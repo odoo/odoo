@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <record id="open_account_charts_modules" model="ir.actions.act_window">
             <field name="name">Chart Templates</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="context" eval="{'search_default_category_id': ref('base.module_category_localization_account_charts')}"/>
+            <field name="context" eval="{'search_default_category_id': ref('base.module_category_localization')}"/>
             <field name="search_view_id" ref="base.view_module_filter"/>
         </record>
 
@@ -48,7 +48,7 @@
                                     domain="[('visible','=', True)]"
                                     class="oe_inline" attrs="{'readonly': [('has_chart_of_accounts','!=',False)]}"/>
                                 <button string="Install more chart templates"
-                                    icon="gtk-go-forward"
+                                    icon="fa-arrow-right text-success"
                                     name="%(open_account_charts_modules)d"
                                     type="action"
                                     class="oe_link" attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}"/>
@@ -56,13 +56,13 @@
                             <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}">
                                 <label for="sale_tax_id"/>
                                 <field name="sale_tax_id"
-                                    domain="[('chart_template_id', '=', chart_template_id),('type_tax_use','in',('sale','all'))]"
+                                    domain="[('chart_template_id', 'parent_of', chart_template_id),('type_tax_use','in',('sale','all'))]"
                                     class="oe_inline"/>
                             </div>
                             <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}">
                                 <label for="purchase_tax_id"/>
                                 <field name="purchase_tax_id"
-                                    domain="[('chart_template_id', '=', chart_template_id),('type_tax_use','in',('purchase', 'all'))]"
+                                    domain="[('chart_template_id', 'parent_of', chart_template_id),('type_tax_use','in',('purchase', 'all'))]"
                                     class="oe_inline"/>
                             </div>
                             <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',True), ('has_chart_of_accounts','!=',False)]}">
@@ -98,7 +98,7 @@
                             </div>
                         </div>
                     </group>
-                    <group string="Accounting &amp; Finance">
+                    <group string="Accounting &amp; Finance" name="accounting">
                         <label for="id" string="Options"/>
                         <div name="account_config">
                             <div>
@@ -162,6 +162,11 @@
                                 <label for="module_account_bank_statement_import_ofx"/>
                                 <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
                             </div>
+                            <div>
+                                <field name="module_account_bank_statement_import_csv" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_bank_statement_import_csv"/>
+                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
+                            </div>
                         </div>
                         <label for="id" string="Automate Payments"/>
                         <div name="bank_payments">
@@ -220,6 +225,7 @@
                                 <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
                             </div>
                         </div>
+                        <field name="group_warning_account" widget="radio"/>
                     </group>
                     <group attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
                         <label for="id" string="Taxes"/>
@@ -244,6 +250,27 @@
                             <div name='payment_acquirer'/>
                         </div>
                     </group>
+                    <!-- Invisible section which is inherited in other modules -->
+                    <separator name="analytic_account" string="Analytic Accounting" invisible="1"/>
+                    <group name="analytic_account_sale" invisible="1">
+                        <label for="id" string="Sale"/>
+                    </group>
+                    <group name="analytic_account_purchase" invisible="1">
+                        <label for="id" string="Purchase"/>
+                    </group>
+                    <group name="followup" position="before">
+                        <field name="use_anglo_saxon"/>
+                        <field name="bank_account_code_prefix" groups="base.group_no_one"/>
+                        <field name="cash_account_code_prefix" groups="base.group_no_one"/>
+                        <field name="code_digits" groups="base.group_no_one"/>
+                        <field name="tax_calculation_rounding_method" groups="base.group_no_one"/>
+                    </group>
+                    <group string="Overdue Payments" name="followup">
+                        <field name="overdue_msg"/>
+                    </group>
+                    <div>
+                        <span>(*) This configuration is related to the company you're logged into.</span>
+                    </div>
                 </form>
             </field>
         </record>
@@ -259,4 +286,4 @@
         <menuitem id="menu_account_config" name="Settings" parent="menu_finance_configuration"
             sequence="0" action="action_account_config" groups="base.group_system"/>
     </data>
-</openerp>
+</odoo>

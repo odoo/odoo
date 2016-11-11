@@ -13,7 +13,7 @@ contentMenu.TopBar.include({
     new_blog_post: function () {
         var model = new Model('blog.blog');
         model.call('name_search', [], { context: base.get_context() }).then(function (blog_ids) {
-            if (blog_ids.length == 1) {
+            if (blog_ids.length === 1) {
                 document.location = '/blog/' + blog_ids[0][0] + '/post/new';
             } else if (blog_ids.length > 1) {
                 website.prompt({
@@ -30,11 +30,10 @@ contentMenu.TopBar.include({
         });
     },
 });
-
 });
 
 odoo.define('website_blog.editor', function (require) {
-"use strict";
+    "use strict";
 
     var ajax = require('web.ajax');
     var widget = require('web_editor.widget');
@@ -46,22 +45,26 @@ odoo.define('website_blog.editor', function (require) {
     }
 
     rte.Class.include({
+        // Destroy popOver and stop listening mouseup event on edit mode
+        start: function () {
+            $(".js_tweet, .js_comment").off('mouseup').trigger('mousedown');
+            return this._super.apply(this, arguments);
+        },
         saveElement: function ($el, context) {
-            if ($el.is('.website_blog #title')) {
+            if ($el.is('.o_blog_cover_container')) {
                 return ajax.jsonRpc("/blog/post_change_background", 'call', {
-                    'post_id' : +$el.find('#blog_post_name').data('oe-id'),
+                    'post_id' : parseInt($el.closest("[name=\"blog_post\"], .website_blog").find("[data-oe-model=\"blog.post\"]").first().data("oe-id"), 10),
                     'cover_properties' : {
-                        "background-image": $el.find('#js_blogcover').css("background-image").replace(/"/g, ''),
-                        "background-color": $el.find('#js_blogcover').attr("class"),
-                        "opacity": $el.find('#js_blogcover').css("opacity"),
-                        "resize_class": $el.attr('class'),
+                        "background-image": $el.children(".o_blog_cover_image").css("background-image").replace(/"/g, '').replace(location.protocol + "//" + location.host, ''),
+                        "background-color": $el.data("filter_color"),
+                        "opacity": $el.data("filter_value"),
+                        "resize_class": $el.data("cover_class"),
                     }
                 });
             }
-            return this._super($el, context);
+            return this._super.apply(this, arguments);
         },
     });
-
 
     options.registry.many2one.include({
         select_record: function (li) {
@@ -80,53 +83,83 @@ odoo.define('website_blog.editor', function (require) {
         }
     });
 
-    options.registry.website_blog = options.Class.extend({
-        start : function() {
-            this.$cover = this.$target.find('#js_blogcover');
-            this.src = this.$target.css("background-image").replace(/url\(|\)|"|'/g,'').replace(/.*none$/,'');
-            this.$image = $('<image src="'+this.src+'">');
-            this._super();
+    options.registry.blog_cover = options.Class.extend({
+        init: function () {
+            this._super.apply(this, arguments);
+
+            this.$image = this.$target.children(".o_blog_cover_image");
+            this.$filter = this.$target.children(".o_blog_cover_filter");
+
+            this.$filter_value_options = this.$el.find('li[data-filter_value]');
+            this.$filter_color_options = this.$el.find('li[data-filter_color]');
+
+            this.filter_color_classes = this.$filter_color_options.map(function () {
+                return $(this).data("filter_color");
+            }).get().join(" ");
         },
-        clear : function(type, value, $li) {
+        clear: function (type, value, $li) {
             if (type !== 'click') return;
-            this.src = null;
-            this.$cover.css({"background-image": '', 'min-height': ''});
-            this.$image.removeAttr("src");
-            this.$target.removeClass('cover cover_full cover_narrow');
+
+            this.select_class(type, "", $());
+            this.$image.css("background-image", "");
+            this.$target.addClass("o_dirty");
         },
-        change : function(type, value, $li) {
+        change: function (type, value, $li) {
             if (type !== 'click') return;
-            var self = this;
-            var editor  = new widget.MediaDialog(this.$image, this.$image[0], {only_images: true});
-            editor.appendTo('body');
-            editor.on('saved', self, function (event, img) {
-                var url = self.$image.attr('src');
-                self.$cover.css({"background-image": url ? 'url(' + url + ')' : "", 'min-height': $(window).height()-this.$cover.offset().top});
-                self.$target.addClass('o_dirty cover cover_full');
-                self.set_active();
+
+            var $image = $("<img/>", {src: this.$image.css("background-image")});
+
+            var editor = new widget.MediaDialog(null, {only_images: true}, $image, $image[0]).open();
+            editor.on("save", this, function (event, img) {
+                var src = $image.attr("src");
+                this.$image.css("background-image", src ? ("url(" + src + ")") : "");
+                if (!this.$target.hasClass("cover")) {
+                    var $li = this.$el.find("[data-select_class]").first();
+                    this.select_class(type, $li.data("select_class"), $li);
+                }
+                this.set_active();
+                this.$target.addClass("o_dirty");
             });
         },
-        cover_class : function(type, value, $li) {
-            this.$target.attr("class", (type === 'over' || type === 'click') ? value : this.class);
+        filter_value: function (type, value, $li) {
+            this.$filter.css("opacity", value);
             this.$target.addClass('o_dirty');
         },
-        opacity : function(type, value, $li) {
-            this.$cover.css("opacity", (type === 'over' || type === 'click') ? value : this.value);
-            this.$target.addClass('o_dirty');
+        filter_color: function (type, value, $li) {
+            this.$filter.removeClass(this.filter_color_classes);
+            if (value) {
+                this.$filter.addClass(value);
+            }
+            this.$target.addClass("o_dirty");
+
+            var $first_visible_filter_option = this.$filter_value_options.eq(1);
+            if (parseFloat(this.$filter.css('opacity')) < parseFloat($first_visible_filter_option.data("filter_value"))) {
+                this.filter_value(type, $first_visible_filter_option.data("filter_value"), $first_visible_filter_option);
+            }
         },
-        bgcolor : function(type, value, $li) {
-            this.$cover.attr("class", (type === 'over' || type === 'click') ? value : this.background);
-            this.$target.addClass('o_dirty');
-        },
-        set_active: function(){
-            this._super();
-            this.background = this.$cover.attr("class");
-            this.class = this.$target.attr('class');
-            this.value = this.$cover.css('opacity');
-            this.$el.parent().find('.snippet-option-website_blog:not(li[data-change])').toggleClass("hidden", !this.$target.hasClass("cover"));
-            this.$el.find('li[data-bgcolor], li[data-opacity], li[data-cover_class]').removeClass("active");
-            this.$el.find('[data-bgcolor="' + this.background + '"], [data-opacity="' + parseFloat(this.value).toFixed(1) + '"], [data-cover_class*="' + ((this.class||'').indexOf('cover_full') === -1 ? 'container' : 'cover_full') + '"]').addClass("active");
+        set_active: function () {
+            this._super.apply(this, arguments);
+            var self = this;
+
+            this.$el.filter(":not([data-change])").toggleClass("hidden", !this.$target.hasClass("cover"));
+            this.$el.filter("li:has(li[data-select_class])").toggleClass("hidden", this.$target.hasClass("o_list_cover"));
+
+            this.$filter_value_options.removeClass("active");
+            this.$filter_color_options.removeClass("active");
+
+            var active_filter_value = this.$filter_value_options
+                .filter(function () {
+                    return (parseFloat($(this).data('filter_value')).toFixed(1) === parseFloat(self.$filter.css('opacity')).toFixed(1));
+                }).addClass("active").data("filter_value");
+
+            var active_filter_color = this.$filter_color_options
+                .filter(function () {
+                    return self.$filter.hasClass($(this).data("filter_color"));
+                }).addClass("active").data("filter_color");
+
+            this.$target.data("cover_class", this.$el.find(".active[data-select_class]").data("select_class") || "");
+            this.$target.data("filter_value", active_filter_value || 0.0);
+            this.$target.data("filter_color", active_filter_color || "");
         },
     });
-
 });

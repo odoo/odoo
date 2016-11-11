@@ -26,8 +26,7 @@ var TopBarContent = Widget.extend({
 
         return this._super();
     },
-    edit_menu: function () {
-        var self = this;
+    edit_menu: function (action_before_reload) {
         var context = base.get_context();
         var def = $.Deferred();
         if ($("[data-content_menu_id]").length) {
@@ -40,8 +39,8 @@ var TopBarContent = Widget.extend({
             def.resolve(null);
         }
 
-        def.then(function (root_id) {
-            ajax.jsonRpc('/web/dataset/call_kw', 'call', {
+        return def.then(function (root_id) {
+            return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
                 model: 'website.menu',
                 method: 'get_tree',
                 args: [context.website_id, root_id],
@@ -49,8 +48,13 @@ var TopBarContent = Widget.extend({
                     context: context
                 },
             }).then(function (menu) {
-                var result = new EditMenuDialog(menu).appendTo(document.body);
-                return result;
+                var dialog = new EditMenuDialog(this, {}, menu).open();
+                dialog.on("save", null, function () {
+                    $.when(action_before_reload && action_before_reload()).then(function () {
+                        editor.reload();
+                    });
+                });
+                return dialog;
             });
         });
     },
@@ -92,7 +96,7 @@ var TopBarContent = Widget.extend({
         }).then(function (deps) {
             website.prompt({
                 id: "editor_rename_page",
-                window_title: _t("Rename Page"),
+                window_title: _t("Rename This Page"),
                 dependencies: deps,
             }, 'website.rename_page').then(function (val, field, $dialog) {
                 ajax.jsonRpc('/web/dataset/call_kw', 'call', {
@@ -128,7 +132,7 @@ var TopBarContent = Widget.extend({
                 id: "editor_delete_page",
                 window_title: _t("Delete Page"),
                 dependencies: deps,
-                    init: function () { $('.btn-continue').prop("disabled", true)},
+                    init: function () { $('.btn-continue').prop("disabled", true); },
             }, 'website.delete_page').then(function (val, field, $dialog) {
 
                 if ($dialog.find('input[type="checkbox"]').is(':checked')) {
@@ -170,17 +174,20 @@ website.TopBar.include({
 
 var SelectEditMenuDialog = widget.Dialog.extend({
     template: 'website.contentMenu.dialog.select',
-    init: function () {
+    init: function (parent, options) {
         var self = this;
         self.roots = [{id: null, name: _t("Top Menu")}];
         $("[data-content_menu_id]").each(function () {
             self.roots.push({id: $(this).data("content_menu_id"), name: $(this).attr("name")});
         });
-        this._super();
+        this._super(parent, _.extend({}, {
+            title: _t("Select a Menu"),
+            save_text: _t("Continue")
+        }, options || {}));
     },
     save: function () {
-        this.trigger("save", parseInt(this.$el.find("select").val() || null));
-        this._super();
+        this.final_data = parseInt(this.$el.find("select").val() || null);
+        this._super.apply(this, arguments);
     }
 });
 
@@ -191,12 +198,14 @@ var EditMenuDialog = widget.Dialog.extend({
         'click button.js_edit_menu': 'edit_menu',
         'click button.js_delete_menu': 'delete_menu',
     }),
-    init: function (menu) {
+    init: function (parent, options, menu) {
         this.menu = menu;
         this.root_menu_id = menu.id;
         this.flat = this.flatenize(menu);
         this.to_delete = [];
-        this._super();
+        this._super(parent, _.extend({}, {
+            title: _t("Edit Menu")
+        }, options || {}));
     },
     start: function () {
         var r = this._super.apply(this, arguments);
@@ -226,7 +235,7 @@ var EditMenuDialog = widget.Dialog.extend({
     },
     add_menu: function () {
         var self = this;
-        var dialog = new MenuEntryDialog(undefined, {});
+        var dialog = new MenuEntryDialog(this, {}, undefined, {});
         dialog.on('save', this, function (link) {
             var new_menu = {
                 id: _.uniqueId('new-'),
@@ -241,14 +250,14 @@ var EditMenuDialog = widget.Dialog.extend({
             self.$('.oe_menu_editor').append(
                 qweb.render('website.contentMenu.dialog.submenu', { submenu: new_menu }));
         });
-        dialog.appendTo(document.body);
+        dialog.open();
     },
     edit_menu: function (ev) {
         var self = this;
         var menu_id = $(ev.currentTarget).closest('[data-menu-id]').data('menu-id');
         var menu = self.flat[menu_id];
         if (menu) {
-            var dialog = new MenuEntryDialog(undefined, menu);
+            var dialog = new MenuEntryDialog(this, {}, undefined, menu);
             dialog.on('save', this, function (link) {
                 var id = link.id;
                 var menu_obj = self.flat[id];
@@ -260,13 +269,12 @@ var EditMenuDialog = widget.Dialog.extend({
                 var $menu = self.$('[data-menu-id="' + id + '"]');
                 $menu.find('.js_menu_label').first().text(menu_obj.name);
             });
-            dialog.appendTo(document.body);
+            dialog.open();
         } else {
             alert("Could not find menu entry");
         }
     },
     delete_menu: function (ev) {
-        var self = this;
         var $menu = $(ev.currentTarget).closest('[data-menu-id]');
         var mid = $menu.data('menu-id')|0;
         if (mid) {
@@ -275,6 +283,7 @@ var EditMenuDialog = widget.Dialog.extend({
         $menu.remove();
     },
     save: function () {
+        var _super = this._super.bind(this);
         var self = this;
         var new_menu = this.$('.oe_menu_editor').nestedSortable('toArray', {startDepthCount: 0});
         var levels = [];
@@ -282,9 +291,9 @@ var EditMenuDialog = widget.Dialog.extend({
         var context = base.get_context();
         // Resequence, re-tree and remove useless data
         new_menu.forEach(function (menu) {
-            if (menu.item_id) {
+            if (menu.id) {
                 levels[menu.depth] = (levels[menu.depth] || 0) + 1;
-                var mobj = self.flat[menu.item_id];
+                var mobj = self.flat[menu.id];
                 mobj.sequence = levels[menu.depth];
                 mobj.parent_id = (menu.parent_id|0) || menu.parent_id || self.root_menu_id;
                 delete(mobj.children);
@@ -298,16 +307,14 @@ var EditMenuDialog = widget.Dialog.extend({
             kwargs: {
                 context: context
             },
-        }).then(function (menu) {
-            self.close();
-            editor.reload();
+        }).then(function () {
+            return _super();
         });
     },
 });
 
 var MenuEntryDialog = widget.LinkDialog.extend({
-    template: 'website.contentMenu.dialog.add',
-    init: function (editor, data) {
+    init: function (parent, options, editor, data) {
         data.text = data.name || '';
         data.isNewWindow = data.new_window;
         this.data = data;
@@ -315,10 +322,11 @@ var MenuEntryDialog = widget.LinkDialog.extend({
     },
     start: function () {
         var self = this;
-        var result = $.when(this._super.apply(this, arguments)).then(function () {
-            if (self.data) {
-                self.bind_data();
-            }
+
+        this.$(".link-style").remove();
+        this.$("label[for=link-new]").text("Menu Label");
+
+        return $.when(this._super.apply(this, arguments)).then(function () {
             var $link_text = self.$('#link-text').focus();
             self.$('#link-page').change(function (e) {
                 if ($link_text.val()) { return; }
@@ -327,7 +335,6 @@ var MenuEntryDialog = widget.LinkDialog.extend({
                 $link_text.focus();
             });
         });
-        return result;
     },
     save: function () {
         var $e = this.$('#link-text');
@@ -337,10 +344,7 @@ var MenuEntryDialog = widget.LinkDialog.extend({
             return;
         }
         return this._super.apply(this, arguments);
-    },
-    destroy: function () {
-        this._super.apply(this, arguments);
-    },
+    }
 });
 
 return {

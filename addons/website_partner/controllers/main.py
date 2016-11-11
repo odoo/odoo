@@ -13,12 +13,12 @@ class WebsitePartnerPage(http.Controller):
         _, partner_id = unslug(partner_id)
         if partner_id:
             partner_sudo = request.env['res.partner'].sudo().browse(partner_id)
-            is_website_publisher = request.env['res.users'].has_group('base.group_website_publisher')
+            is_website_publisher = request.env['res.users'].has_group('website.group_website_publisher')
             if partner_sudo.exists() and (partner_sudo.website_published or is_website_publisher):
                 values = {
                     'main_object': partner_sudo,
                     'partner': partner_sudo,
                     'edit_page': False
                 }
-                return request.website.render("website_partner.partner_page", values)
+                return request.render("website_partner.partner_page", values)
         return request.not_found()

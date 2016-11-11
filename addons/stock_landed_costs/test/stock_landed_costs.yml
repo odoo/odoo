@@ -71,15 +71,14 @@
 -
   I compute the landed cost  using Compute button
 -
-  !python {model: stock.landed.cost}: |
-    self.compute_landed_cost(cr, uid, [ref("stock_landed_cost_1")])
+  !python {model: stock.landed.cost, id: stock_landed_cost_1}: |
+    self.compute_landed_cost()
 
 -
   I check the valuation adjustment lines
 -
-  !python {model: stock.landed.cost}: |
-    landed_cost = self.browse(cr, uid, ref("stock_landed_cost_1"))
-    for valuation in landed_cost.valuation_adjustment_lines:
+  !python {model: stock.landed.cost, id: stock_landed_cost_1}: |
+    for valuation in self.valuation_adjustment_lines:
         if valuation.cost_line_id.name == 'equal split':
             assert valuation.additional_landed_cost == 5
         elif valuation.cost_line_id.name == 'split by quantity' and valuation.move_id.name == "move 1":
@@ -99,8 +98,8 @@
 -
   I confirm the landed cost
 -
-  !python {model: stock.landed.cost}: |
-    self.button_validate(cr, uid, [ref("stock_landed_cost_1")])
+  !python {model: stock.landed.cost, id: stock_landed_cost_1}: |
+    self.button_validate()
 -
   I check that the landed cost is now "Closed" and that it has an accounting entry
 -

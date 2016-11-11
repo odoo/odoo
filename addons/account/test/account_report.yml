@@ -12,60 +12,60 @@
 -
   In order to test the PDF reports defined on an invoice, we will print an Invoice Report
 -
-  !python {model: account.invoice}: |
+  !python {model: account.invoice, id: False}: |
     import os
-    import openerp.report
-    from openerp import tools
-    data, format = openerp.report.render_report(cr, uid, [ref('account.account_invoice_customer0')], 'account.report_invoice', {}, {})
+    import odoo.report
+    from odoo import tools
+    data, format = odoo.report.render_report(self.env.cr, self.env.uid, [ref('account.account_invoice_customer0')], 'account.report_invoice', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-invoice.'+format), 'wb+').write(data)
 -
   In order to test the PDF reports defined on a partner, we will print the Overdue Report
 -
-  !python {model: res.partner}: |
+  !python {model: res.partner, id: False}: |
     import os
-    import openerp.report
-    from openerp import tools
-    data, format = openerp.report.render_report(cr, uid, [ref('base.res_partner_1'),ref('base.res_partner_2'),ref('base.res_partner_12')], 'account.report_overdue', {}, {})
+    import odoo.report
+    from odoo import tools
+    data, format = odoo.report.render_report(self.env.cr, self.env.uid, [ref('base.res_partner_1'),ref('base.res_partner_2'),ref('base.res_partner_12')], 'account.report_overdue', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-report_overdue.'+format), 'wb+').write(data)
 -
   Print the Aged Partner Balance Report
 -
-  !python {model: account.account}: |
+  !python {model: account.account, id: False}: |
     ctx={}
     data_dict = {'chart_account_id':ref('account.chart0')}
-    from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_aged_balance_view',wiz_data=data_dict, context=ctx, our_module='account')
+    from odoo.tools import test_reports
+    test_reports.try_report_action(self.env.cr, self.env.uid, 'action_account_aged_balance_view',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the Account Balance Sheet in Normal mode
 -
-  !python {model: account.account}: |
+  !python {model: account.account, id: False}: |
     ctx={}
     data_dict = {'chart_account_id':ref('account.chart0'), 'account_report_id': ref('account_financial_report_balancesheet0')}
-    from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_report',wiz_data=data_dict, context=ctx, our_module='account')
+    from odoo.tools import test_reports
+    test_reports.try_report_action(self.env.cr, self.env.uid, 'action_account_report',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the Account Balance Report in Normal mode through the wizard - From Account Chart
 -
-  !python {model: account.account}: |
+  !python {model: account.account, id: False}: |
     ctx={}
     data_dict = {'chart_account_id':ref('account.chart0')}
-    from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_balance_menu',wiz_data=data_dict, context=ctx, our_module='account')
+    from odoo.tools import test_reports
+    test_reports.try_report_action(self.env.cr, self.env.uid, 'action_account_balance_menu',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the General Ledger Report (in Landscape Mode)
 -
-  !python {model: account.account}: |
+  !python {model: account.account, id: False}: |
     ctx={}
     data_dict = {'chart_account_id':ref('account.chart0')}
-    from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_general_ledger_menu',wiz_data=data_dict, context=ctx, our_module='account')
+    from odoo.tools import test_reports
+    test_reports.try_report_action(self.env.cr, self.env.uid, 'action_account_general_ledger_menu',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the Profit-Loss Report in Normal Mode
 -
-  !python {model: account.account}: |
+  !python {model: account.account, id: False}: |
     ctx={}
     data_dict = {'chart_account_id':ref('account.chart0'), 'target_move': 'all', 'account_report_id': ref('account_financial_report_balancesheet0')}
-    from openerp.tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_report',wiz_data=data_dict, context=ctx, our_module='account')
+    from odoo.tools import test_reports
+    test_reports.try_report_action(self.env.cr, self.env.uid, 'action_account_report',wiz_data=data_dict, context=ctx, our_module='account')

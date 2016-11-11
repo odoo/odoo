@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
 
 <!-- Editor custom -->
-<template id="assets_editor" inherit_id="website.assets_editor" name="Forum Editor Assets" groups="base.group_user">
+<template id="assets_editor" inherit_id="website.assets_editor" name="Forum Editor Assets">
     <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_forum/static/src/js/website_tour_forum.js"/>
         <script type="text/javascript" src="/website_forum/static/src/js/website_forum.editor.js"/>
@@ -68,24 +68,24 @@
                 </div>
                 <div class="collapse navbar-collapse" id="oe-help-navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li t-att-class="sorting == 'relevancy desc' and 'active' or '' ">
+                        <li t-att-class="sorting == 'relevancy desc' and 'active' or None ">
                             <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='relevancy desc') }}">Trending</a>
                         </li>
-                        <li t-att-class="sorting == 'create_date desc' and 'active' or '' ">
+                        <li t-att-class="sorting == 'create_date desc' and 'active' or None ">
                             <a t-attf-href="/forum/#{ slug(forum) }?{{ keep_query( 'search', 'post_type', 'filters', sorting='create_date desc') }}">Newest</a>
                         </li>
-                        <li t-att-class="searches.get('users') and 'active' or '' ">
+                        <li t-att-class="searches.get('users') and 'active' or None ">
                             <a t-attf-href="/forum/#{ slug(forum) }/users">People</a>
                         </li>
-                        <li t-att-class="searches.get('tags') and 'active' or '' ">
+                        <li t-att-class="searches.get('tags') and 'active' or None ">
                             <a t-attf-href="/forum/#{ slug(forum) }/tag">Tags</a>
                         </li>
-                        <li t-att-class="searches.get('badges') and 'active' or '' ">
+                        <li t-att-class="searches.get('badges') and 'active' or None ">
                             <a t-attf-href="/forum/#{ slug(forum) }/badge">Badges</a>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li t-if="not is_public_user" t-att-class="searches.get('my_profile') and 'active' or '' ">
+                        <li t-if="not is_public_user" t-att-class="searches.get('my_profile') and 'active' or None ">
                             <a t-attf-href="/forum/#{ slug(forum) }/user/#{uid}">
                                 <span t-field="user_id.name"/> (k: <t t-esc="user_id.karma"/>)
                             </a>
@@ -201,12 +201,12 @@
                             </div>
                             <div class="panel-body">
                                 <table class="table">
-                                    <thead><tr><td> Asked: <strong><span t-field="question.create_date" t-field-options='{"format":"short"}'/></strong></td></tr></thead>
+                                    <thead><tr><td> Asked: <strong><span t-field="question.create_date" t-options='{"format":"short"}'/></strong></td></tr></thead>
                                     <tr><td> Seen: <strong><t t-raw="question.views"/></strong>
                                         <span t-if="question.views&gt;1"> times</span>
                                         <span t-if="question.views&lt;=1"> time</span>
                                     </td></tr>
-                                    <tr><td> Last updated: <strong><span t-field="question.write_date" t-field-options='{"format":"short"}'/></strong></td></tr>
+                                    <tr><td> Last updated: <strong><span t-field="question.write_date" t-options='{"format":"short"}'/></strong></td></tr>
                                 </table>
                             </div>
                         </div>
@@ -252,8 +252,8 @@
             <i t-if="question.post_type == 'question'" t-attf-class="fa fa-question-circle" t-att-title="question.post_type.capitalize()" />
             <i t-if="question.post_type == 'discussion'" t-attf-class="fa fa-comments-o" t-att-title="question.post_type.capitalize()" />
             <i t-if="question.post_type == 'link'" t-attf-class="fa fa-link" t-att-title="question.post_type.capitalize()" />
-            <span>By </span><span t-field="question.create_uid" t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
-            <span> • </span><span t-field="question.write_date" t-field-options='{"format":"short"}'/>
+            <span>By </span><span t-field="question.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
+            <span> • </span><span t-field="question.write_date" t-options='{"format":"short"}'/>
             <span> • </span><span t-field="question.views" /> View<t t-if="question.views&gt;1">s</t>
             <span> • </span><a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">
 
@@ -418,33 +418,33 @@
               </a>
               <ul class="dropdown-menu">
                   <li class="dropdown-header">Filter on</li>
-                  <li t-att-class="filters == 'all' and 'active' or '' ">
+                  <li t-att-class="filters == 'all' and 'active' or None ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='all')">All</a>
                   </li>
-                  <li t-att-class="filters == 'unanswered' and 'active' or '' ">
+                  <li t-att-class="filters == 'unanswered' and 'active' or None ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='unanswered')">Unanswered</a>
                   </li>
-                  <li t-if="uid" t-att-class="filters == 'followed' and 'active' or '' ">
+                  <li t-if="uid" t-att-class="filters == 'followed' and 'active' or None ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='followed')">Followed</a>
                   </li>
                   <li t-if="tag" class="dropdown-header">Tags</li>
-                  <li t-if="tag" t-att-class="tag and 'active' or '' ">
+                  <li t-if="tag" t-att-class="tag and 'active' or None ">
                       <a href=""><t t-esc="tag.name"/></a>
                   </li>
                   <li class="dropdown-header">Sort by</li>
-                  <li t-att-class="sorting == 'relevancy desc' and 'active' or '' ">
+                  <li t-att-class="sorting == 'relevancy desc' and 'active' or None ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='relevancy desc')">Relevance</a>
                   </li>
-                  <li t-att-class="sorting == 'write_date desc' and 'active' or '' ">
+                  <li t-att-class="sorting == 'write_date desc' and 'active' or None ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='write_date desc')">Last activity date</a>
                   </li>
-                  <li t-att-class="sorting == 'create_date desc' and 'active' or '' ">
+                  <li t-att-class="sorting == 'create_date desc' and 'active' or None ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='create_date desc')">Newest</a>
                   </li>
-                  <li t-att-class="sorting == 'child_count desc' and 'active' or '' ">
+                  <li t-att-class="sorting == 'child_count desc' and 'active' or None ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='child_count desc')">Most answered</a>
                   </li>
-                  <li t-att-class="sorting == 'vote_count desc' and 'active' or '' ">
+                  <li t-att-class="sorting == 'vote_count desc' and 'active' or None ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='vote_count desc')">Most voted</a>
                   </li>
               </ul>
@@ -555,10 +555,14 @@
 <!-- Edition: ask your question -->
 <template id="new_question">
     <t t-call="website_forum.header">
-        <h1 class="mt0">Ask Your Question</h1>
-        <p>
-            To improve your chance getting an answer:
-        </p>
+      <h1 class="mt0">Ask Your Question</h1>
+      <t t-if='request.env.user.forum_waiting_posts_count'>
+        <div class="alert alert-warning" role="alert">
+            You already have one pending post.<br/>
+            Please wait for a moderator to validate your previous post before continuing.
+        </div>
+      </t>
+      <t t-if='not request.env.user.forum_waiting_posts_count'>
         <ul>
             <li>Set a clear, explicit and concise question title
                 (check
@@ -589,6 +593,7 @@
                 t-att-data-karma="forum.karma_ask"
                 data-hashtags="#question" data-social-target-type="question">Post Your Question</button>
         </form>
+      </t>
     </t>
 </template>
 
@@ -695,6 +700,9 @@
         - no need to answer the same question twice. Also, please <b>don't forget to vote</b>
         - it really helps to select the best questions and answers!
     </p>
+    <t t-if="request.params.get('nocontent')">
+        <p class='alert alert-danger' role='alert'>You cannot post an empty answer</p>
+    </t>
     <form t-attf-action="/forum/#{ slug(forum) }/#{slug(question)}/reply" method="post" class="js_website_submit_form" role="form">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
@@ -732,8 +740,8 @@
         <meta name="twitter:site" t-attf-content="@#{res_company.name}" />
         <meta name="twitter:title" t-att-content="question.name" />
         <meta name="twitter:description" t-att-content="question.content" />
-        <meta name="twitter:image" t-attf-content="#{request.httprequest.url_root}forum/user/#{question.create_uid.id}/avatar"/>   
-    </t> 
+        <meta name="twitter:image" t-attf-content="#{request.httprequest.url_root}forum/user/#{question.create_uid.id}/avatar"/>
+    </t>
     <t t-call="website_forum.header">
         <div class="alert alert-info text-center" role="alert" t-if="forum and question.state == 'pending' and user.karma>=forum.karma_moderate and question.active">
             <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" type="button" class="btn btn-success">Accept <i class="fa fa-check"/></a>
@@ -780,11 +788,11 @@
                     <i t-if="question.post_type == 'discussion'" t-attf-class="fa fa-comments-o" t-att-title="question.post_type.capitalize()" />
                     <i t-if="question.post_type == 'link'" t-attf-class="fa fa-link" t-att-title="question.post_type.capitalize()" />
                     <span>By </span>
-                    <a t-att-href="(question.create_uid.id == request.session.uid or question.create_uid.sudo().website_published) and '/forum/%s/user/%s' % (slug(forum), question.create_uid.id) or '#'"
+                    <a t-att-href="(question.create_uid.id == request.session.uid or question.create_uid.sudo().website_published) and '/forum/%s/user/%s' % (slug(forum), question.create_uid.id) or None"
                         t-field="question.create_uid"
-                        t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
+                        t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}'
                         style="display: inline-block;"/>
-                    <span> on </span><span t-field="question.create_date" t-field-options='{"format":"short"}'/>
+                    <span> on </span><span t-field="question.create_date" t-options='{"format":"short"}'/>
                     <span> • </span><span t-field="question.views"/> views
                 </div>
 
@@ -795,7 +803,7 @@
                     <t t-if="question.closed_uid">
                         <b> by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.closed_uid.id }"
                             t-field="question.closed_uid"
-                            t-field-options='{"widget": "contact", "fields": ["name"]}'
+                            t-options='{"widget": "contact", "fields": ["name"]}'
                             style="display: inline-block;"/></b>
                     </t>
                     <b> on <span t-field="question.closed_date"/></b>
@@ -875,7 +883,7 @@
                             <a t-attf-class="fa fa-reply" href="#post_reply"> Reply</a>
                         </li>
                         <li t-if="question.post_type == 'question'">
-                            <a style="cursor: pointer" t-att-data-toggle="question.can_comment and 'collapse' or ''"
+                            <a style="cursor: pointer" t-att-data-toggle="question.can_comment and 'collapse' or None"
                                 t-attf-class="fa fa-comment-o #{not question.can_comment and 'karma_required text-muted' or ''}"
                                 t-attf-data-karma="#{not question.can_comment and question.karma_comment or 0}"
                                 t-attf-data-target="#comment#{ question._name.replace('.','') + '-' + str(question.id) }">
@@ -940,11 +948,11 @@
                 </a>
                 <a t-att-href="user_profile_url"
                     t-field="answer.create_uid"
-                    t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
+                    t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}'
                     style="display: inline-block;"/>
                 <div class="text-muted">
                     <a t-attf-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}#answer_#{answer.id}">On</a>
-                    <span t-field="answer.create_date" t-field-options='{"format":"short"}'/>
+                    <span t-field="answer.create_date" t-options='{"format":"short"}'/>
                 </div>
             </div>
             <div class="clearfix"><span t-field="answer.content" class="oe_no_empty"/></div>
@@ -988,7 +996,7 @@
                     <li t-if="question.post_type == 'question'">
                         <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
                             t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
-                            style="cursor: pointer" t-att-data-toggle="answer.can_comment and 'collapse' or ''"
+                            style="cursor: pointer" t-att-data-toggle="answer.can_comment and 'collapse' or None"
                             t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
                         </a>
                     </li>
@@ -1028,12 +1036,12 @@
         <div class="o_forum_tooltip_header">
             <h4 class="o_forum_tooltip_heading"><a t-att-href="user_profile_url"
                 t-field="answer.create_uid"
-                t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
+                t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}'
                 style="display: inline-block;"/>
             </h4>
-            <span t-field="answer.create_uid" t-field-options='{"widget": "contact", "UserBio": true, "badges": true, "fields": ["karma"]}'/>
+            <span t-field="answer.create_uid" t-options='{"widget": "contact", "UserBio": True, "badges": True, "fields": ["karma"]}'/>
         </div>
-        <div t-field="answer.create_uid" t-field-options='{"widget": "contact", "website_description": true, "fields": ["partner_id"]}'/>
+        <div t-field="answer.create_uid" t-options='{"widget": "contact", "website_description": True, "fields": ["partner_id"]}'/>
     </div>
 </template>
 
@@ -1065,9 +1073,9 @@
                         </t>
                     </t>
                     <a t-attf-href="/forum/#{slug(forum)}/partner/#{message.author_id.id}"
-                        t-field="message.author_id" t-field-options='{"widget": "contact", "country_image": true, "fields": ["name", "country_id"]}'
+                        t-field="message.author_id" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}'
                         style="display: inline-block;"/>
-                    on <span t-field="message.date" t-field-options='{"format":"short"}'/>
+                    on <span t-field="message.date" t-options='{"format":"short"}'/>
                 </small>
             </div>
             <div class="css_editable_mode_hidden">
@@ -1157,7 +1165,7 @@
     <t t-call="website_forum.header">
         <h2 class="page-header mt0">
             <t t-set="count_posts" t-value="len(posts_ids)"/>
-            <t t-esc="count_posts"/>
+            <span id='count_post' t-esc="count_posts"/>
             <span class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <t t-if="queue_type == 'validation'"> Pending</t>
@@ -1166,14 +1174,14 @@
                     <b class="caret"/>
                 </a>
                 <ul class="dropdown-menu">
-                    <li t-att-class="queue_type == 'validation' and 'active' or '' ">
-                        <a t-attf-href="/forum/#{slug(forum)}/validation_queue">Pending</a>
+                    <li t-att-class="queue_type == 'validation' and 'active' or None ">
+                        <a data-type='validation' t-attf-href="/forum/#{slug(forum)}/validation_queue">Pending</a>
                     </li>
-                    <li t-att-class="queue_type == 'flagged' and 'active' or '' ">
-                        <a t-attf-href="/forum/#{slug(forum)}/flagged_queue">Flagged</a>
+                    <li t-att-class="queue_type == 'flagged' and 'active' or None ">
+                        <a data-type='flagged' t-attf-href="/forum/#{slug(forum)}/flagged_queue">Flagged</a>
                     </li>
-                    <li t-if="uid" t-att-class="queue_type == 'offensive' and 'active' or '' ">
-                        <a t-attf-href="/forum/#{slug(forum)}/offensive_posts">Offensive</a>
+                    <li t-if="uid" t-att-class="queue_type == 'offensive' and 'active' or None ">
+                        <a data-type='offensive' t-attf-href="/forum/#{slug(forum)}/offensive_posts">Offensive</a>
                     </li>
                 </ul>
             </span>
@@ -1183,8 +1191,8 @@
             <t t-if="queue_type == 'flagged'">The flagged queue is empty.</t>
             <t t-if="queue_type == 'offensive'">The offensive queue is empty.</t>
         </div>
-        <div t-foreach="posts_ids" t-as="question" class="mb16 row" style="padding-bottom:16px;border-bottom:1px solid #e7e7e7;">
-            <div class="col-sm-2">
+        <div t-foreach="posts_ids" t-as="question" class="mb16 row post_to_validate" style="padding-bottom:16px;border-bottom:1px solid #e7e7e7;">
+            <div class="col-sm-2 o_js_validation_queue">
                 <div class="panel panel-default text-center" style="background-color:#eee;margin:0;padding:5px 12px 5px 12px;">
                     <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" style="padding-right:8px;"><i class="fa fa-check fa-2x"/></a>
                     <a t-if="queue_type == 'validation'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse"><i class="fa fa-times fa-2x"/></a>
@@ -1214,7 +1222,7 @@
                 <div>
                     <a t-attf-href="/forum/#{slug(forum)}/user/#{user.id}" t-field="user.name"/>
                     <t t-if="user.country_id">
-                        <span t-field="user.country_id.image" t-field-options='{"widget": "image", "class": "country_flag"}' class='ml4'/>
+                        <span t-field="user.country_id.image" t-options='{"widget": "image", "class": "country_flag"}' class='ml4'/>
                     </t>
                     <b class='ml8'><t t-esc="user.karma"/></b>
                     <t t-raw="separator"/>
@@ -1329,7 +1337,7 @@
         <h1 class="mt0 page-header">
             <span t-field="user.name"/>
             <small>profile</small>
-            <t t-call="website.publish_management" groups="base.group_website_publisher">
+            <t t-call="website.publish_management">
                 <t t-set="object" t-value="user"/>
                 <t t-set="publish_edit" t-value="True"/>
             </t>
@@ -1355,10 +1363,10 @@
                 </tr>
                 <tr>
                     <td>member since</td>
-                    <td><span t-field="user.create_date" t-field-options='{"format": "short"}'/></td>
+                    <td><span t-field="user.create_date" t-options='{"format": "short"}'/></td>
                 </tr><tr>
                     <td>last connection</td>
-                    <td><span t-field="user.login_date" t-field-options='{"format": "short"}'/></td>
+                    <td><span t-field="user.login_date" t-options='{"format": "short"}'/></td>
                 </tr>
                 <tr>
                     <td rowspan="2" valign="top"><span class="text-muted">bio</span></td>
@@ -1374,7 +1382,7 @@
                         <span t-field="user.city"/>
                         <span t-if="user.city and user.country_id">, </span>
                         <span t-field="user.country_id"/>
-                        <t t-if="user.country_id"> <span t-field="user.country_id.image" t-field-options='{"widget": "image", "class": "country_flag"}'/></t>
+                        <t t-if="user.country_id"> <span t-field="user.country_id.image" t-options='{"widget": "image", "class": "country_flag"}'/></t>
 
                     </td>
                 </tr>
@@ -1443,7 +1451,7 @@
             <div class="tab-pane" id="activity" t-if="uid == user.id">
                 <ul class="list-unstyled">
                     <li t-foreach="activities" t-as="activity">
-                        <span t-field="activity.date" t-field-options='{"format": "short"}'/>
+                        <span t-field="activity.date" t-options='{"format": "short"}'/>
                         <span t-esc="activity.subtype_id.name" class="label label-info"/>
                         <t t-set="post" t-value="posts[activity.res_id]"/>
                         <span t-if="post[1]">
@@ -1505,9 +1513,9 @@
 </template>
 
 <!-- User Navbar -->
-<template id="content_new_forum" inherit_id="website.user_navbar" groups="base.group_user">
+<template id="content_new_forum" inherit_id="website.user_navbar">
     <xpath expr="//div[@id='o_website_add_page_modal']//ul" position="inside">
-        <li><a href="#" data-action="new_forum"><i class="fa fa-comment"/><p>New Forum</p></a></li>
+        <li groups="website.group_website_designer"><a href="#" data-action="new_forum"><i class="fa fa-comment"/><p>New Forum</p></a></li>
     </xpath>
 </template>
 
@@ -1516,7 +1524,7 @@
     <p>A new answer on <t t-esc="object.name"/> has been posted. Click here to access the post :</p>
     <p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
         <a t-attf-href="/forum/#{slug(object.forum_id)}/question/#{slug(object)}"
-            style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; background-color: #a24689; border: 1px solid #a24689; border-radius:3px">
+            style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">
             See post
         </a>
     </p>
@@ -1526,7 +1534,7 @@
     <p>A new question <b t-esc="object.name" /> on <t t-esc="object.forum_id.name"/> has been posted. Click here to access the question :</p>
     <p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
         <a t-attf-href="/forum/#{slug(object.forum_id)}/question/#{slug(object)}"
-            style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer;background-color: #a24689; border: 1px solid #a24689; border-radius:3px">
+            style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer;background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">
             See question
         </a>
     </p>
@@ -1536,11 +1544,11 @@
     <p>A new question <b t-esc="object.name" /> on <t t-esc="object.forum_id.name"/> has been posted and require your validation. Click here to access the question :</p>
     <p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
         <a t-attf-href="/forum/#{slug(object.forum_id)}/question/#{slug(object)}"
-            style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer;background-color: #a24689; border: 1px solid #a24689; border-radius:3px">
+            style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer;background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">
             Validate question
         </a>
     </p>
 </template>
 
     </data>
-</openerp>
+</odoo>

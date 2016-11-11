@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from openerp import api, fields, models, _
-from openerp.exceptions import UserError, ValidationError
+
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -263,7 +265,6 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
         total = weight = volume = quantity = 0
         total_delivery = 0.0
-        ProductUom = self.env['product.uom']
         for line in order.order_line:
             if line.state == 'cancel':
                 continue
@@ -271,7 +272,7 @@ class DeliveryCarrier(models.Model):
                 total_delivery += line.price_total
             if not line.product_id or line.is_delivery:
                 continue
-            qty = ProductUom._compute_qty(line.product_uom.id, line.product_uom_qty, line.product_id.uom_id.id)
+            qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
             weight += (line.product_id.weight or 0.0) * qty
             volume += (line.product_id.volume or 0.0) * qty
             quantity += qty
@@ -286,7 +287,7 @@ class DeliveryCarrier(models.Model):
         criteria_found = False
         price_dict = {'price': total, 'volume': volume, 'weight': weight, 'wv': volume * weight, 'quantity': quantity}
         for line in self.price_rule_ids:
-            test = eval(line.variable + line.operator + str(line.max_value), price_dict)
+            test = safe_eval(line.variable + line.operator + str(line.max_value), price_dict)
             if test:
                 price = line.list_base_price + line.list_price * price_dict[line.variable_factor]
                 criteria_found = True

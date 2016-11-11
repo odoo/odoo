@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * fetchmail
-# 
+#
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-02-12 16:15+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: fetchmail
@@ -70,7 +70,9 @@ msgstr "Test pripojenia zlyhal: %s"
 msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
-msgstr "Spojenia sú šifrované pomocou SSL/TLS cez dedikovaný port (predvoľba: IMAPs = 993, POP3S = 995)"
+msgstr ""
+"Spojenia sú šifrované pomocou SSL/TLS cez dedikovaný port (predvoľba: IMAPs "
+"= 993, POP3S = 995)"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_object_id
@@ -212,7 +214,9 @@ msgstr "Nepotvrdené"
 msgid ""
 "Optional custom server action to trigger for each incoming mail, on the "
 "record that was created or updated by this mail"
-msgstr "Voliteľné upravené akcie servera spúšťané pre každú prichádzajúcu poštu, na zázname, ktorý bol vytvorený alebo aktualizovaný touto poštou"
+msgstr ""
+"Voliteľné upravené akcie servera spúšťané pre každú prichádzajúcu poštu, na "
+"zázname, ktorý bol vytvorený alebo aktualizovaný touto poštou"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mail_mail
@@ -255,7 +259,10 @@ msgid ""
 "Process each incoming mail as part of a conversation corresponding to this "
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
-msgstr "Spracovanie každej prichádzajúcej pošty v rámci konverzácie zodpovedajúcej tomuto typu dokumentu. To bude vytvárať nové dokumenty pre nové konverzácie, alebo priloží následné emaily na existujúce konverzácie (dokumenty)."
+msgstr ""
+"Spracovanie každej prichádzajúcej pošty v rámci konverzácie zodpovedajúcej "
+"tomuto typu dokumentu. To bude vytvárať nové dokumenty pre nové konverzácie, "
+"alebo priloží následné emaily na existujúce konverzácie (dokumenty)."
 
 #. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -339,18 +346,24 @@ msgstr "Užívateľské meno:"
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_original
+#, fuzzy
 msgid ""
-"Whether a full original copy of each email should be kept for referenceand "
+"Whether a full original copy of each email should be kept for reference and "
 "attached to each processed message. This will usually double the size of "
 "your message database."
-msgstr "Či plná originálna kópia každého emailu musí uchovávať po dobu referencie a pripojené ku každej spracovanej správe. To zvyčajne zdvojnásobi veľkosť databázy správ."
+msgstr ""
+"Či plná originálna kópia každého emailu musí uchovávať po dobu referencie a "
+"pripojené ku každej spracovanej správe. To zvyčajne zdvojnásobi veľkosť "
+"databázy správ."
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_attach
 msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
-msgstr "Či by mali byť stiahnuté prílohy. Ak to nie je povolené, budú prichádzajúce emaily zbavené všetkých príloh pred spracovaním"
+msgstr ""
+"Či by mali byť stiahnuté prílohy. Ak to nie je povolené, budú prichádzajúce "
+"emaily zbavené všetkých príloh pred spracovaním"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_fetchmail_config_settings

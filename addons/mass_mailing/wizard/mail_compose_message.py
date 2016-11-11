@@ -1,59 +1,50 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import osv, fields
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import api, fields, models
 
 
-class MailComposeMessage(osv.TransientModel):
+class MailComposeMessage(models.TransientModel):
     """Add concept of mass mailing campaign to the mail.compose.message wizard
     """
     _inherit = 'mail.compose.message'
 
-    _columns = {
-        'mass_mailing_campaign_id': fields.many2one(
-            'mail.mass_mailing.campaign', 'Mass Mailing Campaign'
-        ),
-        'mass_mailing_id': fields.many2one(
-            'mail.mass_mailing', 'Mass Mailing', ondelete='cascade'
-        ),
-        'mass_mailing_name': fields.char('Mass Mailing'),
-        'mailing_list_ids': fields.many2many(
-            'mail.mass_mailing.list', string='Mailing List'
-        ),
-    }
+    mass_mailing_campaign_id = fields.Many2one('mail.mass_mailing.campaign', string='Mass Mailing Campaign')
+    mass_mailing_id = fields.Many2one('mail.mass_mailing', string='Mass Mailing', ondelete='cascade')
+    mass_mailing_name = fields.Char(string='Mass Mailing')
+    mailing_list_ids = fields.Many2many('mail.mass_mailing.list', string='Mailing List')
 
-    def get_mail_values(self, cr, uid, ids, res_ids, context=None):
+    @api.multi
+    def get_mail_values(self, res_ids):
         """ Override method that generated the mail content by creating the
         mail.mail.statistics values in the o2m of mail_mail, when doing pure
         email mass mailing. """
-        res = super(MailComposeMessage, self).get_mail_values(cr, uid, ids, res_ids, context=context)
-        # TDE: arg was wiards, not ids - but new API -> multi with ensure_one
-        wizard = self.browse(cr, uid, ids[0], context=context)
+        self.ensure_one()
+        res = super(MailComposeMessage, self).get_mail_values(res_ids)
         # use only for allowed models in mass mailing
-        if wizard.composition_mode == 'mass_mail' and \
-                (wizard.mass_mailing_name or wizard.mass_mailing_id) and \
-                wizard.model in [item[0] for item in self.pool['mail.mass_mailing']._get_mailing_model(cr, uid, context=context)]:
-            mass_mailing = wizard.mass_mailing_id
+        if self.composition_mode == 'mass_mail' and \
+                (self.mass_mailing_name or self.mass_mailing_id) and \
+                self.model in [item[0] for item in self.env['mail.mass_mailing']._get_mailing_model()]:
+            mass_mailing = self.mass_mailing_id
             if not mass_mailing:
-                reply_to_mode = wizard.no_auto_thread and 'email' or 'thread'
-                reply_to = wizard.no_auto_thread and wizard.reply_to or False
-                mass_mailing_id = self.pool['mail.mass_mailing'].create(
-                    cr, uid, {
-                        'mass_mailing_campaign_id': wizard.mass_mailing_campaign_id and wizard.mass_mailing_campaign_id.id or False,
-                        'name': wizard.mass_mailing_name,
-                        'template_id': wizard.template_id and wizard.template_id.id or False,
+                reply_to_mode = 'email' if self.no_auto_thread else 'thread'
+                reply_to = self.reply_to if self.no_auto_thread else False
+                mass_mailing = self.env['mail.mass_mailing'].create({
+                        'mass_mailing_campaign_id': self.mass_mailing_campaign_id.id,
+                        'name': self.mass_mailing_name,
+                        'template_id': self.template_id.id,
                         'state': 'done',
                         'reply_to_mode': reply_to_mode,
                         'reply_to': reply_to,
-                        'sent_date': fields.datetime.now(),
-                        'body_html': wizard.body,
-                        'mailing_model': wizard.model,
-                        'mailing_domain': wizard.active_domain,
-                    }, context=context)
-                mass_mailing = self.pool['mail.mass_mailing'].browse(cr, uid, mass_mailing_id, context=context)
+                        'sent_date': fields.Datetime.now(),
+                        'body_html': self.body,
+                        'mailing_model': self.model,
+                        'mailing_domain': self.active_domain,
+                })
             for res_id in res_ids:
                 res[res_id].update({
-                    'mailing_id':  mass_mailing.id,
+                    'mailing_id': mass_mailing.id,
                     'statistics_ids': [(0, 0, {
-                        'model': wizard.model,
+                        'model': self.model,
                         'res_id': res_id,
                         'mass_mailing_id': mass_mailing.id,
                     })],

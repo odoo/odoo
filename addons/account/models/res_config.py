@@ -4,11 +4,11 @@ import time
 import datetime
 from dateutil.relativedelta import relativedelta
 
-import openerp
-from openerp import SUPERUSER_ID
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
-from openerp import api, fields, models, _
-from openerp.exceptions import UserError
+import odoo
+from odoo import SUPERUSER_ID
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class AccountConfigSettings(models.TransientModel):
@@ -40,13 +40,13 @@ class AccountConfigSettings(models.TransientModel):
     has_chart_of_accounts = fields.Boolean(string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Template',
         domain="[('visible','=', True)]")
-    use_anglo_saxon = fields.Boolean(string='Use Anglo-Saxon Accounting', related='company_id.anglo_saxon_accounting')
-    code_digits = fields.Integer(string='# of Digits', related='company_id.accounts_code_digits', help="No. of digits to use for account code")
+    use_anglo_saxon = fields.Boolean(string='Use Anglo-Saxon Accounting *', related='company_id.anglo_saxon_accounting')
+    code_digits = fields.Integer(string='# of Digits *', related='company_id.accounts_code_digits', help="No. of digits to use for account code")
     tax_calculation_rounding_method = fields.Selection(
         [
         ('round_per_line', 'Round calculation of taxes per line'),
         ('round_globally', 'Round globally calculation of taxes '),
-        ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method',
+        ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method *',
         help="""If you select 'Round per line' : for each tax, the tax amount will first be
              computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed,
              leading to the total amount for that tax. If you select 'Round globally': for each tax,
@@ -58,8 +58,8 @@ class AccountConfigSettings(models.TransientModel):
     purchase_tax_id = fields.Many2one('account.tax.template', string='Default purchase tax', oldname="purchase_tax")
     sale_tax_rate = fields.Float(string='Sales tax (%)')
     purchase_tax_rate = fields.Float(string='Purchase tax (%)')
-    bank_account_code_prefix = fields.Char(string='Bank Accounts Prefix', related='company_id.bank_account_code_prefix', help='Define the code prefix for the bank accounts', oldname='bank_account_code_char')
-    cash_account_code_prefix = fields.Char(string='Cash Accounts Prefix', related='company_id.cash_account_code_prefix', help='Define the code prefix for the cash accounts')
+    bank_account_code_prefix = fields.Char(string='Bank Accounts Prefix *', related='company_id.bank_account_code_prefix', help='Define the code prefix for the bank accounts', oldname='bank_account_code_char')
+    cash_account_code_prefix = fields.Char(string='Cash Accounts Prefix *', related='company_id.cash_account_code_prefix', help='Define the code prefix for the cash accounts')
     template_transfer_account_id = fields.Many2one('account.account.template', help="Intermediary account used when moving money from a liquidity account to another")
     transfer_account_id = fields.Many2one('account.account',
         related='company_id.transfer_account_id',
@@ -85,6 +85,10 @@ class AccountConfigSettings(models.TransientModel):
     group_analytic_accounting = fields.Boolean(string='Analytic accounting',
         implied_group='analytic.group_analytic_accounting',
         help="Allows you to use the analytic accounting.")
+    group_warning_account = fields.Selection([
+            (0, 'All the partners can be used in invoices'),
+            (1, 'An informative or blocking warning can be set on a partner')
+            ], "Warning", implied_group='account.group_warning_account')
     currency_exchange_journal_id = fields.Many2one('account.journal',
         related='company_id.currency_exchange_journal_id',
         string="Rate Difference Journal",)
@@ -136,6 +140,10 @@ class AccountConfigSettings(models.TransientModel):
     module_account_bank_statement_import_ofx = fields.Boolean("Import in .ofx format",
         help='Get your bank statements from your bank and import them in Odoo in the .OFX format.\n'
             '-This installs the module account_bank_statement_import_ofx.')
+    module_account_bank_statement_import_csv = fields.Boolean("Import in .csv format",
+        help='Get your bank statements from your bank and import them in Odoo in the .CSV format.\n'
+            '-This installs the module account_bank_statement_import_csv.')
+    overdue_msg = fields.Text(related='company_id.overdue_msg', string='Overdue Payments Message *')
 
 
     @api.model
@@ -165,8 +173,8 @@ class AccountConfigSettings(models.TransientModel):
             ir_values = self.env['ir.values']
             taxes_id = ir_values.get_default('product.template', 'taxes_id', company_id = self.company_id.id)
             supplier_taxes_id = ir_values.get_default('product.template', 'supplier_taxes_id', company_id = self.company_id.id)
-            self.default_sale_tax_id = isinstance(taxes_id, list) and taxes_id[0] or taxes_id
-            self.default_purchase_tax_id = isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id
+            self.default_sale_tax_id = isinstance(taxes_id, list) and len(taxes_id) > 0 and taxes_id[0] or taxes_id
+            self.default_purchase_tax_id = isinstance(supplier_taxes_id, list) and len(supplier_taxes_id) > 0 and supplier_taxes_id[0] or supplier_taxes_id
         return {}
 
     @api.onchange('chart_template_id')
@@ -181,10 +189,10 @@ class AccountConfigSettings(models.TransientModel):
                 ir_values_obj = self.env['ir.values']
                 # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 sale_tax = tax_templ_obj.search(
-                    [('chart_template_id', '=', self.chart_template_id.id), ('type_tax_use', '=', 'sale')], limit=1,
+                    [('chart_template_id', 'parent_of', self.chart_template_id.id), ('type_tax_use', '=', 'sale')], limit=1,
                     order="sequence, id desc")
                 purchase_tax = tax_templ_obj.search(
-                    [('chart_template_id', '=', self.chart_template_id.id), ('type_tax_use', '=', 'purchase')], limit=1,
+                    [('chart_template_id', 'parent_of', self.chart_template_id.id), ('type_tax_use', '=', 'purchase')], limit=1,
                     order="sequence, id desc")
                 self.sale_tax_id = sale_tax
                 self.purchase_tax_id = purchase_tax
@@ -225,8 +233,10 @@ class AccountConfigSettings(models.TransientModel):
     def set_product_taxes(self):
         """ Set the product taxes if they have changed """
         ir_values_obj = self.env['ir.values']
-        ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax_id.id] if self.default_sale_tax_id else False, for_all_users=True, company_id=self.company_id.id)
-        ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id] if self.default_purchase_tax_id else False, for_all_users=True, company_id=self.company_id.id)
+        if self.default_sale_tax_id:
+            ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax_id.id], for_all_users=True, company_id=self.company_id.id)
+        if self.default_purchase_tax_id:
+            ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id], for_all_users=True, company_id=self.company_id.id)
 
     @api.multi
     def set_chart_of_accounts(self):
@@ -245,8 +255,8 @@ class AccountConfigSettings(models.TransientModel):
                 'purchase_tax_rate': self.purchase_tax_rate,
                 'complete_tax_set': self.complete_tax_set,
                 'currency_id': self.currency_id.id,
-                'bank_account_code_prefix': self.bank_account_code_prefix,
-                'cash_account_code_prefix': self.cash_account_code_prefix,
+                'bank_account_code_prefix': self.bank_account_code_prefix or self.chart_template_id.bank_account_code_prefix,
+                'cash_account_code_prefix': self.cash_account_code_prefix or self.chart_template_id.cash_account_code_prefix,
             })
             wizard.execute()
 

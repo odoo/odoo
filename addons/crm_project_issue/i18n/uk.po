@@ -3,15 +3,18 @@
 # * crm_project_issue
 # 
 # Translators:
-# Bogdan, 2016
+# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
+# ТАрас <tratatuta@i.ua>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Yaroslav Molochko <onorua@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-02-13 14:52+0000\n"
-"Last-Translator: Bogdan\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Yaroslav Molochko <onorua@gmail.com>, 2016\n"
+"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -24,6 +27,8 @@ msgid ""
 "<span class=\"o_stat_text\">Convert To</span>\n"
 "                            <span class=\"o_stat_text\">Issue</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Перетворити в</span>\n"
+"                            <span class=\"o_stat_text\">Проблему</span>"
 
 #. module: crm_project_issue
 #: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
@@ -35,17 +40,12 @@ msgstr "Скасувати"
 #: model:ir.ui.view,arch_db:crm_project_issue.crm_case_form_view_leads_project_issue
 #: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
 msgid "Convert to Issue"
-msgstr ""
+msgstr "Конвертувати на скаргу"
 
 #. module: crm_project_issue
 #: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
 msgid "Create Issue"
-msgstr ""
-
-#. module: crm_project_issue
-#: selection:crm.lead2projectissue.wizard,action:0
-msgid "Create a new customer"
-msgstr ""
+msgstr "Створити проблему"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_create_uid
@@ -58,29 +58,14 @@ msgid "Created on"
 msgstr "Дата створення"
 
 #. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_partner_id
-msgid "Customer"
-msgstr "Клієнт"
-
-#. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_display_name
 msgid "Display Name"
-msgstr "Показати ім'я"
-
-#. module: crm_project_issue
-#: selection:crm.lead2projectissue.wizard,action:0
-msgid "Do not link to a customer"
-msgstr ""
-
-#. module: crm_project_issue
-#: model:ir.model,name:crm_project_issue.model_crm_lead2projectissue_wizard
-msgid "Handle partner binding or generation in CRM wizards."
-msgstr ""
+msgstr "Назва для відображення"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_id
 msgid "ID"
-msgstr "ID"
+msgstr "ІД"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard___last_update
@@ -100,12 +85,7 @@ msgstr "Останнє оновлення"
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_lead_id
 msgid "Lead"
-msgstr ""
-
-#. module: crm_project_issue
-#: selection:crm.lead2projectissue.wizard,action:0
-msgid "Link to an existing customer"
-msgstr ""
+msgstr "Привід"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_project_id
@@ -113,6 +93,6 @@ msgid "Project"
 msgstr "Проект"
 
 #. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_action
-msgid "Related Customer"
+#: model:ir.model,name:crm_project_issue.model_crm_lead2projectissue_wizard
+msgid "crm.lead2projectissue.wizard"
 msgstr ""

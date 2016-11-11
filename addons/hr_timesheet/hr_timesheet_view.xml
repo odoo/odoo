@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <menuitem id="timesheet_menu_root" name="Timesheets" sequence="55" groups="base.group_user" web_icon="hr_timesheet,static/description/icon_timesheet.png"/>
         <menuitem id="menu_hr_time_tracking" name="My Timesheet" parent="timesheet_menu_root" sequence="5" />
+
         <record id="hr_timesheet_line_tree" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.hr_timesheet</field>
             <field name="model">account.analytic.line</field>
@@ -11,10 +12,21 @@
                     <field name="date"/>
                     <field name="user_id" required="1" options='{"no_open": True}'/>
                     <field name="name"/>
-                    <field name="project_id" options="{'no_open': True, 'no_create': True}" required="1"/>
-                    <field name="task_id" options="{'no_open': True, 'no_create': True}" domain="[('project_id', '=', project_id)]"/>
+                    <field name="project_id" required="1"/>
+                    <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
                     <field name="unit_amount" string="Duration" sum="Total time" widget="float_time"/>
                 </tree>
+            </field>
+        </record>
+        <record id="view_hr_timesheet_line_pivot" model="ir.ui.view">
+            <field name="name">account.analytic.line.pivot</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <pivot string="Timesheet">
+                    <field name="user_id" type="row"/>
+                    <field name="date" interval="month" type="col"/>
+                    <field name="unit_amount" type="measure"/>
+                </pivot>
             </field>
         </record>
         <record id="hr_timesheet_line_form" model="ir.ui.view">
@@ -39,6 +51,7 @@
                     <field name="project_id"/>
                     <field name="task_id"/>
                     <field name="name"/>
+                    <field name="department_id"/>
                     <group expand="0" string="Group By">
                         <filter string="Users" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Project" domain="[]" context="{'group_by':'project_id'}"/>
@@ -51,12 +64,8 @@
         </record>
 
         <record id="act_hr_timesheet_line" model="ir.actions.act_window">
-            <field name="domain">[]</field> <!-- reset to empty -->
-            <field name="context">{}</field> <!-- reset to empty -->
             <field name="name">Activities</field>
             <field name="res_model">account.analytic.line</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="hr_timesheet_line_form"/>
             <field name="domain">[('project_id', '!=', False)]</field>
             <field name="context">{"search_default_today":1}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
@@ -71,10 +80,17 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window.view" id="action_open_timesheet_tree">
-            <field name="sequence" eval="1"/>
+        <record model="ir.actions.act_window.view" id="act_hr_timesheet_line_view_tree">
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="hr_timesheet_line_tree"/>
+            <field name="sequence">1</field>
+            <field name="view_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+            <field name="act_window_id" ref="act_hr_timesheet_line"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="act_hr_timesheet_line_view_form">
+            <field name="view_mode">form</field>
+            <field name="sequence">2</field>
+            <field name="view_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="act_window_id" ref="act_hr_timesheet_line"/>
         </record>
 
@@ -82,4 +98,4 @@
             name="Detailed Activities"/>
 
     </data>
-</openerp>
+</odoo>

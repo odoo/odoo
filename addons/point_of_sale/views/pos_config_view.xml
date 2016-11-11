@@ -5,13 +5,6 @@
         <field name="model">pos.config</field>
         <field name="arch" type="xml">
             <form string="Point of Sale Configuration">
-                <header>
-                    <button string="Set to Active" name="set_active" type="object" states="inactive,deprecated"/>
-                    <button string="Set to Inactive" name="set_inactive" type="object" states="active" />
-                    <button string="Set to Deprecated" name="set_deprecate" type="object" states="active,inactive" />
-                    <field name="state" widget="statusbar" statusbar_visible="active,inactive,deprecated" statusbar_colors='{"deprecated" : "red"}' nolabel="1"/>
-                </header>
-
                 <sheet>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
@@ -21,11 +14,13 @@
                         <field name="company_id" groups="base.group_multi_company"/>
                         <field name="pricelist_id" groups="product.group_sale_pricelist"/>
                         <field name="journal_id" widget="selection"/>
+                        <field name="invoice_journal_id" widget="selection"/>
                         <field name="group_by" groups="account.group_account_user"/>
                         <field name="barcode_nomenclature_id" />
                         <field name="sequence_id" readonly="1" groups="base.group_no_one"/>
                         <field name="fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}"/>
                         <field name="default_fiscal_position_id" options="{'no_create': True}"/>
+                        <field name="active"/>
                         <field name="currency_id" invisible="1"/>
                     </group>
                     <separator string="Available Payment Methods" colspan="4"/>
@@ -50,7 +45,6 @@
                             <field name="iface_print_auto" />
                             <field name="iface_display_categ_images" />
                             <field name="iface_print_skip_screen"  attrs="{'invisible' : [('iface_print_auto', '=', False)]}" />
-                            <field name="cash_control" />
                         </group>
                     </group>
                     <group string="Hardware Proxy / PosBox" >
@@ -59,6 +53,16 @@
                         <field name="iface_scan_via_proxy" string="Barcode Scanner"/>
                         <field name="iface_electronic_scale" />
                         <field name="iface_cashdrawer" />
+                    </group>
+                    <group string="Cash Control">
+                        <field name="cash_control"/>
+                        <field name="default_cashbox_lines_ids" attrs="{'invisible': [('cash_control', '=', False)]}">
+                            <tree string="Cashbox" editable="bottom">
+                                <field name="coin_value"/>
+                                <field name="number"/>
+                                <field name="subtotal"/>
+                            </tree>
+                        </field>
                     </group>
                     <group name="receipt" string="Receipt" >
                         <field name="receipt_header" string="Header" placeholder="A custom receipt header message"/>
@@ -74,10 +78,9 @@
         <field name="name">pos.config.tree.view</field>
         <field name="model">pos.config</field>
         <field name="arch" type="xml">
-            <tree string="Point of Sale Configuration" decoration-muted="state == 'inactive'">
+            <tree string="Point of Sale Configuration">
                 <field name="name" />
                 <field name="stock_location_id" groups="stock.group_stock_multi_locations"/>
-                <field name="state" />
             </tree>
         </field>
     </record>
@@ -88,8 +91,7 @@
         <field name="arch" type="xml">
             <search string="Point of Sale Config">
                 <field name="name" />
-                <filter string="Active" domain="[('state', '=', 'active')]" />
-                <filter string="Inactive" domain="[('state', '=', 'inactive')]" />
+                <filter string="Inactive" domain="[('active', '=', False)]" />
                 <field name="stock_location_id" groups="stock.group_stock_multi_locations" />
             </search>
         </field>
@@ -123,6 +125,7 @@
         <field name="res_model">pos.config</field>
         <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form</field>
+        <field name="domain"></field>
         <field name="search_view_id" ref="view_pos_config_search" />
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">

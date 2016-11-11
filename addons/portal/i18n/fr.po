@@ -3,16 +3,23 @@
 # * portal
 # 
 # Translators:
-# Martin Trigaux, 2015
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Florian Hatat <mininet@wanadoo.fr>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
+# Lucas Deliege <lud@odoo.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Kévin R. <realrom@hotmail.fr>, 2016
+# Olivier Dony <odo@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-25 12:17+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Olivier Dony <odo@odoo.com>, 2016\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,40 +30,29 @@ msgstr ""
 #: model:mail.template,body_html:portal.mail_template_data_portal_welcome
 msgid ""
 "\n"
-"            \t<p>\n"
-"                    Dear ${object.user_id.name or ''},\n"
-"                </p>\n"
-"                <p>\n"
-"                    You have been given access to ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
-"                </p>\n"
-"                <p>\n"
-"                    Your login account data is:\n"
-"                </p>\n"
-"                <ul>\n"
-"                    <li>Username: ${object.user_id.login or ''}</li>\n"
-"                </ul>\n"
-"                <ul>\n"
-"                    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
-"                </ul>\n"
-"                <ul>\n"
-"                \t<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
-"                </ul>\n"
-"                <p>\n"
-"                \tYou can set or change your password via the following url:\n"
-"                </p>\n"
-"                <ul>\n"
-"                    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
-"                </ul>\n"
-"                <p>\n"
-"                \t${object.wizard_id.welcome_message or ''}\n"
-"                </p>\n"
-"                <p>---<br />\n"
-"                    Odoo - Open Source Business Applications<br />\n"
-"                    http://www.odoo.com<br />\n"
-"                </p>\n"
-"            \n"
-"            "
-msgstr "\n            \t<p>\n                    Bonjour ${object.user_id.name or ''},\n                </p>\n                <p>\n                    On vous a donné accès à ${object.wizard_id.portal_id.name} de ${user.company_id.name}.\n                </p>\n                <p>\n                    Vos informations de connexion sont :\n                </p>\n                <ul>\n                    <li>utilisateur : ${object.user_id.login or ''}</li>\n                </ul>\n                <ul>\n                    <li>Portail: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n                </ul>\n                <ul>\n                \t<li>Base de données : ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n                </ul>\n                <p>\n                \tVous pouvez choisir ou changer votre mot de passe avec le lien suivant :\n                </p>\n                <ul>\n                    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n                </ul>\n                <p>\n                \t${object.wizard_id.welcome_message or ''}\n                </p>\n                <p>---<br />\n                    Odoo - Applications de gestion libres<br />\n                    http://www.odoo.com<br />\n                </p>\n            \n            "
+"<p>\n"
+"    Dear ${object.user_id.name or ''},\n"
+"</p>\n"
+"<p>\n"
+"    You have been given access to ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
+"</p>\n"
+"<p>\n"
+"    Your login account data is:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Username: ${object.user_id.login or ''}</li>\n"
+"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"\t<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"</ul>\n"
+"<p>\n"
+"\tYou can set or change your password via the following url:\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"${object.wizard_id.welcome_message or ''}"
+msgstr ""
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
@@ -64,19 +60,9 @@ msgid "Access Groups"
 msgstr "Groupes d'accès"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_after_sales
-msgid "After Sale Services"
-msgstr "Service après-vente"
-
-#. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Apply"
 msgstr "Appliquer"
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Billing"
-msgstr "Facturation"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -89,7 +75,7 @@ msgid "Contact"
 msgstr "Contact"
 
 #. module: portal
-#: model:ir.ui.view,arch_db:portal.wizard_user_tree_view
+#: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Contacts"
 msgstr "Contacts"
 
@@ -141,19 +127,19 @@ msgstr "Message d'invitation"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard___last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user___last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_write_uid
 msgid "Last Updated by"
-msgstr "Mis à jour par"
+msgstr "Dernière mise à jour par"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_write_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_write_date
 msgid "Last Updated on"
-msgstr "Mis à jour le"
+msgstr "Dernière mise à jour le"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_user_id
@@ -168,7 +154,6 @@ msgstr "Groupes non-portail"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
 #: model:ir.model.fields,field_description:portal.field_res_groups_is_portal
-#: model:ir.ui.menu,name:portal.portal_menu
 msgid "Portal"
 msgstr "Portail"
 
@@ -190,35 +175,35 @@ msgid "Portal User Config"
 msgstr "Paramétrage du portail utilisateur"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_projects
-msgid "Projects"
-msgstr "Projets"
-
-#. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
-msgstr "Sélectionnez dans la liste ci-dessous les contacts qui doivent faire partie du portail.\nLes adresses courriels des contacts sélectionnés doivent être correctes et uniques.\nSi nécessaire, vous pouvez corriger ces adresses directement dans la liste."
+msgstr ""
+"Sélectionnez dans la liste ci-dessous les contacts qui doivent faire partie du portail.\n"
+"Les adresses courriels des contacts sélectionnés doivent être correctes et uniques.\n"
+"Si nécessaire, vous pouvez corriger ces adresses directement dans la liste."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:114
+#: code:addons/portal/wizard/portal_wizard.py:106
 #, python-format
 msgid "Several contacts have the same email: "
 msgstr "Plusieurs contacts ont la même adresse courriel :"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:111
+#: code:addons/portal/wizard/portal_wizard.py:103
 #, python-format
 msgid "Some contacts don't have a valid email: "
 msgstr "Des contacts ont une adresse courriel incorrecte :"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:117
+#: code:addons/portal/wizard/portal_wizard.py:109
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
-msgstr "Des contacts ont la même adresse courriel qu'un utilisateur existant du portail :"
+msgstr ""
+"Des contacts ont la même adresse courriel qu'un utilisateur existant du "
+"portail :"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
@@ -228,21 +213,28 @@ msgstr "Le portail auquel les utilisateurs peuvent être ajoutés ou enlevés."
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
-msgstr "Ce texte est inclus dans le courriel envoyé aux nouveaux utilisateurs du portail."
+msgstr ""
+"Ce texte est inclus dans le courriel envoyé aux nouveaux utilisateurs du "
+"portail."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
 msgid "This text is included in the email sent to new users of the portal."
-msgstr "Ce texte est inclus dans les courriels envoyés aux nouveaux utilisateurs du portail."
+msgstr ""
+"Ce texte est inclus dans les courriels envoyés aux nouveaux utilisateurs du "
+"portail."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:120
+#: code:addons/portal/wizard/portal_wizard.py:112
 #, python-format
 msgid ""
 "To resolve this error, you can: \n"
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
-msgstr "Pour résoudre cette erreur, vous pouvez:\n- Corriger les adresses mails des contacts pertinents\n- N'autoriser l'accès qu'à des contacts ayant une adresse mail unique."
+msgstr ""
+"Pour résoudre cette erreur, vous pouvez:\n"
+"- Corriger les adresses mails des contacts pertinents\n"
+"- N'autoriser l'accès qu'à des contacts ayant une adresse mail unique."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
@@ -259,9 +251,11 @@ msgstr "Assistant"
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."
-msgstr "Vous devez avoir une adresse de courriel définie dans vos préférences utilisateur pour envoyer des courriels."
+msgstr ""
+"Vous devez avoir une adresse de courriel définie dans vos préférences "
+"utilisateur pour envoyer des courriels."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
-msgid "Your Odoo account at ${user.company_id.name|safe}"
-msgstr "Votre compte Odoo chez ${user.company_id.name|safe}"
+msgid "Your Odoo account at ${user.company_id.name}"
+msgstr ""

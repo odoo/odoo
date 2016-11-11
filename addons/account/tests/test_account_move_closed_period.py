@@ -1,7 +1,7 @@
-from openerp.addons.account.tests.account_test_classes import AccountingTestCase
-from openerp.osv.orm import except_orm
+from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.osv.orm import except_orm
 from datetime import datetime, timedelta
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 class TestPeriodState(AccountingTestCase):
     """
@@ -10,16 +10,14 @@ class TestPeriodState(AccountingTestCase):
 
     def setUp(self):
         super(TestPeriodState, self).setUp()
-        cr, uid = self.cr, self.uid
         self.day_before_yesterday = datetime.now() - timedelta(2)
         self.yesterday = datetime.now() - timedelta(1)
-        self.user_id = self.env['res.users'].browse(self.uid)
+        self.user_id = self.env.user
         self.user_id.company_id.write({'fiscalyear_lock_date': self.yesterday.strftime(DEFAULT_SERVER_DATE_FORMAT)})
         self.sale_journal_id = self.env['account.journal'].search([('type', '=', 'sale')])[0]
         self.account_id = self.env['account.account'].search([('internal_type', '=', 'receivable')])[0]
 
     def test_period_state(self):
-        cr, uid = self.cr, self.uid
         with self.assertRaises(except_orm):
             move = self.env['account.move'].create({
                 'name': '/',

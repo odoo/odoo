@@ -3,14 +3,17 @@
 # * website_event_sale
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
+# ТАрас <tratatuta@i.ua>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-01-25 18:17+0000\n"
-"Last-Translator: Bogdan\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: ТАрас <tratatuta@i.ua>, 2016\n"
+"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,7 +23,7 @@ msgstr ""
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "<span>Free</span>"
-msgstr ""
+msgstr "<span>Вільно</span>"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
@@ -30,7 +33,7 @@ msgstr "<span>Необмежений</span>"
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "<span>left</span>"
-msgstr ""
+msgstr "<span>залишилось</span>"
 
 #. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product_intrastat_id
@@ -40,12 +43,12 @@ msgstr "Intrastat code"
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Only"
-msgstr ""
+msgstr "Тільки"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "Order Now"
-msgstr ""
+msgstr "Замовити зараз"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
@@ -53,14 +56,20 @@ msgid "Product"
 msgstr "Товар"
 
 #. module: website_event_sale
+#: code:addons/website_event_sale/controllers/main.py:61
+#, python-format
+msgid "Registration"
+msgstr "Реєстрація"
+
+#. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Remaining"
-msgstr ""
+msgstr "Залишилось"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order
 msgid "Sales Order"
-msgstr "Sales Order"
+msgstr "Замовлення на продаж"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
@@ -69,32 +78,28 @@ msgid "Sold Out"
 msgstr "Розпродано"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:70
+#: code:addons/website_event_sale/models/sale_order.py:71
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
-msgstr ""
+msgstr "Вибачте, квитки %(ticket)s на подію %(event)s вже розпродано."
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:76
+#: code:addons/website_event_sale/models/sale_order.py:77
 #, python-format
 msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
 " ticket for the %(event)s event."
 msgstr ""
+"Вибачте, тільки %(remaining_seats)d місць залишилось для %(ticket)s квитків "
+"на %(event)s подію."
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:65
-#, python-format
-msgid "Subscription"
-msgstr "Передплата"
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:35
+#: code:addons/website_event_sale/models/sale_order.py:39
 #, python-format
 msgid "The ticket doesn't match with this product."
-msgstr ""
+msgstr "Квиток не співпадає з цим товаром."
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website
 msgid "Website"
-msgstr "Веб-сайт"
+msgstr "Вебсайт"

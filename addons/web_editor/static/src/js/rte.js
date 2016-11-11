@@ -41,14 +41,14 @@ var History = function History ($editable) {
     this.applySnap = function (oSnap) {
         var $editable = $(oSnap.editable);
 
-        if (!!document.documentMode) {
+        if (document.documentMode) {
             $editable.removeAttr("contentEditable").removeProp("contentEditable");
         }
 
         $editable.html(oSnap.contents).scrollTop(oSnap.scrollTop);
         $(".oe_overlay").remove();
         $(".note-control-selection").hide();
-        
+
         $editable.trigger("content_changed");
 
         try {
@@ -68,7 +68,7 @@ var History = function History ($editable) {
         });
 
 
-        setTimeout(function () {
+        _.defer(function () {
             var target = dom.isBR(r.sc) ? r.sc.parentNode : dom.node(r.sc);
             if (!target) {
                 return;
@@ -81,7 +81,7 @@ var History = function History ($editable) {
             target.dispatchEvent(evt);
 
             $editable.trigger("keyup");
-        },0);
+        });
     };
 
     this.undo = function () {
@@ -136,7 +136,7 @@ var History = function History ($editable) {
         return aUndo.length > pos+1;
     };
 
-    var toSnap, split;
+    var toSnap;
     this.recordUndo = function ($editable, event, internal_history) {
         var self = this;
         if (!$editable) {
@@ -205,7 +205,7 @@ var history = new History();
 $.extend($.expr[':'],{
     o_editable: function (node,i,m) {
         while (node) {
-            if (node.className) {
+            if (node.className && _.isString(node.className)) {
                 if (node.className.indexOf('o_not_editable')!==-1 ) {
                     return false;
                 }
@@ -296,40 +296,33 @@ var RTE = Widget.extend({
 
         $.fn.carousel = this.edit_bootstrap_carousel;
 
-        this._onKeydown = _.bind(this.onKeydown, this);
-        $(document).on('keydown', this, this._onKeydown);
-        this._onMousedown = _.bind(this.onMousedown, this);
-        $(document).on('mousedown activate', this, this._onMousedown);
-        this._onMouseup = _.bind(this.onMouseup, this);
-        $(document).on('mouseup', this, this._onMouseup);
+        $(document).on("keydown.rte", this, this.onKeydown.bind(this));
+        $(document).on("mousedown.rte activate.rte", this, this.onMousedown.bind(this));
+        $(document).on("mouseup.rte", this, this.onMouseup.bind(this));
 
         $('.o_not_editable').attr("contentEditable", false);
 
         var $editable = this.editable();
 
-        $editable.addClass('o_editable').data('rte', self);
-
-        $editable.each(function () {
+        $editable.addClass('o_editable')
+        .data('rte', this)
+        .each(function () {
             var $node = $(this);
 
             // add class to display inline-block for empty t-field
-            if(window.getComputedStyle(this).display === "inline" && $node.data('oe-type') !== "image") {
+            if (window.getComputedStyle(this).display === "inline" && $node.data('oe-type') !== "image") {
                 $node.addClass('o_is_inline_editable');
             }
-
             $node.data('initInnerHTML', $node.html());
         });
 
         // start element observation
         $(document).on('content_changed', '.o_editable', function (event) {
             self.trigger('change', this);
-            if(!$(this).hasClass('o_dirty')) {
-                $(this).addClass('o_dirty');
-            }
+            $(this).addClass('o_dirty');
         });
 
-        this._onClick = _.bind(this.onClick, this);
-        $('#wrapwrap, .o_editable').on('click', '*', this, this._onClick);
+        $('#wrapwrap, .o_editable').on('click.rte', '*', this, this.onClick.bind(this));
 
         $('body').addClass("editor_enable");
 
@@ -347,15 +340,13 @@ var RTE = Widget.extend({
             });
 
         $(document).trigger('mousedown');
-        self.trigger('rte:start');
+        this.trigger('rte:start');
     },
 
     save: function (context) {
         var self = this;
 
         this.__saved = {}; // list of allready saved views and data
-
-        var editables = history.getEditableHasUndo();
 
         var defs = $('.o_dirty')
             .removeAttr('contentEditable')
@@ -428,7 +419,7 @@ var RTE = Widget.extend({
         var to_escape = escaped_el.find('*').addBack();
         to_escape = to_escape.not(to_escape.filter('object,iframe,script,style,[data-oe-model][data-oe-model!="ir.ui.view"]').find('*').addBack());
         to_escape.contents().each(function () {
-            if(this.nodeType == 3) {
+            if(this.nodeType === 3) {
                 this.nodeValue = $('<div />').text(this.nodeValue).html();
             }
         });
@@ -439,7 +430,7 @@ var RTE = Widget.extend({
         // remove multi edition
         if ($el.data('oe-model')) {
             var key =  $el.data('oe-model')+":"+$el.data('oe-id')+":"+$el.data('oe-field')+":"+$el.data('oe-type')+":"+$el.data('oe-expression');
-            if (this.__saved[key]) return true;
+            if (this.__saved[key]) return $.when();
             this.__saved[key] = true;
         }
         var markup = this.getEscapedElement($el).prop('outerHTML');
@@ -464,12 +455,11 @@ var RTE = Widget.extend({
 
         $.fn.carousel = this.init_bootstrap_carousel;
 
-        $(document).off('keydown', this._onKeydown);
-        $(document).off('mousedown applySnap', this._onMousedown);
-        $(document).off('mouseup', this._onMouseup);
+        $(document).off(".rte");
+        $('#wrapwrap, .o_editable').off('.rte');
+
         $('.o_not_editable').removeAttr("contentEditable");
         $(document).off('content_changed').removeClass('o_is_inline_editable').removeData('rte');
-        $('#wrapwrap, .o_editable').off('click', this._onClick);
         $(document).tooltip('destroy');
         $('body').removeClass("editor_enable");
         this.trigger('rte:stop');
@@ -483,23 +473,23 @@ var RTE = Widget.extend({
         this.stop();
     },
 
-    onClick: function (event) {
-        event.preventDefault();
+    onClick: function (e) {
+        e.preventDefault();
     },
 
     // handler for cancel editor
     onKeydown: function (event) {
         if (event.keyCode === 27 && !$('.modal-content:visible').length) {
-            setTimeout(function () {
+            _.defer(function () {
                 $('#editor-top-navbar [data-action="cancel"]').click();
                 var $modal = $('.modal-content > .modal-body').parents(".modal:first");
                 $modal.off('keyup.dismiss.bs.modal');
-                setTimeout(function () {
+                _.delay(function () {
                     $modal.on('keyup.dismiss.bs.modal', function () {
                         $(this).modal('hide');
                     });
-                },500);
-            },0);
+                }, 500);
+            });
         }
     },
 
@@ -508,40 +498,42 @@ var RTE = Widget.extend({
         var $target = $(event.target);
         var $editable = $target.closest('.o_editable');
 
-        if (!$editable.size()) {
+        if (!$editable.length) {
             return;
         }
 
         if ($target.is('a')) {
-            // add contenteditable on link to improve its editing behaviour
+            /**
+             * Remove content editable everywhere and add it on the link only so that characters can be added
+             * and removed at the start and at the end of it.
+             */
             $target.attr('contenteditable', true);
-            setTimeout(function () {
-                $editable.attr('contenteditable', false);
+            _.defer(function () {
+                $editable.not($target).attr('contenteditable', false);
+                $target.focus();
             });
-            // once clicked outside, remove contenteditable on link
-            var reactive_editable = function(e){
-                if($target.is(e.target)) {
-                    return;
-                }
+
+            // Once clicked outside, remove contenteditable on link and reactive all
+            $(document).on('mousedown.reactivate_contenteditable', function (e) {
+                if ($target.is(e.target)) return;
                 $target.removeAttr('contenteditable');
                 $editable.attr('contenteditable', true);
-                $(document).off('mousedown', reactive_editable);
-            }
-            $(document).on('mousedown', reactive_editable);
+                $(document).off('mousedown.reactivate_contenteditable');
+            });
         }
 
-        if (this && this.$last && (!$editable.size() || this.$last[0] != $editable[0])) {
+        if (this && this.$last && (!$editable.length || this.$last[0] !== $editable[0])) {
             var $destroy = this.$last;
             history.splitNext();
 
-            setTimeout(function () {
+            _.delay(function () {
                 var id = $destroy.data('note-id');
                 $destroy.destroy().removeData('note-id').removeAttr('data-note-id');
                 $('#note-popover-'+id+', #note-handle-'+id+', #note-dialog-'+id+'').remove();
-            },150); // setTimeout to remove flickering when change to editable zone (re-create an editor)
+            }, 150); // setTimeout to remove flickering when change to editable zone (re-create an editor)
             this.$last = null;
         }
-        if ($editable.size() && (!this.$last || this.$last[0] != $editable[0]) &&
+        if ($editable.length && (!this.$last || this.$last[0] !== $editable[0]) &&
                 ($target.closest('[contenteditable]').attr('contenteditable') || "").toLowerCase() !== 'false') {
 
             $editable.summernote(this.config($editable));
@@ -553,7 +545,7 @@ var RTE = Widget.extend({
             try {
                 document.execCommand('enableObjectResizing', false, false);
                 document.execCommand('enableInlineTableEditing', false, false);
-                document.execCommand( '2D-position', false, false);
+                document.execCommand('2D-position', false, false);
             } catch (e) {}
             document.body.addEventListener('resizestart', function (evt) {evt.preventDefault(); return false;});
             document.body.addEventListener('movestart', function (evt) {evt.preventDefault(); return false;});
@@ -578,14 +570,14 @@ var RTE = Widget.extend({
         var $target = $(event.target);
         var $editable = $target.closest('.o_editable');
 
-        if (!$editable.size()) {
+        if (!$editable.length) {
             return;
         }
 
         var self = this;
-        setTimeout(function () {
+        _.defer(function () {
             self.historyRecordUndo($target, 'activate',  true);
-        },0);
+        });
     },
 
     editable: function () {
@@ -627,8 +619,8 @@ var RTE = Widget.extend({
 
 
 var data = {
-    'history': history,
-    'Class': RTE
+    history: history,
+    Class: RTE
 };
 return data;
 

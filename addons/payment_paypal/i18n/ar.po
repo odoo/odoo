@@ -3,46 +3,21 @@
 # * payment_paypal
 # 
 # Translators:
+# SaFi J. <safi2266@gmail.com>, 2016
+# Mustafa Rawi <mustafa@cubexco.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:23+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>, 2016\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ar\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-
-#. module: payment_paypal
-#: model:payment.acquirer,cancel_msg:payment_paypal.payment_acquirer_paypal
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr ""
-
-#. module: payment_paypal
-#: model:payment.acquirer,done_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr ""
-
-#. module: payment_paypal
-#: model:payment.acquirer,error_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
-
-#. module: payment_paypal
-#: model:payment.acquirer,pending_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token
@@ -55,14 +30,9 @@ msgid "Access Token Validity"
 msgstr "صلاحية رمز الوصول"
 
 #. module: payment_paypal
-#: model:ir.model,name:payment_paypal.model_res_company
-msgid "Companies"
-msgstr "المؤسسات"
-
-#. module: payment_paypal
 #: model:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
 msgid "How to configure your paypal account?"
-msgstr ""
+msgstr "كيف يتم اعداد paypal حساب الخاص بك ؟"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
@@ -73,11 +43,6 @@ msgstr "طريقة السداد الإلكتروني"
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "معاملة السداد"
-
-#. module: payment_paypal
-#: model:payment.acquirer,name:payment_paypal.payment_acquirer_paypal
-msgid "Paypal"
-msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_email_account
@@ -100,10 +65,10 @@ msgid "Paypal TX Details"
 msgstr "تفاصيل PayPal TX"
 
 #. module: payment_paypal
-#: code:addons/payment_paypal/models/paypal.py:186
+#: code:addons/payment_paypal/models/payment.py:134
 #, python-format
 msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
-msgstr ""
+msgstr "حساب Paypal: استلم بيانات بمرجع مفقود (%s) أو txn_id (%s)"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_password
@@ -120,7 +85,9 @@ msgstr "إعادة تعيين إسم المستخدم لواجهة برمجة ا
 msgid ""
 "The Merchant ID is used to ensure communications coming from Paypal are "
 "valid and secured."
-msgstr "معرف التاجر يستخدم للتأكد من أن الاتصالات القادمة من PayPal تكون صالحة ومؤمنة."
+msgstr ""
+"معرف التاجر يستخدم للتأكد من أن الاتصالات القادمة من PayPal تكون صالحة "
+"ومؤمنة."
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction_paypal_txn_type
@@ -136,10 +103,3 @@ msgstr "إستخدام تنبيهات الدفع الفورية"
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_enabled
 msgid "Use Rest API"
 msgstr "إستخدم إعادة تعيين واجهة برمجة التطبيق"
-
-#. module: payment_paypal
-#: model:payment.acquirer,pre_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"You will be redirected to the Paypal website after clicking on the payment "
-"button."
-msgstr ""

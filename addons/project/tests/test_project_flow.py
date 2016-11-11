@@ -2,8 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from .test_project_base import TestProjectBase
-from openerp.exceptions import AccessError
-from openerp.tools import mute_logger
+from odoo.tools import mute_logger
 
 
 EMAIL_TPL = """Return-Path: <whatever-2a840@postmaster.twitter.com>
@@ -11,7 +10,7 @@ X-Original-To: {to}
 Delivered-To: {to}
 To: {to}
 cc: {cc}
-Received: by mail1.openerp.com (Postfix, from userid 10002)
+Received: by mail1.odoo.com (Postfix, from userid 10002)
     id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
 Message-ID: {msg_id}
 Date: Tue, 29 Nov 2011 12:43:21 +0530
@@ -37,29 +36,9 @@ class TestProjectFlow(TestProjectBase):
     def test_project_process_project_manager_duplicate(self):
         pigs = self.project_pigs.sudo(self.user_projectmanager)
         dogs = pigs.copy()
-        self.assertEqual(dogs.state, 'open')
         self.assertEqual(len(dogs.tasks), 2, 'project: duplicating a project must duplicate its tasks')
 
-    def test_project_process_project_manager_state(self):
-        pigs = self.project_pigs.sudo(self.user_projectmanager)
-        pigs.state = 'pending'
-        self.assertEqual(pigs.state, 'pending')
-        # Re-open
-        pigs.state = 'open'
-        self.assertEqual(pigs.state, 'open')
-        # Close project
-        pigs.state = 'close'
-        self.assertEqual(pigs.state, 'close')
-        # Re-open
-        pigs.state = 'open'
-        # Copy the project
-        dogs = pigs.copy()
-        self.assertEqual(len(dogs.tasks), 2, 'project: copied project should have copied task')
-        # Cancel the project
-        pigs.state = 'cancelled'
-        self.assertEqual(pigs.state, 'cancelled', 'project: cancelled project should be in cancel state')
-
-    @mute_logger('openerp.addons.mail.mail_thread')
+    @mute_logger('odoo.addons.mail.mail_thread')
     def test_task_process_without_stage(self):
         # Do: incoming mail from an unknown partner on an alias creates a new task 'Frogs'
         task = self.format_and_process(
@@ -86,7 +65,7 @@ class TestProjectFlow(TestProjectBase):
         self.assertEqual(task.project_id.id, self.project_pigs.id, 'project_task: incorrect project')
         self.assertEqual(task.stage_id.sequence, False, "project_task: shouldn't have a stage, i.e. sequence=False")
 
-    @mute_logger('openerp.addons.mail.mail_thread')
+    @mute_logger('odoo.addons.mail.mail_thread')
     def test_task_process_with_stages(self):
         # Do: incoming mail from an unknown partner on an alias creates a new task 'Cats'
         task = self.format_and_process(

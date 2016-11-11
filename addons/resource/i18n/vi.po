@@ -3,14 +3,20 @@
 # * resource
 # 
 # Translators:
+# lam nguyen <lamev.inc@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# fanha99 <fanha99@hotmail.com>, 2016
+# son dang <son.dang@doda100.com>, 2016
+# Phạm Lân <phamquanglan@gmail.com>, 2016
+# Hoang Loc Le Huu <loclhh@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-12-29 08:18+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/vi/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Hoang Loc Le Huu <loclhh@gmail.com>, 2016\n"
+"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:689
+#: code:addons/resource/models/resource.py:689
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (bản sao)"
@@ -26,7 +32,7 @@ msgstr "%s (bản sao)"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_active
 msgid "Active"
-msgstr "Kích hoạt"
+msgstr "Có hiệu lực"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -61,7 +67,7 @@ msgstr "Được tạo bởi"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_create_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource_create_date
 msgid "Created on"
-msgstr "Được tạo vào"
+msgstr "Thời điểm tạo"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_dayofweek
@@ -105,7 +111,8 @@ msgid "End Date"
 msgstr "Ngày kết thúc"
 
 #. module: resource
-#: constraint:resource.calendar.leaves:0
+#: code:addons/resource/models/resource.py:738
+#, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
 
@@ -118,7 +125,7 @@ msgstr "Thứ sáu"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Group By"
-msgstr "Group By"
+msgstr "Nhóm theo"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
@@ -171,7 +178,7 @@ msgstr "Sửa lần cuối vào"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_write_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource_write_uid
 msgid "Last Updated by"
-msgstr "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_write_date

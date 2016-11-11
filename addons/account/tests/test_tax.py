@@ -1,6 +1,6 @@
-from openerp.addons.account.tests.account_test_users import AccountTestUsers
-from openerp.tests.common import TransactionCase
-from openerp.tools import float_compare
+from odoo.addons.account.tests.account_test_users import AccountTestUsers
+from odoo.tests.common import TransactionCase
+from odoo.tools import float_compare
 import time
 
 
@@ -43,9 +43,45 @@ class TestTax(AccountTestUsers):
                 (4, self.percent_tax.id, 0)
             ]
         })
+        self.group_tax_bis = self.tax_model.create({
+            'name': "Group tax bis",
+            'amount_type': 'group',
+            'amount': 0,
+            'sequence': 6,
+            'children_tax_ids': [
+                (4, self.fixed_tax.id, 0),
+                (4, self.percent_tax.id, 0)
+            ]
+        })
+        self.group_of_group_tax = self.tax_model.create({
+            'name': "Group of group tax",
+            'amount_type': 'group',
+            'amount': 0,
+            'sequence': 7,
+            'children_tax_ids': [
+                (4, self.group_tax.id, 0),
+                (4, self.group_tax_bis.id, 0)
+            ]
+        })
         self.bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', self.account_manager.company_id.id)])[0]
         self.bank_account = self.bank_journal.default_debit_account_id
         self.expense_account = self.env['account.account'].search([('user_type_id.type', '=', 'payable')], limit=1) #Should be done by onchange later
+
+    def test_tax_group_of_group_tax(self):
+        self.fixed_tax.include_base_amount = True
+        self.group_tax.include_base_amount = True
+        self.group_of_group_tax.include_base_amount = True
+        res = self.group_of_group_tax.compute_all(200.0)
+        self.assertEquals(res['total_excluded'], 200.0)
+        # After calculation of first group
+        # base = 210
+        # total_included = 231
+        # Base of the first grouped is passed
+        # Base after the second group (220) is dropped.
+        # Base of the group of groups is passed out,
+        # so we obtain base as after first group
+        self.assertEquals(res['base'], 210.0)
+        self.assertEquals(res['total_included'], 263.0)
 
     def test_tax_group(self):
         res = self.group_tax.compute_all(200.0)
@@ -120,7 +156,7 @@ class TestTax(AccountTestUsers):
                 })],
             'company_id': company_id,
         }
-        move = self.env['account.move'].create(vals)
+        move = self.env['account.move'].with_context(apply_taxes=True).create(vals)
 
 
         aml_fixed_tax = move.line_ids.filtered(lambda l: l.tax_line_id.id == self.fixed_tax.id)

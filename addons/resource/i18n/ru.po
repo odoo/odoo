@@ -3,14 +3,22 @@
 # * resource
 # 
 # Translators:
+# Максим Дронь <dronmax@gmail.com>, 2016
+# KingOPl Slav <87slava13@gmail.com>, 2016
+# Masha Koc <mariya.kos.ua@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Sergey Vilizhanin <sv@grimmette.ru>, 2016
+# Denis Trepalin <zekarious@gmail.com>, 2016
+# Alex Puchkov <ap@alteco.co>, 2016
+# Denis Baranov <baranov@itlibertas.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-11-13 19:44+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Denis Baranov <baranov@itlibertas.com>, 2016\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,7 +26,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:689
+#: code:addons/resource/models/resource.py:689
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копия)"
@@ -26,7 +34,7 @@ msgstr "%s (копия)"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_active
 msgid "Active"
-msgstr "Активен"
+msgstr "Активно"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -53,7 +61,7 @@ msgstr "Компания"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource_create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_create_date
@@ -61,7 +69,7 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_create_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource_create_date
 msgid "Created on"
-msgstr "Создан"
+msgstr "Создано"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_dayofweek
@@ -86,7 +94,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
@@ -105,7 +113,8 @@ msgid "End Date"
 msgstr "Дата окончания"
 
 #. module: resource
-#: constraint:resource.calendar.leaves:0
+#: code:addons/resource/models/resource.py:738
+#, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr "Ошибка! Дата начала отгула должна быть раньше даты завершения."
 
@@ -143,19 +152,23 @@ msgstr "ID"
 msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
-msgstr "Если пусто, это не рабочий день для всей компании. Если ресурс установлен, отдых/отпуск только на этот ресурс"
+msgstr ""
+"Если пусто, это не рабочий день для всей компании. Если ресурс установлен, "
+"отдых/отпуск только на этот ресурс"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr "Если значение активного поля — Ложь, это позволит вам скрыть запись ресурса, не удаляя ее."
+msgstr ""
+"Если значение активного поля — Ложь, это позволит вам скрыть запись ресурса,"
+" не удаляя ее."
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Inactive"
-msgstr "Неактивен"
+msgstr "Не активно"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar___last_update
@@ -171,7 +184,7 @@ msgstr "Последний раз изменено"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_write_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource_write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновлено"
+msgstr "Последний раз обновил"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_write_date
@@ -214,7 +227,7 @@ msgstr "Понедельник"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_name
 msgid "Name"
-msgstr "Название"
+msgstr "Имя"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
@@ -236,7 +249,7 @@ msgstr "Пользователь управляющий доступом к ре
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Resource"
-msgstr "Объект"
+msgstr "Ресурс"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
@@ -336,7 +349,11 @@ msgid ""
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
 "show a load of 100% for this phase by default, but if we put a efficiency of"
 " 200%, then his load will only be 50%."
-msgstr "Это поле изображают эффективность ресурса для завершения задачи. например ресурс поместить в одну фазу на этап 5 дней с 5 задачами, возложенными на него, покажет нагрузку 100% в течение этой фазы, по умолчанию, но если мы ставим эффективность 200%, то его нагрузка будет только 50%."
+msgstr ""
+"Это поле изображают эффективность ресурса для завершения задачи. например "
+"ресурс поместить в одну фазу на этап 5 дней с 5 задачами, возложенными на "
+"него, покажет нагрузку 100% в течение этой фазы, по умолчанию, но если мы "
+"ставим эффективность 200%, то его нагрузка будет только 50%."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0

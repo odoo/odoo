@@ -3,16 +3,16 @@
 # * crm_project_issue
 # 
 # Translators:
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2015
+# Olivier Dony <odo@odoo.com>, 2016
+# Xavier Belmere <Info@cartmeleon.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-25 12:34+0000\n"
-"Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
-"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Xavier Belmere <Info@cartmeleon.com>, 2016\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -24,7 +24,9 @@ msgstr ""
 msgid ""
 "<span class=\"o_stat_text\">Convert To</span>\n"
 "                            <span class=\"o_stat_text\">Issue</span>"
-msgstr "<span class=\"o_stat_text\">Convertir en</span>\n<span class=\"o_stat_text\">Incident</span>"
+msgstr ""
+"<span class=\"o_stat_text\">Convertir en</span>\n"
+"<span class=\"o_stat_text\">Incident</span>"
 
 #. module: crm_project_issue
 #: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
@@ -36,17 +38,12 @@ msgstr "Annuler"
 #: model:ir.ui.view,arch_db:crm_project_issue.crm_case_form_view_leads_project_issue
 #: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
 msgid "Convert to Issue"
-msgstr "Convertir en Incident"
+msgstr "Convertir en incident"
 
 #. module: crm_project_issue
 #: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
 msgid "Create Issue"
-msgstr "Créer un Incident"
-
-#. module: crm_project_issue
-#: selection:crm.lead2projectissue.wizard,action:0
-msgid "Create a new customer"
-msgstr "Créer un nouveau client"
+msgstr "Créer un incident"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_create_uid
@@ -59,24 +56,9 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_partner_id
-msgid "Customer"
-msgstr "Client"
-
-#. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_display_name
 msgid "Display Name"
 msgstr "Nom affiché"
-
-#. module: crm_project_issue
-#: selection:crm.lead2projectissue.wizard,action:0
-msgid "Do not link to a customer"
-msgstr "Ne pas lier à un client"
-
-#. module: crm_project_issue
-#: model:ir.model,name:crm_project_issue.model_crm_lead2projectissue_wizard
-msgid "Handle partner binding or generation in CRM wizards."
-msgstr "Gère la relation ou la génération du partenaire dans les assistants du CRM"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_id
@@ -86,17 +68,17 @@ msgstr "ID"
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard___last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_write_uid
 msgid "Last Updated by"
-msgstr "Mis à jour par"
+msgstr "Dernière mise à jour par"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_write_date
 msgid "Last Updated on"
-msgstr "Mis à jour le"
+msgstr "Dernière mise à jour le"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_lead_id
@@ -104,16 +86,11 @@ msgid "Lead"
 msgstr "Piste"
 
 #. module: crm_project_issue
-#: selection:crm.lead2projectissue.wizard,action:0
-msgid "Link to an existing customer"
-msgstr "Lier à un client existant"
-
-#. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_project_id
 msgid "Project"
 msgstr "Projet"
 
 #. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_action
-msgid "Related Customer"
-msgstr "Client associé"
+#: model:ir.model,name:crm_project_issue.model_crm_lead2projectissue_wizard
+msgid "crm.lead2projectissue.wizard"
+msgstr "crm.lead2projectissue.wizard"

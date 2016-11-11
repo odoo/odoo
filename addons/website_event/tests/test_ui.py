@@ -1,7 +1,8 @@
-import openerp.tests
+import odoo.tests
 
-@openerp.tests.common.at_install(False)
-@openerp.tests.common.post_install(True)
-class TestUi(openerp.tests.HttpCase):
+
+@odoo.tests.common.at_install(False)
+@odoo.tests.common.post_install(True)
+class TestUi(odoo.tests.HttpCase):
     def test_admin(self):
-        self.phantom_js("/", "odoo.__DEBUG__.services['web.Tour'].run('event', 'test')", "odoo.__DEBUG__.services['web.Tour'].tours.event", login='admin')
+        self.phantom_js("/", "odoo.__DEBUG__.services['web_tour.tour'].run('event')", "odoo.__DEBUG__.services['web_tour.tour'].tours.event.ready", login='admin')

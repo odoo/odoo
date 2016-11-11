@@ -27,6 +27,8 @@ var View = Widget.extend({
     // multi_record is used to distinguish views displaying a single record
     // (e.g. FormView) from those that display several records (e.g. ListView)
     multi_record: true,
+    // indicates whether or not the view is mobile-friendly
+    mobile_friendly: false,
     // icon is the font-awesome icon to display in the view switcher
     icon: 'fa-question',
     // whether or not the view requires the model's fields to render itself
@@ -45,11 +47,8 @@ var View = Widget.extend({
      * @return {Deferred}
      */
     start: function() {
-        // add css classes that reflect the (absence of) access rights
-        this.$el.addClass('oe_view')
-            .toggleClass('oe_cannot_create', !this.is_action_enabled('create'))
-            .toggleClass('oe_cannot_edit', !this.is_action_enabled('edit'))
-            .toggleClass('oe_cannot_delete', !this.is_action_enabled('delete'));
+        // add classname that reflect the (absence of) access rights
+        this.$el.toggleClass('o_cannot_create', !this.is_action_enabled('create'));
         return this._super().then(this.trigger.bind(this, 'view_loaded'));
     },
     /**
@@ -76,7 +75,7 @@ var View = Widget.extend({
 
         // response handler
         var handler = function (action) {
-            if (action && action.constructor == Object) {
+            if (action && action.constructor === Object) {
                 // filter out context keys that are specific to the current action.
                 // Wrong default_* and search_default_* values will no give the expected result
                 // Wrong group_by values will simply fail and forbid rendering of the destination view
@@ -106,8 +105,8 @@ var View = Widget.extend({
 
         if (action_data.special === 'cancel') {
             return handler({"type":"ir.actions.act_window_close"});
-        } else if (action_data.type=="object") {
-            var args = [[record_id]];
+        } else if (action_data.type === "object") {
+            var args = record_id ? [[record_id]] : [dataset.ids];
             if (action_data.args) {
                 try {
                     // Warning: quotes and double quotes problem due to json and xml clash
@@ -122,7 +121,7 @@ var View = Widget.extend({
             return dataset.call_button(action_data.name, args).then(handler).then(function () {
                 core.bus.trigger('do_reload_needaction');
             });
-        } else if (action_data.type=="action") {
+        } else if (action_data.type === "action") {
             return data_manager.load_action(action_data.name, _.extend(pyeval.eval('context', context), {
                 active_model: dataset.model,
                 active_ids: dataset.ids,
@@ -144,27 +143,24 @@ var View = Widget.extend({
     do_load_state: function (state, warm) {
     },
     /**
-     * This function should render the buttons of the view, set this.$buttons to
-     * the produced jQuery element and define some listeners on it.
-     * This function should be called after start().
+     * This function should render the action buttons of the view.
+     * It should be called after start().
      * @param {jQuery} [$node] a jQuery node where the rendered buttons should be inserted
      * $node may be undefined, in which case the View can insert the buttons somewhere else
      */
     render_buttons: function($node) {
     },
     /**
-     * This function should instantiate and render the sidebar of the view, set this.sidebar to
-     * the instantiated Sidebar Widget and possibly add custom items in it.
-     * This function should be called after start().
+     * This function should render the sidebar of the view.
+     * It should be called after start().
      * @param {jQuery} [$node] a jQuery node where the sidebar should be inserted
      * $node may be undefined, in which case the View can insert the sidebar somewhere else
      */
     render_sidebar: function($node) {
     },
     /**
-     * This function should render the pager of the view, set this.$pager to
-     * the produced jQuery element and define some listeners on it.
-     * This function should be called after start().
+     * This function should render the pager of the view.
+     * It should be called after start().
      * @param {jQuery} [$node] a jQuery node where the pager should be inserted
      * $node may be undefined, in which case the View can insert the pager somewhere else
      */
@@ -200,6 +196,18 @@ var View = Widget.extend({
     get_context: function () {
         return {};
     },
+    destroy: function () {
+        if (this.$buttons) {
+            this.$buttons.off();
+        }
+        return this._super.apply(this, arguments);
+    },
+    set_scrollTop: function(scrollTop) {
+        this.scrollTop = scrollTop;
+    },
+    get_scrollTop: function() {
+        return this.scrollTop;
+    }
 });
 
 return View;

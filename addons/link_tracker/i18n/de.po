@@ -3,26 +3,28 @@
 # * link_tracker
 # 
 # Translators:
-# Renko Spiekermann <renkosp@gmail.com>, 2016
-# Wolfgang Taferner, 2016
+# Henry Mineehen <info@mineehen.de>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Rudolf Schnapka <rs@techno-flex.de>, 2016
+# Joachim <jj2282@hotmail.com>, 2016
+# Tina Rittmüller <tr@ife.de>, 2016
+# darenkster <inactive+darenkster@transifex.com>, 2016
+# Thomas A. Jaeger <tj@jamotion.ch>, 2016
+# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
+# jonas <jonas.hillebrecht@bklynsoap.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-01-16 19:33+0000\n"
-"Last-Translator: Ralf Hilgenstock <rh@dialoge.info>\n"
-"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: jonas <jonas.hillebrecht@bklynsoap.com>, 2016\n"
+"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_campaign_id
-msgid "Campaign"
-msgstr "Kampagne"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_link_click_ids
@@ -38,7 +40,7 @@ msgstr "Der Code muss eindeutig sein."
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_link_code_ids
 msgid "Codes"
-msgstr ""
+msgstr "Schlüssel"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_country_id
@@ -48,14 +50,14 @@ msgstr "Land"
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_click_date
 msgid "Create Date"
-msgstr "Datum Erstellung"
+msgstr "Erstellungsdatum"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_create_uid
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_create_uid
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_create_uid
 msgid "Created by"
-msgstr "Angelegt von"
+msgstr "Erstellt von"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_create_date
@@ -132,11 +134,6 @@ msgid "Link Tracker"
 msgstr "Link Tracker"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_medium_id
-msgid "Medium"
-msgstr "Medium"
-
-#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_count
 msgid "Number of Clicks"
 msgstr "Anzahl der Klicks"
@@ -162,11 +159,6 @@ msgid "Short URL code"
 msgstr ""
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_source_id
-msgid "Source"
-msgstr "Quelle"
-
-#. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_view_click_statistics
 msgid "Statistics of Clicks"
 msgstr ""
@@ -177,25 +169,6 @@ msgid "Target URL"
 msgstr "Ziel-URL"
 
 #. module: link_tracker
-#: model:ir.model.fields,help:link_tracker.field_link_tracker_campaign_id
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
-msgstr "Diese Bezeichnung hilft Ihnen bei der Analyse Ihres Kampagnenerfolgs, z.B.: Herbstangebot, Weihnachtsangebot"
-
-#. module: link_tracker
-#: model:ir.model.fields,help:link_tracker.field_link_tracker_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr "Dies ist die Kommunikationsmethode: z.B. Postkarte, E-Mail oder Bannerwerbung"
-
-#. module: link_tracker
-#: model:ir.model.fields,help:link_tracker.field_link_tracker_source_id
-msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
-msgstr "Dies zeigt die Herkunft für neue Interessenten: Suchmaschine, andere Webdomäne, E-Mail Liste"
-
-#. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
 msgid "Title and URL"
 msgstr ""
@@ -203,12 +176,6 @@ msgstr ""
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
 msgid "Tracked Link"
-msgstr ""
-
-#. module: link_tracker
-#: model:ir.actions.act_window,name:link_tracker.action_link_tracker_click
-#: model:ir.ui.menu,name:link_tracker.menu_url_shortener_links
-msgid "Tracked Links"
 msgstr ""
 
 #. module: link_tracker
@@ -222,7 +189,7 @@ msgid "Visit Page"
 msgstr ""
 
 #. module: link_tracker
-#: code:addons/link_tracker/models/link_tracker.py:138
+#: code:addons/link_tracker/models/link_tracker.py:141
 #, python-format
 msgid "Visit Webpage"
 msgstr ""

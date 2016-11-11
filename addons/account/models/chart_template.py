@@ -1,15 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import time
-import math
-
-from openerp.osv import expression
-from openerp.tools.float_utils import float_round as round
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.exceptions import AccessError, UserError, ValidationError
-import openerp.addons.decimal_precision as dp
-from openerp import api, fields, models, _
-from openerp import SUPERUSER_ID
+from odoo.exceptions import AccessError
+from odoo import api, fields, models, _
+from odoo import SUPERUSER_ID
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -18,7 +11,11 @@ def migrate_set_tags_and_taxes_updatable(cr, registry, module):
     ''' This is a utility function used to manually set the flag noupdate to False on tags and account tax templates on localization modules
     that need migration (for example in case of VAT report improvements)
     '''
-    xml_record_ids = registry['ir.model.data'].search(cr, SUPERUSER_ID, [('model', 'in', ['account.tax.template', 'account.account.tag']), ('module', 'like', module)])
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    xml_record_ids = env['ir.model.data'].search([
+        ('model', 'in', ['account.tax.template', 'account.account.tag']),
+        ('module', 'like', module)
+    ]).ids
     if xml_record_ids:
         cr.execute("update ir_model_data set noupdate = 'f' where id in %s", (tuple(xml_record_ids),))
 
@@ -29,12 +26,20 @@ def migrate_tags_on_taxes(cr, registry):
     Note: This unusual decision has been made in order to help the improvement of VAT reports on version 9.0, to have them more flexible
     and working out of the box when people are creating/using new taxes.
     '''
-    xml_record_ids = registry['ir.model.data'].search(cr, SUPERUSER_ID, [('model', '=', 'account.tax.template'), ('module', 'like', 'l10n_%')])
-    tax_template_ids = [x['res_id'] for x in registry['ir.model.data'].read(cr, SUPERUSER_ID, xml_record_ids, ['res_id'])]
-    for tax_template in registry['account.tax.template'].browse(cr, SUPERUSER_ID, tax_template_ids):
-        tax_id = registry['account.tax'].search(cr, SUPERUSER_ID, [('name', '=', tax_template.name), ('type_tax_use', '=', tax_template.type_tax_use), ('description', '=', tax_template.description)])
-        if len(tax_id) == 1:
-            registry['account.tax'].write(cr, SUPERUSER_ID, tax_id, {'tag_ids': [(6,0,[x.id for x in tax_template.tag_ids])]})
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    xml_records = env['ir.model.data'].search([
+        ('model', '=', 'account.tax.template'),
+        ('module', 'like', 'l10n_%')
+    ])
+    tax_template_ids = [x['res_id'] for x in xml_records.sudo().read(['res_id'])]
+    for tax_template in env['account.tax.template'].browse(tax_template_ids):
+        tax_id = env['account.tax'].search([
+            ('name', '=', tax_template.name),
+            ('type_tax_use', '=', tax_template.type_tax_use),
+            ('description', '=', tax_template.description)
+        ])
+        if len(tax_id.ids) == 1:
+            tax_id.sudo().write({'tag_ids': [(6, 0, tax_template.tag_ids.ids)]})
 
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
@@ -320,14 +325,18 @@ class AccountChartTemplate(models.Model):
                     'account_id': account_ref.get(value['account_id'], False),
                 })
 
-        # Create Journals
-        self.generate_journals(account_ref, company)
+        # Create Journals - Only done for root chart template
+        if not self.parent_id:
+            self.generate_journals(account_ref, company)
 
         # generate properties function
         self.generate_properties(account_ref, company)
 
         # Generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates
         self.generate_fiscal_position(taxes_ref, account_ref, company)
+
+        # Generate account operation template templates
+        self.generate_account_reconcile_model(taxes_ref, account_ref, company)
 
         return account_ref, taxes_ref
 
@@ -337,7 +346,7 @@ class AccountChartTemplate(models.Model):
         # also create an entry in ir_model_data to have an xmlid for the newly created record
         # xmlid is the concatenation of company_id and template_xml_id
         ir_model_data = self.env['ir.model.data']
-        template_xmlid = ir_model_data.search([('model', '=', str(template._model)), ('res_id', '=', template.id)])
+        template_xmlid = ir_model_data.search([('model', '=', template._name), ('res_id', '=', template.id)])
         new_xml_id = str(company.id)+'_'+template_xmlid.name
         return ir_model_data._update(model, template_xmlid.module, vals, xml_id=new_xml_id, store=True, noupdate=True, mode='init', res_id=False)
 
@@ -378,6 +387,40 @@ class AccountChartTemplate(models.Model):
             new_account = self.create_record_with_xmlid(company, account_template, 'account.account', vals)
             acc_template_ref[account_template.id] = new_account
         return acc_template_ref
+
+    @api.multi
+    def generate_account_reconcile_model(self, tax_template_ref, acc_template_ref, company):
+        """ This method for generating accounts from templates.
+
+            :param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
+            :param acc_template_ref: dictionary with the mappping between the account templates and the real accounts.
+            :param company_id: company_id selected from wizard.multi.charts.accounts.
+            :returns: return new_account_reconcile_model for reference purpose.
+            :rtype: dict
+        """
+        self.ensure_one()
+        account_reconcile_models = self.env['account.reconcile.model.template'].search([
+            ('account_id.chart_template_id', '=', self.id)
+        ])
+        for account_reconcile_model in account_reconcile_models:
+            vals = {
+                'name': account_reconcile_model.name,
+                'sequence': account_reconcile_model.sequence,
+                'has_second_line': account_reconcile_model.has_second_line,
+                'company_id': company.id,
+                'account_id': acc_template_ref[account_reconcile_model.account_id.id],
+                'label': account_reconcile_model.label,
+                'amount_type': account_reconcile_model.amount_type,
+                'amount': account_reconcile_model.amount,
+                'tax_id': account_reconcile_model.tax_id and tax_template_ref[account_reconcile_model.tax_id.id] or False,
+                'second_account_id': account_reconcile_model.second_account_id and acc_template_ref[account_reconcile_model.second_account_id.id] or False,
+                'second_label': account_reconcile_model.second_label,
+                'second_amount_type': account_reconcile_model.second_amount_type,
+                'second_amount': account_reconcile_model.second_amount,
+                'second_tax_id': account_reconcile_model.second_tax_id and tax_template_ref[account_reconcile_model.second_tax_id.id] or False,
+            }
+            self.create_record_with_xmlid(company, account_reconcile_model, 'account.reconcile.model', vals)
+        return True
 
     @api.multi
     def generate_fiscal_position(self, tax_template_ref, acc_template_ref, company):
@@ -438,6 +481,7 @@ class AccountTaxTemplate(models.Model):
     analytic = fields.Boolean(string="Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
     tag_ids = fields.Many2many('account.account.tag', string='Account tag', help="Optional tags you may want to assign for custom reporting")
     tax_group_id = fields.Many2one('account.tax.group', string="Tax Group")
+    tax_adjustment = fields.Boolean(default=False)
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
@@ -469,6 +513,7 @@ class AccountTaxTemplate(models.Model):
             'include_base_amount': self.include_base_amount,
             'analytic': self.analytic,
             'tag_ids': [(6, 0, [t.id for t in self.tag_ids])],
+            'tax_adjustment': self.tax_adjustment,
         }
         if self.tax_group_id:
             val['tax_group_id'] = self.tax_group_id.id
@@ -611,7 +656,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
             if self.chart_template_id.complete_tax_set:
             # default tax is given by the lowest sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 chart_ids = self._get_chart_parent_ids(self.chart_template_id)
-                base_tax_domain = [('chart_template_id', 'in', chart_ids)]
+                base_tax_domain = [('chart_template_id', 'parent_of', chart_ids)]
                 sale_tax_domain = base_tax_domain + [('type_tax_use', '=', 'sale')]
                 purchase_tax_domain = base_tax_domain + [('type_tax_use', '=', 'purchase')]
                 sale_tax = tax_templ_obj.search(sale_tax_domain, order="sequence, id desc", limit=1)
@@ -806,3 +851,27 @@ class AccountBankAccountsWizard(models.TransientModel):
     currency_id = fields.Many2one('res.currency', string='Account Currency',
         help="Forces all moves for this account to have this secondary currency.")
     account_type = fields.Selection([('cash', 'Cash'), ('bank', 'Bank')])
+
+
+class AccountReconcileModelTemplate(models.Model):
+    _name = "account.reconcile.model.template"
+
+    name = fields.Char(string='Button Label', required=True)
+    sequence = fields.Integer(required=True, default=10)
+    has_second_line = fields.Boolean(string='Add a second line', default=False)
+    account_id = fields.Many2one('account.account.template', string='Account', ondelete='cascade', domain=[('deprecated', '=', False)])
+    label = fields.Char(string='Journal Item Label')
+    amount_type = fields.Selection([
+        ('fixed', 'Fixed'),
+        ('percentage', 'Percentage of balance')
+        ], required=True, default='percentage')
+    amount = fields.Float(digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    tax_id = fields.Many2one('account.tax.template', string='Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
+    second_account_id = fields.Many2one('account.account.template', string='Second Account', ondelete='cascade', domain=[('deprecated', '=', False)])
+    second_label = fields.Char(string='Second Journal Item Label')
+    second_amount_type = fields.Selection([
+        ('fixed', 'Fixed'),
+        ('percentage', 'Percentage of amount')
+        ], string="Second Amount type",required=True, default='percentage')
+    second_amount = fields.Float(string='Second Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    second_tax_id = fields.Many2one('account.tax.template', string='Second Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])

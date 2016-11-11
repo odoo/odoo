@@ -3,14 +3,18 @@
 # * base_import_module
 # 
 # Translators:
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-01-29 15:04+0000\n"
-"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
-"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016\n"
+"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,12 +24,18 @@ msgstr ""
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Cancel"
-msgstr "Peruuta"
+msgstr "Cancelar"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Close"
 msgstr "Sulje"
+
+#. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:31
+#, python-format
+msgid "Could not select database '%s'"
+msgstr ""
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
@@ -40,16 +50,16 @@ msgstr "Luotu"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_display_name
 msgid "Display Name"
-msgstr "Näytä nimi"
+msgstr "Näyttönimi"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:94
+#: code:addons/base_import_module/models/ir_module.py:96
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "Tiedoston '%s' koko ylittää sallitun maksimikoon."
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:86
+#: code:addons/base_import_module/models/ir_module.py:88
 #, python-format
 msgid "File is not a zip file!"
 msgstr "Tiedosto ei ole zip tiedosto!"
@@ -63,12 +73,14 @@ msgstr "Pakota alustus"
 #: model:ir.model.fields,help:base_import_module.field_base_import_module_force
 msgid ""
 "Force init mode even if installed. (will update `noupdate='1'` records)"
-msgstr "Pakota alustus vaikka moduuli olisi asennettuna. (päivittää myös noupdate=\"1\"-tietueet)"
+msgstr ""
+"Pakota alustus vaikka moduuli olisi asennettuna. (päivittää myös "
+"noupdate=\"1\"-tietueet)"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunniste (ID)"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -81,7 +93,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import Module"
-msgstr "Tuonti moduuli"
+msgstr "Tuo moduuli"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
@@ -124,6 +136,18 @@ msgid "Module .ZIP file"
 msgstr "Moduuli .zip-tiedosto"
 
 #. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:86
+#, python-format
+msgid "No file sent."
+msgstr ""
+
+#. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:25
+#, python-format
+msgid "Only administrators can upload a module"
+msgstr ""
+
+#. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Open Modules"
 msgstr "Avaa moduuleja"
@@ -139,10 +163,10 @@ msgid "Status"
 msgstr "Tila"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:33
+#: code:addons/base_import_module/models/ir_module.py:35
 #, python-format
 msgid "Unmet module dependencies: %s"
-msgstr "Täyttymätön moduuli riippuvuus: %s"
+msgstr "Täyttymätön moduuliriippuvuus: %s"
 
 #. module: base_import_module
 #: selection:base.import.module,state:0

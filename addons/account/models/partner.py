@@ -3,10 +3,10 @@
 from operator import itemgetter
 import time
 
-from openerp import api, fields, models, _
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.exceptions import ValidationError
-
+from odoo import api, fields, models, _
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.exceptions import ValidationError
+from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 
 class AccountFiscalPosition(models.Model):
     _name = 'account.fiscal.position'
@@ -20,7 +20,7 @@ class AccountFiscalPosition(models.Model):
     company_id = fields.Many2one('res.company', string='Company')
     account_ids = fields.One2many('account.fiscal.position.account', 'position_id', string='Account Mapping', copy=True)
     tax_ids = fields.One2many('account.fiscal.position.tax', 'position_id', string='Tax Mapping', copy=True)
-    note = fields.Text('Notes')
+    note = fields.Text('Notes', help="Legal mentions that have to be printed on the invoices.")
     auto_apply = fields.Boolean(string='Detect Automatically', help="Apply automatically this fiscal position.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
     country_id = fields.Many2one('res.country', string='Country',
@@ -44,26 +44,8 @@ class AccountFiscalPosition(models.Model):
             raise ValidationError(_('Invalid "Zip Range", please configure it properly.'))
         return True
 
-    @api.v7
-    def map_tax(self, cr, uid, fposition_id, taxes, context=None):
-        if not taxes:
-            return []
-        if not fposition_id:
-            return map(lambda x: x.id, taxes)
-        result = set()
-        for t in taxes:
-            ok = False
-            for tax in fposition_id.tax_ids:
-                if tax.tax_src_id.id == t.id:
-                    if tax.tax_dest_id:
-                        result.add(tax.tax_dest_id.id)
-                    ok = True
-            if not ok:
-                result.add(t.id)
-        return list(result)
-
-    @api.v8     # noqa
-    def map_tax(self, taxes):
+    @api.model     # noqa
+    def map_tax(self, taxes, product=None, partner=None):
         result = self.env['account.tax'].browse()
         for tax in taxes:
             tax_count = 0
@@ -76,24 +58,14 @@ class AccountFiscalPosition(models.Model):
                 result |= tax
         return result
 
-    @api.v7
-    def map_account(self, cr, uid, fposition_id, account_id, context=None):
-        if not fposition_id:
-            return account_id
-        for pos in fposition_id.account_ids:
-            if pos.account_src_id.id == account_id:
-                account_id = pos.account_dest_id.id
-                break
-        return account_id
-
-    @api.v8
+    @api.model
     def map_account(self, account):
         for pos in self.account_ids:
             if pos.account_src_id == account:
                 return pos.account_dest_id
         return account
 
-    @api.v8
+    @api.model
     def map_accounts(self, accounts):
         """ Receive a dictionary having accounts in values and try to replace those accounts accordingly to the fiscal position.
         """
@@ -123,6 +95,8 @@ class AccountFiscalPosition(models.Model):
         if not country_id:
             return False
         base_domain = [('auto_apply', '=', True), ('vat_required', '=', vat_required)]
+        if self.env.context.get('force_company'):
+            base_domain.append(('company_id', '=', self.env.context.get('force_company')))
         null_state_dom = state_domain = [('state_ids', '=', False)]
         null_zip_dom = zip_domain = [('zip_from', '=', 0), ('zip_to', '=', 0)]
         null_country_dom = [('country_id', '=', False), ('country_group_id', '=', False)]
@@ -250,40 +224,35 @@ class ResPartner(models.Model):
                 partner.debit = -val
 
     @api.multi
-    def _asset_difference_search(self, type, args):
-        if not args:
+    def _asset_difference_search(self, account_type, operator, operand):
+        if operator not in ('<', '=', '>', '>=', '<='):
             return []
-        having_values = tuple(map(itemgetter(2), args))
-        where = ' AND '.join(
-            map(lambda x: '(SUM(bal2) %(operator)s %%s)' % {
-                                'operator':x[1]},args))
-        query = self.env['account.move.line']._query_get()
-        self._cr.execute(('SELECT pid AS partner_id, SUM(bal2) FROM ' \
-                    '(SELECT CASE WHEN bal IS NOT NULL THEN bal ' \
-                    'ELSE 0.0 END AS bal2, p.id as pid FROM ' \
-                    '(SELECT (debit-credit) AS bal, partner_id ' \
-                    'FROM account_move_line l ' \
-                    'WHERE account_id IN ' \
-                            '(SELECT id FROM account_account '\
-                            'WHERE type=%s AND active) ' \
-                    'AND reconciled IS FALSE ' \
-                    'AND '+query+') AS l ' \
-                    'RIGHT JOIN res_partner p ' \
-                    'ON p.id = partner_id ) AS pl ' \
-                    'GROUP BY pid HAVING ' + where),
-                    (type,) + having_values)
+        if type(operand) not in (float, int):
+            return []
+        sign = 1
+        if account_type == 'payable':
+            sign = -1
+        res = self._cr.execute('''
+            SELECT partner.id
+            FROM res_partner partner
+            LEFT JOIN account_move_line aml ON aml.partner_id = partner.id
+            RIGHT JOIN account_account acc ON aml.account_id = acc.id
+            WHERE acc.internal_type = %s
+              AND NOT acc.deprecated
+            GROUP BY partner.id
+            HAVING %s * COALESCE(SUM(aml.amount_residual), 0) ''' + operator + ''' %s''', (account_type, sign, operand))
         res = self._cr.fetchall()
         if not res:
             return [('id', '=', '0')]
         return [('id', 'in', map(itemgetter(0), res))]
 
-    @api.multi
-    def _credit_search(self, args):
-        return self._asset_difference_search('receivable', args)
+    @api.model
+    def _credit_search(self, operator, operand):
+        return self._asset_difference_search('receivable', operator, operand)
 
-    @api.multi
-    def _debit_search(self, args):
-        return self._asset_difference_search('payable', args)
+    @api.model
+    def _debit_search(self, operator, operand):
+        return self._asset_difference_search('payable', operator, operand)
 
     @api.multi
     def _invoice_total(self):
@@ -293,31 +262,37 @@ class ResPartner(models.Model):
             return True
 
         user_currency_id = self.env.user.company_id.currency_id.id
+        all_partners_and_children = {}
+        all_partner_ids = []
         for partner in self:
-            all_partner_ids = self.search([('id', 'child_of', partner.id)]).ids
-
-            # searching account.invoice.report via the orm is comparatively expensive
-            # (generates queries "id in []" forcing to build the full table).
-            # In simple cases where all invoices are in the same currency than the user's company
-            # access directly these elements
-
-            # generate where clause to include multicompany rules
-            where_query = account_invoice_report._where_calc([
-                ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel']), ('company_id', '=', self.env.user.company_id.id),
-                ('type', 'in', ('out_invoice', 'out_refund'))
-            ])
-            account_invoice_report._apply_ir_rules(where_query, 'read')
-            from_clause, where_clause, where_clause_params = where_query.get_sql()
-
-            query = """
-                      SELECT SUM(price_total) as total
-                        FROM account_invoice_report account_invoice_report
-                       WHERE %s
-                    """ % where_clause
-
             # price_total is in the company currency
-            self.env.cr.execute(query, where_clause_params)
-            partner.total_invoiced = self.env.cr.fetchone()[0]
+            all_partners_and_children[partner] = self.search([('id', 'child_of', partner.id)]).ids
+            all_partner_ids += all_partners_and_children[partner]
+
+        # searching account.invoice.report via the orm is comparatively expensive
+        # (generates queries "id in []" forcing to build the full table).
+        # In simple cases where all invoices are in the same currency than the user's company
+        # access directly these elements
+
+        # generate where clause to include multicompany rules
+        where_query = account_invoice_report._where_calc([
+            ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel']), ('company_id', '=', self.env.user.company_id.id),
+            ('type', 'in', ('out_invoice', 'out_refund'))
+        ])
+        account_invoice_report._apply_ir_rules(where_query, 'read')
+        from_clause, where_clause, where_clause_params = where_query.get_sql()
+
+        # price_total is in the company currency
+        query = """
+                  SELECT SUM(price_total) as total, partner_id
+                    FROM account_invoice_report account_invoice_report
+                   WHERE %s
+                   GROUP BY partner_id
+                """ % where_clause
+        self.env.cr.execute(query, where_clause_params)
+        price_totals = self.env.cr.dictfetchall()
+        for partner, child_ids in all_partners_and_children.items():
+            partner.total_invoiced = sum(price['total'] for price in price_totals if price['partner_id'] in child_ids)
 
     @api.multi
     def _journal_item_count(self):
@@ -335,7 +310,7 @@ class ResPartner(models.Model):
             else:
                 domain += [('partner_id', 'in', self.ids)]
         #adding the overdue lines
-        overdue_domain = ['|', '&', ('date_maturity', '!=', False), ('date_maturity', '<=', date), '&', ('date_maturity', '=', False), ('date', '<=', date)]
+        overdue_domain = ['|', '&', ('date_maturity', '!=', False), ('date_maturity', '<', date), '&', ('date_maturity', '=', False), ('date', '<', date)]
         if overdue_only:
             domain += overdue_domain
         return domain
@@ -389,7 +364,8 @@ class ResPartner(models.Model):
 
     @api.multi
     def mark_as_reconciled(self):
-        return self.write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        self.env['account.partial.reconcile'].check_access_rights('write')
+        return self.sudo().write({'last_time_entries_checked': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
     @api.one
     def _get_company_currency(self):
@@ -425,10 +401,10 @@ class ResPartner(models.Model):
         string="Fiscal Position",
         help="The fiscal position will determine taxes and accounts used for the partner.", oldname="property_account_position")
     property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
-        string ='Customer Payment Term',
+        string='Customer Payment Terms',
         help="This payment term will be used instead of the default one for sale orders and customer invoices", oldname="property_payment_term")
     property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
-         string ='Vendor Payment Term',
+         string='Vendor Payment Terms',
          help="This payment term will be used instead of the default one for purchase orders and vendor bills", oldname="property_supplier_payment_term")
     ref_company_ids = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner', oldname="ref_companies")
@@ -443,6 +419,8 @@ class ResPartner(models.Model):
     contract_ids = fields.One2many('account.analytic.account', 'partner_id', string='Contracts', readonly=True)
     bank_account_count = fields.Integer(compute='_compute_bank_count', string="Bank")
     trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', default='normal', company_dependent=True)
+    invoice_warn = fields.Selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, required=True, default="no-message")
+    invoice_warn_msg = fields.Text('Message for Invoice')
 
     @api.multi
     def _compute_bank_count(self):
@@ -460,3 +438,12 @@ class ResPartner(models.Model):
         return super(ResPartner, self)._commercial_fields() + \
             ['debit_limit', 'property_account_payable_id', 'property_account_receivable_id', 'property_account_position_id',
              'property_payment_term_id', 'property_supplier_payment_term_id', 'last_time_entries_checked']
+
+    def open_partner_history(self):
+        '''
+        This function returns an action that display invoices/refunds made for the given partners.
+        '''
+        action = self.env.ref('account.action_invoice_refund_out_tree')
+        result = action.read()[0]
+        result['domain'] = [('partner_id', 'in', self.ids)]
+        return result

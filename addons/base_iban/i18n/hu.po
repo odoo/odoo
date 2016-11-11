@@ -3,15 +3,16 @@
 # * base_iban
 # 
 # Translators:
-# Kris Krnacs, 2015
+# Oregional <geza.nagy@oregional.hu>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-10-21 09:52+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -24,33 +25,35 @@ msgid "Bank Accounts"
 msgstr "Bankszámlák"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:57
+#: code:addons/base_iban/models/res_partner_bank.py:57
 #, python-format
 msgid "Cannot compute the BBAN because the account number is not an IBAN."
-msgstr "BBAN kiszámíthatatlan, mert  a számlaszám nem IBAN."
+msgstr "BBAN nem számolható, mivel a számlaszám nem IBAN."
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:26
+#: code:addons/base_iban/models/res_partner_bank.py:26
 #, python-format
 msgid "No IBAN !"
-msgstr "Nem IBAN !"
+msgstr "Nincs IBAN !"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:34
+#: code:addons/base_iban/models/res_partner_bank.py:34
 #, python-format
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like this %s\n"
 "Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
-msgstr "Az IBAN nem tűnik megfelelőnek. Valami ilyennek kellene lennie %s\nAhol B = Nemzetköz bank kód, S = Fiók kód, C = Számla sz., k = Ellenőrző számjegy"
+msgstr ""
+"Az IBAN nem tűnik megfelelőnek. Ehhez hasonlónak kellene lennie:  %s\n"
+"Ahol B = Nemzetköz bank kód, S = Fiók kód, C = Számlaszám, k = Ellenőrző számjegy"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:30
+#: code:addons/base_iban/models/res_partner_bank.py:30
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr "Az IBAN érvényes, az ország kóddal kell kezdődnie"
+msgstr "Az IBAN érvénytelen, az ország kóddal kell kezdődnie"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:40
+#: code:addons/base_iban/models/res_partner_bank.py:40
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr "Ez az IBAN nem ment át az ellenőrzésen, kérjem ellenőrizni."
+msgstr "Ez az IBAN nem ment át az ellenőrzésen, kérem ellenőrizze."

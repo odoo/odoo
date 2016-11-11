@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import itertools
 
-from openerp import tools
-from openerp import models, fields, api
+from odoo import models, fields, api
 
 MAGIC_FIELDS = ["id", "create_uid", "create_date", "write_uid", "write_date", "__last_update"]
 
@@ -69,18 +71,19 @@ class website_form_model_fields(models.Model):
     _name = 'ir.model.fields'
     _inherit = 'ir.model.fields'
 
-    def init(self, cr):
+    @api.model_cr
+    def init(self):
         # set all existing unset website_form_blacklisted fields to ``true``
         #  (so that we can use it as a whitelist rather than a blacklist)
-        cr.execute('UPDATE ir_model_fields'
-                   ' SET website_form_blacklisted=true'
-                   ' WHERE website_form_blacklisted IS NULL')
+        self._cr.execute('UPDATE ir_model_fields'
+                         ' SET website_form_blacklisted=true'
+                         ' WHERE website_form_blacklisted IS NULL')
         # add an SQL-level default value on website_form_blacklisted to that
         # pure-SQL ir.model.field creations (e.g. in _field_create) generate
         # the right default value for a whitelist (aka fields should be
         # blacklisted by default)
-        cr.execute('ALTER TABLE ir_model_fields '
-                   ' ALTER COLUMN website_form_blacklisted SET DEFAULT true')
+        self._cr.execute('ALTER TABLE ir_model_fields '
+                         ' ALTER COLUMN website_form_blacklisted SET DEFAULT true')
 
     @api.model
     def formbuilder_whitelist(self, model, fields):
@@ -93,7 +96,7 @@ class website_form_model_fields(models.Model):
         if not fields: return False
 
         # only allow users who can change the website structure
-        if not self.env['res.users'].has_group('base.group_website_designer'):
+        if not self.env['res.users'].has_group('website.group_website_designer'):
             return False
 
         # the ORM only allows writing on custom fields and will trigger a
@@ -107,6 +110,6 @@ class website_form_model_fields(models.Model):
         return True
 
     website_form_blacklisted = fields.Boolean(
-        'Blacklisted in web forms', default=True, select=True, # required=True,
+        'Blacklisted in web forms', default=True, index=True, # required=True,
         help='Blacklist this field for web forms'
     )

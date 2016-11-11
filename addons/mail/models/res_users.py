@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import _, api, fields, models
-import openerp
+from odoo import _, api, exceptions, fields, models
 
 
 class Users(models.Model):
@@ -14,11 +14,15 @@ class Users(models.Model):
           group, and the user. This is done by overriding the write method.
     """
     _name = 'res.users'
-    _inherit = ['mail.alias.mixin', 'res.users']
+    _inherit = ['res.users']
 
-    alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="restrict", required=True,
+    alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="set null", required=False,
             help="Email address internally associated with this user. Incoming "\
                  "emails will appear in the user's notifications.", copy=False, auto_join=True)
+    alias_contact = fields.Selection([
+        ('everyone', 'Everyone'),
+        ('partners', 'Authenticated Partners'),
+        ('followers', 'Followers only')], string='Alias Contact Security', related='alias_id.alias_contact')
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
@@ -27,27 +31,19 @@ class Users(models.Model):
         """
         init_res = super(Users, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
-        self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
-        self.SELF_WRITEABLE_FIELDS.extend(['notify_email'])
+        type(self).SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
+        type(self).SELF_WRITEABLE_FIELDS.extend(['notify_email'])
         # duplicate list to avoid modifying the original reference
-        self.SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
-        self.SELF_READABLE_FIELDS.extend(['notify_email', 'alias_domain', 'alias_name'])
+        type(self).SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
+        type(self).SELF_READABLE_FIELDS.extend(['notify_email'])
         return init_res
-
-    def get_alias_model_name(self, vals):
-        return self._name
-
-    def get_alias_values(self):
-        values = super(Users, self).get_alias_values()
-        values['alias_force_thread_id'] = self.id
-        return values
 
     @api.model
     def create(self, values):
         if not values.get('login', False):
             action = self.env.ref('base.action_res_users')
             msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
-            raise openerp.exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
+            raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
         user = super(Users, self).create(values)
 
@@ -64,12 +60,6 @@ class Users(models.Model):
             user_group_ids += [id for command in vals['groups_id'] if command[0] == 6 for id in command[2]]
             self.env['mail.channel'].search([('group_ids', 'in', user_group_ids)])._subscribe_users()
         return write_res
-
-    def copy_data(self, *args, **kwargs):
-        data = super(Users, self).copy_data(*args, **kwargs)
-        if data and data.get('alias_name'):
-            data['alias_name'] = data['login']
-        return data
 
     def _create_welcome_message(self):
         self.ensure_one()
@@ -104,10 +94,7 @@ class Users(models.Model):
         if user_pid not in current_pids:
             partner_ids.append(user_pid)
         kwargs['partner_ids'] = partner_ids
-        # ??
-        # if context and context.get('thread_model') == 'res.partner':
-        #   return self.pool['res.partner'].message_post(cr, uid, user_pid, **kwargs)
-        return self.env['mail.thread'].message_post(**kwargs)  # ??
+        return self.env['mail.thread'].message_post(**kwargs)
 
     def message_update(self, msg_dict, update_vals=None):
         return True
@@ -115,9 +102,9 @@ class Users(models.Model):
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
         return True
 
-    @api.cr_uid_context
-    def message_get_partner_info_from_emails(self, cr, uid, emails, link_mail=False, context=None):
-        return self.pool.get('mail.thread').message_get_partner_info_from_emails(cr, uid, emails, link_mail=link_mail, context=context)
+    @api.multi
+    def message_partner_info_from_emails(self, emails, link_mail=False):
+        return self.env['mail.thread'].message_partner_info_from_emails(emails, link_mail=link_mail)
 
     @api.multi
     def message_get_suggested_recipients(self):

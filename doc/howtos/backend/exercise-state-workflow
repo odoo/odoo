@@ -2,9 +2,9 @@
 # Parent c72382bf0c5794135fa318f6ba59899b2277d8c5
 # Parent  82f902dbb7aab4d3ddd9caaa9170536afa9d274d
 
-diff --git a/openacademy/__openerp__.py b/openacademy/__openerp__.py
---- a/openacademy/__openerp__.py
-+++ b/openacademy/__openerp__.py
+diff --git a/openacademy/__manifest__.py b/openacademy/__manifest__.py
+--- a/openacademy/__manifest__.py
++++ b/openacademy/__manifest__.py
 @@ -29,6 +29,7 @@
          'templates.xml',
          'views/openacademy.xml',
@@ -50,7 +50,7 @@ new file mode 100644
 --- /dev/null
 +++ b/openacademy/views/session_workflow.xml
 @@ -0,0 +1,50 @@
-+<openerp>
++<odoo>
 +    <data>
 +        <record model="workflow" id="wkf_session">
 +            <field name="name">OpenAcademy sessions workflow</field>
@@ -99,4 +99,4 @@ new file mode 100644
 +            <field name="signal">done</field>
 +        </record>
 +    </data>
-+</openerp>
++</odoo>

@@ -19,7 +19,7 @@ var WidgetWebsiteButton = form_common.AbstractField.extend({
                   .removeClass('text-danger')
                   .addClass('text-success');
         } else {
-            $value.html(_t('Not Published'))
+            $value.html(_t('Unpublished'))
                   .removeClass('text-success')
                   .addClass('text-danger');
         }

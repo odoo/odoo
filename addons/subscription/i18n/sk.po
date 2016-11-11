@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * subscription
-# 
+#
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2015-10-24 09:09+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: subscription
@@ -68,7 +68,8 @@ msgstr "Predvolená hodnota"
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_document_fields_value
 msgid "Default value is considered for field when new document is generated."
-msgstr "Predvolená hodnota je považovaná za pole keď sa generuje nový dokument."
+msgstr ""
+"Predvolená hodnota je považovaná za pole keď sa generuje nový dokument."
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_note
@@ -137,14 +138,18 @@ msgstr "ID"
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription document without removing it."
-msgstr "Ak je aktívne pole nastavené na falošné, umožní vám schovať predplatný dokument bez jeho odstránenia."
+msgstr ""
+"Ak je aktívne pole nastavené na falošné, umožní vám schovať predplatný "
+"dokument bez jeho odstránenia."
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription without removing it."
-msgstr "Ak je aktívne pole nastavené na falošné, umožní vám schovať predplatné bez jeho odstránenia."
+msgstr ""
+"Ak je aktívne pole nastavené na falošné, umožní vám schovať predplatné bez "
+"jeho odstránenia."
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_notes
@@ -154,7 +159,8 @@ msgstr "Interné poznámky"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_number
-msgid "Interval Qty"
+#, fuzzy
+msgid "Internal Qty"
 msgstr "Interval ks"
 
 #. module: subscription
@@ -205,7 +211,8 @@ msgstr "Poznámky"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_exec_init
-msgid "Number of documents"
+#, fuzzy
+msgid "Number of Documents"
 msgstr "Počet dokumentov"
 
 #. module: subscription
@@ -220,12 +227,15 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:101
+#: code:addons/subscription/models/subscription.py:88
 #, python-format
 msgid ""
 "Please provide another source document.\n"
 "This one does not exist!"
-msgstr "Prosím poskytnite iný zdrojový dokument.\n\nTento neexestuje!"
+msgstr ""
+"Prosím poskytnite iný zdrojový dokument.\n"
+"\n"
+"Tento neexestuje!"
 
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
@@ -290,6 +300,12 @@ msgid "Subscription"
 msgstr "Predplatné"
 
 #. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+#, fuzzy
+msgid "Subscription Data"
+msgstr "Predplatné dát"
+
+#. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_document_id
 #: model:ir.ui.view,arch_db:subscription.document_form
@@ -323,11 +339,6 @@ msgid "Subscriptions"
 msgstr "Predplatné"
 
 #. module: subscription
-#: model:ir.ui.view,arch_db:subscription.view_subscription_form
-msgid "Subsription Data"
-msgstr "Predplatné dát"
-
-#. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_user_id
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "User"
@@ -337,7 +348,8 @@ msgstr "Používateľ"
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_doc_source
 msgid ""
 "User can choose the source document on which he wants to create documents"
-msgstr "Užívateľ môže vybrať zdrojový dokument na ktorom chce vytvárať dokument"
+msgstr ""
+"Užívateľ môže vybrať zdrojový dokument na ktorom chce vytvárať dokument"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -345,7 +357,7 @@ msgid "Weeks"
 msgstr "Týždne"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:128
+#: code:addons/subscription/models/subscription.py:111
 #, python-format
 msgid "You cannot delete an active subscription!"
 msgstr "Nemôžte zmazať aktívne predplatné!"

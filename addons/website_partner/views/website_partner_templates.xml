@@ -12,7 +12,7 @@
             <div class="oe_structure"/>
         </div>
     </t>
-</template> 
+</template>
 
 <template id="partner_detail" name="Partner Details">
     <t t-call="website.publish_management">
@@ -21,9 +21,9 @@
     </t>
     <h1 class="col-md-12 text-center" id="partner_name" t-field="partner.display_name"/>
     <div class="col-md-4">
-        <div t-field="partner.image" t-field-options='{"widget": "image", "class": "center-block mb16"}'/>
+        <div t-field="partner.image" t-options='{"widget": "image", "class": "center-block mb16"}'/>
         <address class="well">
-             <div t-field="partner.self" t-field-options='{
+             <div t-field="partner.self" t-options='{
                  "widget": "contact",
                  "fields": ["address", "website", "phone", "fax", "email"]
              }'/>
@@ -33,7 +33,7 @@
     <div class="col-md-8 mt32">
         <t t-if="partner">
             <div t-field="partner.website_description"/>
-            <t groups="base.group_website_publisher">
+            <t groups="website.group_website_publisher">
                 <h2 class="css_non_editable_mode_hidden">Short Description for List View</h2>
                 <div class="css_non_editable_mode_hidden" t-field="partner.website_short_description"/>
             </t>

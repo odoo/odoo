@@ -3,14 +3,22 @@
 # * account_test
 # 
 # Translators:
+# Mustafa Rawi <mustafa@cubexco.com>, 2016
+# hoxhe aits <hoxhe0@gmail.com>, 2016
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Sadig Adam <sadig41@gmail.com>, 2016
+# Ali zuaby <ali@zuaby.net>, 2016
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
+# amrnegm <amrnegm.01@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-12 22:29+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: amrnegm <amrnegm.01@gmail.com>, 2016\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,11 +31,13 @@ msgid ""
 "<br/>\n"
 "                        <strong>Description:</strong>"
 msgstr ""
+"<br/>\n"
+"<strong>الوصف:</strong>"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "<strong>Name:</strong>"
-msgstr ""
+msgstr "<strong>اسم:</strong>"
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
@@ -49,14 +59,17 @@ msgstr "نشط"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
-msgstr "فحص ما إذا كانت كافة بنود الحركات موزونة وتنتمي لنفس التاريخ والفترة المالية"
+msgstr ""
+"فحص ما إذا كانت كافة بنود الحركات موزونة وتنتمي لنفس التاريخ والفترة المالية"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
 msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
-msgstr "فحص ما إذا كانت رصيد الإقفال لكشوفات الحسابات البنكية = الرصيد الافتتاحي + مجموع بنود الكشف"
+msgstr ""
+"فحص ما إذا كانت رصيد الإقفال لكشوفات الحسابات البنكية = الرصيد الافتتاحي + "
+"مجموع بنود الكشف"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
@@ -68,14 +81,18 @@ msgstr "فحص ما إذا كانت الفواتير المدفوعة/المسو
 msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
-msgstr "فحص ما إذا كانت الحركات المسواة - والتي تنتمي لحسابات دائنة أو مدينة - تنتمي إلى فواتير تم تسويتها أيضاً."
+msgstr ""
+"فحص ما إذا كانت الحركات المسواة - والتي تنتمي لحسابات دائنة أو مدينة - تنتمي"
+" إلى فواتير تم تسويتها أيضاً."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for"
 " Payable and Receivable Accounts"
-msgstr "فحص ما إذا كانت فواتير المبيعات/المشتريات المسواة قد تم تسوية قيودها في الحسابات الدائنة والمدينة."
+msgstr ""
+"فحص ما إذا كانت فواتير المبيعات/المشتريات المسواة قد تم تسوية قيودها في "
+"الحسابات الدائنة والمدينة."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
@@ -85,7 +102,7 @@ msgstr "فحص أن الأرصدة تطابق القاعدة: مجموعة ال�
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
 msgid "Click to create Accounting Test."
-msgstr ""
+msgstr "انقر لانشاء اختبار المحاسبة."
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -115,7 +132,26 @@ msgid ""
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
-msgstr "يجب أن يحدد الكود دائماً متغير اسمه result يكون هو النتيجة المطلوبة من الاختبار، وقد يكون قائمة List أو قائمة أزواج Dictionary.\n\nإذا كان المتغير result قائمة فارغة، فذلك يعني أن نتيجة الاختبار كانت إيجابية ولا توجد أخطاء في الحسابات.\nإذا لم تكن تلك هي الحالة، فسيحاول النظام ترجمة وطباعة نتائج المتغير result.\n\nإذا كانت نتيجة الاختبار قائمة أزواج Dictionary، فيمكنك تعيين متغير اسمه column_order لتحديد الترتيب الذي سيتم طباعة نتيجة الاختبار بناء عليه.\n\nإن تطلب الأمر، يمكنك استخدام المتغيرات:\ncr لتحديد موضع المؤشر في قاعدة البيانات\nuid لتحديد معرف المستخدم الحالي.\n\nفي كافة الأحوال، يجب أن يكون الكود البرمجي كوداً سليماً بلغة بايثون Python مع استخدام الإزاحة السليمة Indentation (متى تطلب الأمر ذلك).\n\nمثال:\nsql = '''SELECT id, name, ref, date\nFROM account_move_line\nWHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\ncr.execute(sql)\nresult = cr.dictfetchall()"
+msgstr ""
+"يجب أن يحدد الكود دائماً متغير اسمه result يكون هو النتيجة المطلوبة من الاختبار، وقد يكون قائمة List أو قائمة أزواج Dictionary.\n"
+"\n"
+"إذا كان المتغير result قائمة فارغة، فذلك يعني أن نتيجة الاختبار كانت إيجابية ولا توجد أخطاء في الحسابات.\n"
+"إذا لم تكن تلك هي الحالة، فسيحاول النظام ترجمة وطباعة نتائج المتغير result.\n"
+"\n"
+"إذا كانت نتيجة الاختبار قائمة أزواج Dictionary، فيمكنك تعيين متغير اسمه column_order لتحديد الترتيب الذي سيتم طباعة نتيجة الاختبار بناء عليه.\n"
+"\n"
+"إن تطلب الأمر، يمكنك استخدام المتغيرات:\n"
+"cr لتحديد موضع المؤشر في قاعدة البيانات\n"
+"uid لتحديد معرف المستخدم الحالي.\n"
+"\n"
+"في كافة الأحوال، يجب أن يكون الكود البرمجي كوداً سليماً بلغة بايثون Python مع استخدام الإزاحة السليمة Indentation (متى تطلب الأمر ذلك).\n"
+"\n"
+"مثال:\n"
+"sql = '''SELECT id, name, ref, date\n"
+"FROM account_move_line\n"
+"WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
+"cr.execute(sql)\n"
+"result = cr.dictfetchall()"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
@@ -136,7 +172,7 @@ msgstr "الوصف"
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_display_name
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "اسم العرض"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -209,7 +245,7 @@ msgstr "الاختبار 6: حالة الفواتير"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 7 : Closing balance on bank statements"
-msgstr ""
+msgstr "اختبار 7: الرصيد الختامي على البيانات المصرفية"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_desc
@@ -228,7 +264,7 @@ msgid "Tests"
 msgstr "الاختبارات"
 
 #. module: account_test
-#: code:addons/account_test/report/account_test_report.py:49
+#: code:addons/account_test/report/report_account_test.py:51
 #, python-format
 msgid "The test was passed successfully"
 msgstr "تم اجتياز الاختبار بنجاح"
@@ -236,9 +272,9 @@ msgstr "تم اجتياز الاختبار بنجاح"
 #. module: account_test
 #: model:ir.model,name:account_test.model_accounting_assert_test
 msgid "accounting.assert.test"
-msgstr ""
+msgstr "اختبار.الأصول.المحاسبية"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_report_account_test_report_accounttest
 msgid "report.account_test.report_accounttest"
-msgstr ""
+msgstr "تقرير.اختبار_حساب_تقرير_اختبارحساب"

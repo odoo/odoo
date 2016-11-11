@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from openerp import fields, models, _
-from openerp.exceptions import UserError
+from odoo import fields, models, _
+from odoo.exceptions import UserError
 
 
 class AccountPartnerLedger(models.TransientModel):
@@ -15,4 +15,4 @@ class AccountPartnerLedger(models.TransientModel):
     def _print_report(self, data):
         data = self.pre_print_report(data)
         data['form'].update({'reconciled': self.reconciled, 'amount_currency': self.amount_currency})
-        return self.env['report'].get_action(self, 'account_extra_reports.report_partnerledger', data=data)
+        return self.env['report'].get_action(self, 'account.report_partnerledger', data=data)

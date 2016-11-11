@@ -3,14 +3,16 @@
 # * payment_sips
 # 
 # Translators:
+# Dorin Hongu <dhongu@gmail.com>, 2016
+# Cozmin Candea <office@terrabit.ro>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2015-09-19 08:20+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2016\n"
+"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,52 +20,25 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/sips.py:166
+#: code:addons/payment_sips/models/payment.py:155
 #, python-format
 msgid "; multiple order found"
-msgstr ""
+msgstr "; s-au găsit mai multe rezultate"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/sips.py:164
+#: code:addons/payment_sips/models/payment.py:153
 #, python-format
 msgid "; no order found"
-msgstr ""
+msgstr "; nu a fost găsit nici un rezultat"
 
 #. module: payment_sips
-#: model:payment.acquirer,cancel_msg:payment_sips.payment_acquirer_sips
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr ""
-
-#. module: payment_sips
-#: model:payment.acquirer,done_msg:payment_sips.payment_acquirer_sips
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr ""
-
-#. module: payment_sips
-#: model:payment.acquirer,error_msg:payment_sips.payment_acquirer_sips
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
-
-#. module: payment_sips
-#: model:payment.acquirer,pending_msg:payment_sips.payment_acquirer_sips
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr ""
-
-#. module: payment_sips
-#: code:addons/payment_sips/models/sips.py:87
+#: code:addons/payment_sips/models/payment.py:76
 #, python-format
 msgid "Currency not supported by Wordline"
 msgstr ""
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/sips.py:68
+#: code:addons/payment_sips/models/payment.py:57
 #, python-format
 msgid "Incorrect payment acquirer provider"
 msgstr ""
@@ -71,7 +46,7 @@ msgstr ""
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Beneficiarul Platii"
+msgstr "Colector plată"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_transaction
@@ -89,18 +64,7 @@ msgid "SIPS Secret"
 msgstr ""
 
 #. module: payment_sips
-#: model:payment.acquirer,name:payment_sips.payment_acquirer_sips
-msgid "Sips"
-msgstr ""
-
-#. module: payment_sips
-#: code:addons/payment_sips/models/sips.py:162
+#: code:addons/payment_sips/models/payment.py:151
 #, python-format
 msgid "Sips: received data for reference %s"
-msgstr ""
-
-#. module: payment_sips
-#: model:payment.acquirer,pre_msg:payment_sips.payment_acquirer_sips
-msgid ""
-"You will be redirected to the Sips website after clicking on payment button."
 msgstr ""

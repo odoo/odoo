@@ -1,0 +1,1200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Currencies -->
+        <record id="USD" model="res.currency">
+            <field name="name">USD</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="position">before</field>
+        </record>
+
+        <record id="VEF" model="res.currency">
+            <field name="name">VEF</field>
+            <field name="symbol">Bs.F</field>
+            <field name="rounding">0.0001</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="CAD" model="res.currency">
+            <field name="name">CAD</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="CHF" model="res.currency">
+            <field name="name">CHF</field>
+            <field name="symbol">CHF</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="BRL" model="res.currency">
+            <field name="name">BRL</field>
+            <field name="symbol">R$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+            <field name="position">before</field>
+        </record>
+
+        <record id="CNY" model="res.currency">
+            <field name="name">CNY</field>
+            <field name="symbol">¥</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="COP" model="res.currency">
+            <field name="name">COP</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="CZK" model="res.currency">
+            <field name="name">CZK</field>
+            <field name="symbol">Kč</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="DKK" model="res.currency">
+            <field name="name">DKK</field>
+            <field name="symbol">kr</field>
+            <field name="rounding">0.01</field>
+            <field name="position">before</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="HUF" model="res.currency">
+            <field name="name">HUF</field>
+            <field name="symbol">Ft</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="IDR" model="res.currency">
+            <field name="name">IDR</field>
+            <field name="symbol">Rp</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="LVL" model="res.currency">
+            <field name="name">LVL</field>
+            <field name="symbol">Ls</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="NOK" model="res.currency">
+            <field name="name">NOK</field>
+            <field name="symbol">kr</field>
+            <field name="rounding">0.01</field>
+            <field name="position">before</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="XPF" model="res.currency">
+            <field name="name">XPF</field>
+            <field name="symbol">XPF</field>
+            <field name="rounding">1.00</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="PAB" model="res.currency">
+            <field name="name">PAB</field>
+            <field name="symbol">B/.</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="PLN" model="res.currency">
+            <field name="name">PLN</field>
+            <field name="symbol">zł</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="SEK" model="res.currency">
+            <field name="name">SEK</field>
+            <field name="symbol">kr</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ARS" model="res.currency">
+            <field name="name">ARS</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="INR" model="res.currency">
+            <field name="name">INR</field>
+            <field name="symbol">₹</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="AUD" model="res.currency">
+            <field name="name">AUD</field>
+            <field name="symbol">$</field>
+            <field name="position">before</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="UAH" model="res.currency">
+            <field name="name">UAH</field>
+            <field name="symbol">₴</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="VND" model="res.currency">
+            <field name="name">VND</field>
+            <field name="symbol">₫</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="HKD" model="res.currency">
+            <field name="name">HKD</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="JPY" model="res.currency">
+            <field name="name">JPY</field>
+            <field name="symbol">¥</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="BGN" model="res.currency">
+            <field name="name">BGN</field>
+            <field name="symbol">лв</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="LTL" model="res.currency">
+            <field name="name">LTL</field>
+            <field name="symbol">Lt</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="RON" model="res.currency">
+            <field name="name">RON</field>
+            <field name="symbol">lei</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="HRK" model="res.currency">
+            <field name="name">HRK</field>
+            <field name="symbol">kn</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="RUB" model="res.currency">
+            <field name="name">RUB</field>
+            <field name="symbol">руб</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="TRY" model="res.currency">
+            <field name="name">TRY</field>
+            <field name="symbol">₺</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="KRW" model="res.currency">
+            <field name="name">KRW</field>
+            <field name="symbol">₩</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="MXN" model="res.currency">
+            <field name="name">MXN</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+            <field name="position">before</field>
+        </record>
+
+        <record id="MYR" model="res.currency">
+            <field name="name">MYR</field>
+            <field name="symbol">RM</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="NZD" model="res.currency">
+            <field name="name">NZD</field>
+            <field name="symbol">$</field>
+            <field name="position">before</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="PHP" model="res.currency">
+            <field name="name">PHP</field>
+            <field name="symbol">Php</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="SGD" model="res.currency">
+            <field name="name">SGD</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ZAR" model="res.currency">
+            <field name="name">ZAR</field>
+            <field name="symbol">R</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="res_bank_1" model="res.bank">
+            <field name="name">Reserve</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="CRC" model="res.currency">
+            <field name="name">CRC</field>
+            <field name="rounding">0.01</field>
+            <field name="symbol">¢</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="MUR" model="res.currency">
+            <field name="name">MUR</field>
+            <field name="symbol">Rs</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="XOF" model="res.currency">
+            <field name="name">XOF</field>
+            <field name="symbol">CFA</field>
+            <field name="rounding">1</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="XAF" model="res.currency">
+            <field name="name">XAF</field>
+            <field name="symbol">FCFA</field>
+            <field name="rounding">1</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="UGX" model="res.currency">
+            <field name="name">UGX</field>
+            <field name="symbol">USh</field>
+            <field name="rounding">1</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="HNL" model="res.currency">
+            <field name="name">HNL</field>
+            <field name="symbol">L</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="CLP" model="res.currency">
+            <field name="name">CLP</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="UYU" model="res.currency">
+            <field name="name">UYU</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="AFN" model="res.currency">
+            <field name="name">AFN</field>
+            <field name="symbol">Afs</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="AOA" model="res.currency">
+            <field name="name">AOA</field>
+            <field name="symbol">Kz</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="XCD" model="res.currency">
+            <field name="name">XCD</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="AMD" model="res.currency">
+            <field name="name">AMD</field>
+            <field name="symbol">դր.</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="AWG" model="res.currency">
+            <field name="name">AWG</field>
+            <field name="symbol">Afl.</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="AZN" model="res.currency">
+            <field name="name">AZN</field>
+            <field name="symbol">m</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="BSD" model="res.currency">
+            <field name="name">BSD</field>
+            <field name="symbol">B$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="BHD" model="res.currency">
+            <field name="name">BHD</field>
+            <field name="symbol">BD</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="BDT" model="res.currency">
+            <field name="name">BDT</field>
+            <field name="symbol">৳</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="BBD" model="res.currency">
+            <field name="name">BBD</field>
+            <field name="symbol">Bds$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="BYR" model="res.currency">
+            <field name="name">BYR</field>
+            <field name="symbol">BR</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="BZD" model="res.currency">
+            <field name="name">BZD</field>
+            <field name="symbol">BZ$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="BMD" model="res.currency">
+            <field name="name">BMD</field>
+            <field name="symbol">BD$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="BTN" model="res.currency">
+            <field name="name">BTN</field>
+            <field name="symbol">Nu.</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="BOB" model="res.currency">
+            <field name="name">BOB</field>
+            <field name="symbol">Bs.</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="BAM" model="res.currency">
+            <field name="name">BAM</field>
+            <field name="symbol">KM</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="BWP" model="res.currency">
+            <field name="name">BWP</field>
+            <field name="symbol">P</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="BIF" model="res.currency">
+            <field name="name">BIF</field>
+            <field name="symbol">FBu</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="KHR" model="res.currency">
+            <field name="name">KHR</field>
+            <field name="symbol">៛</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="KYD" model="res.currency">
+            <field name="name">KYD</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="KMF" model="res.currency">
+            <field name="name">KMF</field>
+            <field name="symbol">CF</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="CDF" model="res.currency">
+            <field name="name">CDF</field>
+            <field name="symbol">Fr</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="CUP" model="res.currency">
+            <field name="name">CUP</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ANG" model="res.currency">
+            <field name="name">ANG</field>
+            <field name="symbol">ƒ</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="CYP" model="res.currency">
+            <field name="name">CYP</field>
+            <field name="symbol">£</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="DJF" model="res.currency">
+            <field name="name">DJF</field>
+            <field name="symbol">Fdj</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="DOP" model="res.currency">
+            <field name="name">DOP</field>
+            <field name="symbol">RD$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ECS" model="res.currency">
+            <field name="name">ECS</field>
+            <field name="symbol">S/.</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="EGP" model="res.currency">
+            <field name="name">EGP</field>
+            <field name="symbol">E£</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="SVC" model="res.currency">
+            <field name="name">SVC</field>
+            <field name="symbol">¢</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ERN" model="res.currency">
+            <field name="name">ERN</field>
+            <field name="symbol">Nfk</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ETB" model="res.currency">
+            <field name="name">ETB</field>
+            <field name="symbol">Br</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="FKP" model="res.currency">
+            <field name="name">FKP</field>
+            <field name="symbol">£</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="FJD" model="res.currency">
+            <field name="name">FJD</field>
+            <field name="symbol">FJ$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="GEL" model="res.currency">
+            <field name="name">GEL</field>
+            <field name="symbol">ლ</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="GIP" model="res.currency">
+            <field name="name">GIP</field>
+            <field name="symbol">£</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="QTQ" model="res.currency">
+            <field name="name">QTQ</field>
+            <field name="symbol">Q</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="GNF" model="res.currency">
+            <field name="name">GNF</field>
+            <field name="symbol">FG</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="GYD" model="res.currency">
+            <field name="name">GYD</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="HTG" model="res.currency">
+            <field name="name">HTG</field>
+            <field name="symbol">G</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ISK" model="res.currency">
+            <field name="name">ISK</field>
+            <field name="symbol">kr</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="IRR" model="res.currency">
+            <field name="name">IRR</field>
+            <field name="symbol">﷼</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="IQD" model="res.currency">
+            <field name="name">IQD</field>
+            <field name="symbol"> ع.د</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ILS" model="res.currency">
+            <field name="name">ILS</field>
+            <field name="symbol">₪</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="JMD" model="res.currency">
+            <field name="name">JMD</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="JOD" model="res.currency">
+            <field name="name">JOD</field>
+            <field name="symbol"> د.ا </field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="KZT" model="res.currency">
+            <field name="name">KZT</field>
+            <field name="symbol">лв</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="KES" model="res.currency">
+            <field name="name">KES</field>
+            <field name="symbol">KSh</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="KWD" model="res.currency">
+            <field name="name">KWD</field>
+            <field name="symbol"> د.ك </field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="KGS" model="res.currency">
+            <field name="name">KGS</field>
+            <field name="symbol">лв</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="LAK" model="res.currency">
+            <field name="name">LAK</field>
+            <field name="symbol">₭</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="LBP" model="res.currency">
+            <field name="name">LBP</field>
+            <field name="symbol">ل.ل</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="LSL" model="res.currency">
+            <field name="name">LSL</field>
+            <field name="symbol">L</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="LRD" model="res.currency">
+            <field name="name">LRD</field>
+            <field name="symbol">L$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="LYD" model="res.currency">
+            <field name="name">LYD</field>
+            <field name="symbol"> ل.د </field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="MOP" model="res.currency">
+            <field name="name">MOP</field>
+            <field name="symbol">MOP$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="MKD" model="res.currency">
+            <field name="name">MKD</field>
+            <field name="symbol">ден</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="MGA" model="res.currency">
+            <field name="name">MGA</field>
+            <field name="symbol">Ar</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="MWK" model="res.currency">
+            <field name="name">MWK</field>
+            <field name="symbol">MK</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="MVR" model="res.currency">
+            <field name="name">MVR</field>
+            <field name="symbol">.ރ</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="MRO" model="res.currency">
+            <field name="name">MRO</field>
+            <field name="symbol">UM</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="MDL" model="res.currency">
+            <field name="name">MDL</field>
+            <field name="symbol">L</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="MNT" model="res.currency">
+            <field name="name">MNT</field>
+            <field name="symbol">₮</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="MAD" model="res.currency">
+            <field name="name">MAD</field>
+            <field name="symbol"> د.م. </field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="BND" model="res.currency">
+            <field name="name">BND</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="DZD" model="res.currency">
+            <field name="name">DZD</field>
+            <field name="symbol">DZ</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="GHS" model="res.currency">
+            <field name="name">GHS</field>
+            <field name="symbol">GH¢</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="GMD" model="res.currency">
+            <field name="name">GMD</field>
+            <field name="symbol">D</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ZRZ" model="res.currency">
+            <field name="name">ZRZ</field>
+            <field name="symbol">Ƶ</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="MZN" model="res.currency">
+            <field name="name">MZN</field>
+            <field name="symbol">MT</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="MMK" model="res.currency">
+            <field name="name">MMK</field>
+            <field name="symbol">K</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="NAD" model="res.currency">
+            <field name="name">NAD</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="NPR" model="res.currency">
+            <field name="name">NPR</field>
+            <field name="symbol">₨</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ALL" model="res.currency">
+            <field name="name">ALL</field>
+            <field name="symbol">L</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="NIO" model="res.currency">
+            <field name="name">NIO</field>
+            <field name="symbol">C$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="NGN" model="res.currency">
+            <field name="name">NGN</field>
+            <field name="symbol">₦</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="KPW" model="res.currency">
+            <field name="name">KPW</field>
+            <field name="symbol">₩</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ZWD" model="res.currency">
+            <field name="name">ZWD</field>
+            <field name="symbol">Z$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ZMK" model="res.currency">
+            <field name="name">ZMK</field>
+            <field name="symbol">ZK</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="YER" model="res.currency">
+            <field name="name">YER</field>
+            <field name="symbol">﷼</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="VUB" model="res.currency">
+            <field name="name">VUB</field>
+            <field name="symbol">Bs</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="EUR" model="res.currency">
+            <field name="name">EUR</field>
+            <field name="symbol">€</field>
+            <field name="rounding">0.01</field>
+        </record>
+
+        <record id="VUV" model="res.currency">
+            <field name="name">VUV</field>
+            <field name="symbol">VT</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="UZS" model="res.currency">
+            <field name="name">UZS</field>
+            <field name="symbol">лв</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="AED" model="res.currency">
+            <field name="name">AED</field>
+            <field name="symbol">د.إ</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="UAG" model="res.currency">
+            <field name="name">UAG</field>
+            <field name="symbol">₴</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="TMM" model="res.currency">
+            <field name="name">TMM</field>
+            <field name="symbol">m</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="TND" model="res.currency">
+            <field name="name">TND</field>
+            <field name="symbol">DT</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="TTD" model="res.currency">
+            <field name="name">TTD</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="TOP" model="res.currency">
+            <field name="name">TOP</field>
+            <field name="symbol">T$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="THB" model="res.currency">
+            <field name="name">THB</field>
+            <field name="symbol">฿</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="TZS" model="res.currency">
+            <field name="name">TZS</field>
+            <field name="symbol">x/y</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="TJS" model="res.currency">
+            <field name="name">TJS</field>
+            <field name="symbol">TJS</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="TWD" model="res.currency">
+            <field name="name">TWD</field>
+            <field name="symbol">NT$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="SYP" model="res.currency">
+            <field name="name">SYP</field>
+            <field name="symbol">£</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="SZL" model="res.currency">
+            <field name="name">SZL</field>
+            <field name="symbol">E</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="SRG" model="res.currency">
+            <field name="name">SRG</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="SDD" model="res.currency">
+            <field name="name">SDD</field>
+            <field name="symbol">£Sd</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="LKR" model="res.currency">
+            <field name="name">LKR</field>
+            <field name="symbol">Rs</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="SSP" model="res.currency">
+            <field name="name">SSP</field>
+            <field name="symbol">£</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="GBP" model="res.currency">
+            <field name="name">GBP</field>
+            <field name="symbol">£</field>
+            <field name="rounding">0.01</field>
+            <field name="position">before</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="SOD" model="res.currency">
+            <field name="name">SOD</field>
+            <field name="symbol">Sh.</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="SBD" model="res.currency">
+            <field name="name">SBD</field>
+            <field name="symbol">SI$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="SLL" model="res.currency">
+            <field name="name">SLL</field>
+            <field name="symbol">Le</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="SCR" model="res.currency">
+            <field name="name">SCR</field>
+            <field name="symbol">SR</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="RSD" model="res.currency">
+            <field name="name">RSD</field>
+            <field name="symbol">din.</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="SAR" model="res.currency">
+            <field name="name">SAR</field>
+            <field name="symbol">SR</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="STD" model="res.currency">
+            <field name="name">STD</field>
+            <field name="symbol">Db</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ITL" model="res.currency">
+            <field name="name">ITL</field>
+            <field name="symbol">₤</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="WST" model="res.currency">
+            <field name="name">WST</field>
+            <field name="symbol">WS$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="SHP" model="res.currency">
+            <field name="name">SHP</field>
+            <field name="symbol">£</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="RWF" model="res.currency">
+            <field name="name">RWF</field>
+            <field name="symbol">RF</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="RUR" model="res.currency">
+            <field name="name">RUR</field>
+            <field name="symbol">R</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="QAR" model="res.currency">
+            <field name="name">QAR</field>
+            <field name="symbol">QR</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="PLZ" model="res.currency">
+            <field name="name">PLZ</field>
+            <field name="symbol">zł</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="PEN" model="res.currency">
+            <field name="name">PEN</field>
+            <field name="symbol">S/.</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="PYG" model="res.currency">
+            <field name="name">PYG</field>
+            <field name="symbol">₲</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="PGK" model="res.currency">
+            <field name="name">PGK</field>
+            <field name="symbol">K</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="PKR" model="res.currency">
+            <field name="name">PKR</field>
+            <field name="symbol">Rs.</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="OMR" model="res.currency">
+            <field name="name">OMR</field>
+            <field name="symbol">ر.ع.</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="CVE" model="res.currency">
+            <field name="name">CVE</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="SKK" model="res.currency">
+            <field name="name">SKK</field>
+            <field name="symbol">Sk</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="YUM" model="res.currency">
+            <field name="name">YUM</field>
+            <field name="symbol">дин.</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="GTQ" model="res.currency">
+            <field name="name">GTQ</field>
+            <field name="symbol">Q</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

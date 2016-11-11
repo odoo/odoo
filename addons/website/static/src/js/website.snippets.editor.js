@@ -1,10 +1,17 @@
 odoo.define('website.snippets.editor', function (require) {
 'use strict';
 
-var widget = require('web_editor.widget');
+var ajax = require("web.ajax");
+var core = require("web.core");
+var Dialog = require("web.Dialog");
+var Model = require("web.Model");
+var editor = require("web_editor.editor");
 var animation = require('web_editor.snippets.animation');
 var options = require('web_editor.snippets.options');
 var snippet_editor = require('web_editor.snippet.editor');
+var website = require('website.website');
+
+var _t = core._t;
 
 snippet_editor.Class.include({
     _get_snippet_url: function () {
@@ -12,23 +19,74 @@ snippet_editor.Class.include({
     }
 });
 
-var preventParentEmpty = {
-    hide_remove_button: function () {
-        this.$overlay.find('.oe_snippet_remove, .oe_snippet_move').toggleClass("hidden", !this.$target.siblings().length);
+options.registry.menu_data = options.Class.extend({
+    start: function () {
+        this._super.apply(this, arguments);
+        this.link = this.$target.attr("href");
     },
-    on_focus : function () {
-        this._super();
-        this.hide_remove_button();
+
+    on_focus: function () {
+        this._super.apply(this, arguments);
+
+        (new Dialog(null, {
+            title: _t("Confirmation"),
+            $content: $(core.qweb.render("website.leaving_current_page_edition")),
+            buttons: [
+                {text: _t("Go to Link"), classes: "btn-primary", click: save_editor_then_go_to.bind(null, this.link)},
+                {text: _t("Edit the menu"), classes: "btn-primary", click: function () {
+                    var self = this;
+                    website.topBar.content_menu.edit_menu(function () {
+                        return editor.editor_bar.save_without_reload();
+                    }).then(function (dialog) {
+                        self.close();
+                    });
+                }},
+                {text: _t("Stay on this page"), close: true}
+            ]
+        })).open();
+
+        function save_editor_then_go_to(url) {
+            editor.editor_bar.save_without_reload().then(function () {
+                window.location.href = url;
+            });
+        }
     },
-    on_clone: function ($clone) {
-        this._super($clone);
-        this.hide_remove_button();
+});
+
+options.registry.company_data = options.Class.extend({
+    start: function () {
+        this._super.apply(this, arguments);
+
+        var proto = options.registry.company_data.prototype;
+
+        if (proto.__link_deferred === undefined) {
+            proto.__link_deferred = $.Deferred();
+            return ajax.jsonRpc("/web/session/get_session_info", "call").then(function (session) {
+                return (new Model("res.users")).get_func("read")(session.uid, ["company_id"]).then(function (res) {
+                    proto.__link_deferred.resolve(
+                        "/web#action=base.action_res_company_form&view_type=form&id=" + (res && res[0] && res[0].company_id[0] || 1)
+                    );
+                });
+            });
+        }
     },
-    on_remove: function () {
-        this._super();
-        this.hide_remove_button();
+
+    on_focus: function () {
+        this._super.apply(this, arguments);
+
+        var proto = options.registry.company_data.prototype;
+
+        Dialog.confirm(null, _t("Do you want to edit the company data ?"), {
+            confirm_callback: function () {
+                editor.editor_bar.save_without_reload().then(function () {
+                    proto.__link_deferred.then(function (link) {
+                        window.location.href = link;
+                    });
+                });
+            },
+        });
     },
-};
+});
 
 options.registry.slider = options.Class.extend({
     drop_and_build_snippet: function () {
@@ -58,8 +116,7 @@ options.registry.slider = options.Class.extend({
             .first().addClass("active");
     },
     start : function () {
-        var self = this;
-        this._super();
+        this._super.apply(this, arguments);
         this.$target.carousel({interval: false});
         this.id = this.$target.attr("id");
         this.$inner = this.$target.find('.carousel-inner');
@@ -67,7 +124,7 @@ options.registry.slider = options.Class.extend({
         this.$target.carousel('pause');
         this.rebind_event();
     },
-    add_slide: function (type, value) {
+    add_slide: function (type) {
         if(type !== "click") return;
 
         var self = this;
@@ -93,7 +150,7 @@ options.registry.slider = options.Class.extend({
             });
         }
         else {
-            var s_class = selection.attr('class').split(' ').filter(function (o) { return _.str.startsWith(o, "s_") })[0]
+            var s_class = selection.attr('class').split(' ').filter(function (o) { return _.str.startsWith(o, "s_"); })[0];
             selection = $snippets.find("." + s_class);
         }
         var $clone = $(selection).find('.item:first').clone();
@@ -106,35 +163,30 @@ options.registry.slider = options.Class.extend({
         },0);
         return $clone;
     },
-    remove_slide: function (type, value) {
-        if(type !== "click") return;
-
-        if (this.remove_process) {
-            return;
-        }
+    remove_slide: function (type) {
+        if (type !== "click" || this.remove_process) return;
         var self = this;
-        var new_index = 0;
-        var cycle = this.$inner.find('.item').length - 1;
-        var index = this.$inner.find('.item.active').index();
+
+        var $items = this.$inner.find('.item');
+        var cycle = $items.length - 1;
+        var $active = $items.filter('.active');
+        var index = $active.index();
 
         if (cycle > 0) {
             this.remove_process = true;
-            var $el = this.$inner.find('.item.active');
-            self.$target.on('slid.bs.carousel', function (event) {
-                $el.remove();
+            this.$target.on('slid.bs.carousel.slide_removal', function (event) {
+                $active.remove();
                 self.$indicators.find("li:last").remove();
-                self.$target.off('slid.bs.carousel');
+                self.$target.off('slid.bs.carousel.slide_removal');
                 self.rebind_event();
                 self.remove_process = false;
-                if (cycle == 1) {
-                    self.on_remove_slide(event);
+                if (cycle === 1) {
+                    self.$target.find('.carousel-control, .carousel-indicators').addClass("hidden");
                 }
             });
-            setTimeout(function () {
-                self.$target.carousel( index > 0 ? --index : cycle );
-            }, 500);
-        } else {
-            this.$target.find('.carousel-control, .carousel-indicators').addClass("hidden");
+            _.defer(function () {
+                self.$target.carousel(index > 0 ? --index : cycle);
+            });
         }
     },
     interval : function (type, value) {
@@ -162,248 +214,43 @@ options.registry.carousel = options.registry.slider.extend({
     },
     start : function () {
         var self = this;
-        this._super();
+        this._super.apply(this, arguments);
 
         // set background and prepare to clean for save
-        var add_class = function (c) {
-            if (c) self._class = (self._class || "").replace(new RegExp("[ ]+" + c.replace(" ", "|[ ]+")), '') + ' ' + c;
-            return self._class || "";
-        };
         this.$target.on('slid.bs.carousel', function () {
-            if(self.editor && self.editor.styles.background) {
-                self.editor.styles.background.$target = self.$target.find(".item.active");
-                self.editor.styles.background.set_active();
-            }
+                self.editor.styles.background_position.$target = self.editor.styles.background.$target;
+                self.editor.styles.background_position.set_active();
+                self.editor.styles.background.$target.trigger("snippet-option-change", [self.editor.styles.background]);
             self.$target.carousel("pause");
+            if (!self.editor) return;
+
+            _.each(["background", "background_position", "colorpicker"], function (opt_name) {
+                var s_option = self.editor.styles[opt_name];
+                if (!s_option) return;
+
+                s_option.$target = self.$target.find(".item.active");
+                s_option.set_active();
+                s_option.$target.trigger("snippet-option-change", [s_option]);
+            });
         });
         this.$target.trigger('slid.bs.carousel');
-    },
-    add_slide: function (type, data) {
-        if(type !== "click") return;
-
-        var $clone = this._super(type, data);
-        // choose an other background
-        var bg = this.$target.data("snippet-option-ids").background;
-        if (!bg) return $clone;
-
-        var $styles = bg.$el.find("li[data-background]");
-        var $select = $styles.filter(".active").removeClass("active").next("li[data-background]");
-        if (!$select.length) {
-            $select = $styles.first();
-        }
-        $select.addClass("active");
-        $clone.css("background-image", $select.data("background") ? "url('"+ $select.data("background") +"')" : "");
-
-        return $clone;
     },
     // rebind event to active carousel on edit mode
     rebind_event: function () {
         var self = this;
         this.$target.find('.carousel-control').off('click').on('click', function () {
-            self.$target.carousel( $(this).data('slide')); });
-        this._super();
+            self.$target.carousel($(this).data('slide'));
+        });
+        this._super.apply(this, arguments);
 
         /* Fix: backward compatibility saas-3 */
         this.$target.find('.item.text_image, .item.image_text, .item.text_only').find('.container > .carousel-caption > div, .container > img.carousel-image').attr('contentEditable', 'true');
     },
 });
 
-options.registry.marginAndResize = options.Class.extend({
-    start: function () {
-        var self = this;
-        this._super();
+options.registry["margin-x"] = options.registry.marginAndResize.extend({
+    preventChildPropagation: true,
 
-        var resize_values = this.getSize();
-        if (resize_values.n) this.$overlay.find(".oe_handle.n").removeClass("readonly");
-        if (resize_values.s) this.$overlay.find(".oe_handle.s").removeClass("readonly");
-        if (resize_values.e) this.$overlay.find(".oe_handle.e").removeClass("readonly");
-        if (resize_values.w) this.$overlay.find(".oe_handle.w").removeClass("readonly");
-        if (resize_values.size) this.$overlay.find(".oe_handle.size").removeClass("readonly");
-
-        this.$overlay.find(".oe_handle:not(.size), .oe_handle.size .size").on('mousedown', function (event) {
-            event.preventDefault();
-
-            var $handle = $(this);
-
-            var resize_values = self.getSize();
-            var compass = false;
-            var XY = false;
-            if ($handle.hasClass('n')) {
-                compass = 'n';
-                XY = 'Y';
-            }
-            else if ($handle.hasClass('s')) {
-                compass = 's';
-                XY = 'Y';
-            }
-            else if ($handle.hasClass('e')) {
-                compass = 'e';
-                XY = 'X';
-            }
-            else if ($handle.hasClass('w')) {
-                compass = 'w';
-                XY = 'X';
-            }
-            else if ($handle.hasClass('size')) {
-                compass = 'size';
-                XY = 'Y';
-            }
-
-            var resize = resize_values[compass];
-            if (!resize) return;
-
-
-            if (compass === 'size') {
-                var offset = self.$target.offset().top;
-                if (self.$target.css("background").match(/rgba\(0, 0, 0, 0\)/)) {
-                    self.$target.addClass("resize_editor_busy");
-                }
-            } else {
-                var xy = event['page'+XY];
-                var current = resize[2] || 0;
-                var margin_dir = {s:'bottom', n: 'top', w: 'left', e: 'right'}[compass];
-                var real_margin = parseInt(self.$target.css('margin-'+margin_dir));
-                _.each(resize[0], function (val, key) {
-                    if (self.$target.hasClass(val)) {
-                        current = key;
-                    } else if (resize[1][key] === real_margin) {
-                        current = key;
-                    }
-                });
-                var begin = current;
-                var beginClass = self.$target.attr("class");
-                var regClass = new RegExp("\\s*" + resize[0][begin].replace(/[-]*[0-9]+/, '[-]*[0-9]+'), 'g');
-            }
-
-            self.buildingBlock.editor_busy = true;
-
-            var cursor = $handle.css("cursor")+'-important';
-            var $body = $(document.body);
-            $body.addClass(cursor);
-
-            var body_mousemove = function (event) {
-                event.preventDefault();
-                if (compass === 'size') {
-                    var dy = event.pageY-offset;
-                    dy = dy - dy%resize;
-                    if (dy <= 0) dy = resize;
-                    self.$target.css("height", dy+"px");
-                    self.$target.css("overflow", "hidden");
-                    self.on_resize(compass, null, dy);
-                    self.buildingBlock.cover_target(self.$overlay, self.$target);
-                    return;
-                }
-                var dd = event['page'+XY] - xy + resize[1][begin];
-                var next = current+1 === resize[1].length ? current : (current+1);
-                var prev = current ? (current-1) : 0;
-
-                var change = false;
-                if (dd > (2*resize[1][next] + resize[1][current])/3) {
-                    self.$target.attr("class", (self.$target.attr("class")||'').replace(regClass, ''));
-                    self.$target.addClass(resize[0][next]);
-                    current = next;
-                    change = true;
-                }
-                if (prev != current && dd < (2*resize[1][prev] + resize[1][current])/3) {
-                    self.$target.attr("class", (self.$target.attr("class")||'').replace(regClass, ''));
-                    self.$target.addClass(resize[0][prev]);
-                    current = prev;
-                    change = true;
-                }
-
-                if (change) {
-                    self.on_resize(compass, beginClass, current);
-                    self.buildingBlock.cover_target(self.$overlay, self.$target);
-                }
-            };
-
-            var body_mouseup = function () {
-                $body.unbind('mousemove', body_mousemove);
-                $body.unbind('mouseup', body_mouseup);
-                $body.removeClass(cursor);
-                setTimeout(function () {
-                    self.buildingBlock.editor_busy = false;
-                    if (begin !== current) {
-                        self.buildingBlock.parent.rte.historyRecordUndo(self.$target, 'resize_' + XY);
-                    }
-                },0);
-                self.$target.removeClass("resize_editor_busy");
-            };
-            $body.mousemove(body_mousemove);
-            $body.mouseup(body_mouseup);
-        });
-        this.$overlay.find(".oe_handle.size .auto_size").on('click', function (event) {
-            self.$target.css("height", "");
-            self.$target.css("overflow", "");
-            self.buildingBlock.parent.rte.historyRecordUndo(self.$target, 'resize_Y');
-            self.buildingBlock.cover_target(self.$overlay, self.$target);
-            return false;
-        });
-    },
-    getSize: function () {
-        this.grid = {};
-        return this.grid;
-    },
-
-    on_focus : function () {
-        this._super();
-        this.change_cursor();
-    },
-
-    change_cursor : function () {
-        var _class = this.$target.attr("class") || "";
-
-        var col = _class.match(/col-md-([0-9-]+)/i);
-        col = col ? +col[1] : 0;
-
-        var offset = _class.match(/col-md-offset-([0-9-]+)/i);
-        offset = offset ? +offset[1] : 0;
-
-        var overlay_class = this.$overlay.attr("class").replace(/(^|\s+)block-[^\s]*/gi, '');
-        if (col+offset >= 12) overlay_class+= " block-e-right";
-        if (col === 1) overlay_class+= " block-w-right block-e-left";
-        if (offset === 0) overlay_class+= " block-w-left";
-
-        var mb = _class.match(/mb([0-9-]+)/i);
-        mb = mb ? +mb[1] : parseInt(this.$target.css('margin-bottom'));
-        if (mb >= 128) overlay_class+= " block-s-bottom";
-        else if (!mb) overlay_class+= " block-s-top";
-
-        var mt = _class.match(/mt([0-9-]+)/i);
-        mt = mt ? +mt[1] : parseInt(this.$target.css('margin-top'));
-        if (mt >= 128) overlay_class+= " block-n-top";
-        else if (!mt) overlay_class+= " block-n-bottom";
-
-        this.$overlay.attr("class", overlay_class);
-    },
-    
-    /* on_resize
-    *  called when the box is resizing and the class change, before the cover_target
-    *  @compass: resize direction : 'n', 's', 'e', 'w'
-    *  @beginClass: attributes class at the begin
-    *  @current: curent increment in this.grid
-    */
-    on_resize: function (compass, beginClass, current) {
-        this.change_cursor();
-    }
-});
-
-options.registry["margin-y"] = options.registry.marginAndResize.extend({
-    getSize: function () {
-        this.grid = this._super();
-        var grid = [0,4,8,16,32,48,64,92,128];
-        this.grid = {
-            // list of class (Array), grid (Array), default value (INT)
-            n: [_.map(grid, function (v) {return 'mt'+v;}), grid],
-            s: [_.map(grid, function (v) {return 'mb'+v;}), grid],
-            // INT if the user can resize the snippet (resizing per INT px)
-            size: null
-        };
-        return this.grid;
-    },
-});
-
-options.registry["margin-x"] = options.registry.marginAndResize.extend(preventParentEmpty).extend({
     getSize: function () {
         this.grid = this._super();
         var width = this.$target.parents(".row:first").first().outerWidth();
@@ -411,38 +258,10 @@ options.registry["margin-x"] = options.registry.marginAndResize.extend(preventPa
         var grid = [1,2,3,4,5,6,7,8,9,10,11,12];
         this.grid.e = [_.map(grid, function (v) {return 'col-md-'+v;}), _.map(grid, function (v) {return width/12*v;})];
 
-        var grid = [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11];
+        grid = [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11];
         this.grid.w = [_.map(grid, function (v) {return 'col-md-offset-'+v;}), _.map(grid, function (v) {return width/12*v;}), 12];
 
         return this.grid;
-    },
-    _drag_and_drop_after_insert_dropzone: function () {
-        var self = this;
-        $(".row:has(> .oe_drop_zone)").each(function () {
-            var $row = $(this);
-            var width = $row.innerWidth();
-            var pos = 0;
-            while (width > pos + self.size.width) {
-                var $last = $row.find("> .oe_drop_zone:last");
-                $last.each(function () {
-                    pos = $(this).position().left;
-                });
-                if (width > pos + self.size.width) {
-                    $row.append("<div class='col-md-1 oe_drop_to_remove'/>");
-                    var $add_drop = $last.clone();
-                    $row.append($add_drop);
-                    self._drag_and_drop_active_drop_zone($add_drop);
-                }
-            }
-        });
-    },
-    _drag_and_drop_start: function () {
-        this._super();
-        this.$target.attr("class",this.$target.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, ''));
-    },
-    _drag_and_drop_stop: function () {
-        this.$target.addClass("col-md-offset-" + this.$target.prevAll(".oe_drop_to_remove").length);
-        this._super();
     },
     on_clone: function ($clone) {
         var _class = $clone.attr("class").replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, '');
@@ -474,166 +293,50 @@ options.registry["margin-x"] = options.registry.marginAndResize.extend(preventPa
     },
 });
 
-options.registry.resize = options.registry.marginAndResize.extend({
-    getSize: function () {
-        this.grid = this._super();
-        this.grid.size = 8;
-        return this.grid;
-    },
-});
-
 options.registry.parallax = options.Class.extend({
     getSize: function () {
-        this.grid = this._super();
+        this.grid = this._super.apply(this, arguments);
         this.grid.size = 8;
         return this.grid;
     },
-    on_resize: function (compass, beginClass, current) {
+    on_resize: function () {
+        this._refresh();
+    },
+    _refresh: function () {
         this.$target.data("snippet-view").set_values();
     },
-    start : function () {
-        var self = this;
-        this._super();
-        if (!self.$target.data("snippet-view")) {
+    start: function () {
+        this._super.apply(this, arguments);
+        if (!this.$target.data("snippet-view")) {
             this.$target.data("snippet-view", new animation.registry.parallax(this.$target));
         }
         this.scroll();
-        this.$target.on('snippet-option-change snippet-option-preview', function () {
-            self.$target.data("snippet-view").set_values();
-        });
-        this.$target.attr('contentEditable', 'false');
 
-        this.$target.find('> div > .oe_structure').attr('contentEditable', 'true'); // saas-3 retro-compatibility
-
-        this.$target.find('> div > div:not(.oe_structure) > .oe_structure').attr('contentEditable', 'true');
+        this._refresh_callback = this._refresh.bind(this);
+        this.buildingBlock.$el.on("snippet-dropped snippet-activated", this._refresh_callback);
+        this.$target.on('snippet-option-change snippet-option-preview', this._refresh_callback);
     },
     scroll: function (type, value) {
-        this.$target.attr('data-scroll-background-ratio', value);
-        this.$target.data("snippet-view").set_values();
+        this.$target.attr("data-scroll-background-ratio", value);
+        this._refresh();
     },
     set_active: function () {
-        var value = this.$target.attr('data-scroll-background-ratio') || 0;
         this.$el.find('[data-scroll]').removeClass("active")
             .filter('[data-scroll="' + (this.$target.attr('data-scroll-background-ratio') || 0) + '"]').addClass("active");
     },
     clean_for_save: function () {
-        this._super();
-        this.$target.find(".parallax")
-            .css("background-position", '')
-            .removeAttr("data-scroll-background-offset");
-    }
-});
-
-
-// to remove after 9.0 (keep for compatibility without update with -u)
-options.registry.transform = options.Class.extend({
-    start: function () {
-        var self = this;
-        this._super();
-        this.$overlay.find('.oe_snippet_clone, .oe_handles').addClass('hidden');
-        this.$overlay.find('[data-toggle="dropdown"]')
-            .on("mousedown", function () {
-                self.$target.transfo("hide");
-            });
-        this.$target.on('attributes_change', function () {
-            self.resetTransfo();
-        });
-
-        // don't unactive transform if rotation and mouseup on an other container
-        var cursor_mousedown = false;
-        $(document).on('mousedown', function (event) {
-            if (self.$overlay.hasClass('oe_active') && $(event.target).closest(".transfo-controls").length) {
-                cursor_mousedown = event;
-            }
-        });
-        $(document).on('mouseup', function (event) {
-            if (cursor_mousedown) {
-                event.preventDefault();
-
-                var dx = event.clientX-cursor_mousedown.clientX;
-                var dy = event.clientY-cursor_mousedown.clientY;
-                setTimeout(function () {
-                    self.$target.focusIn().activateBlock();
-                    if (10 < Math.pow(dx, 2)+Math.pow(dy, 2)) {
-                        setTimeout(function () {
-                            self.$target.transfo({ 'hide': false });
-                        },0);
-                    }
-                },0);
-                cursor_mousedown = false;
-            }
-        });
+        this._super.apply(this, arguments);
+        this.$target.css("background-position", '').css("background-attachment", '');
     },
-    style: function (type, value) {
-        if (type !== 'click') return;
-        var settings = this.$target.data("transfo").settings;
-        this.$target.transfo({ 'hide': (settings.hide = !settings.hide) });
+    on_move: function () {
+        this._super.apply(this, arguments);
+        this._refresh();
     },
-    clear_style: function (type, value) {
-        if (type !== 'click') return;
-        this.$target.removeClass("fa-spin").attr("style", "");
-        this.resetTransfo();
+    on_remove: function () {
+        this._super.apply(this, arguments);
+        this.$target.off("snippet-option-change snippet-option-preview", this._refresh_callback);
+        this.buildingBlock.$el.off("snippet-dropped snippet-activated", this._refresh_callback);
     },
-    move_summernote_select: function () {
-        var self = this;
-        var transfo = this.$target.data("transfo");
-        $('body > .note-handle')
-            .attr('style', transfo.$markup.attr('style'))
-            .css({
-                'z-index': 0,
-                'pointer-events': 'none'
-            })
-            .off('mousedown mouseup')
-            .on('mousedown mouseup', function (event) {
-                self.$target.trigger( jQuery.Event( event.type, event ) );
-            })
-            .find('.note-control-selection').attr('style', transfo.$markup.find('.transfo-controls').attr('style'))
-                .css({
-                    'display': 'block',
-                    'cursor': 'auto'
-                });
-    },
-    resetTransfo: function () {
-        var self = this;
-        this.$overlay.css('width', '');
-        this.$overlay.data('not-cover_target', true);
-        this.$target.transfo("destroy");
-        this.$target.transfo({
-            hide: true,
-            callback: function () {
-                var pos = $(this).data("transfo").$center.offset();
-                self.$overlay.css({
-                    'top': pos.top | 0,
-                    'left': pos.left | 0,
-                    'position': 'absolute',
-                });
-                self.$overlay.find(".oe_overlay_options").attr("style", "width:0; left:0!important; top:0;");
-                self.$overlay.find(".oe_overlay_options > .btn-group").attr("style", "width:160px; left:-80px;");
-
-                self.move_summernote_select();
-            }});
-        this.$target.data('transfo').$markup
-            .on("mouseover", function () {
-                self.$target.trigger("mouseover");
-            })
-            .mouseover();
-    },
-    on_focus : function () {
-        var self = this;
-        setTimeout(function () {
-            self.$target.css({"-webkit-animation": "none", "animation": "none"});
-            self.resetTransfo();
-        },0);
-    },
-    on_blur : function () {
-        this.$target.transfo("hide");
-        $('.note-handle').hide(); // hide selection of summernote
-        this.$target.css({"-webkit-animation-play-state": "", "animation-play-state": "", "-webkit-transition": "", "transition": "", "-webkit-animation": "", "animation": ""});
-    },
-    clean_for_save: function () {
-        this.on_blur();
-        this._super();
-    }
 });
 
 options.registry.ul = options.Class.extend({
@@ -651,15 +354,15 @@ options.registry.ul = options.Class.extend({
         this.$target.find('.o_ul_toggle_self, .o_ul_toggle_next').remove();
 
         this.$target.find('li:has(>ul,>ol)').map(function () {
-                // get if the li contain a text label
-                var texts = _.filter(_.toArray(this.childNodes), function (a) { return a.nodeType == 3;});
-                if (!texts.length || !texts.reduce(function (a,b) { return a.textContent + b.textContent;}).match(/\S/)) {
-                    return;
-                }
-                $(this).children('ul,ol').addClass('o_close');
-                return $(this).children(':not(ul,ol)')[0] || this;
-            })
-            .prepend('<a href="#" class="o_ul_toggle_self fa" />');
+            // get if the li contain a text label
+            var texts = _.filter(_.toArray(this.childNodes), function (a) { return a.nodeType == 3;});
+            if (!texts.length || !texts.reduce(function (a,b) { return a.textContent + b.textContent;}).match(/\S/)) {
+                return;
+            }
+            $(this).children('ul,ol').addClass('o_close');
+            return $(this).children(':not(ul,ol)')[0] || this;
+        })
+        .prepend('<a href="#" class="o_ul_toggle_self fa" />');
 
         var $li = this.$target.find('li:has(+li:not(>.o_ul_toggle_self)>ul, +li:not(>.o_ul_toggle_self)>ol)');
         $li.map(function () { return $(this).children()[0] || this; })
@@ -685,7 +388,7 @@ options.registry.ul = options.Class.extend({
     }
 });
 
-options.registry.collapse = options.Class.extend(preventParentEmpty).extend({
+options.registry.collapse = options.Class.extend({
     start: function () {
         var self = this;
         this._super();
@@ -747,7 +450,6 @@ options.registry.collapse = options.Class.extend(preventParentEmpty).extend({
 });
 
 return options;
-
 });
 
 
@@ -755,7 +457,6 @@ odoo.define('website.rte.summernote', function (require) {
 'use strict';
 
 var core = require('web.core');
-var options = require('website.snippets.editor');
 require('web_editor.rte.summernote');
 
 var eventHandler = $.summernote.eventHandler;
@@ -776,7 +477,6 @@ renderer.tplPopovers = function (lang, options) {
 
 
 $.summernote.pluginEvents.transform = function (event, editor, layoutInfo, sorted) {
-    var $editable = layoutInfo.editable();
     var $selection = layoutInfo.handle().find('.note-control-selection');
     var $image = $($selection.data('target'));
 
@@ -805,7 +505,6 @@ $.summernote.pluginEvents.transform = function (event, editor, layoutInfo, sorte
     $(document).on('mousedown', mousedown);
 };
 
-
 var fn_boutton_update = eventHandler.modules.popover.button.update;
 eventHandler.modules.popover.button.update = function ($container, oStyle) {
     fn_boutton_update.call(this, $container, oStyle);
@@ -813,6 +512,4 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
         .toggleClass('active', $(oStyle.image).is('[style*="transform"]'))
         .toggleClass('hidden', !$(oStyle.image).is('img'));
 };
-
-
 });

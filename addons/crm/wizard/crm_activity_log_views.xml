@@ -50,8 +50,8 @@
                     <group>
                         <div>
                             <p><strong>Recommended activities:</strong></p>
-                            <field name="recommended_activity_id" widget="radio"
-                                domain="[('preceding_activity_ids', 'in', [last_activity_id])]"/>
+                            <field name="recommended_activity_id" widget="radio" class="o_recommended_activity"
+                                domain="[('preceding_activity_ids', '=', last_activity_id)]"/>
                         </div>
                     </group>
                 </group>
@@ -71,4 +71,15 @@
         <field name="view_id" ref="crm_activity_log_view_form"/>
         <field name="target">new</field>
     </record>
+
+
+    <record id="crm_activity_schedule_action" model="ir.actions.act_window">
+        <field name="name">Schedule an Activity</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">crm.activity.log</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="crm_activity_log_view_form_schedule"/>
+        <field name="target">new</field>
+    </record>
+
 </odoo>

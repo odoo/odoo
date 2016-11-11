@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.stock.tests.common import TestStockCommon
-from openerp.tools import mute_logger, float_round
+from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.tools import mute_logger, float_round
 
 
 class TestStockFlow(TestStockCommon):
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
+    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_00_picking_create_and_transfer_quantity(self):
         """ Basic stock operation on incoming and outgoing shipment. """
         LotObj = self.env['stock.production.lot']
@@ -309,7 +309,7 @@ class TestStockFlow(TestStockCommon):
 
         # Confirm back order of incoming shipment.
         back_order_in.action_confirm()
-        self.assertEqual(back_order_in.state, 'assigned', 'Wrong state of incoming shipment back order.')
+        self.assertEqual(back_order_in.state, 'assigned', 'Wrong state of incoming shipment back order: %s instead of %s' % (back_order_in.state, 'assigned'))
         for move in back_order_in.move_lines:
             self.assertEqual(move.state, 'assigned', 'Wrong state of move line.')
 
@@ -917,7 +917,7 @@ class TestStockFlow(TestStockCommon):
         #-----------------------------------------------------------------------
 
         # Check incoming shipment state.
-        self.assertEqual(picking_in.state, 'done', 'Incoming shipment state should be done.')
+        self.assertEqual(picking_in.state, 'done', 'Incoming shipment state: %s instead of %s' % (picking_in.state, 'done'))
         # Check incoming shipment move lines state.
         for move in picking_in.move_lines:
             self.assertEqual(move.state, 'done', 'Wrong state of move lines.')
@@ -1168,6 +1168,48 @@ class TestStockFlow(TestStockCommon):
         total_qty = sum([quant.qty for quant in quants])
         self.assertEqual(total_qty, 0, 'Expecting 0 units lot of lotproduct, but we got %.4f on location stock!' % (total_qty))
 
+        # check product available of saleable category in stock location
+        category_id = self.ref('product.product_category_5')
+        inventory3 = self.InvObj.create({
+                                    'name': 'Test Category',
+                                    'filter': 'category',
+                                    'location_id': self.stock_location,
+                                    'category_id': category_id
+                                })
+        # Start Inventory
+        inventory3.prepare_inventory()
+        # check all products have given category id
+        products_category = inventory3.line_ids.mapped('product_id.categ_id')
+        self.assertEqual(len(products_category), 1, "Inventory line should have only one category")
+        inventory3.action_done()
+        # check category with exhausted in stock location
+        inventory4 = self.InvObj.create({
+                                    'name': 'Test Exhausted Product',
+                                    'filter': 'category',
+                                    'location_id': self.stock_location,
+                                    'category_id': category_id,
+                                    'exhausted': True,
+                                })
+        inventory4.prepare_inventory()
+        inventory4._get_inventory_lines_values()
+        inventory4_lines_count = len(inventory4.line_ids)
+        inventory4.action_done()
+        # Add one product in this product category
+        product = self.ProductObj.create({'name': 'Product A', 'type': 'product', 'categ_id': category_id})
+        # Check that this exhausted product is in the product category inventory adjustment
+        inventory5 = self.InvObj.create({
+                                    'name': 'Test Exhausted Product',
+                                    'filter': 'category',
+                                    'location_id': self.stock_location,
+                                    'category_id': category_id,
+                                    'exhausted': True,
+                                })
+        inventory5.prepare_inventory()
+        inventory5._get_inventory_lines_values()
+        inventory5_lines_count = len(inventory5.line_ids)
+        inventory5.action_done()
+        self.assertEqual(inventory5_lines_count, inventory4_lines_count + 1, "The new product is not taken into account in the inventory valuation.")
+        self.assertTrue(product.id in inventory5.line_ids.mapped('product_id').ids, "The new product is not take into account in the inventory valuation.")
 
     def test_30_check_with_no_incoming_lot(self):
         """ Picking in without lots and picking out with"""

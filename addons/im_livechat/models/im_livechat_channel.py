@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-import json
-import openerp
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import random
 import re
 from datetime import datetime, timedelta
 
-from openerp import api, fields, models
-from openerp import tools
+from odoo import api, fields, models, modules, tools
 
 
 class ImLivechatChannel(models.Model):
@@ -20,7 +19,7 @@ class ImLivechatChannel(models.Model):
     _description = 'Livechat Channel'
 
     def _default_image(self):
-        image_path = openerp.modules.get_module_resource('im_livechat', 'static/src/img', 'default.png')
+        image_path = modules.get_module_resource('im_livechat', 'static/src/img', 'default.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     def _default_user_ids(self):
@@ -48,13 +47,11 @@ class ImLivechatChannel(models.Model):
     # images fields
     image = fields.Binary('Image', default=_default_image, attachment=True,
         help="This field holds the image used as photo for the group, limited to 1024x1024px.")
-    image_medium = fields.Binary('Medium',
-        compute='_compute_image', store=True, attachment=True,
+    image_medium = fields.Binary('Medium', attachment=True,
         help="Medium-sized photo of the group. It is automatically "\
              "resized as a 128x128px image, with aspect ratio preserved. "\
              "Use this field in form views or some kanban views.")
-    image_small = fields.Binary('Thumbnail',
-        compute='_compute_image', store=True, attachment=True,
+    image_small = fields.Binary('Thumbnail', attachment=True,
         help="Small-sized photo of the group. It is automatically "\
              "resized as a 64x64px image, with aspect ratio preserved. "\
              "Use this field anywhere a small image is required.")
@@ -68,12 +65,6 @@ class ImLivechatChannel(models.Model):
     @api.one
     def _are_you_inside(self):
         self.are_you_inside = bool(self.env.uid in [u.id for u in self.user_ids])
-
-    @api.one
-    @api.depends('image')
-    def _compute_image(self):
-        self.image_medium = tools.image_resize_image_medium(self.image)
-        self.image_small = tools.image_resize_image_small(self.image)
 
     @api.multi
     def _compute_script_external(self):
@@ -110,6 +101,16 @@ class ImLivechatChannel(models.Model):
                 record.rating_percentage_satisfaction = ((happy*100) / total) if happy > 0 else 0
             else:
                 record.rating_percentage_satisfaction = -1
+
+    @api.model
+    def create(self, vals):
+        tools.image_resize_images(vals)
+        return super(ImLivechatChannel, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        tools.image_resize_images(vals)
+        return super(ImLivechatChannel, self).write(vals)
 
     # --------------------------
     # Action Methods
@@ -174,7 +175,7 @@ class ImLivechatChannel(models.Model):
             'anonymous_name': anonymous_name,
             'channel_type': 'livechat',
             'name': ', '.join([anonymous_name, user.name]),
-            'public': 'public',
+            'public': 'private',
             'email_send': False,
         })
         return mail_channel.sudo().with_context(im_livechat_operator_partner_id=operator_partner_id).channel_info()[0]
@@ -213,27 +214,27 @@ class ImLivechatChannelRule(models.Model):
 
 
     regex_url = fields.Char('URL Regex',
-        help="Regular expression identifying the web page on which the rules will be applied.")
+        help="Regular expression specifying the web pages this rule will be applied on.")
     action = fields.Selection([('display_button', 'Display the button'), ('auto_popup', 'Auto popup'), ('hide_button', 'Hide the button')],
         string='Action', required=True, default='display_button',
-        help="* Select 'Display the button' to simply display the chat button on the pages.\n"\
-             "* Select 'Auto popup' for to display the button, and automatically open the conversation window.\n"\
-             "* Select 'Hide the button' to hide the chat button on the pages.")
+        help="* 'Display the button' displays the chat button on the pages.\n"\
+             "* 'Auto popup' displays the button and automatically open the conversation pane.\n"\
+             "* 'Hide the button' hides the chat button on the pages.")
     auto_popup_timer = fields.Integer('Auto popup timer', default=0,
-        help="Delay (in seconds) to automatically open the converssation window. Note : the selected action must be 'Auto popup', otherwise this parameter will not be take into account.")
+        help="Delay (in seconds) to automatically open the conversation window. Note: the selected action must be 'Auto popup' otherwise this parameter will not be taken into account.")
     channel_id = fields.Many2one('im_livechat.channel', 'Channel',
         help="The channel of the rule")
     country_ids = fields.Many2many('res.country', 'im_livechat_channel_country_rel', 'channel_id', 'country_id', 'Country',
-        help="The actual rule will match only for this country. So if you set select 'Belgium' and 'France' and you set the action to 'Hide Buttun', this 2 country will not be see the support button for the specified URL. This feature requires GeoIP installed on your server.")
+        help="The rule will only be applied for these countries. Example: if you select 'Belgium' and 'United States' and that you set the action to 'Hide Button', the chat button will be hidden on the specified URL from the visitors located in these 2 countries. This feature requires GeoIP installed on your server.")
     sequence = fields.Integer('Matching order', default=10,
         help="Given the order to find a matching rule. If 2 rules are matching for the given url/country, the one with the lowest sequence will be chosen.")
 
     def match_rule(self, channel_id, url, country_id=False):
-        """ determine if a rule of the given channel match with the given url
+        """ determine if a rule of the given channel matches with the given url
             :param channel_id : the identifier of the channel_id
             :param url : the url to match with a rule
             :param country_id : the identifier of the country
-            :returns the rule that match the given condition. False otherwise.
+            :returns the rule that matches the given condition. False otherwise.
             :rtype : im_livechat.channel.rule
         """
         def _match(rules):

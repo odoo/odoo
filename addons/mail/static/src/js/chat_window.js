@@ -16,9 +16,9 @@ var HEIGHT_FOLDED = '28px';
 return Widget.extend({
     template: "mail.ChatWindow",
     events: {
-        "click .o_chat_input": "focus_input", // focus even if jquery's blockUI is enabled
-        "keydown .o_chat_input": "on_keydown",
-        "keypress .o_chat_input": "on_keypress",
+        "click .o_chat_composer": "focus_input", // focus even if jquery's blockUI is enabled
+        "keydown .o_chat_composer": "on_keydown",
+        "keypress .o_chat_composer": "on_keypress",
         "click .o_chat_window_close": "on_click_close",
         "click .o_chat_title": "on_click_fold",
     },
@@ -32,6 +32,7 @@ return Widget.extend({
             autofocus: true,
             display_stars: true,
             display_reply_icon: false,
+            display_email_icon: false,
             placeholder: _t("Say something"),
             input_less: false,
         });
@@ -40,7 +41,7 @@ return Widget.extend({
         this.is_hidden = false;
     },
     start: function () {
-        this.$input = this.$('.o_chat_input input');
+        this.$input = this.$('.o_composer_text_field');
         this.$header = this.$('.o_chat_header');
 
         this.thread = new ChatThread(this, {

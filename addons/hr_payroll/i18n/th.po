@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2016-03-25 03:54+0000\n"
-"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
-"Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,17 +20,20 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:59
+#: code:addons/hr_payroll/models/hr_payroll.py:46
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (สำเนา)"
+msgstr "(สำเนา) %s"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_state
 msgid ""
-"* When the payslip is created the status is 'Draft'.            \n"
-"* If the payslip is under verification, the status is 'Waiting'.             \n"
-"* If the payslip is confirmed then status is set to 'Done'.            \n"
+"* When the payslip is created the status is 'Draft'\n"
+"                \n"
+"* If the payslip is under verification, the status is 'Waiting'.\n"
+"                \n"
+"* If the payslip is confirmed then status is set to 'Done'.\n"
+"                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
 
@@ -65,7 +69,7 @@ msgstr "<strong>จากวันที่</strong>"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Date To:</strong>"
-msgstr ""
+msgstr "<strong>ถึงวันที่:</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -124,12 +128,12 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Accounting"
-msgstr "บัญชี"
+msgstr "การบัญชี"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Accounting Information"
-msgstr "ข้อมูลทางการบัญชี"
+msgstr "ข้อมูลทางบัญชี"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_active
@@ -140,7 +144,7 @@ msgstr "เปิดใช้งาน"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Add an internal note..."
-msgstr "เพิ่มบันทึกภายใน…"
+msgstr "เพิ่มโน้ตภายใน…"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
@@ -160,7 +164,7 @@ msgstr "เป็นจริงเสมอ"
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Amount"
-msgstr "จำนวนรวม"
+msgstr "จำนวน"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_select
@@ -220,11 +224,17 @@ msgid "Cancel Payslip"
 msgstr "ยกเลิกสลิปเงินเดือน"
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:238
+#, python-format
+msgid "Cannot cancel a payslip that is done."
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9081
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9067
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Category"
-msgstr "หมวดหมู่"
+msgstr "หมวด"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -241,7 +251,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_children_ids
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_children_ids
 msgid "Children"
-msgstr ""
+msgstr "ลูก"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -300,7 +310,7 @@ msgstr "การคำนวณ"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Compute Sheet"
-msgstr "คำนวน"
+msgstr "คำนวนแผ่น"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_select
@@ -316,7 +326,7 @@ msgstr "เงื่อนไข"
 #. module: hr_payroll
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_configuration
 msgid "Configuration"
-msgstr "ตั้งค่า"
+msgstr "การกำหนดค่า"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_configuration
@@ -330,7 +340,6 @@ msgid "Confirm"
 msgstr "ยืนยัน"
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_contract
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_contract_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_contract_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_contract_id
@@ -444,7 +453,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Description"
-msgstr "รายละเอียด"
+msgstr "คำอธิบาย"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -472,7 +481,6 @@ msgstr "รายละเอียดตามหมวดเกณฑ์เง
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_display_name
 msgid "Display Name"
 msgstr "ชื่อที่ใช้แสดง"
@@ -482,7 +490,7 @@ msgstr "ชื่อที่ใช้แสดง"
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Done"
-msgstr "เสร็จสมบูรณ์"
+msgstr "เสร็จสิ้น"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
@@ -499,7 +507,7 @@ msgstr "เสร็จสิ้นสลิป"
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Draft"
-msgstr "ฉบับร่าง"
+msgstr "ร่าง"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
@@ -509,7 +517,7 @@ msgstr "ร่างสลิปเงินเดือนชุด"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Draft Slip"
-msgstr "ร่างสลิปเงินเดือน"
+msgstr "ร่างสลิป"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_employee
@@ -517,7 +525,12 @@ msgstr "ร่างสลิปเงินเดือน"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_employee_id
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Employee"
-msgstr "พนักงาน"
+msgstr "บุคลากร"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_contract
+msgid "Employee Contract"
+msgstr "สัญญาของบุคลากร"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
@@ -529,7 +542,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
 #: model:ir.ui.menu,name:hr_payroll.menu_department_tree
 msgid "Employee Payslips"
-msgstr "สลิปเงินเดือนพนักงาน"
+msgstr "สลิปเงินเดือนบุคลากร"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_employee_ids
@@ -537,10 +550,11 @@ msgstr "สลิปเงินเดือนพนักงาน"
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Employees"
-msgstr "พนักงาน"
+msgstr "บุคลากร"
 
 #. module: hr_payroll
-#: constraint:hr.payroll.structure:0
+#: code:addons/hr_payroll/models/hr_payroll.py:41
+#, python-format
 msgid "Error ! You cannot create a recursive Salary Structure."
 msgstr ""
 
@@ -583,14 +597,14 @@ msgstr "สร้างสลิปเงินเดือน"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_employees
 msgid "Generate payslips for all selected employees"
-msgstr "สร้างสลิปเงินเดือนสำหรับพนักงานทุกคน"
+msgstr "สร้างสลิปเงินเดือนสำหรับบุคลากรทุกคน"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Group By"
-msgstr "จัดกลุ่มโดย"
+msgstr "จัดกลุ่มตาม"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_id
@@ -607,10 +621,9 @@ msgstr "จัดกลุ่มโดย"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_id
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_id
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_id
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip_id
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_id
 msgid "ID"
-msgstr "รหัส"
+msgstr "ID"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_run_credit_note
@@ -653,12 +666,12 @@ msgstr "ติดตั้งระบบค่าใช้จ่ายของ
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_note
 msgid "Internal Note"
-msgstr "บันทึกย่อภายใน"
+msgstr "โน้ตภายใน"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_quantity
 msgid ""
-"It is used in computation for percentage and fixed amount.For e.g. A rule "
+"It is used in computation for percentage and fixed amount. For e.g. A rule "
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
@@ -686,7 +699,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails___last_update
 msgid "Last Modified on"
 msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
@@ -743,6 +755,11 @@ msgid "Made Payment Order ? "
 msgstr "สร้างคำสั่งจ่าย"
 
 #. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_manager
+msgid "Manager"
+msgstr "ผู้จัดการ"
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_max
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_max
 msgid "Maximum Range"
@@ -778,7 +795,7 @@ msgid "Name"
 msgstr "ชื่อ"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:395
+#: code:addons/hr_payroll/models/hr_payroll.py:323
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr "วันทำงานปกติ"
@@ -786,7 +803,7 @@ msgstr "วันทำงานปกติ"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
 msgid "Notes"
-msgstr "บันทึกย่อ"
+msgstr "โน้ต"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_days
@@ -799,6 +816,11 @@ msgid "Number of Hours"
 msgstr "จำนวนชั่วโมง"
 
 #. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_user
+msgid "Officer"
+msgstr "เจ้าหน้าที่ / \t ผู้ปฏิบัติงาน"
+
+#. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Other Inputs"
 msgstr "อินพุตอื่น"
@@ -807,7 +829,7 @@ msgstr "อินพุตอื่น"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_parent_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_parent_id
 msgid "Parent"
-msgstr ""
+msgstr "แม่"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_parent_rule_id
@@ -884,12 +906,12 @@ msgid "Payslip"
 msgstr "สลิปเงินเดือน"
 
 #. module: hr_payroll
-#: constraint:hr.payslip:0
+#: code:addons/hr_payroll/models/hr_payroll.py:224
+#, python-format
 msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr "\"จากวันที่\" ต้องมาก่อน \"ถึงวันที่\" ในสลิปเงินเดือน"
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_payslip_run
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_run_id
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Payslip Batches"
@@ -938,6 +960,11 @@ msgid "Payslip Name"
 msgstr "ชื่อสลิปเงินเดือน"
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_run
+msgid "Payslip Run"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_line_ids
 msgid "Payslip Worked Days"
@@ -966,7 +993,7 @@ msgstr "ชุดสลิปเงินเดือน"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 msgid "Payslips by Employees"
-msgstr "สลิปเงินเดือนตามพนักงาน"
+msgstr "สลิปเงินเดือนตามบุคลากร"
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
@@ -986,7 +1013,7 @@ msgstr "คิดเป็นเปอร์เซ็นต์จาก"
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Period"
-msgstr "ระยะเวลา"
+msgstr "งวดบัญชี"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
@@ -1017,7 +1044,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_quantity
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_quantity
 msgid "Quantity"
-msgstr "จำนวน"
+msgstr "ปริมาณ"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -1056,7 +1083,7 @@ msgstr "อัตรา (%)"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_code
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_number
 msgid "Reference"
-msgstr "อ้างอิงถึง"
+msgstr "อ้างอิง"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -1064,13 +1091,7 @@ msgid "Refund"
 msgstr "คืนเงิน"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:315
-#, python-format
-msgid "Refund Payslip"
-msgstr ""
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:306
+#: code:addons/hr_payroll/models/hr_payroll.py:244
 #, python-format
 msgid "Refund: "
 msgstr "คืนเงิน:"
@@ -1088,7 +1109,7 @@ msgstr "ปฏิเสธ"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_salary_rule_id
 msgid "Rule"
-msgstr "กฎ"
+msgstr "เกณฑ์"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
@@ -1107,7 +1128,7 @@ msgstr "การคำนวนเงินเดือน"
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree_view
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
 msgid "Salary Rule Categories"
-msgstr "หมวดกฎเงินเดือน"
+msgstr "หมวดเกณฑ์เงินเดือน"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
@@ -1126,7 +1147,7 @@ msgstr "หมวดกฎเงินเดือน"
 #: model:ir.model,name:hr_payroll.model_hr_rule_input
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_input_id
 msgid "Salary Rule Input"
-msgstr "อินพุตกฎเงินเดือน"
+msgstr "อินพุตเกณฑ์เงินเดือน"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
@@ -1138,10 +1159,11 @@ msgstr "อินพุตกฎเงินเดือน"
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Salary Rules"
-msgstr "กฎเงินเดือน"
+msgstr "เกณฑ์เงินเดือน"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:638
+#: code:addons/hr_payroll/models/hr_payroll.py:548
+#: code:addons/hr_payroll/models/hr_payroll.py:595
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr "สลิปเงินเดือน %s (%s)"
@@ -1159,7 +1181,7 @@ msgstr "โครงสร้างเงินเดือน"
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
 msgid "Salary Structures"
-msgstr "โครสร้างเงินเดือน"
+msgstr "โครงสร้างเงินเดือน"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
@@ -1190,7 +1212,7 @@ msgstr "ค้าหาสลิปเงินเดือน"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Search Salary Rule"
-msgstr "ค้นหากฎเงินเดือน"
+msgstr "ค้นหาเกณฑ์เงินเดือน"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -1203,19 +1225,19 @@ msgstr "ประจำสองปี"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_sequence
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_sequence
 msgid "Sequence"
-msgstr "กำหนดเลขที่เอกสาร"
+msgstr "ลำดับ"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Set to Draft"
-msgstr "กำหนดให้เป็นแบบร่าง"
+msgstr "กำหนดให้เป็นฉบับร่าง"
 
 #. module: hr_payroll
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_global_settings
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
 msgid "Settings"
-msgstr "ตั้งค่าต่างๆ"
+msgstr "ตั้งค่า"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
@@ -1294,7 +1316,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Total"
-msgstr "รวม"
+msgstr "รวมทั้งหมด"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -1339,71 +1361,72 @@ msgid "Worked Days & Inputs"
 msgstr "วันทำงานและอินพุต"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:838
+#: code:addons/hr_payroll/models/hr_payroll.py:770
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:844
+#: code:addons/hr_payroll/models/hr_payroll.py:776
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:867
+#: code:addons/hr_payroll/models/hr_payroll.py:799
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:831
+#: code:addons/hr_payroll/models/hr_payroll.py:763
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:861
+#: code:addons/hr_payroll/models/hr_payroll.py:793
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:333
+#: code:addons/hr_payroll/models/hr_payroll.py:268
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:35
+#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:24
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
 msgstr ""
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:838
+#, python-format
+msgid "You must set a contract to create a payslip line."
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_config_settings
 msgid "hr.payroll.config.settings"
-msgstr ""
+msgstr "hr.payroll.config.settings"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule
 msgid "hr.salary.rule"
-msgstr ""
+msgstr "hr.salary.rule"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
 msgid "report.hr_payroll.report_contributionregister"
-msgstr ""
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslip
-msgid "report.hr_payroll.report_payslip"
-msgstr ""
+msgstr "report.hr_payroll.report_contributionregister"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
 msgid "report.hr_payroll.report_payslipdetails"
-msgstr ""
+msgstr "report.hr_payroll.report_payslipdetails"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_percentage_base

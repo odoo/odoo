@@ -3,15 +3,17 @@
 # * project_issue
 # 
 # Translators:
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2015
+# Martin Trigaux <mat@odoo.com>, 2016
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2016
+# Vida Potočnik <vida.potocnik@mentis.si>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:25+0000\n"
-"PO-Revision-Date: 2015-10-14 05:46+0000\n"
-"Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
-"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Vida Potočnik <vida.potocnik@mentis.si>, 2016\n"
+"Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,12 +31,12 @@ msgid "# Issues"
 msgstr "# Zadeve"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_nbr
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_nbr_issues
 msgid "# of Issues"
 msgstr "# zadev"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:212
+#: code:addons/project_issue/models/project_issue.py:156
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -55,18 +57,9 @@ msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
 msgstr "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">kot </span>"
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
-msgid ""
-"A Issue's kanban state indicates special situations affecting it:\n"
-" * Normal is the default situation\n"
-" * Blocked indicates something is preventing the progress of this issue\n"
-" * Ready for next stage indicates the issue is ready to be pulled to the next stage"
-msgstr "Kanban stanje zadev prikazuje dotične situacije:\n * Normalno je privzeta situacija\n * Blokirano pomeni da nekaj preprečuje napredovanje zadeve\n * Pripravljeno na naslednjo stopnjo kaže, da jezadeve pripravljena na prehod v naslednjo stopnjo"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction
-msgid "Action Needed"
-msgstr "Potreben je ukrep"
+#: selection:project.config.settings,module_project_issue_sheet:0
+msgid "Activate timesheets on issues"
+msgstr "Aktiviraj časovnice na zadevah"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_active
@@ -77,6 +70,18 @@ msgstr "Aktivno"
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Add an internal note..."
 msgstr "Dodajanje zaznamka"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
+msgid ""
+"An Issue's kanban state indicates special situations affecting it:\n"
+"\n"
+"                                           * Normal is the default situation\n"
+"\n"
+"                                           * Blocked indicates something is preventing the progress of this issue\n"
+"\n"
+"                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -127,13 +132,24 @@ msgid "Blocked"
 msgstr "Blokirano"
 
 #. module: project_issue
+#: model:project.issue,legend_done:project_issue.crm_case_buginaccountsmodule0
+#: model:project.issue,legend_done:project_issue.crm_case_constrainterror0
+#: model:project.issue,legend_done:project_issue.crm_case_errorinprogram0
+#: model:project.issue,legend_done:project_issue.crm_case_improvereportsinpms0
+#: model:project.issue,legend_done:project_issue.crm_case_includeattendancesheetinproject0
+#: model:project.issue,legend_done:project_issue.crm_case_newfeaturestobeadded0
+#: model:project.issue,legend_done:project_issue.crm_case_patcheserrorinprogram0
+#: model:project.issue,legend_done:project_issue.crm_case_programnotgivingproperoutput0
+msgid "Buzz or set as done"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
 msgid "By Responsible"
 msgstr "Po odgovornih"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_channel
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_channel
 msgid "Channel"
 msgstr "Kanal"
 
@@ -141,27 +157,18 @@ msgstr "Kanal"
 #: model:ir.model.fields,help:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,help:project_issue.field_project_project_use_issues
 msgid "Check this box to manage customer activities through this project"
-msgstr "Označite to polje za upravljanje dejavnosti kupca v sklopu tega projekta"
-
-#. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.open_view_issue
-msgid "Click to create an issue."
-msgstr "Ustvari zadevo"
+msgstr ""
+"Označite to polje za upravljanje dejavnosti kupca v sklopu tega projekta"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_closed
 msgid "Closed"
-msgstr "Zaprto"
+msgstr "Neaktivni"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_color
 msgid "Color Index"
 msgstr "Barvni indeks"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_report_channel
-msgid "Communication Channel."
-msgstr "Komunikacijski kanal"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_channel
@@ -202,17 +209,22 @@ msgstr "Ustvaril"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_create_date
+msgid "Created on"
+msgstr "Ustvarjeno"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
 msgid "Creation Date"
 msgstr "Datum nastanka"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:367
+#: code:addons/project_issue/models/project_issue.py:296
 #, python-format
 msgid "Customer"
 msgstr "Kupec"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:369
+#: code:addons/project_issue/models/project_issue.py:298
 #, python-format
 msgid "Customer Email"
 msgstr "E-pošta kupca"
@@ -236,11 +248,6 @@ msgstr "Datum zaprtja"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_opening_date
 msgid "Date of Opening"
 msgstr "Datum odprtja"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Datum zadnjega sporočila vpisanega pod to vknjižbo."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_days_since_creation
@@ -296,7 +303,12 @@ msgstr "Razlika v dnevih med zadnjo aktivnostjo in tekočim datumom"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_display_name
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_display_name
 msgid "Display Name"
-msgstr "Prikaz naziva"
+msgstr "Prikazni naziv"
+
+#. module: project_issue
+#: selection:project.config.settings,module_project_issue_sheet:0
+msgid "Do not track working hours on issues"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
@@ -329,25 +341,15 @@ msgid "Feature description"
 msgstr "Opis značilnosti"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_follower_ids
-msgid "Followers"
-msgstr "Sledilci"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Sledilci (kanali)"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Sledilci (partnerji)"
-
-#. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Group By"
-msgstr "Združeno po"
+msgstr "Združi po"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Helpdesk & Support"
+msgstr "Pomoč & Podpora"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -356,7 +358,7 @@ msgid "High"
 msgstr "Visok"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:345
+#: code:addons/project_issue/models/project_issue.py:271
 #, python-format
 msgid "I take it"
 msgstr "Prevzemam"
@@ -366,27 +368,6 @@ msgstr "Prevzemam"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_id
 msgid "ID"
 msgstr "ID"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
-#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
-msgid "Important Messages"
-msgstr "Pomembna sporočila"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_is_follower
-msgid "Is Follower"
-msgstr "Je sledilec"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_name
@@ -445,20 +426,17 @@ msgstr "Zadeva odprta"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
-msgid "Issue ready for next sStage"
-msgstr "Zadeva pripravljena za naslednjo stopnjo"
+msgid "Issue ready for next stage"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,name:project_issue.action_view_issues
-#: model:ir.actions.act_window,name:project_issue.open_view_issue
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
-#: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_ids
-#: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
+#: model:ir.model.fields,field_description:project_issue.field_project_project_issue_needaction_count
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
-#: model:ir.ui.menu,name:project_issue.portal_services_issues
 #: model:ir.ui.view,arch_db:project_issue.project_issue_calendar_view
 #: model:ir.ui.view,arch_db:project_issue.res_partner_issues_button_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
@@ -504,11 +482,6 @@ msgid "Last Message"
 msgstr "Zadnje sporočilo"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_last_post
-msgid "Last Message Date"
-msgstr "Datum zadnjega sporočila"
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue___last_update
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report___last_update
 msgid "Last Modified on"
@@ -526,20 +499,15 @@ msgid "Last Updated by"
 msgstr "Zadnjič posodobil"
 
 #. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
+msgid "Last Updated on"
+msgstr "Zadnjič posodobljeno"
+
+#. module: project_issue
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Low"
 msgstr "Nizko"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_ids
-msgid "Messages"
-msgstr "Sporočila"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_ids
-msgid "Messages and communication history"
-msgstr "Komunikacije in kronologija"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -547,13 +515,24 @@ msgid "My Issues"
 msgstr "Moje zadeve"
 
 #. module: project_issue
+#: model:project.issue,legend_blocked:project_issue.crm_case_buginaccountsmodule0
+#: model:project.issue,legend_blocked:project_issue.crm_case_constrainterror0
+#: model:project.issue,legend_blocked:project_issue.crm_case_errorinprogram0
+#: model:project.issue,legend_blocked:project_issue.crm_case_improvereportsinpms0
+#: model:project.issue,legend_blocked:project_issue.crm_case_includeattendancesheetinproject0
+#: model:project.issue,legend_blocked:project_issue.crm_case_newfeaturestobeadded0
+#: model:project.issue,legend_blocked:project_issue.crm_case_patcheserrorinprogram0
+#: model:project.issue,legend_blocked:project_issue.crm_case_programnotgivingproperoutput0
+msgid "Need functional or technical help"
+msgstr "Potrebuje funkcionalno ali tehnično pomoč"
+
+#. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
-#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "New"
 msgstr "Novo"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:347
+#: code:addons/project_issue/models/project_issue.py:275
 #, python-format
 msgid "New Issue"
 msgstr "Nova zadeva"
@@ -564,10 +543,15 @@ msgid "Next Action"
 msgstr "Naslednje dejanje"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:390
+#: code:addons/project_issue/models/project_issue.py:322
 #, python-format
 msgid "No Subject"
 msgstr "Ni zadeve"
+
+#. module: project_issue
+#: selection:project.config.settings,module_rating_project_issue:0
+msgid "No customer rating"
+msgstr "Brez ocenjevanja kupcev"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
@@ -576,9 +560,12 @@ msgid "Normal"
 msgstr "Običajno"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Število aktivnosti"
+#: model:project.issue,legend_blocked:project_issue.crm_case_createnewobject0
+#: model:project.issue,legend_blocked:project_issue.crm_case_pagenotfound0
+#: model:project.issue,legend_blocked:project_issue.crm_case_problemloadingpage0
+#: model:project.issue,legend_blocked:project_issue.crm_case_programmingerror0
+msgid "Not validated"
+msgstr "Nepotrjeno"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
@@ -591,14 +578,25 @@ msgid "Number of Days to open the project issue."
 msgstr "Število dni od odprtja projektne zadeve"
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Število sporočil, ki zahtevajo dejavnost"
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_blocked
+msgid ""
+"Override the default value displayed for the blocked state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Število neprebranih sporočil"
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_done
+msgid ""
+"Override the default value displayed for the done state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_normal
+msgid ""
+"Override the default value displayed for the normal state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
@@ -606,12 +604,14 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:480
+#: code:addons/project_issue/models/account_analytic_account.py:16
 #, python-format
 msgid ""
 "Please remove existing issues in the project linked to the accounts you want"
 " to delete."
-msgstr "Odstranite obstoječe zadeve iz projekta povezanega s konti, ki jih želite izbrisati."
+msgstr ""
+"Odstranite obstoječe zadeve iz projekta povezanega s konti, ki jih želite "
+"izbrisati."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_priority
@@ -651,26 +651,28 @@ msgid "Project Issues"
 msgstr "Projektne zadeve"
 
 #. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_project_issue_sheet
+msgid ""
+"Provides timesheet support for the issues/bugs management in project.\n"
+"-This installs the module project_issue_sheet."
+msgstr ""
+"Omogoča časovnice na projektnih zadevah.\n"
+"-Namesti modul project_issue_sheet."
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
+msgid "Rating on issue"
+msgstr ""
+
+#. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
 msgstr "Pripravljeno za naslednjo stopnjo"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_team_id
-msgid "Sale Team"
-msgstr "Prodajna ekipa"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_team_id
-msgid "Sales Team"
-msgstr "Prodajna ekipa"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_team_id
-msgid ""
-"Sales team to which Case belongs to.                             Define "
-"Responsible user and Email account for mail gateway."
-msgstr "Prodajna ekipa kateri pripada Primer.                             Določite odgovornega uporabnika in E-poštni račun za mail gateway."
+#: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
+msgid "Ready to reopen"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -702,41 +704,42 @@ msgid "Tags"
 msgstr "Ključne besede"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_task_id
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_task_id
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Task"
 msgstr "Naloga"
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
-#: model:ir.actions.act_window,help:project_issue.action_view_issues
-msgid ""
-"The Odoo issues tacker allows you to efficiently manage things\n"
-"                    like internal requests, software development bugs, customer\n"
-"                    complaints, project troubles, material breakdowns, etc."
-msgstr "Odoo sledilnik zadevam omogoča upravljanje stvari,\n                    kot notranji zahtevki, hrošči pri razvoju aplikacij, reklamacije\n                    kupcev, projektna problematika, okvare, ipd."
+#: model:ir.model,name:project_issue.model_project_task_type
+msgid "Task Stage"
+msgstr "Stopnja opravila"
 
 #. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
+#: model:ir.actions.act_window,help:project_issue.action_view_issues
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
 msgid ""
-"The Odoo issues tacker allows you to efficiently manage things\n"
-"                like internal requests, software development bugs, customer\n"
-"                complaints, project troubles, material breakdowns, etc."
-msgstr "Odoo sledilnik zadevam omogoča upravljanje stvari,\n                kot notranji zahtevki, hrošči pri razvoju aplikacij, reklamacije\n                kupcev, projektna problematika, okvare, ipd."
+"The Odoo issues tracker allows you to efficiently manage things\n"
+"                    like internal requests, software development bugs, customer\n"
+"                    complaints, project troubles, material breakdowns, etc."
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
 msgid ""
-"These email addresses will be added to the CC field of all inbound and "
-"outbound emails for this record before being sent. Separate multiple email "
-"addresses with a comma"
-msgstr "Ti poštni naslovi bodo dodani v CC polje vseh vhodnih in izhodnih sporočil za ta zapis, preden bodo razposlana. V primeru večih elektronskih naslovov jih ločite z vejico."
+"These email addresses will be added to the CC field of all inbound\n"
+"        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
 msgid "These people will receive email."
 msgstr "Prejemniki e-pošte"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_rating_project_issue
+msgid "This allows customers to give rating on issue"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
@@ -746,7 +749,26 @@ msgid ""
 "support or after-sales services. You can track the issues per age. You can "
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
-msgstr "Poročilo o projektnih zadevah omogoča analizo kvalitete podpore ali poprodajnih storitev. Zadevam sledimo po starosti. Možna je analiza časa potrebnega za odprtje ali zaprtje zadeve, števila izmenjanih e-poštnih sporočil  in povprečne porabe časa na posamezni zadevi."
+msgstr ""
+"Poročilo o projektnih zadevah omogoča analizo kvalitete podpore ali "
+"poprodajnih storitev. Zadevam sledimo po starosti. Možna je analiza časa "
+"potrebnega za odprtje ali zaprtje zadeve, števila izmenjanih e-poštnih "
+"sporočil  in povprečne porabe časa na posamezni zadevi."
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Timesheets"
+msgstr "Časovnice"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
+msgid "Timesheets on Issues"
+msgstr ""
+
+#. module: project_issue
+#: selection:project.config.settings,module_rating_project_issue:0
+msgid "Track customer satisfaction on issues"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -755,22 +777,14 @@ msgid "Unassigned"
 msgstr "Nedodeljeno"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Unread Messages"
 msgstr "Neprebrana sporočila"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Števec neprebranih sporočil"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
-msgid "Update Date"
-msgstr "Datum posodobitve"
-
-#. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
+#: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
+#: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 msgid "Use Issues"
 msgstr "Uporaba zadev"
 
@@ -790,16 +804,6 @@ msgid "Watchers Emails"
 msgstr "E-pošta opazovalcev"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_website_message_ids
-msgid "Website Messages"
-msgstr "Sporočila iz spletne strani"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_website_message_ids
-msgid "Website communication history"
-msgstr "Kronologija komunikacij spletne strani"
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_open
 msgid "Working Hours to assign the Issue"
 msgstr "Delovnih ur do dodelitve zadeve"
@@ -814,20 +818,20 @@ msgstr "Delovnih ur do zaključka zadeve"
 msgid ""
 "You can link this issue to an existing task or directly create a new one "
 "from here"
-msgstr "To zadevo lahko povežete z obstoječim opravilom ali pa od tukaj neposredno ustvarite novega"
+msgstr ""
+"To zadevo lahko povežete z obstoječim opravilom ali pa od tukaj neposredno "
+"ustvarite novega"
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.open_view_issue
-msgid ""
-"You can track your issues from this menu and the action we     \n"
-"                will take."
-msgstr "Iz tega menija lahko sledite zadevam in ukrepom, ki se nanje\n                nanašajo."
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:260
+#: code:addons/project_issue/models/project_issue.py:191
 #, python-format
 msgid "issues"
 msgstr "zadeve"
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_project_config_settings
+msgid "project.config.settings"
+msgstr "project.config.settings"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report

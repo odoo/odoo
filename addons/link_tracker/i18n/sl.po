@@ -3,14 +3,17 @@
 # * link_tracker
 # 
 # Translators:
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Dejan Sraka <dejan.sraka@picolabs.si>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-10-16 11:06+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Dejan Sraka <dejan.sraka@picolabs.si>, 2016\n"
+"Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,15 +21,10 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_campaign_id
-msgid "Campaign"
-msgstr "Kampanija"
-
-#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_link_click_ids
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Clicks"
-msgstr ""
+msgstr "Klikov"
 
 #. module: link_tracker
 #: sql_constraint:link.tracker.code:0
@@ -67,7 +65,7 @@ msgstr "Ustvarjeno"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_display_name
 msgid "Display Name"
-msgstr "Prikaz naziva"
+msgstr "Prikazni naziv"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_favicon
@@ -130,11 +128,6 @@ msgid "Link Tracker"
 msgstr ""
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_medium_id
-msgid "Medium"
-msgstr "Srednje"
-
-#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_count
 msgid "Number of Clicks"
 msgstr ""
@@ -160,11 +153,6 @@ msgid "Short URL code"
 msgstr ""
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_source_id
-msgid "Source"
-msgstr "Vir"
-
-#. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_view_click_statistics
 msgid "Statistics of Clicks"
 msgstr ""
@@ -175,25 +163,6 @@ msgid "Target URL"
 msgstr ""
 
 #. module: link_tracker
-#: model:ir.model.fields,help:link_tracker.field_link_tracker_campaign_id
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
-msgstr "Naziv, ki pomaga slediti kampanjskim naporom Primer: Posebna_ponudba, Božična_akcija"
-
-#. module: link_tracker
-#: model:ir.model.fields,help:link_tracker.field_link_tracker_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr "Metoda dostave. Primer: razglednica, E-pošta, pasica, ..."
-
-#. module: link_tracker
-#: model:ir.model.fields,help:link_tracker.field_link_tracker_source_id
-msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
-msgstr "Vir povezave. Primer: Iskalnik, druga domena, naziv e-poštnega seznama"
-
-#. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
 msgid "Title and URL"
 msgstr ""
@@ -201,12 +170,6 @@ msgstr ""
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
 msgid "Tracked Link"
-msgstr ""
-
-#. module: link_tracker
-#: model:ir.actions.act_window,name:link_tracker.action_link_tracker_click
-#: model:ir.ui.menu,name:link_tracker.menu_url_shortener_links
-msgid "Tracked Links"
 msgstr ""
 
 #. module: link_tracker
@@ -220,7 +183,7 @@ msgid "Visit Page"
 msgstr ""
 
 #. module: link_tracker
-#: code:addons/link_tracker/models/link_tracker.py:138
+#: code:addons/link_tracker/models/link_tracker.py:141
 #, python-format
 msgid "Visit Webpage"
 msgstr ""

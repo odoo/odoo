@@ -17,7 +17,6 @@
           - delay: 1
             name: supplier_dropship
             min_qty: 2.0
-            qty: 5.0
         uom_id: product.product_uom_unit
         uom_po_id: product.product_uom_unit
 - 
@@ -35,45 +34,45 @@
 - 
     Confirm sales order
 - 
-    !python {model: sale.order}: |
-        self.action_confirm(cr, uid, ref("sale_order_drp_shpng"), context=context)
+    !python {model: sale.order, id: sale_order_drp_shpng}: |
+        self.action_confirm()
 - 
     Check the sales order created a procurement group which has a procurement of 200 pieces
 - 
-    !python {model: procurement.group}: |
-        sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_drp_shpng'))
-        assert self.browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0].product_qty == 200
+    !python {model: procurement.group, id: False}: |
+        sale_record = self.env["sale.order"].browse(ref('sale_order_drp_shpng'))
+        assert sale_record.procurement_group_id.procurement_ids[0].product_qty == 200
 - 
     Check a quotation was created to a certain vendor and confirm so it becomes a confirmed purchase order
 -
-    !python {model: purchase.order}: |
-        from openerp import netsvc
-        sale_record = self.pool.get("sale.order").browse(cr, uid, ref('sale_order_drp_shpng'))
-        procurement_order = self.pool.get("procurement.group").browse(cr, uid, sale_record.procurement_group_id.id).procurement_ids[0]
-        purchase_id = procurement_order.purchase_line_id.order_id.id
+    !python {model: purchase.order, id: False}: |
+        from odoo import netsvc
+        sale_record = self.env["sale.order"].browse(ref('sale_order_drp_shpng'))
+        procurement_order = sale_record.procurement_group_id.procurement_ids[0]
+        purchase = procurement_order.purchase_line_id.order_id
         
-        self.button_confirm(cr, uid, purchase_id)
-        po_id = self.pool.get('purchase.order').search(cr, uid, [('partner_id', '=', ref('supplier_dropship'))])
-        assert self.browse(cr, uid, purchase_id).state == 'purchase', 'Purchase order should be in the approved state'
+        purchase.button_confirm()
+        po_id = self.env['purchase.order'].search([('partner_id', '=', ref('supplier_dropship'))])
+        assert purchase.state == 'purchase', 'Purchase order should be in the approved state'
 - 
     Use 'Receive Products' button to immediately view this picking, it should have created a picking with 200 pieces
 -
-    !python {model: purchase.order}: |
-         po_id = self.search(cr, uid, [('partner_id', '=', ref('supplier_dropship'))])
+    !python {model: purchase.order, id: False}: |
+         po_id = self.search([('partner_id', '=', ref('supplier_dropship'))]).ids
          assert len(po_id) == 1, 'There should be one picking'
 -
     Send the 200 pieces.
 - 
-    !python {model: stock.picking}: |
-        po_id = self.pool.get('purchase.order').search(cr, uid, [('partner_id', '=', ref('supplier_dropship'))])
-        assert po_id and len(po_id) == 1, 'Problem with the Purchase Order detected'
-        picking_ids = [pick.id for pick in self.pool.get('purchase.order').browse(cr, uid, po_id[0]).picking_ids]
-        self.do_transfer(cr, uid, picking_ids)
+    !python {model: stock.picking, id: False}: |
+        po = self.env['purchase.order'].search([('partner_id', '=', ref('supplier_dropship'))])
+        assert po.ids and len(po.ids) == 1, 'Problem with the Purchase Order detected'
+        pickings = po[0].picking_ids
+        pickings.do_transfer()
 - 
   Check one quant was created in Customers location with 200 pieces and one move in the history_ids
 - 
-    !python {model: stock.quant}: |
-        quant_ids = self.search(cr, uid, [('location_id', '=', ref('stock.stock_location_customers')), ('product_id', '=', ref("drop_shop_product"))])
-        assert quant_ids, 'No Quant found'
-        assert len(quant_ids) == 1, 'There should be exactly one quant'
-        assert len(self.browse(cr, uid, quant_ids)[0].history_ids) == 1, 'The quant should have exactly 1 move in its history'
+    !python {model: stock.quant, id: False}: |
+        quants = self.search([('location_id', '=', ref('stock.stock_location_customers')), ('product_id', '=', ref("drop_shop_product"))])
+        assert quants, 'No Quant found'
+        assert len(quants.ids) == 1, 'There should be exactly one quant'
+        assert len(quants[0].history_ids) == 1, 'The quant should have exactly 1 move in its history'

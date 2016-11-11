@@ -1,0 +1,265 @@
+.o_form_view {
+    .o_form_sheet_bg {
+        background: url(/web/static/src/img/form_sheetbg.png);
+        border-bottom: 1px solid #ddd;
+        .o_form_sheet {
+            border: 1px solid #c8c8d3;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+    }
+
+    // Header containing status/workflow buttons
+    > header {
+        border-bottom: 1px solid #cacaca;
+        .o-vertical-gradient(#fcfcfc, #dedede);
+        > button:not(.btn-primary):not(.btn-link):not(.oe_highlight) {
+            .btn-default;
+        }
+    }
+    &.o_form_nosheet > header {
+        margin: -16px -16px 0 -16px;
+    }
+    ul.oe_form_status, ul.oe_form_status_clickable {
+        display: inline-block;
+        margin: 0;
+        padding: 0 18px 0 0;
+        li {
+            display: inline-block;
+            list-style-type: none;
+            // It is probably a bad idea to modify this margin
+            margin: 0 -18px 0 0;
+            padding: 0;
+            height: 30px;
+            .o-vertical-gradient(#fcfcfc, #dedede);
+            &:first-child > .label {
+                border-left: 1px solid #cacaca;
+                padding-left: 14px;
+            }
+            &:last-child {
+                border-right: 1px solid #cacaca;
+                > .label {
+                    padding-right: 14px;
+                }
+                > .arrow {
+                    display: none;
+                }
+            }
+            > .label {
+                color: #4c4c4c;
+                text-shadow: 0 1px 1px #fcfcfc, 0 -1px 1px #dedede;
+                padding: 7px;
+                display: inline-block;
+                padding-left: 24px;
+                margin: 0;
+                position: relative;
+                // Customize for statusbar label
+                line-height: normal;
+                font-size: 100%;
+                font-weight: normal;
+                // End of customize
+            }
+            > .arrow {
+                width: 17px;
+                height: 30px;
+                display: inline-block;
+                vertical-align: top;
+                overflow: hidden;
+                margin-left: -5px;
+                span {
+                    position: relative;
+                    width: 24px;
+                    height: 24px;
+                    display: inline-block;
+                    margin-left: -12px;
+                    margin-top: 3px;
+                    border-radius: 3px;
+                    box-shadow: -1px 1px 2px rgba(255,255,255,0.2), inset -1px 1px 1px rgba(0,0,0,0.2);
+                    .o-skew-gradient(#fcfcfc, #dedede);
+                    .o-transform(rotate(45deg));
+                }
+            }
+        }
+        ul.oe_dropdown_menu {
+            display: none;
+            padding: 0;
+            min-width: 0;
+            &.oe_opened {
+                display: block;
+            }
+            li {
+                margin: 0;
+                width: 100%;
+                span.label {
+                    padding-left: 14px;
+                }
+            }
+        }
+        li.oe_active {
+            .o-vertical-gradient(lighten(@odoo-brand-primary, 15%), darken(@odoo-brand-primary, 15%));
+            > .arrow span {
+                .o-skew-gradient(lighten(@odoo-brand-primary, 15%), darken(@odoo-brand-primary, 15%));
+            }
+            > .label {
+                color: white;
+                text-shadow: 0 1px 1px #729fcf, 0 -1px 1px #3465a4;
+            }
+        }
+    }
+    ul.oe_form_status_clickable {
+        li {
+            cursor: pointer;
+            &:hover {
+                .o-vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%));
+                > .label {
+                    text-shadow: 0 -1px 1px #fcfcfc, 0 1px 1px #dedede;
+                }
+                > .arrow span {
+                    .o-vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%));
+                }
+            }
+            > .label {
+                color: @link-color;
+            }
+        }
+        li.oe_active {
+            &:hover {
+                .o-vertical-gradient(@odoo-brand-primary, darken(@odoo-brand-primary, 30%));
+                > .label {
+                    text-shadow: 0 -1px 1px #729fcf, 0 1px 1px #3465a4;
+                }
+                > .arrow span {
+                    .o-skew-gradient(@odoo-brand-primary, darken(@odoo-brand-primary, 30%));
+                }
+            }
+        }
+    }
+
+    // Button box
+    .oe_button_box {
+        .oe_stat_button {
+            border-radius: 0;
+            border-color: #ccc;
+            background: white;
+            outline: none;
+            &:hover {
+                background-color: #e6e6e6;
+            }
+            .o_button_icon {
+                color: #7C7BAD;
+                font-size: 24px;
+            }
+
+            .o_stat_info { // contains the value and text
+                .o_stat_value {
+                    .o-text-overflow(block);
+                    font-weight: 700;
+                    color: @odoo-brand-primary;
+                }
+                .o_stat_text {
+                    .o-text-overflow(block);
+                    font-size: small;
+
+                    .o_stat_value {
+                        display: inline;
+                    }
+                }
+            }
+
+            // Some buttons only display text and directly use the WidgetButton template instead of StatInfo
+            > span {
+                font-size: small;
+                white-space: normal; // text on several lines if needed
+            }
+        }
+    }
+
+    // Avatar
+    .oe_avatar > img {
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+        border: none;
+    }
+
+    // Groups
+    .o_group {
+        .o_td_label {
+            border-right: 1px solid #ddd;
+        }
+    }
+
+    // All required form fields
+    .o_form_required {
+        &.o_form_input, .o_form_input, &.o_form_textarea, .o_form_textarea {
+            background-color: #D2D2FF;
+        }
+    }
+
+    .o_form_field.o_form_field_many2one .o_external_button {
+        padding: 0;
+        margin-left: 2px;
+        font-size: 19px;
+        color: #7C7BAD;
+        border: none;
+        &:hover {
+            background-color: transparent;
+        }
+    }
+
+    // Dropdowns input carret
+    .o_form_input_dropdown .o_dropdown_button {
+        .o-position-absolute(2px, 4px);
+    }
+
+    // Separators
+    .o_horizontal_separator {
+        color: @odoo-brand-optional;
+        font-weight: bold;
+    }
+
+    // Translate icon
+    .o_field_translate {
+        margin-left: -15px;
+    }
+
+    // Percent pie field
+    .o_form_field_percent_pie {
+        @pie-dimension: 34px;
+        @pie-ring-width: 4px;
+
+        .o_pie {
+            width: @pie-dimension;
+            height: @pie-dimension;
+            margin-left: 5px;
+
+            &:after { // Outside pie border to go over border-radius irregularities
+                border: 1px solid @odoo-brand-primary;
+            }
+
+            .o_pie_value {
+                .o-position-absolute(@pie-ring-width, @pie-ring-width);
+                width: @pie-dimension - 2 * @pie-ring-width;
+                height: @pie-dimension - 2 * @pie-ring-width;
+                border: 1px solid white;
+                background-color: white;
+            }
+        }
+    }
+
+    // Specific style classes
+    .o_group.o_inner_group.oe_subtotal_footer {
+        .oe_subtotal_footer_separator {
+            border-top: 1px solid #cacaca;
+        }
+        .o_td_label {
+            border-right: none;
+        }
+    }
+}
+
+// Overriden style when form view in modal
+.modal .modal-dialog {
+    .o_form_view {
+        .o_form_sheet_bg, .o_form_sheet {
+            border: none;
+        }
+    }
+}

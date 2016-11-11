@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import base64
 import logging
 import werkzeug
 
-from openerp.addons.web import http
-from openerp.exceptions import AccessError, UserError
-from openerp.http import request
-from openerp.tools.translate import _
+from odoo import http, _
+from odoo.exceptions import AccessError, UserError
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
 
-class website_slides(http.Controller):
+class WebsiteSlides(http.Controller):
     _slides_per_page = 12
     _slides_per_list = 20
     _order_by_criterion = {
@@ -21,7 +22,7 @@ class website_slides(http.Controller):
     }
 
     def _set_viewed_slide(self, slide, view_mode):
-        slide_key = '%s_%s' % (view_mode, request.session_id)
+        slide_key = '%s_%s' % (view_mode, request.session.sid)
         viewed_slides = request.session.setdefault(slide_key, list())
         if slide.id not in viewed_slides:
             if view_mode == 'slide':
@@ -56,10 +57,10 @@ class website_slides(http.Controller):
         """
         channels = request.env['slide.channel'].search([], order='sequence, id')
         if not channels:
-            return request.website.render("website_slides.channel_not_found")
+            return request.render("website_slides.channel_not_found")
         elif len(channels) == 1:
             return request.redirect("/slides/%s" % channels.id)
-        return request.website.render('website_slides.channels', {
+        return request.render('website_slides.channels', {
             'channels': channels,
             'user': request.env.user,
             'is_public_user': request.env.user == request.website.user_id
@@ -131,7 +132,7 @@ class website_slides(http.Controller):
         }
         if search:
             values['search'] = search
-            return request.website.render('website_slides.slides_search', values)
+            return request.render('website_slides.slides_search', values)
 
         # Display uncategorized slides
         if not slide_type and not category:
@@ -147,7 +148,7 @@ class website_slides(http.Controller):
             values.update({
                 'category_datas': category_datas,
             })
-        return request.website.render('website_slides.home', values)
+        return request.render('website_slides.home', values)
 
     # --------------------------------------------------
     # SLIDE.SLIDE CONTOLLERS
@@ -158,7 +159,7 @@ class website_slides(http.Controller):
         values = self._get_slide_detail(slide)
         if not values.get('private'):
             self._set_viewed_slide(slide, 'slide')
-        return request.website.render('website_slides.slide_detail_view', values)
+        return request.render('website_slides.slide_detail_view', values)
 
     @http.route('''/slides/slide/<model("slide.slide", "[('channel_id.can_see', '=', True), ('datas', '!=', False), ('slide_type', '=', 'presentation')]"):slide>/pdf_content''', type='http', auth="public", website=True)
     def slide_get_pdf_content(self, slide):
@@ -171,7 +172,7 @@ class website_slides(http.Controller):
     def slide_comment(self, slide, **post):
         """ Controller for message_post. Public user can post; their name and
         email is used to find or create a partner and post as admin with the
-        right partner. Their comments are not published by default. Logged
+        right partner. Their comments are unpublished by default. Logged
         users can post as usual. """
         # TDE TODO :
         # - subscribe partner instead of user writing the message ?
@@ -225,7 +226,7 @@ class website_slides(http.Controller):
                  ('Content-Disposition', disposition)])
         elif not request.session.uid and slide.download_security == 'user':
             return werkzeug.utils.redirect('/web?redirect=/slides/slide/%s' % (slide.id))
-        return request.website.render("website.403")
+        return request.render("website.403")
 
     @http.route('''/slides/slide/<model("slide.slide"):slide>/promote''', type='http', auth='user', website=True)
     def slide_set_promoted(self, slide):
@@ -295,8 +296,8 @@ class website_slides(http.Controller):
         payload = request.httprequest.content_length
         # payload is total request content size so it's not exact size of file.
         # already add client validation this is for double check if client alter.
-        if (payload / 1024 / 1024 > 15):
-            return {'error': _('File is too big. File size cannot exceed 15MB')}
+        if (payload / 1024 / 1024 > 25):
+            return {'error': _('File is too big. File size cannot exceed 25MB')}
 
         values = dict((fname, post[fname]) for fname in [
             'name', 'url', 'tag_ids', 'slide_type', 'channel_id',
@@ -344,8 +345,8 @@ class website_slides(http.Controller):
             values['is_embedded'] = is_embedded
             if not values.get('private'):
                 self._set_viewed_slide(slide, 'embed')
-            return request.website.render('website_slides.embed_slide', values)
+            return request.render('website_slides.embed_slide', values)
         except AccessError: # TODO : please, make it clean one day, or find another secure way to detect
                             # if the slide can be embedded, and properly display the error message.
             slide = request.env['slide.slide'].sudo().browse(slide_id)
-            return request.website.render('website_slides.embed_slide_forbidden', {'slide': slide})
+            return request.render('website_slides.embed_slide_forbidden', {'slide': slide})

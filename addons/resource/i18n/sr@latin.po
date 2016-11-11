@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * resource
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 07:50+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-05-23 20:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/language/sr@latin/)\n"
+"Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/"
+"language/sr@latin/)\n"
+"Language: sr@latin\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sr@latin\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:689
+#: code:addons/resource/resource.py:686
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopiranje)"
@@ -71,7 +73,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_calendar_id
 msgid "Define the schedule of resource"
-msgstr ""
+msgstr "Rasporediti resurse"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -86,7 +88,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Ime za prikaz"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
@@ -96,7 +98,7 @@ msgstr "Trajanje"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_time_efficiency
 msgid "Efficiency Factor"
-msgstr ""
+msgstr "Faktor efikasnosti"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_to
@@ -151,11 +153,12 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
+"Ako je ovo polje postavljeno na NE, možete sakriti resurs bez da ga uklonite."
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Inactive"
-msgstr ""
+msgstr "Neaktivno"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar___last_update
@@ -163,7 +166,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves___last_update
 #: model:ir.model.fields,field_description:resource.field_resource_resource___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Zadnja izmjena"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_write_uid
@@ -171,7 +174,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_write_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zadnja izmjena"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_write_date
@@ -179,7 +182,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_write_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zadnja izmjena"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
@@ -226,7 +229,7 @@ msgstr "Razlog"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_user_id
 msgid "Related user name for the resource to manage its access."
-msgstr ""
+msgstr "Korisničko ime povezano je sa pristupom i upravljanjem modulima"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_resource_id
@@ -252,12 +255,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
-msgstr ""
+msgstr "Odsustva resursa"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_resource_type
 msgid "Resource Type"
-msgstr ""
+msgstr "Tip resursa"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_calendar_id
@@ -334,9 +337,13 @@ msgstr "Nedelja"
 msgid ""
 "This field depict the efficiency of the resource to complete tasks. e.g  "
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of"
-" 200%, then his load will only be 50%."
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
 msgstr ""
+"Ovo polje prikazuje efikasnost resursa u vezi sa dovršetkom dodeljenih "
+"zadataka. Npr. resurs stavite na bazi 5 dana i dodelite mu 5 zadatka, "
+"pokazaće opterećenje od 100% za ovu fazu po defaultu , ali ako stavite "
+"učinkovitost od 200% , onda će mu biti samo 50 %"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0

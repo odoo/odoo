@@ -1,0 +1,208 @@
+.o_hr_attendance_sign_in_out_icon {
+    font-size: 15em;
+    cursor: pointer;
+    margin: 20px 0px 20px 0px;
+    padding: 0px 15px 0px 15px;
+    border-radius: 10%;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
+}
+
+.oe_hr_attendance_status {
+    font-size: 1.2em;
+    margin-right: .3em;
+    display: inline-block;
+    color: @odoo-brand-secondary;
+
+    &.oe_hr_attendance_status_green {
+        color: @brand-success;
+    }
+    &.oe_hr_attendance_status_red {
+        color: @brand-danger;
+    }
+}
+
+.o_hr_attendance_back_button {
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
+    font-size: 3em;
+    border-radius: 50%;
+    height: 1.7em;
+    width: 1.7em;
+    position: absolute;
+    left: auto;
+    right: 0px;
+    top: 0px;
+    bottom: auto;
+    
+    @media (min-width: @screen-xs-max) {
+        transform: translate(50%, -50%);
+    }
+}
+
+.o_hr_attendance_validation {
+    color: green;
+}
+
+.o_hr_attendance_btn-round-corners {
+    border-radius: 10%;
+}
+
+.o_hr_attendance_pin_pad_border {
+    margin: 10px 0px 10px 0px;
+}
+
+.o_hr_attendance_PINbox {
+    background: white;
+    border: 1px solid #d5d5d5;
+    text-align: center;
+    margin: 5px 0px 5px 0px;   
+}
+
+.o_hr_attendance_kiosk_mode_container {
+    .o-flex-display();
+    .o-flex-flow(column, nowrap);
+    .o-justify-content(center);
+    .o-align-items(center);
+
+    @media (min-width: @screen-xs-max) {
+        background: url("../../../../web_enterprise/static/src/img/application-switcher-bg.jpg") no-repeat center center fixed;
+        background-size: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+}
+
+.o_hr_attendance_warning_message {
+    color: @brand-warning;
+}
+.o_hr_attendance_random_message {
+    font-style: italic;
+}
+.o_hr_attendance_kiosk_mode {
+    width: 100%;
+    text-align: center;
+    position: relative;
+    background-color: #fff;
+    padding: 2em;
+
+    h1 {
+        margin: 0 0 2rem 0;
+    }
+
+    .message_demo_barcodes {
+        font-size: 0.9em;
+        margin: 0;
+    }
+
+    img {
+        overflow:hidden; // prevent margins colapsing with h1
+        margin-top: 3rem;
+        width: 200px;
+    }
+
+    p {
+        text-align: left;
+        margin: 3rem 0;
+    }
+
+    > button {
+        font-size: 1.2em;
+        margin-bottom: 2rem;
+        width: 100%;
+    }
+
+    > button:last-child {
+        margin-bottom: 0;
+    }
+
+    @media (min-width: @screen-xs-max) {
+        flex: 0 0 auto;
+        width: 550px;
+        border-radius: 10px;
+        background-color: rgba(255,255,255,0.8);
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
+        font-size: 1.2em;
+        padding: 3em;
+    }
+}
+
+.o_hr_attendance_clock {
+    font-size: 1.5em;
+    text-align: center;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+
+    @media (min-width: @screen-xs-max) {
+        flex: 0 0 auto;
+        border-radius: 3px;
+        background-color: rgba(255,255,255,0.5);
+        padding: 3px 10px 3px 10px;
+    }
+}
+
+.o_hr_attendance_message_container {
+    .o-flex-display();
+    .o-flex-flow(column, nowrap);
+    .o-justify-content(center);
+    .o-align-items(center);
+
+    @media (min-width: @screen-xs-max) {
+        background: url("../../../../web_enterprise/static/src/img/application-switcher-bg.jpg") no-repeat center center fixed;
+        background-size: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+}
+
+.o_hr_attendance_message {
+    width: 100%;
+    text-align: center;
+    background-color: #fff;
+    padding: 2em;
+
+    h1 {
+        margin: 0 0 2rem 0;
+    }
+
+    .message_demo_barcodes {
+        font-size: 0.9em;
+        margin: 0;
+    }
+
+    img {
+        overflow:hidden; // prevent margins colapsing with h1
+        margin-top: 3rem;
+        width: 200px;
+    }
+
+    p {
+        text-align: left;
+        margin: 3rem 0;
+    }
+
+    > button {
+        font-size: 1.2em;
+        margin-bottom: 2rem;
+        width: 100%;
+    }
+
+    > button:last-child {
+        margin-bottom: 0;
+    }
+
+    @media (min-width: @screen-xs-max) {
+        flex: 0 0 auto;
+        width: 550px;
+        border-radius: 10px;
+        background-color: rgba(255,255,255,0.8);
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
+        font-size: 1.2em;
+        padding: 3em;
+    }
+}

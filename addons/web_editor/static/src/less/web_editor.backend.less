@@ -6,9 +6,7 @@
         line-height: initial !important;
         color: initial !important;
         p {
-            margin: initial;
             font-family: 'Lucida Grande', Helvetica, Verdana, Arial, sans-serif;
-            -webkit-margin-before: 0;
             font-size: 13px;
         }
         a, a:hover {
@@ -81,5 +79,23 @@
     }
     .note-editable [contentEditable='true']:hover {
         box-shadow: #DDCC33 0 0 5px 2px inset;
+    }
+}
+
+// FIX (to improve in next versions)
+// ---------------------------------
+// The web_editor.colorpicker defines a series of color buttons which toggle the bg-* and text-* classes.
+// The problem is that themes can define new buttons whose bg-* and text-* classes only exist in the frontend.
+// So these buttons should not be displayed in the backend. Only solution for the current implementation is
+// to add this ugly rule (in this backend file) which hides every button and redisplayed the default ones.
+.note-editor {
+    .colorpicker .o_colorpicker_section > button {
+        display: none;
+
+        &[data-color="alpha"], &[data-color="beta"], &[data-color="gamma"], &[data-color="delta"], &[data-color="epsilon"],
+        &[data-color="white"], &[data-color="gray-lighter"], &[data-color="gray-light"], &[data-color="gray"], &[data-color="gray-dark"], &[data-color="gray-darker"], &[data-color="black"],
+        &[data-color="primary"], &[data-color="success"], &[data-color="info"], &[data-color="warning"], &[data-color="danger"] {
+            display: block;
+        }
     }
 }

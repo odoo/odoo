@@ -1,18 +1,21 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from PIL import Image
+from urllib import urlencode
+from urlparse import urlparse
 
 import datetime
 import io
 import json
-from PIL import Image
 import re
-from urllib import urlencode
 import urllib2
-from urlparse import urlparse
 
-from openerp import api, fields, models, SUPERUSER_ID, _
-from openerp.tools import image
-from openerp.exceptions import Warning
-from openerp.addons.website.models.website import slug
+from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.tools import image
+from odoo.tools.translate import html_translate
+from odoo.exceptions import Warning
+from odoo.addons.website.models.website import slug
 
 
 class Channel(models.Model):
@@ -31,7 +34,7 @@ class Channel(models.Model):
 
     name = fields.Char('Name', translate=True, required=True)
     active = fields.Boolean(default=True)
-    description = fields.Html('Description', translate=True)
+    description = fields.Html('Description', translate=html_translate, sanitize_attributes=False)
     sequence = fields.Integer(default=10, help='Display order')
     category_ids = fields.One2many('slide.category', 'channel_id', string="Categories")
     slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides")
@@ -99,7 +102,7 @@ class Channel(models.Model):
         string='Channel Groups', help="Groups allowed to see presentations in this channel")
     access_error_msg = fields.Html(
         'Error Message', help="Message to display when not accessible due to access rights",
-        default="<p>This channel is private and its content is restricted to some users.</p>", translate=True)
+        default="<p>This channel is private and its content is restricted to some users.</p>", translate=html_translate, sanitize_attributes=False)
     upload_group_ids = fields.Many2many(
         'res.groups', 'rel_upload_groups', 'channel_id', 'group_id',
         string='Upload Groups', help="Groups allowed to upload presentations in this channel. If void, every user can upload.")
@@ -141,11 +144,12 @@ class Channel(models.Model):
 
     @api.multi
     @api.depends('name')
-    def _website_url(self, name, arg):
-        res = super(Channel, self)._website_url(name, arg)
+    def _compute_website_url(self):
+        super(Channel, self)._compute_website_url()
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        res.update({(channel.id, '%s/slides/%s' % (base_url, slug(channel))) for channel in self})
-        return res
+        for channel in self:
+            if channel.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
+                channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
 
     @api.onchange('visibility')
     def change_visibility(self):
@@ -159,6 +163,20 @@ class Channel(models.Model):
             # archiving/unarchiving a channel does it on its slides, too
             self.with_context(active_test=False).mapped('slide_ids').write({'active': vals['active']})
         return res
+
+    @api.multi
+    def message_post(self, parent_id=False, subtype=None, **kwargs):
+        """ Temporary workaround to avoid spam. If someone replies on a channel
+        through the 'Presentation Published' email, it should be considered as a
+        note as we don't want all channel followers to be notified of this answer. """
+        self.ensure_one()
+        if parent_id:
+            parent_message = self.env['mail.message'].sudo().browse(parent_id)
+            if parent_message.subtype_id and parent_message.subtype_id == self.env.ref('website_slides.mt_channel_slide_published'):
+                if kwargs.get('subtype_id'):
+                    kwargs['subtype_id'] = False
+                subtype = 'mail.mt_note'
+        return super(Channel, self).message_post(parent_id=parent_id, subtype=subtype, **kwargs)
 
 
 class Category(models.Model):
@@ -200,7 +218,7 @@ class EmbeddedSlide(models.Model):
     _description = 'Embedded Slides View Counter'
     _rec_name = 'slide_id'
 
-    slide_id = fields.Many2one('slide.slide', string="Presentation", required=True, select=1)
+    slide_id = fields.Many2one('slide.slide', string="Presentation", required=True, index=True)
     url = fields.Char('Third Party Website URL', required=True)
     count_views = fields.Integer('# Views', default=1)
 
@@ -289,7 +307,7 @@ class Slide(models.Model):
         default='document',
         help="The document type will be set automatically based on the document URL and properties (e.g. height and width for presentation and document).")
     index_content = fields.Text('Transcript')
-    datas = fields.Binary('Content')
+    datas = fields.Binary('Content', attachment=True)
     url = fields.Char('Document URL', help="Youtube or Google Document URL")
     document_id = fields.Char('Document ID', help="Youtube or Google Document ID")
     mime_type = fields.Char('Mime-type')
@@ -345,17 +363,17 @@ class Slide(models.Model):
 
     @api.multi
     @api.depends('name')
-    def _website_url(self, name, arg):
-        res = super(Slide, self)._website_url(name, arg)
+    def _compute_website_url(self):
+        super(Slide, self)._compute_website_url()
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        #link_tracker is not in dependencies, so use it to shorten url only if installed.
-        if self.env.registry.get('link.tracker'):
-            LinkTracker = self.env['link.tracker']
-            res.update({(slide.id, LinkTracker.sudo().create({'url': '%s/slides/slide/%s' % (base_url, slug(slide))}).short_url) for slide in self})
-        else:
-            res.update({(slide.id, '%s/slides/slide/%s' % (base_url, slug(slide))) for slide in self})
-        return res
-
+        for slide in self:
+            if slide.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
+                # link_tracker is not in dependencies, so use it to shorten url only if installed.
+                if self.env.registry.get('link.tracker'):
+                    url = self.env['link.tracker'].sudo().create({'url': '%s/slides/slide/%s' % (base_url, slug(slide))}).short_url
+                else:
+                    url = '%s/slides/slide/%s' % (base_url, slug(slide))
+                slide.website_url = url
 
     @api.model
     def create(self, values):
@@ -370,7 +388,7 @@ class Slide(models.Model):
             for key, value in doc_data.iteritems():
                 values.setdefault(key, value)
         # Do not publish slide if user has not publisher rights
-        if not self.user_has_groups('base.group_website_publisher'):
+        if not self.user_has_groups('website.group_website_publisher'):
             values['website_published'] = False
         slide = super(Slide, self).create(values)
         slide.channel_id.message_subscribe_users()
@@ -383,6 +401,9 @@ class Slide(models.Model):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in doc_data.iteritems():
                 values.setdefault(key, value)
+        if values.get('channel_id'):
+            custom_channels = self.env['slide.channel'].search([('custom_slide_id', '=', self.id), ('id', '!=', values.get('channel_id'))])
+            custom_channels.write({'custom_slide_id': False})
         res = super(Slide, self).write(values)
         if values.get('website_published'):
             self.date_published = datetime.datetime.now()
@@ -418,9 +439,7 @@ class Slide(models.Model):
 
     @api.multi
     def get_access_action(self):
-        """ Override method that generated the link to access the document. Instead
-        of the classic form view, redirect to the slide on the website directly
-        if it is published. """
+        """ Instead of the classic form view, redirect to website if it is published. """
         self.ensure_one()
         if self.website_published:
             return {
@@ -432,15 +451,15 @@ class Slide(models.Model):
         return super(Slide, self).get_access_action()
 
     @api.multi
-    def _notification_get_recipient_groups(self, message, recipients):
-        """ Override to set the access button: everyone can see an access button
-        on their notification email if the slide is published. """
-        res = super(Slide, self)._notification_get_recipient_groups(message, recipients)
-        if all(slide.website_published for slide in self):
-            access_action = self._notification_link_helper('view', model=message.model, res_id=message.res_id)
-            for category, data in res.iteritems():
-                res[category]['button_access'] = {'url': access_action, 'title': _('View Slide')}
-        return res
+    def _notification_recipients(self, message, groups):
+        groups = super(Slide, self)._notification_recipients(message, groups)
+
+        self.ensure_one()
+        if self.website_published:
+            for group_name, group_method, group_data in groups:
+                group_data['has_button_access'] = True
+
+        return groups
 
     def get_related_slides(self, limit=20):
         domain = [('website_published', '=', True), ('channel_id.visibility', '!=', 'private'), ('id', '!=', self.id)]
@@ -455,10 +474,14 @@ class Slide(models.Model):
 
     def _post_publication(self):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        for slide in self.filtered(lambda slide: slide.website_published):
+        for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
             publish_template = slide.channel_id.publish_template_id
             html_body = publish_template.with_context({'base_url': base_url}).render_template(publish_template.body_html, 'slide.slide', slide.id)
-            slide.channel_id.message_post(body=html_body, subtype='website_slides.mt_channel_slide_published')
+            subject = publish_template.render_template(publish_template.subject, 'slide.slide', slide.id)
+            slide.channel_id.message_post(
+                subject=subject,
+                body=html_body,
+                subtype='website_slides.mt_channel_slide_published')
         return True
 
     @api.one

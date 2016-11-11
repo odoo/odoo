@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- view of the Wizard Form --> 
+    <record id="view_crm_lead2projectissue_wizard" model="ir.ui.view">
+        <field name="name">crm.lead2projectissue.wizard.form</field>
+        <field name="model">crm.lead2projectissue.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Convert to Issue">
+                <group>
+                    <field name="project_id"/>
+                </group>
+                <footer>
+                    <button type="object" name="action_lead_to_project_issue" string="Create Issue" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- action of converting, via wizard -->
+    <record id="convert_lead2projectissue_wizard_action" model="ir.actions.act_window">
+        <field name="name">Convert to Issue</field>
+        <field name="res_model">crm.lead2projectissue.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

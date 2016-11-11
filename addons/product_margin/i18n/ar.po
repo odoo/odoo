@@ -3,14 +3,25 @@
 # * product_margin
 # 
 # Translators:
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
+# Ahmed Almokashfi siddeg <mokashfi200@yahoo.com>, 2016
+# Mustafa Rawi <mustafa@cubexco.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# hoxhe aits <hoxhe0@gmail.com>, 2016
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
+# AMAAL RU <Fabu1410@yahoo.com>, 2016
+# Ali zuaby <ali@zuaby.net>, 2016
+# fares alokeeli <okffok@gmail.com>, 2016
+# amrnegm <amrnegm.01@gmail.com>, 2016
+# SaFi J. <safi2266@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-12 22:29+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: SaFi J. <safi2266@gmail.com>, 2016\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,8 +40,8 @@ msgstr "العدد في فواتير في المبيعات"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
-msgid "#Purchased"
-msgstr "العدد المشترى"
+msgid "# Purchased"
+msgstr "عدد المشتريات"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -45,7 +56,7 @@ msgstr "متوسط السعر في فواتير العملاء"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_purchase_avg_price
 msgid "Avg. Price in Vendor Bills "
-msgstr ""
+msgstr "معدل السعر في فواتير المجهز"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_avg_price
@@ -66,7 +77,7 @@ msgstr "السعر المعلن"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_membership
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "أشر إذا كان المنتج مؤهلا ان يكون عضوية."
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_create_uid
@@ -86,17 +97,17 @@ msgstr "ضرائب العميل"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_membership_date_from
 msgid "Date from which membership becomes active."
-msgstr ""
+msgstr "تاريخ تنشيط العضوية"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_membership_date_to
 msgid "Date until which membership remains active."
-msgstr ""
+msgstr "التأريخ الى متى تبقى العضوية فعالة."
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "اسم العرض"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -198,17 +209,17 @@ msgstr "الهوامش"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_membership
 msgid "Membership"
-msgstr ""
+msgstr "العضوية"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_to
 msgid "Membership End Date"
-msgstr ""
+msgstr "موعد نهاية العضوية"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_from
 msgid "Membership Start Date"
-msgstr ""
+msgstr "موعد بداية العضوية"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_normal_cost
@@ -235,12 +246,12 @@ msgstr "مفتوحة ومدفوعة"
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Paid"
-msgstr "مدفوعة"
+msgstr "مدفوع"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_product
 msgid "Product"
-msgstr "المنتج"
+msgstr "منتج"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_email_template_id
@@ -253,7 +264,7 @@ msgid "Product Margin"
 msgstr "هامش المنتج"
 
 #. module: product_margin
-#: code:addons/product_margin/wizard/product_margin.py:66
+#: code:addons/product_margin/wizard/product_margin.py:49
 #: model:ir.actions.act_window,name:product_margin.product_margin_act_window
 #: model:ir.ui.menu,name:product_margin.menu_action_product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -297,7 +308,7 @@ msgstr "السعر القياسي"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
-msgstr ""
+msgstr "مجموع الضرب لكلفة السعر لفواتير المجهز"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_turnover
@@ -308,7 +319,7 @@ msgstr "مجموع حاصل ضرب سعر الفاتورة في الكميات �
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
-msgstr ""
+msgstr "مجموع الضرب لسعر الفاتورة والكمية لفواتير المجهز"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_expected
@@ -325,7 +336,7 @@ msgstr "مجموع الكمية في فواتير العملاء"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_purchase_num_invoiced
 msgid "Sum of Quantity in Vendor Bills"
-msgstr ""
+msgstr "مجموع الكمية في فواتير المجهز"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_property_account_expense_id
@@ -333,6 +344,8 @@ msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
 msgstr ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_property_account_income_id
@@ -340,6 +353,8 @@ msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
 msgstr ""
+"سيتم استخدام شرط السداد بدلا من الشرط الافتراضى لأوامر البيع و فواتير "
+"العملاء"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_to_date
@@ -381,7 +396,7 @@ msgstr "العائد - السعر القياسي"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr ""
+msgstr "ضرائب بائع"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_email_template_id
@@ -390,3 +405,5 @@ msgid ""
 "this template. The customer will receive an email for each product linked to"
 " an email template."
 msgstr ""
+"عندما تأكد فاورة سيتم ارسال رسالة بريد الكتروني للعميل استنادا على هذا "
+"القالب. سيستلم العميل بريد الكتروني لكل منتج مرتبط بقالب البريد الالكتروني."

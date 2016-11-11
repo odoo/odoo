@@ -2,6 +2,7 @@ odoo.define('web_editor.editor', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
+var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var core = require('web.core');
 var base = require('web_editor.base');
@@ -15,27 +16,26 @@ var editor = {};
 
 editor.dummy = function () {return true;}; // used for snippets, options...
 
-editor.editable = !!$('html').data('editable');
+editor.editable = !!($('html').data('editable') || $("[data-oe-model]").length); // temporary hack, this should be done in python
 
 ajax.loadXML('/web_editor/static/src/xml/editor.xml', qweb);
 
-    $(document).on('click', '.note-editable', function (ev) {
-        ev.preventDefault();
-    });
+$(document).on('click', '.note-editable', function (ev) {
+    ev.preventDefault();
+});
 
-    $(document).on('submit', '.note-editable form .btn', function (ev) {
-        // Disable form submition in editable mode
-        ev.preventDefault();
-    });
+$(document).on('submit', '.note-editable form .btn', function (ev) {
+    ev.preventDefault(); // Disable form submition in editable mode
+});
 
-    $(document).on('hide.bs.dropdown', '.dropdown', function (ev) {
-        // Prevent dropdown closing when a contenteditable children is focused
-        if (ev.originalEvent
-                && $(ev.target).has(ev.originalEvent.target).length
-                && $(ev.originalEvent.target).is('[contenteditable]')) {
-            ev.preventDefault();
-        }
-    });
+$(document).on('hide.bs.dropdown', '.dropdown', function (ev) {
+    // Prevent dropdown closing when a contenteditable children is focused
+    if (ev.originalEvent
+            && $(ev.target).has(ev.originalEvent.target).length
+            && $(ev.originalEvent.target).is('[contenteditable]')) {
+        ev.preventDefault();
+    }
+});
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -76,8 +76,6 @@ editor.Class = Widget.extend({
         return res;
     },
     start: function () {
-        var self = this;
-
         $('.dropdown-toggle').dropdown();
 
         this.display_placeholder();
@@ -89,11 +87,12 @@ editor.Class = Widget.extend({
         window.onbeforeunload = function (event) {
             if (rte.history.getEditableHasUndo().length && !flag) {
                 flag = true;
-                setTimeout(function () {flag=false;},0);
+                _.defer(function () { flag=false; });
                 return _t('This document is not saved!');
             }
         };
-        return this._super();
+
+        return this._super.apply(this, arguments);
     },
     display_placeholder: function () {
         var $area = $("#wrapwrap").find("[data-oe-model] .oe_structure.oe_empty, [data-oe-model].oe_structure.oe_empty, [data-oe-type=html]")
@@ -131,22 +130,14 @@ editor.Class = Widget.extend({
         return this.rte.save();
     },
     cancel: function () {
-        new $.Deferred(function (d) {
+        return new $.Deferred(function (d) {
             if (!rte.history.getEditableHasUndo().length) {
                 return d.resolve();
             }
-            var $dialog = $(qweb.render('web_editor.discard')).appendTo(document.body);
-            $dialog.on('click', '.btn-danger', function () {
-                d.resolve();
-            }).on('hidden.bs.modal', function () {
-                d.reject();
-            }).on('keydown.dismiss.bs.modal', function (event) {
-                event.stopImmediatePropagation();
+            var confirm = Dialog.confirm(null, _t("If you discard the current edition, all unsaved changes will be lost. You can cancel to return to the edition mode."), {
+                confirm_callback: d.resolve.bind(d)
             });
-            d.always(function () {
-                $dialog.remove();
-            });
-            $dialog.modal('show');
+            confirm.on("closed", d, d.reject);
         }).then(function () {
             window.onbeforeunload = null;
             editor.reload();
@@ -155,5 +146,4 @@ editor.Class = Widget.extend({
 });
 
 return editor;
-
 });

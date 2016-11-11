@@ -3,15 +3,16 @@
 # * website_event_sale
 # 
 # Translators:
-# Kris Krnacs, 2015
+# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-10-15 21:04+0000\n"
-"Last-Translator: Kris Krnacs\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: krnkris <krnkris@freemail.hu>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -46,12 +47,18 @@ msgstr "Kizárólag"
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "Order Now"
-msgstr "Azonnali rendelés"
+msgstr "Rendelje most"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product"
 msgstr "Termék"
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/controllers/main.py:61
+#, python-format
+msgid "Registration"
+msgstr "Regisztráció"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
@@ -61,7 +68,7 @@ msgstr "Hátralevő"
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order
 msgid "Sales Order"
-msgstr "Vevői megrendelés"
+msgstr "Vásárlói megrendelés"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
@@ -70,27 +77,25 @@ msgid "Sold Out"
 msgstr "Eladva"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:70
+#: code:addons/website_event_sale/models/sale_order.py:71
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
-msgstr "Sajnáljuk, A %(ticket)s belépők a  %(event)s eseményhez már értékesítésre kerültek."
+msgstr ""
+"Sajnáljuk, A %(ticket)s belépők a  %(event)s eseményhez már értékesítésre "
+"kerültek."
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:76
+#: code:addons/website_event_sale/models/sale_order.py:77
 #, python-format
 msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
 " ticket for the %(event)s event."
-msgstr "Sajnáljuk, csak %(remaining_seats)d ülőhely maradt a %(ticket)s belépőkhöz az %(event)s eseményre."
+msgstr ""
+"Sajnáljuk, csak %(remaining_seats)d ülőhely maradt a %(ticket)s belépőkhöz "
+"az %(event)s eseményre."
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:65
-#, python-format
-msgid "Subscription"
-msgstr "Feliratkozás"
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:35
+#: code:addons/website_event_sale/models/sale_order.py:39
 #, python-format
 msgid "The ticket doesn't match with this product."
 msgstr "A cédula nem egyezik ezzel a termékkel."
@@ -98,4 +103,4 @@ msgstr "A cédula nem egyezik ezzel a termékkel."
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website
 msgid "Website"
-msgstr "Honlap"
+msgstr "Weboldal"

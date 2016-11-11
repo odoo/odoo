@@ -25,10 +25,6 @@ class WebsiteSaleDelivery(WebsiteSale):
         order_lines_not_delivery = order_lines.filtered(lambda line: not line.is_delivery)
         return super(WebsiteSaleDelivery, self).order_lines_2_google_api(order_lines_not_delivery)
 
-    def checkout_values(self, data=None):
-        values = super(WebsiteSaleDelivery, self).checkout_values(data)
-        return request.env['sale.order']._get_shipping_country(values)
-
     def order_2_return_dict(self, order):
         """ Returns the tracking_cart dict of the order for Google analytics """
         ret = super(WebsiteSaleDelivery, self).order_2_return_dict(order)

@@ -8,9 +8,9 @@ from os.path import isfile
 from os import listdir
 from threading import Thread, Lock
 
-from openerp import http
+from odoo import http
 
-import openerp.addons.hw_proxy.controllers.main as hw_proxy
+import odoo.addons.hw_proxy.controllers.main as hw_proxy
 
 _logger = logging.getLogger(__name__)
 

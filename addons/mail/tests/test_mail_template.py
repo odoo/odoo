@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import datetime
 
-from openerp.addons.mail.tests.common import TestMail
-from openerp.tools import mute_logger
+from odoo.addons.mail.tests.common import TestMail
+from odoo.tools import mute_logger
 
 
 class TestMailTemplate(TestMail):
@@ -52,7 +53,7 @@ class TestMailTemplate(TestMail):
 
         values = composer.onchange_template_id(self.email_template.id, 'comment', 'mail.channel', self.group_pigs.id)['value']
         # use _convert_to_cache to return a browse record list from command list or id list for x2many fields
-        values = self.env['mail.compose.message']._convert_to_cache(values)
+        values = composer._convert_to_record(composer._convert_to_cache(values))
         recipients = values['partner_ids']
         attachments = values['attachment_ids']
 
@@ -66,7 +67,7 @@ class TestMailTemplate(TestMail):
         self.assertEqual(set(attachments.mapped('res_model')), set(['res.partner']))
         self.assertEqual(set(attachments.mapped('res_id')), set([self.user_admin.partner_id.id]))
 
-    @mute_logger('openerp.addons.mail.models.mail_mail')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_composer_template_send(self):
         self.group_pigs.with_context(use_template=False).message_post_with_template(self.email_template.id, composition_mode='comment')
 
@@ -80,7 +81,7 @@ class TestMailTemplate(TestMail):
         # self.assertIn((attach.datas_fname, base64.b64decode(attach.datas)), _attachments_test,
         #     'mail.message attachment name / data incorrect')
 
-    @mute_logger('openerp.addons.mail.models.mail_mail')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_composer_template_mass_mailing(self):
         composer = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'mass_mail',

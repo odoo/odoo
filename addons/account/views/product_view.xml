@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <record id="product_template_form_view" model="ir.ui.view">
             <field name="name">product.template.form.inherit</field>
@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <page name="sales" position="after">
-                    <page string="Accounting" groups="account.group_account_invoice">
+                    <page string="Invoicing" name="invoicing" groups="account.group_account_invoice">
                         <group name="properties">
                             <group>
                                 <field name="property_account_income_id"
@@ -35,8 +35,8 @@
             <field name="inherit_id" ref="product.product_category_form_view"/>
             <field name="arch" type="xml">
                 <group name="first" position="after">
-                    <group>
-                        <group name="account_property" string="Account Properties">
+                    <group name="account_property" groups="account.group_account_manager">
+                        <group string="Account Properties">
                             <field name="property_account_income_categ_id" domain="[('internal_type','=','other'),('deprecated', '=', False)]"/>
                             <field name="property_account_expense_categ_id" domain="[('internal_type','=','other'),('deprecated', '=', False)]"/>
                         </group>
@@ -45,4 +45,4 @@
             </field>
         </record>
     </data>
-</openerp>
+</odoo>

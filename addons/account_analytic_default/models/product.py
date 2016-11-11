@@ -26,8 +26,8 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def action_view_rules(self):
-        result = self._get_act_window_dict('account_analytic_default.action_product_default_list')
-        result['domain'] = "[('product_id','in',[" + ','.join(map(str, self._get_products())) + "])]"
+        result = self.env.ref('account_analytic_default.action_product_default_list').read()[0]
+        result['domain'] = [('product_id', 'in', self.mapped('product_variant_ids').ids)]
         # Remove context so it is not going to filter on product_id with active_id of template
         result['context'] = "{}"
         return result

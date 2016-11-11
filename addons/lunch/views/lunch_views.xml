@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
         <!-- Top menu item -->
-        <menuitem id='menu_lunch' name='Lunch' sequence="105" groups="group_lunch_user" icon="fa-cutlery" web_icon="lunch,static/description/icon.png"/>
+        <menuitem id='menu_lunch' name='Lunch' sequence="105" groups="group_lunch_user" web_icon="lunch,static/description/icon.png"/>
         <menuitem name="My Lunch" parent="menu_lunch" id="menu_lunch_title" sequence="50" />
         <menuitem name="Manager" parent="menu_lunch" id="menu_lunch_admin" sequence="51" groups="group_lunch_manager"/>
         <menuitem name="Configuration" parent="menu_lunch" id="menu_lunch_config" sequence="53" groups="group_lunch_manager"/>
@@ -14,7 +14,7 @@
                 <search string="Search">
                     <filter name='is_mine' string="My Orders" domain="[('user_id','=',uid)]"/>
                     <separator/>
-                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('note', 'ilike', self)]"/>
+                    <field name="name" string="Product" filter_domain="['|', ('name', 'ilike', self), ('note', 'ilike', self)]"/>
                     <filter name="not_confirmed" string="Not Received" domain="[('state','!=',('confirmed'))]"/>
                     <filter name="confirmed" string="Received" domain="[('state','=','confirmed')]"/>
                     <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]"/>
@@ -92,7 +92,7 @@
                 <form string="cashmove form">
                     <sheet>
                         <group>
-                            <field name="user_id"/>
+                            <field name="user_id" required="1"/>
                             <field name="date"/>
                             <field name="amount"/>
                         </group>
@@ -168,9 +168,9 @@
                 Here you can see today's orders grouped by vendors.
               </p>
               <p>
-                - Click on the <img src="../../../web/static/src/img/icons/terp-call-start.png"/> to announce that the order is ordered <br/>
-                - Click on the <img src="../../../web/static/src/img/icons/gtk-apply.png"/> to announce that the order is received <br/>
-                - Click on the <img src="../../../web/static/src/img/icons/gtk-cancel.png"/> to announce that the order isn't available
+                - Click on the <span class="fa fa-phone text-success"/> to announce that the order is ordered <br/>
+                - Click on the <span class="fa fa-check text-success"/> to announce that the order is received <br/>
+                - Click on the <span class="fa fa-times-circle text-danger"/> to announce that the order isn't available
               </p>
             </field>
         </record>
@@ -188,9 +188,9 @@
                 Summary of all lunch orders, grouped by vendor and by date.
               </p>
               <p>
-                - Click on the <img src="../../../web/static/src/img/icons/terp-call-start.png"/> to announce that the order is ordered <br/>
-                - Click on the <img src="../../../web/static/src/img/icons/gtk-apply.png"/> to announce that the order is received <br/>
-                - Click on the <img src="../../../web/static/src/img/icons/gtk-cancel.png"/> red X to announce that the order isn't available
+                - Click on the <span class="fa fa-phone text-success"/> to announce that the order is ordered <br/>
+                - Click on the <span class="fa fa-check text-success"/> to announce that the order is received <br/>
+                - Click on the <span class="fa fa-times-circle text-danger"/> red X to announce that the order isn't available
               </p>
             </field>
         </record>
@@ -318,9 +318,9 @@
                     <field name='state'/>
                     <field name='user_id'/>
                     <field name='price' sum="Total" string="Price"/>
-                    <button name="order" string="Order" type="object" icon="terp-call-start" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}" groups="lunch.group_lunch_manager"/>
-                    <button name="confirm" string="Receive" type="object" icon="gtk-apply" attrs="{'invisible': [('state','!=','ordered')]}" groups="lunch.group_lunch_manager"/>
-                    <button name="cancel" string="Cancel" type="object" icon="gtk-cancel" attrs="{'invisible': [('state','=','cancelled')]}" groups="lunch.group_lunch_manager"/>
+                    <button name="order" string="Order" type="object" icon="fa-phone text-success" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}" groups="lunch.group_lunch_manager"/>
+                    <button name="confirm" string="Receive" type="object" icon="fa-check text-success" attrs="{'invisible': [('state','!=','ordered')]}" groups="lunch.group_lunch_manager"/>
+                    <button name="cancel" string="Cancel" type="object" icon="fa-times-circle text-danger" attrs="{'invisible': [('state','=','cancelled')]}" groups="lunch.group_lunch_manager"/>
                 </tree>
             </field>
         </record>
@@ -366,7 +366,7 @@
 
                         <group>
                             <group>
-                                <field name='user_id' class="oe_inline"/>
+                                <field name='user_id' class="oe_inline" required='1'/>
                                 <field name='date'/>
                             </group>
                             <div>
@@ -419,7 +419,9 @@
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_lunch_product" />
             <field name="state">code</field>
-            <field name="code">self.toggle_active(cr, uid, context.get('active_ids', []), context=context)</field>
+            <field name="code">
+if env.context.get('active_ids'):
+    model.browse(context['active_ids']).toggle_active()</field>
         </record>
 
         <record id="ir_values_lunch_archive_product" model="ir.values">

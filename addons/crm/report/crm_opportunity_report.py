@@ -1,60 +1,57 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.addons.crm import crm_stage
-from openerp.osv import fields, osv
-from openerp import tools
+from odoo import fields, models, tools
 
+from ..models import crm_stage
 
-class crm_opportunity_report(osv.Model):
+class OpportunityReport(models.Model):
     """ CRM Opportunity Analysis """
+
     _name = "crm.opportunity.report"
     _auto = False
     _description = "CRM Opportunity Analysis"
     _rec_name = 'date_deadline'
 
-    _columns = {
-        'date_deadline': fields.date('Expected Closing', readonly=True),
-        'create_date': fields.datetime('Creation Date', readonly=True),
-        'opening_date': fields.datetime('Assignation Date', readonly=True),
-        'date_closed': fields.datetime('Close Date', readonly=True),
-        'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
-        'active': fields.boolean('Active', readonly=True),
+    date_deadline = fields.Date('Expected Closing', readonly=True)
+    create_date = fields.Datetime('Creation Date', readonly=True)
+    opening_date = fields.Datetime('Assignation Date', readonly=True)
+    date_closed = fields.Datetime('Close Date', readonly=True)
+    date_last_stage_update = fields.Datetime('Last Stage Update', readonly=True)
+    active = fields.Boolean('Active', readonly=True)
 
-        # durations
-        'delay_open': fields.float('Delay to Assign',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
-        'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
-        'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
+    # durations
+    delay_open = fields.Float('Delay to Assign', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to open the case")
+    delay_close = fields.Float('Delay to Close', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Days to close the case")
+    delay_expected = fields.Float('Overpassed Deadline', digits=(16, 2), readonly=True, group_operator="avg")
 
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'team_id':fields.many2one('crm.team', 'Sales Team', oldname='section_id', readonly=True),
-        'nbr_activities': fields.integer('# of Activities', readonly=True),
-        'city': fields.char('City'),
-        'country_id':fields.many2one('res.country', 'Country', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
-        'total_revenue': fields.float('Total Revenue',digits=(16,2),readonly=True),
-        'expected_revenue': fields.float('Expected Revenue', digits=(16,2),readonly=True),
-        'stage_id': fields.many2one ('crm.stage', 'Stage', readonly=True, domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]"),
-        'stage_name': fields.char('Stage Name', readonly=True),
-        'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'priority': fields.selection(crm_stage.AVAILABLE_PRIORITIES, 'Priority'),
-        'type':fields.selection([
-            ('lead','Lead'),
-            ('opportunity','Opportunity'),
-        ],'Type', help="Type is used to separate Leads and Opportunities"),
-        'lost_reason': fields.many2one('crm.lost.reason', 'Lost Reason', readonly=True),
-        'date_conversion': fields.datetime('Conversion Date', readonly=True),
-        'campaign_id': fields.many2one('utm.campaign', 'Campaign', readonly=True),
-        'source_id':fields.many2one('utm.source', 'Source', readonly=True),
-        'medium_id': fields.many2one('utm.medium', 'Medium', readonly=True),
-    }
+    user_id = fields.Many2one('res.users', string='User', readonly=True)
+    team_id = fields.Many2one('crm.team', 'Sales Team', oldname='section_id', readonly=True)
+    nbr_activities = fields.Integer('# of Activities', readonly=True)
+    city = fields.Char('City')
+    country_id = fields.Many2one('res.country', string='Country', readonly=True)
+    probability = fields.Float(string='Probability', digits=(16, 2), readonly=True, group_operator="avg")
+    total_revenue = fields.Float(string='Total Revenue', digits=(16, 2), readonly=True)
+    expected_revenue = fields.Float(string='Probable Turnover', digits=(16, 2), readonly=True)
+    stage_id = fields.Many2one('crm.stage', string='Stage', readonly=True, domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]")
+    stage_name = fields.Char(string='Stage Name', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
+    company_id = fields.Many2one('res.company', string='Company', readonly=True)
+    priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Priority', group_operator="avg")
+    type = fields.Selection([
+        ('lead', 'Lead'),
+        ('opportunity', 'Opportunity'),
+    ], help="Type is used to separate Leads and Opportunities")
+    lost_reason = fields.Many2one('crm.lost.reason', string='Lost Reason', readonly=True)
+    date_conversion = fields.Datetime(string='Conversion Date', readonly=True)
+    campaign_id = fields.Many2one('utm.campaign', string='Campaign', readonly=True)
+    source_id = fields.Many2one('utm.source', string='Source', readonly=True)
+    medium_id = fields.Many2one('utm.medium', string='Medium', readonly=True)
 
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'crm_opportunity_report')
-        cr.execute("""
-            CREATE OR REPLACE VIEW crm_opportunity_report AS (
+    def init(self):
+        tools.drop_view_if_exists(self._cr, 'crm_opportunity_report')
+        self._cr.execute("""
+            CREATE VIEW crm_opportunity_report AS (
                 SELECT
                     c.id,
                     c.date_deadline,
@@ -73,7 +70,7 @@ class crm_opportunity_report(osv.Model):
                     c.team_id,
                     (SELECT COUNT(*)
                      FROM mail_message m
-                     WHERE m.model = 'crm.lead' and m.res_id = c.id) as nbr_activity,
+                     WHERE m.model = 'crm.lead' and m.res_id = c.id) as nbr_activities,
                     c.active,
                     c.campaign_id,
                     c.source_id,

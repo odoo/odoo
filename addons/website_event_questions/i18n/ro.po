@@ -3,14 +3,17 @@
 # * website_event_questions
 # 
 # Translators:
+# Dorin Hongu <dhongu@gmail.com>, 2016
+# Cozmin Candea <office@terrabit.ro>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 10:15+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,7 +22,7 @@ msgstr ""
 
 #. module: website_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.registration_attendee_details_questions
-msgid "<strong>Last questions</strong>"
+msgid "<strong>Common Questions</strong>"
 msgstr ""
 
 #. module: website_event_questions
@@ -39,7 +42,7 @@ msgstr "Raspuns"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_ids
 #: model:ir.ui.view,arch_db:website_event_questions.view_registration_search_inherit_question
 msgid "Answers"
-msgstr "Raspunsuri"
+msgstr "Răspunsuri"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_is_individual
@@ -49,7 +52,7 @@ msgstr ""
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration
 msgid "Attendee"
-msgstr "Participanți"
+msgstr "Participant"
 
 #. module: website_event_questions
 #: model:event.answer,name:website_event_questions.event_suggestion_0_2
@@ -76,7 +79,7 @@ msgstr "Creat în"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_display_name
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nume afișat"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_event
@@ -98,6 +101,11 @@ msgstr ""
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_event_registration_id
 msgid "Event registration id"
+msgstr ""
+
+#. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_event_general_question_ids
+msgid "General Questions"
 msgstr ""
 
 #. module: website_event_questions
@@ -141,7 +149,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report___last_update
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima modificare la"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_write_uid
@@ -173,7 +181,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_form
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Question"
-msgstr "Intrebare"
+msgstr "Întrebare"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_question_id
@@ -181,9 +189,7 @@ msgid "Question id"
 msgstr ""
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_event_general_question_ids
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event_question_ids
-#: model:ir.model.fields,field_description:website_event_questions.field_event_event_specific_question_ids
 #: model:ir.ui.menu,name:website_event_questions.menu_report_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_form_inherit_question
 msgid "Questions"
@@ -212,7 +218,12 @@ msgstr "Secvență"
 #. module: website_event_questions
 #: model:event.answer,name:website_event_questions.event_suggestion_0_1
 msgid "Silver"
-msgstr "Argintiu"
+msgstr "Argint"
+
+#. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_event_specific_question_ids
+msgid "Specific Questions"
+msgstr ""
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_title

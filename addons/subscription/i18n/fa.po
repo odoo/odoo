@@ -3,14 +3,18 @@
 # * subscription
 # 
 # Translators:
+# Hamid Darabi <hamid.darabi@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Zahed Alfak <tamass4116@gmail.com>, 2016
+# Faraz Sadri <ifarazir@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 09:05+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Persian (http://www.transifex.com/odoo/odoo-9/language/fa/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Faraz Sadri <ifarazir@gmail.com>, 2016\n"
+"Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -80,7 +84,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_display_name
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "نام نمایشی"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_doc_lines
@@ -149,11 +153,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_notes
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Internal Notes"
-msgstr "یادداشت های داخلی"
+msgstr "یادداشت‌های داخلی"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_number
-msgid "Interval Qty"
+msgid "Internal Qty"
 msgstr ""
 
 #. module: subscription
@@ -167,7 +171,7 @@ msgstr "یکای بازه"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription___last_update
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "آخرین به‌روزرسانی در تاریخ "
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_write_uid
@@ -204,7 +208,7 @@ msgstr "یادداشت‌ها"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_exec_init
-msgid "Number of documents"
+msgid "Number of Documents"
 msgstr ""
 
 #. module: subscription
@@ -219,7 +223,7 @@ msgid "Partner"
 msgstr "همکار"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:101
+#: code:addons/subscription/models/subscription.py:92
 #, python-format
 msgid ""
 "Please provide another source document.\n"
@@ -279,13 +283,18 @@ msgstr "وضعیت"
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Stop"
-msgstr ""
+msgstr "توقف"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_subscription_id
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "Subscription"
+msgstr ""
+
+#. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+msgid "Subscription Data"
 msgstr ""
 
 #. module: subscription
@@ -319,12 +328,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 #: model:ir.ui.view,arch_db:subscription.view_subscription_tree
 msgid "Subscriptions"
-msgstr ""
-
-#. module: subscription
-#: model:ir.ui.view,arch_db:subscription.view_subscription_form
-msgid "Subsription Data"
-msgstr ""
+msgstr "اشتراک ها"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_user_id
@@ -344,7 +348,7 @@ msgid "Weeks"
 msgstr "هفته‌ها"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:128
+#: code:addons/subscription/models/subscription.py:115
 #, python-format
 msgid "You cannot delete an active subscription!"
 msgstr ""

@@ -10,7 +10,7 @@
 -
   !record {model: res.users, id: res_hr_timesheet_manager}:
     groups_id:
-      - base.group_hr_manager
+      - hr_timesheet.group_hr_timesheet_user
 -
   Create a user as 'HR timesheet Officer'
 -
@@ -23,7 +23,7 @@
 -
   !record {model: res.users, id: res_hr_timesheet_officer}:
     groups_id:
-      - base.group_hr_user
+      - hr_timesheet.group_hr_timesheet_user
 -
   Create a user as 'Timesheet Employee'
 -

@@ -1,0 +1,79 @@
+.li-a-padding {
+    padding: 3px @odoo-dropdown-hpadding;
+}
+
+.ui-autocomplete { // Copy style of bootstrap dropdown
+    background-image: none;
+    background-color: @dropdown-bg;
+    border: 1px solid @dropdown-border;
+    font-family: @font-family-serif;
+    font-size: @font-size-base;
+    padding: 5px 0px;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.176);
+
+    .ui-menu-item {
+        padding: 0;
+        > a {
+            display: block;
+            color: @dropdown-link-color;
+
+            .li-a-padding
+        }
+
+        &.ui-state-focus {
+            background-image: none;
+            background-color: @odoo-brand-primary;
+            border: none;
+            font-weight: normal;
+            margin: 0;
+        }
+        &.o_m2o_dropdown_option {
+            padding-left: 20px;
+            > a {
+                color: @odoo-brand-primary;
+            }
+        }
+    }
+}
+
+.dropdown-menu {
+    .o_inline_dropdown {
+        position: relative;
+
+        &> .dropdown-menu {
+            top: 0;
+            left: 100%;
+        }
+        &:hover > .dropdown-menu {
+            display: block;
+        }
+    }
+}
+
+.dropdown-menu-mixin {
+    .open .dropdown-menu > li {
+        position: relative; // to allow absolute positionning inside the li
+        > a {
+            &:focus, &:active, &:focus:active {
+                outline: none;
+            }
+
+            .li-a-padding;
+        }
+
+        &.dropdown-header {
+            .li-a-padding;
+            color: @odoo-main-text-color;
+
+            @media (max-width: @screen-xs-max) {
+                color: white;
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+.dropdown-menu-mixin();
+.navbar-nav {
+    .dropdown-menu-mixin();
+}

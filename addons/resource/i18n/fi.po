@@ -3,14 +3,21 @@
 # * resource
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
+# Kimmo Lehtonen <leban@netzionale.com>, 2016
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
+# Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2016
+# Kari Lindgren <karisatu@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-02-09 15:38+0000\n"
-"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
-"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Kari Lindgren <karisatu@gmail.com>, 2016\n"
+"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,15 +25,15 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:689
+#: code:addons/resource/models/resource.py:689
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (kopio)"
+msgstr "%s (copy)"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_active
 msgid "Active"
-msgstr "Aktiivinen"
+msgstr "Active"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -36,7 +43,7 @@ msgstr "Sulkupäivät"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_code
 msgid "Code"
-msgstr "Koodi"
+msgstr "Código"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_company_id
@@ -86,7 +93,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_display_name
 msgid "Display Name"
-msgstr "Näytä nimi"
+msgstr "Näyttönimi"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
@@ -105,7 +112,8 @@ msgid "End Date"
 msgstr "Loppupäivä"
 
 #. module: resource
-#: constraint:resource.calendar.leaves:0
+#: code:addons/resource/models/resource.py:738
+#, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr "Virhe! Poissaolon alkupäivä pitää olla ennen kuin loman loppupäivä."
 
@@ -118,12 +126,12 @@ msgstr "Perjantai"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Group By"
-msgstr "Ryhmittele"
+msgstr "Ryhmittely"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
 msgid "Hours"
-msgstr "Tuntia"
+msgstr "Tunnit"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -136,21 +144,25 @@ msgstr "Ihminen"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_id
 #: model:ir.model.fields,field_description:resource.field_resource_resource_id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunniste (ID)"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves_resource_id
 msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
-msgstr "Jos tyhjä, tämä on yrityksen yleinen loma-aika. Jos resurssi asetetaan, loma koskee vain sitä resurssia."
+msgstr ""
+"Jos tyhjä, tämä on yrityksen yleinen loma-aika. Jos resurssi asetetaan, loma"
+" koskee vain sitä resurssia."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr "Jos aktiivisen kentän arvo on epätosi (false), voit piilottaa resurssin poistamatta sitä."
+msgstr ""
+"Jos aktiivisen kentän arvo on epätosi (false), voit piilottaa resurssin "
+"poistamatta sitä."
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -191,7 +203,7 @@ msgstr "Jätä yksityiskohdat"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Month"
-msgstr ""
+msgstr "Lomakuukausi"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leave_ids
@@ -282,7 +294,10 @@ msgid ""
 "Resources allow you to create and manage resources that should be involved "
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
-msgstr "Resurssit mahdollistavat projektin eri vaiheissa tarvittavien resurssien luomisen ja hallitsemisen. Voit myös asettaa niiden tehokkuustason ja kuormituksen huomoiden viikottaiset työajat."
+msgstr ""
+"Resurssit mahdollistavat projektin eri vaiheissa tarvittavien resurssien "
+"luomisen ja hallitsemisen. Voit myös asettaa niiden tehokkuustason ja "
+"kuormituksen huomoiden viikottaiset työajat."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -336,7 +351,11 @@ msgid ""
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
 "show a load of 100% for this phase by default, but if we put a efficiency of"
 " 200%, then his load will only be 50%."
-msgstr "Tämä kenttä kuvaa resurssin tehokkuutta tehtävien suorittamisessa. Esim. jos resurssi jätetään yksin viideksi päiväksi suorittamaan viittä hänelle määrättyä tehtävää, tämä näyttää 100% kuormitusta. Jos tehokkuus määritetään 200%:ksi, kuormitus on vain 50%."
+msgstr ""
+"Tämä kenttä kuvaa resurssin tehokkuutta tehtävien suorittamisessa. Esim. jos"
+" resurssi jätetään yksin viideksi päiväksi suorittamaan viittä hänelle "
+"määrättyä tehtävää, tämä näyttää 100% kuormitusta. Jos tehokkuus määritetään"
+" 200%:ksi, kuormitus on vain 50%."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0

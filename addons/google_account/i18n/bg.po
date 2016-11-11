@@ -3,14 +3,18 @@
 # * google_account
 # 
 # Translators:
+# kalatchev <kalatchev@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Radina <radis.choice@gmail.com>, 2016
+# Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-13 13:41+0000\n"
-"PO-Revision-Date: 2016-01-14 10:12+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/bg/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Kaloyan Naumov <kaloyan@lumnus.net>, 2016\n"
+"Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -53,7 +57,13 @@ msgid "Last Updated on"
 msgstr "Последно обновено на"
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:98
+#: code:addons/google_account/models/google_service.py:169
+#, python-format
+msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
+msgstr ""
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:117
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -61,7 +71,7 @@ msgid ""
 msgstr ""
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:37
+#: code:addons/google_account/models/google_service.py:52
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -69,7 +79,7 @@ msgid ""
 msgstr ""
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:128
+#: code:addons/google_account/models/google_service.py:144
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -77,7 +87,7 @@ msgid ""
 msgstr ""
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:173
+#: code:addons/google_account/models/google_service.py:193
 #, python-format
 msgid "Something went wrong with your request to google"
 msgstr "Нещо се обърка с Вашето искане до Google"
@@ -85,4 +95,4 @@ msgstr "Нещо се обърка с Вашето искане до Google"
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service
 msgid "google.service"
-msgstr ""
+msgstr "google.service"

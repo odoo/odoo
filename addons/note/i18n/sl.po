@@ -3,25 +3,21 @@
 # * note
 # 
 # Translators:
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2015
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-10-15 04:17+0000\n"
-"Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
-"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/sl/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sl\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_needaction
-msgid "Action Needed"
-msgstr "Potreben je ukrep"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_open
@@ -38,6 +34,11 @@ msgstr "Arhiviraj"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Po kategoriji lepljivih beležk"
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
+msgstr ""
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -75,11 +76,6 @@ msgid "Date done"
 msgstr "Datum zaključka"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Datum zadnjega sporočila vpisanega pod to vknjižbo."
-
-#. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Delete"
 msgstr "Izbriši"
@@ -89,7 +85,7 @@ msgstr "Izbriši"
 #: model:ir.model.fields,field_description:note.field_note_stage_display_name
 #: model:ir.model.fields,field_description:note.field_note_tag_display_name
 msgid "Display Name"
-msgstr "Prikaz naziva"
+msgstr "Prikazni naziv"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage_fold
@@ -97,24 +93,9 @@ msgid "Folded by Default"
 msgstr "Zloženo (Privzeto)"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_follower_ids
-msgid "Followers"
-msgstr "Sledilci"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Sledilci (kanali)"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Sledilci (partnerji)"
-
-#. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
-msgstr "Združeno po"
+msgstr "Združi po"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_id
@@ -122,26 +103,6 @@ msgstr "Združeno po"
 #: model:ir.model.fields,field_description:note.field_note_tag_id
 msgid "ID"
 msgstr "ID"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_is_follower
-msgid "Is Follower"
-msgstr "Je sledilec"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_last_post
-msgid "Last Message Date"
-msgstr "Datum zadnjega sporočila"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note___last_update
@@ -171,22 +132,12 @@ msgid "Later"
 msgstr "Pozneje"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_ids
-msgid "Messages"
-msgstr "Sporočila"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_ids
-msgid "Messages and communication history"
-msgstr "Komunikacije in kronologija"
-
-#. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
 msgstr "Novo"
 
 #. module: note
-#: code:addons/note/note.py:163
+#: code:addons/note/models/note.py:129
 #, python-format
 msgid "New Note"
 msgstr "Nova opomba"
@@ -227,21 +178,6 @@ msgid "Notes"
 msgstr "Beležke"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Število aktivnosti"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Število sporočil, ki zahtevajo dejavnost"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Število neprebranih sporočil"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
 #: model:ir.model.fields,field_description:note.field_note_stage_user_id
 msgid "Owner"
@@ -249,8 +185,8 @@ msgstr "Lastnik"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
-msgstr "Lastnik faze beležke"
+msgid "Owner of the note stage"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_sequence
@@ -302,13 +238,15 @@ msgid "Tag name already exists !"
 msgstr "Označba že obstaja!"
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Ključne besede"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
 msgstr "Ta teden"
@@ -325,16 +263,6 @@ msgid "Tomorrow"
 msgstr "Jutri"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_unread
-msgid "Unread Messages"
-msgstr "Neprebrana sporočila"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Števec neprebranih sporočil"
-
-#. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid ""
 "Use notes to organize personal tasks or notes. All\n"
@@ -342,7 +270,12 @@ msgid ""
 "            you can share some notes with other people by inviting followers\n"
 "            on the note. (Useful for meeting minutes, especially if\n"
 "            you activate the pad feature for collaborative writings)."
-msgstr "Uporabite beležke za organiziranje osebnih nalog ali beležke.\n            Vse beležke so osebne; nihče drug jih ne bo videl. Če želite,\n            lahko določene beležke delite z drugimi in sicer tako, da povabite\n            sledilce na tej beležki. (uporabno za sestanke, posebej če\n            aktivirate orodje za sodelovanje pri pisanju)."
+msgstr ""
+"Uporabite beležke za organiziranje osebnih nalog ali beležke.\n"
+"            Vse beležke so osebne; nihče drug jih ne bo videl. Če želite,\n"
+"            lahko določene beležke delite z drugimi in sicer tako, da povabite\n"
+"            sledilce na tej beležki. (uporabno za sestanke, posebej če\n"
+"            aktivirate orodje za sodelovanje pri pisanju)."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_sequence
@@ -359,4 +292,6 @@ msgstr "Uporabniki"
 msgid ""
 "You can customize how you process your notes/tasks by adding,\n"
 "            removing or modifying columns."
-msgstr "Način obravnave vaših beležk/opravil lahko nastavite z\n            dodajanjem, odvzemanjem ali spreminjanjem stolpcev."
+msgstr ""
+"Način obravnave vaših beležk/opravil lahko nastavite z\n"
+"            dodajanjem, odvzemanjem ali spreminjanjem stolpcev."

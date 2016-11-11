@@ -1,4 +1,5 @@
-<openerp>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
     <!-- Mails & quote templates is done in a NOUPDATE block
          so users can freely customize/delete them -->
     <data noupdate="1">
@@ -92,7 +93,7 @@
         </record>
 
         <record id="confirmation_mail" model="mail.template">
-            <field name="name">Website Quote: confirmation e-mail</field>
+            <field name="name">Online Quote: confirmation e-mail</field>
             <field name="email_from">${(object.user_id.email or object.company_id.email or 'noreply@localhost')|safe}</field>
             <field name="subject">Your order ${object.name} is confirmed</field>
             <field name="email_to">${ctx.get('email_to') or object.partner_id.email}</field>
@@ -124,7 +125,7 @@
                 <p>Your order <a href="/quote/${object.id}/${object.access_token}">${object.name}</a> has been validated!</p><br/>
                 
                 % if object.partner_id.user_ids
-                <p>You can view your quotes, sales orders and invoices online by going to our <a style="text-decoration:none; color: #a24689;" href="/my/home">Online Portal</a>.</p><br/>
+                <p>You can view your quotes, sales orders and invoices online by going to our <a style="text-decoration:none; color: #875A7B;" href="/my/home">Online Portal</a>.</p><br/>
                 % endif
 
                 <p>If you have any question, do not hesitate to contact us.</p><br/>
@@ -137,9 +138,9 @@
                 </p>
                 % endif
                 <p style="font-size: 11px;"><strong>Sent by
-                <a href="${user.company_id.website}" style="text-decoration:none; color: #a24689;">
+                <a href="${user.company_id.website}" style="text-decoration:none; color: #875A7B;">
                     <strong>${user.company_id.name}</strong>
-                </a> using <a href="www.odoo.com" style="text-decoration:none; color: #a24689;"><strong>Odoo</strong></a>
+                </a> using <a href="www.odoo.com" style="text-decoration:none; color: #875A7B;"><strong>Odoo</strong></a>
                 </strong></p>
             </td>
         </tr></tbody>
@@ -148,4 +149,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>

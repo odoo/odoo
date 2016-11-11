@@ -3,14 +3,17 @@
 # * utm
 # 
 # Translators:
+# Dorin Hongu <dhongu@gmail.com>, 2016
+# Cozmin Candea <office@terrabit.ro>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-09-30 09:28+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -24,6 +27,11 @@ msgstr "Activ(a)"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_campaign
+#: model:ir.model.fields,field_description:utm.field_account_invoice_campaign_id
+#: model:ir.model.fields,field_description:utm.field_crm_lead_campaign_id
+#: model:ir.model.fields,field_description:utm.field_hr_applicant_campaign_id
+#: model:ir.model.fields,field_description:utm.field_link_tracker_campaign_id
+#: model:ir.model.fields,field_description:utm.field_sale_order_campaign_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_campaign_id
 #: model:ir.ui.view,arch_db:utm.utm_campaign_form
 #: model:ir.ui.view,arch_db:utm.utm_campaign_tree
@@ -92,12 +100,7 @@ msgstr "Creat în"
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_display_name
 #: model:ir.model.fields,field_description:utm.field_utm_source_display_name
 msgid "Display Name"
-msgstr ""
-
-#. module: utm
-#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
-msgid "Email Campaign - Products"
-msgstr "Campanie de Email-uri - Produse"
+msgstr "Nume afișat"
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_services
@@ -128,7 +131,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:utm.field_utm_mixin___last_update
 #: model:ir.model.fields,field_description:utm.field_utm_source___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima modificare la"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign_write_uid
@@ -156,6 +159,11 @@ msgstr ""
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
+#: model:ir.model.fields,field_description:utm.field_account_invoice_medium_id
+#: model:ir.model.fields,field_description:utm.field_crm_lead_medium_id
+#: model:ir.model.fields,field_description:utm.field_hr_applicant_medium_id
+#: model:ir.model.fields,field_description:utm.field_link_tracker_medium_id
+#: model:ir.model.fields,field_description:utm.field_sale_order_medium_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_medium_id
 #: model:ir.ui.menu,name:utm.menu_utm_medium
 #: model:ir.ui.view,arch_db:utm.utm_medium_view_tree
@@ -164,6 +172,7 @@ msgid "Medium"
 msgstr "Mediu"
 
 #. module: utm
+#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
 #: model:utm.source,name:utm.utm_source_newsletter
 msgid "Newsletter"
 msgstr "Buletin informativ"
@@ -171,7 +180,7 @@ msgstr "Buletin informativ"
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_fall_drive
 msgid "Sale"
-msgstr ""
+msgstr "Vânzări"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_search_engine
@@ -180,6 +189,11 @@ msgstr "Motor căutare"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source
+#: model:ir.model.fields,field_description:utm.field_account_invoice_source_id
+#: model:ir.model.fields,field_description:utm.field_crm_lead_source_id
+#: model:ir.model.fields,field_description:utm.field_hr_applicant_source_id
+#: model:ir.model.fields,field_description:utm.field_link_tracker_source_id
+#: model:ir.model.fields,field_description:utm.field_sale_order_source_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_source_id
 msgid "Source"
 msgstr "Sursa"
@@ -196,6 +210,11 @@ msgid "Sources"
 msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_account_invoice_campaign_id
+#: model:ir.model.fields,help:utm.field_crm_lead_campaign_id
+#: model:ir.model.fields,help:utm.field_hr_applicant_campaign_id
+#: model:ir.model.fields,help:utm.field_link_tracker_campaign_id
+#: model:ir.model.fields,help:utm.field_sale_order_campaign_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_campaign_id
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts "
@@ -203,15 +222,25 @@ msgid ""
 msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_account_invoice_medium_id
+#: model:ir.model.fields,help:utm.field_crm_lead_medium_id
+#: model:ir.model.fields,help:utm.field_hr_applicant_medium_id
+#: model:ir.model.fields,help:utm.field_link_tracker_medium_id
+#: model:ir.model.fields,help:utm.field_sale_order_medium_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+msgid "This is the method of delivery.Ex: Postcard, Email, or Banner Ad"
 msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_account_invoice_source_id
+#: model:ir.model.fields,help:utm.field_crm_lead_source_id
+#: model:ir.model.fields,help:utm.field_hr_applicant_source_id
+#: model:ir.model.fields,help:utm.field_link_tracker_source_id
+#: model:ir.model.fields,help:utm.field_sale_order_source_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_source_id
 msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
+"This is the source of the link Ex:Search Engine, another domain,or name of "
+"email list"
 msgstr ""
 
 #. module: utm
@@ -227,4 +256,4 @@ msgstr ""
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
 msgid "utm.mixin"
-msgstr ""
+msgstr "utm.mixin"

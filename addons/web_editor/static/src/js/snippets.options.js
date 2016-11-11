@@ -1,89 +1,86 @@
 odoo.define('web_editor.snippets.options', function (require) {
     'use strict';
 
-    var Class = require('web.Class');
     var ajax = require('web.ajax');
+    var Class = require('web.Class');
     var core = require('web.core');
     var Dialog = require('web.Dialog');
     var base = require('web_editor.base');
     var editor = require('web_editor.editor');
     var widget = require('web_editor.widget');
-    var animation = require('web_editor.snippets.animation');
 
     var qweb = core.qweb;
     var _t = core._t;
 
-    /* ----- Editor option (object link the the xml with data-js) ---- */
-
+    /**
+     * The SnippetOption class handles one option for one snippet. The registry returned by
+     * this module contains the names of the specialized SnippetOption which can be reference
+     * thanks to the data-js key of the full options web_editor template.
+     */
     var SnippetOption = Class.extend({
-        // initialisation (don't overwrite)
         init: function (BuildingBlock, editor, $target, option_id) {
             this.buildingBlock = BuildingBlock;
             this.editor = editor;
             this.$target = $target;
+
+            this.option = option_id;
             var option = this.buildingBlock.templateOptions[option_id];
-            var styles = this.$target.data("snippet-option-ids") || {};
-            styles[option_id] = this;
-            this.$target.data("snippet-option-ids", styles);
-            this.$overlay = this.$target.data('overlay') || $('<div>');
-            this.option= option_id;
-            this.$el = option.$el.find(">li").clone();
+            this.$el = option.$el.children("li").clone();
             this.data = option.$el.data();
+
+            this.$overlay = this.$target.data('overlay') || $();
         },
 
         // helper for this.$target.find
-        $: function (selector) {
-            return this.$target(selector);
+        $: function () {
+            return this.$target.find.apply(this.$target, arguments);
         },
 
         _bind_li_menu: function () {
             this.$el.filter("li:hasData").find('a:first')
                 .off('mouseenter click')
-                .on('mouseenter click', _.bind(this._mouse, this));
+                .on('mouseenter click', _.bind(_mouse, this));
 
             this.$el
                 .off('mouseenter click', "li:hasData a")
-                .on('mouseenter click', "li:hasData a", _.bind(this._mouse, this));
+                .on('mouseenter click', "li:hasData a", _.bind(_mouse, this));
 
-            this.$el.closest("ul").add(this.$el)
-                .off('mouseleave')
-                .on('mouseleave', _.bind(this.reset, this));
+            this.$el.off('mouseleave')
+                    .on('mouseleave', _.bind(this.reset, this));
 
-            this.$el
-                .off('mouseleave', "ul")
-                .on('mouseleave', "ul", _.bind(this.reset, this));
+            this.$el.off('mouseleave', "ul")
+                    .on('mouseleave', "ul", _.bind(this.reset, this));
 
-            this.reset_methods = [];
+            this.methodsToReset = [];
+
+            function _mouse(event) {
+                var $next = $(event.currentTarget).parent();
+
+                // triggers preview or apply methods if a menu item has been clicked
+                this.select(event.type === "click" ? "click" : "over", $next);
+                if (event.type === 'click') {
+                    this.set_active();
+                    this.$target.trigger("snippet-option-change", [this]);
+                } else {
+                    this.$target.trigger("snippet-option-preview", [this]);
+                }
+            }
         },
 
         /**
-         * this method handles mouse:over and mouse:leave on the snippet editor menu
+         * The set_active method tweaks the option dropdown to show the selected value
+         * according to the state of the $target the option customizes.
          */
-         _time_mouseleave: null,
-        _mouse: function (event) {
-            var $next = $(event.currentTarget).parent();
-
-            // triggers preview or apply methods if a menu item has been clicked
-            this.select(event.type === "click" ? "click" : "over", $next);
-            if (event.type === 'click') {
-                this.set_active();
-                this.$target.trigger("snippet-option-change", [this]);
-            } else {
-                this.$target.trigger("snippet-option-preview", [this]);
-            }
-        },
-        /*
-        *  select and set item active or not (add highlight item and his parents)
-        *  called before start
-        */
         set_active: function () {
-            var classes = _.uniq((this.$target.attr("class") || '').split(/\s+/));
+            var self = this;
             this.$el.find('[data-toggle_class], [data-select_class]')
-                .add(this.$el)
-                .filter('[data-toggle_class], [data-select_class]')
+                .addBack('[data-toggle_class], [data-select_class]')
                 .removeClass("active")
-                .filter('[data-toggle_class="' + classes.join('"], [data-toggle_class="') + '"] ,'+
-                    '[data-select_class="' + classes.join('"], [data-select_class="') + '"]')
+                .filter(function () {
+                    var $elem = $(this);
+                    var className = $elem.data("toggle_class") || $elem.data("select_class");
+                    return self.$target.hasClass(className);
+                })
                 .addClass("active");
         },
 
@@ -97,131 +94,115 @@ odoo.define('web_editor.snippets.options', function (require) {
             this._bind_li_menu();
         },
 
-        on_blur : function () {
-        },
+        on_blur : function () {},
+        on_clone: function ($clone) {},
+        on_move: function () {},
+        on_remove: function () {},
 
-        on_clone: function ($clone) {
-        },
-
-        on_move: function () {
-        },
-
-        on_remove: function () {
-        },
-
-        drop_and_build_snippet: function () {
-        },
+        drop_and_build_snippet: function () {},
 
         reset: function () {
             var self = this;
-            var lis = self.$el.add(self.$el.find('li')).filter('.active').get();
-            lis.reverse();
-            _.each(lis, function (li) {
+            var lis = this.$el.find("li.active").addBack('.active').get();
+            _.each(lis.reverse(), function (li) {
                 var $li = $(li);
-                for (var k in self.reset_methods) {
-                    var method = self.reset_methods[k];
-                    if ($li.is('[data-'+method+']') || $li.closest('[data-'+method+']').size()) {
-                        delete self.reset_methods[k];
+                for (var k in self.methodsToReset) {
+                    var method = self.methodsToReset[k];
+                    if ($li.closest('[data-' + method + ']').length) {
+                        delete self.methodsToReset[k];
                     }
                 }
                 self.select("reset", $li);
             });
 
-            for (var k in self.reset_methods) {
-                var method = self.reset_methods[k];
+            for (var k in this.methodsToReset) {
+                var method = this.methodsToReset[k];
                 if (method) {
-                    self[method]("reset", null);
+                    this[method]("reset", null);
                 }
             }
-            self.reset_methods = [];
-            self.$target.trigger("snippet-option-reset", [this]);
+            this.methodsToReset = [];
+            this.$target.trigger("snippet-option-reset", [this]);
         },
 
-        // call data-method args as method (data-only can be used)
+        /**
+         * Handle action type on a particuler $li (sub)option of the option.
+         * @param type action type to handle ("click", "over", "reset")
+         * @param $li the suboption DOM element which is concerned by the action
+         */
         select: function (type, $li) {
-            var self = this,
-                $methods = [],
-                el = $li[0];
-
+            // (sub)options can say they respond to only one action type
             if ($li.data('only') && type !== $li.data('only')) {
                 return;
             }
-
-            if (type==="click") {
+            // If the type is click, the user selected the option for good (so reset and record action)
+            if (type === "click") {
                 this.reset();
-                this.buildingBlock.parent.rte.historyRecordUndo(this.$target);
+                this.buildingBlock.getParent().rte.historyRecordUndo(this.$target);
             }
 
-            function filter (k) { return k !== 'oeId' && k !== 'oeModel' && k !== 'oeField' && k !== 'oeXpath' && k !== 'oeSourceId' && k !== 'only';}
-            function hasData(el) {
-                for (var k in el.dataset) {
-                    if (filter (k)) {
-                        return true;
-                    }
-                }
-                return false;
-            }
-            function method(el) {
-                var data = {};
-                for (var k in el.dataset) {
-                    if (filter (k)) {
-                        data[k] = el.dataset[k];
-                    }
-                }
-                return data;
-            }
-
-            while (el && this.$el.is(el) || _.some(this.$el.map(function () {return $.contains(this, el);}).get()) ) {
-                if (hasData(el)) {
-                    $methods.push(el);
+            // Search for methods (data-...) (i.e. data-toggle_class) on the selected (sub)option and its parents
+            var el = $li[0];
+            var methods = [];
+            do {
+                var m = _.omit(el.dataset, ["oeId", "oeModel", "oeField", "oeXpath", "oeSourceId", "only"]);
+                if (_.keys(m).length) {
+                    methods.push([el, m]);
                 }
                 el = el.parentNode;
-            }
+            } while (this.$el.parent().has(el).length);
 
-            $methods.reverse();
-
-            _.each($methods, function (el) {
-                var $el = $(el);
-                var methods = method(el);
+            // Call the found method in the right order (parents -> child) and save them for later reset
+            var self = this;
+            _.each(methods.reverse(), function (data) {
+                var $el = $(data[0]);
+                var methods = data[1];
 
                 for (var k in methods) {
                     if (self[k]) {
-                        if (type !== "reset" && self.reset_methods.indexOf(k) === -1) {
-                            self.reset_methods.push(k);
+                        if (type !== "reset" && self.methodsToReset.indexOf(k) === -1) {
+                            self.methodsToReset.push(k);
                         }
                         self[k](type, methods[k], $el);
                     } else {
-                        console.error("'"+self.option+"' snippet have not method '"+k+"'");
+                        console.error("'" + self.option + "' snippet option have not method '" + k + "'");
                     }
                 }
             });
         },
 
-        // default method for snippet
+        /**
+         * Default option methods toggle_class and selected_class handle the two behavior of having a list
+         * of option classes to toggle or not and having a list of option classes where only one must be chosen.
+         */
         toggle_class: function (type, value, $li) {
-            var $lis = this.$el.find('[data-toggle_class]').add(this.$el).filter('[data-toggle_class]');
+            var $lis = this.$el.find("[data-toggle_class]").addBack("[data-toggle_class]");
 
-            function map ($lis) {
+            function map($lis) {
                 return $lis.map(function () {return $(this).data("toggle_class");}).get().join(" ");
             }
             var classes = map($lis);
             var active_classes = map($lis.filter('.active, :has(.active)'));
 
-            this.$target.removeClass(classes);
-            this.$target.addClass(active_classes);
-
+            this.$target.removeClass(classes).addClass(active_classes);
             if (type !== 'reset') {
                 this.$target.toggleClass(value);
             }
         },
         select_class: function (type, value, $li) {
-            var $lis = this.$el.find('[data-select_class]').add(this.$el).filter('[data-select_class]');
+            var $lis = this.$el.find("[data-select_class]").addBack("[data-select_class]");
 
-            var classes = $lis.map(function () {return $(this).data('select_class');}).get();
+            var classes = $lis.map(function () {return $(this).data("select_class");}).get().join(" ");
 
-            this.$target.removeClass(classes.join(" "));
-            if(value) this.$target.addClass(value);
+            this.$target.removeClass(classes);
+            if (value) {
+                this.$target.addClass(value);
+            }
         },
+
+        /**
+         * Helper method to evaluate the value expression directly as a function
+         */
         eval: function (type, value, $li) {
             var fn = new Function("node", "type", "value", "$li", value);
             fn.call(this, this, type, value, $li);
@@ -233,61 +214,265 @@ odoo.define('web_editor.snippets.options', function (require) {
 
     /* ----- default options ---- */
 
-    // to remove after 9.0 (keep for compatibility without update with -u)
-    registry.media = SnippetOption.extend({
-        start: function () {
-            var self =this;
-            this._super();
-            animation.start(true, this.$target);
-            this.$target.closest(".o_editable").on("content_changed", function () {
-                if (!self.$target.parent().length) {
-                    self.$target.remove();
-                    self.$overlay.remove();
-                }
-            });
-        },
-        edition: function (type, value) {
-            if(type !== "click") return;
-            var self = this;
-            var _editor = new widget.MediaDialog(this.$target.closest('.o_editable'), this.$target[0]);
-            _editor.appendTo(document.body);
-            _editor.on('saved', this, function (item, old) {
-                self.editor.on_blur();
-                self.buildingBlock.make_active(false);
-                if (self.$target.parent().data("oe-field") !== "image") {
-                    setTimeout(function () {
-                        self.buildingBlock.make_active($(item));
-                    },0);
-                }
-                $(item).trigger("content_changed");
-            });
-        },
-        on_focus : function () {
-            var self = this;
-            var $parent = this.$target.parent();
+    registry.marginAndResize = SnippetOption.extend({
+        preventChildPropagation: true,
 
-            if ($parent.data("oe-field") === "image" && $parent.hasClass('o_editable')) {
-                this.$overlay.addClass("hidden");
-                self.edition('click', null);
-                self.buildingBlock.make_active(false);
-            }
+        start: function () {
+            var self = this;
+            this._super();
+
+            var resize_values = this.getSize();
+            if (resize_values.n) this.$overlay.find(".oe_handle.n").removeClass("readonly");
+            if (resize_values.s) this.$overlay.find(".oe_handle.s").removeClass("readonly");
+            if (resize_values.e) this.$overlay.find(".oe_handle.e").removeClass("readonly");
+            if (resize_values.w) this.$overlay.find(".oe_handle.w").removeClass("readonly");
+            if (resize_values.size) this.$overlay.find(".oe_handle.size").removeClass("readonly");
+
+            var $auto_size = this.$overlay.find(".oe_handle.size .auto_size");
+            var $fixed_size = this.$overlay.find(".oe_handle.size .size");
+
+            var auto_sized = isNaN(parseInt(self.$target.prop("style").height));
+            $fixed_size.toggleClass("active", !auto_sized);
+            $auto_size.toggleClass("active", auto_sized);
+
+            $fixed_size.add(this.$overlay.find(".oe_handle:not(.size)")).on('mousedown', function (event) {
+                event.preventDefault();
+
+                var $handle = $(this);
+
+                var resize_values = self.getSize();
+                var compass = false;
+                var XY = false;
+                if ($handle.hasClass('n')) {
+                    compass = 'n';
+                    XY = 'Y';
+                }
+                else if ($handle.hasClass('s')) {
+                    compass = 's';
+                    XY = 'Y';
+                }
+                else if ($handle.hasClass('e')) {
+                    compass = 'e';
+                    XY = 'X';
+                }
+                else if ($handle.hasClass('w')) {
+                    compass = 'w';
+                    XY = 'X';
+                }
+                else if ($handle.hasClass('size')) {
+                    compass = 'size';
+                    XY = 'Y';
+                }
+
+                var resize = resize_values[compass];
+                if (!resize) return;
+
+
+                if (compass === 'size') {
+                    var offset = self.$target.offset().top;
+                    if (self.$target.css("background").match(/rgba\(0, 0, 0, 0\)/)) {
+                        self.$target.addClass("resize_editor_busy");
+                    }
+                } else {
+                    var xy = event['page'+XY];
+                    var current = resize[2] || 0;
+                    var margin_dir = {s:'bottom', n: 'top', w: 'left', e: 'right'}[compass];
+                    var real_margin = parseInt(self.$target.css('margin-'+margin_dir));
+                    _.each(resize[0], function (val, key) {
+                        if (self.$target.hasClass(val)) {
+                            current = key;
+                        } else if (resize[1][key] === real_margin) {
+                            current = key;
+                        }
+                    });
+                    var begin = current;
+                    var beginClass = self.$target.attr("class");
+                    var regClass = new RegExp("\\s*" + resize[0][begin].replace(/[-]*[0-9]+/, '[-]*[0-9]+'), 'g');
+                }
+
+                self.buildingBlock.editor_busy = true;
+
+                var cursor = $handle.css("cursor")+'-important';
+                var $body = $(document.body);
+                $body.addClass(cursor);
+
+                var body_mousemove = function (event) {
+                    event.preventDefault();
+                    if (compass === 'size') {
+                        var dy = event.pageY-offset;
+                        dy = dy - dy%resize;
+                        if (dy <= 0) dy = resize;
+                        self.$target.css("height", dy+"px");
+                        self.$target.css("overflow", "hidden");
+                        self.on_resize(compass, null, dy);
+                        self.buildingBlock.cover_target(self.$overlay, self.$target);
+                        return;
+                    }
+                    var dd = event['page'+XY] - xy + resize[1][begin];
+                    var next = current+1 === resize[1].length ? current : (current+1);
+                    var prev = current ? (current-1) : 0;
+
+                    var change = false;
+                    if (dd > (2*resize[1][next] + resize[1][current])/3) {
+                        self.$target.attr("class", (self.$target.attr("class")||'').replace(regClass, ''));
+                        self.$target.addClass(resize[0][next]);
+                        current = next;
+                        change = true;
+                    }
+                    if (prev !== current && dd < (2*resize[1][prev] + resize[1][current])/3) {
+                        self.$target.attr("class", (self.$target.attr("class")||'').replace(regClass, ''));
+                        self.$target.addClass(resize[0][prev]);
+                        current = prev;
+                        change = true;
+                    }
+
+                    if (change) {
+                        self.on_resize(compass, beginClass, current);
+                        self.buildingBlock.cover_target(self.$overlay, self.$target);
+                    }
+                };
+
+                var body_mouseup = function () {
+                    $body.unbind('mousemove', body_mousemove);
+                    $body.unbind('mouseup', body_mouseup);
+                    $body.removeClass(cursor);
+                    setTimeout(function () {
+                        self.buildingBlock.editor_busy = false;
+                        if (begin !== current) {
+                            self.buildingBlock.getParent().rte.historyRecordUndo(self.$target, 'resize_' + XY);
+                        }
+                    },0);
+                    self.$target.removeClass("resize_editor_busy");
+
+                    if (compass === "size") {
+                        $fixed_size.addClass("active");
+                        $auto_size.removeClass("active");
+                    }
+                };
+                $body.mousemove(body_mousemove);
+                $body.mouseup(body_mouseup);
+            });
+            $auto_size.on('click', function () {
+                self.$target.css("height", "");
+                self.$target.css("overflow", "");
+                self.buildingBlock.getParent().rte.historyRecordUndo(self.$target, 'resize_Y');
+                self.buildingBlock.cover_target(self.$overlay, self.$target);
+
+                $fixed_size.removeClass("active");
+                $auto_size.addClass("active");
+
+                return false;
+            });
+        },
+        getSize: function () {
+            this.grid = {};
+            return this.grid;
+        },
+
+        on_focus : function () {
+            this._super();
+            this.change_cursor();
+        },
+
+        change_cursor : function () {
+            var _class = this.$target.attr("class") || "";
+
+            var col = _class.match(/col-md-([0-9-]+)/i);
+            col = col ? +col[1] : 0;
+
+            var offset = _class.match(/col-md-offset-([0-9-]+)/i);
+            offset = offset ? +offset[1] : 0;
+
+            var overlay_class = this.$overlay.attr("class").replace(/(^|\s+)block-[^\s]*/gi, '');
+            if (col+offset >= 12) overlay_class+= " block-e-right";
+            if (col === 1) overlay_class+= " block-w-right block-e-left";
+            if (offset === 0) overlay_class+= " block-w-left";
+
+            var mb = _class.match(/mb([0-9-]+)/i);
+            mb = mb ? +mb[1] : parseInt(this.$target.css('margin-bottom'));
+            if (mb >= 128) overlay_class+= " block-s-bottom";
+            else if (!mb) overlay_class+= " block-s-top";
+
+            var mt = _class.match(/mt([0-9-]+)/i);
+            mt = mt ? +mt[1] : parseInt(this.$target.css('margin-top'));
+            if (mt >= 128) overlay_class+= " block-n-top";
+            else if (!mt) overlay_class+= " block-n-bottom";
+
+            this.$overlay.attr("class", overlay_class);
+        },
+
+        /* on_resize
+        *  called when the box is resizing and the class change, before the cover_target
+        *  @compass: resize direction : 'n', 's', 'e', 'w'
+        *  @beginClass: attributes class at the begin
+        *  @current: curent increment in this.grid
+        */
+        on_resize: function () {
+            this.change_cursor();
         }
     });
 
+    registry["margin-y"] = registry.marginAndResize.extend({
+        preventChildPropagation: true,
+
+        getSize: function () {
+            this.grid = this._super();
+            var grid = [0,4,8,16,32,48,64,92,128];
+            this.grid = {
+                // list of class (Array), grid (Array), default value (INT)
+                n: [_.map(grid, function (v) {return 'mt'+v;}), grid],
+                s: [_.map(grid, function (v) {return 'mb'+v;}), grid],
+                // INT if the user can resize the snippet (resizing per INT px)
+                size: null
+            };
+            return this.grid;
+        },
+    });
+
+    registry.resize = registry.marginAndResize.extend({
+        preventChildPropagation: true,
+
+        getSize: function () {
+            this.grid = this._super();
+            this.grid.size = 8;
+            return this.grid;
+        },
+    });
+
+    /**
+     * The colorpicker option is designed to change the background color class of a snippet. This class change the
+     * default background color and text color of the snippet content.
+     */
     registry.colorpicker = SnippetOption.extend({
         start: function () {
             var self = this;
-            var res = this._super();
+            var res = this._super.apply(this, arguments);
 
             if (!this.$el.find('.colorpicker').length) {
                 var $pt = $(qweb.render('web_editor.snippet.option.colorpicker'));
                 var $clpicker = $(qweb.render('web_editor.colorpicker'));
 
+                // Retrieve excluded palettes list
+                var excluded = [];
+                if (this.data.paletteExclude) {
+                    excluded = this.data.paletteExclude.replace(/ /g, '').split(',');
+                }
+                // Apply a custom title if specified
+                if (this.data.paletteTitle) {
+                    $pt.find('.note-palette-title').text(this.data.paletteTitle);
+                }
+
                 var $toggles = $pt.find('.o_colorpicker_section_menu');
                 var $tabs = $pt.find('.o_colorpicker_section_tabs');
 
+                // Remove excluded palettes
+                _.each(excluded, function (exc) {
+                    $clpicker.find('[data-name="' + exc + '"]').remove();
+                });
+
                 var $sections = $clpicker.find('.o_colorpicker_section');
-                if ($sections.length) {
+
+                if ($sections.length > 1) { // Multi-palette layout
                     $sections.each(function () {
                         var $section = $(this);
                         var id = 'o_palette_' + $section.data('name') + _.uniqueId();
@@ -299,14 +484,26 @@ odoo.define('web_editor.snippets.options', function (require) {
 
                         $tabs.append($section.addClass('tab-pane').attr('id', id));
                     });
-                    $toggles.find('li').first().addClass('active');
-                    $tabs.find('div').first().addClass('active');
+
+                    // If a default palette is defined, make it active
+                    if (this.data.paletteDefault) {
+                        var $palette_def = $tabs.find('div[data-name="' + self.data.paletteDefault + '"]');
+                        var pos = $tabs.find('> div').index($palette_def);
+
+                        $toggles.children('li').eq(pos).addClass('active');
+                        $palette_def.addClass('active');
+                    } else {
+                        $toggles.find('li').first().addClass('active');
+                        $tabs.find('div').first().addClass('active');
+                    }
 
                     $toggles.on('click mouseover', '> li > a', function (e) {
                         e.preventDefault();
                         e.stopPropagation();
                         $(this).tab('show');
                     });
+                } else if ($sections.length === 1) { // Unique palette layout
+                    $tabs.addClass('o_unique_palette').append($sections.addClass('tab-pane active'));
                 } else {
                     $toggles.parent().empty().append($clpicker);
                 }
@@ -319,12 +516,14 @@ odoo.define('web_editor.snippets.options', function (require) {
             }
 
             var classes = [];
-            this.$el.find(".colorpicker button").map(function () {
+            this.$el.find(".colorpicker button").each(function () {
                 var $color = $(this);
+                if (!$color.data("color")) {
+                    return;
+                }
+
                 var className = 'bg-' + $color.data('color');
-
                 $color.addClass(className);
-
                 if (self.$target.hasClass(className)) {
                     self.color = className;
                     $color.addClass("selected");
@@ -340,109 +539,120 @@ odoo.define('web_editor.snippets.options', function (require) {
             var self = this;
             var $colors = this.$el.find(".colorpicker button");
             $colors
-                .mouseenter(function () {
-                    self.$target.removeClass(self.classes).addClass('bg-' + $(this).data("color"));
+                .mouseenter(function (e) {
+                    self.$target.removeClass(self.classes);
+                    var color = $(this).data("color");
+                    if (color) {
+                        self.$target.addClass('bg-' + color);
+                    }
+                    self.$target.trigger("background-color-event", e.type);
                 })
-                .mouseleave(function () {
-                    self.$target.removeClass(self.classes)
-                        .addClass('bg-' + $colors.filter(".selected").data("color"));
+                .mouseleave(function (e) {
+                    self.$target.removeClass(self.classes);
+                    var $selected = $colors.filter(".selected");
+                    var color = $selected.length && $selected.data("color");
+                    if (color) {
+                        self.$target.addClass('bg-' + color);
+                    }
+                    self.$target.trigger("background-color-event", e.type);
                 })
-                .click(function () {
+                .click(function (e) {
                     $colors.removeClass("selected");
                     $(this).addClass("selected");
                     self.$target.closest(".o_editable").trigger("content_changed");
+                    self.$target.trigger("background-color-event", e.type);
                 });
 
             this.$el.find('.note-color-reset').on('click', function () {
                 self.$target.removeClass(self.classes);
+                $colors.removeClass("selected");
             });
         }
     });
 
+    /**
+     * The background option is designed to change the background image of a snippet.
+     */
     registry.background = SnippetOption.extend({
-        start: function ($change_target) {
-            this.$target = $change_target || this.$target;
-            this._super();
-            var src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
-            if (this.$target.hasClass('oe_custom_bg')) {
-                this.$el.find('li[data-choose_image]').data("background", src).attr("data-background", src);
-            }
+        start: function () {
+            var res = this._super.apply(this, arguments);
+            this.$target.off(".background-option")
+                        .on("background-color-event.background-option", (function (e, type) {
+                            e.stopPropagation();
+                            if (e.currentTarget !== e.target) return;
+                            this.$el.find("li:first > a").trigger(type);
+                        }).bind(this));
+            return res;
         },
+
         background: function (type, value, $li) {
             if (value && value.length) {
-                this.$target.attr("style", 'background-image: url(' + value + '); ' + (this.$target.attr("style") || '').replace(/background-image:[^;]+/, '') );
+                this.$target.css("background-image", "url(" + value + ")");
                 this.$target.addClass("oe_img_bg");
             } else {
                 this.$target.css("background-image", "");
                 this.$target.removeClass("oe_img_bg oe_custom_bg");
             }
         },
-        select_class : function (type, value, $li) {
+        select_class: function (type, value, $li) {
             this.background(type, '', $li);
-            this._super(type, value, $li);
+            this._super(type, value ? (value + " oe_img_bg") : value, $li);
         },
         choose_image: function (type, value, $li) {
-            if(type !== "click") return;
+            if(type !== "click") {
+                return;
+            }
 
-            var self = this;
-            var $image = $('<img class="hidden"/>');
-            $image.attr("src", value);
-            $image.appendTo(self.$target);
+            // Put fake image in the DOM, edit it and use it as background-image
+            var $image = $("<img/>", {"class": "hidden", "src": value}).appendTo(this.$target);
 
-            var _editor = new widget.MediaDialog(null, $image[0]);
-            _editor.appendTo(document.body);
+            var _editor = new widget.MediaDialog(null, {}, null, $image[0]).open();
             _editor.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
 
-            _editor.on('saved', self, function () {
+            _editor.on('save', this, function () {
                 var value = $image.attr("src");
-                $image.remove();
-                self.$el.find('li[data-choose_image]').data("background", value).attr("data-background", value);
-                self.background(type, value,$li);
-                self.$target.addClass('oe_custom_bg');
-                self.$target.trigger("snippet-option-change", [self]);
-                self.set_active();
+                this.background(type, value, $li);
+                this.$target.addClass("oe_custom_bg");
+                this.set_active();
+                this.$target.trigger("snippet-option-change", [this]);
             });
-            _editor.on('cancel', self, function () {
+            _editor.on('closed', this, function () {
                 $image.remove();
             });
         },
         set_active: function () {
-            var self = this;
-            var src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
-            this._super();
+            this._super.apply(this, arguments);
 
+            var src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)|^none$/g, "");
             if (this.$target.hasClass('oe_custom_bg')) {
                 this.$el.find('li[data-choose_image]').data("background", src).attr("data-background", src);
             }
 
-            this.$el.find('li[data-background]:not([data-background=""])')
+            this.$el.find('li[data-background]')
                 .removeClass("active")
-                .each(function () {
-                    var background = $(this).data("background") || $(this).attr("data-background");
-                    if ((src.length && background.length && src.indexOf(background) !== -1) || (!src.length && !background.length)) {
-                        $(this).addClass("active");
-                    }
-                });
-
-            if (!this.$el.find('li[data-background].active').size()) {
-                this.$el.find('li[data-background=""]:not([data-choose_image])').addClass("active");
-            } else {
-                this.$el.find('li[data-background=""]:not([data-choose_image])').removeClass("active");
-            }
+                .filter(function () {
+                    var bgOption = $(this).data("background");
+                    return (bgOption === "" && src === "" || bgOption !== "" && src.indexOf(bgOption) >= 0);
+                })
+                .addClass("active");
         }
     });
 
+    /**
+     * The background_position option is designed to change the background image position of a snippet.
+     */
     registry.background_position = SnippetOption.extend({
         start: function () {
+            this._super.apply(this, arguments);
+            this.on_focus();
             var self = this;
-            var $btn = this.$overlay.find('.oe_options');
-            $btn.on('show.bs.dropdown', function () {
-                if (self.$target.css('background-image') === 'none') {
-                    $btn.find('.background_position_li').addClass('hidden');
-                } else {
-                    $btn.find('.background_position_li').removeClass('hidden');
-                }
+            this.$target.on("snippet-option-change", function () {
+                self.on_focus();
             });
+        },
+        on_focus: function () {
+            this._super.apply(this, arguments);
+            this.$el.toggleClass('hidden', this.$target.css('background-image') === 'none');
         },
         background_position: function (type, value, $li) {
             if (type != 'click') { return; }
@@ -454,7 +664,7 @@ odoo.define('web_editor.snippets.options', function (require) {
             this.bg_siz = self.$target.css('background-size').split(' ');
 
             this.modal = new Dialog(null, {
-                title: _t("Background Image Options"),
+                title: _t("Background Image Sizing"),
                 $content: $(qweb.render('web_editor.dialog.background_position')),
                 buttons: [
                     {text: _t("Ok"), classes: "btn-primary", close: true, click: _.bind(this.save, this)},
@@ -650,7 +860,7 @@ odoo.define('web_editor.snippets.options', function (require) {
         on_focus: function () {
             this.$target.attr('contentEditable', 'false');
             this.clear();
-            this._super();
+            this._super.apply(this, arguments);
         },
 
         clear: function () {
@@ -712,7 +922,7 @@ odoo.define('web_editor.snippets.options', function (require) {
             this.ID = +$(li).data("id");
             this.$target.attr('data-oe-many2one-id', this.ID).data('oe-many2one-id', this.ID);
 
-            this.buildingBlock.parent.rte.historyRecordUndo(this.$target);
+            this.buildingBlock.getParent().rte.historyRecordUndo(this.$target);
             this.$target.trigger('content_changed');
 
             if (self.$target.data('oe-type') === "contact") {
@@ -741,7 +951,7 @@ odoo.define('web_editor.snippets.options', function (require) {
     });
 
     return {
-        registry: registry,
         Class: SnippetOption,
+        registry: registry,
     };
 });

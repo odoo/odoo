@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api, _
-from openerp.exceptions import UserError
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
-import openerp.addons.decimal_precision as dp
+import odoo.addons.decimal_precision as dp
 
 
 class StockQuantPackage(models.Model):
@@ -68,10 +68,9 @@ class StockPicking(models.Model):
     @api.depends('pack_operation_ids')
     def _compute_bulk_weight(self):
         weight = 0.0
-        uom_obj = self.env['product.uom']
         for packop in self.pack_operation_ids:
             if packop.product_id and not packop.result_package_id:
-                weight += uom_obj._compute_qty_obj(packop.product_uom_id , packop.product_qty, packop.product_id.uom_id) * packop.product_id.weight
+                weight += packop.product_uom_id._compute_quantity(packop.product_qty, packop.product_id.uom_id) * packop.product_id.weight
         self.weight_bulk = weight
 
     @api.one
@@ -79,7 +78,7 @@ class StockPicking(models.Model):
     def _compute_shipping_weight(self):
         self.shipping_weight = self.weight_bulk + sum([pack.shipping_weight for pack in self.package_ids])
 
-    carrier_price = fields.Float(string="Shipping Cost", readonly=True)
+    carrier_price = fields.Float(string="Shipping Cost")
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
     carrier_id = fields.Many2one("delivery.carrier", string="Carrier")
     volume = fields.Float(copy=False)
@@ -91,6 +90,11 @@ class StockPicking(models.Model):
     weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight')
     shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight')
 
+    @api.onchange('carrier_id')
+    def onchange_carrier(self):
+        if self.carrier_id.delivery_type in ['fixed', 'base_on_rule']:
+            self.carrier_price = self.carrier_id.price
+
     @api.depends('product_id', 'move_lines')
     def _cal_weight(self):
         for picking in self:
@@ -98,6 +102,7 @@ class StockPicking(models.Model):
 
     @api.multi
     def do_transfer(self):
+        # TDE FIXME: should work in batch
         self.ensure_one()
         res = super(StockPicking, self).do_transfer()
 
@@ -111,16 +116,16 @@ class StockPicking(models.Model):
 
     @api.multi
     def put_in_pack(self):
+        # TDE FIXME: work in batch, please
         self.ensure_one()
-        package_id = super(StockPicking, self).put_in_pack()
-        package = self.env['stock.quant.package'].browse(package_id)
+        package = super(StockPicking, self).put_in_pack()
 
         current_package_carrier_type = self.carrier_id.delivery_type if self.carrier_id.delivery_type not in ['base_on_rule', 'fixed'] else 'none'
         count_packaging = self.env['product.packaging'].search_count([('package_carrier_type', '=', current_package_carrier_type)])
         if not count_packaging:
             return False
         # By default, sum the weights of all package operations contained in this package
-        pack_operation_ids = self.env['stock.pack.operation'].search([('result_package_id', '=', package_id)])
+        pack_operation_ids = self.env['stock.pack.operation'].search([('result_package_id', '=', package.id)])
         package_weight = sum([x.qty_done * x.product_id.weight for x in pack_operation_ids])
         package.shipping_weight = package_weight
 
@@ -131,7 +136,7 @@ class StockPicking(models.Model):
             'res_model': 'stock.quant.package',
             'view_id': self.env.ref('delivery.view_quant_package_form_save').id,
             'target': 'new',
-            'res_id': package_id,
+            'res_id': package.id,
             'context': {
                 'current_package_carrier_type': current_package_carrier_type,
             },

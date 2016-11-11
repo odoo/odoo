@@ -15,12 +15,16 @@ return Widget.extend({
         'click li': function (event) {
             event.stopImmediatePropagation();
         },
-        'click .oe-save-search a': function () {
+        'click li a': function (event) {
+            event.preventDefault();
+        },
+        'click .o_save_search a': function (event) {
+            event.preventDefault();
             this.toggle_save_menu();
         },
-        'click .oe-save-name button': 'save_favorite',
+        'click .o_save_name button': 'save_favorite',
         'hidden.bs.dropdown': 'close_menus',
-        'keyup .oe-save-name input': function (ev) {
+        'keyup .o_save_name input': function (ev) {
             if (ev.which === $.ui.keyCode.ENTER) {
                 this.save_favorite();
             }
@@ -38,8 +42,8 @@ return Widget.extend({
     start: function () {
         var self = this;
         this.$filters = {};
-        this.$save_search = this.$('.oe-save-search');
-        this.$save_name = this.$('.oe-save-name');
+        this.$save_search = this.$('.o_save_search');
+        this.$save_name = this.$('.o_save_name');
         this.$inputs = this.$save_name.find('input');
         this.$divider = this.$('.divider');
         this.$inputs.eq(0).val(this.searchview.get_title());
@@ -116,7 +120,6 @@ return Widget.extend({
             model_id: this.target_model,
             context: results.context,
             domain: results.domain,
-            sort: JSON.stringify(this.searchview.dataset._sort),
             is_default: default_filter,
             action_id: this.action_id,
         };
@@ -204,12 +207,11 @@ return Widget.extend({
         this.$divider.show();
         if (!(key in this.$filters)) {
             var $filter = $('<li>')
-                .addClass(filter.user_id ? 'oe_searchview_custom_private'
-                                         : 'oe_searchview_custom_public')
-                .toggleClass('oe_searchview_custom_default', filter.is_default)
-                .append($('<a>').text(filter.name))
+                .addClass(filter.user_id ? 'o-searchview-custom-private'
+                                         : 'o-searchview-custom-public')
+                .append($('<a>', {'href': '#'}).text(filter.name))
                 .append($('<span>', {
-                    class: 'fa fa-trash-o remove-filter',
+                    class: 'fa fa-trash-o o-remove-filter',
                     on: {
                         click: function (event) {
                             event.stopImmediatePropagation();
@@ -235,13 +237,6 @@ return Widget.extend({
         }
         this.query.reset([this.facet_for(filter)], {
             preventSearch: preventSearch || false});
-
-        // Load sort settings on view
-        if (!_.isUndefined(filter.sort)){
-            var sort_items = JSON.parse(filter.sort);
-            this.searchview.dataset.set_sort(sort_items);
-        }
-
         this.$filters[this.key_for(filter)].addClass('selected');
     },
     remove_filter: function (filter, $filter, key) {
@@ -277,16 +272,20 @@ var Widget = require('web.Widget');
 return Widget.extend({
     template: 'SearchView.FilterMenu',
     events: {
-        'click .oe-add-filter': function () {
+        'click .o_add_filter': function (event) {
+            event.preventDefault();
             this.toggle_custom_filter_menu();
         },
-        'click li': function (event) {event.stopImmediatePropagation();},
+        'click li': function (event) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+        },
         'hidden.bs.dropdown': function () {
             this.toggle_custom_filter_menu(false);
         },
-        'click .oe-add-condition': 'append_proposition',
-        'click .oe-apply-filter': 'commit_search',
-        'keyup .searchview_extended_prop_value': function (ev) {
+        'click .o_add_condition': 'append_proposition',
+        'click .o_apply_filter': 'commit_search',
+        'keyup .o_searchview_extended_prop_value': function (ev) {
             if (ev.which === $.ui.keyCode.ENTER) {
                 this.commit_search();
             }
@@ -301,10 +300,10 @@ return Widget.extend({
     },
     start: function () {
         var self = this;
-        this.$menu = this.$('.filters-menu');
-        this.$add_filter = this.$('.oe-add-filter');
-        this.$apply_filter = this.$('.oe-apply-filter');
-        this.$add_filter_menu = this.$('.oe-add-filter-menu');
+        this.$menu = this.$('.o_filters_menu');
+        this.$add_filter = this.$('.o_add_filter');
+        this.$apply_filter = this.$('.o_apply_filter');
+        this.$add_filter_menu = this.$('.o_add_filter_menu');
         _.each(this.filters, function (group) {
             if (group.is_visible()) {
                 group.insertBefore(self.$add_filter);
@@ -340,7 +339,7 @@ return Widget.extend({
                 .toggleClass('o_closed_menu', !self.custom_filters_open)
                 .toggleClass('o_open_menu', self.custom_filters_open);
             self.$add_filter_menu.toggle(self.custom_filters_open);
-            self.$('.oe-filter-condition').toggle(self.custom_filters_open);
+            self.$('.o_filter_condition').toggle(self.custom_filters_open);
         });
     },
     append_proposition: function () {
@@ -402,7 +401,8 @@ return Widget.extend({
         'hidden.bs.dropdown': function () {
             this.toggle_add_menu(false);
         },
-        'click .add-custom-group a': function () {
+        'click .o_add_custom_group a': function (event) {
+            event.preventDefault();
             this.toggle_add_menu();
         },
     },
@@ -413,13 +413,13 @@ return Widget.extend({
         this.searchview = parent;
     },
     start: function () {
-        this.$menu = this.$('.group-by-menu');
+        this.$menu = this.$('.o_group_by_menu');
         var divider = this.$menu.find('.divider');
         _.invoke(this.groups, 'insertBefore', divider);
         if (this.groups.length) {
             divider.show();
         }
-        this.$add_group = this.$menu.find('.add-custom-group');
+        this.$add_group = this.$menu.find('.o_add_custom_group');
     },
     get_fields: function () {
         var self = this;
@@ -435,9 +435,9 @@ return Widget.extend({
                 self.groupable_fields = _.sortBy(filter_group_field, 'string');
 
                 self.$menu.append(QWeb.render('GroupByMenuSelector', self));
-                self.$add_group_menu = self.$('.oe-add-group');
-                self.$group_selector = self.$('.oe-group-selector');
-                self.$('.oe-select-group').click(function () {
+                self.$add_group_menu = self.$('.o_add_group');
+                self.$group_selector = self.$('.o_group_selector');
+                self.$('.o_select_group').click(function () {
                     self.toggle_add_menu(false);
                     var field = self.$group_selector.find(':selected').data('name');
                     self.add_groupby_to_menu(field);

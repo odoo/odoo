@@ -1,0 +1,62 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_vat
+# 
+# Translators:
+# Myat Thu <myat90thu@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Myat Thu <myat90thu@gmail.com>, 2016\n"
+"Language-Team: Burmese (https://www.transifex.com/odoo/teams/41243/my/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: my\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_company
+msgid "Companies"
+msgstr "ကုမ္ပဏီများ"
+
+#. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_company_vat_check_vies
+msgid ""
+"If checked, Partners VAT numbers will be fully validated against EU's VIES "
+"service rather than via a simple format validation (checksum)."
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr "မိတ်ဖက်"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:131
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
+msgstr ""
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:130
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
+msgid "VIES VAT Check"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.view_partner_form
+msgid "e.g. BE0477472701"
+msgstr ""

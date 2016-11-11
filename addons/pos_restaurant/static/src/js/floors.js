@@ -34,7 +34,7 @@ models.load_models({
 });
 
 // At POS Startup, after the floors are loaded, load the tables, and associate
-// them with their floor. 
+// them with their floor.
 models.load_models({
     model: 'restaurant.table',
     fields: ['name','width','height','position_h','position_v','shape','floor_id','color','seats'],
@@ -87,7 +87,7 @@ var TableWidget = PosBaseWidget.extend({
                     } else {
                         self.getParent().deselect_tables();
                     }
-                } 
+                }
             },50);
         } else {
             floorplan.pos.set_table(this.table);
@@ -117,7 +117,7 @@ var TableWidget = PosBaseWidget.extend({
             this.table.position_h += dx;
 
             $el.css(this.table_style());
-        } 
+        }
     },
     // drag and dropping the resizing handles
     handle_dragstart_handler: function(event, $el, drag) {
@@ -125,7 +125,7 @@ var TableWidget = PosBaseWidget.extend({
             this.handle_dragging = true;
             this.handle_dragpos  = this.event_position(event);
             this.handle          = drag.target;
-        } 
+        }
     },
     handle_dragend_handler: function() {
         this.handle_dragging = false;
@@ -143,7 +143,7 @@ var TableWidget = PosBaseWidget.extend({
 
             var MIN_SIZE = 40;  // smaller than this, and it becomes impossible to edit.
 
-            var tw = Math.max(MIN_SIZE, this.table.width);  
+            var tw = Math.max(MIN_SIZE, this.table.width);
             var th = Math.max(MIN_SIZE, this.table.height);
             var tx = this.table.position_h;
             var ty = this.table.position_v;
@@ -199,7 +199,7 @@ var TableWidget = PosBaseWidget.extend({
             'margin-top':   unit(-table.height/2),
             'top':          unit(table.position_v + table.height/2),
             'left':         unit(table.position_h + table.width/2),
-            'border-radius': table.shape === 'round' ? 
+            'border-radius': table.shape === 'round' ?
                     unit(Math.max(table.width,table.height)/2) : '3px',
         };
         if (table.color) {
@@ -207,7 +207,7 @@ var TableWidget = PosBaseWidget.extend({
         }
         if (table.height >= 150 && table.width >= 150) {
             style['font-size'] = '32px';
-        } 
+        }
 
         return style;
     },
@@ -258,20 +258,20 @@ var TableWidget = PosBaseWidget.extend({
         }, function(err,event) {
             self.gui.show_popup('error',{
                 'title':_t('Changes could not be saved'),
-                'body': _t('Check your internet connection and access rights'),
+                'body': _t('You must be connected to the internet to save your changes.'),
             });
             event.stopPropagation();
             event.preventDefault();
         });
     },
-    // destroy the table.  We do not really destroy it, we set it 
+    // destroy the table.  We do not really destroy it, we set it
     // to inactive so that it doesn't show up anymore, but it still
     // available on the database for the orders that depend on it.
     trash: function(){
         var self  = this;
         var model = new Model('restaurant.table');
         return model.call('create_from_ui',[{'active':false,'id':this.table.id}]).then(function(table_id){
-            // Removing all references from the table and the table_widget in in the UI ... 
+            // Removing all references from the table and the table_widget in in the UI ...
             for (var i = 0; i < self.pos.floors.length; i++) {
                 var floor = self.pos.floors[i];
                 for (var j = 0; j < floor.tables.length; j++) {
@@ -292,6 +292,13 @@ var TableWidget = PosBaseWidget.extend({
             }
             floorplan.update_toolbar();
             self.destroy();
+        }, function(err, event) {
+            self.gui.show_popup('error', {
+                'title':_t('Changes could not be saved'),
+                'body': _t('You must be connected to the internet to save your changes.'),
+            });
+            event.stopPropagation();
+            event.preventDefault();
         });
     },
     get_notifications: function(){  //FIXME : Make this faster
@@ -330,7 +337,7 @@ var TableWidget = PosBaseWidget.extend({
         this.$el.on('dragstart', function(event,drag){ self.dragstart_handler(event,$(this),drag); });
         this.$el.on('drag',      function(event,drag){ self.dragmove_handler(event,$(this),drag); });
         this.$el.on('dragend',   function(event,drag){ self.dragend_handler(event,$(this),drag); });
-        
+
         var handles = this.$el.find('.table-handle');
         handles.on('dragstart',  function(event,drag){ self.handle_dragstart_handler(event,$(this),drag); });
         handles.on('drag',       function(event,drag){ self.handle_dragmove_handler(event,$(this),drag); });
@@ -357,7 +364,7 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
     },
     hide: function(){
         this._super();
-        if (this.editing) { 
+        if (this.editing) {
             this.toggle_editing();
         }
         this.chrome.widget.order_selector.show();
@@ -365,7 +372,7 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
     show: function(){
         this._super();
         this.chrome.widget.order_selector.hide();
-        for (var i = 0; i < this.table_widgets.length; i++) { 
+        for (var i = 0; i < this.table_widgets.length; i++) {
             this.table_widgets[i].renderElement();
         }
         this.check_empty_floor();
@@ -382,7 +389,7 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
             this.check_empty_floor();
         }
     },
-    background_image_url: function(floor) { 
+    background_image_url: function(floor) {
         return '/web/image?model=restaurant.floor&id='+floor.id+'&field=background_image';
     },
     get_floor_style: function() {
@@ -399,10 +406,10 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
         var self = this;
         this.floor.background_color = background;
         (new Model('restaurant.floor'))
-            .call('set_background_color',[this.floor.id, background]).fail(function(err,event){
+            .call('write',[[this.floor.id], {'background_color': background}]).fail(function(err, event){
                 self.gui.show_popup('error',{
                     'title':_t('Changes could not be saved'),
-                    'body': _t('Check your internet connection and access rights'),
+                    'body': _t('You must be connected to the internet to save your changes.'),
                 });
                 event.stopPropagation();
                 event.preventDefault();
@@ -523,13 +530,13 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
         for (var p in params) {
             table[p] = params[p];
         }
-        
+
         table.name = this.new_table_name(params.name);
 
-        delete table.id; 
+        delete table.id;
         table.floor_id = [this.floor.id,''];
         table.floor = this.floor;
-        
+
         this.floor.tables.push(table);
         var tw = new TableWidget(this,{table: table});
             tw.appendTo('.floor-map .tables');
@@ -577,7 +584,7 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
         }
     },
     update_toolbar: function(){
-        
+
         if (this.editing) {
             this.$('.edit-bar').removeClass('oe_hidden');
             this.$('.edit-button.editing').addClass('active');
@@ -605,7 +612,7 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
         var self = this;
 
         // cleanup table widgets from previous renders
-        for (var i = 0; i < this.table_widgets.length; i++) { 
+        for (var i = 0; i < this.table_widgets.length; i++) {
             this.table_widgets[i].destroy();
         }
 
@@ -652,7 +659,7 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
         this.$('.edit-button.trash').click(function(){
             self.tool_trash_table();
         });
-        
+
         this.$('.color-picker .close-picker').click(function(event){
             self.tool_colorpicker_close();
             event.stopPropagation();
@@ -717,7 +724,7 @@ models.Order = models.Order.extend({
         var json = _super_order.export_as_JSON.apply(this,arguments);
         json.table     = this.table ? this.table.name : undefined;
         json.table_id  = this.table ? this.table.id : false;
-        json.floor     = this.table ? this.table.floor.name : false; 
+        json.floor     = this.table ? this.table.floor.name : false;
         json.floor_id  = this.table ? this.table.floor.id : false;
         json.customer_count = this.customer_count;
         return json;
@@ -780,7 +787,7 @@ chrome.OrderSelectorWidget.include({
 // and when an order is validated, it needs to go back to the floor map.
 //
 // And when we change the table, we must create an order for that table
-// if there is none. 
+// if there is none.
 var _super_posmodel = models.PosModel.prototype;
 models.PosModel = models.PosModel.extend({
     initialize: function(session, attributes) {
@@ -812,9 +819,9 @@ models.PosModel = models.PosModel.extend({
         } else {
             this.table = table;
             var orders = this.get_order_list();
-            if (orders.length) {   
+            if (orders.length) {
                 this.set_order(orders[0]); // and go to the first one ...
-            } else { 
+            } else {
                 this.add_new_order();  // or create a new order with the current table
             }
         }
@@ -844,8 +851,8 @@ models.PosModel = models.PosModel.extend({
 
 
     // get the list of unpaid orders (associated to the current table)
-    get_order_list: function() {    
-        var orders = _super_posmodel.get_order_list.call(this);  
+    get_order_list: function() {
+        var orders = _super_posmodel.get_order_list.call(this);
         if (!this.config.iface_floorplan) {
             return orders;
         } else if (!this.table) {
@@ -883,8 +890,8 @@ models.PosModel = models.PosModel.extend({
         return count;
     },
 
-    // When we validate an order we go back to the floor plan. 
-    // When we cancel an order and there is multiple orders 
+    // When we validate an order we go back to the floor plan.
+    // When we cancel an order and there is multiple orders
     // on the table, stay on the table.
     on_removed_order: function(removed_order,index,reason){
         if (this.config.iface_floorplan) {
@@ -900,7 +907,7 @@ models.PosModel = models.PosModel.extend({
         }
     },
 
-    
+
 });
 
 var TableGuestsButton = screens.ActionButtonWidget.extend({
@@ -930,7 +937,7 @@ var TableGuestsButton = screens.ActionButtonWidget.extend({
 screens.OrderWidget.include({
     update_summary: function(){
         this._super();
-        if (this.getParent().action_buttons && 
+        if (this.getParent().action_buttons &&
             this.getParent().action_buttons.guests) {
             this.getParent().action_buttons.guests.renderElement();
         }

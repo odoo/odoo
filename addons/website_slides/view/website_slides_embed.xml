@@ -1,12 +1,12 @@
 <?xml version="1.0" ?>
-<openerp>
+<odoo>
     <data>
         <!-- Bundle (minimal) for embedded slide iframe -->
         <template id="website_slides.slide_embed_assets" name="Website slides embed assets">
             <link type="text/less" rel='stylesheet' href='/web/static/src/less/import_bootstrap.less'/>
             <link type="text/less" href="/website_slides/static/src/less/website_slides.less" rel="stylesheet" t-ignore="true"/>
 
-            <t t-call="website.pdf_js_lib"></t>
+            <t t-call="web.pdf_js_lib"></t>
             <script type="text/javascript" src="/website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js"></script>
             <script type="text/javascript" src="/website_slides/static/src/js/slides_embed.js"></script>
         </template>
@@ -168,4 +168,4 @@
             </html>
         </template>
     </data>
-</openerp>
+</odoo>

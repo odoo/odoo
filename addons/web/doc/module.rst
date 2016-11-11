@@ -2,12 +2,12 @@
 
 .. queue:: module/series
 
-Building an OpenERP Web module
-==============================
+Building a Web module
+=====================
 
-There is no significant distinction between an OpenERP Web module and
-an OpenERP module, the web part is mostly additional data and code
-inside a regular OpenERP module. This allows providing more seamless
+There is no significant distinction between a Web module and
+a regular module, the web part is mostly additional data and code
+inside a regular module. This allows providing more seamless
 features by integrating your module deeper into the web client.
 
 A Basic Module
@@ -19,11 +19,11 @@ A very basic OpenERP module structure will be our starting point:
 
     web_example
     ├── __init__.py
-    └── __openerp__.py
+    └── __manifest__.py
 
 .. patch::
 
-This is a sufficient minimal declaration of a valid OpenERP module.
+This is a sufficient minimal declaration of a valid module.
 
 Web Declaration
 ---------------
@@ -36,7 +36,7 @@ module is automatically recognized as "web-enabled" if it contains a
 
     web_example
     ├── __init__.py
-    ├── __openerp__.py
+    ├── __manifest__.py
     └── static
 
 is the extent of it. You should also change the dependency to list

@@ -94,6 +94,21 @@
                     <t t-if="message.origin_id &amp;&amp; (message.origin_id !== options.channel_id)">
                         (from <a t-att-data-oe-id="message.origin_id" href="#">#<t t-esc="message.origin_name"/></a>)
                     </t>
+                    <span t-if="options.display_email_icon &amp;&amp; message.customer_email_data &amp;&amp; message.customer_email_data.length" class="o_thread_tooltip_container">
+                        <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.customer_email_status + ' fa fa-envelope-o'"/>
+                        <span class="o_thread_tooltip_content">
+                            <t t-foreach="message.customer_email_data" t-as="customer">
+                                <span>
+                                    <t t-if="customer[2] == 'sent'"><i class='fa fa-check'/></t>
+                                    <t t-if="customer[2] == 'bounce'"><i class='fa fa-exclamation'/></t>
+                                    <t t-if="customer[2] == 'exception'"><i class='fa fa-exclamation'/></t>
+                                    <t t-if="customer[2] == 'ready'"><i class='fa fa-send-o'/></t>
+                                    <t t-esc="customer[1]"/>
+                                </span>
+                                <br />
+                            </t>
+                        </span>
+                    </span>
                     <span>
                         <i t-if="options.display_stars &amp;&amp; !message.is_system_notification"
                             t-att-class="'fa fa-lg o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
@@ -138,10 +153,12 @@
                 <li>
                     <t t-esc="value.changed_field"/>:
                     <t t-if="value.old_value">
-                        <span> <t t-esc="value.old_value"/> </span>
-                        <span class="fa fa-long-arrow-right"/>
+                        <span> <t t-esc="value.old_value || ((value.field_type !== 'boolean') and '')"/> </span>
+                        <span t-if="value.old_value != value.new_value" class="fa fa-long-arrow-right"/>
                     </t>
-                    <span> <t t-esc="value.new_value"/> </span>
+                    <span t-if="value.old_value != value.new_value">
+                        <t t-esc="value.new_value || ((value.field_type !== 'boolean') and '')"/>
+                    </span>
                 </li>
             </t>
         </ul>

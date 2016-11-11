@@ -1,0 +1,946 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <template id="crm_planner">
+        <t t-call="web_planner.pages">
+            <t t-call="web_planner.page">
+                <t t-set="page_title">Welcome</t>
+                <t t-set="hide_mark_as_done" t-value="True"/>
+                <div class="o_planner_intro">
+                  <p>
+                      We designed Odoo to help you grow your business. Odoo CRM
+                      is not just a tool, we want it to have a major impact on your
+                      sales performance. That's our mission, and we are serious about it.
+                  </p><p>
+                      Setting up your sales funnel is just the first step. To achieve a
+                      significant boost, we will help you get the most out of
+                      Odoo CRM to transform how your salespeople work.
+                      That's the purpose of this guide.
+                  </p><p>
+                      The whole process may take a few hours. But it's worth doing
+                      it.
+                  </p><p>
+                      We are here to help you. If you get stuck, do not hesitate to
+                      reach our <a href="https://www.odoo.com/help">support team</a> or
+                      <a href="https://www.odoo.com/documentation/user/">browse the documentation</a>.
+                  </p><p>
+                      Have fun deploying your sales strategy,
+                  </p>
+                  <div class="mt32">
+                      <img class="signature mb8" src="/web_planner/static/src/img/fabien_signature.png"/>
+                      <address>
+                          For the Odoo Team,<br/>
+                          Fabien Pinckaers, Founder
+                      </address>
+                  </div>
+                </div>
+            </t>
+
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle">KPIs</t>
+                <t t-set="menu_categoryclasses" t-value="'fa-trophy'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title">Your Expectations</t>
+                    <p class="text-muted">
+                        What are your sales objectives? What challenges are you
+                        dealing with? Being clear on your expectations is the first step
+                        of a successful implementation.
+                    </p>
+                    <div class="row">
+                        <div class="o_planner_notebook_container col-md-12">
+                            <ul class="o_planner_notebook">
+                                <div class="o_planner_notebook_line_separator"></div>
+                                <li class="o_planner_notebook_header">
+                                    <h5><strong>Sales objectives</strong>:</h5>
+                                    <a class="pull-right" data-toggle="collapse" href="#o_planner_page2_help">
+                                        <i class="fa fa-question-circle"> view examples</i>
+                                    </a>
+                                    <div id="o_planner_page2_help" class="collapse">
+                                        <h5>Examples</h5>
+                                        <ul>
+                                            <li> Better visibility on team activities</li>
+                                            <li> Have clear forecasts on sales</li>
+                                            <li> Grow leads acquisition</li>
+                                            <li> Improve average revenue per salesperson</li>
+                                            <li> Upsell more to existing customers</li>
+                                            <li> Better structure the sales process</li>
+                                        </ul>
+                                    </div>
+                                </li>
+
+                                <li><span>#1</span><textarea id="input_element_exp1" value="" line="1" type="text"/></li>
+                                <li><span>#2</span><textarea id="input_element_exp2" value="" line="1" type="text"/></li>
+                                <li><span>#3</span><textarea id="input_element_exp3" value="" line="1" type="text"/></li>
+                                <li><span>#4</span><textarea id="input_element_exp4" value="" line="1" type="text"/></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="alert alert-info info_icon" role="alert">
+                        <span class="fa fa-lightbulb-o fa-lg"/>
+                        <p>At the end of the deployment process, your expectations should be reached.
+                        <br />
+                        If not, our CRM experts are available to help you achieve your KPIs.</p>
+                    </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title">Your KPIs</t>
+                    <p class="text-muted">
+                        What are the main KPIs you need to track for your the sales activities?
+                    </p>
+                    <div class="row">
+                        <div class="o_planner_notebook_container col-md-12">
+                            <ul class="o_planner_notebook">
+                                <div class="o_planner_notebook_line_separator"></div>
+                                <li class="o_planner_notebook_header">
+                                    <h5><strong>Your Main KPIs:</strong></h5>
+                                    <a class="pull-right" data-toggle="collapse" href="#o_planner_page3_help">
+                                        <i class="fa fa-question-circle"> view examples</i>
+                                    </a>
+                                    <div id="o_planner_page3_help" class="collapse">
+                                        <h5>Examples</h5>
+                                        <ul>
+                                            <li> Sales Forecasts (month+1)</li>
+                                            <li> Win / Loss Ratio</li>
+                                            <li> Revenue by Salesperson</li>
+                                            <li> Time to Close a Deal</li>
+                                            <li> Time to Qualify a Lead</li>
+                                            <li> Leads by Source</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><span>#1</span><textarea id="input_element_kpi1" value="" line="1" type="text"/></li>
+                                <li><span>#2</span><textarea id="input_element_kpi2" value="" line="1" type="text"/></li>
+                                <li><span>#3</span><textarea id="input_element_kpi3" value="" line="1" type="text"/></li>
+                                <li><span>#4</span><textarea id="input_element_kpi4" value="" line="1" type="text"/></li>
+                            </ul>
+                        </div>
+                    </div>
+                </t>
+            </t>
+
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle">Sale Flow</t>
+                <t t-set="menu_categoryclasses" t-value="'fa-tag'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title">Pipeline</t>
+                    <p class="text-muted">
+                        Systematic organization is what makes the difference
+                        between good and great salespeople! Setup a pipeline
+                        that is in line with your sales cycle.
+                    </p><p class="text-muted">
+                        Aligning your sales organization on a systematic
+                        process will allow you to continuously improve your
+                        sales performance.
+                    </p>
+                    <div class="row">
+                        <div class="o_planner_notebook_container col-md-12">
+                            <ul class="o_planner_notebook">
+                                <li class="row o_planner_notebook_header">
+                                    <div class="col-md-4 col-md-push-8 fa fa-lightbulb-o">
+                                        Examples:
+                                        <select id="input_element_pipeline">
+                                            <option value="odoo_default">Odoo Default</option>
+                                            <option value="solution_selling">Solution Selling</option>
+                                            <option value="b2c">B2C</option>
+                                            <option value="b2b">B2B</option>
+                                        </select>
+                                    </div>
+                                    <h5 class="col-md-8 col-md-pull-4"><strong>Sales Stages</strong></h5>
+                                </li>
+                                <li class="row">
+                                    <div class="col-md-6">
+                                        <span>#1</span>
+                                        <input id="input_element_stage_0" type="text" value="New"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <textarea id="input_element_stage_7" type="text"/>
+                                    </div>
+                                </li>
+                                <li class="row">
+                                    <div class="col-md-6">
+                                        <span>#2</span>
+                                        <input id="input_element_stage_1" type="text" value="Qualified"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <textarea id="input_element_stage_8" type="text"/>
+                                    </div>
+                                </li>
+                                <li class="row">
+                                    <div class="col-md-6">
+                                        <span>#3</span>
+                                        <input id="input_element_stage_2" type="text" value="Proposition"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <textarea id="input_element_stage_9" type="text"/>
+                                    </div>
+                                </li>
+                                <li class="row">
+                                    <div class="col-md-6">
+                                        <span>#4</span>
+                                        <input id="input_element_stage_3" type="text" value="Negotiation"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <textarea id="input_element_stage_10" type="text"/>
+                                    </div>
+                                </li>
+                                <li class="row">
+                                    <div class="col-md-6">
+                                        <span>#5</span>
+                                        <input id="input_element_stage_4" type="text" value="Won"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <textarea id="input_element_stage_11" type="text"/>
+                                    </div>
+                                </li>
+                                <li class="row">
+                                    <div class="col-md-6">
+                                        <span>#6</span>
+                                        <input id="input_element_stage_5" type="text" value="Lost"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <textarea id="input_element_stage_12" type="text"/>
+                                    </div>
+                                </li>
+                                <li class="row">
+                                    <div class="col-md-6">
+                                        <span>#7</span>
+                                        <input id="input_element_stage_6" type="text"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <textarea id="input_element_stage_13" type="text"/>
+                                    </div>
+                                </li>
+                                <div class="o_planner_notebook_line_separator"></div>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="alert alert-info info_icon" role="alert">
+                        <span class="fa fa-lightbulb-o fa-lg"/>
+                        <li>A good pipeline should have between 5 and 7 stages</li>
+                        <li>The first stage is usually "New" and the last one is "Won"</li>
+                        <li>Don't use stages to qualify opportunities, use tags instead</li>
+                        <li>Every stage should be a step forward in the buyer's decision-making, not a task to carry out</li>
+                    </div>
+                    <p>Great pipelines have stages <strong>aligned with the buyer's buying process</strong>, not your selling process:</p>
+                    <table class="table">
+                        <thead>
+                            <th></th>
+                            <th width="50%"><strong>Example: Qualified stage</strong></th>
+                            <th></th>
+                            <th width="50%"><strong>Example: Negotiation stage</strong></th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="fa fa-thumbs-o-up fa-2x text-success"/></td>
+                                <td><strong>The customer</strong> understood his pain points and proposed the next step in the buying process</td>
+                                <td><span class="fa fa-thumbs-o-up fa-2x text-success"/></td>
+                                <td><strong>The prospect</strong> started to discuss your offer</td>
+                            </tr>
+                            <tr>
+                                <td><span class="fa fa-thumbs-o-down fa-2x text-danger"/></td>
+                                <td><strong>You</strong> understand the customer's needs and pain points, and you have a fairly good idea of his budget to spend</td>
+                                <td><span class="fa fa-thumbs-o-down fa-2x text-danger"/></td>
+                                <td><strong>You</strong> called the prospect for a follow up on your offer</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="well well-lg">
+                        <strong>Recommended actions:</strong>
+                        <li>
+                            <a t-attf-href="web#view_type=kanban&amp;model=crm.lead&amp;menu_id=#{pipeline_menu_id}">
+                                Configure the stages of your sales pipeline</a> with your work above
+                        </li>
+                        <li>
+                            <a t-attf-href="web#view_type=kanban&amp;model=crm.lead&amp;menu_id=#{pipeline_menu_id}">
+                                Create the three firsts opportunities</a> as an exercise
+                        </li>
+                    </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title">Proposal</t>
+                    <p class="text-muted">
+                        Odoo will help you create polished, professional quotations and contracts in minutes.
+                        Tell us how you sell and we will tell you what
+                        configuration will best fit your quotation process.
+                    </p>
+                    <t t-if="not is_module_installed('sale')">
+                        <span class="text-muted">Note: To use those features, you need to install the <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'sale')">Sales Management module.</a></span>
+                    </t>
+                    <h4>What <strong>kind of proposals</strong> do you usually send to your customers ?</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title">
+                                        <span class="fa" data-icon="&#xe060;"/>
+                                        <strong>One-time sale</strong><br/>
+                                        <span class="small"></span>
+                                    </span>
+                                </div>
+                                <div class="panel-body">
+                                    <h4><strong>Standard quotation</strong> <span class="small">(products or services)</span></h4>
+                                    <span>
+                                        <li>This is the default configuration, there is nothing to setup.</li>
+                                    </span>
+                                    <br/>
+                                    <h4><strong>Quote template</strong> <span class="small">(packaged services)</span></h4>
+                                    <span>
+                                        <li>Activate the 'Online Quotations' option in <a t-att-href="prepare_backend_url(
+                                        'sales_team.action_sale_config')">Sales Settings</a></li>
+                                        <li>Create your templates of offers</li>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title">
+                                        <span class="fa" data-icon="&#xe040;"/>
+                                        <strong>Subscriptions</strong><br/>
+                                        <span class="small"></span>
+                                    </span>
+                                </div>
+                                <div class="panel-body">
+                                    <t t-if="not is_module_installed('website_contract')">
+                                        <span class="text-muted">If you sell subscriptions (whether it's invoiced annually or monthly), activate the
+                                            <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_contract')">Subscription Management</a> app.
+                                        </span>
+                                    </t>
+                                    <t t-if="is_module_installed('website_contract')">
+                                        <h4><strong>Subscriptions</strong></h4>
+                                        <p>
+                                            Use subscription for recurring billing.
+                                            Examples of subscription may include:
+                                            annual support contract, monthly
+                                            subscription to a service, etc.
+                                        </p>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info info_icon" role="alert">
+                        <span class="fa fa-lightbulb-o fa-lg"/>
+                        <strong>Note:</strong>
+                        Using templates can boost the quality of your
+                        quotations and their success rate. However,
+                        creating such templates can be a huge effort.
+                        We recommend to start with standard quotations
+                        and upgrade later.
+                    </div>
+                </t>
+            </t>
+
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle">Deployment</t>
+                <t t-set="menu_categoryclasses" t-value="'fa-magic'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title">Incoming Emails</t>
+                    <p class="text-muted">
+                        There are several ways for your company to generate leads with Odoo CRM.
+                        One of them is using your company's generic email address as a trigger
+                        to create a new lead in the system. In Odoo, each one of your sales teams
+                        is linked to its own email address from which prospects can reach them.
+                        For example, if the personal email address of your Direct team is
+                        direct@mycompany.example.com, every email sent when a new prospect
+                        contacts you will automatically create a new opportunity into the sales team.
+
+                        That's the easiest way to integrate Odoo with third party apps.
+                    </p>
+                    <h4>The point of contact <strong>for all your prospects</strong></h4>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="well well-sm text-center">
+                                <h4><span class="fa" data-icon="&#xe01e;"/><t t-if="alias_name and alias_domain"> <t t-esc="alias_name"/>@<t t-esc="alias_domain"/></t></h4>
+                            </div>
+                            <div class="well well-sm text-center relative">
+                                <p>
+                                    This email address has been preconfigured as the default
+                                    for your sales department.<br/>
+                                    <a t-att-href="prepare_backend_url('sales_team.action_sale_config')">(you can change it here)</a>
+                                </p>
+                                <span class="arrow-down"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="well well-lg">
+                                <h4><span class="label label-default text-center odoo_purple">Incoming email</span></h4>
+                                <span class="fa fa-angle-down fa-2x"></span>
+                                <h4><span class="label label-default text-center odoo_purple">Lead</span></h4>
+                                <span class="fa fa-angle-down fa-2x"></span>
+                                <h4><span class="label label-default text-center odoo_purple">Opportunity</span></h4>
+                                <span class="fa fa-angle-down fa-2x"></span>
+                                <h4><span class="label label-default text-center odoo_purple">Quotation</span></h4>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="well well-lg">
+                                <p><strong>
+                                <h4><a href="mailto:info@odoo.com?subject=Sales%20Planner" target="_blank">Contact Us</a></h4>to setup your own domain
+                                 name (e.g. sales@yourcompany.com)</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info" role="alert">
+                        <p>Don't forget to change this address on:</p>
+                        <ul>
+                            <li>Your business cards</li>
+                            <li>Your document templates</li>
+                            <li>Your LinkedIn or social media pages</li>
+                            <li>Your website</li>
+                        </ul>
+                    </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title">Customers</t>
+                    <p class="text-muted">
+                        Unless you are starting a new business, you probably have a list of customers and vendors you'd like to import.
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title">
+                                        <span class="fa" data-icon="&#xe060;"/>
+                                        <strong> Create manually</strong><br/>
+                                        <span class="small">&lt; 200 contacts</span>
+                                    </span>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        If you have less than 200 contacts, we recommend you
+                                        to create them manually.
+                                    </p>
+                                    <ul>
+                                        <li>
+                                            <a t-att-href="prepare_backend_url('base.action_partner_form','kanban')">Create Customers</a>
+                                        </li><li>
+                                            <a t-att-href="prepare_backend_url('base.action_partner_supplier_form','kanban')">Create Vendors</a>, if accounting or purchase is installed
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title">
+                                        <span class="fa" data-icon="&#xe040;"/>
+                                        <strong>Import</strong><br/>
+                                        <span class="small">&gt; 200 contacts</span>
+                                    </span>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        We can handle the whole import process
+                                        for you: simply send your Odoo project
+                                        manager a CSV file containing all your
+                                        data.
+                                    </p><p>
+                                        If you want to do it yourself:
+                                    </p>
+                                    <ul>
+                                        <li>Download the <a href="/base_import/static/csv/customers.xls">Excel template</a></li>
+                                        <li>Import using the top left button in <a t-att-href="prepare_backend_url('base.action_partner_form','list')">the list of customers</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info info_icon" role="alert">
+                        <span class="fa fa-lightbulb-o fa-lg"/>
+                        <strong>Tip:</strong> For developers, you can
+                        use our API to load data through scripts: read
+                        the <a href="https://www.odoo.com/documentation/9.0/api_integration.html" target="_blank">API documentation</a>
+                    </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title">Products</t>
+                    <p>A product in Odoo is something you sell or buy. It could
+                    be a goods, consumable or services. Choose how you want to
+                    create your products:
+                    </p>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title">
+                                        <span class="fa" data-icon="&#xe060;"/>
+                                        <strong> Create manually</strong><br/>
+                                        <span class="small">Recommended if &lt;50 items</span>
+                                    </span>
+                                </div>
+                                <div class="panel-body">
+                                        <a t-att-href="prepare_backend_url('product.product_template_action', 'form')" target="_blank">Create your product items</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title">
+                                        <span class="fa" data-icon="&#xe040;"/>
+                                        <strong>Import a file</strong><br/>
+                                        <span class="small">Recommended if &gt;50 items</span>
+                                    </span>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        <a href="/base_import/static/csv/products.xls" target="_blank">Use our import templates to get your catalog ready in no time!</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                            <div class="col-md-12 col-xs-12">
+                                <div class="well well-lg">
+                                    <strong>For complex imports</strong> (&gt;5000 items, product variants, pictures, etc.):
+                        
+                                    <li>Online users: we do it for you! <a href="https://www.odoo.com/help" target="_blank"><i class="fa fa-envelope-o"/> Ask Our Experts</a></li>
+                                    <li>Community &amp; Enterprise users: <a href="https://www.odoo.com/documentation/9.0/api_integration.html" target="_blank">use Odoo API to import through scripts</a></li>                                    
+                                </div>
+                            </div>
+                        </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title">Pricing &amp; Discounts</t>
+                    <p class="text-muted">
+                    In Odoo, there are 3 different ways to manage your prices.<br/>
+                    </p>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title">
+                                        <strong>Unique Price (default)</strong>
+                                    </span>
+                                 </div>
+                                 <div class="panel-body">
+                                    <p>
+                                        Each product has only one price.
+                                        <br/>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title">
+                                        <strong>Specific Price per Audience</strong>
+                                    </span>
+                                </div>
+                                <div class="panel-body">
+                                        <li>Basic, Premium</li>
+                                        <li>Consumers, Retailers</li>
+                                        <li>USD, EUR, GBP</li>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title">
+                                        <strong> Rules &amp; Formulas</strong>
+                                    </span>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        Create and combine rules:<br/>
+                                        <li>e.g. 15% discount when buying more than 3 t-shirts</li>
+                                        <li>additional 10% during summer sales</li>
+                                    </p>
+                                </div>
+                            </div>                        
+                        </div>   
+                    </div>
+                    <div class="alert alert-info info_icon" role="alert">
+                            <span class="fa fa-lightbulb-o fa-2x"></span><p>To stimulate your customers, show them the public price and the discount applied to it. This is settable in the pricelist configuration if you allow discounts.</p>
+                    </div>
+
+                    <div class="well well-lg">
+                        <strong>Next actions:</strong>
+                        <li><a t-att-href="prepare_backend_url('sales_team.action_sale_config')" target="blank"> Select your pricing preference and allow discounts</a></li>
+                        <li><a t-att-href="prepare_backend_url('product.product_pricelist_action2')" target="blank"> Configure your pricelists</a></li>
+                        <li><a t-att-href="prepare_backend_url('account.action_account_config')" target="blank"> Apply multi-currencies</a></li>
+                        <li><a href="https://www.odoo.com/documentation/user/9.0/sales.html" target="blank"> Read the documentation about pricing &amp; discounts</a></li>
+                    </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title">Reporting</t>
+                    <h4><strong>Click on 'Reporting' in the main menu </strong>and browse statistics:</h4>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title"><span data-icon="&#xe016;"/><strong> Exercise 1</strong></span>
+                                    <span>(Lead Manager)</span>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        <strong>Exercise:</strong> Try to get the number of leads per salesperson and by creation date
+                                    </p>
+                                    <p>
+                                        <a t-att-href="prepare_backend_url('crm.crm_opportunity_report_action_lead', 'pivot')">Leads Analysis</a> (if leads are activated)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title"><span data-icon="&#xe077;"/><strong> Exercise 2</strong></span>
+                                    <span>(Sales Manager)</span>
+                                </div>
+                                <div class="panel-body">
+                                    <p>
+                                        A sales manager will mostly use these two reports:
+                                        <li>
+                                            <a t-att-href="prepare_backend_url('crm.crm_opportunity_report_action', 'pivot')">Opportunities Analysis</a>
+                                        </li>
+                                        <li>
+                                            <a t-att-href="prepare_backend_url('account.action_account_invoice_report_all', 'pivot', 'account')">Invoice Analysis</a>
+                                        </li>
+                                    </p>
+                                    <p>
+                                        <strong>Exercise: </strong>Try to analyse the average time to close a deal.
+                                        Group X Axis: Creation Date
+                                        Group Y Axis: Expected Closing Date
+                                        Filter: Won Opportunities
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <span class="panel-title"><span data-icon="&#xe05e;"/><strong> Exercise 3</strong></span>
+                                    <span>(Salesperson)</span>
+                                </div>
+                                <div class="panel-body">
+                                    <p>Every salesperson can analyze their own pipe by clicking on the 'switch view to graph' icon.</p>
+                                    <p><strong>Exercise: </strong>Try to switch the kanban to graph view</p>
+                                    <p>
+                                        <a t-attf-href="web#view_type=kanban&amp;model=crm.lead&amp;menu_id=#{pipeline_menu_id}">Opportunities pipeline</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info info_icon" role="alert">
+                        <span class="fa fa-lightbulb-o fa-2x"></span>
+                        <strong>Tips:</strong>
+                        <li>Show advanced filters and options by clicking on the magnifying glass icon next to the search bar.</li>
+                        <li>Save filters or add any report to your dashboard with the Favorites menu.</li>
+                    </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title">Customizations</t>
+                    <p class="text-muted">
+                        <strong>Every business is different.</strong> Odoo allows to
+                        customize every application and it's usually a good
+                        advice to customize screens to fit your sales process.
+                        <strong>Customizations are done by Odoo experts.</strong>
+
+                    </p><p class="text-muted">
+                        Here are some of the <strong>customizations available</strong>:
+                    </p>
+                    <section  data-snippet-id="pricing">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <span class="fa fa-laptop"/>
+                                            <strong> Screen Customization</strong>
+                                        </span>
+                                    </div>
+                                    <div class="panel-body">
+                                        <p>
+                                            We can add fields related to your business on any screen, for example
+                                        </p>
+                                        <li>Number of Rooms</li>
+                                        <li>Existing Tools</li>
+                                        <li>Licences</li>
+                                        <li>....</li>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <span class="fa fa-sitemap"/>
+                                            <strong> Workflow Customization</strong>
+                                        </span>
+                                    </div>
+                                    <div class="panel-body">
+                                        <p>We can automate steps in your workflow, for example:</p>
+                                        <li>Send an email to all opportunities in the "Qualified" stage for more than 20 days</li>
+                                        <li>Set the sales manager as a follower of every opportunity above $20k</li>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <span class="panel-title">
+                                            <span class="fa fa-pencil-square-o"/>
+                                            <strong> Create Custom Reports</strong>
+                                        </span>
+                                    </div>
+                                    <div class="panel-body">
+                                        <p>
+                                            We can implement custom reports for you based on your Word templates, for example:
+                                        </p>
+                                        <li> Attach a qualification form to every house opportunity</li>
+                                        <li> Change the layout of a quotation</li>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="well well-lg">
+                                    <span><strong>Contact us to customize your application:</strong><br/>
+                                    We have special options for unlimited number of customizations!
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </t>
+            </t>
+
+            <t t-call="web_planner.category">
+                <t t-set="menu_categorytitle">Grow revenues</t>
+                <t t-set="menu_categoryclasses" t-value="'fa-bolt'"/>
+                <t t-call="web_planner.page">
+                    <t t-set="page_title">Weekly Meetings</t>
+                    <p class="text-muted">
+                        Once you’ve deployed your CRM, it’s time to grow your revenues. Start by setting up a continuous improvement approach.We recommend you to organize weekly sales meeting with the team during which you will do a pipeline review.
+                     </p>
+                    <div class="o_planner_paragraphs">
+                        <div class="row">
+                            <div class="hidden-xs hidden-sm col-md-2 icon"><span data-icon="&#xe075;"/></div>
+                            <div class="col-md-10">
+                                <p>
+                                    <strong>Organize weekly sales meetings</strong><br/>
+                                    It's a great way to see where you can improve and keep track of the progress of your sales team. Start the pipeline review by looking at the big picture; revenues and number of opportunities by stage, by expected closing date and by salespeople.
+                                 </p>
+                                 <p>
+                                   Analyzing the pipeline by expected closing date will help your team efficiently forecast its future revenues. The pipeline review will allow you to identify sales inefficiencies or pick up on the best practices.
+                                </p>
+                            </div>
+                            <div class="hidden-xs hidden-sm col-md-2 icon"><span  data-icon="&#xe090;" /></div>
+                            <div class="col-md-10">
+                                <p>
+                                    <strong>Review the top 5 opportunities</strong><br/>
+                                    Once the big picture is clear, focus on the best opportunities. Start from stages on the right (negotiation, proposal, etc) and review the biggest opportunities one by one with the team.
+                                </p><p>
+                                    For every deal, review the next action, the expected closing, the pain points, the expected revenues, the buying process, etc.
+                                </p>
+                            </div>
+
+                            <div class="hidden-xs hidden-sm col-md-2 icon"><span  data-icon="&#xe05c;" /></div>
+                            <div class="col-md-10">
+                                <p>
+                                    <strong>Forecast future revenues</strong><br/>
+                                    You can assess the maturity of a sales team by its ability to forecasts future revenues
+                                    for the coming months or quarters. Train the team to forecast efficiently by having
+                                    an up-to-date pipeline of opportunities.
+                                    After a few month, set the real success rate according to the stages, to have
+                                    accurate expected revenues by closing date.
+                                    </p><p>
+                                    Depending on how complex your business is, it may take between 6 months and 18 months for a new
+                                    sales team to efficiently forecasts future revenues.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title">Sales Tools</t>
+                    <p>
+                        The three main practices to develop a sales force are
+                        <strong>methodical organization</strong>, <strong>trainings</strong> and
+                        <strong>good sales tools</strong>.
+                        </p><p>
+                        If you followed the preceding steps, you already setup
+                        the foundations to a strong process leading to
+                        continuous improvements of your sales teams.
+                    </p>
+
+                    <div class="row o_planner_paragraphs">
+                        <div class="col-md-2 icon"><span  data-icon="&#xe087;" /></div>
+                        <div class="col-md-10">
+                            <p><strong>Trainings</strong><br/>
+                                To build a strong sales training program, you can use the following
+                                apps of Odoo:
+                                <ul>
+                                    <t t-if="not is_module_installed('survey')">
+                                    <li>Use <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'survey')">survey</a> to create tests and certifications.</li>
+                                    </t>
+                                    <t t-if="is_module_installed('survey')">
+                                    <li>Use <a t-att-href="prepare_backend_url(
+                                        'survey.action_survey_form','list')">survey</a> to create tests and certifications.</li>
+                                    </t>
+                                    <t t-if="not is_module_installed('website_slides')">
+                                    <li>Use <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_slides')">Slides</a> to organize all your documents like: customer presentations, product sheets, comparisons with competitors, pain points sheets, training materials, etc.</li>
+                                    </t>
+                                    <t t-if="is_module_installed('website_slides')">
+                                    <li>Use <a t-att-href="prepare_backend_url(
+                                        'website_slides.action_slide_channels','list')">Slides</a> to organize all your documents like: customer presentations, product sheets, comparisons with competitors, pain points sheets, training materials, etc.</li>
+                                    </t>
+                                    <t t-if="not is_module_installed('gamification')">
+                                    <li>Use  <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'gamification')">Gamification</a> to create internal challenge for your salesmen</li>
+                                    </t>
+                                </ul>
+                            </p>
+                        </div>
+
+                        <div class="col-md-2 icon"><span  data-icon="&#xe08f;" /></div>
+                        <div class="col-md-10">
+                            <p><strong>Sales tools</strong><br/>
+                                Efficiently following up the pipeline will lead to great improvements. But to achieve excellence in your sales organization, you need  to provide your team with sales tools. For every stage of the opportunities pipeline, identify the blocking points and create  documents to train the team.
+                            </p>
+                        </div>
+                    </div>
+                    <p>Here are a few examples of documents you should provide to your sales team based on the sales stage:</p>
+                    <section>
+                        <div class="well well-lg">
+                            <p><strong>New:</strong></p>
+                            <ul>
+                                <li>Phone scripts</li>
+                                <li>Qualification form (you can use the survey app for this)</li>
+                                <li>Templates of emails</li>
+                            </ul>
+                            <p><strong>Qualified:</strong></p>
+                            <ul>
+                                <li>List of possible pain points by segment/profile</li>
+                                <li>VIP letter to potential sponsors</li>
+                            </ul>
+                            <p><strong>Propositions:</strong></p>
+                            <ul>
+                                <li>Templates of quotations (use Odoo Online Proposals for this)</li>
+                                <li>Competition Matrix comparing prices</li>
+                            </ul>
+                            <p><strong>Negotiation:</strong></p>
+                            <ul>
+                                <li>Motivation letter from the management</li>
+                            </ul>
+                        </div>
+                        <p>
+                            You don't need to review lost opportunities at every sales meeting, but it's good
+                            practice to do it at least once a month. Ask your team to set tags on opportunities to
+                            identify why they were lost and use this information to generate statistics. Here are
+                            some examples of tags to create: no budget, competition, no pain found, etc.
+                        </p>
+                    </section>
+                </t>
+
+                <t t-call="web_planner.page">
+                    <t t-set="page_title">Add Features</t>
+                    <p class="text-muted">
+                        Odoo is the world's only software to have a full integration of Marketing Apps for your sales channel: insight sales, point of sale, ecommerce.
+                    </p>
+                    <h4>
+                        <strong>To boost your leads acquisition,</strong> you should have a look at our marketing apps:
+                    </h4>
+                    <section>
+                        <div class="row o_planner_row_apps">
+                            <div class="text-center mt8 col-md-6">
+                                <span class="fa fa-envelope fa-4x"></span>
+                                <h3><strong>Mass mailing</strong></h3>
+                                <p>Design efficient email campaigns. Send, convert and track performance.</p>
+                                <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'mass_mailing')" class="btn odoo_purple">
+                                <span class="fa fa-arrow-circle-o-down"/> Install Mailing</a>
+                            </div>
+                            <div class="text-center mt8 col-md-6">
+                                <span class="fa fa-comments-o fa-4x"></span>
+                                <h3><strong>Website Live Chat</strong></h3>
+                                <p>Engage directly with your website visitors to convert them into leads.</p>
+                                <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'im_livechat')"
+                                   class="btn odoo_purple">
+                                <span class="fa fa-arrow-circle-o-down"/> Install Website Live Chat</a>
+                            </div>
+                        </div><div class="row o_planner_row_apps">
+                            <div class="text-center mt8 col-md-6">
+                                <span class="fa fa-check-square-o fa-4x"></span>
+                                <h3><strong>Survey</strong></h3>
+                                <p>Gain high quality insight from surveys, a great way to engage with prospects</p>
+                                <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'survey')"
+                                   class="btn odoo_purple">
+                                <span class="fa fa-arrow-circle-o-down"/> Install Surveys</a>
+                            </div>
+                            <div class="text-center mt8 col-md-6">
+                                <span class="fa fa-calendar-o fa-4x"></span>
+                                <h3><strong>Events</strong></h3>
+                                <p>Create sleek and attractive event pages. Sell online and organize on site.</p>
+                                <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'event')"
+                                   class="btn odoo_purple">
+                                <span class="fa fa-arrow-circle-o-down"/> Install Events</a>
+                            </div>
+                        </div><div class="row o_planner_row_apps">
+                            <div class="text-center mt8 col-md-6">
+                                <span class="fa fa-credit-card fa-4x"></span>
+                                <h3><strong>e-Commerce</strong></h3>
+                                <p>Boost your online sales with sleek product pages.</p>
+                                <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_sale')"
+                                   class="btn odoo_purple">
+                                <span class="fa fa-arrow-circle-o-down"/> Install e-Commerce</a>
+                            </div>
+                            <div class="text-center mt8 col-md-6">
+                                <span class="fa fa-file-powerpoint-o fa-4x"></span>
+                                <h3><strong>Slides</strong></h3>
+                                <p>Display your brochures, product sheets, showcases etc.</p>
+                                <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_slides')" class="btn odoo_purple">
+                                    <span class="fa fa-arrow-circle-o-down"/> Install Slides</a>
+                            </div>
+                        </div>
+                    </section>
+                </t>
+            </t>
+            <t t-call="web_planner.page">
+                <t t-set="page_title">End</t>
+                <t t-set="hide_title" t-value="True"/>
+                <t t-set="hide_from_menu" t-value="True"/>
+                <t t-set="hide_mark_as_done" t-value="True"/>
+                <h1 class="text-center o_planner_trophy" data-icon="&#xe006;" />
+                <div class="text-center">
+                    <h1>Congratulations, you're done!</h1>
+                    <h3>We hope this process helped you bring your sales vision to life.</h3>
+                    <h4>Don't hesitate to <a href="mailto:info@odoo.com?subject=Sales%20Planner" target="_blank">send us an email</a> to describe<br/> your experience or to suggest improvements!</h4>
+
+                    <p>Happy Selling!<br/>- The Odoo Team</p>
+                    <img src="/web_planner/static/src/img/odoo_logo.png"/>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!--Planner Data-->
+    <record id="planner_crm" model="web.planner">
+        <field name="name">Sales strategy planner</field>
+        <field name="view_id" ref="crm_planner"/>
+        <field name="menu_id" ref="sales_team.menu_base_partner"/>
+        <field name="planner_application">planner_crm</field>
+        <field name="tooltip_planner"><![CDATA[
+            Plan your sales strategy: objectives, leads, KPIs, and much more!
+            ]]>
+        </field>
+    </record>
+
+</odoo>

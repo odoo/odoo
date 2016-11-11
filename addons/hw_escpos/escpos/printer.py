@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-import usb.core
-import usb.util
 import serial
 import socket
+import usb.core
+import usb.util
 
 from escpos import *
 from constants import *

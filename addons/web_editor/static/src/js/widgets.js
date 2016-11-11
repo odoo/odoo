@@ -3,6 +3,7 @@ odoo.define('web_editor.widget', function (require) {
 
 var core = require('web.core');
 var ajax = require('web.ajax');
+var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var rte = require('web_editor.rte');
@@ -11,39 +12,35 @@ var QWeb = core.qweb;
 var range = $.summernote.core.range;
 var dom = $.summernote.core.dom;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+var _t = core._t;
 
-var Dialog = Widget.extend({
-    events: {
-        'hidden.bs.modal': 'destroy',
-        'keydown.dismiss.bs.modal': 'stop_escape',
-        'click button.save': 'save',
-        'click button[data-dismiss="modal"]': 'cancel',
-    },
-    init: function () {
-        this._super();
-    },
-    start: function () {
-        var sup = this._super();
-        this.$el.modal({backdrop: 'static'});
-        this.$('input:first').focus();
-        return sup;
+/**
+ * Extend Dialog class to handle save/cancel of edition components.
+ */
+Dialog = Dialog.extend({
+    init: function (parent, options) {
+        options = options || {};
+        this._super(parent, _.extend({}, {
+            buttons: [
+                {text: options.save_text || _t("Save"), classes: "btn-primary o_save_button", click: this.save},
+                {text: _t("Discard"), close: true}
+            ]
+        }, options));
+
+        this.destroyAction = "cancel";
+
+        var self = this;
+        this.opened().then(function () {
+            self.$('input:first').focus();
+        });
+        this.on("closed", this, function () {
+            this.trigger(this.destroyAction, this.final_data || null);
+        });
     },
     save: function () {
+        this.destroyAction = "save";
         this.close();
-        this.trigger("saved");
     },
-    cancel: function () {
-        this.trigger("cancel");
-    },
-    close: function () {
-        this.$el.modal('hide');
-    },
-    stop_escape: function (event) {
-        if($(".modal.in").length>0 && event.which == 27) {
-            event.stopPropagation();
-        }
-    }
 });
 
 /**
@@ -51,24 +48,25 @@ var Dialog = Widget.extend({
  */
 var alt = Dialog.extend({
     template: 'web_editor.dialog.alt',
-    init: function ($editable, media) {
+    init: function (parent, options, $editable, media) {
+        this._super(parent, _.extend({}, {
+            title: _t("Change media description and tooltip")
+        }, options));
         this.$editable = $editable;
         this.media = media;
         this.alt = ($(this.media).attr('alt') || "").replace(/&quot;/g, '"');
         this.title = ($(this.media).attr('title') || "").replace(/&quot;/g, '"');
-        return this._super();
     },
     save: function () {
-        var self = this;
-        range.createFromNode(self.media).select();
+        range.createFromNode(this.media).select();
         this.$editable.data('NoteHistory').recordUndo();
         var alt = this.$('#alt').val();
         var title = this.$('#title').val();
         $(this.media).attr('alt', alt ? alt.replace(/"/g, "&quot;") : null).attr('title', title ? title.replace(/"/g, "&quot;") : null);
-        setTimeout(function () {
-            click_event(self.media, "mouseup");
-        },0);
-        return this._super();
+        _.defer((function () {
+            click_event(this.media, "mouseup");
+        }).bind(this));
+        return this._super.apply(this, arguments);
     },
 });
 
@@ -82,7 +80,7 @@ var click_event = function (el, type) {
  * MediaDialog widget. Lets users change a media, including uploading a
  * new image, font awsome or video and can change a media into an other
  * media
- * 
+ *
  * options: select_images: allow the selection of more of one image
  */
 var MediaDialog = Dialog.extend({
@@ -90,8 +88,10 @@ var MediaDialog = Dialog.extend({
     events : _.extend({}, Dialog.prototype.events, {
         'input input#icon-search': 'search',
     }),
-    init: function ($editable, media, options) {
-        this._super();
+    init: function (parent, options, $editable, media) {
+        this._super(parent, _.extend({}, {
+            title: _t("Select a Media"),
+        }, options));
         if ($editable) {
             this.$editable = $editable;
             this.rte = this.$editable.rte || this.$editable.data('rte');
@@ -101,6 +101,9 @@ var MediaDialog = Dialog.extend({
         this.media = media;
         this.isNewMedia = !media;
         this.range = range.create();
+
+        this.$modal.addClass('note-image-dialog');
+        this.$modal.find('.modal-dialog').addClass('o_select_media_dialog');
     },
     start: function () {
         var self = this;
@@ -110,20 +113,22 @@ var MediaDialog = Dialog.extend({
             this.$('[href="#editor-media-document"], [href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
         }
 
-        if (this.media) {
-            if (this.media.nodeName === "IMG") {
-                this.$('[href="#editor-media-image"]').tab('show');
-            } else if ($(this.media).is('a.o_image')) {
-                this.$('[href="#editor-media-document"]').tab('show');
-            } else if (this.media.className.match(/(^|\s)media_iframe_video($|\s)/)) {
-                this.$('[href="#editor-media-video"]').tab('show');
-            } else if (this.media.parentNode.className.match(/(^|\s)media_iframe_video($|\s)/)) {
-                this.media = this.media.parentNode;
-                this.$('[href="#editor-media-video"]').tab('show');
-            } else if (this.media.className.match(/(^|\s)fa($|\s)/)) {
-                this.$('[href="#editor-media-icon"]').tab('show');
+        this.opened((function () {
+            if (this.media) {
+                if (this.media.nodeName === "IMG") {
+                    this.$('[href="#editor-media-image"]').tab('show');
+                } else if ($(this.media).is('a.o_image')) {
+                    this.$('[href="#editor-media-document"]').tab('show');
+                } else if (this.media.className.match(/(^|\s)media_iframe_video($|\s)/)) {
+                    this.$('[href="#editor-media-video"]').tab('show');
+                } else if (this.media.parentNode.className.match(/(^|\s)media_iframe_video($|\s)/)) {
+                    this.media = this.media.parentNode;
+                    this.$('[href="#editor-media-video"]').tab('show');
+                } else if (this.media.className.match(/(^|\s)fa($|\s)/)) {
+                    this.$('[href="#editor-media-icon"]').tab('show');
+                }
             }
-        }
+        }).bind(this));
 
         this.imageDialog = new ImageDialog(this, this.media, this.options);
         this.imageDialog.appendTo(this.$("#editor-media-image"));
@@ -138,11 +143,11 @@ var MediaDialog = Dialog.extend({
 
         this.active = this.imageDialog;
 
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+        this.$('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
             if ($(event.target).is('[href="#editor-media-image"]')) {
                 self.active = self.imageDialog;
                 self.$('li.search, li.previous, li.next').removeClass("hidden");
-            } if ($(event.target).is('[href="#editor-media-document"]')) {
+            } else if ($(event.target).is('[href="#editor-media-document"]')) {
                 self.active = self.documentDialog;
                 self.$('li.search, li.previous, li.next').removeClass("hidden");
             } else if ($(event.target).is('[href="#editor-media-icon"]')) {
@@ -155,12 +160,12 @@ var MediaDialog = Dialog.extend({
             }
         });
 
-        return this._super();
+        return this._super.apply(this, arguments);
     },
     save: function () {
         if (this.options.select_images) {
-            this.trigger("saved", this.active.save());
-            this.close();
+            this.final_data = this.active.save();
+            this._super.apply(this, arguments);
             return;
         }
         if(this.rte) {
@@ -193,25 +198,18 @@ var MediaDialog = Dialog.extend({
         }
         var media = this.active.media;
 
-        $(document.body).trigger("media-saved", [media, self.old_media]);
-        self.trigger("saved", [media, self.old_media]);
-        setTimeout(function () {
-            if (!media.parentNode) {
-                return;
-            }
+        this.final_data = [media, self.old_media];
+        $(document.body).trigger("media-saved", this.final_data);
+
+        // Update editor bar after image edition (in case the image change to icon or other)
+        _.defer(function () {
+            if (!media.parentNode) return;
             range.createFromNode(media).select();
             click_event(media, "mousedown");
-            if (!this.only_images) {
-                setTimeout(function () {
-                    if($(media).parent().data("oe-field") !== "image") {
-                        click_event(media, "click");
-                    }
-                    click_event(media, "mouseup");
-                },0);
-            }
-        },0);
+            click_event(media, "mouseup");
+        });
 
-        this.close();
+        this._super.apply(this, arguments);
     },
     searchTimer: null,
     search: function () {
@@ -225,14 +223,14 @@ var MediaDialog = Dialog.extend({
 });
 
 /**
- * ImageDialog widget. Lets users change an image, including uploading a
- * new image in OpenERP or selecting the image style (if supported by
+ * ImageDialog widget. Let users change an image, including uploading a
+ * new image in odoo or selecting the image style (if supported by
  * the caller).
  */
-var IMAGES_PER_ROW = 6;
-var IMAGES_ROWS = 2;
 var ImageDialog = Widget.extend({
     template: 'web_editor.dialog.image',
+    IMAGES_PER_ROW: 6,
+    IMAGES_ROWS: 2,
     events: _.extend({}, Dialog.prototype.events, {
         'change .url-source': function (e) {
             this.changed($(e.target));
@@ -254,13 +252,15 @@ var ImageDialog = Widget.extend({
         'submit form': 'form_submit',
         'change input.url': "change_input",
         'keyup input.url': "change_input",
-        //'change select.image-style': 'preview_image',
         'click .existing-attachments [data-src]': 'select_existing',
+        'dblclick .existing-attachments [data-src]': function () {
+            this.getParent().save();
+        },
         'click .o_existing_attachment_remove': 'try_remove',
         'keydown.dismiss.bs.modal': function () {},
     }),
     init: function (parent, media, options) {
-        this._super();
+        this._super.apply(this, arguments);
         this.options = options || {};
         this.accept = this.options.accept || this.options.document ? "*/*" : "image/*";
         this.domain = this.options.domain || ['|', ['mimetype', '=', false], ['mimetype', this.options.document ? 'not in' : 'in', ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png']]];
@@ -273,8 +273,8 @@ var ImageDialog = Widget.extend({
     start: function () {
         this.$preview = this.$('.preview-container').detach();
         var self = this;
-        var res = this._super();
-        var o = { url: null, alt: null };
+        var res = this._super.apply(this, arguments);
+        var o = {url: null, alt: null};
 
         if ($(this.media).is("img")) {
             o.url = this.media.getAttribute('src');
@@ -301,7 +301,7 @@ var ImageDialog = Widget.extend({
     },
     push: function (attachment) {
         if (this.options.select_images) {
-            var img = _.select(this.images, function (v) { return v.id == attachment.id;});
+            var img = _.select(this.images, function (v) { return v.id === attachment.id; });
             if (img.length) {
                 this.images.splice(this.images.indexOf(img[0]),1);
             }
@@ -312,10 +312,8 @@ var ImageDialog = Widget.extend({
     },
     save: function () {
         if (this.options.select_images) {
-            this.parent.trigger("save", this.images);
             return this.images;
         }
-        this.parent.trigger("save", this.media);
 
         var img = this.images[0];
         if (!img) {
@@ -323,13 +321,14 @@ var ImageDialog = Widget.extend({
             img = _.find(this.images, function (img) { return img.id === id;});
         }
 
+        var media;
         if (!img.is_document) {
             if (this.media.tagName !== "IMG" || !this.old_media) {
                 this.add_class = "pull-left";
                 this.style = {"width": "100%"};
             }
             if(this.media.tagName !== "IMG") {
-                var media = document.createElement('img');
+                media = document.createElement('img');
                 $(this.media).replaceWith(media);
                 this.media = media;
             }
@@ -337,7 +336,7 @@ var ImageDialog = Widget.extend({
         } else {
             if (this.media.tagName !== "A") {
                 $('.note-control-selection').hide();
-                var media = document.createElement('a');
+                media = document.createElement('a');
                 $(this.media).replaceWith(media);
                 this.media = media;
             }
@@ -354,17 +353,11 @@ var ImageDialog = Widget.extend({
     clear: function () {
         this.media.className = this.media.className.replace(/(^|\s+)((img(\s|$)|img-(?!circle|rounded|thumbnail))[^\s]*)/g, ' ');
     },
-    cancel: function () {
-        this.trigger('cancel');
-    },
     change_input: function (e) {
         var $input = $(e.target);
         var $button = $input.parent().find("button");
-        if ($input.val() === "") {
-            $button.addClass("btn-default").removeClass("btn-primary");
-        } else {
-            $button.removeClass("btn-default").addClass("btn-primary");
-        }
+        var emptyValue = ($input.val() === "");
+        $button.toggleClass("btn-default", emptyValue).toggleClass("btn-primary", !emptyValue);
     },
     search: function (needle) {
         var self = this;
@@ -372,19 +365,15 @@ var ImageDialog = Widget.extend({
             self.selected_existing();
         });
     },
-    set_image: function (attachment, error) {
-        var self = this;
+    set_image: function (attachment) {
         this.push(attachment);
         this.$('input.url').val('');
-        this.fetch_existing().then(function () {
-            self.selected_existing();
-        });
+        this.search();
     },
     form_submit: function (event) {
         var self = this;
         var $form = this.$('form[action="/web_editor/attachment/add"]');
         if (!$form.find('input[name="upload"]').val().length) {
-            var url = $form.find('input[name="url"]').val();
             if (this.selected_existing().size()) {
                 event.preventDefault();
                 return false;
@@ -412,10 +401,11 @@ var ImageDialog = Widget.extend({
         };
     },
     file_selection: function () {
+        var $form = this.$('form');
         this.$el.addClass('nosave');
-        this.$('form').removeClass('has-error').find('.help-block').empty();
+        $form.removeClass('has-error').find('.help-block').empty();
         this.$('button.filepicker').removeClass('btn-danger btn-success');
-        this.$('form').submit();
+        $form.submit();
     },
     file_selected: function (attachment, error) {
         var $button = this.$('button.filepicker');
@@ -423,14 +413,12 @@ var ImageDialog = Widget.extend({
             $button.addClass('btn-success');
             this.set_image(attachment);
         } else {
-            this.$('form').addClass('has-error')
-                .find('.help-block').text(error);
+            this.$('form').addClass('has-error').find('.help-block').text(error);
             $button.addClass('btn-danger');
         }
 
         if (!this.options.select_images) {
-            // auto save and close popup
-            this.parent.save();
+            this.parent.save(); // auto save and close popup
         }
     },
     fetch_existing: function (needle) {
@@ -444,15 +432,19 @@ var ImageDialog = Widget.extend({
             args: [],
             kwargs: {
                 domain: domain,
-                fields: ['name', 'mimetype', 'checksum', 'url'], // if we want to use /web/image/xxx with redirect for image url, remove 'url'
+                fields: ['name', 'mimetype', 'checksum', 'url', 'type'],
                 order: 'id desc',
                 context: base.get_context()
             }
         }).then(this.proxy('fetched_existing'));
     },
     fetched_existing: function (records) {
-        this.records = records;
-        _.each(records, function (record) {
+        this.records = _.uniq(_.filter(records, function (r) {
+            return (r.type === "binary" || r.url && r.url.length > 0);
+        }), function (r) {
+            return (r.url || r.id);
+        });
+        _.each(this.records, function (record) {
             record.src = record.url || '/web/image/' + record.id;
             record.is_document = !(/gif|jpe|jpg|png/.test(record.mimetype));
         });
@@ -460,22 +452,20 @@ var ImageDialog = Widget.extend({
     },
     display_attachments: function () {
         var self = this;
-        var per_screen = IMAGES_PER_ROW * IMAGES_ROWS;
+        var per_screen = this.IMAGES_PER_ROW * this.IMAGES_ROWS;
         var from = this.page * per_screen;
         var records = this.records;
 
         // Create rows of 3 records
         var rows = _(records).chain()
             .slice(from, from + per_screen)
-            .groupBy(function (_, index) { return Math.floor(index / IMAGES_PER_ROW); })
+            .groupBy(function (_, index) { return Math.floor(index / self.IMAGES_PER_ROW); })
             .values()
             .value();
 
         this.$('.help-block').empty();
 
-        this.$('.existing-attachments').replaceWith(
-            QWeb.render(
-                'web_editor.dialog.image.existing.content', {rows: rows}));
+        this.$('.existing-attachments').replaceWith(QWeb.render('web_editor.dialog.image.existing.content', {rows: rows}));
         this.parent.$('.pager')
             .find('li.previous').toggleClass('disabled', (from === 0)).end()
             .find('li.next').toggleClass('disabled', (from + per_screen >= records.length));
@@ -524,15 +514,20 @@ var ImageDialog = Widget.extend({
                 return;
             }
             $both.css({borderWidth: "", borderColor: ""});
-            $help_block.replaceWith(QWeb.render(
-                'web_editor.dialog.image.existing.error', {
-                    views: prevented[id]
-                }
-            ));
+            $help_block.replaceWith(QWeb.render('web_editor.dialog.image.existing.error', {
+                views: prevented[id]
+            }));
         });
     },
 });
 
+/* list of font icons to load by editor. The icons are displayed in the media editor and
+ * identified like font and image (can be colored, spinned, resized with fa classes).
+ * To add font, push a new object {base, parser}
+ * - base: class who appear on all fonts (eg: fa fa-refresh)
+ * - parser: regular expression used to select all font in css style sheets
+ */
+var fontIcons = [{'base': 'fa', 'parser': /(?=^|\s)(\.fa-[0-9a-z_-]+::?before)/i}];
 
 var cacheCssSelectors = {};
 var getCssSelectors = function (filter) {
@@ -592,7 +587,7 @@ var computeFonts = _.once(function () {
 });
 
 rte.Class.include({
-    init: function (EditorBar) {
+    init: function () {
         this._super.apply(this, arguments);
         computeFonts();
     },
@@ -607,18 +602,9 @@ rte.Class.include({
     },
 });
 
-/* list of font icons to load by editor. The icons are displayed in the media editor and
- * identified like font and image (can be colored, spinned, resized with fa classes).
- * To add font, push a new object {base, parser}
- * - base: class who appear on all fonts (eg: fa fa-refresh)
- * - parser: regular expression used to select all font in css style sheets
- */
-var fontIcons = [{'base': 'fa', 'parser': /(?=^|\s)(\.fa-[0-9a-z_-]+::?before)/i}];
-
-
 /**
- * FontIconsDialog widget. Lets users change a font awsome, suport all
- * font awsome loaded in the css files.
+ * FontIconsDialog widget. Lets users change a font awesome, support all
+ * font awesome loaded in the css files.
  */
 var fontIconsDialog = Widget.extend({
     template: 'web_editor.dialog.font-icons',
@@ -631,31 +617,32 @@ var fontIconsDialog = Widget.extend({
             $(".font-icons-icon").removeClass("o_selected");
             $(e.target).addClass("o_selected");
         },
+        'dblclick .font-icons-icon': function () {
+            this.getParent().save();
+        },
         'keydown.dismiss.bs.modal': function () {},
     }),
 
-    // extract list of font (like awsome) from the cheatsheet.
-    renderElement: function () {
-        this.iconsParser = fontIcons;
-        this.icons = _.flatten(_.map(fontIcons, function (data) {
-                return data.icons;
-            }));
-        this._super();
-    },
-
     init: function (parent, media) {
-        this._super();
+        this._super.apply(this, arguments);
         this.parent = parent;
         this.media = media;
         computeFonts();
     },
     start: function () {
-        return this._super().then(this.proxy('load_data'));
+        return this._super.apply(this, arguments).then(this.proxy('load_data'));
+    },
+    renderElement: function () { // extract list of font (like awesome) from the cheatsheet.
+        this.iconsParser = fontIcons;
+        this.icons = _.flatten(_.map(fontIcons, function (data) {
+            return data.icons;
+        }));
+        this._super.apply(this, arguments);
     },
     search: function (needle) {
         var iconsParser = this.iconsParser;
         if (needle) {
-            var iconsParser = [];
+            iconsParser = [];
             _.filter(this.iconsParser, function (data) {
                 var cssData = _.filter(data.cssData, function (cssData) {
                     return _.find(cssData[3], function (alias) {
@@ -679,8 +666,6 @@ var fontIconsDialog = Widget.extend({
      */
     save: function () {
         var self = this;
-        this.parent.trigger("save", this.media);
-        var icons = this.icons;
         var style = this.media.attributes.style ? this.media.attributes.style.value : '';
         var classes = (this.media.className||"").split(/\s+/);
         var custom_classes = /^fa(-[1-5]x|spin|rotate-(9|18|27)0|flip-(horizont|vertic)al|fw|border)?$/;
@@ -696,6 +681,8 @@ var fontIconsDialog = Widget.extend({
             style = style.replace(/\s*width:[^;]+/, '');
         }
         $(this.media).attr("class", _.compact(final_classes).join(' ')).attr("style", style);
+
+        return this.media;
     },
     /**
      * return the data font object (with base, parser and icons) or null
@@ -733,7 +720,7 @@ var fontIconsDialog = Widget.extend({
         var classes = (this.media&&this.media.className||"").split(/\s+/);
         for (var i = 0; i < classes.length; i++) {
             var cls = classes[i];
-            switch(cls) {
+            switch (cls) {
                 case 'fa-1x':case 'fa-2x':case 'fa-3x':case 'fa-4x':case 'fa-5x':
                     // size classes
                     this.$('#fa-size').val(cls);
@@ -761,8 +748,7 @@ var fontIconsDialog = Widget.extend({
         }
     },
     /**
-     * Serializes the dialog to an array of FontAwesome classes. Includes
-     * the base ``fa``.
+     * Serializes the dialog to an array of FontAwesome classes. Includes the base ``fa``.
      */
     get_fa_classes: function () {
         var font = this.getFont(this.$('#fa-icon').val());
@@ -780,7 +766,9 @@ var fontIconsDialog = Widget.extend({
 });
 
 
-function createVideoNode(url) {
+function createVideoNode(url, options) {
+    options = options || {};
+
     // video url patterns(youtube, instagram, vimeo, dailymotion, youku)
     var ytRegExp = /^(?:(?:https?:)?\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
     var ytMatch = url.match(ytRegExp);
@@ -802,36 +790,56 @@ function createVideoNode(url) {
 
     var $video = $('<iframe>');
     if (ytMatch && ytMatch[1].length === 11) {
-      var youtubeId = ytMatch[1];
-      $video = $('<iframe>')
-        .attr('src', '//www.youtube.com/embed/' + youtubeId)
-        .attr('width', '640').attr('height', '360');
+        var youtubeId = ytMatch[1];
+        $video = $('<iframe>', {
+            src: '//www.youtube.com/embed/' + youtubeId,
+            width: '640',
+            height: '360'
+        });
     } else if (igMatch && igMatch[0].length) {
-      $video = $('<iframe>')
-        .attr('src', igMatch[0] + '/embed/')
-        .attr('width', '612').attr('height', '710')
-        .attr('scrolling', 'no')
-        .attr('allowtransparency', 'true');
+        $video = $('<iframe>', {
+            src: igMatch[0] + '/embed/',
+            width: '612',
+            height: '710',
+            scrolling: 'no',
+            allowtransparency: 'true'
+        });
     } else if (vMatch && vMatch[0].length) {
-      $video = $('<iframe>')
-        .attr('src', vMatch[0] + '/embed/simple')
-        .attr('width', '600').attr('height', '600')
-        .attr('class', 'vine-embed');
+        $video = $('<iframe>', {
+            src: vMatch[0] + '/embed/simple',
+            width: '600',
+            height: '600',
+            class: 'vine-embed'
+        });
     } else if (vimMatch && vimMatch[3].length) {
-      $video = $('<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen>')
-        .attr('src', '//player.vimeo.com/video/' + vimMatch[3])
-        .attr('width', '640').attr('height', '360');
+        $video = $('<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen>', {
+            src: '//player.vimeo.com/video/' + vimMatch[3],
+            width: '640',
+            height: '360'
+        });
     } else if (dmMatch && dmMatch[2].length) {
-      $video = $('<iframe>')
-        .attr('src', '//www.dailymotion.com/embed/video/' + dmMatch[2])
-        .attr('width', '640').attr('height', '360');
+        $video = $('<iframe>', {
+            src: '//www.dailymotion.com/embed/video/' + dmMatch[2],
+            width: '640',
+            height: '360'
+        });
     } else if (youkuMatch && youkuMatch[1].length) {
-      $video = $('<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen>')
-        .attr('height', '498')
-        .attr('width', '510')
-        .attr('src', '//player.youku.com/embed/' + youkuMatch[1]);
+        $video = $('<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen>', {
+            height: '498',
+            width: '510',
+            src: '//player.youku.com/embed/' + youkuMatch[1]
+        });
     } else {
-      // this is not a known video link. Now what, Cat? Now what?
+        // this is not a known video link. Now what, Cat? Now what?
+        $video = $('<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen>', {
+            width: '640',
+            height: '360',
+            src: url
+        });
+    }
+
+    if (options.autoplay) {
+        $video.attr("src", $video.attr("src") + "?autoplay=1");
     }
 
     $video.attr('frameborder', 0);
@@ -848,6 +856,7 @@ var VideoDialog = Widget.extend({
     events : _.extend({}, Dialog.prototype.events, {
         'click input#urlvideo ~ button': 'get_video',
         'click input#embedvideo ~ button': 'get_embed_video',
+        'change input#autoplay': 'get_video',
         'change input#urlvideo': 'change_input',
         'keyup input#urlvideo': 'change_input',
         'change input#embedvideo': 'change_input',
@@ -855,7 +864,7 @@ var VideoDialog = Widget.extend({
         'keydown.dismiss.bs.modal': function () {},
     }),
     init: function (parent, media) {
-        this._super();
+        this._super.apply(this, arguments);
         this.parent = parent;
         this.media = media;
     },
@@ -866,9 +875,10 @@ var VideoDialog = Widget.extend({
         if ($media.hasClass("media_iframe_video")) {
             var src = $media.data('src');
             this.$("input#urlvideo").val(src);
+            this.$("input#autoplay").prop("checked", (src || "").indexOf("autoplay") >= 0);
             this.get_video();
         }
-        return this._super();
+        return this._super.apply(this, arguments);
     },
     change_input: function (e) {
         var $input = $(e.target);
@@ -890,19 +900,17 @@ var VideoDialog = Widget.extend({
     },
     get_video: function (event) {
         if (event) event.preventDefault();
-        var $video = createVideoNode(this.$("input#urlvideo").val());
+        var $video = createVideoNode(this.$("input#urlvideo").val(), {autoplay: this.$("input#autoplay").is(":checked")});
         this.$iframe.replaceWith($video);
         this.$iframe = $video;
         return false;
     },
     save: function () {
-        this.parent.trigger("save", this.media);
         var video_id = this.$("#video_id").val();
         if (!video_id) {
             this.$("button.btn-primary").click();
             video_id = this.$("#video_id").val();
         }
-        var video_type = this.$("#video_type").val();
         var $iframe = $(
             '<div class="media_iframe_video" data-src="'+this.$iframe.attr("src")+'">'+
                 '<div class="css_editable_mode_display">&nbsp;</div>'+
@@ -911,6 +919,8 @@ var VideoDialog = Widget.extend({
             '</div>');
         $(this.media).replaceWith($iframe);
         this.media = $iframe[0];
+
+        return this.media;
     },
     clear: function () {
         if (this.media.dataset.src) {
@@ -924,7 +934,9 @@ var VideoDialog = Widget.extend({
     },
 });
 
-/* ----- EDITOR: LINK & MEDIA ---- */
+/**
+ * The Link Dialog allows to customize link content and style.
+ */
 var LinkDialog = Dialog.extend({
     template: 'web_editor.dialog.link',
     events: _.extend({}, Dialog.prototype.events, {
@@ -939,8 +951,10 @@ var LinkDialog = Dialog.extend({
             this.preview();
         },
     }),
-    init: function (editable, linkInfo) {
-        this._super(editable, linkInfo);
+    init: function (parent, options, editable, linkInfo) {
+        this._super(parent, _.extend({}, {
+            title: _t("Link to")
+        }, options || {}));
         this.editable = editable;
         this.data = linkInfo || {};
 
@@ -977,20 +991,20 @@ var LinkDialog = Dialog.extend({
                 } else if (eo !== ec.textContent.length) {
                     ec.splitText(eo);
                 }
-                
+
                 nodes = dom.listBetween(sc, ec);
 
                 // browsers can't target a picture or void node
                 if (dom.isVoid(sc) || dom.isImg(sc)) {
-                  so = dom.listPrev(sc).length-1;
-                  sc = sc.parentNode;
+                    so = dom.listPrev(sc).length-1;
+                    sc = sc.parentNode;
                 }
                 if (dom.isBR(ec)) {
-                  eo = dom.listPrev(ec).length-1;
-                  ec = ec.parentNode;
+                    eo = dom.listPrev(ec).length-1;
+                    ec = ec.parentNode;
                 } else if (dom.isVoid(ec) || dom.isImg(sc)) {
-                  eo = dom.listPrev(ec).length;
-                  ec = ec.parentNode;
+                    eo = dom.listPrev(ec).length;
+                    ec = ec.parentNode;
                 }
 
                 this.data.range = range.create(sc, so, ec, eo);
@@ -1026,7 +1040,7 @@ var LinkDialog = Dialog.extend({
     start: function () {
         this.bind_data();
         this.$('input.url-source:eq(1)').closest('.list-group-item').addClass('active');
-        return this._super();
+        return this._super.apply(this, arguments);
     },
     get_data: function (test) {
         var self = this;
@@ -1057,31 +1071,32 @@ var LinkDialog = Dialog.extend({
         var isNewWindow = this.$('input.window-new').prop('checked');
 
         if ($e.hasClass('email-address') && $e.val().indexOf("@") !== -1) {
-            self.get_data_buy_mail(def, $e, isNewWindow, label, classes);
+            self.get_data_buy_mail(def, $e, isNewWindow, label, classes, test);
         } else {
-            self.get_data_buy_url(def, $e, isNewWindow, label, classes);
+            self.get_data_buy_url(def, $e, isNewWindow, label, classes, test);
         }
         return def;
     },
-    get_data_buy_mail: function (def, $e, isNewWindow, label, classes) {
+    get_data_buy_mail: function (def, $e, isNewWindow, label, classes, test) {
         var val = $e.val();
         def.resolve(val.indexOf("mailto:") === 0 ? val : 'mailto:' + val, isNewWindow, label, classes);
     },
-    get_data_buy_url: function (def, $e, isNewWindow, label, classes) {
+    get_data_buy_url: function (def, $e, isNewWindow, label, classes, test) {
         def.resolve($e.val(), isNewWindow, label, classes);
     },
     save: function () {
         var self = this;
         var _super = this._super.bind(this);
-        return this.get_data()
-            .then(function (url, new_window, label, classes) {
-                self.data.url = url;
-                self.data.isNewWindow = new_window;
-                self.data.text = label;
-                self.data.className = classes.replace(/\s+/gi, ' ').replace(/^\s+|\s+$/gi, '');
-
-                self.trigger("save", self.data);
-            }).then(_super);
+        return this.get_data().then(function (url, new_window, label, classes) {
+            self.data.url = url;
+            self.data.isNewWindow = new_window;
+            self.data.text = label;
+            self.data.className = classes.replace(/\s+/gi, ' ').replace(/^\s+|\s+$/gi, '');
+                if (classes.replace(/(^|[ ])(btn-default|btn-success|btn-primary|btn-info|btn-warning|btn-danger)([ ]|$)/gi, ' ')) {
+                    self.data.style = {'background-color': '', 'color': ''};
+                }
+            self.final_data = self.data;
+        }).then(_super);
     },
     bind_data: function () {
         var href = this.data.url;
@@ -1102,8 +1117,8 @@ var LinkDialog = Dialog.extend({
         }
 
         if (href) {
-            var match;
-            if(match = /mailto:(.+)/.exec(href)) {
+            var match = /mailto:(.+)/.exec(href);
+            if (match) {
                 this.$('input.email-address').val(match = /mailto:(.+)/.exec(href) ? match[1] : '');
             } else {
                 this.$('input.url').val(href);
@@ -1130,18 +1145,17 @@ var LinkDialog = Dialog.extend({
             $preview.attr("target", new_window ? '_blank' : "")
                 .attr("href", url && url.length ? url : "#")
                 .html((label && label.length ? label : url))
-                .attr("class", classes.replace(/pull-\w+/, ''));
+                .attr("class", classes.replace(/pull-\w+/, '') + " o_btn_preview");
         });
     }
 });
 
 return {
-    'getCssSelectors': getCssSelectors,
-    'Dialog': Dialog,
-    'alt': alt,
-    'MediaDialog': MediaDialog,
-    'fontIcons': fontIcons,
-    'LinkDialog': LinkDialog
+    Dialog: Dialog,
+    alt: alt,
+    MediaDialog: MediaDialog,
+    LinkDialog: LinkDialog,
+    getCssSelectors: getCssSelectors,
+    fontIcons: fontIcons,
 };
-
 });

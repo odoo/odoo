@@ -6,11 +6,7 @@
             This menu item's purpose is to rename it into 'Sales' in the 
             case that CRM was installed after Sales
         -->
-        <menuitem name="Sales"
-            id="base.menu_base_partner"
-            groups="base.group_sale_manager,base.group_sale_salesman"
-            web_icon="sale,static/description/icon.png"
-            sequence="6"/>
+        <menuitem name="Sales" id="sales_team.menu_base_partner"/>
 
         <record id="crm_case_form_view_oppor" model="ir.ui.view">
             <field name="name">crm.lead.oppor.inherited.crm</field>

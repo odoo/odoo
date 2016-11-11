@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from openerp.addons.sale.tests.test_sale_common import TestSale
+
+from odoo.addons.sale.tests.test_sale_common import TestSale
+from odoo.exceptions import UserError
 
 
 class TestSaleStock(TestSale):
@@ -103,7 +105,8 @@ class TestSaleStock(TestSale):
         del_qties_truth = [2.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after partial delivery')
         # invoice on delivery: nothing to invoice
-        self.assertFalse(self.so.action_invoice_create(), 'Sale Stock: there should be nothing to invoice')
+        with self.assertRaises(UserError):
+            self.so.action_invoice_create()
 
     def test_02_sale_stock_return(self):
         """
@@ -151,7 +154,7 @@ class TestSaleStock(TestSale):
         self.assertEqual(len(inv_1_id), 1, 'Sale Stock: only one invoice instead of "%s" should be created' % len(inv_1_id))
         self.inv_1 = self.env['account.invoice'].browse(inv_1_id)
         self.assertEqual(self.inv_1.amount_untaxed, self.inv_1.amount_untaxed, 'Sale Stock: amount in SO and invoice should be the same')
-        self.inv_1.signal_workflow('invoice_open')
+        self.inv_1.action_invoice_open()
 
         # Create return picking
         StockReturnPicking = self.env['stock.return.picking']

@@ -3,14 +3,17 @@
 # * subscription
 # 
 # Translators:
+# Dorin Hongu <dhongu@gmail.com>, 2016
+# Cozmin Candea <office@terrabit.ro>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 09:05+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -62,12 +65,14 @@ msgstr "Zile"
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_value
 msgid "Default Value"
-msgstr "Valoarea Implicita"
+msgstr "Valoarea implicită"
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_document_fields_value
 msgid "Default value is considered for field when new document is generated."
-msgstr "Valoarea predefinita este considerata pentru camp atunci cand este generat noul document."
+msgstr ""
+"Valoarea predefinita este considerata pentru camp atunci cand este generat "
+"noul document."
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_note
@@ -80,7 +85,7 @@ msgstr "Descriere sau Rezumat a(l) Abonamentului"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_display_name
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nume afișat"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_doc_lines
@@ -111,7 +116,7 @@ msgstr "Câmp"
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_field_ids
 msgid "Fields"
-msgstr "Campuri"
+msgstr "Câmpuri"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_date_init
@@ -136,14 +141,18 @@ msgstr "ID"
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription document without removing it."
-msgstr "In cazul in care campul activ este setat ca Fals, va va permite sa ascundeti documentul de abonament fara a-l sterge."
+msgstr ""
+"In cazul in care campul activ este setat ca Fals, va va permite sa ascundeti"
+" documentul de abonament fara a-l sterge."
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription without removing it."
-msgstr "Daca campul activ este setat pe Fals, va va permite sa ascundeti abonamentul fara a-l sterge."
+msgstr ""
+"Daca campul activ este setat pe Fals, va va permite sa ascundeti abonamentul"
+" fara a-l sterge."
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_notes
@@ -153,8 +162,8 @@ msgstr "Note Interne"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_number
-msgid "Interval Qty"
-msgstr "Interval Cant"
+msgid "Internal Qty"
+msgstr ""
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_type
@@ -167,7 +176,7 @@ msgstr "Interval Unitate"
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription___last_update
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima modificare la"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_write_uid
@@ -188,7 +197,7 @@ msgstr "Ultima actualizare în"
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
 msgid "Months"
-msgstr "Luni de zile"
+msgstr "Luni"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_name
@@ -204,8 +213,8 @@ msgstr "Note"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_exec_init
-msgid "Number of documents"
-msgstr "Numarul de documente"
+msgid "Number of Documents"
+msgstr ""
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_model
@@ -219,7 +228,7 @@ msgid "Partner"
 msgstr "Partener"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:101
+#: code:addons/subscription/models/subscription.py:92
 #, python-format
 msgid ""
 "Please provide another source document.\n"
@@ -247,7 +256,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 #: selection:subscription.subscription,state:0
 msgid "Running"
-msgstr "In executie"
+msgstr "În execuție"
 
 #. module: subscription
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_cron_id
@@ -262,13 +271,13 @@ msgstr "Cauta Abonament"
 #. module: subscription
 #: model:ir.ui.view,arch_db:subscription.view_subscription_form
 msgid "Set to Draft"
-msgstr "Setati ca ciorna"
+msgstr "Setați ca ciornă"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_doc_source
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_history_document_id
 msgid "Source Document"
-msgstr "Document sursa"
+msgstr "Document sursă"
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_state
@@ -287,6 +296,11 @@ msgstr "Stop"
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "Subscription"
 msgstr "Abonament"
+
+#. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+msgid "Subscription Data"
+msgstr ""
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
@@ -322,11 +336,6 @@ msgid "Subscriptions"
 msgstr "Abonamente"
 
 #. module: subscription
-#: model:ir.ui.view,arch_db:subscription.view_subscription_form
-msgid "Subsription Data"
-msgstr "Date Abonament"
-
-#. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_user_id
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "User"
@@ -336,15 +345,17 @@ msgstr "Utilizator"
 #: model:ir.model.fields,help:subscription.field_subscription_subscription_doc_source
 msgid ""
 "User can choose the source document on which he wants to create documents"
-msgstr "Utilizatorul poate alege documentul sursa in care doreste sa creeze documente"
+msgstr ""
+"Utilizatorul poate alege documentul sursa in care doreste sa creeze "
+"documente"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
 msgid "Weeks"
-msgstr "Saptamani"
+msgstr "Săptămâni"
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:128
+#: code:addons/subscription/models/subscription.py:115
 #, python-format
 msgid "You cannot delete an active subscription!"
 msgstr ""

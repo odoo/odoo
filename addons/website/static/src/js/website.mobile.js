@@ -26,7 +26,7 @@ var MobilePreviewDialog = Dialog.extend({
         });
         this.$iframe = this.$('iframe');
         this.$iframe.on('load', function (e) {
-            self.$iframe.contents().find('body').removeAttr('user');
+            self.$iframe.contents().find('body').removeClass('o_connected_user');
             self.$iframe.contents().find('#oe_main_menu_navbar, #o_website_add_page_modal').remove();
         });
 
@@ -39,7 +39,7 @@ website.TopBar.include({
         var self = this;
         this.$el.on('click', 'a[data-action=show-mobile-preview]', function () {
             new MobilePreviewDialog(self, {
-                title: _t('Mobile preview') + " <span class='fa fa-repeat'/>",
+                title: _t('Mobile preview') + " <span class='fa fa-refresh'/>",
             }).open();
         });
         return this._super();

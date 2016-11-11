@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,6 +22,11 @@ msgstr ""
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_campaign
+#: model:ir.model.fields,field_description:utm.field_account_invoice_campaign_id
+#: model:ir.model.fields,field_description:utm.field_crm_lead_campaign_id
+#: model:ir.model.fields,field_description:utm.field_hr_applicant_campaign_id
+#: model:ir.model.fields,field_description:utm.field_link_tracker_campaign_id
+#: model:ir.model.fields,field_description:utm.field_sale_order_campaign_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_campaign_id
 #: model:ir.ui.view,arch_db:utm.utm_campaign_form
 #: model:ir.ui.view,arch_db:utm.utm_campaign_tree
@@ -93,11 +98,6 @@ msgid "Display Name"
 msgstr ""
 
 #. module: utm
-#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
-msgid "Email Campaign - Products"
-msgstr ""
-
-#. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_services
 msgid "Email Campaign - Services"
 msgstr ""
@@ -154,6 +154,11 @@ msgstr ""
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
+#: model:ir.model.fields,field_description:utm.field_account_invoice_medium_id
+#: model:ir.model.fields,field_description:utm.field_crm_lead_medium_id
+#: model:ir.model.fields,field_description:utm.field_hr_applicant_medium_id
+#: model:ir.model.fields,field_description:utm.field_link_tracker_medium_id
+#: model:ir.model.fields,field_description:utm.field_sale_order_medium_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_medium_id
 #: model:ir.ui.menu,name:utm.menu_utm_medium
 #: model:ir.ui.view,arch_db:utm.utm_medium_view_tree
@@ -162,6 +167,7 @@ msgid "Medium"
 msgstr ""
 
 #. module: utm
+#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
 #: model:utm.source,name:utm.utm_source_newsletter
 msgid "Newsletter"
 msgstr ""
@@ -178,6 +184,11 @@ msgstr ""
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source
+#: model:ir.model.fields,field_description:utm.field_account_invoice_source_id
+#: model:ir.model.fields,field_description:utm.field_crm_lead_source_id
+#: model:ir.model.fields,field_description:utm.field_hr_applicant_source_id
+#: model:ir.model.fields,field_description:utm.field_link_tracker_source_id
+#: model:ir.model.fields,field_description:utm.field_sale_order_source_id
 #: model:ir.model.fields,field_description:utm.field_utm_mixin_source_id
 msgid "Source"
 msgstr ""
@@ -194,18 +205,33 @@ msgid "Sources"
 msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_account_invoice_campaign_id
+#: model:ir.model.fields,help:utm.field_crm_lead_campaign_id
+#: model:ir.model.fields,help:utm.field_hr_applicant_campaign_id
+#: model:ir.model.fields,help:utm.field_link_tracker_campaign_id
+#: model:ir.model.fields,help:utm.field_sale_order_campaign_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_campaign_id
 msgid "This is a name that helps you keep track of your different campaign efforts Ex: Fall_Drive, Christmas_Special"
 msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_account_invoice_medium_id
+#: model:ir.model.fields,help:utm.field_crm_lead_medium_id
+#: model:ir.model.fields,help:utm.field_hr_applicant_medium_id
+#: model:ir.model.fields,help:utm.field_link_tracker_medium_id
+#: model:ir.model.fields,help:utm.field_sale_order_medium_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+msgid "This is the method of delivery.Ex: Postcard, Email, or Banner Ad"
 msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_account_invoice_source_id
+#: model:ir.model.fields,help:utm.field_crm_lead_source_id
+#: model:ir.model.fields,help:utm.field_hr_applicant_source_id
+#: model:ir.model.fields,help:utm.field_link_tracker_source_id
+#: model:ir.model.fields,help:utm.field_sale_order_source_id
 #: model:ir.model.fields,help:utm.field_utm_mixin_source_id
-msgid "This is the source of the link Ex: Search Engine, another domain, or name of email list"
+msgid "This is the source of the link Ex:Search Engine, another domain,or name of email list"
 msgstr ""
 
 #. module: utm

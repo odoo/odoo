@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="follow">
+        <div class="input-group js_follow" t-att-data-id="object.id"
+                  t-att-data-object="object._name"
+                  t-att-data-follow="object.id and object.message_is_follower and 'on' or 'off'"
+                  t-att-data-unsubscribe="'unsubscribe' if 'unsubscribe' in request.params else None">
+            <input
+                  type="email" name="email"
+                  class="js_follow_email form-control"
+                  placeholder="your email..."
+                  groups="base.group_public"/>
+            <span class="input-group-btn">
+                <button href="#" t-attf-class="btn btn-default js_unfollow_btn">Unsubscribe</button>
+                <button href="#" t-attf-class="btn btn-primary js_follow_btn">Subscribe</button>
+            </span>
+        </div>
+    </template>
+
+    <template id="head" inherit_id="website.assets_frontend" name="Mail customization">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_mail/static/src/js/follow.js"></script>
+            <script type="text/javascript" src="/website_mail/static/src/js/message_post.js"></script>
+            <link rel='stylesheet' href='/website_mail/static/src/css/website_mail.css'/>
+        </xpath>
+    </template>
+
+    <template id="message_thread">
+        <!--
+            Generic chatter template for the frontend
+            To use this template, you need to call it after setting the following variable in your template or in your controller:
+                :object browserecord : the mail_thread object
+                :token string (optional): if you want your chatter to be available for non-logged user,
+                         you can use a token to verify the identity of the user;
+                         the message will be posted with the identity of the partner_id of the object
+                :token_field string (optional): name of the field that contains the token on the object (default to 'token')
+                :sha_in string (optional): if you use the shasign to allow commenting by non-logged user, you need to set it in this variable using the
+                                 object_shasign function defined in the main controller of website_portal
+                :sha_time string (optional): timestamp of the shasign generation
+                :chatter_mode string: 'json' or 'post' depending on what kind of request you want
+        -->
+        <section id="discussion" class="hidden-print oe_website_portal o_website_mail_thread">
+            <t t-set="is_user_public" t-value="website.env.user == request.website.user_id"/>
+            <t t-set="can_comment" t-value="sha_in or token or not is_user_public"/>
+            <section class="mb32 hidden-print" t-if="can_comment">
+                <form class="o_website_chatter_form" t-attf-action="/website_mail/post/#{chatter_mode}" method="POST">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <img class="img pull-left img-circle" t-attf-src="/web/image/res.partner/#{user_id.partner_id.id}/image_small/50x50" style="width: 50px; margin-right: 10px;"/>
+                    <div class="pull-left mb32" style="width: 75%%">
+                        <textarea rows="4" name="message" class="form-control" placeholder="Write a message..."></textarea>
+                        <input type='hidden' name="res_model" t-att-value="object._name"/>
+                        <input type='hidden' name="res_id" t-att-value="object.id"/>
+                        <input type='hidden' name="token" t-att-value="token" t-if="token"/>
+                        <input type='hidden' name="sha_in" t-att-value="sha_in" t-if="sha_in"/>
+                        <input type='hidden' name="sha_time" t-att-value="sha_time" t-if="sha_time"/>
+                        <input type='hidden' name="token_field" t-att-value="token_field" t-if="token_field"/>
+                        <div class="alert alert-danger mt8 mb0 o_website_chatter_error" style="display:none;">
+                            Oops! Something went wrong. Try to reload the page and to log in.
+                        </div>
+                        <button t-attf-class="o_website_chatter_#{chatter_mode} btn btn-primary mt8 o_website_message_post_helper" type="submit">Send</button>
+                    </div>
+                </form>
+            </section>
+            <section class="mb32 hidden-print" t-if="not can_comment">
+                <h3>Leave a comment</h3>
+                <p>You must be <a t-attf-href="/web/login?redirect=#{quote_plus(request.httprequest.url + '#discussion')}">logged in</a> to post a comment.</p>
+            </section>
+            <div class="clearfix"/>
+            <ul class="media-list o_website_comments">
+                <t t-set="messages" t-value="object.message_ids"/>
+                <t groups="base.group_portal,base.group_public">
+                    <t t-set="messages" t-value="object.message_ids.filtered(lambda m: m.subtype_id.internal == False)"/>
+                </t>
+                <t t-foreach="messages" t-as="message">
+                    <t t-if="message.website_published or website.env.user.sudo(website.env.user.id).has_group('website.group_website_publisher')">
+                        <li class="media" t-if="message.message_type != 'notification'" t-att-id="'message-%s' % message.id">
+                            <div class="media-body">
+                                <img class="media-object pull-left img-circle" t-attf-src="/mail/#{message.model}/#{message.res_id}/avatar/#{message.author_id.id}"
+                                    style="width: 50px; margin-right: 10px;"/>
+                            <div class="media-body">
+                                <h5 class="media-heading">
+                                    <span t-field="message.author_id"/> <small>on <span t-field="message.date"/></small>
+                                </h5>
+                                <t t-set="object" t-value="message"/>
+                                <t t-call="website.publish_short"/>
+                                <div t-field="message.body"/>
+                                <div class="o_mg_link_content">
+                                    <div class="col-md-2 col-sm-3 text-center" t-foreach='message.attachment_ids' t-as='attachment'>
+                                        <a t-attf-href="/web/content/#{attachment.id}?download=true" target="_blank">
+                                            <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80"/>
+                                            <div class='oe_attachment_name'><t t-raw='attachment.name' /></div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </li>
+                    </t>
+                </t>
+            </ul>
+        </section>
+    </template>
+</odoo>

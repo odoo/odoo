@@ -32,7 +32,7 @@ var mixins = core.mixins;
  *     },
  *     start: function() {
  *         // stuff you want to make after the rendering, `this.$el` holds a correct value
- *         this.$el.find(".my_button").click(/* an example of event binding * /);
+ *         this.$(".my_button").click(/* an example of event binding * /);
  *
  *         // if you have some asynchronous operations, it's a good idea to return
  *         // a promise in start()

@@ -3,14 +3,16 @@
 # * crm_project_issue
 # 
 # Translators:
+# Dorin Hongu <dhongu@gmail.com>, 2016
+# Cozmin Candea <office@terrabit.ro>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 17:57+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2016\n"
+"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -23,6 +25,8 @@ msgid ""
 "<span class=\"o_stat_text\">Convert To</span>\n"
 "                            <span class=\"o_stat_text\">Issue</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Convertește în</span>\n"
+"                            <span class=\"o_stat_text\">Problemă</span>"
 
 #. module: crm_project_issue
 #: model:ir.ui.view,arch_db:crm_project_issue.view_crm_lead2projectissue_wizard
@@ -42,11 +46,6 @@ msgid "Create Issue"
 msgstr "Crează problemă"
 
 #. module: crm_project_issue
-#: selection:crm.lead2projectissue.wizard,action:0
-msgid "Create a new customer"
-msgstr "Creeaza un client nou"
-
-#. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_create_uid
 msgid "Created by"
 msgstr "Creat de"
@@ -57,24 +56,9 @@ msgid "Created on"
 msgstr "Creat în"
 
 #. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_partner_id
-msgid "Customer"
-msgstr "Client"
-
-#. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_display_name
 msgid "Display Name"
-msgstr ""
-
-#. module: crm_project_issue
-#: selection:crm.lead2projectissue.wizard,action:0
-msgid "Do not link to a customer"
-msgstr "Nu asociati unui client"
-
-#. module: crm_project_issue
-#: model:ir.model,name:crm_project_issue.model_crm_lead2projectissue_wizard
-msgid "Handle partner binding or generation in CRM wizards."
-msgstr "Gestionati determinarea sau generarea partenerului in wizard-urile MRC."
+msgstr "Nume afișat"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_id
@@ -84,7 +68,7 @@ msgstr "ID"
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima modificare la"
 
 #. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_write_uid
@@ -102,16 +86,11 @@ msgid "Lead"
 msgstr "Pistă"
 
 #. module: crm_project_issue
-#: selection:crm.lead2projectissue.wizard,action:0
-msgid "Link to an existing customer"
-msgstr "Conectati la un client existent"
-
-#. module: crm_project_issue
 #: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_project_id
 msgid "Project"
 msgstr "Proiect"
 
 #. module: crm_project_issue
-#: model:ir.model.fields,field_description:crm_project_issue.field_crm_lead2projectissue_wizard_action
-msgid "Related Customer"
-msgstr "Client Corelat"
+#: model:ir.model,name:crm_project_issue.model_crm_lead2projectissue_wizard
+msgid "crm.lead2projectissue.wizard"
+msgstr "crm.lead2projectissue.wizard"

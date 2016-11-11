@@ -5,52 +5,54 @@
 # Please note that these reports are not multi-currency !!!
 #
 
-from openerp.osv import fields,osv
-from openerp import tools
+from odoo import api, fields, models, tools
 
-class purchase_report(osv.osv):
+
+class PurchaseReport(models.Model):
     _name = "purchase.report"
     _description = "Purchases Orders"
     _auto = False
-    _columns = {
-        'date_order': fields.datetime('Order Date', readonly=True, help="Date on which this document has been created", oldname='date'),
-        'state': fields.selection([('draft', 'Draft RFQ'),
-                                   ('sent', 'RFQ Sent'),
-                                   ('to approve', 'To Approve'),
-                                   ('purchase', 'Purchase Order'),
-                                   ('done', 'Done'),
-                                   ('cancel', 'Cancelled')
-                                  ],'Order Status', readonly=True),
-        'product_id':fields.many2one('product.product', 'Product', readonly=True),
-        'picking_type_id': fields.many2one('stock.warehouse', 'Warehouse', readonly=True),
-        'partner_id':fields.many2one('res.partner', 'Vendor', readonly=True),
-        'date_approve':fields.date('Date Approved', readonly=True),
-        'product_uom' : fields.many2one('product.uom', 'Reference Unit of Measure', required=True),
-        'company_id':fields.many2one('res.company', 'Company', readonly=True),
-        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
-        'delay':fields.float('Days to Validate', digits=(16,2), readonly=True),
-        'delay_pass':fields.float('Days to Deliver', digits=(16,2), readonly=True),
-        'unit_quantity': fields.float('Product Quantity', readonly=True, oldname='quantity'),
-        'price_total': fields.float('Total Price', readonly=True),
-        'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
-        'negociation': fields.float('Purchase-Standard Price', readonly=True, group_operator="avg"),
-        'price_standard': fields.float('Products Value', readonly=True, group_operator="sum"),
-        'nbr_lines': fields.integer('# of Lines', readonly=True, oldname='nbr'),
-        'category_id': fields.many2one('product.category', 'Product Category', readonly=True),
-        'product_tmpl_id': fields.many2one('product.template', 'Product Template', readonly=True),
-        'country_id': fields.many2one('res.country', 'Partner Country', readonly=True),
-        'fiscal_position_id': fields.many2one('account.fiscal.position', string='Fiscal Position', oldname='fiscal_position', readonly=True),
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-        'commercial_partner_id': fields.many2one('res.partner', 'Commercial Entity', readonly=True),
-        'weight': fields.float('Gross Weight', readonly=True),
-        'volume': fields.float('Volume', readonly=True),
-    }
     _order = 'date_order desc, price_total desc'
-    def init(self, cr):
-        tools.sql.drop_view_if_exists(cr, 'purchase_report')
-        cr.execute("""
-            create or replace view purchase_report as (
+
+    date_order = fields.Datetime('Order Date', readonly=True, help="Date on which this document has been created", oldname='date')
+    state = fields.Selection([
+        ('draft', 'Draft RFQ'),
+        ('sent', 'RFQ Sent'),
+        ('to approve', 'To Approve'),
+        ('purchase', 'Purchase Order'),
+        ('done', 'Done'),
+        ('cancel', 'Cancelled')
+        ], 'Order Status', readonly=True)
+    product_id = fields.Many2one('product.product', 'Product', readonly=True)
+    picking_type_id = fields.Many2one('stock.warehouse', 'Warehouse', readonly=True)
+    partner_id = fields.Many2one('res.partner', 'Vendor', readonly=True)
+    date_approve = fields.Date('Date Approved', readonly=True)
+    product_uom = fields.Many2one('product.uom', 'Reference Unit of Measure', required=True)
+    company_id = fields.Many2one('res.company', 'Company', readonly=True)
+    currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
+    user_id = fields.Many2one('res.users', 'Responsible', readonly=True)
+    delay = fields.Float('Days to Validate', digits=(16, 2), readonly=True)
+    delay_pass = fields.Float('Days to Deliver', digits=(16, 2), readonly=True)
+    unit_quantity = fields.Float('Product Quantity', readonly=True, oldname='quantity')
+    price_total = fields.Float('Total Price', readonly=True)
+    price_average = fields.Float('Average Price', readonly=True, group_operator="avg")
+    negociation = fields.Float('Purchase-Standard Price', readonly=True, group_operator="avg")
+    price_standard = fields.Float('Products Value', readonly=True, group_operator="sum")
+    nbr_lines = fields.Integer('# of Lines', readonly=True, oldname='nbr')
+    category_id = fields.Many2one('product.category', 'Product Category', readonly=True)
+    product_tmpl_id = fields.Many2one('product.template', 'Product Template', readonly=True)
+    country_id = fields.Many2one('res.country', 'Partner Country', readonly=True)
+    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', oldname='fiscal_position', readonly=True)
+    account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
+    commercial_partner_id = fields.Many2one('res.partner', 'Commercial Entity', readonly=True)
+    weight = fields.Float('Gross Weight', readonly=True)
+    volume = fields.Float('Volume', readonly=True)
+
+    @api.model_cr
+    def init(self):
+        tools.drop_view_if_exists(self._cr, 'purchase_report')
+        self._cr.execute("""
+            create view purchase_report as (
                 WITH currency_rate as (%s)
                 select
                     min(l.id) as id,
@@ -122,4 +124,4 @@ class purchase_report(osv.osv):
                     partner.commercial_partner_id,
                     analytic_account.id
             )
-        """ % self.pool['res.currency']._select_companies_rates())
+        """ % self.env['res.currency']._select_companies_rates())

@@ -84,6 +84,14 @@
         </div>
     </t>
 
+    <t t-name="SaleDetailsButton">
+        <div class="oe_status">
+            <div class="js_connected oe_icon">
+                <i class='fa fa-fw fa-print'></i>
+            </div>
+        </div>
+    </t>
+
     <t t-name="HeaderButtonWidget">
         <div class="header-button">
             <t t-esc="widget.label" />
@@ -274,7 +282,7 @@
                         <t t-esc="widget.get_product_weight_string()" />
                     </div>
                     <div class='product-price'>
-                        <t t-esc="widget.format_currency(widget.get_product_price()) + '/Kg'" />
+                        <t t-esc="widget.format_currency(widget.get_product_price()) + '/' + widget.get_product_uom()" />
                     </div>
                     <div class='computed-price'>
                         123.14 €
@@ -316,15 +324,15 @@
                 <div class='client-details-left'>
                     <div class='client-detail'>
                         <span class='label'>Street</span>
-                        <input class='detail client-address-street' name='street'       t-att-value='partner.street' placeholder='Street'></input>
+                        <input class='detail client-address-street' name='street'       t-att-value='partner.street || ""' placeholder='Street'></input>
                     </div>
                     <div class='client-detail'>
                         <span class='label'>City</span>
-                        <input class='detail client-address-city'   name='city'         t-att-value='partner.city' placeholder='City'></input>
+                        <input class='detail client-address-city'   name='city'         t-att-value='partner.city || ""' placeholder='City'></input>
                     </div>
                     <div class='client-detail'>
                         <span class='label'>Postcode</span>
-                        <input class='detail client-address-zip'    name='zip'          t-att-value='partner.zip' placeholder='ZIP'></input>
+                        <input class='detail client-address-zip'    name='zip'          t-att-value='partner.zip || ""' placeholder='ZIP'></input>
                     </div>
                     <div class='client-detail'>
                         <span class='label'>Country</span>
@@ -372,11 +380,21 @@
                 <div class='client-details-left'>
                     <div class='client-detail'>
                         <span class='label'>Address</span>
-                        <span class='detail client-address'><t t-esc='partner.address' /></span>
+                        <t t-if='partner.address'>
+                            <span class='detail client-address'><t t-esc='partner.address' /></span>
+                        </t>
+                        <t t-if='!partner.address'>
+                            <span class='detail client-address empty'>N/A</span>
+                        </t>
                     </div>
                     <div class='client-detail'>
                         <span class='label'>Email</span>
-                        <span class='detail client-email'><t t-esc='partner.email' /></span>
+                        <t t-if='partner.email'>
+                            <span class='detail client-email'><t t-esc='partner.email' /></span>
+                        </t>
+                        <t t-if='!partner.email'>
+                            <span class='detail client-email empty'>N/A</span>
+                        </t>
                     </div>
                     <div class='client-detail'>
                         <span class='label'>Phone</span>
@@ -437,7 +455,7 @@
                 <section class="full-content">
                     <div class='window'>
                         <section class='subwindow collapsed'>
-                            <div class='subwindow-container'>
+                            <div class='subwindow-container collapsed'>
                                 <div class='subwindow-container-fix client-details-contents'>
                                 </div>
                             </div>
@@ -663,6 +681,14 @@
         </div>
     </t>
 
+    <t t-name="XmlReceiptWrappedProductNameLines">
+        <t t-foreach="line.product_name_wrapped.slice(1)" t-as="wrapped_line">
+            <line>
+                <left><t t-esc="wrapped_line"/></left>
+            </line>
+        </t>
+    </t>
+
     <t t-name="XmlReceipt">
         <receipt align='center' width='40' value-thousands-separator='' >
             <t t-if='receipt.company.logo'>
@@ -674,9 +700,6 @@
                 <br/>
             </t>
             <div font='b'>
-                <t t-if='receipt.shop.name'>
-                    <div><t t-esc='receipt.shop.name' /></div>
-                </t>
                 <t t-if='receipt.company.contact_address'>
                     <div><t t-esc='receipt.company.contact_address' /></div>
                 </t>
@@ -714,12 +737,14 @@
                     <t t-set='simple' t-value='line.discount === 0 and line.unit_name === "Unit(s)" and line.quantity === 1' />
                     <t t-if='simple'>
                         <line>
-                            <left><t t-esc='line.product_name' /></left>
+                            <left><t t-esc='line.product_name_wrapped[0]' /></left>
                             <right><value><t t-esc='line.price_display' /></value></right>
                         </line>
+                        <t t-call="XmlReceiptWrappedProductNameLines"/>
                     </t>
                     <t t-if='!simple'>
-                        <line><left><t t-esc='line.product_name' /></left></line>
+                        <line><left><t t-esc='line.product_name_wrapped[0]' /></left></line>
+                        <t t-call="XmlReceiptWrappedProductNameLines"/>
                         <t t-if='line.discount !== 0'>
                             <line indent='1'><left>Discount: <t t-esc='line.discount' />%</left></line>
                         </t>
@@ -829,6 +854,90 @@
         </receipt>
     </t>
 
+    <t t-name="SaleDetailsReport">
+        <receipt align='center' width='40' value-thousands-separator='' >
+            <t t-if='pos.company_logo_base64'>
+                <img t-att-src='pos.company_logo_base64' />
+                <br/>
+            </t>
+            <t t-if='!pos.company_logo_base64'>
+                <h1><t t-esc='company.name' /></h1>
+                <br/>
+            </t>
+            <br /><br />
+
+            <!-- Orderlines -->
+
+            <div class='orderlines' line-ratio='0.6'>
+                <t t-foreach='products' t-as='line'>
+                    <line>
+                        <left><t t-esc='line.product_name.substr(0,20)' /></left>
+                        <right>
+                            <value value-decimals='2' value-autoint='on'>
+                                <t t-esc='line.quantity' />
+                            </value>
+                            <t t-if='line.uom !== "Unit(s)"'>
+                                <t t-esc='line.uom' /> 
+                            </t>
+                        </right>
+                        <right>
+                            <value><t t-esc='line.price_unit' /></value>
+                        </right>
+                    </line>
+                    <t t-if='line.discount !== 0'>
+                        <line indent='1'><left>Discount: <t t-esc='line.discount' />%</left></line>
+                    </t>
+                </t>
+            </div>
+
+            <br/>
+            <line><left>------------------------</left></line>
+            <br/>
+
+            <line>
+                <left>Payments:</left>
+            </line>
+            <line t-foreach='payments' t-as='payment'>
+                <left><t t-esc='payment.name' /></left>
+                <right>
+                    <t t-esc='payment.total'/>
+                </right>
+            </line>
+
+            <br/>
+            <line><left>------------------------</left></line>
+            <br/>
+
+            <line>
+                <left>Taxes:</left>
+            </line>
+            <line t-foreach='taxes' t-as='taxe'>
+                <left><t t-esc='taxe.name' /></left>
+                <right>
+                    <t t-esc='taxe.total'/>
+                </right>
+            </line>
+
+            <br/>
+            <line><left>------------------------</left></line>
+            <br/>
+
+            <line>
+                <left>Total:</left>
+                <right>
+                    <t t-esc='total_paid'/>
+                </right>
+            </line>
+
+            <br/>
+            <div font='b'>
+                <div><t t-esc='date' /></div>
+            </div>
+
+        </receipt>
+    </t>
+
+
     <t t-name="PopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-alert">
@@ -925,6 +1034,35 @@
                     </div>
                     <div class="button cancel">
                         Cancel 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="PackLotLinePopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-text">
+                <p class="title"><t t-esc=" widget.options.title || '' " /></p>
+                <div class='packlot-lines'>
+                    <t t-if="widget.options.pack_lot_lines">
+                        <t t-set="focus_lot_line" t-value="widget.focus_model || widget.options.pack_lot_lines.get_empty_model()"/>
+                        <t t-foreach='widget.options.pack_lot_lines.models' t-as='lot_line'>
+                            <input type="text" t-att-cid="lot_line.cid"
+                                t-att-value="lot_line.get('lot_name')"
+                                t-att-autofocus="lot_line === focus_lot_line ? 'autofocus': undefined"
+                                class="popup-input packlot-line-input"
+                                placeholder="Serial/Lot Number"/>
+                            <i class="oe_link_icon remove-lot fa fa-trash-o"></i>
+                        </t>
+                    </t>
+                </div>
+                <div class="footer">
+                    <div class="button confirm">
+                        Ok
+                    </div>
+                    <div class="button cancel">
+                        Cancel
                     </div>
                 </div>
             </div>
@@ -1070,7 +1208,7 @@
                 </t>
                 <t t-if="product.to_weight">
                     <span class="price-tag">
-                        <t t-esc="widget.format_currency(product.price,'Product Price')+'/Kg'"/>
+                        <t t-esc="widget.format_currency(product.price,'Product Price')+'/'+widget.pos.units_by_id[product.uom_id[0]].name"/>
                     </span>
                 </t>
             </div>
@@ -1084,6 +1222,9 @@
         <li t-attf-class="orderline #{ line.selected ? 'selected' : '' }">
             <span class="product-name">
                 <t t-esc="line.get_product().display_name"/>
+                <t t-if="line.get_product().tracking!=='none'">
+                    <i t-attf-class="oe_link_icon fa fa-list oe_icon line-lot-icon #{line.has_valid_product_lot() ? 'oe_green' : 'oe_red' }"/>
+                </t>
             </span>
             <span class="price">
                 <t t-esc="widget.format_currency(line.get_display_price())"/>
@@ -1176,13 +1317,13 @@
 
                 <p class="category">Hardware Status</p>
                 <ul>
-                    <li class="status weighting">Weighting</li>
+                    <li class="status weighing">Weighing</li>
                 </ul>
                 <p class="category">Hardware Events</p>
                 <ul>
                     <li class="event open_cashbox">Open Cashbox</li>
                     <li class="event print_receipt">Print Receipt</li>
-                    <li class="event scale_read">Read Weighting Scale</li>
+                    <li class="event scale_read">Read Weighing Scale</li>
                 </ul>
             </div>
         </div>
@@ -1261,7 +1402,6 @@
             <t t-esc="widget.pos.company.name"/><br />
             Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
             User: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br />
-            Shop: <t t-esc="widget.pos.shop.name"/><br />
             <br />
             <t t-if="receipt.header">
                 <div style='text-align:center'>

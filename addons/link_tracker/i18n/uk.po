@@ -3,15 +3,18 @@
 # * link_tracker
 # 
 # Translators:
-# Bogdan, 2016
+# ТАрас <tratatuta@i.ua>, 2016
+# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
+# Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
+# Yaroslav Molochko <onorua@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-02-13 17:00+0000\n"
-"Last-Translator: Bogdan\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Yaroslav Molochko <onorua@gmail.com>, 2016\n"
+"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,15 +22,10 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_campaign_id
-msgid "Campaign"
-msgstr ""
-
-#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_link_click_ids
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Clicks"
-msgstr ""
+msgstr "Переходів"
 
 #. module: link_tracker
 #: sql_constraint:link.tracker.code:0
@@ -42,7 +40,7 @@ msgstr "Коди"
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_country_id
 msgid "Country"
-msgstr "Country"
+msgstr "Країна"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_click_date
@@ -68,7 +66,7 @@ msgstr "Дата створення"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_display_name
 msgid "Display Name"
-msgstr "Показати ім'я"
+msgstr "Назва для відображення"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_favicon
@@ -90,7 +88,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_id
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_id
 msgid "ID"
-msgstr "ID"
+msgstr "ІД"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_ip
@@ -128,12 +126,7 @@ msgstr "Посилання"
 #: model:ir.actions.act_window,name:link_tracker.action_link_tracker
 #: model:ir.ui.menu,name:link_tracker.menu_url_shortener_main
 msgid "Link Tracker"
-msgstr ""
-
-#. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_medium_id
-msgid "Medium"
-msgstr "Засіб розповсюдження"
+msgstr "Відстеження посилань"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_count
@@ -161,11 +154,6 @@ msgid "Short URL code"
 msgstr ""
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_source_id
-msgid "Source"
-msgstr "Звідки"
-
-#. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_view_click_statistics
 msgid "Statistics of Clicks"
 msgstr ""
@@ -173,25 +161,6 @@ msgstr ""
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_url
 msgid "Target URL"
-msgstr ""
-
-#. module: link_tracker
-#: model:ir.model.fields,help:link_tracker.field_link_tracker_campaign_id
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
-msgstr ""
-
-#. module: link_tracker
-#: model:ir.model.fields,help:link_tracker.field_link_tracker_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr ""
-
-#. module: link_tracker
-#: model:ir.model.fields,help:link_tracker.field_link_tracker_source_id
-msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
 msgstr ""
 
 #. module: link_tracker
@@ -205,12 +174,6 @@ msgid "Tracked Link"
 msgstr ""
 
 #. module: link_tracker
-#: model:ir.actions.act_window,name:link_tracker.action_link_tracker_click
-#: model:ir.ui.menu,name:link_tracker.menu_url_shortener_links
-msgid "Tracked Links"
-msgstr ""
-
-#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_short_url
 msgid "Tracked URL"
 msgstr ""
@@ -221,7 +184,7 @@ msgid "Visit Page"
 msgstr ""
 
 #. module: link_tracker
-#: code:addons/link_tracker/models/link_tracker.py:138
+#: code:addons/link_tracker/models/link_tracker.py:141
 #, python-format
 msgid "Visit Webpage"
 msgstr ""

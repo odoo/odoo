@@ -3,16 +3,24 @@
 # * procurement
 # 
 # Translators:
-# Gennady Marchenko <gennadym@gmail.com>, 2016
-# Max Belyanin <maxbelyanin@gmail.com>, 2015
+# Максим Дронь <dronmax@gmail.com>, 2016
+# KingOPl Slav <87slava13@gmail.com>, 2016
+# Masha Koc <mariya.kos.ua@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Sergey Vilizhanin <sv@grimmette.ru>, 2016
+# Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2016
+# Viktor Pogrebniak <vp@aifil.ru>, 2016
+# Max Belyanin <maxbelyanin@gmail.com>, 2016
+# Danil Bochevkin <danil.borchevkin@gmail.com>, 2016
+# Denis Trepalin <zekarious@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2016-03-10 13:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Denis Trepalin <zekarious@gmail.com>, 2016\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,25 +30,15 @@ msgstr ""
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
-"<b>Procurement Orders</b> represent the need for a certain quantity of "
-"products, at a given time, in a given location."
-msgstr "<b>Заказы на закупки</b> представляют собой потребность в определенном количестве продуктов в определенный момент времени, в определенном месте."
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"<b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). \n"
-"                <br>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc..."
-msgstr ""
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
 "A <b>Procurement Exception</b> occurs when the system cannot find a way to "
 "fulfill a procurement. Some exceptions will resolve themselves "
 "automatically, but others require manual intervention (those are identified "
 "by a specific error message in the chatter)."
-msgstr "<b>Исключение при закупке</b> возникает, когда система не может найти путь к исполнению закупок. Некоторые исключения будут решаться сами собой, автоматически, но другие требуют ручного вмешательства (идентифицируются сообщением о конкретной ошибке в чате)"
+msgstr ""
+"<b>Исключение поставки</b> — ситуация, когда система не может найти способ "
+"исполнения поставки. Некоторые исключения будут автоматически решаться сами "
+"собой, а другие требуют ручного вмешательства (идентифицируются сообщением о"
+" конкретной ошибке в чате)"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -51,7 +49,11 @@ msgid ""
 "                product at a specific location. Procurement orders are usually\n"
 "                created automatically from <i>sales orders, pull logistic rules or\n"
 "                minimum stock rules.</i>"
-msgstr "<b>Заказ на закупку</b> служит для записи необходимой специфики\nпродукта в определенном месте. Заказы на Закупку, как правило\nформируются автоматически из <i>заказов на продажу, логистических правил или\nправил минимальных запасов.<i>"
+msgstr ""
+"<b>Заказ на поставку</b> служит для записи необходимости в \n"
+"специфическом продукте из определенного места. Заказы на \n"
+"поставку, как правило, формируются автоматически из <i>заказов \n"
+"на продажу, логистических правил или правил минимальных запасов.</i>"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
@@ -59,19 +61,19 @@ msgid "Action"
 msgstr "Действие"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction
-msgid "Action Needed"
-msgstr "Требуется реакция"
-
-#. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
 msgid "Active"
-msgstr "Активен"
+msgstr "Активно"
 
 #. module: procurement
 #: selection:procurement.group,move_type:0
 msgid "All at once"
-msgstr "Все сразу"
+msgstr "Всё сразу"
+
+#. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr "Архивировано "
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
@@ -81,23 +83,17 @@ msgstr "Отмена"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Cancel Procurement"
-msgstr "Отменить снабжение"
+msgstr "Отменить поставку"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Cancelled"
-msgstr "Отменен"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:139
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr "Нельзя удалить заказы снабжения в состоянии  %s"
+msgstr "Отменено"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Check Procurement"
-msgstr "Проверка снабжения"
+msgstr "Проверить поставку"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
@@ -105,21 +101,17 @@ msgid ""
 "Chosen rule for the procurement resolution. Usually chosen by the system but"
 " can be manually set by the procurement manager to force an unusual "
 "behavior."
-msgstr "Выбранные правила для одобрения закупки. Обычно выбирается системой, но могут быть выставлены вручную менеджером по закупкам, чтобы создать необычное поведение."
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"Click to create a Procurement order in exception state, or remove the filter"
-" on the search bar to display all the procurements."
-msgstr "Нажмите, чтобы создать заказ на закупку в состоянии исключенительной ситуации \"Проблема\", или удалите фильтр в строке поиска, чтобы отобразить все закупки."
+msgstr ""
+"Выбранные правила для одобрения поставки. Обычно выбирается системой, но "
+"могут быть выставлены вручную менеджером по поставкам, чтобы ускорить "
+"необычное поведение."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid "Click to create a procurement order."
-msgstr "Нажмите, чтобы создать заказ на закупку"
+msgstr "Нажмите, чтобы создать заказ на поставку."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_company_id
@@ -130,12 +122,12 @@ msgstr "Компания"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr "Вычислить всё снабжение в фоновом режиме."
+msgstr "Вычислить все поставки в фоновом режиме."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
 msgid "Compute all schedulers"
-msgstr "Вычисление всех планировщиков"
+msgstr "Вычислить всё запланированное"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -148,7 +140,7 @@ msgstr "Подтверждено"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_create_uid
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_create_date
@@ -156,17 +148,12 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_create_date
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_date
 msgid "Created on"
-msgstr "Создан"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Дата последнего сообщения"
+msgstr "Создано"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-msgid "Delivery Method"
-msgstr "Метод доставки"
+msgid "Delivery Type"
+msgstr "Тип доставки"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -179,12 +166,12 @@ msgstr "Описание"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_display_name
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Done"
-msgstr "Сделано"
+msgstr "Выполнено"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -209,43 +196,28 @@ msgstr "Доп. информация"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Fixed"
-msgstr "Фиксированный"
+msgstr "Исправлено"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_id
 msgid "Fixed Procurement Group"
-msgstr "Фиксированная группа заукпок"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_follower_ids
-msgid "Followers"
-msgstr "Подписчики"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Подписчики (Каналы)"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Подписчики (Партнеры)"
+msgstr "Исправленная группа поставок"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Global"
-msgstr "Глобальный"
+msgstr "Глобально"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Group By"
-msgstr "Группировать по"
+msgstr "Группировать"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Group's Procurements"
-msgstr "Группы Закупки"
+msgstr "Группы поставок"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_id
@@ -256,16 +228,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Если отмечено, новые сообщения требуют вашего внимания."
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "If the route is global"
 msgstr "Если маршрут глобальный"
@@ -273,17 +235,8 @@ msgstr "Если маршрут глобальный"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_rule_active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr "Если флажок не установлен, это позволит вам скрыть правило, не удаляя его."
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_is_follower
-msgid "Is Follower"
-msgstr "Подписчик"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_last_post
-msgid "Last Message Date"
-msgstr "Последнее сообщение по дате"
+msgstr ""
+"Если флажок не установлен, это позволит вам скрыть правило, не удаляя его."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
@@ -299,7 +252,7 @@ msgstr "Последний раз изменено"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_write_uid
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновлено"
+msgstr "Последний раз обновил"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_write_date
@@ -312,7 +265,7 @@ msgstr "Последний раз обновлено"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Late"
-msgstr "Поздно"
+msgstr "Позже"
 
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
@@ -320,30 +273,25 @@ msgid "Leave Empty"
 msgstr "Оставьте пустым"
 
 #. module: procurement
-#: model:ir.ui.view,arch_db:procurement.mrp_company
-msgid "Logistics"
-msgstr "Логистика"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_ids
-msgid "Messages"
-msgstr "Сообщения"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_ids
-msgid "Messages and communication history"
-msgstr "Сообщения и история общения"
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"Most common exceptions are products to purchase without\n"
+"                having a vendor defined on the product, and products to\n"
+"                manufacture without having a bill of materials."
+msgstr ""
+"Наиболее частым исключением из правил являются продукты без указания "
+"поставщика и  производство продуктов без ведомости материалов."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
 msgid "Name"
-msgstr "Название"
+msgstr "Имя"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:206
+#: code:addons/procurement/models/procurement.py:189
 #, python-format
 msgid "No rule matching this procurement"
-msgstr "Нет правила, которое соответствует снабжению"
+msgstr "Нет правила, которое соответствует поставке"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -358,22 +306,7 @@ msgstr "Не срочно"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Notes"
-msgstr "Примечания"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Количество действий"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Количество сообщений, требующих реакции"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Количество непрочтённых сообщений"
+msgstr "Заметки"
 
 #. module: procurement
 #: selection:procurement.group,move_type:0
@@ -390,57 +323,57 @@ msgstr "Приоритет"
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Procurement"
-msgstr "Снабжение"
+msgstr "Поставка"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action5
 #: model:ir.actions.act_window,name:procurement.procurement_order_action_exceptions
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Procurement Exceptions"
-msgstr "Проблемы снабжения"
+msgstr "Исключения поставок"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_group_id
 msgid "Procurement Group"
-msgstr "Группа снабжения"
+msgstr "Группа поставки"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
 msgid "Procurement Lines"
-msgstr "Позиции снабжения"
+msgstr "Позиции поставки"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action
 #: model:ir.actions.act_window,name:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,name:procurement.procurement_order_action_product_template_stat
 msgid "Procurement Orders"
-msgstr "Заказы снабжения"
+msgstr "Заказы поставки"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_group
 msgid "Procurement Requisition"
-msgstr "Заявка снабжения"
+msgstr "Заявка поставки"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_rule
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "Procurement Rule"
-msgstr "Правило снабжения"
+msgstr "Правило поставки"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_tree
 msgid "Procurement Rules"
-msgstr "Правила закупки"
+msgstr "Правила поставок"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
 msgid "Procurement group"
-msgstr "Группа снабжения"
+msgstr "Группа поставки"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Procurement started late"
-msgstr "Дата начала снабжения"
+msgstr "Поставка запущена позже"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_procurement_ids
@@ -448,13 +381,13 @@ msgstr "Дата начала снабжения"
 #: model:ir.ui.view,arch_db:procurement.product_product_view_form_procurement_button
 #: model:ir.ui.view,arch_db:procurement.product_template_view_form_procurement_button
 msgid "Procurements"
-msgstr "Снабжение"
+msgstr "Поставки"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_product_id
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Product"
-msgstr "Товар"
+msgstr "Продукт"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_product_uom
@@ -474,7 +407,7 @@ msgstr "Опции распространения"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_propagation_option
 msgid "Propagation of Procurement Group"
-msgstr "Распространение групп закупки"
+msgstr "Распространение группы поставки"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_product_qty
@@ -484,7 +417,7 @@ msgstr "Количество"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Reconfirm Procurement"
-msgstr "Снова подтвердить снабжение"
+msgstr "Переподтвердить поставку"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_name
@@ -494,9 +427,11 @@ msgstr "Ссылка"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
 msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by Odoo."
-msgstr "Сноска на документ, создавший этот запрос снабжения.\nЗаполняется автоматически."
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
+msgstr ""
+"Ссылка на создавший данную поставку документ. Заполняется автоматически "
+"Odoo."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -506,12 +441,12 @@ msgstr "Правило"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Run Procurement"
-msgstr "Запустить снабжение"
+msgstr "Запустить поставку"
 
 #. module: procurement
 #: model:ir.actions.server,name:procurement.procurement_order_server_action
 msgid "Run Procurements"
-msgstr "Запустить закупки"
+msgstr "Запустить поставки"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
@@ -548,12 +483,12 @@ msgstr "Планирование"
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Search Procurement"
-msgstr "Искать снабжение"
+msgstr "Искать поставку"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_sequence
 msgid "Sequence"
-msgstr "Нумерация"
+msgstr "Порядок"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_origin
@@ -569,22 +504,13 @@ msgstr "Статус"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_rule_name
 msgid "This field will fill the packing origin and the name of its moves"
-msgstr "Это поле будет попадать в источник упаковки и в название его перемещений."
+msgstr ""
+"Это поле будет попадать в источник упаковки и в название его перемещений."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
 msgid "Unit of Measure"
-msgstr "Ед. изм."
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread
-msgid "Unread Messages"
-msgstr "Непрочитанные"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Счетчик непрочтённых сообщений"
+msgstr "Единица измерения"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -597,31 +523,30 @@ msgid "Very Urgent"
 msgstr "Очень срочно"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_website_message_ids
-msgid "Website Messages"
-msgstr "Сообщения с сайта"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_website_message_ids
-msgid "Website communication history"
-msgstr "История общения с сайта"
-
-#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: purchase\n"
+"                creates the necessary operations to fulfill the need: purchase\n"
 "                order proposition, manufacturing order, etc."
-msgstr "Когда заказ на закупку будет подтвержден, он автоматически\nсоздаст все необходимые для выполнения операции: предложение\nна поставку заказа, производственный заказ и т.д."
+msgstr ""
+"При подтверждении заказа на поставку он автоматически\n"
+"создаёт операции для закрытия потребностей: предложение\n"
+"по закупке, производственную заявку и т. п."
+
+#. module: procurement
+#: code:addons/procurement/models/procurement.py:144
+#, python-format
+msgid "You cannot delete procurements that are in cancel state."
+msgstr "Нельзя удалить поставку со статусом «отменено»."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "e.g. Buy"
-msgstr "например Купить"
+msgstr "напр. Купить"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
-msgstr "например SO005"
+msgstr "напр. ПР005"

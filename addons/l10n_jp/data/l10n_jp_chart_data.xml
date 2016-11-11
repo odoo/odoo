@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_reports_jp_statements_menu" name="Japanese Statements" parent="account.menu_finance_reports" sequence="3" groups="account.group_account_user"/>
+
+    <!-- Chart Template -->
+    <record id="transfer_account_id" model="account.account.template">
+        <field name="code">A11109</field>
+        <field name="name">振替口座</field>
+        <field name="reconcile" eval='True'/>
+        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+    </record>
+    <record id="l10n_jp1" model="account.chart.template">
+        <field name="name">日本勘定設定テンプレート</field>
+        <field name="code_digits">7</field>
+        <field name="bank_account_code_prefix">A11102</field>
+        <field name="cash_account_code_prefix">A11105</field>
+        <field name="currency_id" ref="base.JPY"/>
+        <field name="transfer_account_id" ref="transfer_account_id"/>
+    </record>
+    <record id="transfer_account_id" model="account.account.template">
+        <field name="chart_template_id" ref="l10n_jp1"/>
+    </record>
+
+    <!-- Account Tags -->
+    <record id="tag_jp_01" model="account.account.tag">
+        <field name="name">支払対象税額</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_jp_02" model="account.account.tag">
+        <field name="name">仮受税額</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_jp_03" model="account.account.tag">
+        <field name="name">仮受消費税(8%)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_jp_04" model="account.account.tag">
+        <field name="name">免税</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_jp_05" model="account.account.tag">
+        <field name="name">不課税</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_jp_06" model="account.account.tag">
+        <field name="name">仮払税額</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_jp_07" model="account.account.tag">
+        <field name="name">仮払消費税(8%)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_jp_08" model="account.account.tag">
+        <field name="name">輸入</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_jp_09" model="account.account.tag">
+        <field name="name">不課税</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_jp_10" model="account.account.tag">
+        <field name="name">税計算基準額</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_jp_11" model="account.account.tag">
+        <field name="name">販売基準額</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_jp_12" model="account.account.tag">
+        <field name="name">課税対象売上(8%)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_jp_13" model="account.account.tag">
+        <field name="name">免税売上</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_jp_14" model="account.account.tag">
+        <field name="name">不課税売上</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_jp_15" model="account.account.tag">
+        <field name="name">購買基準額</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_jp_16" model="account.account.tag">
+        <field name="name">課税対象仕入(8%)</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_jp_17" model="account.account.tag">
+        <field name="name">輸入仕入</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="tag_jp_18" model="account.account.tag">
+        <field name="name">不課税仕入</field>
+        <field name="applicability">taxes</field>
+    </record>
+</odoo>

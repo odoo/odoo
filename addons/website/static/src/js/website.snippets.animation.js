@@ -45,66 +45,70 @@ animation.registry.slider = animation.Class.extend({
 
 animation.registry.parallax = animation.Class.extend({
     selector: ".parallax",
+
     start: function () {
-        var self = this;
-        setTimeout(function () {self.set_values();});
-        this.on_scroll = function () {
-            var speed = parseFloat(self.$target.attr("data-scroll-background-ratio") || 0);
-            if (speed == 1) return;
-            var offset = parseFloat(self.$target.attr("data-scroll-background-offset") || 0);
-            var top = offset + window.scrollY * speed;
-            self.$target.css("background-position", "0px " + top + "px");
-        };
-        this.on_resize = function () {
-            self.set_values();
-        };
-        $(window).on("scroll", this.on_scroll);
-        $(window).on("resize", this.on_resize);
+        _.defer((function () { this.set_values(); }).bind(this));
+        $(window).on("scroll.animation_parallax", _.throttle(this.on_scroll.bind(this), 10))
+                 .on("resize.animation_parallax", _.debounce(this.set_values.bind(this), 500));
+
+        return this._super.apply(this, arguments);
     },
     stop: function () {
-        $(window).off("scroll", this.on_scroll)
-                .off("resize", this.on_resize);
+        $(window).off(".animation_parallax");
     },
+
     set_values: function () {
         var self = this;
-        var speed = parseFloat(self.$target.attr("data-scroll-background-ratio") || 0);
+        this.speed = parseFloat(self.$target.attr("data-scroll-background-ratio") || 0);
+        this.offset = 0;
 
-        if (speed === 1 || this.$target.css("background-image") === "none") {
+        if (this.speed === 1 || this.$target.css("background-image") === "none") {
             this.$target.css("background-attachment", "fixed").css("background-position", "0px 0px");
             return;
-        } else {
-            this.$target.css("background-attachment", "scroll");
         }
 
-        this.$target.attr("data-scroll-background-offset", 0);
+        this.$target.css("background-attachment", "scroll");
+
         var img = new Image();
         img.onload = function () {
             var offset = 0;
             var padding =  parseInt($(document.body).css("padding-top"));
-            if (speed > 1) {
+            if (self.speed > 1) {
                 var inner_offset = - self.$target.outerHeight() + this.height / this.width * document.body.clientWidth;
                 var outer_offset = self.$target.offset().top - (document.body.clientHeight - self.$target.outerHeight()) - padding;
-                offset = - outer_offset * speed + inner_offset;
+                offset = - outer_offset * self.speed + inner_offset;
             } else {
-                offset = - self.$target.offset().top * speed;
+                offset = - self.$target.offset().top * self.speed;
             }
-            self.$target.attr("data-scroll-background-offset", offset > 0 ? 0 : offset);
-            $(window).scroll();
+            self.offset = offset > 0 ? 0 : offset;
+            self.on_scroll();
         };
         img.src = this.$target.css("background-image").replace(/url\(['"]*|['"]*\)/g, "");
-        $(window).scroll();
-    }
+    },
+
+    on_scroll: function () {
+        if (this.speed === 1) return;
+        var top = this.offset + window.scrollY * this.speed;
+        this.$target.css("background-position", "0px " + top + "px");
+    },
 });
 
 animation.registry.share = animation.Class.extend({
     selector: ".oe_share",
     start: function () {
+        var url_regex = /(\?(?:|.*&)(?:u|url|body)=)(.*?)(&|#|$)/;
+        var title_regex = /(\?(?:|.*&)(?:title|text|subject)=)(.*?)(&|#|$)/;
         var url = encodeURIComponent(window.location.href);
         var title = encodeURIComponent($("title").text());
         this.$("a").each(function () {
             var $a = $(this);
-            var url_regex = /\{url\}|%7Burl%7D/, title_regex = /\{title\}|%7Btitle%7D/;
-            $a.attr("href", $(this).attr("href").replace(url_regex, url).replace(title_regex, title));
+            $a.attr("href", function(i, href) {
+                return href.replace(url_regex, function (match, a, b, c) {
+                    return a + url + c;
+                }).replace(title_regex, function (match, a, b, c) {
+                    return a + title + c;
+                });
+            });
             if ($a.attr("target") && $a.attr("target").match(/_blank/i) && !$a.closest('.o_editable').length) {
                 $a.on('click', function () {
                     window.open(this.href,'','menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=550,width=600');
@@ -118,7 +122,7 @@ animation.registry.share = animation.Class.extend({
 animation.registry.media_video = animation.Class.extend({
     selector: ".media_iframe_video",
     start: function () {
-        if (!this.$target.has('.media_iframe_video_size').length) {
+        if (!this.$target.has('> iframe').length) {
             var editor = '<div class="css_editable_mode_display">&nbsp;</div>';
             var size = '<div class="media_iframe_video_size">&nbsp;</div>';
             this.$target.html(editor+size+'<iframe src="'+_.escape(this.$target.data("src"))+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');
@@ -140,6 +144,20 @@ animation.registry.ul = animation.Class.extend({
             $(this).closest('li').next().toggleClass('o_close');
             event.preventDefault();
         });
+    },
+});
+
+/**
+ * This is a fix for apple device (<= IPhone 4, IPad 2)
+ * Standard bootstrap requires data-toggle='collapse' element to be <a/> tags. Unfortunatly one snippet uses a
+ * <div/> tag instead. The fix forces an empty click handler on these div, which allows standard bootstrap to work.
+ *
+ * This should be removed in a future odoo snippets refactoring.
+ */
+animation.registry._fix_apple_collapse = animation.Class.extend({
+    selector: ".s_faq_collapse [data-toggle='collapse']",
+    start: function () {
+        this.$target.off("click._fix_apple_collapse").on("click._fix_apple_collapse", function () {});
     },
 });
 

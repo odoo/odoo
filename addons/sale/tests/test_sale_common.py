@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from openerp.addons.account.tests.account_test_classes import AccountingTestCase
+
+from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 
 
 class TestSale(AccountingTestCase):
     def setUp(self):
         super(TestSale, self).setUp()
         # some users
-        group_manager = self.env.ref('base.group_sale_manager')
-        group_user = self.env.ref('base.group_sale_salesman')
+        group_manager = self.env.ref('sales_team.group_sale_manager')
+        group_user = self.env.ref('sales_team.group_sale_salesman')
         self.manager = self.env['res.users'].create({
             'name': 'Andrew Manager',
             'login': 'manager',
-            'alias_name': 'andrew',
             'email': 'a.m@example.com',
             'signature': '--\nAndreww',
             'notify_email': 'always',
@@ -21,7 +21,6 @@ class TestSale(AccountingTestCase):
         self.user = self.env['res.users'].create({
             'name': 'Mark User',
             'login': 'user',
-            'alias_name': 'mark',
             'email': 'm.u@example.com',
             'signature': '--\nMark',
             'notify_email': 'always',

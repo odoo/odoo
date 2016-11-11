@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
+<odoo>
     <data>
 
         <!-- Bundle for Rating Widget (in assets common to be used in website modules) -->
@@ -98,18 +98,48 @@
         <template id="rating_external_page_view">
             <head>
                 <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+                <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
             </head>
-            <div class='well' t-if="not is_rated">
-                <h1>Thanks for voting !</h1>
-                <div class="oe_right">
-                    <p>Your vote has been taken into account.</p>
-                    <p>It was <img t-attf-src='../../../rating/static/src/img/rating_#{rating}.png'/></p>
+            <div class="container">
+                <div class="text-center" style="margin-top:128px">
+                    <i class="fa fa-check-circle fa-5x text-success" />
+                </div>
+                <h2 class="text-center">We appreciate your feedback!</h2>
+                <div class="text-center">
+                    <a t-att-href="web_base_url" class="btn btn-primary">Go to our website</a>
                 </div>
             </div>
-            <div class='well' t-if="is_rated">
-                <h1>Sorry you have already voted !</h1>
+        </template>
+
+        <!-- External page: rate and submit feedback -->
+        <template id="rating_external_page_submit">
+            <head>
+                <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
+            </head>
+            <div class="container">
+                <div clas="row">
+                    <h1 class="text-center">Thanks! We appreciate your feedback.</h1>
+                    <h4 class="text-center text-muted" style="margin-bottom: 32px;">Your rating has been submitted.</h4>
+                    <div class="pull-left">
+                        <img t-attf-src='/rating/static/src/img/rating_#{rate}.png'/>
+                    </div>
+                    <div style="margin-left: 80px;">
+                        you are <b t-esc="rate_name"></b><br/>
+                        on our services on "<b t-esc="rating.res_name"></b>"<br/>
+                        <t t-if="rating.rated_partner_id">by <b t-esc="rating.rated_partner_id.name"></b>.</t>
+                    </div>
+                    <div class="clearfix"></div>
+                    <p style="margin-top:32px;">
+                        Would be great if you can provide more information:
+                    </p>
+                    <form class="form-horizontal" t-attf-action="/rating/#{token}/#{rate}/submit_feedback" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <textarea class="form-control" name="feedback" rows="8" t-att-value="rating.feedback"></textarea>
+                        <button type="submit" class="btn btn-primary" style="margin-top:8px;">Send Feedback</button>
+                    </form>
+                </div>
             </div>
         </template>
 
     </data>
-</openerp>
+</odoo>

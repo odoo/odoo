@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
-import openerp
-from openerp.http import request
-from openerp.addons.bus.models.bus import dispatch
+
+from odoo import exceptions
+from odoo.http import Controller, request, route
+from odoo.addons.bus.models.bus import dispatch
 
 
-class BusController(openerp.http.Controller):
+class BusController(Controller):
     """ Examples:
     openerp.jsonRpc('/longpolling/poll','call',{"channels":["c1"],last:0}).then(function(r){console.log(r)});
     openerp.jsonRpc('/longpolling/send','call',{"channel":"c1","message":"m1"});
     openerp.jsonRpc('/longpolling/send','call',{"channel":"c2","message":"m2"});
     """
 
-    @openerp.http.route('/longpolling/send', type="json", auth="public")
+    @route('/longpolling/send', type="json", auth="public")
     def send(self, channel, message):
         if not isinstance(channel, basestring):
             raise Exception("bus.Bus only string channels are allowed.")
@@ -26,7 +27,7 @@ class BusController(openerp.http.Controller):
         request._cr = None
         return dispatch.poll(dbname, channels, last, options)
 
-    @openerp.http.route('/longpolling/poll', type="json", auth="public")
+    @route('/longpolling/poll', type="json", auth="public")
     def poll(self, channels, last, options=None):
         if options is None:
             options = {}
@@ -35,5 +36,5 @@ class BusController(openerp.http.Controller):
         if [c for c in channels if not isinstance(c, basestring)]:
             raise Exception("bus.Bus only string channels are allowed.")
         if request.registry.in_test_mode():
-            raise openerp.exceptions.UserError("bus.Bus not available in test mode")
+            raise exceptions.UserError("bus.Bus not available in test mode")
         return self._poll(request.db, channels, last, options)

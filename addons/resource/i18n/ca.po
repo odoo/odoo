@@ -3,15 +3,18 @@
 # * resource
 # 
 # Translators:
-# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2015
+# Martin Trigaux <mat@odoo.com>, 2016
+# RGB Consulting <odoo@rgbconsulting.com>, 2016
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-11-21 21:26+0000\n"
-"Last-Translator: Marc Tormo i Bochaca <mtbochaca@gmail.com>\n"
-"Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2016\n"
+"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:689
+#: code:addons/resource/models/resource.py:689
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (còpia)"
@@ -79,7 +82,9 @@ msgstr "Defineix l'horari del recurs"
 msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
-msgstr "Definir hores de treball i taula de temps, programables per als membres del vostre projecte."
+msgstr ""
+"Definir hores de treball i taula de temps, programables per als membres del "
+"vostre projecte."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_display_name
@@ -87,7 +92,7 @@ msgstr "Definir hores de treball i taula de temps, programables per als membres 
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_display_name
 msgid "Display Name"
-msgstr "Mostra Nom"
+msgstr "Mostrar Nom"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
@@ -106,9 +111,12 @@ msgid "End Date"
 msgstr "Data final"
 
 #. module: resource
-#: constraint:resource.calendar.leaves:0
+#: code:addons/resource/models/resource.py:738
+#, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
-msgstr "Error! La data inicial d'absència ha de ser anterior a la data final d'absència."
+msgstr ""
+"Error! La data inicial d'absència ha de ser anterior a la data final "
+"d'absència."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -119,7 +127,7 @@ msgstr "Divendres"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Group By"
-msgstr "Agrupa per"
+msgstr "Agrupar per"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
@@ -144,14 +152,18 @@ msgstr "ID"
 msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
-msgstr "Si està buit, és un dia festiu per a tota l'empresa. Si hi ha un recurs seleccionat, el festiu/absència és solament per a aquest recurs."
+msgstr ""
+"Si està buit, és un dia festiu per a tota l'empresa. Si hi ha un recurs "
+"seleccionat, el festiu/absència és solament per a aquest recurs."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_active
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr "Si el camp actiu es desmarca, permet ocultar el registre del recurs sense eliminar-ho."
+msgstr ""
+"Si el camp actiu es desmarca, permet ocultar el registre del recurs sense "
+"eliminar-ho."
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -164,7 +176,7 @@ msgstr "Inactiu"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves___last_update
 #: model:ir.model.fields,field_description:resource.field_resource_resource___last_update
 msgid "Last Modified on"
-msgstr "Darrera modificació feta el"
+msgstr "Última modificació el "
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_write_uid
@@ -172,7 +184,7 @@ msgstr "Darrera modificació feta el"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_write_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource_write_uid
 msgid "Last Updated by"
-msgstr "Actualitzat per última vegada per"
+msgstr "Última actualització per"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_write_date
@@ -180,7 +192,7 @@ msgstr "Actualitzat per última vegada per"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_write_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource_write_date
 msgid "Last Updated on"
-msgstr "Actualitzat per última vegada el dia"
+msgstr "Última actualització el"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
@@ -222,7 +234,7 @@ msgstr "Nom"
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Reason"
-msgstr "Motiu"
+msgstr "Raó"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_user_id
@@ -283,7 +295,11 @@ msgid ""
 "Resources allow you to create and manage resources that should be involved "
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
-msgstr "Els recursos li permeten crear i gestionar els recursos que han de participar en una certa fase d'un projecte. També podeu definir el seu nivell d'eficiència i càrrega de treball sobre la base de les seves hores de treball setmanals."
+msgstr ""
+"Els recursos li permeten crear i gestionar els recursos que han de "
+"participar en una certa fase d'un projecte. També podeu definir el seu "
+"nivell d'eficiència i càrrega de treball sobre la base de les seves hores de"
+" treball setmanals."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -308,7 +324,7 @@ msgstr "Cerca horari de treball"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_date_from
 msgid "Start Date"
-msgstr "Data d'inici"
+msgstr "Data inicial"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance_hour_from
@@ -337,7 +353,12 @@ msgid ""
 "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
 "show a load of 100% for this phase by default, but if we put a efficiency of"
 " 200%, then his load will only be 50%."
-msgstr "Aquest camp representa l'eficiència dels recursos per completar les tasques. per exemple, posar recursos només en una fase de 5 dies amb 5 tasques que se li assignen, es mostrarà una càrrega de 100% per aquesta fase per defecte, però si posem una eficiència del 200%, llavors la seva càrrega només serà del 50%."
+msgstr ""
+"Aquest camp representa l'eficiència dels recursos per completar les tasques."
+" per exemple, posar recursos només en una fase de 5 dies amb 5 tasques que "
+"se li assignen, es mostrarà una càrrega de 100% per aquesta fase per "
+"defecte, però si posem una eficiència del 200%, llavors la seva càrrega "
+"només serà del 50%."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0

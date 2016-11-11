@@ -5,16 +5,37 @@ import uuid
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
+
+class AccountCashboxLine(models.Model):
+    _inherit = 'account.cashbox.line'
+
+    default_pos_id = fields.Many2one('pos.config', string='This cashbox line is used by default when opening or closing a balance for this point of sale')
+
+class AccountBankStmtCashWizard(models.Model):
+    _inherit = 'account.bank.statement.cashbox'
+    
+    @api.model
+    def default_get(self, fields):
+        vals = super(AccountBankStmtCashWizard, self).default_get(fields)
+        config_id = self.env.context.get('default_pos_id')
+        if config_id:
+            lines = self.env['account.cashbox.line'].search([('default_pos_id', '=', config_id)])
+            if self.env.context.get('balance', False) == 'start':
+                vals['cashbox_lines_ids'] = [[0, 0, {'coin_value': line.coin_value, 'number': line.number, 'subtotal': line.subtotal}] for line in lines]
+            else:
+                vals['cashbox_lines_ids'] = [[0, 0, {'coin_value': line.coin_value, 'number': 0, 'subtotal': 0.0}] for line in lines]
+        return vals
+
 class PosConfig(models.Model):
     _name = 'pos.config'
 
-    POS_CONFIG_STATE = [
-        ('active', 'Active'),
-        ('inactive', 'Inactive'),
-        ('deprecated', 'Deprecated')
-    ]
-
     def _default_sale_journal(self):
+        journal = self.env.ref('point_of_sale.pos_sale_journal', raise_if_not_found=False)
+        if journal and journal.company_id == self.env.user.company_id:
+            return journal
+        return self._default_invoice_journal()
+
+    def _default_invoice_journal(self):
         return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.user.company_id.id)], limit=1)
 
     def _default_pricelist(self):
@@ -46,6 +67,11 @@ class PosConfig(models.Model):
         domain=[('type', '=', 'sale')],
         help="Accounting journal used to post sales entries.",
         default=_default_sale_journal)
+    invoice_journal_id = fields.Many2one(
+        'account.journal', string='Invoice Journal',
+        domain=[('type', '=', 'sale')],
+        help="Accounting journal used to create invoices.",
+        default=_default_invoice_journal)
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")
     iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer")
     iface_payment_terminal = fields.Boolean(string='Payment Terminal', help="Enables Payment Terminal integration")
@@ -56,7 +82,7 @@ class PosConfig(models.Model):
     iface_invoicing = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale', default=True)
     iface_big_scrollbars = fields.Boolean('Large Scrollbars', help='For imprecise industrial touchscreens')
     iface_print_auto = fields.Boolean(string='Automatic Receipt Printing', default=False,
-        help='The receipt will automatically be p-rinted at the end of each order')
+        help='The receipt will automatically be printed at the end of each order')
     iface_print_skip_screen = fields.Boolean(string='Skip Receipt Screen', default=True,
         help='The receipt screen will be skipped if the receipt can be printed automatically.')
     iface_precompute_cash = fields.Boolean(string='Prefill Cash Payment',
@@ -72,7 +98,7 @@ class PosConfig(models.Model):
     receipt_footer = fields.Text(string='Receipt Footer', help="A short text that will be inserted as a footer in the printed receipt")
     proxy_ip = fields.Char(string='IP Address', size=45,
         help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty')
-    state = fields.Selection(POS_CONFIG_STATE, string='Status', required=True, readonly=True, copy=False, default=POS_CONFIG_STATE[0][0])
+    active = fields.Boolean(default=True)
     uuid = fields.Char(readonly=True, default=lambda self: str(uuid.uuid4()),
         help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data')
     sequence_id = fields.Many2one('ir.sequence', string='Order IDs Sequence', readonly=True,
@@ -98,6 +124,7 @@ class PosConfig(models.Model):
         help="The product used to encode the customer tip. Leave empty if you do not accept tips.")
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions')
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
+    default_cashbox_lines_ids = fields.One2many('account.cashbox.line', 'default_pos_id', string='Default Balance')
 
     @api.depends('journal_id.currency_id', 'journal_id.company_id.currency_id')
     def _compute_currency(self):
@@ -143,6 +170,11 @@ class PosConfig(models.Model):
     def _check_company_journal(self):
         if self.journal_id and self.journal_id.company_id.id != self.company_id.id:
             raise UserError(_("The company of the sale journal is different than the one of point of sale"))
+
+    @api.constrains('company_id', 'invoice_journal_id')
+    def _check_company_journal(self):
+        if self.invoice_journal_id and self.invoice_journal_id.company_id.id != self.company_id.id:
+            raise UserError(_("The invoice journal and the point of sale must belong to the same company"))
 
     @api.constrains('company_id', 'journal_ids')
     def _check_company_payment(self):
@@ -198,18 +230,6 @@ class PosConfig(models.Model):
             pos_config.sequence_id.unlink()
         return super(PosConfig, self).unlink()
 
-    @api.multi
-    def set_active(self):
-        self.write({'state': 'active'})
-
-    @api.multi
-    def set_inactive(self):
-        self.write({'state': 'inactive'})
-
-    @api.multi
-    def set_deprecate(self):
-        self.write({'state': 'deprecated'})
-
     # Methods to open the POS
     @api.multi
     def open_ui(self):
@@ -223,7 +243,8 @@ class PosConfig(models.Model):
     @api.multi
     def open_existing_session_cb_close(self):
         assert len(self.ids) == 1, "you can open only one session at a time"
-        self.current_session_id.signal_workflow('cashbox_control')
+        if self.current_session_id.cash_control:
+            self.current_session_id.action_pos_session_closing_control()
         return self.open_session_cb()
 
     @api.multi

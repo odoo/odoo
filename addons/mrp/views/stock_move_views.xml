@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record model="ir.actions.act_window" id="action_mrp_production_moves">
+            <field name="name">Stock Moves</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|', ('raw_material_production_id', '=', active_id), ('production_id', '=', active_id)]</field>
+        </record>
+
+        <record id="view_stock_move_lots" model="ir.ui.view">
+            <field name="name">stock.move.lots.form</field>
+            <field name="model">stock.move</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <form string="Lots">
+                    <field name="state" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="product_id" readonly="1"/>
+                            <label for="quantity_done"/>
+                            <div>
+                                <field name="quantity_done" readonly="1" class="oe_inline"/>
+                                <field name="product_uom" readonly="1" class="oe_inline" groups="product.group_uom"/>
+                            </div>
+                            <field name="is_done" invisible="1"/>
+                            <field name="workorder_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="active_move_lot_ids" attrs="{'readonly': [('is_done', '=', True)]}" context="{'default_workorder_id': workorder_id}">
+                        <tree editable="bottom" decoration-success="quantity==quantity_done" decoration-danger="(quantity &gt; 0) and (quantity_done&gt;quantity)">
+                            <field name="lot_id" domain="[('product_id', '=', parent.product_id)]" context="{'default_product_id': parent.product_id}"/>
+                            <field name="quantity" invisible="not context.get('show_reserved') or context.get('serial') or context.get('state_done')" readonly="1"/>
+                            <field name="quantity_done"/>
+                            <button name="do_minus" type="object" icon="fa-minus-square" attrs="{'invisible': [('quantity_done', '&lt;=', 0.99)]}" invisible="not context.get('show_reserved') or context.get('state_done')"/>
+                            <button name="do_plus" type="object" icon="fa-plus-square" attrs="{'invisible': [('plus_visible', '=', False)]}" invisible="not context.get('show_reserved') or context.get('state_done')"/>
+                            <field name="plus_visible" invisible="1"/>
+                            <field name="workorder_id" invisible="1"/>
+                            <field name="done_wo" invisible="1"/>
+                        </tree>
+                    </field>
+                    <footer class="oe_edit_only">
+                        <button name="save" type="object" string="Save" class="oe_highlight"/>
+                        <button string="Discard" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    <menuitem id="menu_mrp_traceability"
+          name="Traceability: Lots"
+          parent="menu_mrp_reporting"
+          action="stock.action_production_lot_form"
+          groups="stock.group_production_lot"
+          sequence="10"/>
+
+    <menuitem id="menu_mrp_scrap"
+            name="Scrap"
+            parent="menu_mrp_manufacturing"
+            action="stock.action_stock_scrap"
+            sequence="25"/>
+
+</odoo>

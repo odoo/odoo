@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <template>
 <t t-name="DashBoard">
     <div class="oe_dashboard_links">
@@ -38,8 +39,7 @@
         <ul>
             <li t-foreach="'1 1-1 1-1-1 1-2 2-1'.split(' ')" t-as="layout" t-att-data-layout="layout">
                 <img t-attf-src="/board/static/src/img/layout_#{layout}.png"/>
-                <img t-if="layout == current_layout"
-                    src="/web/static/src/img/icons/gtk-apply.png" width="16" height="16" class="oe_dashboard_selected_layout"/>
+                <i t-if="layout == current_layout" class="oe_dashboard_selected_layout fa fa-check fa-lg text-success"/>
             </li>
         </ul>
     </div>

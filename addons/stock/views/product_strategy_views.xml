@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_putaway" model="ir.ui.view">
+        <field name="name">product.putaway.form</field>
+        <field name="model">product.putaway</field>
+        <field name="arch" type="xml">
+            <form string="Putaway">
+               <group colspan="4">
+                   <field name="name"/>
+	       <field name="method"/>
+               </group>
+               <div attrs="{'invisible': [('method', '!=', 'fixed')]}">
+                   <separator string="Fixed Locations Per Categories"/>
+                   <field name="fixed_location_ids" colspan="4" nolabel="1">
+                       <tree editable="top">
+                           <field name="sequence" widget='handle'/>
+                           <field name="category_id"/>
+                           <field name="fixed_location_id"/>
+                       </tree>
+                   </field>
+               </div>
+           </form>
+        </field>
+    </record>
+
+    <record id="view_removal" model="ir.ui.view">
+        <field name="name">product.removal.form</field>
+        <field name="model">product.removal</field>
+        <field name="arch" type="xml">
+            <form string="Removal">
+                <group col="4">
+                    <field name="name"/>
+                    <field name="method"/>
+                </group>
+           </form>
+        </field>
+    </record>
+</odoo>

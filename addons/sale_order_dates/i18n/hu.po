@@ -3,14 +3,16 @@
 # * sale_order_dates
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 08:03+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: krnkris <krnkris@freemail.hu>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,14 +30,20 @@ msgid ""
 "Date by which the customer has requested the items to be delivered.\n"
 "When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
 "Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
-msgstr "A vásárló által igényelt kiszállítási idő dátuma.\nHa ez a megrendelés jóváhagyásra kerül, a kiszállítás elvárt ideje kiszámításra kerül ennek a dátumnak és a Vállalat Biztonsági késedelmi idejéből.\nHagyja üresen, ha ezt a kézbesítési bizonylatot/szállítólevelet el akarja végezni amilyen gyorsan csak lehetséges. Ebben az esetben az elvárt idő az alapértelmezett módszerrel kerül kiszámításra: a termék szállítási idejét és a Vállalat Biztonsági késedelmi idejét alapul véve."
+msgstr ""
+"A vásárló által igényelt kiszállítási idő dátuma.\n"
+"Ha ez a megrendelés jóváhagyásra kerül, a kiszállítás elvárt ideje kiszámításra kerül ennek a dátumnak és a Vállalat Biztonsági késedelmi idejéből.\n"
+"Hagyja üresen, ha ezt a kézbesítési bizonylatot/szállítólevelet el akarja végezni amilyen gyorsan csak lehetséges. Ebben az esetben az elvárt idő az alapértelmezett módszerrel kerül kiszámításra: a termék szállítási idejét és a Vállalat Biztonsági késedelmi idejét alapul véve."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
 msgid ""
 "Date by which the products are sure to be delivered. This is a date that you"
 " can promise to the customer, based on the Product Lead Times."
-msgstr "Dátum mire az áru biztosan le lesz szállítva. Ez az a dátum amit biztonsággal megígérhet a vásárlónak, a termék szállítási időket figyelembe véve."
+msgstr ""
+"Dátum mire az áru biztosan le lesz szállítva. Ez az a dátum amit "
+"biztonsággal megígérhet a vásárlónak, a termék szállítási időket figyelembe "
+"véve."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
@@ -53,7 +61,7 @@ msgid "Requested Date"
 msgstr "Kért dátum"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:51
+#: code:addons/sale_order_dates/models/sale_order.py:56
 #, python-format
 msgid "Requested date is too soon!"
 msgstr "Az igényelt dátum túl közeli!"
@@ -61,17 +69,19 @@ msgstr "Az igényelt dátum túl közeli!"
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order
 msgid "Sales Order"
-msgstr "Vevői megrendelés"
+msgstr "Vásárlói megrendelés"
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Vásárlói megrendelés sor"
+msgstr "Vásárlói megrendelés tételsor"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:52
+#: code:addons/sale_order_dates/models/sale_order.py:57
 #, python-format
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
-msgstr "A vásárló által kitűzött dátum közelebb van mint a kötelezettség dátuma. Lehet, hogy nem tudja teljesíteni a vásárló igényét."
+msgstr ""
+"A vásárló által kitűzött dátum közelebb van mint a kötelezettség dátuma. "
+"Lehet, hogy nem tudja teljesíteni a vásárló igényét."

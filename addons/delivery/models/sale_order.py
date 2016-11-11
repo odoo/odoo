@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import models, fields, api, _
-from openerp.exceptions import UserError
-import openerp.addons.decimal_precision as dp
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
+import odoo.addons.decimal_precision as dp
 
 
 class SaleOrder(models.Model):
@@ -34,7 +34,7 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for so in self:
-            self.invoice_shipping_on_delivery = all([not line.is_delivery for line in so.order_line])
+            so.invoice_shipping_on_delivery = all([not line.is_delivery for line in so.order_line])
         return res
 
     @api.multi
@@ -80,7 +80,7 @@ class SaleOrder(models.Model):
         taxes = carrier.product_id.taxes_id.filtered(lambda t: t.company_id.id == self.company_id.id)
         taxes_ids = taxes.ids
         if self.partner_id and self.fiscal_position_id:
-            taxes_ids = self.fiscal_position_id.map_tax(taxes).ids
+            taxes_ids = self.fiscal_position_id.map_tax(taxes, carrier.product_id, self.partner_id).ids
 
         # Create the sale order line
         values = {
@@ -95,7 +95,7 @@ class SaleOrder(models.Model):
         }
         if self.order_line:
             values['sequence'] = self.order_line[-1].sequence + 1
-        sol = SaleOrderLine.create(values)
+        sol = SaleOrderLine.sudo().create(values)
         return sol
 
 
@@ -110,4 +110,4 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id or not line.product_uom or not line.product_uom_qty:
                 return 0.0
-            line.product_qty = self.env['product.uom']._compute_qty_obj(line.product_uom, line.product_uom_qty, line.product_id.uom_id)
+            line.product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)

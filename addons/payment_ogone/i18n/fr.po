@@ -3,18 +3,22 @@
 # * payment_ogone
 # 
 # Translators:
-# Clo <clo@odoo.com>, 2015
-# Cyrille de Lambert <cdelambert@teclib.com>, 2015
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015-2016
-# Melanie Bernard <mbe@odoo.com>, 2015
+# dekkra <dekkra67@free.fr>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Melanie Bernard <mbe@odoo.com>, 2016
+# Cyrille de Lambert <cdelambert@teclib.com>, 2016
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Clo <clo@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2016-01-08 21:17+0000\n"
-"Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
-"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Clo <clo@odoo.com>, 2016\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,43 +26,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:239
+#: code:addons/payment_ogone/models/payment.py:241
 #, python-format
 msgid "; multiple order found"
 msgstr "; plusieurs commandes trouvées"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:237
+#: code:addons/payment_ogone/models/payment.py:239
 #, python-format
 msgid "; no order found"
 msgstr "; aucune commande trouvée"
-
-#. module: payment_ogone
-#: model:payment.acquirer,cancel_msg:payment_ogone.payment_acquirer_ogone
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr "<span><i>Annuler,</i> votre paiement a été annulé.</span>"
-
-#. module: payment_ogone
-#: model:payment.acquirer,done_msg:payment_ogone.payment_acquirer_ogone
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr "<span><i>Terminé,</i> votre paiement en ligne a été enregistré. Merci de votre commande.</span>"
-
-#. module: payment_ogone
-#: model:payment.acquirer,error_msg:payment_ogone.payment_acquirer_ogone
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr "<span><i>Erreur,</i> une erreur est survenue pendant la transaction. La commande a été confirmée mais ne sera pas payée. N'hésitez pas à nous contacter si vous avez une question sur le statut de votre commande.</span>"
-
-#. module: payment_ogone
-#: model:payment.acquirer,pending_msg:payment_ogone.payment_acquirer_ogone
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr "<span><i>En cours,</i> votre paiement en ligne a été enregistré. Mais votre commande n'est pas encore validée.</span>"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_userid
@@ -103,11 +80,9 @@ msgstr "Comment configurer votre compte de Ogone ?"
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer_ogone_alias_usage
 msgid ""
-"If you want to use Ogone Aliases,\n"
-"                                                                this default Alias Usage will be presented to\n"
-"                                                                the customer as the reason you want to\n"
-"                                                                keep his payment data"
-msgstr "Si vous voulez utiliser des alias Ogone,\nL'alias par défaut sera présenté au \nclient comme la raison pour laquelle vous voulez\ngarder ses données de paiement"
+"If you want to use Ogone Aliases, this default Alias Usage will be presented"
+" to the customer as the reason you want to keep his payment data"
+msgstr ""
 
 #. module: payment_ogone
 #: model:ir.ui.view,arch_db:payment_ogone.ogone_s2s_form
@@ -120,29 +95,26 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: payment_ogone
-#: model:payment.acquirer,name:payment_ogone.payment_acquirer_ogone
-msgid "Ogone"
-msgstr "Ogone"
-
-#. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:247
+#: code:addons/payment_ogone/models/payment.py:248
 #, python-format
 msgid "Ogone: invalid shasign, received %s, computed %s, for data %s"
 msgstr "Ogone: SHASIGN invalide, %s reçu, %s calculé, pour les données %s"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:235
+#: code:addons/payment_ogone/models/payment.py:237
 #, python-format
 msgid "Ogone: received data for reference %s"
 msgstr "Ogone : données reçues pour la référence %s"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/ogone.py:228
+#: code:addons/payment_ogone/models/payment.py:230
 #, python-format
 msgid ""
 "Ogone: received data with missing reference (%s) or pay_id (%s) or shasign "
 "(%s)"
-msgstr "Ogone : données reçues avec la référence manquante (%s) ou pay_id (%s) ou SHASIGN (%s)"
+msgstr ""
+"Ogone : données reçues avec la référence manquante (%s) ou pay_id (%s) ou "
+"SHASIGN (%s)"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer_ogone_pspid
@@ -152,7 +124,7 @@ msgstr "PSPID"
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Intermédiaire de paiement"
+msgstr "Intermédiaire de Paiement"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
@@ -170,13 +142,6 @@ msgid "SHA Key OUT"
 msgstr "Clé SHA sortante"
 
 #. module: payment_ogone
-#: model:payment.acquirer,pre_msg:payment_ogone.payment_acquirer_ogone
-msgid ""
-"You will be redirected to the Ogone website after clicking on the payment "
-"button."
-msgstr "<p>Vous serez redirigé vers le site web d'Ogone après avoir cliqué sur le bouton de paiement.</p>"
-
-#. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_payment_method
-msgid "payment.method"
-msgstr "payment.method"
+#: model:ir.model,name:payment_ogone.model_payment_token
+msgid "payment.token"
+msgstr ""

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_event_registration_ticket_search" model="ir.ui.view">
+            <field name="name">event.registration.search.inherit</field>
+            <field name="model">event.registration</field>
+            <field name="inherit_id" ref="event.view_registration_search" />
+            <field name="arch" type="xml">
+                <filter name="group_event" position="after">
+                    <filter string="Ticket Type" domain="[]" context="{'group_by':'event_ticket_id'}"/>
+                </filter>
+            </field>
+        </record>
+
+        <record id="view_event_registration_ticket_tree" model="ir.ui.view">
+            <field name="name">event.registration.tree.inherit</field>
+            <field name="model">event.registration</field>
+            <field name="inherit_id" ref="event.view_event_registration_tree" />
+            <field name="arch" type="xml">
+                <field name="event_id" position="after">
+                    <field name="event_ticket_id"/>
+                    <field name="origin"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_event_registration_ticket_form" model="ir.ui.view">
+            <field name="name">event.registration.form.inherit</field>
+            <field name="model">event.registration</field>
+            <field name="inherit_id" ref="event.view_event_registration_form" />
+            <field name="arch" type="xml">
+                <field name="event_id" position="after">
+                    <field name="event_ticket_id" domain="[('event_id', '=', event_id)]"/>
+                </field>
+                <group name="event" position="after">
+                    <group string="Origin">
+                        <field name="sale_order_id"/>
+                        <field name="origin" attrs="{'invisible': [('sale_order_id', '!=', False)]}"/>
+                        <field name="sale_order_line_id" readonly="1" attrs="{'invisible': [('sale_order_id', '=', False)]}"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+        <record id="view_event_form_inherit_ticket" model="ir.ui.view">
+            <field name="name">event.form.inherit</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="arch" type="xml">
+                    <xpath expr="//page[@name='registrations']" position="replace">
+                        <page string="Tickets">
+                            <group>
+                                <group>
+                                    <field name="auto_confirm" invisible="1"/>
+                                    <field name="seats_min"/>
+                                    <field name="seats_availability" widget='radio'/>
+                                    <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
+                                </group>
+                            </group>
+                            <field name="event_ticket_ids" context="{'default_name': name}">
+                                <tree string="Tickets" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="product_id" context="{'default_event_ok':1}"/>
+                                    <field name="deadline"/>
+                                    <field name="price"/>
+                                    <field name="seats_max"/>
+                                    <field name="seats_reserved" readonly="1"/>
+                                    <field name="seats_unconfirmed" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </xpath>
+            </field>
+        </record>
+
+        <record id="event_ticket_form_view" model="ir.ui.view">
+            <field name="name">event.event.ticket.form</field>
+            <field name="model">event.event.ticket</field>
+            <field name="arch" type="xml">
+                <form string="Event's Ticket">
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="Event Name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="event_id"/>
+                            <field name="seats_availability"/>
+                            <field name="seats_available"/>
+                            <field name="deadline"/>
+                            <field name="price"/>
+                            <field name="price_reduce" groups="base.group_no_one"/>
+                        </group>
+                        <group>
+                            <field name="seats_max"/>
+                            <field name="seats_reserved"/>
+                            <field name="seats_unconfirmed"/>
+                            <field name="seats_used"/>
+                            <field name="product_id"/>
+                            <field name="is_expired"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+</odoo>

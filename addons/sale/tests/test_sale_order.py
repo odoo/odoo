@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from openerp.exceptions import UserError, AccessError
+
+from odoo.exceptions import UserError, AccessError
 
 from test_sale_common import TestSale
 
@@ -40,7 +41,7 @@ class TestSaleOrder(TestSale):
 
         # deliver lines except 'time and material' then invoice again
         for line in so.order_line:
-            line.qty_delivered = 2 if line.product_id.invoice_policy in ['order', 'delivery'] else 0
+            line.qty_delivered = 2 if line.product_id.expense_policy=='no' else 0
         self.assertTrue(so.invoice_status == 'to invoice', 'Sale: SO status after delivery should be "to invoice"')
         inv_id = so.action_invoice_create()
         inv = inv_obj.browse(inv_id)
@@ -129,7 +130,7 @@ class TestSaleOrder(TestSale):
             'currency_id': company.currency_id.id,
         }
         inv = self.env['account.invoice'].create(invoice_vals)
-        inv.signal_workflow('invoice_open')
+        inv.action_invoice_open()
         sol = so.order_line.filtered(lambda l: l.product_id == serv_cost)
         self.assertTrue(sol, 'Sale: cost invoicing does not add lines when confirming vendor invoice')
         self.assertTrue(sol.price_unit == 160 and sol.qty_delivered == 2 and sol.product_uom_qty == sol.qty_invoiced == 0, 'Sale: line is wrong after confirming vendor invoice')

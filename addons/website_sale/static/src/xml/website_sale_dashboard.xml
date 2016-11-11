@@ -3,18 +3,15 @@
 <templates>
 
     <t t-name="website_sale.dashboard_sales">
-        <div class="row o_dashboard_sales">
+        <div t-if="widget.dashboards_data.sales" class="row o_dashboard_sales">
             <div class="col-xs-12 o_box">
-                <h2>Sales</h2>
+                <div class="col-md-6 col-xs-12">
+                    <h2>Sales / <t t-esc="widget.date_range"></t></h2>
+                    <div id="o_graph_sales" class="o_graph" data-type="sales"/>
+                </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <div id="o_graph_sales" class="o_graph" data-type="sales"/>
-                    </div>
-
-                    <div class="col-md-6">
-                        <t t-call="website_sale.products_table"/>
-                    </div>
+                <div class="col-md-6 col-xs-12">
+                    <t t-call="website_sale.products_table"/>
                 </div>
             </div>
         </div>

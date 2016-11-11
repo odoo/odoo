@@ -3,26 +3,22 @@
 # * link_tracker
 # 
 # Translators:
-# Eric Geens <ericgeens@yahoo.com>, 2015
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-14 08:56+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
-"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_campaign_id
-msgid "Campaign"
-msgstr "Campagne"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_link_click_ids
@@ -69,7 +65,7 @@ msgstr "Aangemaakt op"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_display_name
 msgid "Display Name"
-msgstr "Naam weergeven"
+msgstr "Weergave naam"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_favicon
@@ -132,11 +128,6 @@ msgid "Link Tracker"
 msgstr "Opvolging links"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_medium_id
-msgid "Medium"
-msgstr "Gemiddeld"
-
-#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_count
 msgid "Number of Clicks"
 msgstr "Aantal klikken"
@@ -144,7 +135,7 @@ msgstr "Aantal klikken"
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_title
 msgid "Page Title"
-msgstr "Paginatitel"
+msgstr "Pagina titel"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_redirected_url
@@ -162,11 +153,6 @@ msgid "Short URL code"
 msgstr "Korte URL code"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_source_id
-msgid "Source"
-msgstr "Bron"
-
-#. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_view_click_statistics
 msgid "Statistics of Clicks"
 msgstr "Statistieken van de klikken"
@@ -175,25 +161,6 @@ msgstr "Statistieken van de klikken"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_url
 msgid "Target URL"
 msgstr "Doel URL"
-
-#. module: link_tracker
-#: model:ir.model.fields,help:link_tracker.field_link_tracker_campaign_id
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
-msgstr "Dit is de naam welke u helpt om uw verschillende campagnes te volgen. Zoals bijvoorbeeld: Fall_drive, Christmas_Special"
-
-#. module: link_tracker
-#: model:ir.model.fields,help:link_tracker.field_link_tracker_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr "Dit is de methode van afleveren. Bijvoorbeeld: Brief, E-mail of Banner advertentie"
-
-#. module: link_tracker
-#: model:ir.model.fields,help:link_tracker.field_link_tracker_source_id
-msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
-msgstr "Dit is de bron van de link. Bijvoorbeeld: zoekmachine, ander domein of de naam van de e-mail lijst"
 
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
@@ -206,12 +173,6 @@ msgid "Tracked Link"
 msgstr "Gevolgde link"
 
 #. module: link_tracker
-#: model:ir.actions.act_window,name:link_tracker.action_link_tracker_click
-#: model:ir.ui.menu,name:link_tracker.menu_url_shortener_links
-msgid "Tracked Links"
-msgstr "Gevolgde links"
-
-#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_short_url
 msgid "Tracked URL"
 msgstr "Gevolgde URL"
@@ -222,7 +183,7 @@ msgid "Visit Page"
 msgstr "Bezoek pagina"
 
 #. module: link_tracker
-#: code:addons/link_tracker/models/link_tracker.py:138
+#: code:addons/link_tracker/models/link_tracker.py:141
 #, python-format
 msgid "Visit Webpage"
 msgstr "Bezoek webpagina"

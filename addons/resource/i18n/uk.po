@@ -3,15 +3,19 @@
 # * resource
 # 
 # Translators:
-# Bogdan, 2015-2016
+# ТАрас <tratatuta@i.ua>, 2016
+# Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
+# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
+# Yaroslav Molochko <onorua@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-02-20 16:51+0000\n"
-"Last-Translator: Bogdan\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -19,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:689
+#: code:addons/resource/models/resource.py:689
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копія)"
@@ -37,7 +41,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_code
 msgid "Code"
-msgstr "Code"
+msgstr "Код"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_company_id
@@ -67,12 +71,12 @@ msgstr "Дата створення"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_dayofweek
 msgid "Day of Week"
-msgstr ""
+msgstr "День тижня"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_calendar_id
 msgid "Define the schedule of resource"
-msgstr ""
+msgstr "Створіть графік для ресурсу"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -87,7 +91,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_display_name
 msgid "Display Name"
-msgstr "Показати ім'я"
+msgstr "Назва для відображення"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
@@ -97,7 +101,7 @@ msgstr "Тривалість"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_time_efficiency
 msgid "Efficiency Factor"
-msgstr ""
+msgstr "Фактор ефективності"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_to
@@ -106,7 +110,8 @@ msgid "End Date"
 msgstr "Кінцева дата"
 
 #. module: resource
-#: constraint:resource.calendar.leaves:0
+#: code:addons/resource/models/resource.py:738
+#, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
 
@@ -137,7 +142,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_id
 #: model:ir.model.fields,field_description:resource.field_resource_resource_id
 msgid "ID"
-msgstr "ID"
+msgstr "ІД"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves_resource_id
@@ -187,7 +192,7 @@ msgstr "Останнє оновлення"
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Leave Detail"
-msgstr ""
+msgstr "Деталі пропуску"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -197,7 +202,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leave_ids
 msgid "Leaves"
-msgstr ""
+msgstr "Відпустки"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -215,7 +220,7 @@ msgstr "Понеділок"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_name
 msgid "Name"
-msgstr "Name"
+msgstr "Назва"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
@@ -242,7 +247,7 @@ msgstr "Ресурс"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Calendar"
-msgstr ""
+msgstr "Календар ресурсу"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
@@ -253,12 +258,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
-msgstr ""
+msgstr "Вихідні ресурсу"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_resource_type
 msgid "Resource Type"
-msgstr ""
+msgstr "Тип ресурсу"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_calendar_id
@@ -270,7 +275,7 @@ msgstr ""
 #: model:ir.ui.menu,name:resource.menu_resource_resource
 #: model:ir.ui.view,arch_db:resource.resource_resource_tree
 msgid "Resources"
-msgstr ""
+msgstr "Ресурси"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
@@ -342,7 +347,7 @@ msgstr ""
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Thursday"
-msgstr "Червер"
+msgstr "Четвер"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -368,7 +373,7 @@ msgstr "Середа"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
 msgid "Work Detail"
-msgstr ""
+msgstr "Деталі роботи"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_from

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
-
+<odoo>
     <record id="view_payment_advice_tree" model="ir.ui.view">
         <field name="name">payment.advice.report.tree</field>
         <field name="model">payment.advice.report</field>
@@ -78,8 +76,6 @@
         <field name="help">This report performs analysis on Payment Advices</field>
     </record>
 
-    <menuitem name="Reports" id="menu_l10n_in_hr_payroll_report" parent="hr_payroll.menu_hr_payroll_root" sequence="99" groups="base.group_hr_manager"/>
+    <menuitem name="Reports" id="menu_l10n_in_hr_payroll_report" parent="hr_payroll.menu_hr_payroll_root" sequence="99" groups="hr_payroll.group_hr_payroll_manager"/>
     <menuitem action="action_payment_advice_report_all" id="menu_reporting_payment_advice" parent="menu_l10n_in_hr_payroll_report" sequence="5" />
-
-</data>
-</openerp>
+</odoo>

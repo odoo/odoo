@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <record id="res_config_view_base" model="ir.ui.view">
+            <field name="name">res.config.view.base</field>
+            <field name="model">res.config</field>
+            <field name="arch" type="xml">
+                <form string="Configuration">
+                    <group name="res_config_contents"/>
+                    <footer>
+                        <button name="action_next" type="object" string="Apply" class="btn-primary"/>
+                        <button name="action_skip" type="object" special="cancel" string="Cancel" class="btn-default"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="res_config_installer" model="ir.ui.view">
+            <field name="name">Inheritable view for installer objects</field>
+            <field name="model">res.config.installer</field>
+            <field name="arch" type="xml">
+                <form string="Configuration Installer">
+                    <separator string="title" colspan="4"/>
+                    <footer>
+                        <button name="action_next" type="object" string="Install Apps" class="btn-primary"/>
+                        <button string="Skip" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

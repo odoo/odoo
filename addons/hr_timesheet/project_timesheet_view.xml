@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <record id="act_hr_timesheet_line_by_project" model="ir.actions.act_window">
             <field name="name">Activities</field>
@@ -20,17 +20,40 @@
               </p>
             </field>
         </record>
+
+        <record id="project_project_view_form_simplified_inherit_timesheet" model="ir.ui.view">
+            <field name="name">project.project.view.form.simplified.inherit.timesheet</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+            <field name="priority">24</field>
+            <field name="arch" type="xml">
+                <group name="options" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </group>
+                <field name="use_tasks" position="after">
+                    <field name="allow_timesheets"/>
+                </field>
+            </field>
+        </record>
+
         <record id="project_invoice_form" model="ir.ui.view">
             <field name="name">Inherit project form : Invoicing Data</field>
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
+            <field name="priority">24</field>
             <field name="arch" type="xml">
-                <div name="button_box" position="inside">
-                    <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fa-calendar" string="Timesheets"/>
-                </div>
+                <button name="toggle_active" position="before">
+                    <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fa-calendar" string="Timesheets" attrs="{'invisible': [('allow_timesheets', '=', False)]}"/>
+                </button>
                 <field name="user_id" position="after">
-                    <field name="subtask_project_id" groups="base.group_no_one" />
+                    <field name="subtask_project_id" groups="base.group_no_one" attrs="{'invisible': [('allow_timesheets', '=', False)]}"/>
                 </field>
+                <xpath expr="//div[@name='options_active']" position="inside">
+                    <div>
+                        <field name="allow_timesheets" class="oe_inline" string="Allow timesheets"/>
+                        <label for="allow_timesheets"/>
+                    </div>
+                </xpath>
             </field>
         </record>
 
@@ -74,13 +97,8 @@
                     <field name="child_ids" invisible="1" />
                     <field name="subtask_project_id" invisible="1" />
                 </field>
-                <field name="partner_id" position="after">
-                    <field name="parent_id" attrs="{'invisible' : [('parent_id', '=', False)]}" />
-                    <field name="child_ids" invisible="1" />
-                    <field name="subtask_project_id" invisible="1" />
-                </field>
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
-                    <page string="Timesheets">
+                    <page string="Timesheets" attrs="{'invisible': [('project_id', '=', False)]}">
                     <field name="timesheet_ids" context="{'default_project_id': project_id}">
                         <tree editable="bottom" string="Timesheet Activities" default_order="date">
                             <field name="date"/>
@@ -94,6 +112,7 @@
                      <group class="oe_subtotal_footer oe_right" name="project_hours">
                         <field name="effective_hours" widget="float_time" />
                         <field name="children_hours" widget="float_time" attrs="{'invisible' : [('children_hours', '=', 0.0)]}" />
+                        <field name="total_hours_spent" widget="float_time" class="oe_subtotal_footer_separator" attrs="{'invisible' : [('children_hours', '=', 0.0)]}" />
                         <field name="remaining_hours" widget="float_time" class="oe_subtotal_footer_separator" readonly="1"/>
                      </group>
                     </group>
@@ -124,13 +143,23 @@
             <field name="name">project.project.timesheet.kanban.inherited</field>
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="priority">24</field>
             <field name="arch" type="xml">
-                <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
-                    <div>
+                <field name="use_tasks" position="after">
+                    <field name="allow_timesheets" invisible="1"/>
+                </field>
+                <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]/div[last()]" position="after">
+                    <div attrs="{'invisible': [('allow_timesheets', '=', False)]}">
                         <a name="%(act_hr_timesheet_line_by_project)d" type="action">Timesheets</a>
                     </div>
                 </xpath>
-
+                <xpath expr="//div[contains(@class, 'o_project_kanban_box')]/div[last()]" position="before">
+                    <div attrs="{'invisible': [('allow_timesheets', '=', False)]}" class="o_project_kanban_box">
+                        <a t-if="record.allow_timesheets.raw_value" name="%(act_hr_timesheet_line_by_project)d" type="action">
+                            <span class="o_label">Timesheets</span>
+                        </a>
+                    </div>
+                </xpath>
             </field>
         </record>
 
@@ -154,5 +183,17 @@
              </field>
          </record>
 
+         <act_window id="project_task_action_view_timesheet"
+            name="Timesheet Entries"
+            src_model="project.task"
+            res_model="account.analytic.line"
+            view_mode="tree"
+            view_id="hr_timesheet_line_tree"
+            context="{
+                'search_default_task_id': [active_id],
+                'default_task_id': active_id,
+            }"
+        />
+
     </data>
-</openerp>
+</odoo>

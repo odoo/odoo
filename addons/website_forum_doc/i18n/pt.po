@@ -3,14 +3,18 @@
 # * website_forum_doc
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016
+# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
+# Daniel C Santos <dcs@thinkopensolutions.pt>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-10-20 14:22+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Daniel C Santos <dcs@thinkopensolutions.pt>, 2016\n"
+"Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,7 +24,7 @@ msgstr ""
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -47,7 +51,9 @@ msgstr "Más respostas"
 msgid ""
 "Before submiting the question, help us improve its quality by\n"
 "                        editing the question and the main answer."
-msgstr "Antes de submeter a questão, ajude-nos a melhorar a sua qualidade de \n                         edição da pergunta e da resposta principal."
+msgstr ""
+"Antes de submeter a questão, ajude-nos a melhorar a sua qualidade de \n"
+"                         edição da pergunta e da resposta principal."
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -99,7 +105,7 @@ msgstr "Clientes"
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.view_forum_post_kanban
 msgid "Delete"
-msgstr "Apagar"
+msgstr "Eliminar"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -110,7 +116,7 @@ msgstr "Descrever a Solução de Negócio"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_display_name
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_display_name
 msgid "Display Name"
-msgstr "Nome a Mostrar"
+msgstr "Nome a Exibir"
 
 #. module: website_forum_doc
 #: model:ir.actions.act_url,name:website_forum_doc.action_open_documentation
@@ -159,14 +165,15 @@ msgid "Employee Contract"
 msgstr "Contrato do funcionário"
 
 #. module: website_forum_doc
-#: constraint:forum.documentation.toc:0
+#: code:addons/website_forum_doc/models/forum_documentation_toc.py:38
+#, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Erro! Não pode criar categorias recursivas."
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
-msgid "Explain how to configure in Odoo"
-msgstr "Explica como configurar no Odoo"
+msgid "Explain how to configure Odoo"
+msgstr ""
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -217,7 +224,7 @@ msgstr "Gestão de recursos humanos"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_id
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_id
 msgid "ID"
-msgstr "ID"
+msgstr "Id."
 
 #. module: website_forum_doc
 #: model:forum.documentation.stage,name:website_forum_doc.stage_ideas
@@ -239,13 +246,13 @@ msgstr "Última Modificação em"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_write_uid
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_write_uid
 msgid "Last Updated by"
-msgstr "Última Actualização por"
+msgstr "Última Atualização por"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_write_date
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_write_date
 msgid "Last Updated on"
-msgstr "Última Actualização em"
+msgstr "Última Atualização em"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_crm_lead
@@ -345,7 +352,7 @@ msgstr "Vendas e Compras"
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_sale
 msgid "Sales Management"
-msgstr "Gestão de vendas"
+msgstr "Gestão de Vendas"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_sale_so
@@ -361,7 +368,7 @@ msgstr "Exemplos"
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation_post
 msgid "Search"
-msgstr "Pesquisar"
+msgstr "Procurar"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation
@@ -388,7 +395,9 @@ msgstr "A resposta é compreensível para alguém que não conhece o Odoo"
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "The question describes a real business problem, not a software problem"
-msgstr "A questão descreve um problema de negócio real, e não um problema de software"
+msgstr ""
+"A questão descreve um problema de negócio real, e não um problema de "
+"software"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -418,7 +427,9 @@ msgstr "Esta questão foi incluída no"
 msgid ""
 "To be promoted in the official documentation the question\n"
 "                        and answer must satisfy the following criteria:"
-msgstr "Para ser promovido na documentação oficial a questão \n                         e resposta deve satisfazer os seguintes critérios:"
+msgstr ""
+"Para ser promovido na documentação oficial a questão \n"
+"                         e resposta deve satisfazer os seguintes critérios:"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,introduction:website_forum_doc.toc_sale
@@ -430,22 +441,7 @@ msgstr ""
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_website
 msgid "Website"
-msgstr "Página Web"
-
-#. module: website_forum_doc
-#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_website_meta_description
-msgid "Website meta description"
-msgstr "Website Meta Descrição"
-
-#. module: website_forum_doc
-#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Website meta Palavra-Chaves"
-
-#. module: website_forum_doc
-#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_website_meta_title
-msgid "Website meta title"
-msgstr "Website meta Título"
+msgstr "Website"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question

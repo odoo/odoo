@@ -1,21 +1,17 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 import itertools
 import logging
 import math
 import re
 import uuid
+
+from datetime import datetime
 from werkzeug.exceptions import Forbidden
 
-from openerp import _
-from openerp import api, fields, models
-from openerp import http
-from openerp import modules
-from openerp import tools
-from openerp import SUPERUSER_ID
-from openerp.addons.website.models.website import slug
-from openerp.exceptions import UserError, ValidationError
+from odoo import api, fields, models, modules, tools, SUPERUSER_ID, _
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -30,13 +26,14 @@ class Forum(models.Model):
     _description = 'Forum'
     _inherit = ['mail.thread', 'website.seo.metadata']
 
-    def init(self, cr):
+    @api.model_cr
+    def init(self):
         """ Add forum uuid for user email validation.
 
         TDE TODO: move me somewhere else, auto_init ? """
-        forum_uuids = self.pool['ir.config_parameter'].search(cr, SUPERUSER_ID, [('key', '=', 'website_forum.uuid')])
+        forum_uuids = self.env['ir.config_parameter'].search([('key', '=', 'website_forum.uuid')])
         if not forum_uuids:
-            self.pool['ir.config_parameter'].set_param(cr, SUPERUSER_ID, 'website_forum.uuid', str(uuid.uuid4()), ['base.group_system'])
+            forum_uuids.set_param('website_forum.uuid', str(uuid.uuid4()), ['base.group_system'])
 
     @api.model
     def _get_default_faq(self):
@@ -218,20 +215,20 @@ class Post(models.Model):
     )
 
     # history
-    create_date = fields.Datetime('Asked on', select=True, readonly=True)
-    create_uid = fields.Many2one('res.users', string='Created by', select=True, readonly=True)
-    write_date = fields.Datetime('Update on', select=True, readonly=True)
+    create_date = fields.Datetime('Asked on', index=True, readonly=True)
+    create_uid = fields.Many2one('res.users', string='Created by', index=True, readonly=True)
+    write_date = fields.Datetime('Update on', index=True, readonly=True)
     bump_date = fields.Datetime('Bumped on', readonly=True,
                                 help="Technical field allowing to bump a question. Writing on this field will trigger "
                                      "a write on write_date and therefore bump the post. Directly writing on write_date "
                                      "is currently not supported and this field is a workaround.")
-    write_uid = fields.Many2one('res.users', string='Updated by', select=True, readonly=True)
+    write_uid = fields.Many2one('res.users', string='Updated by', index=True, readonly=True)
     relevancy = fields.Float('Relevance', compute="_compute_relevancy", store=True)
 
     # vote
     vote_ids = fields.One2many('forum.post.vote', 'post_id', string='Votes')
     user_vote = fields.Integer('My Vote', compute='_get_user_vote')
-    vote_count = fields.Integer('Votes', compute='_get_vote_count', store=True)
+    vote_count = fields.Integer('Total Votes', compute='_get_vote_count', store=True)
 
     # favorite
     favourite_ids = fields.Many2many('res.users', string='Favourite')
@@ -253,7 +250,7 @@ class Post(models.Model):
 
     # closing
     closed_reason_id = fields.Many2one('forum.post.reason', string='Reason')
-    closed_uid = fields.Many2one('res.users', string='Closed by', select=1)
+    closed_uid = fields.Many2one('res.users', string='Closed by', index=True)
     closed_date = fields.Datetime('Closed on', readonly=True)
 
     # karma calculation and access
@@ -560,7 +557,14 @@ class Post(models.Model):
             if post.closed_reason_id in (reason_offensive, reason_spam):
                 _logger.info('Upvoting user <%s>, reopening spam/offensive question',
                              post.create_uid)
-                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_flagged * -1)
+
+                karma = post.forum_id.karma_gen_answer_flagged
+                if post.closed_reason_id == reason_spam:
+                    # If first post, increase the karma to add
+                    count_post = post.search_count([('parent_id', '=', False), ('forum_id', '=', post.forum_id.id), ('create_uid', '=', post.create_uid.id)])
+                    if count_post == 1:
+                        karma *= 10
+                post.create_uid.sudo().add_karma(karma * -1)
 
         self.sudo().write({'state': 'active'})
 
@@ -575,7 +579,13 @@ class Post(models.Model):
             for post in self:
                 _logger.info('Downvoting user <%s> for posting spam/offensive contents',
                              post.create_uid)
-                post.create_uid.sudo().add_karma(post.forum_id.karma_gen_answer_flagged)
+                karma = post.forum_id.karma_gen_answer_flagged
+                if reason_id == reason_spam:
+                    # If first post, increase the karma to remove
+                    count_post = post.search_count([('parent_id', '=', False), ('forum_id', '=', post.forum_id.id), ('create_uid', '=', post.create_uid.id)])
+                    if count_post == 1:
+                        karma *= 10
+                post.create_uid.sudo().add_karma(karma)
 
         self.write({
             'state': 'close',
@@ -684,13 +694,14 @@ class Post(models.Model):
                 Vote.create({'post_id': post_id, 'vote': new_vote})
         return {'vote_count': self.vote_count, 'user_vote': new_vote}
 
-    @api.one
+    @api.multi
     def convert_answer_to_comment(self):
         """ Tools to convert an answer (forum.post) to a comment (mail.message).
         The original post is unlinked and a new comment is posted on the question
         using the post create_uid as the comment's author. """
+        self.ensure_one()
         if not self.parent_id:
-            return False
+            return self.env['mail.message']
 
         # karma-based action check: use the post field that computed own/all value
         if not self.can_comment_convert:
@@ -700,12 +711,12 @@ class Post(models.Model):
         question = self.parent_id
         values = {
             'author_id': self.sudo().create_uid.partner_id.id,  # use sudo here because of access to res.users model
-            'body': tools.html_sanitize(self.content, strict=True, strip_style=True, strip_classes=True),
+            'body': tools.html_sanitize(self.content, sanitize_attributes=True, strip_style=True, strip_classes=True),
             'message_type': 'comment',
             'subtype': 'mail.mt_comment',
             'date': self.create_date,
         }
-        new_message = self.browse(question.id).with_context(mail_create_nosubscribe=True).message_post(**values)
+        new_message = question.with_context(mail_create_nosubscribe=True).message_post(**values)
 
         # unlink the original answer, using SUPERUSER_ID to avoid karma issues
         self.sudo().unlink()
@@ -769,8 +780,7 @@ class Post(models.Model):
 
     @api.multi
     def get_access_action(self):
-        """ Override method that generated the link to access the document. Instead
-        of the classic form view, redirect to the post on the website directly """
+        """ Instead of the classic form view, redirect to the post on the website directly """
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
@@ -780,32 +790,48 @@ class Post(models.Model):
         }
 
     @api.multi
-    def _notification_get_recipient_groups(self, message, recipients):
-        """ Override to set the access button: everyone can see an access button
-        on their notification email. It will lead on the website view of the
-        post. """
-        res = super(Post, self)._notification_get_recipient_groups(message, recipients)
-        access_action = self._notification_link_helper('view', model=message.model, res_id=message.res_id)
-        for category, data in res.iteritems():
-            res[category]['button_access'] = {'url': access_action, 'title': '%s %s' % (_('View'), self.post_type)}
-        return res
+    def _notification_recipients(self, message, groups):
+        groups = super(Post, self)._notification_recipients(message, groups)
 
-    @api.cr_uid_ids_context
-    def message_post(self, cr, uid, thread_id, message_type='notification', subtype=None, context=None, **kwargs):
-        if thread_id and message_type == 'comment':  # user comments have a restriction on karma
-            if isinstance(thread_id, (list, tuple)):
-                post_id = thread_id[0]
-            else:
-                post_id = thread_id
-            post = self.browse(cr, uid, post_id, context=context)
-            # TDE FIXME: trigger browse because otherwise the function field is not compted - check with RCO
-            tmp1, tmp2 = post.karma_comment, post.can_comment
-            user = self.pool['res.users'].browse(cr, uid, uid)
-            tmp3 = user.karma
-            # TDE END FIXME
-            if not post.can_comment:
+        for group_name, group_method, group_data in groups:
+            group_data['has_button_access'] = True
+
+        return groups
+
+    @api.multi
+    def message_post(self, message_type='notification', subtype=None, **kwargs):
+        question_followers = self.env['res.partner']
+        if self.ids and message_type == 'comment':  # user comments have a restriction on karma
+            # add followers of comments on the parent post
+            if self.parent_id:
+                partner_ids = kwargs.get('partner_ids', [])
+                comment_subtype = self.sudo().env.ref('mail.mt_comment')
+                question_followers = self.env['mail.followers'].sudo().search([
+                    ('res_model', '=', self._name),
+                    ('res_id', '=', self.parent_id.id),
+                    ('partner_id', '!=', False),
+                ]).filtered(lambda fol: comment_subtype in fol.subtype_ids).mapped('partner_id')
+                partner_ids += [(4, partner.id) for partner in question_followers]
+                kwargs['partner_ids'] = partner_ids
+
+            self.ensure_one()
+            if not self.can_comment:
                 raise KarmaError('Not enough karma to comment')
-        return super(Post, self).message_post(cr, uid, thread_id, message_type=message_type, subtype=subtype, context=context, **kwargs)
+            if not kwargs.get('record_name') and self.parent_id:
+                kwargs['record_name'] = self.parent_id.name
+        return super(Post, self).message_post(message_type=message_type, subtype=subtype, **kwargs)
+
+    @api.multi
+    def message_get_message_notify_values(self, message, message_values):
+        """ Override to avoid keeping all notified recipients of a comment.
+        We avoid tracking needaction on post comments. Only emails should be
+        sufficient. """
+        if message.message_type == 'comment':
+            return {
+                'needaction_partner_ids': [],
+                'partner_ids': [],
+            }
+        return {}
 
 
 class PostReason(models.Model):
@@ -824,7 +850,7 @@ class Vote(models.Model):
     post_id = fields.Many2one('forum.post', string='Post', ondelete='cascade', required=True)
     user_id = fields.Many2one('res.users', string='User', required=True, default=lambda self: self._uid)
     vote = fields.Selection([('1', '1'), ('-1', '-1'), ('0', '0')], string='Vote', required=True, default='1')
-    create_date = fields.Datetime('Create Date', select=True, readonly=True)
+    create_date = fields.Datetime('Create Date', index=True, readonly=True)
     forum_id = fields.Many2one('forum.forum', string='Forum', related="post_id.forum_id", store=True)
     recipient_id = fields.Many2one('res.users', string='To', related="post_id.create_uid", store=True)
 

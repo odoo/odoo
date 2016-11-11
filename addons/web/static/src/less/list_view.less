@@ -1,0 +1,233 @@
+@odoo-list-group-header-color: lighten(@odoo-list-grey, 10%);
+.o_list_view {
+    cursor: pointer;
+    background-color: @odoo-view-background-color;
+    margin-bottom: 0px;
+
+    &.table {
+        td, th {
+           vertical-align: middle;
+        }
+    }
+
+    thead {
+        color: @odoo-main-text-color;
+        background-color: #eee;
+        border-bottom: 1px solid #cacaca;
+        > tr > th {
+            border-left: 1px solid #dfdfdf;
+            &:not(.o_column_sortable):hover {
+                cursor: default;
+            }
+        }
+    }
+
+    tfoot {
+        cursor: default;
+        color: @odoo-list-footer-color;
+        background-color: @odoo-list-footer-bg-color;
+        font-weight: @odoo-list-footer-font-weight;
+        border-top: 2px solid #cacaca;
+        border-bottom: 1px solid #cacaca;
+    }
+
+    .o_column_sortable {
+        .user-select(none);  // Prevent unwanted selection while sorting
+
+        &.o-sort-up:after {
+            font-family: FontAwesome;
+            margin-left: 5px;
+            content: "\f0d7";
+        }
+        &.o-sort-down:after {
+            font-family: FontAwesome;
+            margin-left: 5px;
+            content: "\f0d8";
+        }
+    }
+
+    .o_list_record_selector {
+        width: 1px;  // to prevent the column to expand
+        > input {
+            margin-left: 3px;
+            .hidden-xs();
+        }
+    }
+
+    .o_list_record_delete {
+        width: 13px;
+    }
+
+    .o_handle_cell {
+        width: 1px; // to prevent the column to expand
+        .o_row_handle {
+            cursor: ns-resize;
+        }
+    }
+
+    // Decoration of the row
+    .text-bf {
+        font-weight: bold;
+    }
+    .text-it {
+        font-style: italic;
+    }
+    .text-muted {
+        color: lighten(@text-muted, 10%);
+    }
+
+    // Grouped list views
+    tbody > tr.o_group_header {
+        .o-vertical-gradient(#fcfcfc, #dedede);
+
+        .o_group_name {
+            white-space: nowrap;
+        }
+        .o_group_pager {
+            cursor: text;
+            .user-select(none);
+            text-align: right;
+            .o_pager_previous, .o_pager_next {
+                background-color: @odoo-list-group-header-color;
+                &:hover {
+                    background-color: darken(@odoo-list-group-header-color, 10%);
+                }
+            }
+        }
+    }
+    tbody + tbody {
+        border-top: none;  // Override bootstrap for grouped list views
+    }
+
+    .o_list_number {
+        text-align: right;
+        white-space: nowrap;
+    }
+    .o_list_text {
+        white-space: pre-wrap;
+    }
+}
+
+.o_list_editable {
+    position: relative;
+
+    .o_temp_visible {
+        opacity: 0;
+        display: block!important;
+
+        &.o_form_invisible {
+            display: block!important;
+        }
+    }
+
+    .o_list_view {
+        .o_row_edition > td {
+            visibility: hidden;  // Hide row's content during edition
+            &.o_list_record_selector, &.o_list_record_delete, &.o_list_button {
+                visibility: visible;
+            }
+
+            &.o_readonly {
+                visibility: visible;
+                color: transparent;
+            }
+        }
+    }
+
+    .o_form_view.o_list_editable_form {
+        padding: 0;
+        > .o_form_field {
+            padding: 0;
+            position: absolute;
+            white-space: nowrap;
+            &.o_form_textarea {
+                white-space: pre-wrap;
+            }
+            .o_form_field, .badge { // Many2Many tags
+                display: block;
+                float: left;
+                white-space: normal;
+                max-width: 100%; // Fix a chrome bug where badge would not break on multiple lines
+            }
+
+            &.o_readonly {
+                background-color: transparent;
+                padding: 5px;
+            }
+        }
+        > .o_field_translate {
+            position: absolute;
+            width: 16px; // to have some space on the right
+        }
+        .o_form_input_dropdown {
+            height: 100%;
+        }
+        .o_form_input {
+            height: 100%;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+        .o_form_input, .o_form_textarea, .o_form_field_many2manytags, .o_form_field_monetary {
+            border-style: solid;
+        }
+        .o_form_field_monetary .o_form_input {
+            width: 0;
+        }
+        .o_checkbox {
+            padding: 7px 0 0 5px;
+            background: transparent;
+        }
+        .o_form_textarea {
+            min-width: 0;
+        }
+        .o_with_button .o_form_input_dropdown {
+            width: 1%; // Hack so that the sibling button is not overlapped
+        }
+        .o_form_input_dropdown, .o_datepicker {
+            > .o_form_input {
+                padding-right: 15px; // To prevent caret overlapping
+            }
+            > .o_dropdown_button, .o_datepicker_button {
+                .o-position-absolute(20%, 5px);
+            }
+        }
+        .o_form_field > .o_external_button {
+            padding: 0;
+            background-color: inherit;
+            margin-left: 3px;
+        }
+        .o_row_handle {
+            visibility: hidden; // Hide sequence when editing
+        }
+        .o_form_field_boolean {
+            width: auto!important; // Override the width computed in JS (needed for Chrome)
+        }
+        .o_form_field_number {
+            text-align: right;
+        }
+    }
+}
+
+// Workaround a bug in safari mobile where the inputs are not displayed correctly.
+.modal {
+    .o_list_editable {
+        .o_form_view.o_list_editable_form {
+            -webkit-overflow-scrolling: auto;
+        }
+    }
+}
+
+// Buttons in ControlPanel
+.o_list_buttons {
+    .o_list_button_save, .o_list_button_discard {
+        display: none;
+    }
+    &.o-editing { // for list view editable
+        .o_list_button_add {
+            display: none
+        }
+        .o_list_button_save, .o_list_button_discard {
+            display: inline-block
+        }
+    }
+}

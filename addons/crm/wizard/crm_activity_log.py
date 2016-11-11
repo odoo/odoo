@@ -3,26 +3,31 @@
 
 from datetime import datetime, timedelta
 
-from openerp import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _
 
 
 class ActivityLog(models.TransientModel):
+
     _name = "crm.activity.log"
     _description = "Log an Activity"
     _rec_name = 'title_action'
 
+    @api.model
+    def _default_lead_id(self):
+        if 'default_lead_id' in self._context:
+            return self._context['default_lead_id']
+        if self._context.get('active_model') == 'crm.lead':
+            return self._context.get('active_id')
+        return False
+
     next_activity_id = fields.Many2one('crm.activity', 'Activity')
-    last_activity_id = fields.Many2one('crm.activity', 'Previous Activity')
+    last_activity_id = fields.Many2one('crm.activity', 'Previous Activity', default=False)
     recommended_activity_id = fields.Many2one("crm.activity", "Recommended Activities")
     title_action = fields.Char('Summary')
     note = fields.Html('Note')
     date_action = fields.Date('Next Activity Date')
-    lead_id = fields.Many2one(
-        'crm.lead', 'Lead', required=True,
-        default=lambda self: self._context.get('default_lead_id',
-                                               self._context.get('active_model') == 'crm.lead' and self._context.get('active_id') or False))
-    team_id = fields.Many2one(
-        'crm.team', 'Sales Team')
+    lead_id = fields.Many2one('crm.lead', 'Lead', required=True, default=_default_lead_id)
+    team_id = fields.Many2one('crm.team', 'Sales Team')
     date_deadline = fields.Date('Expected Closing')
     planned_revenue = fields.Float('Expected Revenue')
 

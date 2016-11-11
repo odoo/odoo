@@ -1,3 +1,5 @@
+.. _setup/enterprise:
+
 ============================
 From Community to Enterprise
 ============================
@@ -58,14 +60,7 @@ have your own favourite. You may need to adapt sections to your usual workflow.
 
 * Shutdown your server
 * Backup your community database
-* Update the ``--addons-path`` parameter of your launch command (``init.d``, custom script,
-  configuration file, etc.). The Enterprise addons folder should be included" **before** the community modules.
-  For example:
-
-  .. code-block:: console
-
-    $ --addons-path=~/src/custom_modules,~/src/enterprise,~/src/odoo/addons
-
+* Update the ``--addons-path`` parameter of your launch command (see :ref:`setup/install/source`)
 * Update the web module by using
 
   .. code-block:: console

@@ -60,6 +60,8 @@
 
 <template id="assets_common" inherit_id="web.assets_common" name="web_editor base assets_common">
     <xpath expr="script[last()]" position="after">
+        <script type="text/javascript" src="/web_editor/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
+        <script type="text/javascript" src="/web_editor/static/src/js/ace.js" />
         <script type="text/javascript" src="/web_editor/static/src/js/base.js" />
         <script type="text/javascript" src="/web_editor/static/src/js/snippets.animation.js" />
     </xpath>
@@ -67,7 +69,7 @@
 
 <template id="assets_backend" inherit_id="web.assets_backend" name="web_editor assets for backend">
     <xpath expr="link[last()]" position="after">
-        <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.common.less"/> <!-- not in common because compiled diffently with context -->
+        <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.common.less"/> <!-- not in common because compiled differently with context -->
         <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.backend.less"/>
     </xpath>
     <xpath expr="script[last()]" position="after">
@@ -75,15 +77,15 @@
     </xpath>
 </template>
 
-<template id="assets_frontend" inherit_id="web.assets_frontend">
+<template id="assets_frontend" inherit_id="web.assets_frontend" priority="15">
     <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.common.less"/> <!-- not in common because compiled diffently with context -->
+        <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.common.less"/> <!-- not in common because compiled differently with context -->
     </xpath>
 </template>
 
 <template id="assets_editor" name="Full web_editor assets">
     <t t-call="web.less_helpers"/>
-    
+
     <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.ui.less"/>
     <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.ui.components.less"/>
 
@@ -153,6 +155,15 @@
             <button data-color="info">Info</button>
             <button data-color="warning">Warning</button>
             <button data-color="danger">Danger</button>
+        </div>
+        <div class="o_colorpicker_section" data-name="transparent_grayscale" data-icon-class="fa fa-eye-slash">
+            <button class="o_btn_transparent">Transparent</button>
+            <button data-color="black-25">25% Black</button>
+            <button data-color="black-50">50% Black</button>
+            <button data-color="black-75">75% Black</button>
+            <button data-color="white-25">25% White</button>
+            <button data-color="white-50">50% White</button>
+            <button data-color="white-75">75% White</button>
         </div>
     </colorpicker>
 </template>

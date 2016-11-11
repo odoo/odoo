@@ -3,15 +3,17 @@
 # * membership
 # 
 # Translators:
-# Kris Krnacs, 2015
+# krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-19 16:09+0000\n"
-"Last-Translator: Kris Krnacs\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -26,7 +28,7 @@ msgstr "# Számlázott "
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_num_paid
 msgid "# Paid"
-msgstr "# Kifizetések"
+msgstr "# Fizetett"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_num_waiting
@@ -36,9 +38,11 @@ msgstr "# Várakozó"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_associate_member
 msgid ""
-"A member with whom you want to associate your membership.It will consider "
+"A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
-msgstr "Egy tag akihez a tagságát szeretné társítani.Fontolóra veszi a társított tag tagságának állapotát."
+msgstr ""
+"Egy tag akihez a tagságát szeretné társítani.Fontolóra veszi a társított tag"
+" tagságának állapotát."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
@@ -53,7 +57,7 @@ msgstr "Leírás hozzáadása..."
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "All Members"
-msgstr "Összes tagok"
+msgstr "Összes tag"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -78,12 +82,6 @@ msgid "Associated Partner"
 msgstr "Társult partner"
 
 #. module: membership
-#: model:product.product,name:membership.membership_2
-#: model:product.template,name:membership.membership_2_product_template
-msgid "Basic Membership"
-msgstr "Alap tagság"
-
-#. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Buy Membership"
 msgstr "Tagság vásárlása"
@@ -91,17 +89,17 @@ msgstr "Tagság vásárlása"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_membership_invoice_view
 msgid "Cancel"
-msgstr "Mégsem"
+msgstr "Érvénytelenít"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_cancel
 msgid "Cancel Membership Date"
-msgstr "Tagsági tátum visszavonása"
+msgstr "Tagság érvénytelenítési dátuma"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_cancel
 msgid "Cancel date"
-msgstr "Törlés dátuma"
+msgstr "Érvénytelenítés dátuma"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -133,9 +131,14 @@ msgid "Company"
 msgstr "Vállalat"
 
 #. module: membership
+#: model:ir.ui.menu,name:membership.menu_marketing_config_association
+msgid "Configuration"
+msgstr "Beállítások"
+
+#. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_tree
 msgid "Contacts"
-msgstr "Kapcsolattartók"
+msgstr "Kapcsolatok"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_create_uid
@@ -192,7 +195,7 @@ msgstr "Dátum ameddig a tagság aktív maradhat."
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_display_name
 #: model:ir.model.fields,field_description:membership.field_report_membership_display_name
 msgid "Display Name"
-msgstr "Név megjelenítése"
+msgstr "Megjelenített név"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_tot_earned
@@ -202,7 +205,7 @@ msgstr "Beérkező / megkeresett összeg"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_date_to
 msgid "End Date"
-msgstr "Dátum-ig:"
+msgstr "Befejezés dátuma"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -230,14 +233,10 @@ msgid "Error ! Ending Date cannot be set before Beginning Date."
 msgstr "Hiba ! A befejezés időpontja nem lehet előbb mint a kezdés időpontja."
 
 #. module: membership
-#: constraint:res.partner:0
+#: code:addons/membership/models/partner.py:159
+#, python-format
 msgid "Error ! You cannot create recursive associated members."
 msgstr "HIBA ! Nem tud létrehozni önmagára hivatkozó felhasználókat/tagokat."
-
-#. module: membership
-#: constraint:membership.membership_line:0
-msgid "Error, this membership product is out of date"
-msgstr "Hiba, ez a tagsági termék lejárt"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -261,12 +260,6 @@ msgstr "Kezdő dátum"
 #: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "From Month"
 msgstr "Ettől a hónaptól"
-
-#. module: membership
-#: model:product.product,name:membership.membership_0
-#: model:product.template,name:membership.membership_0_product_template
-msgid "Gold Membership"
-msgstr "Arany tagság"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -330,19 +323,33 @@ msgid ""
 "-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
-msgstr "Ez mutatja meg a tagság szintjét.\n-Nem tag: Az ügyfél még nem nyújtott be kérvényt egyik tagságra sem.\n-Törölt tag: Olyan tag, aki visszavonta tagságát.\n-Régi tag: Egy olyan tag, akinek a tagsága lejárt.\n-Várakozó tag: Egy olyan tag, aki tagságot igényelt és készül a számlája.\n-Kiszámlázott tag: Tag, akinek a számlája elkészült.\n-Fizető tag: Tag, aki kifizette a tagsági díját."
+msgstr ""
+"Ez mutatja meg a tagság szintjét.\n"
+"-Nem tag: Az ügyfél még nem nyújtott be kérvényt egyik tagságra sem.\n"
+"-Törölt tag: Olyan tag, aki visszavonta tagságát.\n"
+"-Régi tag: Egy olyan tag, akinek a tagsága lejárt.\n"
+"-Várakozó tag: Egy olyan tag, aki tagságot igényelt és készül a számlája.\n"
+"-Kiszámlázott tag: Tag, akinek a számlája elkészült.\n"
+"-Fizető tag: Tag, aki kifizette a tagsági díját."
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
 msgid ""
 "It indicates the membership status.\n"
-"                        -Non Member: A member who has not applied for any membership.\n"
-"                        -Cancelled Member: A member who has cancelled his membership.\n"
-"                        -Old Member: A member whose membership date has expired.\n"
-"                        -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been created.\n"
-"                        -Paid Member: A member who has paid the membership amount."
-msgstr "Ez kijelzi a tagság állapotát.\n                    -Nem tag: Egy partner aki nem jelentkezett a tagságra.\n                    -Visszavont tag: Egy partner aki visszavonta a tagságát.\n                    -Réi tag: Egy partner akinek lejárt a tagsága.\n                    -Várakozó tag: Egy partner aki feliratkozott a tagságra és számlája el lesz készítve.\n                    -Számlázott tag: Egy tag akinek a számlája elkészült.\n                    -Fizető tag: Egy tag aki kifizette a tagsági díját."
+"-Non Member: A member who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paid Member: A member who has paid the membership amount."
+msgstr ""
+"Ez mutatja meg a tagság szintjét.\n"
+"-Nem tag: Az ügyfél még nem nyújtott be kérvényt egyik tagságra sem.\n"
+"-Törölt tag: Olyan tag, aki visszavonta tagságát.\n"
+"-Régi tag: Egy olyan tag, akinek a tagsága lejárt.\n"
+"-Várakozó tag: Egy olyan tag, aki tagságot igényelt és készül a számlája.\n"
+"-Kiszámlázott tag: Tag, akinek a számlája elkészült.\n"
+"-Fizető tag: Tag, aki kifizette a tagsági díját."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date
@@ -360,13 +367,13 @@ msgstr "Utoljára frissítve ekkor"
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_write_uid
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítve, által"
+msgstr "Utoljára frissítette"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_write_date
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve ekkor"
+msgstr "Utoljára frissítve "
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_partner_id
@@ -380,6 +387,7 @@ msgstr "Tagság ára"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
+#: model:ir.ui.menu,name:membership.menu_association
 #: model:ir.ui.menu,name:membership.menu_membership
 #: model:ir.ui.view,arch_db:membership.membership_members_tree
 msgid "Members"
@@ -503,7 +511,9 @@ msgstr "Egyiksem/Visszavont/Régi/Várakozió"
 msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
 "                 Current Membership Status, Discussions and History of Membership, etc."
-msgstr "Odoo rendszer segít a tagsághoz tartozó tevékenységének könnyű nyomonkövetésében: \n                 Jelenlegi tagság állapota, Megbeszélések és Tagság történet, stb."
+msgstr ""
+"Odoo rendszer segít a tagsághoz tartozó tevékenységének könnyű nyomonkövetésében: \n"
+"                 Jelenlegi tagság állapota, Megbeszélések és Tagság történet, stb."
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -526,13 +536,13 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: membership
-#: code:addons/membership/membership.py:351
+#: code:addons/membership/models/partner.py:181
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
 msgstr "Partnernak nincs számlázási címe."
 
 #. module: membership
-#: code:addons/membership/membership.py:349
+#: code:addons/membership/models/partner.py:179
 #, python-format
 msgid "Partner is a free Member."
 msgstr "A partner ingyenes tagságú"
@@ -575,12 +585,6 @@ msgid "Select if you want to give free membership."
 msgstr "Válassza ki, ha ingyenes tagságot szeretne adni."
 
 #. module: membership
-#: model:product.product,name:membership.membership_1
-#: model:product.template,name:membership.membership_1_product_template
-msgid "Silver Membership"
-msgstr "Ezüst tagság"
-
-#. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_start_date
 msgid "Start Date"
 msgstr "Kezdő dátum"
@@ -618,17 +622,19 @@ msgstr "Ez ki fogja jelezni a fizetve, régi és összes bevétel oszlopokat"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display waiting, invoiced and total pending columns"
-msgstr "Ez ki fogja jelezni a várakozást, számlázott és teljes függőben lévő oszlopokat"
+msgstr ""
+"Ez ki fogja jelezni a várakozást, számlázott és teljes függőben lévő "
+"oszlopokat"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_to
 msgid "To"
-msgstr "Záró dátum"
+msgstr "Címzett"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Vendors"
-msgstr "Kereskedők"
+msgstr "Beszállítók"
 
 #. module: membership
 #: selection:membership.membership_line,state:0

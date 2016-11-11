@@ -14,7 +14,7 @@ var _t = core._t;
 var QWeb = core.qweb;
 
 var GraphView = View.extend({
-    className: 'oe_graph',
+    className: 'o_graph',
     display_name: _lt('Graph'),
     icon: 'fa-bar-chart',
     require_fields: true,
@@ -54,12 +54,14 @@ var GraphView = View.extend({
         if ($node) {
             var context = {measures: _.pairs(_.omit(this.measures, '__count__'))};
             this.$buttons = $(QWeb.render('GraphView.buttons', context));
-            this.$measure_list = this.$buttons.find('.oe-measure-list');
+            this.$measure_list = this.$buttons.find('.o_graph_measures_list');
             this.update_measure();
             this.$buttons.find('button').tooltip();
             this.$buttons.click(this.on_button_click.bind(this));
 
-            this.$buttons.appendTo($node);
+            this.$buttons.find('.o_graph_button[data-mode="' + this.widget.mode + '"]').addClass('active');
+
+            this.$buttons.appendTo($node);  
         }
     },
     update_measure: function () {
@@ -82,11 +84,11 @@ var GraphView = View.extend({
                 }
             }
         });
-        this.measures.__count__ = {string: _t("Quantity"), type: "integer"};
+        this.measures.__count__ = {string: _t("Count"), type: "integer"};
     },
     do_search: function (domain, context, group_by) {
         if (!this.widget) {
-            this.initial_groupbys = context.graph_groupbys || this.initial_groupbys;
+            this.initial_groupbys = context.graph_groupbys || (group_by.length ? group_by : this.initial_groupbys);
             this.widget = new GraphWidget(this, this.model, {
                 measure: context.graph_measure || this.active_measure,
                 mode: context.graph_mode || this.active_mode,
@@ -94,6 +96,7 @@ var GraphView = View.extend({
                 groupbys: this.initial_groupbys,
                 context: context,
                 fields: this.fields,
+                stacked: this.fields_view.arch.attrs.stacked !== "False" 
             });
             // append widget
             this.widget.appendTo(this.$el);
@@ -111,18 +114,26 @@ var GraphView = View.extend({
     },
     on_button_click: function (event) {
         var $target = $(event.target);
-        if ($target.hasClass('oe-bar-mode')) {this.widget.set_mode('bar');}
-        if ($target.hasClass('oe-line-mode')) {this.widget.set_mode('line');}
-        if ($target.hasClass('oe-pie-mode')) {this.widget.set_mode('pie');}
-        if ($target.parents('.oe-measure-list').length) {
-            var parent = $target.parent(),
-                field = parent.data('field');
+        if ($target.hasClass('o_graph_button')) {
+            this.widget.set_mode($target.data('mode'));
+            this.$buttons.find('.o_graph_button.active').removeClass('active');
+            $target.addClass('active');
+        }
+        else if ($target.parents('.o_graph_measures_list').length) {
+            var parent = $target.parent();
+            var field = parent.data('field');
             this.active_measure = field;
-            parent.toggleClass('selected');
+            event.preventDefault();
             event.stopPropagation();
             this.update_measure();
             this.widget.set_measure(this.active_measure);
         }
+    },
+    destroy: function () {
+        if (this.$buttons) {
+            this.$buttons.find('button').off(); // remove jquery's tooltip() handlers
+        }
+        return this._super.apply(this, arguments);
     },
 });
 

@@ -1,98 +1,83 @@
 odoo.define('website_sale.tour', function (require) {
 'use strict';
 
-var Tour = require('web.Tour');
+var tour = require("web_tour.tour");
+var base = require("web_editor.base");
 
-Tour.register({
-    id:   'shop_buy_product',
-    name: "Try to buy products",
-    path: '/shop',
-    mode: 'test',
-    steps: [
+tour.register('shop_buy_product', {
+    test: true,
+    url: '/shop',
+    wait_for: base.ready()
+},
+    [
         {
-            title:  "search ipod",
-            element: 'form:has(input[name="search"]) a.a-submit',
-            onload: function() {
-                $('input[name="search"]').val("ipod");
-            }
+            content: "search ipod",
+            trigger: 'form input[name="search"]',
+            run: "text ipod",
         },
         {
-            title:     "select ipod",
-            element:   '.oe_product_cart a:contains("iPod")',
+            content: "search ipod",
+            trigger: 'form:has(input[name="search"]) .oe_search_button',
         },
         {
-            title:     "select ipod 32GB",
-            waitFor:   '#product_detail',
-            element:   'label:contains(32 GB) input',
+            content: "select ipod",
+            trigger: '.oe_product_cart a:contains("iPod")',
         },
         {
-            title:     "click on add to cart",
-            waitFor:   'label:contains(32 GB) input:propChecked',
-            element:   '#product_detail form[action^="/shop/cart/update"] .btn',
+            content: "select ipod 32GB",
+            extra_trigger: '#product_detail',
+            trigger: 'label:contains(32 GB) input',
         },
         {
-            title:     "add suggested",
-            waitNot:   '#cart_products:contains("[A8767] Apple In-Ear Headphones")',
-            element:   '.oe_cart a:contains("Add to Cart")',
+            content: "click on add to cart",
+            extra_trigger: 'label:contains(32 GB) input:propChecked',
+            trigger: '#product_detail form[action^="/shop/cart/update"] .btn',
         },
         {
-            title:     "add one more iPod",
-            waitFor:   '.my_cart_quantity:contains(2)',
-            element:   '#cart_products tr:contains("32 GB") a.js_add_cart_json:eq(1)',
+            content: "add suggested",
+            extra_trigger: '#wrap:not(:has(#cart_products:contains("[A8767] Apple In-Ear Headphones")))',
+            trigger: '.oe_cart:has(tr:contains("32 GB")) a:contains("Add to Cart")',
         },
         {
-            title:     "remove Headphones",
-            waitFor:   '#cart_products tr:contains("32 GB") input.js_quantity:propValue(2)',
-            element:   '#cart_products tr:contains("Apple In-Ear Headphones") a.js_add_cart_json:first',
+            content: "add one more iPod",
+            extra_trigger: '.my_cart_quantity:contains(2)',
+            trigger: '#cart_products tr:contains("32 GB") a.js_add_cart_json:eq(1)',
         },
         {
-            title:     "set one iPod",
-            waitNot:   '#cart_products tr:contains("Apple In-Ear Headphones")',
-            element:   '#cart_products input.js_quantity',
-            sampleText: '1',
+            content: "remove Headphones",
+            extra_trigger: '#cart_products tr:contains("32 GB") input.js_quantity:propValue(2)',
+            trigger: '#cart_products tr:contains("Apple In-Ear Headphones") a.js_add_cart_json:first',
         },
         {
-            title:     "go to checkout",
-            waitFor:   '#cart_products input.js_quantity:propValue(1)',
-            element:   'a[href="/shop/checkout"]',
+            content: "set one iPod",
+            extra_trigger: '#wrap:not(:has(#cart_products tr:contains("Apple In-Ear Headphones")))',
+            trigger: '#cart_products input.js_quantity',
+            run: 'text 1',
         },
         {
-            title:     "test with input error",
-            element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
-            onload: function (tour) {
-                $("input[name='phone']").val("");
-            },
+            content: "go to checkout",
+            extra_trigger: '#cart_products input.js_quantity:propValue(1)',
+            trigger: 'a[href="/shop/checkout"]',
         },
         {
-            title:     "test without input error",
-            waitFor:   'form[action="/shop/confirm_order"] .has-error',
-            element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
-            onload: function (tour) {
-                if ($("input[name='name']").val() === "")
-                    $("input[name='name']").val("website_sale-test-shoptest");
-                if ($("input[name='email']").val() === "")
-                    $("input[name='email']").val("website_sale_test_shoptest@websitesaletest.odoo.com");
-                $("input[name='phone']").val("123");
-                $("input[name='street2']").val("123");
-                $("input[name='city']").val("123");
-                $("input[name='zip']").val("123");
-                $("select[name='country_id']").val("21");
-            },
+            content: "Confirm checkout",
+            extra_trigger: "div.all_shipping .panel",
+            trigger: 'a[href="/shop/confirm_order"]',
         },
         {
-            title:     "select payment",
-            element:   '#payment_method label:has(img[title="Wire Transfer"]) input',
+            content: "select payment",
+            trigger: '#payment_method label:contains("Wire Transfer") input',
         },
         {
-            title:     "Pay Now",
-            waitFor:   '#payment_method label:has(input:checked):has(img[title="Wire Transfer"])',
-            element:   '.oe_sale_acquirer_button .btn[type="submit"]:visible',
+            content: "Pay Now",
+            extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked',
+            trigger: '.oe_sale_acquirer_button .btn[type="submit"]:visible',
         },
         {
-            title:     "finish",
-            waitFor:   '.oe_website_sale:contains("Thank you for your order")',
+            content: "finish",
+            trigger: '.oe_website_sale:contains("Thank you for your order")',
         }
     ]
-});
+);
 
 });

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <!-- Account Tags -->
+
+     <record id="tag_cl_01" model="account.account.tag">
+        <field name="name">Impuestos Directos a Pagar</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_02" model="account.account.tag">
+        <field name="name">Impuesto a la Renta Primera Categoría a Pagar</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_03" model="account.account.tag">
+        <field name="name">Impuesto General a las Ventas (IVA) Total a Pagar</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_04" model="account.account.tag">
+        <field name="name">Impuesto Pagado</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_05" model="account.account.tag">
+        <field name="name">Impuesto Pagado IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_06" model="account.account.tag">
+        <field name="name">Impuesto Pagado de Exonerados al IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_07" model="account.account.tag">
+        <field name="name">Impuesto Pagado Fuera de Ámbito</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_08" model="account.account.tag">
+        <field name="name">Impuesto Cobrado</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_09" model="account.account.tag">
+        <field name="name">Impuesto Cobrado IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_10" model="account.account.tag">
+        <field name="name">Impuesto Cobrado de Exonerados al IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_11" model="account.account.tag">
+        <field name="name">Impuesto Cobrado Fuera de Ámbito</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+   <record id="tag_cl_12" model="account.account.tag">
+        <field name="name">Base Imponible</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_13" model="account.account.tag">
+        <field name="name">Base Imponible - Ventas</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_14" model="account.account.tag">
+        <field name="name">Ventas Gravadas con IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_15" model="account.account.tag">
+        <field name="name">Ventas NO Gravadas (Exoneradas)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_16" model="account.account.tag">
+        <field name="name">Ventas Gravadas Fuera de Ámbito</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_17" model="account.account.tag">
+        <field name="name">Base Imponible - Compras</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_18" model="account.account.tag">
+        <field name="name">Compras Gravadas con IVA</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_19" model="account.account.tag">
+        <field name="name">Compras NO Gravadas (Exoneradas)</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="tag_cl_20" model="account.account.tag">
+        <field name="name">Compras Gravadas Fuera de Ámbito</field>
+        <field name="applicability">taxes</field>
+    </record>
+
+    <record id="ITAX_19" model="account.tax.template">
+      <field name="chart_template_id" ref="cl_chart_template"/>
+      <field name="name">IVA 19% Venta</field>
+      <field name="description">IVA 19% Venta</field>
+      <field name="amount">19</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">sale</field>
+      <field name="refund_account_id" ref="231"/>
+      <field name="account_id" ref="231"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_cl_09'), ref('tag_cl_14')])]"/>
+    </record>
+
+    <record id="OTAX_19" model="account.tax.template">
+      <field name="chart_template_id" ref="cl_chart_template"/>
+      <field name="name">IVA 19% Compra</field>
+      <field name="description">IVA 19% Compra</field>
+      <field name="amount">19</field>
+      <field name="amount_type">percent</field>
+      <field name="type_tax_use">purchase</field>
+      <field name="refund_account_id" ref="231"/>
+      <field name="account_id" ref="231"/>
+      <field name="tag_ids" eval="[(6,0,[ref('tag_cl_05'), ref('tag_cl_18')])]"/>
+    </record>
+</odoo>

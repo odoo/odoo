@@ -74,12 +74,16 @@ class Subscription(models.Model):
                 'nextcall': subscription.date_init,
                 'model': self._name,
                 'args': repr([[subscription.id]]),
-                'function': 'model_copy',
+                'function': '_cron_model_copy',
                 'priority': 6,
                 'user_id': subscription.user_id.id
             }
-            cron = self.env['ir.cron'].create(cron_data)
+            cron = self.env['ir.cron'].sudo().create(cron_data)
             subscription.write({'cron_id': cron.id, 'state': 'running'})
+
+    @api.model
+    def _cron_model_copy(self, ids):
+        self.browse(ids).model_copy()
 
     @api.multi
     def model_copy(self):

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <record id="view_yearly_salary_detail" model="ir.ui.view">
             <field name="name">Employee Yearly Salary</field>
             <field name="model">yearly.salary.detail</field>
@@ -34,10 +33,8 @@
             name="Yearly Salary by Employee"
             parent="hr.menu_hr_reporting_timesheet"
             action="action_yearly_salary_detail"
-            sequence="250" icon="STOCK_PRINT"
+            sequence="250"
             id="menu_yearly_salary_detail"
-            groups="base.group_hr_manager,base.group_hr_user"
+            groups="hr_payroll.group_hr_payroll_manager,hr_payroll.group_hr_payroll_user"
            />
-
-</data>
-</openerp>
+</odoo>

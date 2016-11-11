@@ -3,15 +3,17 @@
 # * procurement
 # 
 # Translators:
-# Kris Krnacs, 2015-2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:11+0000\n"
-"PO-Revision-Date: 2016-03-11 09:10+0000\n"
-"Last-Translator: Kris Krnacs\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,25 +23,16 @@ msgstr ""
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
-"<b>Procurement Orders</b> represent the need for a certain quantity of "
-"products, at a given time, in a given location."
-msgstr "<b>Beszerzési megrendelések</b> jelképezi egy bizonyos mennyiségű termékek igénylését, egy megadott időben, egy megadott helyen."
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"<b>Sales Orders</b> are one typical source of Procurement Orders (but these are distinct documents). \n"
-"                <br>Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc..."
-msgstr "<b>Vásárlói megrendelések</b> tipikus forrásai a beszerzési megrendeléseknek (de ezek határozott dokumentumok).\n                <br>A beszerzési megrendelés dokumentum paramétereitől és a termék beállításától függően, a beszerzési motor megpróbálja kielégíteni az igényt a termékek raktári lefoglalásával, a termék egy beszállítótól történő megrendelésével, vagy egy gyártási megrendelés feladásával, stb..."
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
 "A <b>Procurement Exception</b> occurs when the system cannot find a way to "
 "fulfill a procurement. Some exceptions will resolve themselves "
 "automatically, but others require manual intervention (those are identified "
 "by a specific error message in the chatter)."
-msgstr "Egy <b>Beszerzési kifogás</b> keletkezik ha a rendszer nem tud olyan utat találni mellyel kielégítheti a beszerzési igényt. Egyes kifogások automatikusan saját maguktól megoldódnak, de mások igénylika kézi beavatkozást (ezek beazonosíthatóak egy specifikus hiba üzenetről az üzenőfalon)."
+msgstr ""
+"Egy <b>Beszerzési kifogás</b> keletkezik ha a rendszer nem tud olyan utat "
+"találni mellyel kielégítheti a beszerzési igényt. Egyes kifogások "
+"automatikusan saját maguktól megoldódnak, de mások igénylika kézi "
+"beavatkozást (ezek beazonosíthatóak egy specifikus hiba üzenetről az "
+"üzenőfalon)."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -50,17 +43,16 @@ msgid ""
 "                product at a specific location. Procurement orders are usually\n"
 "                created automatically from <i>sales orders, pull logistic rules or\n"
 "                minimum stock rules.</i>"
-msgstr "Egy <b>beszerzési megrendelés</b> egy egyedi termék meghatározott helyre történő \n                igénylését rögzíti. Beszerzési megrendelést általában automatikusan \n                létrehoz a <i>vásárlói megrendelésekből, kiemelés logisztikai szabályokból vagy\n                minimum raktárkészlet szabályokból.</i>"
+msgstr ""
+"Egy <b>beszerzési megrendelés</b> egy egyedi termék meghatározott helyre történő \n"
+"                igénylését rögzíti. Beszerzési megrendelést általában automatikusan \n"
+"                létrehoz a <i>vásárlói megrendelésekből, kiemelés logisztikai szabályokból vagy\n"
+"                minimum raktárkészlet szabályokból.</i>"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
 msgid "Action"
 msgstr "Művelet"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction
-msgid "Action Needed"
-msgstr "Művelet szükséges"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_active
@@ -73,9 +65,14 @@ msgid "All at once"
 msgstr "Egyszerre"
 
 #. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr "Archivált"
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
-msgstr "Megszakítás"
+msgstr "Érvénytelenít"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -88,12 +85,6 @@ msgid "Cancelled"
 msgstr "Törölt"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:139
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr "Nem tudja törölni a beszerzési megrendelés(eke)t melyek a %s  állapotban vannak."
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Check Procurement"
 msgstr "Beszerzés ellenőrzése"
@@ -104,14 +95,10 @@ msgid ""
 "Chosen rule for the procurement resolution. Usually chosen by the system but"
 " can be manually set by the procurement manager to force an unusual "
 "behavior."
-msgstr "A beszerzés kiosztásához kiválasztott szabály. Általában a rendszer választja, de kézzel is beállítható a beszerzési igazgató által, egy nem általános viselkedés eröltetéséhez."
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
-msgid ""
-"Click to create a Procurement order in exception state, or remove the filter"
-" on the search bar to display all the procurements."
-msgstr "Kattintson beszerzési megrendelés kifogásolt állapot beállításához, vagy vegye le a szűrőt a keresésből az összes beszerzés megjelenítéséhez."
+msgstr ""
+"A beszerzés kiosztásához kiválasztott szabály. Általában a rendszer "
+"választja, de kézzel is beállítható a beszerzési igazgató által, egy nem "
+"általános viselkedés eröltetéséhez."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -139,7 +126,7 @@ msgstr "Összes ütemező futtatása"
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Confirmed"
-msgstr "Jóváhagyott"
+msgstr "Megerősített"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_create_uid
@@ -158,14 +145,9 @@ msgid "Created on"
 msgstr "Létrehozás dátuma"
 
 #. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-msgid "Delivery Method"
-msgstr "Szállítási mód"
+msgid "Delivery Type"
+msgstr "Szállítás típusa"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -178,12 +160,12 @@ msgstr "Leírás"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_display_name
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_display_name
 msgid "Display Name"
-msgstr "Név megjelenítése"
+msgstr "Megjelenített név"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Done"
-msgstr "Kész"
+msgstr "Elvégezve"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -216,21 +198,6 @@ msgid "Fixed Procurement Group"
 msgstr "Lerögzített beszerzési csoport"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_follower_ids
-msgid "Followers"
-msgstr "Követők"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Követők (Csatornák)"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Követők (Partnerek)"
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Global"
 msgstr "Globális"
@@ -238,7 +205,7 @@ msgstr "Globális"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Group By"
-msgstr "Csoportosítás..."
+msgstr "Csoportosítás"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
@@ -252,17 +219,7 @@ msgstr "Beszerzések csoportjai"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_id
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_id
 msgid "ID"
-msgstr "ID"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+msgstr "Azonosító ID"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
@@ -272,17 +229,9 @@ msgstr "Ha az útvonal mindenre érvényesül"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_rule_active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr "Ha nincs bejelölve, lehetővé teszi a szabály eltüntetését annak törlése nélkül."
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_is_follower
-msgid "Is Follower"
-msgstr "Ő egy követő"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_last_post
-msgid "Last Message Date"
-msgstr "Utolsó üzenet dátuma"
+msgstr ""
+"Ha nincs bejelölve, lehetővé teszi a szabály eltüntetését annak törlése "
+"nélkül."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
@@ -298,7 +247,7 @@ msgstr "Utoljára frissítve ekkor"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_write_uid
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítve, által"
+msgstr "Utoljára frissítette"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_write_date
@@ -306,7 +255,7 @@ msgstr "Utoljára frissítve, által"
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_write_date
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve ekkor"
+msgstr "Utoljára frissítve "
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
@@ -319,19 +268,15 @@ msgid "Leave Empty"
 msgstr "Hagyja üresen"
 
 #. module: procurement
-#: model:ir.ui.view,arch_db:procurement.mrp_company
-msgid "Logistics"
-msgstr "Logisztika"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_ids
-msgid "Messages"
-msgstr "Üzenetek"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_ids
-msgid "Messages and communication history"
-msgstr "Üzenetek és kommunikáció történet"
+#: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
+msgid ""
+"Most common exceptions are products to purchase without\n"
+"                having a vendor defined on the product, and products to\n"
+"                manufacture without having a bill of materials."
+msgstr ""
+"Legismertebb kivételek a beszerezni kívánt termékek melyekhez\n"
+"                nincs beszállító meghatározva, és gyártandó termékek,\n"
+"                melyeknek nincs anyagjegyzéke"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -339,7 +284,7 @@ msgid "Name"
 msgstr "Név"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:206
+#: code:addons/procurement/models/procurement.py:189
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Ehhez a beszerzéshez nincs szabály"
@@ -357,22 +302,7 @@ msgstr "Nem sürgős"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Notes"
-msgstr "Jegyzetek"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Műveletek száma"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Olvasatlan üzenetek száma"
+msgstr "Megjegyzések"
 
 #. module: procurement
 #: selection:procurement.group,move_type:0
@@ -382,7 +312,7 @@ msgstr "Részleges"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_priority
 msgid "Priority"
-msgstr "Prioritás"
+msgstr "Elsőbbségi"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order
@@ -493,9 +423,11 @@ msgstr "Hivatkozás"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
 msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by Odoo."
-msgstr "Arra a dokumentumra a hivatkozás, mely előállította ezt a beszerzést.\nEzt az Odoo rendszer automatikusan hozza létre."
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
+msgstr ""
+"Arra a dokumentumra a hivatkozás, mely előállította ezt a beszerzést.\n"
+"Ezt az Odoo rendszer automatikusan hozza létre."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -568,22 +500,13 @@ msgstr "Állapot"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_rule_name
 msgid "This field will fill the packing origin and the name of its moves"
-msgstr "Ez a mező tartalmazza a becsomagolás helyét és a raktár mozgások neveit"
+msgstr ""
+"Ez a mező tartalmazza a becsomagolás helyét és a raktár mozgások neveit"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
 msgid "Unit of Measure"
 msgstr "Mértékegység"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread
-msgid "Unread Messages"
-msgstr "Olvasatlan üzenetek"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Olvasatlan üzenetek számlálója"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -596,24 +519,23 @@ msgid "Very Urgent"
 msgstr "Nagyon sürgős"
 
 #. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_order_website_message_ids
-msgid "Website Messages"
-msgstr "Weboldal üzenetek"
-
-#. module: procurement
-#: model:ir.model.fields,help:procurement.field_procurement_order_website_message_ids
-msgid "Website communication history"
-msgstr "Weboldal  kommunikáció történet"
-
-#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid ""
 "When the procurement order is confirmed, it automatically\n"
-"                creates the necessary operations to fullfil the need: purchase\n"
+"                creates the necessary operations to fulfill the need: purchase\n"
 "                order proposition, manufacturing order, etc."
-msgstr "Ha egy beszerzési megrendelés jóváhagyott, automatikusan\n                létrehozza a szükséges műveleteket hozzá az igény kielégítéséhez: beszerzési\n                megrendelés javaslat, gyártási megrendelés, stb."
+msgstr ""
+"Ha egy beszerzési megrendelés jóváhagyott, automatikusan\n"
+"                létrehozza a szükséges műveleteket hozzá az igény kielégítéséhez: beszerzési\n"
+"                megrendelés javaslat, gyártási megrendelés, stb."
+
+#. module: procurement
+#: code:addons/procurement/models/procurement.py:144
+#, python-format
+msgid "You cannot delete procurements that are in cancel state."
+msgstr "Nem törölhet olyan beszerzéseket, melyek megszakított állapotúak."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form

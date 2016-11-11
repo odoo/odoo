@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
 import re
 
-from openerp import _, api, fields, models, SUPERUSER_ID
-from openerp import tools
-from openerp.tools.safe_eval import safe_eval as eval
+from odoo import _, api, fields, models, SUPERUSER_ID, tools
+from odoo.tools.safe_eval import safe_eval
 
 
 # main mako-like expression pattern
@@ -65,7 +65,7 @@ class MailComposer(models.TransientModel):
         result['model'] = result.get('model', self._context.get('active_model'))
         result['res_id'] = result.get('res_id', self._context.get('active_id'))
         result['parent_id'] = result.get('parent_id', self._context.get('message_id'))
-        if 'no_auto_thread' not in result and (not result['model'] or not result['model'] in self.pool or not hasattr(self.env[result['model']], 'message_post')):
+        if 'no_auto_thread' not in result and (result['model'] not in self.env or not hasattr(self.env[result['model']], 'message_post')):
             result['no_auto_thread'] = True
 
         # default values according to composition mode - NOTE: reply is deprecated, fall back on comment
@@ -120,7 +120,7 @@ class MailComposer(models.TransientModel):
     auto_delete = fields.Boolean('Delete Emails', help='Delete sent emails (mass mailing only)')
     auto_delete_message = fields.Boolean('Delete Message Copy', help='Do not keep a copy of the email in the document communication history (mass mailing only)')
     template_id = fields.Many2one(
-        'mail.template', 'Use template', select=True,
+        'mail.template', 'Use template', index=True,
         domain="[('model', '=', model)]")
     # mail_message updated fields
     message_type = fields.Selection(default="comment")
@@ -192,7 +192,7 @@ class MailComposer(models.TransientModel):
     @api.multi
     def send_mail_action(self):
         # TDE/ ???
-        return self.with_context(report_template_in_attachment=True).send_mail()
+        return self.send_mail()
 
     @api.multi
     def send_mail(self, auto_commit=False):
@@ -230,7 +230,7 @@ class MailComposer(models.TransientModel):
                 ActiveModel = ActiveModel.with_context(mail_notify_force_send=False, mail_create_nosubscribe=True)
             # wizard works in batch mode: [res_id] or active_ids or active_domain
             if mass_mode and wizard.use_active_domain and wizard.model:
-                res_ids = self.env[wizard.model].search(eval(wizard.active_domain)).ids
+                res_ids = self.env[wizard.model].search(safe_eval(wizard.active_domain)).ids
             elif mass_mode and wizard.model and self._context.get('active_ids'):
                 res_ids = self._context['active_ids']
             else:
@@ -358,20 +358,6 @@ class MailComposer(models.TransientModel):
             if template.user_signature and 'body_html' in values:
                 signature = self.env.user.signature
                 values['body_html'] = tools.append_content_to_html(values['body_html'], signature, plaintext=False)
-            if template.report_template:
-                attachment = self.env['ir.attachment']
-                attach = self.generate_attachment_from_report(template_id, res_id)
-                for attach_fname, attach_datas in attach[res_id].pop('attachments', []):
-                    data_attach = {
-                        'name': attach_fname,
-                        'datas': attach_datas,
-                        'datas_fname': attach_fname,
-                        'res_model': 'mail.compose.message',
-                        'res_id': 0,
-                        'type': 'binary',
-                    }
-                values.setdefault('attachment_ids', list()).append(attachment.create(data_attach).id)
-
         elif template_id:
             values = self.generate_email_for_composer(template_id, [res_id])[res_id]
             # transform attachments into attachment_ids; not attached to the document because this will
@@ -398,16 +384,9 @@ class MailComposer(models.TransientModel):
         # ORM handle the assignation of command list on new onchange (api.v8),
         # this force the complete replacement of x2many field with
         # command and is compatible with onchange api.v7
-        values = self._convert_to_write(self._convert_to_cache(values))
+        values = self._convert_to_write(values)
 
         return {'value': values}
-
-    @api.multi
-    def generate_attachment_from_report(self, template_id, res_id):
-        fields = ['attachment_ids']
-        result = self.env['mail.template'].with_context(tpl_partners_only=True).browse(template_id).generate_email([res_id], fields=fields)
-        return result
-
 
     @api.multi
     def save_as_template(self):
@@ -466,8 +445,9 @@ class MailComposer(models.TransientModel):
         bodies = self.render_template(self.body, self.model, res_ids, post_process=True)
         emails_from = self.render_template(self.email_from, self.model, res_ids)
         replies_to = self.render_template(self.reply_to, self.model, res_ids)
-
-        default_recipients = self.env['mail.thread'].message_get_default_recipients(res_model=self.model, res_ids=res_ids)
+        default_recipients = {}
+        if not self.partner_ids:
+            default_recipients = self.env['mail.thread'].message_get_default_recipients(res_model=self.model, res_ids=res_ids)
 
         results = dict.fromkeys(res_ids, False)
         for res_id in res_ids:

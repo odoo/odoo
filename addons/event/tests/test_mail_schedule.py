@@ -3,14 +3,14 @@
 import datetime
 from dateutil.relativedelta import relativedelta
 
-from openerp import fields, tools
-from openerp.addons.event.tests.common import TestEventCommon
-from openerp.tools import mute_logger
+from odoo import fields, tools
+from odoo.addons.event.tests.common import TestEventCommon
+from odoo.tools import mute_logger
 
 
 class TestMailSchedule(TestEventCommon):
 
-    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.models')
+    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
     def test_00_event_mail_schedule(self):
         """ Test mail scheduling for events """
         self.env['ir.values'].set_default('event.config.settings', 'auto_confirmation', True)
@@ -56,11 +56,11 @@ class TestMailSchedule(TestEventCommon):
         # verify that subscription scheduler was auto-executed after each registration
         self.assertEqual(len(schedulers[0].mail_registration_ids), 2, 'event: incorrect number of mail scheduled date')
 
-        mails = self.env['mail.mail'].search([('subject', 'ilike', 'subscription'), ('date', '>=', datetime.datetime.strftime(now, tools.DEFAULT_SERVER_DATETIME_FORMAT))], order='date DESC', limit=3)
-        self.assertEqual(len(mails), 2, 'event: wrong number of subscription mail sent')
+        mails = self.env['mail.mail'].search([('subject', 'ilike', 'registration'), ('date', '>=', datetime.datetime.strftime(now, tools.DEFAULT_SERVER_DATETIME_FORMAT))], order='date DESC', limit=3)
+        self.assertEqual(len(mails), 2, 'event: wrong number of registration mail sent')
 
         for registration in schedulers[0].mail_registration_ids:
-            self.assertTrue(registration.mail_sent, 'event: wrongly confirmed mailing on subscription')
+            self.assertTrue(registration.mail_sent, 'event: wrongly confirmed mailing on registration')
 
         # check before event scheduler
         schedulers = self.EventMail.search([('event_id', '=', test_event.id), ('interval_type', '=', 'before_event')])

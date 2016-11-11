@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
-from openerp import http
-from openerp.http import request
-from dateutil.relativedelta import relativedelta
-from datetime import datetime, date, timedelta
-from math import floor
-import time
-import operator
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from odoo import http
+from odoo.http import request
 
 
 class WebsiteBackend(http.Controller):
@@ -16,9 +11,10 @@ class WebsiteBackend(http.Controller):
     def fetch_dashboard_data(self, date_from, date_to):
 
         params = request.env['ir.config_parameter']
-        ga_client_id = params.get_param('google_management_client_id', default='')
+        ga_client_id = params.sudo().get_param('google_management_client_id', default='')
 
         return {
+            'groups': {'system': request.env['res.users'].has_group('base.group_system')},
             'currency': request.env.user.company_id.currency_id.id,
             'dashboards': {
                 'visits': {

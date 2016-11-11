@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- views -->
+
+    <record id="view_attendance_tree" model="ir.ui.view">
+        <field name="name">hr.attendance.tree</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <tree string="Employee attendances">
+                <field name="employee_id"/>
+                <field name="check_in"/>
+                <field name="check_out"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_form" model="ir.ui.view">
+        <field name="name">hr.attendance.form</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Employee attendances">
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="check_in"/>
+                        <field name="check_out"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_filter" model="ir.ui.view">
+        <field name="name">hr_attendance_view_filter</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <search string="Hr Attendance Search">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <filter name="today" string="Today" domain="[('check_in', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('check_in', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]" />
+                <filter string="Current Month" domain="[('check_in', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]" />
+                <separator/>
+                <filter string="No Check Out" domain="[('check_out', '=', False)]" />
+                <separator/>
+                <filter string="My Attendances" domain="[('employee_id.user_id.id', '=', uid)]" />
+                <group expand="0" string="Group By">
+                    <filter name="employee" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <separator/>
+                    <filter name="groupby_name" string="Month" context="{'group_by':'check_in'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_pivot" model="ir.ui.view">
+        <field name="name">hr.attendance.pivot</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <pivot string="Attendance">
+                <field name="employee_id" type="row"/>
+                <field name="check_in" type="col"/>
+                <field name="worked_hours" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_graph" model="ir.ui.view">
+        <field name="name">hr.attendance.graph</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <graph string="Attendance">
+                <field name="employee_id"/>
+                <field name="check_in"/>
+                <field name="worked_hours" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- actions -->
+
+    <record id="hr_attendance_action" model="ir.actions.act_window">
+        <field name="name">Attendances</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{"search_default_today":1}</field>
+        <field name="search_view_id" ref="hr_attendance_view_filter" />
+        <field name="help" type="html">
+            <p>The attendance records of your employees will be displayed here.</p>
+            <p>Please make sure you're using the correct filter if you expected to see any.</p>
+        </field>
+    </record>
+
+    <record id="hr_attendance_action_graph" model="ir.actions.act_window">
+        <field name="name">Attendance Analysis</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="view_id"></field>  <!-- force empty -->
+    </record>
+
+    <record id="hr_attendance_action_graph_filtered" model="ir.actions.act_window">
+        <field name="name">Attendance Analysis</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="context">{
+            'search_default_department_id': [active_id],
+            'default_department_id': active_id}
+        </field>
+        <field name="view_id"></field>  <!-- force empty -->
+    </record>
+
+    <record id="hr_attendance_action_kiosk_mode" model="ir.actions.client">
+        <field name="name">Attendances</field>
+        <field name="tag">hr_attendance_kiosk_mode</field>
+        <field name="target">fullscreen</field>
+    </record>
+
+    <record id="hr_attendance_action_my_attendances" model="ir.actions.client">
+        <field name="name">Attendance</field>
+        <field name="tag">hr_attendance_my_attendances</field>
+        <field name="target">main</field>
+    </record>
+
+    <record id="hr_attendance_action_greeting_message" model="ir.actions.client">
+        <field name="name">Message</field>
+        <field name="tag">hr_attendance_greeting_message</field>
+    </record>
+
+    <!-- Menus -->
+
+    <menuitem id="menu_hr_attendance_root" name="Attendances" sequence="90" groups="hr.group_hr_attendance" web_icon="hr_attendance,static/description/icon.png"/>
+    
+    <menuitem id="menu_hr_attendance_my_attendances" name="My Attendances" parent="menu_hr_attendance_root" sequence="10" groups="hr.group_hr_attendance" action="hr_attendance_action_my_attendances"/>
+
+    <menuitem id="menu_hr_attendance_manage_attendances" name="Manage Attendances" parent="menu_hr_attendance_root" sequence="20" groups="hr_attendance.group_hr_attendance_user"/>
+
+    <menuitem id="menu_hr_attendance_view_attendances" name="Attendances" parent="menu_hr_attendance_manage_attendances" sequence="10" groups="hr_attendance.group_hr_attendance_user" action="hr_attendance_action"/>
+
+    <menuitem id="menu_hr_attendance_view_employees_kanban" name="Employees" parent="menu_hr_attendance_manage_attendances" sequence="15" groups="hr_attendance.group_hr_attendance_user" action="hr.open_view_employee_list_my"/>
+
+    <menuitem id="menu_hr_attendance_kiosk_mode" name="Kiosk Mode" parent="menu_hr_attendance_manage_attendances" sequence="20" groups="hr_attendance.group_hr_attendance_user" action="hr_attendance_action_kiosk_mode"/>
+
+    <menuitem id="menu_hr_attendance_report" name="Reports" parent="menu_hr_attendance_root" sequence="30" groups="hr_attendance.group_hr_attendance_user" action="hr_attendance_action_graph"/>
+</odoo>

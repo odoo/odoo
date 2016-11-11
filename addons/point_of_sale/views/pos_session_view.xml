@@ -11,20 +11,20 @@
         <field name="name">pos.session.form.view</field>
         <field name="model">pos.session</field>
         <field name="arch" type="xml">
-            <form string="Point of Sale Session">
+            <form string="Point of Sale Session" create="0">
                 <header>
-                    <button name="open" type="workflow" string="Open Session"
+                    <button name="action_pos_session_open" type="object" string="Open Session"
                         attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}" class="oe_highlight"/>
                     <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"
                         class="oe_highlight"/>
-                    <button name="cashbox_control" type="workflow" string="End of Session"
+                    <button name="action_pos_session_closing_control" type="object" string="End of Session"
                         attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '!=', 'opened')]}" 
                         class="oe_highlight"/>
-                    <button name="close" type="workflow" string="Validate Closing &amp; Post Entries"
+                    <button name="action_pos_session_closing_control" type="object" string="Validate Closing &amp; Post Entries"
                         attrs="{'invisible' : ['|', ('cash_control', '=', True),('state', '!=', 'opened')]}"
-                        class="oe_highlight" />
-                    <button name="close" type="workflow" string="Validate Closing &amp; Post Entries" states="closing_control"
-                        class="oe_highlight" />
+                        class="oe_highlight"/>
+                    <button name="action_pos_session_closing_control" type="object" string="Validate Closing &amp; Post Entries" states="closing_control"
+                        class="oe_highlight"/>
                     
                     <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1" />
                     
@@ -52,15 +52,18 @@
                             class="oe_stat_button"
                             attrs="{'invisible':['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}"
                             icon="fa-money"
-                            type="action" context="{'balance': 'start', 'bank_statement_id': cash_register_id}">
+                            type="action" context="{'balance': 'start', 'bank_statement_id': cash_register_id, 'default_pos_id': config_id}">
                             <span class="o_stat_text">Set Opening Balance</span>
                         </button>
                         <button name="%(account.action_view_account_bnk_stmt_cashbox)d"
                             class="oe_stat_button"
                             attrs="{'invisible':['|', '|', ('cash_control', '=', False), ('state', '=', 'opening_control'), ('state', '=', 'closed')]}"
                             icon="fa-money"
-                            type="action" context="{'balance': 'end', 'bank_statement_id': cash_register_id}">
+                            type="action" context="{'balance': 'end', 'bank_statement_id': cash_register_id, 'default_pos_id': config_id}">
                             <span class="o_stat_text">Set Closing Balance</span>
+                        </button>
+                        <button class="oe_stat_button" name="action_stock_picking" type="object" icon="fa-arrows-v" attrs="{'invisible':[('picking_count', '=', 0)]}">
+                            <field name="picking_count" widget="statinfo" string="Picking Errors"/>
                         </button>
                     </div>
                     <h1 class="oe_title">
@@ -130,7 +133,7 @@
         <field name="name">pos.session.tree.view</field>
         <field name="model">pos.session</field>
         <field name="arch" type="xml">
-            <tree string="Point of Sale Session">
+            <tree string="Point of Sale Session" create="0">
                 <field name="config_id" />
                 <field name="name" />
                 <field name="user_id" />

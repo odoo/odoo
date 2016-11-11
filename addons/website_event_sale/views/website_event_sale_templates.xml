@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="assets_editor" inherit_id="website.assets_frontend" name="Event Sale">
+  <xpath expr="." position="inside">
+    <script type="text/javascript" src="/website_event_sale/static/src/js/website.tour.event_sale.js"></script>
+  </xpath>
+</template>
+
+<template id="index" inherit_id="website_event.index" name="Event's Ticket">
+    <xpath expr="//li[@t-foreach='event_ids']/div/h4" position="before">
+        <t t-if="event.state in ['draft', 'confirm'] and event.event_ticket_ids">
+            <span t-if="event.seats_availability == 'limited' and not event.seats_available" class="label label-danger pull-right">Sold Out</span>
+            <span t-if="event.seats_availability ==  'limited' and event.seats_available and event.seats_available &lt;= ((event.seats_max or 0) / 4)" class="label pull-right label-info">
+                Only <t t-esc="event.seats_available"/> Remaining
+            </span>
+        </t>
+    </xpath>
+</template>
+
+<template id="registration_template" inherit_id="website_event.registration_template">
+    <xpath expr="//thead/tr/th[contains(@class, 'o_th_price')]" position="after">
+        <t t-set='show_tickets_left' t-value="any([ticket for ticket in event.event_ticket_ids if (ticket.seats_max and ((ticket.seats_reserved or 0)*100 / ticket.seats_max)&gt;75)])"/>
+        <th t-if="show_tickets_left"></th>
+    </xpath>
+    <xpath expr="//tbody" position="replace">
+        <tbody>
+            <t t-foreach="event.event_ticket_ids" t-as="ticket">
+                <tr itemscope="itemscope" itemtype="http://data-vocabulary.org/Offer" t-if="not ticket.is_expired">
+                    <td itemscope="itemscope" itemtype="http://data-vocabulary.org/Product">
+                        <div itemprop="name" t-field="ticket.name"/>
+                        <div><small itemprop="description" t-field="ticket.product_id.description_sale"/></div>
+                    </td>
+                    <td>
+                        <t t-if="ticket.deadline">
+                            <span itemprop="priceValidUntil" t-field="ticket.deadline"/>
+                        </t>
+                        <t t-if="not ticket.deadline">
+                            <span>Unlimited</span>
+                        </t>
+                    </td>
+                    <td>
+                        <t t-if="ticket.price or editable">
+                            <t t-if="(ticket.price-website.get_current_pricelist().currency_id.compute(ticket.price_reduce, event.company_id.sudo().currency_id)) &gt; 1">
+                            <del class="text-danger mr4" style="white-space: nowrap;" t-field="ticket.price" t-options='{
+                              "widget": "monetary",
+                              "from_currency": event.company_id.sudo().currency_id,
+                              "display_currency": website.get_current_pricelist().currency_id
+                            }'/>
+                            </t>
+                            <span t-field="ticket.price_reduce" t-options='{
+                             "widget": "monetary",
+                             "display_currency": website.pricelist_id.currency_id
+                            }'/>
+                            <span itemprop="price" style="display:none;" t-esc="ticket.price"/>
+                            <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
+                        </t>
+                        <t t-if="not ticket.price and not editable">
+                            <span>Free</span>
+                        </t>
+                    </td>
+                    <td t-if="show_tickets_left">
+                        <span t-if="ticket.seats_max and ((ticket.seats_reserved or 0)*100 / ticket.seats_max)&gt;75" class="text-muted">
+                            <t t-esc="ticket.seats_max - ticket.seats_reserved"/> <span>left</span>
+                        </span>
+                    </td>
+                    <td>
+                        <select t-if="(event.seats_available or event.seats_availability == 'unlimited') and (ticket.seats_available or ticket.seats_availability == 'unlimited')" t-attf-name="nb_register-#{ticket.id}" class="form-control">
+                            <t t-set="seats_max_ticket" t-value="(ticket.seats_availability == 'unlimited' or ticket.seats_available > 9) and 10 or ticket.seats_available + 1"/>
+                            <t t-set="seats_max_event" t-value="(event.seats_availability == 'unlimited' or event.seats_available > 9) and 10 or event.seats_available + 1"/>
+                            <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event)"/>
+                            <t t-foreach="range(0, seats_max)" t-as="nb">
+                                <option t-esc="nb"/>
+                            </t>
+                        </select>
+                        <span t-if="(not event.seats_available and event.seats_availability == 'limited') or (ticket.seats_availability == 'limited' and not ticket.seats_available)">Sold Out</span>
+                    </td>
+                </tr>
+            </t>
+        </tbody>
+    </xpath>
+    <xpath expr="//button[@type='submit']" position="replace">
+        <button type="submit" t-if="event.state == 'confirm' and (event.seats_available or event.seats_availability == 'unlimited')"
+            class="btn btn-primary btn-lg pull-right a-submit" t-attf-id="#{event.id}">Order Now</button>
+    </xpath>
+    <xpath expr="//form[@id='registration_form']" position="attributes">
+        <attribute name="t-if">event.event_ticket_ids</attribute>
+    </xpath>
+</template>
+
+<template id="cart" inherit_id="website_sale.cart_lines" name="Hide product reduction for event tickets">
+    <xpath expr="//del" position="attributes">
+        <attribute name="t-attf-class" separator=" " add="#{line.event_id and 'hidden' or ''}"/>
+    </xpath>
+</template>
+</odoo>

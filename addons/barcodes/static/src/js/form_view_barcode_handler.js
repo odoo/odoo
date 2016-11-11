@@ -7,6 +7,7 @@ var common = require('web.form_common');
 var BarcodeEvents = require('barcodes.BarcodeEvents');
 var BarcodeHandlerMixin = require('barcodes.BarcodeHandlerMixin');
 var KanbanRecord = require('web_kanban.Record');
+var Dialog = require('web.Dialog');
 
 var _t = core._t;
 
@@ -52,6 +53,11 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
         }
     },
 
+    destroy: function () {
+        this.stop_listening();
+        this._super.apply(this, arguments);
+    },
+
     _display_no_edit_mode_warning: function() {
         this.do_warn(_t('Error : Document not editable'), _t('To modify this document, please first start edition.'));
     },
@@ -72,22 +78,38 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
             } else {
                 var field = this.form_view.fields[this.m2x_field];
                 var view = field.viewmanager.active_view;
+                var $content = $('<div>').append($('<input>', {type: 'text', class: 'o_set_qty_input'}));
 
                 if (this.last_scanned_barcode) {
-                    var new_qty = window.prompt(_t('Set quantity'), character) || "0";
-                    new_qty = new_qty.replace(',', '.');
-                    var record = this._get_records(field).find(function(record) {
-                        return record.get('product_barcode') === self.last_scanned_barcode;
+                    this.dialog = new Dialog(this, {
+                        title: _t('Set quantity'),
+                        buttons: [{text: _t('Select'), classes: 'btn-primary', close: true, click: function () {
+                            var new_qty = this.$content.find('.o_set_qty_input').val();
+                            var record = _.find(self._get_records(field), function (record) {
+                                return record.get('product_barcode') === self.last_scanned_barcode;
+                            });
+                            if (record) {
+                                var values = {};
+                                values[self.quantity_field] = parseFloat(new_qty);
+                                field.data_update(record.get('id'), values).then(function () {
+                                    view.controller.reload_record(record);
+                                });
+                            } else {
+                                self._display_no_last_scanned_warning();
+                            }
+                        }}, {text: _t('Discard'), close: true}],
+                        $content: $content,
+                    }).open();
+                    // This line set the value of the key which triggered the _set_quantity in the input
+                    this.dialog.$content.find('.o_set_qty_input').focus().val(character);
+
+                    var $selectBtn = this.dialog.$footer.find('.btn-primary');
+                    core.bus.on('keypress', this.dialog, function(event){
+                        if (event.which === 13) {
+                            event.preventDefault();
+                            $selectBtn.click();
+                        }
                     });
-                    if (record) {
-                        var values = {};
-                        values[this.quantity_field] = parseFloat(new_qty);
-                        field.data_update(record.get('id'), values).then(function () {
-                            view.controller.reload_record(record);
-                        });
-                    } else {
-                        this._display_no_last_scanned_warning();
-                    }
                 } else {
                     this._display_no_last_scanned_warning();
                 }
@@ -154,8 +176,13 @@ var FormViewBarcodeHandler = common.AbstractField.extend(BarcodeHandlerMixin, {
     },
 
     _get_records: function(field) {
-        return field.viewmanager.active_view.controller.records || // tree view
-            field.viewmanager.active_view.controller.widgets; // kanban view
+        var active_view = field.viewmanager.active_view;
+        if (active_view.type === "kanban") {
+            return active_view.controller.widgets;
+        } else {
+             // tree view case
+            return active_view.controller.records.records;
+        }
     },
 });
 

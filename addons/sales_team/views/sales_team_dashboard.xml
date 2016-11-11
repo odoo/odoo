@@ -4,7 +4,7 @@
         <field name="name">crm.team.dashboard</field>
         <field name="model">crm.team</field>
         <field name="arch" type="xml">
-            <sales_team_dashboard class="oe_background_grey o_kanban_dashboard o_salesteam_kanban" create="0">
+            <kanban class="oe_background_grey o_kanban_dashboard o_salesteam_kanban" create="0" js_class="sales_team_dashboard">
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="member_ids"/>
@@ -46,7 +46,7 @@
                                     </div>
                                 </div>
 
-                                <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                <div t-if="widget.editable" class="o_kanban_card_manage_settings row" groups="sales_team.group_sale_manager">
                                     <div class="col-xs-8">
                                         <ul class="oe_kanban_colorpicker" data-field="color"/>
                                     </div>
@@ -58,7 +58,7 @@
                         </div>
                     </t>
                 </templates>
-            </sales_team_dashboard>
+            </kanban>
         </field>
     </record>
 

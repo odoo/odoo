@@ -3,9 +3,9 @@
 
 from datetime import datetime
 
-from openerp import api, fields, models, tools
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
+from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo.tools.translate import _
+from odoo.exceptions import UserError
 
 AVAILABLE_PRIORITIES = [
     ('0', 'Normal'),
@@ -120,20 +120,21 @@ class Applicant(models.Model):
                            help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact")
-    create_date = fields.Datetime("Creation Date", readonly=True, select=True)
+    create_date = fields.Datetime("Creation Date", readonly=True, index=True)
     write_date = fields.Datetime("Update Date", readonly=True)
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', track_visibility='onchange',
                                domain="['|', ('job_id', '=', False), ('job_id', '=', job_id)]",
-                               copy=False, select=1,
+                               copy=False, index=True,
+                               group_expand='_read_group_stage_ids',
                                default=_default_stage_id)
     last_stage_id = fields.Many2one('hr.recruitment.stage', "Last Stage",
                                     help="Stage of the applicant before being in the current stage. Used for lost cases analysis.")
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags")
     company_id = fields.Many2one('res.company', "Company", default=_default_company_id)
     user_id = fields.Many2one('res.users', "Responsible", track_visibility="onchange", default=lambda self: self.env.uid)
-    date_closed = fields.Datetime("Closed", readonly=True, select=True)
-    date_open = fields.Datetime("Assigned", readonly=True, select=True)
-    date_last_stage_update = fields.Datetime("Last Stage Update", select=True, default=fields.Datetime.now)
+    date_closed = fields.Datetime("Closed", readonly=True, index=True)
+    date_open = fields.Datetime("Assigned", readonly=True, index=True)
+    date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     date_action = fields.Date("Next Action Date")
     title_action = fields.Char("Next Action", size=64)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')
@@ -148,8 +149,6 @@ class Applicant(models.Model):
     partner_mobile = fields.Char("Mobile", size=32)
     type_id = fields.Many2one('hr.recruitment.degree', "Degree")
     department_id = fields.Many2one('hr.department', "Department")
-    survey = fields.Many2one('survey.survey', related='job_id.survey_id', string="Survey")  # TDE FIXME: rename to survey_id
-    response_id = fields.Many2one('survey.user_input', "Response", ondelete="set null", oldname="response")
     reference = fields.Char("Referred By")
     day_open = fields.Float(compute='_compute_day', string="Days to Open")
     day_close = fields.Float(compute='_compute_day', string="Days to Close")
@@ -183,32 +182,17 @@ class Applicant(models.Model):
             record.attachment_number = attach_data.get(record.id, 0)
 
     @api.model
-    def _read_group_stage_ids(self, ids, domain, read_group_order=None, access_rights_uid=None):
-        access_rights_uid = access_rights_uid or self.env.uid
-        Stage = self.env['hr.recruitment.stage']
-        order = Stage._order
+    def _read_group_stage_ids(self, stages, domain, order):
         # retrieve job_id from the context and write the domain: ids + contextual columns (job or default)
         job_id = self._context.get('default_job_id')
         search_domain = [('job_id', '=', False)]
         if job_id:
-            search_domain = ['|'] + search_domain + [('job_id', '=', job_id)]
-        if self.ids:
-            search_domain = ['|'] + search_domain + [('id', 'in', self.ids)]
+            search_domain = ['|', ('job_id', '=', job_id)] + search_domain
+        if stages:
+            search_domain = ['|', ('id', 'in', stages.ids)] + search_domain
 
-        stage_ids = Stage._search(search_domain, order=order, access_rights_uid=access_rights_uid)
-        stages = Stage.sudo(access_rights_uid).browse(stage_ids)
-        result = stages.name_get()
-        # restore order of the search
-        result.sort(lambda x, y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
-
-        fold = {}
-        for stage in stages:
-            fold[stage.id] = stage.fold or False
-        return result, fold
-
-    _group_by_full = {
-        'stage_id': _read_group_stage_ids
-    }
+        stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
+        return stages.browse(stage_ids)
 
     @api.onchange('job_id')
     def onchange_job_id(self):
@@ -323,27 +307,6 @@ class Applicant(models.Model):
         }
         return res
 
-    @api.multi
-    def action_start_survey(self):
-        self.ensure_one()
-        # create a response and link it to this applicant
-        if not self.response_id:
-            response = self.env['survey.user_input'].create({'survey_id': self.survey.id, 'partner_id': self.partner_id.id})
-            self.response_id = response.id
-        else:
-            response = self.response_id
-        # grab the token of the response and start surveying
-        return self.survey.with_context(survey_token=response.token).action_start_survey()
-
-    @api.multi
-    def action_print_survey(self):
-        """ If response is available then print this response otherwise print survey form (print template of the survey) """
-        self.ensure_one()
-        if not self.response_id:
-            return self.survey.action_print_survey()
-        else:
-            response = self.response_id
-            return self.survey.with_context(survey_token=response.token).action_print_survey()
 
     @api.multi
     def action_get_attachment_tree_view(self):
@@ -351,6 +314,7 @@ class Applicant(models.Model):
         action = attachment_action.read()[0]
         action['context'] = {'default_res_model': self._name, 'default_res_id': self.ids[0]}
         action['domain'] = str(['&', ('res_model', '=', self._name), ('res_id', 'in', self.ids)])
+        action['search_view_id'] = (self.env.ref('hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment').id, )
         return action
 
     @api.multi
@@ -459,7 +423,7 @@ class Applicant(models.Model):
         self.write({'active': True, 'stage_id': default_stage_id})
 
 
-class applicant_category(models.Model):
+class ApplicantCategory(models.Model):
     _name = "hr.applicant.category"
     _description = "Category of applicant"
 

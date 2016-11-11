@@ -7,10 +7,16 @@
         <field name="arch" type="xml">
             <group name="social" position="before">
                 <group name="delivery" string="eCommerce">
-                    <label string="Manage Deliveries" for="module_website_sale_delivery"/>
-                    <div class="oe_inline">
-                        <field name="module_website_sale_delivery"/>
-                    </div>
+                    <field name="group_website_multiimage" widget="radio"/>
+                    <field name="module_website_sale_options" widget="radio"/>
+                    <field name="group_sale_pricelist" class="oe_inline" invisible="1"/>
+                    <field name="group_pricelist_item" class="oe_inline" invisible="1"/>
+                    <field name="group_product_pricelist" class="oe_inline" invisible="1"/>
+                    <field name="sale_pricelist_setting_split_1" widget="radio"/>
+                    <field name="sale_pricelist_setting_split_2" widget="radio" attrs="{'invisible': [('sale_pricelist_setting_split_1', '=', False)]}"/>
+                    <field name="module_website_sale_delivery" invisible="1"/>
+                    <field name="module_delivery" invisible="1"/>
+                    <field name="sale_delivery_settings" widget="radio"/>
                     <label for="module_delivery_ups" string="Shipping Connectors"/>
                     <div>
                         <div>
@@ -44,6 +50,7 @@
                     <div groups="base.group_no_one" class="oe_inline">
                         <field name="salesperson_id"/>
                     </div>
+                    <field name="order_mail_template"/>
                 </group>
             </group>
         </field>

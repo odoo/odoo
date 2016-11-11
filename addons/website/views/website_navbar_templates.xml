@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Front-end/Back-end integration -->
+    <template id="user_navbar" inherit_id="website.layout">
+        <xpath expr="//t[@t-set='html_data']" position="after">
+            <t t-set="body_classname" t-value="'o_connected_user' if env['ir.ui.view'].user_has_groups('base.group_user') else None"/>
+        </xpath>
+        <xpath expr="//div[@id='wrapwrap']" position="before">
+            <nav groups="base.group_user" t-if="website and menu_data" id="oe_main_menu_navbar" class="o_main_navbar">
+                <ul id="oe_applications">
+                    <li class="dropdown active">
+                        <a class="dropdown full" data-toggle="dropdown" href="#">
+                            <i class="fa fa-th-large"/> WEBSITE <b class="caret"/>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li t-as="menu" t-foreach="menu_data['children']">
+                                <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
+                                <a t-att-class="'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'" t-att-data-action-id="menu['action'] and menu['action'].split(',')[1] or None" t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or None" t-att-data-menu="menu['id']" t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')">
+                                    <i t-attf-class="fa #{menu.get('icon')} fa-lg fa-fw" t-if="menu.get('icon')"/>
+                                    <span class="oe_menu_text">
+                                        <t t-esc="menu['name']"/>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <button type="button" class="fa fa-bars pull-right visible-xs-block o_mobile_menu_toggle"/>
+
+                <div class="o_menu_brand">Website</div>
+
+                <ul class="o_menu_sections" groups="website.group_website_designer">
+                    <!-- Content -->
+                    <li class="dropdown content" t-if="editable">
+                        <a id="content-menu-button" class="dropdown-toggle waves" data-toggle="dropdown" href="#">Content</a>
+                        <ul class="dropdown-menu oe_content_menu" role="menu">
+                            <li>
+                                <a data-action="edit_menu" href="#" title="Edit Top Menu">Edit Menu</a>
+                            </li>
+                            <li t-if="deletable" role="separator" class="divider"></li>
+                            <li t-if="deletable"><a href="#" data-action="rename_page">Rename Page</a></li>
+                            <li t-if="deletable"><a href="#" data-action="delete_page">Delete Page</a></li>
+                        </ul>
+                    </li>
+                    <!-- Customize -->
+                    <li class="dropdown" id="customize-menu">
+                        <a class="dropdown-toggle waves" data-toggle="dropdown" href="#" id="customize-menu-button">Customize</a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li id="html_editor"><a data-action="ace" href="#advanced-view-editor">HTML Editor</a></li>
+                            <li id="theme_customize"><a href="#">Customize Theme</a></li>
+                            <li id="install_apps"><a href="/web#return_label=Website&amp;action=website.action_module_website">Install Apps</a></li>
+                            <li class="divider"/>
+                        </ul>
+                    </li>
+                    <!-- Promote -->
+                    <li class="dropdown">
+                        <a class="dropdown-toggle waves" data-toggle="dropdown" href="#" id="promote-menu-button">Promote</a>
+                        <ul class="dropdown-menu oe_promote_menu" role="menu">
+                            <li><a data-action="promote-current-page" href="#" title="Promote page on the web">Optimize SEO</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <ul class="o_menu_systray hidden-xs" groups="website.group_website_publisher">
+                    <!-- Mobile preview -->
+                    <li class="o_mobile_preview">
+                        <a data-action="show-mobile-preview" href="#"><span title="Mobile preview" class="fa fa-mobile"/></a>
+                    </li>
+                    <!-- Page Edition -->
+                    <li>
+                        <a data-action="new_page" href="#" data-toggle="modal" data-target="#o_website_add_page_modal"><span class="fa fa-plus"/>New</a>
+                    </li>
+                    <li t-if="not translatable">
+                        <a data-action="edit" href="#"><span class="fa fa-pencil"/>Edit</a>
+                    </li>
+                    <li t-if="translatable">
+                        <a data-action="translate" href="#">TRANSLATE</a>
+                    </li>
+                    <li t-if="translatable">
+                        <a data-action="edit_master" href="#">or Edit Master</a>
+                    </li>
+                </ul>
+            </nav>
+        </xpath>
+
+        <!-- Add new page/content modal -->
+        <xpath expr="//div[@id='wrapwrap']" position="after">
+            <div groups="website.group_website_publisher" class="modal" id="o_website_add_page_modal">
+                <div class="modal-dialog modal-lg">
+                    <ul>
+                        <li groups="website.group_website_designer"><a href="#" data-action="new_page"><i class="fa fa-file-o"/><p>New Page</p></a></li>
+                    </ul>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

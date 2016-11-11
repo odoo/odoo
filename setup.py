@@ -8,15 +8,15 @@ from setuptools import find_packages, setup
 from os.path import join, dirname
 
 
-execfile(join(dirname(__file__), 'openerp', 'release.py'))  # Load release variables
-lib_name = 'openerp'
+execfile(join(dirname(__file__), 'odoo', 'release.py'))  # Load release variables
+lib_name = 'odoo'
 
 
 def py2exe_datafiles():
     data_files = {}
     data_files['Microsoft.VC90.CRT'] = glob('C:\Microsoft.VC90.CRT\*.*')
 
-    for root, dirnames, filenames in os.walk('openerp'):
+    for root, dirnames, filenames in os.walk('odoo'):
         for filename in filenames:
             if not re.match(r'.*(\.pyc|\.pyo|\~)$', filename):
                 data_files.setdefault(root, []).append(join(root, filename))
@@ -36,9 +36,11 @@ def py2exe_datafiles():
 
     import docutils
     import passlib
+    import reportlab
     import requests
     data_mapping = ((docutils, 'docutils'),
                     (passlib, 'passlib'),
+                    (reportlab, 'reportlab'),
                     (requests, 'requests'))
 
     for mod, datadir in data_mapping:
@@ -57,9 +59,7 @@ def py2exe_options():
         import py2exe
         return {
             'console': [
-                {'script': 'odoo.py'},
-                {'script': 'openerp-gevent'},
-                {'script': 'openerp-server', 'icon_resources': [
+                {'script': 'odoo-bin', 'icon_resources': [
                     (1, join('setup', 'win32', 'static', 'pixmaps', 'openerp-icon.ico'))
                 ]},
             ],
@@ -85,7 +85,7 @@ def py2exe_options():
                         'markupsafe',
                         'mock',
                         'ofxparse',
-                        'openerp',
+                        'odoo',
                         'openid',
                         'passlib',
                         'PIL',
@@ -130,9 +130,9 @@ setup(
     author_email=author_email,
     classifiers=filter(None, classifiers.split('\n')),
     license=license,
-    scripts=['openerp-server', 'odoo.py'],
+    scripts=['setup/odoo'],
     packages=find_packages(),
-    package_dir={'%s' % lib_name: 'openerp'},
+    package_dir={'%s' % lib_name: 'odoo'},
     include_package_data=True,
     install_requires=[
         'babel >= 1.0',

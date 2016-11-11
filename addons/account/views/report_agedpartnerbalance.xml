@@ -4,7 +4,7 @@
     <t t-call="report.html_container">
         <t t-call="report.internal_layout">
             <div class="page">
-                <h2>Aged Trial Balance</h2>
+                <h2>Aged Partner Balance</h2>
 
                 <div class="row mt32">
                     <div class="col-xs-3">
@@ -50,13 +50,13 @@
                         </tr>
                         <tr t-if="get_partner_lines">
                             <th>Account Total</th>
-                            <th class="text-right"><span t-esc="get_direction[6]" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></th>
-                            <th class="text-right"><span t-esc="get_direction[4]" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></th>
-                            <th class="text-right"><span t-esc="get_direction[3]" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></th>
-                            <th class="text-right"><span t-esc="get_direction[2]" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></th>
-                            <th class="text-right"><span t-esc="get_direction[1]" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></th>
-                            <th class="text-right"><span t-esc="get_direction[0]" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></th>
-                            <th class="text-right"><span t-esc="get_direction[5]" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></th>
+                            <th class="text-right"><span t-esc="get_direction[6]" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/></th>
+                            <th class="text-right"><span t-esc="get_direction[4]" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/></th>
+                            <th class="text-right"><span t-esc="get_direction[3]" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/></th>
+                            <th class="text-right"><span t-esc="get_direction[2]" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/></th>
+                            <th class="text-right"><span t-esc="get_direction[1]" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/></th>
+                            <th class="text-right"><span t-esc="get_direction[0]" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/></th>
+                            <th class="text-right"><span t-esc="get_direction[5]" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,25 +65,25 @@
                                 <span t-esc="partner['name']"/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="partner['direction']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                <span t-esc="partner['direction']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="partner['4']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                <span t-esc="partner['4']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="partner['3']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                <span t-esc="partner['3']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="partner['2']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                <span t-esc="partner['2']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="partner['1']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                <span t-esc="partner['1']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="partner['0']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                <span t-esc="partner['0']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                             </td>
                             <td class="text-right">
-                                <span t-esc="partner['total']" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                                <span t-esc="partner['total']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
                             </td>
                         </tr>
                     </tbody>

@@ -1,33 +1,35 @@
 odoo.define('mass_mailing.editor', function (require) {
 "use strict";
 
-var Model = require('web.Model');
+var ajax = require("web.ajax");
+var core = require("web.core");
 var rte = require('web_editor.rte');
 var web_editor = require('web_editor.editor');
 var options = require('web_editor.snippets.options');
 var snippets_editor = require('web_editor.snippet.editor');
 
+var $editable_area = $("#editable_area");
+var odoo_top = window.top.odoo;
+
 // Snippet option for resizing  image and column width inline like excel
 options.registry["width-x"] = options.Class.extend({
     start: function () {
-        this.container_width = 600;
-        var parent = this.$target.closest('[data-max-width]');
-        if( parent.length ){
-            this.container_width = parseInt(parent.attr('data-max-width'));
-        } 
+        this.container_width = this.$target.parent().closest("td, table, div").width();
+
         var self = this;
         var offset, sib_offset, target_width, sib_width;
+        var $body = $(document.body);
         this.is_image = false;
-        this._super();
+        this._super.apply(this, arguments);
 
         this.$overlay.find(".oe_handle.e, .oe_handle.w").removeClass("readonly");
-        if( this.$target.is('img')){
+        if (this.$target.is("img")) {
             this.$overlay.find(".oe_handle.w").addClass("readonly");
-            this.$overlay.find(".oe_snippet_remove, .oe_snippet_move, .oe_snippet_clone").addClass("hidden");
+            this.$overlay.find(".oe_snippet_move, .oe_snippet_clone").addClass("hidden");
             this.is_image=true;
         }
 
-        this.$overlay.find(".oe_handle").on('mousedown', function (event){
+        this.$overlay.find(".oe_handle").on('mousedown', function (event) {
             event.preventDefault();
             var $handle = $(this);
             var compass = false;
@@ -35,93 +37,100 @@ options.registry["width-x"] = options.Class.extend({
             _.each(['n', 's', 'e', 'w' ], function(handler) {
                 if ($handle.hasClass(handler)) { compass = handler; }
             });
-            if(self.is_image){ compass = "image"; }
+            if (self.is_image) { compass = "image"; }
             self.buildingBlock.editor_busy = true;
 
-            var $body = $(document.body);
-
-            var body_mousemove = function (event){
+            $body.on("mousemove.mass_mailing_width_x", function (event) {
                 event.preventDefault();
                 offset = self.$target.offset().left;
                 target_width = self.get_max_width(self.$target);
                 if (compass === 'e' && self.$target.next().offset()) {
                     sib_width = self.get_max_width(self.$target.next());
                     sib_offset = self.$target.next().offset().left;
-                    self.change_width(event, self.$target, target_width, offset ,'plus');
-                    self.change_width(event, self.$target.next(), sib_width, sib_offset ,'minus');
+                    self.change_width(event, self.$target, target_width, offset, true);
+                    self.change_width(event, self.$target.next(), sib_width, sib_offset, false);
                 }
                 if (compass === 'w' && self.$target.prev().offset()) {
                     sib_width = self.get_max_width(self.$target.prev());
                     sib_offset = self.$target.prev().offset().left;
-                    self.change_width(event, self.$target, target_width, offset ,'minus');
-                    self.change_width(event, self.$target.prev(), sib_width, sib_offset, 'plus');
+                    self.change_width(event, self.$target, target_width, offset, false);
+                    self.change_width(event, self.$target.prev(), sib_width, sib_offset, true);
                 }
-                if (compass === 'image'){
-                    self.change_width(event, self.$target, target_width, offset ,'plus');
+                if (compass === 'image') {
+                    self.change_width(event, self.$target, target_width, offset, true);
                 }
-            }
-            var body_mouseup = function(){
-                $body.unbind('mousemove', body_mousemove);
-                $body.unbind('mouseup', body_mouseup);
+            });
+            $body.on("mouseup.mass_mailing_width_x", function () {
+                $body.off('.mass_mailing_width_x');
                 self.buildingBlock.editor_busy = false;
                 self.$target.removeClass("resize_editor_busy");
-            };
-            $body.mousemove(body_mousemove);
-            $body.mouseup(body_mouseup);
+            });
         });
     },
-    change_width:function(event, target ,target_width, offset, type){
-        var self = this;
-        if(type == 'plus'){
-            var width = event.pageX-offset;
-        }else{
-            var width = offset + target_width - event.pageX;
-        }
-        target.css("width", width + "px");
-        self.buildingBlock.cover_target(self.$overlay, self.$target);
-        return;
+    change_width: function (event, target, target_width, offset, grow) {
+        target.css("width", grow ? (event.pageX - offset) : (offset + target_width - event.pageX));
+        this.buildingBlock.cover_target(this.$overlay, this.$target);
     },
-    get_int_width: function ($el) {
-        var el_width = $el.css('width');
-        return parseInt(el_width);
+    get_int_width: function (el) {
+        return parseInt($(el).css("width"), 10);
     },
     get_max_width: function ($el) {
-        var max_width = 0;
-        var self = this;
-        _.each($el.siblings(),function(sib){
-            max_width +=  self.get_int_width($(sib));
-        })
-        return this.container_width - max_width;
+        return this.container_width - _.reduce(_.map($el.siblings(), this.get_int_width), function (memo, w) { return memo + w; });
     },
-    on_clone: function ($clone) {
-        var clone_index = $(this.$target).index();
-        var $table = this.$target.parents('table[data-max-width]');
-        if($table.length == 1){
-            _.each($table.find('tbody>tr'),function(row){
-                var clone_selector = 'td:eq(' + clone_index + ')';
-                var $col_to_clone = $(row).find(clone_selector);
-                if($col_to_clone.length != 0){
-                    $col_to_clone.after($col_to_clone.clone());
-                }
-            });
+    on_focus: function () {
+        this._super.apply(this, arguments);
+
+        if (this.$target.is("td, th")) {
+            this.$overlay.find(".oe_handle.e, .oe_handle.w").toggleClass("readonly", this.$target.siblings().length === 0);
         }
-        this._super($clone);
-        this.buildingBlock.cover_target(this.$overlay, this.$target);
-    },
-    on_remove: function () {
-        var remove_index = $(this.$target).index();
-        var $table = this.$target.parents('table[data-max-width]');
-        if($table.length == 1){
-            _.each($table.find('tbody>tr'),function(row){
-                var remove_selector = 'td:eq(' + remove_index + ')';
-                $(row).find(remove_selector).remove();
-            });
-        }
-        this._super();
-        this.buildingBlock.cover_target(this.$overlay, this.$target);
     },
 });
 
+options.registry.table_item = options.Class.extend({
+    on_clone: function ($clone) {
+        this._super.apply(this, arguments);
+
+        // If we cloned a td or th element...
+        if (this.$target.is("td, th")) {
+            // ... and that the td or th element was alone on its row ...
+            if (this.$target.siblings().length === 1) {
+                var $tr = $clone.parent();
+                $tr.clone().empty().insertAfter($tr).append($clone); // ... move the clone in a new row instead
+                return;
+            }
+
+            // ... if not, if the clone neighbor is an empty cell, remove this empty cell (like if the clone content had been put in that cell)
+            var $next = $clone.next();
+            if ($next.length && $next.text().trim() === "") {
+                $next.remove();
+                return;
+            }
+
+            // ... if not, insert an empty col in each other row, at the index of the clone
+            var width = $clone.width();
+            var $trs = this.$target.closest("table").children("thead, tbody, tfoot").addBack().children("tr").not(this.$target.parent());
+            _.each($trs.children(":nth-child(" + this.$target.index() + ")"), function (col) {
+                $(col).after($("<td/>", {style: "width: " + width + "px;"}));
+            });
+        }
+    },
+    on_remove: function () {
+        this._super.apply(this, arguments);
+
+        // If we are removing a td or th element which was not alone on its row ...
+        if (this.$target.is("td, th") && this.$target.siblings().length > 0) {
+            var $trs = this.$target.closest("table").children("thead, tbody, tfoot").addBack().children("tr").not(this.$target.parent());
+            if ($trs.length) { // ... if there are other rows in the table ...
+                var $last_tds = $trs.children(":last-child");
+                if (_.reduce($last_tds, function (memo, td) { return memo + (td.innerHTML || ""); }, "").trim() === "") {
+                    $last_tds.remove(); // ... remove the potential full empty column in the table
+                } else {
+                    this.$target.parent().append("<td/>"); // ... else, if there is no full empty column, append an empty col in the current row
+                }
+            }
+        }
+    },
+});
 
 var fn_popover_update = $.summernote.eventHandler.modules.popover.update;
 $.summernote.eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
@@ -129,112 +138,217 @@ $.summernote.eventHandler.modules.popover.update = function ($popover, oStyle, i
     $("span.o_table_handler, div.note-table").remove();
 };
 
-web_editor.Class.include({
-    start: function () {
-        var self = this;
-        $('[data-toggle="tooltip"]').tooltip();
-        if (location.search.indexOf("enable_editor") !== -1) {
-            this.on('rte:start', this, function () {
-                $("#choose_template").off("click").on("click", _.bind(self.on_choose_template, self));
-                $(".theme_thumbnail [data-snippet-theme]").off("click").on("click", _.bind(self.on_set_snippet_theme, self));
-                var $editable = $("#editable_area");
-                $editable.html($editable.prop("innerHTML").replace(/^<p[^>]*>\s*<\/p>$/, ''));
-            });
-            this.on("snippets:ready", this, _.bind(self.display_theme_from_html, self));
-        }
-        return this._super.apply(this, arguments);
-    },
-    display_theme_from_html: function () {
-        var theme = $("#editable_area [data-snippet-theme]").data("snippet-theme");
-        if (theme) {
-            $("#choose_template").show();
-            this.set_snippet_theme(theme);
-        } else {
-            $("#choose_template").hide();
-            this.on_choose_template();
-        }
-        var mailing_model = JSON.parse($.deparam(location.search).datarecord).mailing_model;
-        if (mailing_model) {
-            this.get_snippet_template( mailing_model );
-        }
-    },
-
-    on_choose_template: function (event) {
-        if (event) {
-            $("#choose_template").show();
-        }
-        var $editable = $("#editable_area");
-        $(".o_table_handler").remove();
-        $editable.add("#oe_snippets, #templates, .note-popover").toggleClass("hidden");
-        $("#choose_template").children().toggleClass("hidden");
-        $("body").trigger("resize");
-        $(window.top).trigger('resize');
-        setTimeout(function () {
-            $(".note-popover").toggleClass("hidden", $("#templates").is(":visible"));
-        },0);
-    },
-    on_set_snippet_template: function (event) {
-        var $editable = $("#editable_area");
-        this.rte.historyRecordUndo($editable);
-        $editable.html( $(event.target).closest(".theme_thumbnail").find(".js_content").html() );
-        $editable.add("#oe_snippets, #templates, .note-popover").toggleClass("hidden");
-        $("#choose_template").children().toggleClass("hidden");
-        setTimeout(function () {
-            $("body").trigger("resize");
-            $("body")[0].scrollTop = 0;
-        },0);
-        event.preventDefault();
-    },
-    on_set_snippet_theme: function (event) {
-        this.set_snippet_theme($(event.target).data("snippet-theme"));
-        this.on_choose_template(event);
-        event.preventDefault();
-    },
-    set_snippet_theme: function (theme) {
-        $("#oe_snippets .o_panel_body > div").addClass("hidden");
-        $("#oe_snippets .o_panel_body > div."+theme).removeClass("hidden");
-        $("#editable_area").trigger("content_changed");
-    },
-    get_snippet_template: function (mailing_model) {
-        var self = this;
-        var domain = [['model', '=', mailing_model]];
-        return new Model('mail.template').call('search_read', [domain]).then(function (datas) {
-            var $template = $("#templates > div:last").addClass("hidden");
-            var $tclone = $template.find("> div > div:first");
-            $tclone.siblings().remove();
-            _.each(datas, function (data) {
-                if (!data.body_html) {
-                    return;
-                }
-                $template.removeClass("hidden");
-                var $clone = $tclone.clone().removeClass("hidden");
-                $clone.find("p:first").html(data.name);
-                $clone.find(".template_preview").html(data.body_html);
-                $tclone.after($clone);
-            });
-
-            $(".js_template_set").off("click").on("click", _.bind(self.on_set_snippet_template, self));
-        });
-    }
-});
+ajax.loadXML("/mass_mailing/static/src/xml/mass_mailing.xml", core.qweb);
 
 snippets_editor.Class.include({
     _get_snippet_url: function () {
-        return snippets_url;
+        var url = (typeof snippets_url !== "undefined" ? window["snippets_url"] : this._super.apply(this, arguments));
+        return url;
     },
-    clean_for_save: function () {
-        this._super();
-        var $editable = $("#editable_area");
-        var theme = ($("#oe_snippets .o_panel_body > div:not(.hidden)").attr("class") || "").replace(/^\s*|\s*o_mail_block[^\s]+\s*|\s*oe_snippet\s*|\s*ui-draggable\s*|\s*$/g, '');
-        var $theme = $("#editable_area [data-snippet-theme]").removeAttr("data-snippet-theme").removeData("snippet-theme");
-        $editable.children().first().attr("data-snippet-theme", theme);
-        $editable.find(":not(br):hidden").remove();
+    compute_snippet_templates: function (html) {
+        var self = this;
+        var ret = this._super.apply(this, arguments);
+
+        var $themes = this.$("#email_designer_themes").children();
+        if ($themes.length === 0) return ret;
+
+        /**
+         * Initialize theme parameters.
+         */
+        var all_classes = "";
+        var themes_params = _.map($themes, function (theme) {
+            var $theme = $(theme);
+            var name = $theme.data("name");
+            var classname = "o_" + name + "_theme";
+            all_classes += " " + classname;
+            var images_info = _.defaults($theme.data("imagesInfo") || {}, {all: {}});
+            _.each(images_info, function (info) {
+                info = _.defaults(info, images_info.all, {module: "mass_mailing", format: "jpg"});
+            });
+            return {
+                name: name,
+                className: classname || "",
+                img: $theme.data("img") || "",
+                template: $theme.html().trim(),
+                get_image_info: function (filename) {
+                    if (images_info[filename]) {
+                        return images_info[filename];
+                    }
+                    return images_info.all;
+                }
+            };
+        });
+        $themes.parent().remove();
+
+        var $body = $(document.body);
+        var $snippets = this.$(".oe_snippet");
+        var $snippets_menu = this.$el.find("#snippets_menu");
+
+        /**
+         * Create theme selection screen and check if it must be forced opened.
+         * Reforce it opened if the last snippet is removed.
+         */
+        var $dropdown = $(core.qweb.render("mass_mailing.theme_selector", {
+            themes: themes_params
+        }));
+        var first_choice;
+        check_if_must_force_theme_choice();
+
+        /**
+         * Add proposition to install enterprise themes if not installed.
+         */
+        var $mail_themes_upgrade = $dropdown.find(".o_mass_mailing_themes_upgrade");
+        $mail_themes_upgrade.on("click", "> a", function (e) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            odoo_top[window.callback+"_do_action"]("mass_mailing.action_mass_mailing_configuration");
+        });
+
+        /**
+         * Switch theme when a theme button is hovered. Confirm change if the theme button
+         * is pressed.
+         */
+        var selected_theme = false;
+        $dropdown.on("mouseenter", "li > a", function (e) {
+            if (first_choice) return;
+            e.preventDefault();
+            var theme_params = themes_params[$(e.currentTarget).parent().index()];
+            switch_theme(theme_params);
+        });
+        $dropdown.on("click", "li > a", function (e) {
+            e.preventDefault();
+            var theme_params = themes_params[$(e.currentTarget).parent().index()];
+            if (first_choice) {
+                switch_theme(theme_params);
+                $body.removeClass("o_force_mail_theme_choice");
+                first_choice = false;
+
+                if ($mail_themes_upgrade.length) {
+                    $dropdown.remove();
+                    $snippets_menu.empty();
+                }
+            }
+
+            switch_images(theme_params, $snippets);
+
+            selected_theme = theme_params;
+
+            // Notify form view
+            odoo_top[window.callback+"_downup"]($editable_area.addClass("o_dirty").html());
+        });
+
+        /**
+         * If the user opens the theme selection screen, indicates which one is active and
+         * saves the information...
+         * ... then when the user closes check if the user confirmed its choice and restore
+         * previous state if this is not the case.
+         */
+        $dropdown.on("shown.bs.dropdown", function () {
+            check_selected_theme();
+            $dropdown.find("li").removeClass("selected").filter(function () {
+                return ($(this).has(".o_thumb[style=\""+ "background-image: url(" + (selected_theme && selected_theme.img) + "_small.png)"+ "\"]").length > 0);
+            }).addClass("selected");
+        });
+        $dropdown.on("hidden.bs.dropdown", function () {
+            switch_theme(selected_theme);
+        });
+
+        /**
+         * On page load, check the selected theme and force switching to it (body needs the
+         * theme style for its edition toolbar).
+         */
+        check_selected_theme();
+        $body.addClass(selected_theme.className);
+
+        $dropdown.insertAfter($snippets_menu);
+
+        return ret;
+
+        function check_if_must_force_theme_choice() {
+            first_choice = editable_area_is_empty();
+            $body.toggleClass("o_force_mail_theme_choice", first_choice);
+        }
+
+        function editable_area_is_empty($layout) {
+            $layout = $layout || $editable_area.find(".o_layout");
+            var $mail_wrapper = $layout.children(".o_mail_wrapper");
+            return (
+                $editable_area.html().trim() === ""
+                || ($layout.length > 0 && ($layout.html().trim() === "" || $mail_wrapper.length > 0 && $mail_wrapper.html().trim() === ""))
+            );
+        }
+
+        function check_selected_theme() {
+            var $layout = $editable_area.find(".o_layout");
+            if ($layout.length === 0) {
+                selected_theme = false;
+            } else {
+                _.each(themes_params, function (theme_params) {
+                    if ($layout.hasClass(theme_params.className)) {
+                        selected_theme = theme_params;
+                    }
+                });
+            }
+        }
+
+        function switch_images(theme_params, $container) {
+            $container.find("img").each(function () {
+                var $img = $(this);
+                var src = $img.attr("src");
+
+                var m = src.match(/^\/web\/image\/\w+\.s_default_image_(?:theme_[a-z]+_)?(.+)$/);
+                if (!m) {
+                    m = src.match(/^\/\w+\/static\/src\/img\/(?:theme_[a-z]+\/)?s_default_image_(.+)\.[a-z]+$/);
+                }
+                if (!m) return;
+
+                var file = m[1];
+                var img_info = theme_params.get_image_info(file);
+
+                if (img_info.format) {
+                    src = "/" + img_info.module + "/static/src/img/theme_" + theme_params.name + "/s_default_image_" + file + "." + img_info.format;
+                } else {
+                    src = "/web/image/" + img_info.module + ".s_default_image_theme_" + theme_params.name + "_" + file;
+                }
+
+                $img.attr("src", src);
+            });
+        }
+
+        function switch_theme(theme_params) {
+            if (!theme_params || switch_theme.last === theme_params) return;
+            switch_theme.last = theme_params;
+
+            $body.removeClass(all_classes).addClass(theme_params.className);
+            switch_images(theme_params, $editable_area);
+
+            var $old_layout = $editable_area.find(".o_layout");
+            var $new_wrapper = $("<div/>", {"class": "o_mail_wrapper oe_structure"});
+            var $new_layout = $("<div/>", {"class": "o_layout " + theme_params.className}).append($new_wrapper);
+
+            var $contents;
+            if (first_choice) {
+                $contents = theme_params.template;
+            } else if ($old_layout.length) {
+                $contents = ($old_layout.hasClass("oe_structure") ? $old_layout : $old_layout.find(".oe_structure").first()).contents();
+            } else {
+                $contents = $editable_area.contents();
+            }
+
+            $editable_area.empty().append($new_layout);
+            $new_wrapper.append($contents);
+            $old_layout.remove();
+
+            if (first_choice) {
+                self.add_default_snippet_text_classes($new_wrapper);
+            }
+            self.show_blocks();
+        }
     },
 });
 
-var _set_value = window.top.odoo[callback+"_updown"];
-var odoo_top = window.top.odoo;
-window.top.odoo[callback+"_updown"] = function (value, fields_values, field_name) {
+var callback = window ? window["callback"] : undefined;
+odoo_top[callback+"_updown"] = function (value, fields_values, field_name) {
     if (!window) {
         delete odoo_top[callback+"_updown"];
         return;
@@ -244,7 +358,7 @@ window.top.odoo[callback+"_updown"] = function (value, fields_values, field_name
     var _val = $editable.prop("innerHTML");
     var editor_enable = $('body').hasClass('editor_enable');
     value = value || "";
-    
+
     if(value !==_val) {
         if (editor_enable) {
             if (value !== fields_values[field_name]) {
@@ -252,14 +366,11 @@ window.top.odoo[callback+"_updown"] = function (value, fields_values, field_name
             }
             snippets_editor.instance.make_active(false);
         }
-        
-        if (value.indexOf('on_change_model_and_list') === -1) {
 
+        if (value.indexOf('on_change_model_and_list') === -1) {
             $editable.html(value);
 
             if (editor_enable) {
-                web_editor.editor_bar.display_theme_from_html();
-
                 if (value !== fields_values[field_name]) {
                     $editable.trigger("content_changed");
                 }
@@ -268,16 +379,13 @@ window.top.odoo[callback+"_updown"] = function (value, fields_values, field_name
     }
 
     if (fields_values.mailing_model && web_editor.editor_bar) {
-        web_editor.editor_bar.get_snippet_template(fields_values.mailing_model);
         if (value.indexOf('on_change_model_and_list') !== -1) {
             odoo_top[callback+"_downup"](_val);
         }
     }
 };
 
-
-if ($("#editable_area").html().indexOf('on_change_model_and_list') !== -1) {
-    $("#editable_area").empty();
+if ($editable_area.html().indexOf('on_change_model_and_list') !== -1) {
+    $editable_area.empty();
 }
-
 });

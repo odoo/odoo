@@ -1,10 +1,11 @@
-from reportlab.graphics.barcode import createBarcodeDrawing
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp.osv import osv
-from openerp.addons.base.ir.ir_qweb import HTMLSafe
+from odoo import api, models
+from odoo.addons.base.ir.ir_qweb import unicodifier
 
 
-class BarcodeConverter(osv.AbstractModel):
+class IrQwebFieldBarcode(models.AbstractModel):
     """ ``barcode`` widget rendering, inserts a data:uri-using image tag in the
     document. May be overridden by e.g. the website module to generate links
     instead.
@@ -12,13 +13,15 @@ class BarcodeConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.barcode'
     _inherit = 'ir.qweb.field'
 
-    def value_to_html(self, cr, uid, value, field, options=None, context=None):
+    @api.model
+    def value_to_html(self, value, options=None):
         barcode_type = options.get('type', 'Code128')
-        barcode = self.pool['report'].barcode(
+        barcode = self.env['report'].barcode(
             barcode_type,
             value,
             **dict((key, value) for key, value in options.items() if key in ['width', 'height', 'humanreadable']))
-        return HTMLSafe('<img src="data:%s;base64,%s">' % ('png', barcode.encode('base64')))
+        return unicodifier('<img src="data:%s;base64,%s">' % ('png', barcode.encode('base64')))
 
-    def from_html(self, cr, uid, model, field, element, context=None):
+    @api.model
+    def from_html(self, model, field, element):
         return None

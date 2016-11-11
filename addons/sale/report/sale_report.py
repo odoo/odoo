@@ -1,47 +1,47 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from openerp import tools
-from openerp.osv import fields, osv
+from odoo import tools
+from odoo import api, fields, models
 
-class sale_report(osv.osv):
+
+class SaleReport(models.Model):
     _name = "sale.report"
     _description = "Sales Orders Statistics"
     _auto = False
     _rec_name = 'date'
-
-    _columns = {
-        'date': fields.datetime('Date Order', readonly=True),
-        'product_id': fields.many2one('product.product', 'Product', readonly=True),
-        'product_uom': fields.many2one('product.uom', 'Unit of Measure', readonly=True),
-        'product_uom_qty': fields.float('# of Qty', readonly=True),
-        'qty_delivered': fields.float('Qty Delivered', readonly=True),
-        'qty_to_invoice': fields.float('Qty To Invoice', readonly=True),
-        'qty_invoiced': fields.float('Qty Invoiced', readonly=True),
-        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
-        'price_total': fields.float('Total Price', readonly=True),
-        'price_subtotal': fields.float('Untaxed Total Price', readonly=True),
-        'product_tmpl_id': fields.many2one('product.template', 'Product Template', readonly=True),
-        'categ_id': fields.many2one('product.category','Product Category', readonly=True),
-        'nbr': fields.integer('# of Lines', readonly=True),
-        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-        'team_id': fields.many2one('crm.team', 'Sales Team', readonly=True, oldname='section_id'),
-        'country_id': fields.many2one('res.country', 'Partner Country', readonly=True),
-        'commercial_partner_id': fields.many2one('res.partner', 'Commercial Entity', readonly=True),
-        'state': fields.selection([
-                ('draft', 'Draft Quotation'),
-                ('sent', 'Quotation Sent'),
-                ('sale', 'Sales Order'),
-                ('done', 'Sales Done'),
-                ('cancel', 'Cancelled'),
-            ], string='Status', readonly=True),
-        'weight': fields.float('Gross Weight', readonly=True),
-        'volume': fields.float('Volume', readonly=True),
-    }
     _order = 'date desc'
+
+    name = fields.Char('Order Reference', readonly=True)
+    date = fields.Datetime('Date Order', readonly=True)
+    product_id = fields.Many2one('product.product', 'Product', readonly=True)
+    product_uom = fields.Many2one('product.uom', 'Unit of Measure', readonly=True)
+    product_uom_qty = fields.Float('# of Qty', readonly=True)
+    qty_delivered = fields.Float('Qty Delivered', readonly=True)
+    qty_to_invoice = fields.Float('Qty To Invoice', readonly=True)
+    qty_invoiced = fields.Float('Qty Invoiced', readonly=True)
+    partner_id = fields.Many2one('res.partner', 'Partner', readonly=True)
+    company_id = fields.Many2one('res.company', 'Company', readonly=True)
+    user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
+    price_total = fields.Float('Total', readonly=True)
+    price_subtotal = fields.Float('Untaxed Total', readonly=True)
+    product_tmpl_id = fields.Many2one('product.template', 'Product Template', readonly=True)
+    categ_id = fields.Many2one('product.category', 'Product Category', readonly=True)
+    nbr = fields.Integer('# of Lines', readonly=True)
+    pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', readonly=True)
+    analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
+    team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True, oldname='section_id')
+    country_id = fields.Many2one('res.country', 'Partner Country', readonly=True)
+    commercial_partner_id = fields.Many2one('res.partner', 'Commercial Entity', readonly=True)
+    state = fields.Selection([
+        ('draft', 'Draft Quotation'),
+        ('sent', 'Quotation Sent'),
+        ('sale', 'Sales Order'),
+        ('done', 'Sales Done'),
+        ('cancel', 'Cancelled'),
+        ], string='Status', readonly=True)
+    weight = fields.Float('Gross Weight', readonly=True)
+    volume = fields.Float('Volume', readonly=True)
 
     def _select(self):
         select_str = """
@@ -56,6 +56,7 @@ class sale_report(osv.osv):
                     sum(l.price_total / COALESCE(cr.rate, 1.0)) as price_total,
                     sum(l.price_subtotal / COALESCE(cr.rate, 1.0)) as price_subtotal,
                     count(*) as nbr,
+                    s.name as name,
                     s.date_order as date,
                     s.state as state,
                     s.partner_id as partner_id,
@@ -71,7 +72,7 @@ class sale_report(osv.osv):
                     partner.commercial_partner_id as commercial_partner_id,
                     sum(p.weight * l.product_uom_qty / u.factor * u2.factor) as weight,
                     sum(p.volume * l.product_uom_qty / u.factor * u2.factor) as volume
-        """ % self.pool['res.currency']._select_companies_rates()
+        """ % self.env['res.currency']._select_companies_rates()
         return select_str
 
     def _from(self):
@@ -97,6 +98,7 @@ class sale_report(osv.osv):
                     l.order_id,
                     t.uom_id,
                     t.categ_id,
+                    s.name,
                     s.date_order,
                     s.partner_id,
                     s.user_id,
@@ -111,10 +113,11 @@ class sale_report(osv.osv):
         """
         return group_by_str
 
-    def init(self, cr):
+    @api.model_cr
+    def init(self):
         # self._table = sale_report
-        tools.drop_view_if_exists(cr, self._table)
-        cr.execute("""CREATE or REPLACE VIEW %s as (
+        tools.drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute("""CREATE or REPLACE VIEW %s as (
             %s
             FROM ( %s )
             %s

@@ -9,6 +9,17 @@
     }
 }
 
+// "Cover" snippet
+@s_text_block_image_fw-padding: 0 30px;
+.s_text_block_image_fw {
+    .container {
+        padding: @s_text_block_image_fw-padding;
+        > .row > div {
+            padding: 30px;
+        }
+    }
+}
+
 // Table Snippet
 .table_desc {
     margin: 0 0 20px 0;
@@ -364,33 +375,45 @@ div.carousel .container {
 
 // Parallax Theme
 div.carousel {
-    .carousel-indicators {
-        li { border: 1px solid grey; }
-        .active { background-color: grey; }
+    .carousel-indicators li {
+        box-shadow: 0 0 0 1px grey;
+        &:hover:not(.active) {
+            background-color: @color-white-50;
+        }
     }
     span.carousel-img img,
     div.carousel-content {
         max-height: 95%;
         padding: 10px;
     }
-    div.carousel-content {
-        background-color: black;
-        color: white;
-        background: rgba(0, 0, 0, 0.3);
+    .carousel-control {
+        cursor: pointer;
     }
 }
 
 .parallax {
-    background-size: cover;
-    > div {
-        position: relative;
-        display: table;
+    position: relative;
+    min-height: 200px;
+
+    &::before {
+        content: "";
+        display: inline-block;
+        width: 0;
+        min-height: inherit;
+        height: 100%;
+        vertical-align: middle;
+    }
+
+    > .oe_structure {
+        display: inline-block;
         width: 100%;
-        min-height: 200px;
-        > div {
-            display: table-cell;
-            vertical-align: middle;
-            padding: 32px 0;
+        vertical-align: middle;
+
+        > :first-child {
+            margin-top: 32px;
+        }
+        > :last-child {
+            margin-bottom: 32px;
         }
     }
 }

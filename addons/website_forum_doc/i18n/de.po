@@ -3,14 +3,23 @@
 # * website_forum_doc
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# darenkster <inactive+darenkster@transifex.com>, 2016
+# Fabian Liesch <fabian.liesch@gmail.com>, 2016
+# Tina Rittmüller <tr@ife.de>, 2016
+# Ermin Trevisan <trevi@twanda.com>, 2016
+# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
+# Henry Mineehen <info@mineehen.de>, 2016
+# Anja Funk <anja.funk@afimage.de>, 2016
+# Martin K <martinkuenz@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-01-16 09:22+0000\n"
-"Last-Translator: Wolfgang Taferner\n"
-"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Martin K <martinkuenz@gmail.com>, 2016\n"
+"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -47,7 +56,9 @@ msgstr "Schlechte Fragen"
 msgid ""
 "Before submiting the question, help us improve its quality by\n"
 "                        editing the question and the main answer."
-msgstr "Bevor Sie die Frage versenden, können Sie uns dabei helfen\n                       die Qualität von Fragen und Antworten zu verbessern."
+msgstr ""
+"Bevor Sie die Frage versenden, können Sie uns dabei helfen\n"
+"                       die Qualität von Fragen und Antworten zu verbessern."
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -78,7 +89,7 @@ msgstr "Farbkennzeichnung"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_create_uid
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_create_uid
 msgid "Created by"
-msgstr "Angelegt von"
+msgstr "Erstellt von"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_create_date
@@ -151,7 +162,7 @@ msgstr "Entwurf"
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.view_forum_post_kanban
 msgid "Edit Post"
-msgstr ""
+msgstr "Beitrag bearbeiten"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_hrm_contract
@@ -159,14 +170,15 @@ msgid "Employee Contract"
 msgstr "Arbeitsvertrag"
 
 #. module: website_forum_doc
-#: constraint:forum.documentation.toc:0
+#: code:addons/website_forum_doc/models/forum_documentation_toc.py:38
+#, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Fehler! Rekursive Kategorien sind nicht zulässig"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
-msgid "Explain how to configure in Odoo"
-msgstr "Erklären Sie die Konfiguration von Odoo"
+msgid "Explain how to configure Odoo"
+msgstr ""
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -176,7 +188,7 @@ msgstr "Erklären Sie die Implementierung von Odoo"
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_forum_id
 msgid "Forum"
-msgstr "Hilfeforum"
+msgstr "Forum"
 
 #. module: website_forum_doc
 #: model:ir.model,name:website_forum_doc.model_forum_post
@@ -260,7 +272,7 @@ msgstr "Linker Stamm"
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_name
 msgid "Name"
-msgstr "Bezeichnung"
+msgstr "Name"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation_post
@@ -361,7 +373,7 @@ msgstr "Beispiele"
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation_post
 msgid "Search"
-msgstr "Suche"
+msgstr "Suchen"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation
@@ -388,7 +400,9 @@ msgstr "Die Antwort kann durch Odoo Anfänger verstanden werden."
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "The question describes a real business problem, not a software problem"
-msgstr "Die Antwort beschreibt ein organisatorisches Problem, kein Problem mit der Anwendung."
+msgstr ""
+"Die Antwort beschreibt ein organisatorisches Problem, kein Problem mit der "
+"Anwendung."
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -418,7 +432,9 @@ msgstr "Diese Frage wurde inkludiert in die"
 msgid ""
 "To be promoted in the official documentation the question\n"
 "                        and answer must satisfy the following criteria:"
-msgstr "Um in die offizielle Dokumentation aufgenommen zu werden\n                 muss die Antwort folgende Kriterien erfüllen:"
+msgstr ""
+"Um in die offizielle Dokumentation aufgenommen zu werden\n"
+"                 muss die Antwort folgende Kriterien erfüllen:"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,introduction:website_forum_doc.toc_sale
@@ -430,27 +446,14 @@ msgstr ""
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_website
 msgid "Website"
-msgstr "Website"
-
-#. module: website_forum_doc
-#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_website_meta_description
-msgid "Website meta description"
-msgstr "Webseite Meta Beschreibung"
-
-#. module: website_forum_doc
-#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Webseite Metasuchwörter"
-
-#. module: website_forum_doc
-#: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_website_meta_title
-msgid "Website meta title"
-msgstr "Webseite Meta Titel"
+msgstr "Webseite"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "What report should I use to compute probabilities per stage?"
-msgstr "Welcher Report zeigt die Wahrscheinlichkeiten für erfolgreiche Abschlüsse nach Ihren Vertriebsstufen ?"
+msgstr ""
+"Welcher Report zeigt die Wahrscheinlichkeiten für erfolgreiche Abschlüsse "
+"nach Ihren Vertriebsstufen ?"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -465,7 +468,7 @@ msgstr "Abbrechen"
 #. module: website_forum_doc
 #: model:forum.documentation.toc,introduction:website_forum_doc.toc_functional_doc
 msgid "community forum"
-msgstr ""
+msgstr "Forum"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.toc

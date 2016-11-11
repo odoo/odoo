@@ -22,7 +22,6 @@ var form_relational = require('web.form_relational'); // necessary
 var form_widgets = require('web.form_widgets'); // necessary
 var framework = require('web.framework');
 var ListView = require('web.ListView');
-var Menu = require('web.Menu');
 var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var Registry = require('web.Registry');
@@ -89,6 +88,7 @@ openerp.web.form.FieldMany2One = core.form_widget_registry.get('many2one');
 openerp.web.form.FormWidget = form_common.FormWidget;
 openerp.web.form.tags = make_old_registry(core.form_tag_registry);
 openerp.web.form.widgets = make_old_registry(core.form_widget_registry);
+openerp.web.form.custom_widgets = make_old_registry(core.form_custom_registry);
 
 openerp.web.format_value = formats.format_value;
 openerp.web.FormView = FormView;
@@ -96,7 +96,6 @@ openerp.web.FormView = FormView;
 openerp.web.json_node_to_xml = utils.json_node_to_xml;
 
 openerp.web.ListView = ListView;
-openerp.web.Menu = Menu;
 openerp.web.Model = Model;
 openerp.web.normalize_format = time.strftime_to_moment_format;
 openerp.web.py_eval = pyeval.py_eval;
@@ -208,7 +207,7 @@ ListView.include({
                 }).value();
         }
 
-        return this._super(data);
+        return this._super();
     },
     /**
      * Returns the style for the provided record in the current view (from the
@@ -262,5 +261,28 @@ ListView.include({
      },
 });
 
+// IE patch
+//-------------------------------------------------------------------------
+if (typeof(console) === "undefined") {
+    // Even IE9 only exposes console object if debug window opened
+    window.console = {};
+    ('log error debug info warn assert clear dir dirxml trace group'
+        + ' groupCollapsed groupEnd time timeEnd profile profileEnd count'
+        + ' exception').split(/\s+/).forEach(function(property) {
+            console[property] = _.identity;
+    });
+}
+
+/**
+    Some hack to make placeholders work in ie9.
+*/
+if (!('placeholder' in document.createElement('input'))) {
+    document.addEventListener("DOMNodeInserted",function(event){
+        var nodename =  event.target.nodeName.toLowerCase();
+        if ( nodename === "input" || nodename === "textarea" ) {
+            $(event.target).placeholder();
+        }
+    });
+}
 
 });

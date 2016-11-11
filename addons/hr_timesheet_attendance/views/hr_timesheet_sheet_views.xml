@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="act_hr_timesheet_sheet_sheet_2_hr_attendance" model="ir.actions.act_window">
+            <field name="context">{'search_default_sheet_id': [active_id]}</field>
+            <field name="name">Attendances</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="src_model">hr_timesheet_sheet.sheet</field>
+        </record>
+
+        <record id="hr_timesheet_sheet_tree_simplified" model="ir.ui.view">
+            <field name="name">hr.timesheet.sheet.tree</field>
+            <field name="model">hr_timesheet_sheet.sheet</field>
+            <field name="inherit_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_tree_simplified" />
+            <field name="arch" type="xml">
+                <field name="department_id" position="after">
+                    <field name="total_attendance" widget="float_time" groups="hr.group_hr_attendance"/>
+                    <field name="total_timesheet" widget="float_time"/>
+                    <field name="total_difference" widget="float_time" groups="hr.group_hr_attendance"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet" model="ir.actions.act_window">
+            <field name="context">{'search_default_sheet_id': [active_id]}</field>
+            <field name="name">Timesheet Activities</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="src_model">hr_timesheet_sheet.sheet</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('hr_timesheet.hr_timesheet_line_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('hr_timesheet.hr_timesheet_line_form')})]"/>
+        </record>
+
+        <record id="hr_timesheet_sheet_form" model="ir.ui.view">
+            <field name="name">hr.timesheet.sheet.form</field>
+            <field name="model">hr_timesheet_sheet.sheet</field>
+            <field name="inherit_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_form" />
+            <field name="arch" type="xml">
+                <div class="oe_title" position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button type="action"
+                            name="%(hr_timesheet_attendance.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet)d"
+                            class="oe_stat_button"
+                            icon="fa-clock-o">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value"><field name="total_timesheet" widget="float_time"/></span>
+                                <span class="o_stat_text">Timesheet</span>
+                            </div>
+                        </button>
+                        <button type="object" groups="hr.group_hr_attendance"
+                            class="oe_stat_button" icon="fa-users"
+                            name="action_sheet_report">
+                            <field name="attendance_count" widget="statinfo" string="Attendances"/>
+                        </button>
+                    </div>
+                </div>
+                <xpath expr="//page[@class='o_hr_timesheet_sheet_details']" position="after">
+                    <page string="Attendances" groups="hr.group_hr_attendance">
+                        <group>
+                            <group groups="hr.group_hr_attendance">
+                                <field name="total_attendance" widget="float_time"/>
+                                <field name="total_difference" widget="float_time"/>
+                            </group>
+                        </group>
+                        <field name="period_ids">
+                            <tree decoration-danger="total_difference&lt;0.1" decoration-info="total_difference&gt;=0.1" string="Period">
+                                <field name="name"/>
+                                <field name="total_attendance" widget="float_time" sum="Attendances"/>
+                                <field name="total_timesheet" widget="float_time" sum="Timesheets"/>
+                                <field name="total_difference" widget="float_time" sum="Differences"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!--
+            hr.attendance inheritancy
+        -->
+
+        <record model="ir.ui.view" id="hr_attendance_view_filter">
+            <field name="name">hr_attendance_view_filter</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.hr_attendance_view_filter" />
+            <field name="arch" type="xml">
+                <field name="employee_id" position="after">
+                    <field name="sheet_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="hr_attendance_view_form" model="ir.ui.view">
+            <field name="name">hr.attendance.form</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+            <field name="arch" type="xml">
+                <field name="check_out" position="after">
+                    <field name="sheet_id"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_attendance_tree" model="ir.ui.view">
+            <field name="name">hr.attendance.tree</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+            <field name="arch" type="xml">
+                <field name="check_out" position="after">
+                    <field name="sheet_id"/>
+                </field>
+            </field>
+        </record>
+
+        <act_window
+            context="{'search_default_sheet_id': [active_id]}"
+            id="act_hr_timesheet_sheet_sheet_by_account"
+            name="Timesheet by Account"
+            groups="hr.group_hr_attendance"
+            res_model="hr_timesheet_sheet.sheet.account"
+            src_model="hr_timesheet_sheet.sheet"/>
+
+        <act_window
+            context="{'search_default_sheet_id': [active_id]}"
+            id="act_hr_timesheet_sheet_sheet_by_day"
+            name="Timesheet by Day"
+            groups="hr.group_hr_attendance"
+            res_model="hr_timesheet_sheet.sheet.day"
+            src_model="hr_timesheet_sheet.sheet"/>
+
+        <record id="hr_timesheet_day_tree" model="ir.ui.view">
+            <field name="name">hr.timesheet.day.tree</field>
+            <field name="model">hr_timesheet_sheet.sheet.day</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="total_difference&lt;0.1" decoration-danger="total_difference&gt;=0.1" string="Period">
+                    <field name="name"/>
+                    <field name="total_attendance" widget="float_time" sum="Total Attendances" groups="hr.group_hr_attendance"/>
+                    <field name="total_timesheet" widget="float_time" sum="Total Timesheet"/>
+                    <field name="total_difference" widget="float_time" sum="Total Difference" groups="hr.group_hr_attendance"/>
+                </tree>
+            </field>
+        </record>
+
+</odoo>

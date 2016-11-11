@@ -1,9 +1,9 @@
 # HG changeset patch
 # Parent 16e4cb131d9f7f3a72a8a1b0bc46c2ce9ac76435
-Index: addons/openacademy/__openerp__.py
+Index: addons/openacademy/__manifest__.py
 ===================================================================
---- addons.orig/openacademy/__openerp__.py	2014-08-26 17:25:53.519783468 +0200
-+++ addons/openacademy/__openerp__.py	2014-08-26 17:25:53.511783468 +0200
+--- addons.orig/openacademy/__manifest__.py	2014-08-26 17:25:53.519783468 +0200
++++ addons/openacademy/__manifest__.py	2014-08-26 17:25:53.511783468 +0200
 @@ -27,6 +27,7 @@
      'data': [
          # 'security/ir.model.access.csv',
@@ -18,7 +18,7 @@ Index: addons/openacademy/views/openacademy.xml
 +++ addons/openacademy/views/openacademy.xml	2014-08-26 17:25:53.511783468 +0200
 @@ -0,0 +1,35 @@
 +<?xml version="1.0" encoding="UTF-8"?>
-+<openerp>
++<odoo>
 +    <data>
 +        <!-- window action -->
 +        <!--
@@ -51,4 +51,4 @@ Index: addons/openacademy/views/openacademy.xml
 +             action="openacademy.course_list_action"
 +             It is not required when it is the same module -->
 +    </data>
-+</openerp>
++</odoo>

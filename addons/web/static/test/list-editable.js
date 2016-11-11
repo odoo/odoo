@@ -43,7 +43,7 @@ odoo.define_section('editor', ['web.ListEditor'], function (test, mock) {
                 tag: 'form',
                 attrs: {
                     version: '7.0',
-                    'class': 'oe_form_container'
+                    'class': 'o_list_editable_form'
                 },
                 children: children
             },
@@ -196,6 +196,13 @@ odoo.define_section('list.edition', ['web.data', 'web.ListView', 'web.data_manag
         mock.add('demo:onchange', function () {
             return {};
         });
+        mock.add('demo:fields_get', function () {
+            return {
+                a: {type: 'char', string: "A"},
+                b: {type: 'char', string: "B"},
+                c: {type: 'char', string: "C"}
+            };
+        });
     }
 
     test('newrecord', function (assert, data, ListView, data_manager) {
@@ -262,6 +269,13 @@ odoo.define_section('list.edition.events', ['web.data', 'web.ListView', 'web.dat
     function setup () {
         mock.add('demo:read', function () {
             return [{ id: 1, a: 'foo', b: 'bar', c: 'baz' }];
+        });
+        mock.add('demo:fields_get', function () {
+            return {
+                a: {type: 'char', string: "A"},
+                b: {type: 'char', string: "B"},
+                c: {type: 'char', string: "C"}
+            };
         });
     }
 
@@ -345,6 +359,13 @@ odoo.define_section('list.edition.onwrite', ['web.data', 'web.ListView', 'web.da
         mock.add('demo:default_get', function () { return {}; });
         mock.add('demo:create', function () { return 1; });
         mock.add('demo:on_write', function () { return [42]; });
+        mock.add('demo:fields_get', function () {
+            return {
+                a: {type: 'char', string: "A"},
+                b: {type: 'char', string: "B"},
+                c: {type: 'char', string: "C"}
+            };
+        });
 
         var ds = new data.DataSetStatic(null, 'demo', null, []);
         var fields_view = data_manager._postprocess_fvg({

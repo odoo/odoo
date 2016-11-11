@@ -3,16 +3,19 @@
 # * website_payment
 # 
 # Translators:
-# Paolo Valier, 2016
 # Simone Bernini <simone@aperturelabs.it>, 2016
+# Paolo Valier <paolo.valier@hotmail.it>, 2016
+# Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-03-12 08:56+0000\n"
-"Last-Translator: Paolo Valier\n"
-"Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Francesco Garganese <francesco.garganese@aeromnia.aero>, 2016\n"
+"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -48,14 +51,16 @@ msgstr "Configura gli acquirenti del pagamento"
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_account_config_settings_default_acquirer
 msgid "Default Acquirer"
-msgstr "Acquirente di default"
+msgstr "Acquirente predefinito"
 
 #. module: website_payment
 #: model:ir.model.fields,help:website_payment.field_account_config_settings_default_acquirer
 msgid ""
 "Default payment acquirer for website payments; your provider needs to be "
 "visible in the website."
-msgstr "Acquirente di default per i pagamento del sito; il fornitore deve essere visibile sul sito web."
+msgstr ""
+"Acquirente predefinito per i pagamento del sito; il fornitore deve essere "
+"visibile sul sito web."
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
@@ -83,12 +88,7 @@ msgid "Manage your payment methods"
 msgstr "Gestisci i tuoi metodi di pagamento"
 
 #. module: website_payment
-#: model:ir.ui.view,arch_db:website_payment.pay_methods
-msgid "My Account"
-msgstr "Il mio Account"
-
-#. module: website_payment
-#: code:addons/website_payment/controllers/main.py:42
+#: code:addons/website_payment/controllers/main.py:45
 #, python-format
 msgid "Pay Now"
 msgstr "Paga Ora"
@@ -102,7 +102,7 @@ msgstr "Pagamento"
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Acquirente del pagamento"
+msgstr "Acquirente di Pagamento"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.header_footer_custom_payment
@@ -126,11 +126,6 @@ msgid "Reference"
 msgstr "Riferimento"
 
 #. module: website_payment
-#: model:ir.model.fields,help:website_payment.field_payment_acquirer_website_url
-msgid "The full URL to access the document through the website."
-msgstr "L'URL completo per accedere al documento attraverso il Sito Web "
-
-#. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "This transaction will be processed by"
 msgstr "La transazione verrà elaborata da"
@@ -139,11 +134,6 @@ msgstr "La transazione verrà elaborata da"
 #: model:ir.model,name:website_payment.model_website
 msgid "Website"
 msgstr "Sito Web"
-
-#. module: website_payment
-#: model:ir.model.fields,field_description:website_payment.field_payment_acquirer_website_url
-msgid "Website URL"
-msgstr "URL sito web"
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_account_config_settings

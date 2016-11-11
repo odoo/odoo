@@ -2,9 +2,9 @@
 # Parent c8cc9e66a2701dad6589ff1d950e1cb7738d0854
 # Parent  44a09b8865d418cda8b7c46dfb70fadc86e22184
 
-diff --git a/academy/__openerp__.py b/academy/__openerp__.py
---- a/academy/__openerp__.py
-+++ b/academy/__openerp__.py
+diff --git a/academy/__manifest__.py b/academy/__manifest__.py
+--- a/academy/__manifest__.py
++++ b/academy/__manifest__.py
 @@ -26,6 +26,7 @@
      'data': [
          'security/ir.model.access.csv',
@@ -18,7 +18,7 @@ new file mode 100644
 --- /dev/null
 +++ b/academy/views.xml
 @@ -0,0 +1,13 @@
-+<openerp>
++<odoo>
 + <data>
 +  <record id="action_academy_teachers" model="ir.actions.act_window">
 +    <field name="name">Academy teachers</field>
@@ -32,4 +32,4 @@ new file mode 100644
 +            parent="menu_academy_content"
 +            action="action_academy_teachers"/>
 + </data>
-+</openerp>
++</odoo>

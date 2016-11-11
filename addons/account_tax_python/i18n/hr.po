@@ -3,14 +3,18 @@
 # * account_tax_python
 # 
 # Translators:
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2016
+# Bole <bole@dajmi5.com>, 2016
+# Jasmina Otročak <jasmina@uvid.hr>, 2016
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 16:04+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Vladimir Olujić <olujic.vladimir@storm.hr>, 2016\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,7 +25,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_applicable
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_applicable
 msgid "Applicable Code"
-msgstr ""
+msgstr "Primjenjiva šifra"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_python_compute
@@ -35,6 +39,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Izračun iznosa poreza korištenjem varijable 'result'.\n"
+"\n"
+":parametar base_amount: decimalni broj, iznos osnovice na koju se primjenjuje porez\n"
+":parametar price_unit: decimalni broj\n"
+":parametar quantity: decimalni broj\n"
+":parametar company: res.company zapis tablice\n"
+":parametar product: product.product zapis tablice ili  None\n"
+":parametar partner: res.partner zapis tablice ili None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_compute
@@ -47,6 +59,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Izračun poreza korištenjem varijable 'result'.\n"
+"\n"
+":parametar base_amount: decimalni broj, iznos osnovice na koju se primjenjuje porez\n"
+":parametar price_unit: decimalni broj\n"
+":parametar quantity: decimalni broj\n"
+":parametar product: product.product zaps tablice ili None\n"
+":parametar partner: res.partner zapis tablice ili None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_python_applicable
@@ -59,6 +78,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Odlučuje hoće li se porez primjeniti postavljanjem varijable 'result' na True ili False.\n"
+"\n"
+":parametar price_unit: decimalni broj\n"
+":parametar: quantity: decimalni broj\n"
+":parametar company: res.company zapis tablice\n"
+":parametar product: product.product zapis tablice ili None\n"
+":parametar partner: res.partner zapis tablice ili None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_applicable
@@ -70,6 +96,12 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Odlučuje hoće li se porez primjeniti postavljanjem varijable 'resutl' na True ili False.\n"
+"\n"
+":parametar price_unit: decimalni broj\n"
+":parametar quantity: decimalni broj\n"
+":parametar product: product.product zapis tablice ili None\n"
+":parametar partner: res.partner zapis tablice ili None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_compute

@@ -10,7 +10,7 @@ class HrEmployee(models.Model):
     public_info = fields.Char(string='Public Info')
 
     @api.multi
-    def _website_url(self, field_name, arg):
-        res = super(HrEmployee, self)._website_url(field_name, arg)
-        res.update({(employee_id, '/page/website.aboutus#team') for employee_id in self.ids})
-        return res
+    def _compute_website_url(self):
+        super(HrEmployee, self)._compute_website_url()
+        for employee in self:
+            employee.website_url = '/page/website.aboutus#team'

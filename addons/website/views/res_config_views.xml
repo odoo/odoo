@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+        <record id="view_website_config_settings" model="ir.ui.view">
+            <field name="name">Website settings</field>
+            <field name="model">website.config.settings</field>
+            <field name="arch" type="xml">
+                <form string="Configure Website" class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <div>
+                        <field name="website_id" invisible="1"/>
+                        <group string="Domain">
+                            <field name="website_name" />
+                            <label for="google_analytics_key"/>
+                            <div name="google_analytics_key">
+                                <div>
+                                    <div name="google_analytics_key" class="oe_inline">
+                                        <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <label for="id" string="Google Maps"/>
+                            <div name="google_maps">
+                                <div>
+                                    Follow <a href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend,static_maps_backend&amp;keyType=CLIENT_SIDE&amp;reusekey=true">the instructions</a> to create your key.
+                                </div>
+                                <div>
+                                    <label for="google_maps_api_key" string="API Key"/>
+                                    <field name="google_maps_api_key" class="oe_inline"/>
+                                </div>
+                            </div>
+                        </group>
+                        <group string="Language">
+                            <label for="language_ids"/>
+                            <div name="language_ids">
+                                <div>
+                                    <div name="language_ids" class="oe_inline">
+                                        <field name="language_ids" widget="many2many_checkboxes"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <label for="default_lang_id"/>
+                            <div name="default_lang_id">
+                                <div>
+                                    <div name="default_lang_id" class="oe_inline">
+                                        <field name="default_lang_id" widget="selection"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <label for="id" string="New Language"/>
+                            <div>
+                                <button type="action" name="%(base.action_view_base_language_install)d" string="Install a language" class="oe_link"/>
+                            </div>
+                        </group>
+                        <group name="social" string="Social Media">
+                            <label for="social_twitter"/>
+                            <div name="social_twitter">
+                                <div class="oe_inline">
+                                    <field name="social_twitter" placeholder="https://twitter.com/Odoo"/>
+                                </div>
+                            </div>
+                            <label for="social_facebook"/>
+                            <div name="social_facebook">
+                                <div class="oe_inline">
+                                    <field name="social_facebook" placeholder="https://www.facebook.com/Odoo"/>
+                                </div>
+                            </div>
+                            <label for="social_github"/>
+                            <div name="social_github">
+                                <div class="oe_inline">
+                                    <field name="social_github" placeholder="https://youraccount.github.io"/>
+                                </div>
+                            </div>
+                            <label for="social_linkedin"/>
+                            <div name="social_linkedin">
+                                <div class="oe_inline">
+                                    <field name="social_linkedin" placeholder="https://www.linkedin.com/company/odoo"/>
+                                </div>
+                            </div>
+                            <label for="social_youtube"/>
+                            <div name="social_youtube">
+                                <div class="oe_inline">
+                                    <field name="social_youtube" placeholder="https://www.youtube.com/user/OpenERPonline"/>
+                                </div>
+                            </div>
+                            <label for="social_googleplus"/>
+                            <div name="social_googleplus">
+                                <div class="oe_inline">
+                                    <field name="social_googleplus" placeholder="https://plus.google.com/+Odooapps"/>
+                                </div>
+                            </div>
+                        </group>
+                        <group>
+
+                        </group>
+                        <group string="Menu" groups="base.group_no_one">
+                            <button type="action"
+                                name="%(website.action_website_menu)d"
+                                string="Configure website menus" class="oe_link"/>
+                        </group>
+                        <group string="Advanced" name="advanced">
+                            <label for="favicon"/>
+                            <div>
+                                <field name="favicon" widget="image" class="oe_avatar oe_left"/>
+                            </div>
+                            <field name="module_website_form_editor" widget="radio"/>
+                            <field name="module_website_version" widget="radio"/>
+                            <label for="id"/>
+                            <div>
+                                <a href="https://www.odoo.com/slides/slide/how-a-b-testing-can-help-you-optimize-your-website-341" target="_blank">More Info</a>
+                            </div>
+                        </group>
+                        <group string="Performance Optimization" name="optimization" groups="base.group_no_one">
+                            <label for="id" string="Speed"/>
+                            <div>
+                                <div>
+                                    <field name="compress_html"/>
+                                    <label for="compress_html"/>
+                                </div>
+                                <div>
+                                    <field name="cdn_activated"/>
+                                    <label for="cdn_activated"/>
+                                </div>
+                                <div attrs="{'invisible': [('cdn_activated', '=', False)]}">
+                                    <label for="cdn_url"/>
+                                    <field name="cdn_url"
+                                           attrs="{'required': [('cdn_activated', '=', True)]}"
+                                           placeholder="//mycompany.mycdn.com/"
+                                           t-translation="off"/>
+                                    <label for="cdn_filters"/>
+                                    <field name="cdn_filters"
+                                           attrs="{'required': [('cdn_activated', '=', True)]}"/>
+                                </div>
+                            </div>
+                        </group>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_website_configuration" model="ir.actions.act_window">
+            <field name="name">Website Settings</field>
+            <field name="res_model">website.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <record id="backend_dashboard" model="ir.actions.client">
+            <field name="name">Website Dashboard</field>
+            <field name="tag">backend_dashboard</field>
+        </record>
+
+        <menuitem id="menu_website_configuration" sequence="215" name="Website Admin"
+            groups="website.group_website_designer" web_icon="website,static/description/icon_admin.png"/>
+
+        <menuitem id="menu_dashboard" name="Dashboard" action="website.backend_dashboard" parent="website.menu_website_configuration" sequence="1"/>
+
+        <menuitem id="menu_website_global_configuration" parent="menu_website_configuration"
+            sequence="100" name="Configuration" groups="base.group_system"/>
+        <menuitem id="menu_website_website_settings" parent="menu_website_global_configuration" name="Settings" action="action_website_configuration"/>
+
+</odoo>

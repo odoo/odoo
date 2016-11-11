@@ -1,59 +1,64 @@
+# -*- coding: utf-8 -*-
 import logging
 import os
 import sys
 import zipfile
 from os.path import join as opj
 
-import openerp
-from openerp import fields
-from openerp.osv import osv
-from openerp.tools import convert_file, exception_to_unicode
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.modules import load_information_from_description_file
+from odoo.tools import convert_file, exception_to_unicode
+from odoo.tools.osutil import tempdir
 
 _logger = logging.getLogger(__name__)
 
-MAX_FILE_SIZE = 100 * 1024 * 1024 # in megabytes
+MAX_FILE_SIZE = 100 * 1024 * 1024  # in megabytes
 
-class ir_module_module(osv.osv):
+
+class IrModule(models.Model):
     _inherit = "ir.module.module"
 
-    imported = fields.Boolean(string="Imported Module", default=False)
+    imported = fields.Boolean(string="Imported Module")
 
-    def import_module(self, cr, uid, module, path, force=False, context=None):
-        known_mods = self.browse(cr, uid, self.search(cr, uid, []))
-        known_mods_names = dict([(m.name, m) for m in known_mods])
+    @api.multi
+    def import_module(self, module, path, force=False):
+        known_mods = self.search([])
+        known_mods_names = {m.name: m for m in known_mods}
         installed_mods = [m.name for m in known_mods if m.state == 'installed']
 
-        terp = openerp.modules.load_information_from_description_file(module, mod_path=path)
+        terp = load_information_from_description_file(module, mod_path=path)
         values = self.get_values_from_terp(terp)
 
         unmet_dependencies = set(terp['depends']).difference(installed_mods)
         if unmet_dependencies:
-            msg = _("Unmet module dependencies: %s")
-            raise UserError(msg % ', '.join(unmet_dependencies))
+            raise UserError(_("Unmet module dependencies: %s") % ', '.join(unmet_dependencies))
 
         mod = known_mods_names.get(module)
         if mod:
-            self.write(cr, uid, mod.id, dict(state='installed', **values))
+            mod.write(dict(state='installed', **values))
             mode = 'update' if not force else 'init'
         else:
             assert terp.get('installable', True), "Module not installable"
-            self.create(cr, uid, dict(name=module, state='installed', imported=True, **values))
+            self.create(dict(name=module, state='installed', imported=True, **values))
             mode = 'init'
 
         for kind in ['data', 'init_xml', 'update_xml']:
             for filename in terp[kind]:
+                ext = os.path.splitext(filename)[1].lower()
+                if ext not in ('.xml', '.csv', '.sql'):
+                    _logger.info("module %s: skip unsupported file %s", module, filename)
+                    continue
                 _logger.info("module %s: loading %s", module, filename)
                 noupdate = False
                 if filename.endswith('.csv') and kind in ('init', 'init_xml'):
                     noupdate = True
                 pathname = opj(path, filename)
                 idref = {}
-                convert_file(cr, module, filename, idref, mode=mode, noupdate=noupdate, kind=kind, pathname=pathname)
+                convert_file(self.env.cr, module, filename, idref, mode=mode, noupdate=noupdate, kind=kind, pathname=pathname)
 
         path_static = opj(path, 'static')
-        ir_attach = self.pool['ir.attachment']
+        IrAttachment = self.env['ir.attachment']
         if os.path.isdir(path_static):
             for root, dirs, files in os.walk(path_static):
                 for static_file in files:
@@ -71,17 +76,18 @@ class ir_module_module(osv.osv):
                         type='binary',
                         datas=data,
                     )
-                    att_id = ir_attach.search(cr, uid, [('url', '=', url_path), ('type', '=', 'binary'), ('res_model', '=', 'ir.ui.view')], context=context)
-                    if att_id:
-                        ir_attach.write(cr, uid, att_id, values, context=context)
+                    attachment = IrAttachment.search([('url', '=', url_path), ('type', '=', 'binary'), ('res_model', '=', 'ir.ui.view')])
+                    if attachment:
+                        attachment.write(values)
                     else:
-                        ir_attach.create(cr, uid, values, context=context)
+                        IrAttachment.create(values)
 
         return True
 
-    def import_zipfile(self, cr, uid, module_file, force=False, context=None):
+    @api.model
+    def import_zipfile(self, module_file, force=False):
         if not module_file:
-            raise Exception("No file sent.")
+            raise Exception(_("No file sent."))
         if not zipfile.is_zipfile(module_file):
             raise UserError(_('File is not a zip file!'))
 
@@ -91,10 +97,9 @@ class ir_module_module(osv.osv):
         with zipfile.ZipFile(module_file, "r") as z:
             for zf in z.filelist:
                 if zf.file_size > MAX_FILE_SIZE:
-                    msg = _("File '%s' exceed maximum allowed file size")
-                    raise UserError(msg % zf.filename)
+                    raise UserError(_("File '%s' exceed maximum allowed file size") % zf.filename)
 
-            with openerp.tools.osutil.tempdir() as module_dir:
+            with tempdir() as module_dir:
                 z.extractall(module_dir)
                 dirs = [d for d in os.listdir(module_dir) if os.path.isdir(opj(module_dir, d))]
                 for mod_name in dirs:
@@ -102,7 +107,7 @@ class ir_module_module(osv.osv):
                     try:
                         # assert mod_name.startswith('theme_')
                         path = opj(module_dir, mod_name)
-                        self.import_module(cr, uid, mod_name, path, force=force, context=context)
+                        self.import_module(mod_name, path, force=force)
                         success.append(mod_name)
                     except Exception, e:
                         _logger.exception('Error while importing module')

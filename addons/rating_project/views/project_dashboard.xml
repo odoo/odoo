@@ -6,15 +6,26 @@
         <field name="arch" type="xml">
             <field name="use_tasks" position="after">
                 <field name="percentage_satisfaction_project" invisible="1"/>
-                <field name="is_visible_happy_customer" invisible="1"/>
+                <field name="rating_status" invisible="1"/>
             </field>
 
-            <xpath expr="//div[contains(@class, 'o_kanban_card_content')]" position="inside">
-                <div t-if="record.is_visible_happy_customer.raw_value and record.percentage_satisfaction_project.raw_value &gt;= 0" class="row text-center o_project_kanban_bugs">
-                    <a name="action_view_all_rating" type="object" title="Percentage of happy people about this project" class="pull-right">
-                        <h5 t-attf-class="label #{record.percentage_satisfaction_project.raw_value &gt;= 50 ? 'label-success' : 'label-warning'}">
-                            <i t-attf-class="fa #{record.percentage_satisfaction_project.raw_value &gt;= 50 ? 'fa-smile-o' : 'fa-frown-o'}"/> <t t-raw="record.percentage_satisfaction_project.raw_value"/> %
-                        </h5>
+            <xpath expr="//div[contains(@class, 'o_kanban_primary_left')]" position="inside">
+                <div t-if="record.rating_status.raw_value != 'no'" class="mt8 text-primary" title="Percentage of happy ratings over the past 30 days. Get rating details from the More menu.">
+                    <b>
+                        <i class="fa fa-smile-o"/>
+                        <t t-if="record.percentage_satisfaction_project.value == -1">
+                            No rating yet
+                        </t>
+                        <t t-if="record.percentage_satisfaction_project.value != -1">
+                            <t t-esc="record.percentage_satisfaction_project.value"/>%
+                        </t>
+                    </b>
+                </div>
+            </xpath>
+            <xpath expr="//div[contains(@class, 'o_kanban_card_manage_section')]" position="inside">
+                <div t-if="record.rating_status.raw_value != 'no'">
+                    <a name="action_view_all_rating" type="object">
+                        Customer Ratings
                     </a>
                 </div>
             </xpath>

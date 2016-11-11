@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgid "Active"
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:34
+#: code:addons/google_drive/models/google_drive.py:40
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
 msgstr ""
@@ -67,7 +67,7 @@ msgid "Created on"
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:141
+#: code:addons/google_drive/models/google_drive.py:159
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
 msgstr ""
@@ -88,15 +88,15 @@ msgid "Filter"
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:53
-#: code:addons/google_drive/google_drive.py:73
+#: code:addons/google_drive/models/google_drive.py:59
+#: code:addons/google_drive/models/google_drive.py:80
 #, python-format
 msgid "Go to the configuration panel"
 msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_client_id
-msgid "Google Client "
+msgid "Google Client"
 msgstr ""
 
 #. module: google_drive
@@ -116,8 +116,8 @@ msgid "Google Drive Name Pattern"
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:55
-#: code:addons/google_drive/google_drive.py:75
+#: code:addons/google_drive/models/google_drive.py:61
+#: code:addons/google_drive/models/google_drive.py:82
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
 msgstr ""
@@ -153,20 +153,19 @@ msgid "Link your own google drive templates to any record of Odoo. If you have r
 msgstr ""
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model_id
 msgid "Model"
 msgstr ""
 
 #. module: google_drive
-#: constraint:google.drive.config:0
-msgid "Model of selected filter is not matching with model of current template."
+#: code:addons/google_drive/models/google_drive.py:201
+#, python-format
+msgid "Please enter a valid Google Document URL."
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:173
-#, python-format
-msgid "Please enter a valid Google Document URL."
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
+msgid "Related Model"
 msgstr ""
 
 #. module: google_drive
@@ -175,7 +174,7 @@ msgid "Resource Id"
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:72
+#: code:addons/google_drive/models/google_drive.py:79
 #, python-format
 msgid "Something went wrong during the token generation. Please request again an authorization code ."
 msgstr ""
@@ -197,7 +196,7 @@ msgid "Templates"
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:90
+#: code:addons/google_drive/models/google_drive.py:97
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
 msgstr ""
@@ -216,7 +215,7 @@ msgid "The name of the attached document can use fixed or variable data. To dist
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:117
+#: code:addons/google_drive/models/google_drive.py:135
 #, python-format
 msgid "The permission 'reader' for 'anyone with the link' has not been written on the document"
 msgstr ""
@@ -227,7 +226,7 @@ msgid "URI"
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:52
+#: code:addons/google_drive/models/google_drive.py:58
 #, python-format
 msgid "You haven't configured 'Authorization Code' generated from google, Please generate and configure it ."
 msgstr ""

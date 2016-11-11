@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
         <!-- account.account.type -->
         <record model="account.account.type" id="data_account_type_receivable">
@@ -14,6 +14,11 @@
         </record>
         <record model="account.account.type" id="data_account_type_liquidity">
           <field name="name">Bank and Cash</field>
+          <field name="type">liquidity</field>
+          <field name="include_initial_balance" eval="True"/>
+        </record>
+        <record model="account.account.type" id="data_account_type_credit_card">
+          <field name="name">Credit Card</field>
           <field name="type">liquidity</field>
           <field name="include_initial_balance" eval="True"/>
         </record>
@@ -72,9 +77,9 @@
           <field name="type">other</field>
         </record>
         <record model="account.account.type" id="data_account_type_direct_costs">
-          <field name="name">Direct Costs</field>
+          <field name="name">Cost of Revenue</field>
           <field name="type">other</field>
         </record>
     </data>
-</openerp>
+</odoo>
 

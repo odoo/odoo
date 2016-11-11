@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
 
 <template id="layout" name="Editor layout">&lt;!DOCTYPE html&gt;
     <html t-att-lang="lang and lang.replace('_', '-')"
@@ -14,6 +14,13 @@
             <script type="text/javascript">
                 var snippets_url = '<t t-esc="snippets or ''"/>';
                 var callback = window.location.href.match(/callback=([^&amp;=]+)/)[1];
+
+                var odoo = {
+                    session_info: {
+                        is_superuser: <t t-esc="json.dumps(request.env.user._is_superuser())"/>,
+                        is_frontend: true, // this is not really the frontend here but this key is used to detect if xml has to be manually loaded
+                    },
+                };
             </script>
             <t t-if="not dont_load_assets">
                 <t t-call-assets="web.assets_common" t-js="false"/>
@@ -25,7 +32,7 @@
                 <t t-call-assets="web_editor.summernote" t-css="false"/>
                 <t t-call-assets="web_editor.assets_editor" t-css="false"/>
 
-                <script type="text/javascript" src="/web/static/src/js/framework/session_instance.js"></script>
+                <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
                 <script type="text/javascript" src="/web_editor/static/src/js/iframe.js"></script>
                 <script t-if="enable_editor and inline_mode" type="text/javascript" src="/web_editor/static/src/js/inline.js"></script>
             </t>
@@ -33,16 +40,17 @@
                 if (window.top.odoo &amp;&amp; !window.top.odoo[callback+"_updown"]) {
                     window.top.odoo[callback+"_updown"] = function (value, fields_values) {
                         var editable = document.getElementsByClassName("o_editable")[0];
-                        if (value !== editable.innerHTML) {
+                        if (editable &amp;&amp; value !== editable.innerHTML) {
                             editable.innerHTML = value;
                         }
                     };
                 }
-                if(window['odoo']) {
+                if(window.odoo.define) {
                     odoo.define('web.csrf', function (require) {
                         var token = "<t t-esc="request.csrf_token(None)"/>";
-                        require('web.core').csrf_token = token;
-                        require('qweb').default_dict.csrf_token = token;
+                        var core = require('web.core');
+                        core.csrf_token = token;
+                        core.qweb.default_dict.csrf_token = token;
                     });
                 }
             </script>
@@ -65,4 +73,4 @@
     </t>
 </template>
 
-</openerp>
+</odoo>

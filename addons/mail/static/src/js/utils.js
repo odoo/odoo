@@ -1,7 +1,7 @@
 odoo.define('mail.utils', function (require) {
 "use strict";
 
-var bus = require('bus.bus');
+var bus = require('bus.bus').bus;
 var session = require('web.session');
 var web_client = require('web.web_client');
 

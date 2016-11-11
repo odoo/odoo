@@ -21,8 +21,17 @@
         }
 
         .o_project_kanban_manage {
-            .o-position-absolute(@bottom: 0, @left: 0);
-            padding: @odoo-horizontal-padding/2 @odoo-horizontal-padding;
+            .o_left {
+                .o-position-absolute(@bottom: 0, @left: 0);
+                padding: @odoo-horizontal-padding/2 @odoo-horizontal-padding;
+            }
+            .o_right {
+                .o-position-absolute(@bottom: 0, @right: 30%);
+                padding: @odoo-horizontal-padding/2 @odoo-horizontal-padding;
+            }
+            .o_kanban_manage_toggle_button:not(:hover) {
+                color: @odoo-main-text-color;
+            }
         }
         .o_kanban_card_manage_pane .o_kanban_card_manage_title {
             margin: 0;
@@ -30,7 +39,7 @@
     }
 
     .o_dashboard_star {
-            font-size: 12px;
+            font-size: 16px;
 
             &.fa-star-o {
                 color: @odoo-main-color-muted;
@@ -81,10 +90,9 @@
         .o_project_kanban_box {
             position: relative;
             text-align: center;
-            padding: 15px 0 15px 0;
+            padding: 0 0 0 0;
             .o-flex(1, 1, auto);
             .o-flex-display();
-            .o-align-items(center);
             .o-flex-flow(column, nowrap);
             .o-justify-content(center);
         }

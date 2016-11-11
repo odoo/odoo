@@ -2,7 +2,7 @@ odoo.define_section('list.buttons', ['web.ListView', 'web.data', 'web.data_manag
 
     test('record-deletion', function (assert, ListView, data, data_manager) {
         assert.expect(2);
-        
+
         mock.add('demo:read', function (args, kwargs) {
             if (_.isEqual(args[0], [1, 2, 3])) {
                 return [
@@ -12,14 +12,15 @@ odoo.define_section('list.buttons', ['web.ListView', 'web.data', 'web.data_manag
             throw new Error(JSON.stringify(_.toArray(arguments)));
         });
         mock.add('demo:search_read', function (args, kwargs) {
-            console.log(args);
             if (_.isEqual(args[0], [['id', 'in', [2]]])) {
                 return [];
             }
             throw new Error(JSON.stringify(_.toArray(arguments)));
         });
         mock.add('/web/dataset/call_button', function () { return false; });
-
+        mock.add('demo:fields_get', function() {
+            return {a: {type: 'char', string: "A"}};
+        });
 
         var ds = new data.DataSetStatic(null, 'demo', null, [1, 2, 3]);
         var fields_view = data_manager._postprocess_fvg({

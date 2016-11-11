@@ -3,24 +3,21 @@
 # * note
 # 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Belkacem Mohammed <belkacem77@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2015-09-19 08:22+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-9/language/kab/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>, 2016\n"
+"Language-Team: Kabyle (https://www.transifex.com/odoo/teams/41243/kab/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: kab\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_needaction
-msgid "Action Needed"
-msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_open
@@ -36,6 +33,11 @@ msgstr "Aɣbaṛ"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
+msgstr ""
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
 msgstr ""
 
 #. module: note
@@ -74,11 +76,6 @@ msgid "Date done"
 msgstr ""
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "Azemz n yizen anegaru iţunefken ɣef ukalas agi"
-
-#. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Delete"
 msgstr "Kkes"
@@ -96,21 +93,6 @@ msgid "Folded by Default"
 msgstr ""
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_follower_ids
-msgid "Followers"
-msgstr "Imeltaɣen"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_channel_ids
-msgid "Followers (Channels)"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_partner_ids
-msgid "Followers (Partners)"
-msgstr ""
-
-#. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "Sdukel s"
@@ -121,26 +103,6 @@ msgstr "Sdukel s"
 #: model:ir.model.fields,field_description:note.field_note_tag_id
 msgid "ID"
 msgstr "Asulay"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ma yeṛcem, iznan imaynuten suturen tamuɣli leqqayen."
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_is_follower
-msgid "Is Follower"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_last_post
-msgid "Last Message Date"
-msgstr "Azemz n yizen aneggaru"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note___last_update
@@ -170,22 +132,12 @@ msgid "Later"
 msgstr "Ssakin"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_ids
-msgid "Messages"
-msgstr "Iznan"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_ids
-msgid "Messages and communication history"
-msgstr "Amazray n iznan  d  teywalin"
-
-#. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
 msgstr "Amaynut"
 
 #. module: note
-#: code:addons/note/note.py:163
+#: code:addons/note/models/note.py:129
 #, python-format
 msgid "New Note"
 msgstr ""
@@ -226,21 +178,6 @@ msgid "Notes"
 msgstr "Iwenniten"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_needaction_counter
-msgid "Number of Actions"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_unread_counter
-msgid "Number of unread messages"
-msgstr ""
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
 #: model:ir.model.fields,field_description:note.field_note_stage_user_id
 msgid "Owner"
@@ -248,8 +185,8 @@ msgstr "Bab"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
-msgstr "Bab n umecwaṛ n uwennit."
+msgid "Owner of the note stage"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_sequence
@@ -301,13 +238,15 @@ msgid "Tag name already exists !"
 msgstr ""
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Tibzimin"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
 msgstr "Dduṛt agi"
@@ -322,16 +261,6 @@ msgstr "Assa"
 #: model:note.stage,name:note.demo_note_stage_02
 msgid "Tomorrow"
 msgstr "Azekka"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_unread
-msgid "Unread Messages"
-msgstr "Iznan ur neţwaɣer-ara"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr ""
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note

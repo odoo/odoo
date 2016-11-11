@@ -24,8 +24,9 @@
     <record id="view_sales_order_filter_ecommerce" model="ir.ui.view">
         <field name="name">sale.order.ecommerce.search.view</field>
         <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
         <field name="arch" type="xml">
-            <search string="eCommerce">
+            <search>
                 <filter string="From Website" name="from_website" domain="[('team_id.website_ids', '!=', False)]"/>
             </search>
         </field>
@@ -72,8 +73,20 @@
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
     </record>
 
+    <record id="website_product_pricelist3" model="ir.actions.act_window">
+        <field name="name">Pricelists</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.pricelist</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('website_id', '!=', False)]</field>
+        <field name="search_view_id" ref="product.product_pricelist_view_search" />
+        <field name="context">{"default_base":'list_price'}</field>
+    </record>
+
     <menuitem id="menu_orders" name="Orders" parent="website.menu_website_configuration" sequence="2"/>
     <menuitem id="menu_catalog" name="Catalog" parent="website.menu_website_configuration" sequence="3"/>
+    <menuitem id="menu_ecommerce_settings" parent="website.menu_website_global_configuration" name="eCommerce"/>
 
     <!-- Orders sub-menus -->
     <menuitem id="menu_orders_orders" name="Orders" parent="menu_orders" action="action_orders_ecommerce" sequence="1"/>
@@ -83,12 +96,10 @@
 
     <!-- Catalog sub-menus -->
     <menuitem id="menu_catalog_products" name="Products" parent="menu_catalog" action="product_template_action" sequence="1"/>
-    <menuitem id="menu_catalog_categories" name="Categories" parent="menu_catalog" action="product.product_category_action_form" sequence="2"/>
-    <menuitem id="menu_catalog_pricelists" name="Pricelists" parent="menu_catalog" action="product.product_pricelist_action2" sequence="3"/>
+    <menuitem id="menu_catalog_pricelists" name="Pricelists" parent="menu_catalog" action="product.product_pricelist_action2" groups="product.group_sale_pricelist" sequence="3"/>
+    <menuitem id="menu_catalog_categories" parent="menu_ecommerce_settings" action="product_public_category_action" sequence="2"/>
 
     <!-- Configuration sub-menus -->
-    <menuitem id="menu_ecommerce_settings" parent="website.menu_website_global_configuration" name="eCommerce"/>
     <menuitem id="menu_ecommerce_payment_acquirers" parent="menu_ecommerce_settings" name="Payment Acquirers" action="payment.action_payment_acquirer"/>
-
 
 </odoo>

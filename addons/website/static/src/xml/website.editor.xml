@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-
     <t t-extend="web_editor.dialog.link">
         <t t-jquery=".list-group-item.form-group">
             this.removeClass('active');
@@ -17,4 +16,14 @@
         </t>
     </t>
 
+    <div t-name="website.homepage_editor_welcome_message" class="container text-center o_homepage_editor_welcome_message">
+        <h2 class="mt0">Welcome to your <b>Homepage</b>!</h2>
+        <p class="lead">Let's start designing.</p>
+        <div class="o_tooltip_container">Follow all the <div class="o_tooltip bottom"/> signs to get your website ready in no time.</div>
+    </div>
+
+    <div t-name="website.leaving_current_page_edition">
+        <p>What do you want to do?</p>
+        <p class="text-muted">Your current changes will be saved automatically.</p>
+    </div>
 </templates>

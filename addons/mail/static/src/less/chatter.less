@@ -11,22 +11,8 @@
             font-style: italic;
         }
 
-        .o_chatter_composer_subtypes {
-            > label {
-                display: inline-block; // Required for old design compatibility
-                width: 100px;
-            }
-
-            .o_chatter_composer_subtype_select {
-                display: inline-block;
-                min-width: 150px;
-                width: auto;
-            }
-        }
-
         .o_composer {
             margin-top: 10px;
-
             .o_composer_input {
                 width: 100%;
                 .box-sizing(content-box);
@@ -38,5 +24,10 @@
 
     .o_mail_thread {
         margin-top: 10px;
+
+        .o_spinner {
+            text-align: center;
+            font-size: large;
+        }
     }
 }

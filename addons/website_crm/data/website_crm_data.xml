@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
-        <record id="crm.model_crm_lead" model="ir.model">         
+        <record id="crm.model_crm_lead" model="ir.model">
             <field name="website_form_default_field_id" ref="crm.field_crm_lead_description" />
             <field name="website_form_access">True</field>
             <field name="website_form_label">Create a lead</field>
@@ -30,11 +30,9 @@
             <field name="state">open</field>
         </record>
 
-        <record model="crm.team" id="website.salesteam_website_sales">
-            <field name="name">Website Sales</field>
-            <field name="code">WS</field>
+        <record model="crm.team" id="sales_team.salesteam_website_sales">
             <field name="use_leads">True</field>
             <field name="use_opportunities" eval="False"/>
         </record>
     </data>
-</openerp>
+</odoo>

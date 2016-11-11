@@ -1,0 +1,831 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- Top menu item -->
+        <!--
+            This menu item's purpose is to overwrite another one defined in
+            the base module in order to set new groups.
+        -->
+        <menuitem name="Sales"
+            id="sales_team.menu_base_partner"
+            web_icon="sale,static/description/icon.png"/>
+
+        <menuitem
+            id= "menu_sales_config"
+            parent= "sales_team.menu_sale_config"
+            sequence= "1"
+            name= "Sales"
+            groups= "sales_team.group_sale_manager,sales_team.group_sale_salesman,account.group_account_manager,account.group_account_user"/>
+
+        <menuitem id="menu_product" name="Product Variants" parent="sales_team.menu_base_partner" sequence="9" groups="product.group_product_variant"/>
+        <menuitem id="sales_team.menu_sales" name="Sales" parent="sales_team.menu_base_partner" sequence="5"/>
+        <menuitem action="product.product_template_action" id="menu_product_template_action" parent="sales_team.menu_sales" sequence="13" />
+        <menuitem id="sale.prod_config_main" name="Products" parent="sales_team.menu_sale_config" sequence="2"/>
+        <menuitem action="product.attribute_action" id="menu_attribute_action" parent="sale.prod_config_main" sequence="4" groups="product.group_product_variant"/>
+        <menuitem action="product.variants_action" id="menu_variants_action" parent="sale.prod_config_main" sequence="5" groups="product.group_product_variant"/>
+        <menuitem id="menu_products" action="product.product_normal_action_sell" parent="sales_team.menu_sales" groups="product.group_product_variant" sequence="99"/>
+        <menuitem action="product.product_category_action_form" groups="base.group_no_one" id="menu_product_category_action_form" parent="sale.prod_config_main" sequence="2"/>
+        <menuitem id="next_id_16" name="Units of Measure" parent="sale.prod_config_main" sequence="30" groups="product.group_uom"/>
+        <menuitem action="product.product_uom_form_action" id="menu_product_uom_form_action" parent="sale.prod_config_main" sequence="6" groups="product.group_uom"/>
+        <menuitem action="product.product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="sale.prod_config_main" sequence="7" groups="base.group_no_one"/>
+        <menuitem id="menu_product_pricelist_main" name="Pricelists" parent="sales_team.menu_sale_config" groups="product.group_sale_pricelist" sequence="3"/>
+        <menuitem action="product.product_pricelist_action2" id="menu_product_pricelist_action2" parent="menu_product_pricelist_main" sequence="1" groups="product.group_sale_pricelist"/>
+
+
+        <record id="view_sale_order_calendar" model="ir.ui.view">
+            <field name="name">sale.order.calendar</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <calendar string="Sales Orders" color="state" date_start="date_order">
+                    <field name="partner_id"/>
+                    <field name="amount_total" widget="monetary"/>
+                </calendar>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_sale_order_graph">
+            <field name="name">sale.order.graph</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <graph string="Sales Orders">
+                    <field name="partner_id"/>
+                    <field name="amount_total" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_sale_order_pivot">
+            <field name="name">sale.order.pivot</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <pivot string="Sales Orders">
+                    <field name="date_order" type="row"/>
+                    <field name="amount_total" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- Sales Orders Kanban View  -->
+        <record model="ir.ui.view" id="view_sale_order_kanban">
+            <field name="name">sale.order.kanban</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="amount_total"/>
+                    <field name="date_order"/>
+                    <field name="state"/>
+                    <field name="currency_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <strong><span><t t-esc="record.partner_id.value"/></span></strong>
+                                    </div>
+                                    <div class="col-xs-6 pull-right text-right">
+                                        <strong><field name="amount_total" widget="monetary"/></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6 text-muted">
+                                        <span><t t-esc="record.name.value"/> <t t-esc="record.date_order.value"/></span>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span class="pull-right text-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default',
+                                            'done': 'success'}}"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_order_tree" model="ir.ui.view">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Orders" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="name" string="Order Number"/>
+                    <field name="date_order"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
+                    <field name="invoice_status"/>
+                    <field name="state" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_quotation_tree" model="ir.ui.view">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="priority">4</field>
+            <field name="arch" type="xml">
+                <tree string="Quotation" class="o_sale_order" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="name" string="Quotation Number"/>
+                    <field name="date_order"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <form string="Sales Order" class="o_sale_order">
+                <header>
+                    <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                        type="action" class="btn-primary"
+                        attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}"/>
+                    <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                        type="action" context="{'default_advance_payment_method': 'percentage'}"
+                        attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
+                    <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
+                    <button name="print_quotation" string="Print" type="object" states="draft" class="btn-primary"/>
+                    <button name="action_confirm" states="sent" string="Confirm Sale" class="btn-primary o_sale_confirm" type="object" />
+                    <button name="action_confirm" states="draft" string="Confirm Sale" class="o_sale_confirm" type="object" />
+                    <button name="print_quotation" string="Print" type="object" states="sent,sale"/>
+                    <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
+                    <button name="action_cancel" states="draft,sent,sale" type="object" string="Cancel"/>
+                    <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
+                    <button name="action_done" type="object" string="Lock" states="sale"
+                        help="If the sale is locked, you can not modify it anymore. However, you will still be able to invoice or deliver."/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o"
+                            attrs="{'invisible': [('invoice_count', '=', 0)]}">
+                            <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
+                            <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}"/>
+                            <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}"/>
+                        </group>
+                        <group>
+                            <field name="date_order" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
+                            <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
+                            <field name="confirmation_date" attrs="{'invisible': [('state', 'in', ['draft', 'sent', 'cancel'])]}"/>
+                            <field name="pricelist_id" groups="product.group_sale_pricelist"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="payment_term_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Order Lines">
+                            <field name="order_line" mode="tree,kanban"
+                                attrs="{'readonly': [('state', 'in', ('done','cancel'))]}">
+                                <form string="Sales Order Lines">
+                                    <group>
+                                        <group>
+                                            <field name="product_id"
+                                                context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                                                attrs="{'readonly': ['|', ('qty_invoiced', '&gt;', 0), ('procurement_ids', '!=', [])]}"
+                                               />
+                                            <field name="layout_category_id" groups="sale.group_sale_layout"/>
+                                            <field name="invoice_status" invisible="1"/>
+                                            <field name="qty_to_invoice" invisible="1"/>
+                                            <field name="qty_delivered_updateable" invisible="1"/>
+                                            <field name="procurement_ids" invisible="1"/>
+                                            <field name="price_subtotal" invisible="1"/>
+                                            <label for="product_uom_qty" string="Ordered Quantity"/>
+                                            <div>
+                                                <field
+                                                    context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'uom_qty_change':True, 'company_id': parent.company_id}"
+                                                    name="product_uom_qty" class="oe_inline"/>
+                                                <field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button"
+                                                    attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"/>
+                                            </div>
+                                            <label for="qty_delivered" string="Delivered Quantity" invisible="context.get('hide_sale')"/>
+                                            <div invisible="context.get('hide_sale')">
+                                                <field name="qty_delivered" attrs="{'readonly': [('qty_delivered_updateable', '=', False)]}"/>
+                                            </div>
+                                            <label for="qty_invoiced" string="Invoiced Quantity" invisible="context.get('hide_sale')"/>
+                                            <div invisible="context.get('hide_sale')">
+                                                <field name="qty_invoiced" invisible="context.get('hide_sale')"/>
+                                            </div>
+                                            <field name="price_unit"/>
+                                            <label for="discount" groups="sale.group_discount_per_so_line"/>
+                                            <div name="discount" groups="sale.group_discount_per_so_line">
+                                                <field name="discount" class="oe_inline"/> %%
+                                            </div>
+                                        </group>
+                                        <group>
+                                            <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
+                                                attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
+                                            <label for="customer_lead"/>
+                                            <div>
+                                                <field name="customer_lead" class="oe_inline"/> days
+                                            </div>
+                                            <label for="analytic_tag_ids"/>
+                                            <div>
+                                                <field name="analytic_tag_ids" widget="many2many_tags"/>
+                                            </div>
+                                        </group>
+                                    </group>
+                                    <label for="name"/>
+                                    <field name="name"/>
+                                    <div groups="base.group_no_one">
+                                        <label for="invoice_lines"/>
+                                        <field name="invoice_lines"/>
+                                    </div>
+                                    <field name="state" invisible="1"/>
+                                </form>
+                                <tree string="Sales Order Lines" editable="bottom" decoration-info="invoice_status=='to invoice'">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"
+                                        attrs="{'readonly': ['|', ('qty_invoiced', '&gt;', 0), ('procurement_ids', '!=', [])]}"
+                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                                       />
+                                    <field name="layout_category_id" groups="sale.group_sale_layout"/>
+                                    <field name="name"/>
+                                    <field name="product_uom_qty"
+                                        string="Ordered Qty"
+                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                                    />
+                                    <field name="qty_delivered" invisible="context.get('hide_sale')"
+                                        attrs="{'readonly': [('qty_delivered_updateable', '=', False)]}"/>
+                                    <field name="qty_invoiced"
+                                        invisible="context.get('hide_sale')"/>
+                                    <field name="qty_to_invoice" invisible="1"/>
+                                    <field name="product_uom"
+                                        attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
+                                        context="{'company_id': parent.company_id}"
+                                        groups="product.group_uom" options='{"no_open": True}'/>
+                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags"/>
+                                    <field name="price_unit"
+                                        attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
+                                    <field name="tax_id" widget="many2many_tags" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
+                                        attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
+                                    <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                    <field name="price_subtotal" widget="monetary" groups="sale.group_show_price_subtotal"/>
+                                    <field name="price_total" widget="monetary" groups="sale.group_show_price_total"/>
+                                    <field name="qty_delivered_updateable" invisible="1"/>
+                                    <field name="procurement_ids" invisible="1"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="invoice_status" invisible="1"/>
+                                    <field name="customer_lead" invisible="1"/>
+                                </tree>
+                                <kanban class="o_kanban_mobile">
+                                    <field name="product_id"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="product_uom" groups="product.group_uom"/>
+                                    <field name="price_subtotal"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <strong><span><t t-esc="record.product_id.value"/></span></strong>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-8 text-muted">
+                                                        <span><t t-esc="record.product_uom_qty.value"/> <t t-esc="record.product_uom.value"/></span>
+                                                    </div>
+                                                    <div class="col-xs-4 text-muted">
+                                                        <span class="pull-right text-right"><t t-esc="record.price_subtotal.value"/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                <field name="amount_untaxed" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="amount_tax" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                    <label for="amount_total" />
+                                    <button name="button_dummy"
+                                        states="draft,sent" string="(update)" type="object" class="oe_edit_only oe_link"/>
+                                </div>
+                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                            <field name="note" class="oe_inline" placeholder="Setup default terms and conditions in your company settings."/>
+                            <div class="oe_clear"/>
+                        </page>
+                        <page string="Other Information">
+                            <group>
+                                <group string="Sales Information" name="sales_person">
+                                    <field name="user_id"/>
+                                    <field name="team_id" options="{'no_create': True}"/>
+                                    <field name="client_order_ref"/>
+                                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                    <field name="project_id" attrs="{'invisible':[('state','=','sale')]}" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" groups="analytic.group_analytic_accounting"/>
+                                    <field name="related_project_id"
+                                           attrs="{'readonly': ['|',('project_id','!=',False),('invoice_count','!=',0),('state','=','sale')],'invisible':[('state','!=','sale')]}"
+                                           context="{'default_partner_id':partner_invoice_id, 'default_name':name}"
+                                           groups="analytic.group_analytic_accounting"/>
+                                </group>
+                                <group name="sale_pay" string="Invoicing">
+                                    <field name="fiscal_position_id" options="{'no_create': True}"/>
+                                    <field name="invoice_status"
+                                        attrs="{'invisible': [('state', 'not in', ('sale','done'))]}"/>
+                                </group>
+                                <group string="Reporting" name="technical" groups="base.group_no_one">
+                                    <field groups="base.group_no_one" name="origin"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- inherited view to make the order lines list in the form non-editable
+             for the members of some usability groups -->
+        <record id="view_order_form_editable_list" model="ir.ui.view">
+            <field name="name">sale.order.form.editable.list</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="groups_id" eval="[(4, ref('product.group_stock_packaging')), (4, ref('sale.group_mrp_properties'))]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']/tree" position="attributes">
+                    <attribute name="editable"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_sales_order_filter" model="ir.ui.view">
+            <field name="name">sale.order.list.select</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <search string="Search Sales Order">
+                    <field name="name" string="Sales Order" filter_domain="['|',('name','ilike',self),('client_order_ref','ilike',self)]"/>
+                    <field name="partner_id" operator="child_of"/>
+                    <field name="user_id"/>
+                    <field name="team_id" string="Sales Team"/>
+                    <field name="project_id"/>
+                    <field name="product_id"/>
+                    <filter string="My Orders" domain="[('user_id','=',uid)]" name="my_sale_orders_filter"/>
+                    <separator/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter name="customer" string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Order Month" domain="[]" context="{'group_by':'date_order'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+
+        <record id="sale_order_view_search_inherit_quotation" model="ir.ui.view">
+            <field name="name">sale.order.search.inherit.quotation</field>
+            <field name="model">sale.order</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                    <separator/>
+                    <filter string="Quotations" name="draft" domain="[('state','=','draft')]"/>
+                    <filter string="Quotations Sent" name="sent" domain="[('state','=','sent')]"/>
+                    <filter string="Sales" name="sales" domain="[('state','in',('sale','done'))]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="sale_order_view_search_inherit_sale" model="ir.ui.view">
+            <field name="name">sale.order.search.inherit.sale</field>
+            <field name="model">sale.order</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                    <separator/>
+                    <filter string="Sales" name="sales" domain="[('state','in',('progress','done'))]" />
+                    <separator/>
+                    <filter string="To Invoice" domain="[('invoice_status','=','to invoice')]" />
+                    <filter string="Upselling" domain="[('invoice_status','=','upselling')]" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_orders" model="ir.actions.act_window">
+            <field name="name">Sales Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>
+            <field name="context">{}</field>
+            <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create a Quotation, the first step of a new sale.
+                </p><p>
+                    Once the quotation is confirmed, it becomes a sales order.
+                    You'll be able to invoice it and collect payments.
+                    From the <i>Sales Orders</i> menu, you can track delivery
+                    orders or services.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_orders"
+            id="menu_sale_order" parent="sales_team.menu_sales"
+            sequence="12" groups="sales_team.group_sale_salesman,sales_team.group_sale_manager"/>
+
+        <record id="action_orders_to_invoice" model="ir.actions.act_window">
+            <field name="name">Sales to Invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph,pivot</field>
+            <field name="context">{}</field>
+            <field name="domain">[('invoice_status','=','to invoice')]</field>
+            <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="help" type="html">
+              <p>
+                You will find here all orders that are ready to be invoiced.
+              </p><p>
+                You can select all orders and invoice them in batch, or check
+                every order and invoice them one by one.
+              </p>
+            </field>
+        </record>
+        <menuitem name="Invoicing"
+            id="menu_sale_invoicing" parent="sales_team.menu_base_partner"
+            sequence="5"/>
+        <menuitem action="action_orders_to_invoice"
+            id="menu_sale_order_invoice" parent="sale.menu_sale_invoicing"
+            sequence="2"/>
+
+        <record id="action_orders_upselling" model="ir.actions.act_window">
+            <field name="name">Orders to Upsell</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph,pivot</field>
+            <field name="domain">[('invoice_status','=','upselling')]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="view_sales_order_filter"/>
+            <field name="help" type="html">
+              <p>
+                Orders to upsell are orders having products with an invoicing
+                policy based on <i>ordered quantities</i> for which you have
+                delivered more than what have been ordered.
+              </p><p>
+                <i>Example: pre-paid service offers for which the customer have
+                to buy an extra pack of hours, because he used all his support
+                hours.</i>
+              </p>
+            </field>
+        </record>
+        <menuitem action="action_orders_upselling"
+            id="menu_sale_order_upselling" parent="sale.menu_sale_invoicing"
+            sequence="5"/>
+
+
+        <record id="action_quotations" model="ir.actions.act_window">
+            <field name="name">Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_quotation_tree"/>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
+            <field name="context">{'hide_sale': True}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Create a Quotation, the first step of a new sale.
+              </p><p>
+                Your next actions should flow efficiently: confirm the Quotation
+                to a Sale Order, then create the Invoice and collect the Payment.
+              </p><p>
+                Note that once a Quotation becomes a Sale Order, it will be moved
+                from the Quotations list to the Sales Order list.
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_sale_quotations"
+                action="action_quotations" parent="sales_team.menu_sales"
+                sequence="11"/>
+
+        <record id="view_order_line_tree" model="ir.ui.view">
+            <field name="name">sale.order.line.tree</field>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Order Lines" create="false">
+                    <field name="product_id" invisible="1"/>
+                    <field name="order_id"/>
+                    <field name="order_partner_id"/>
+                    <field name="name"/>
+                    <field name="salesman_id"/>
+                    <field name="product_uom_qty" string="Qty"/>
+                    <field name="qty_delivered"/>
+                    <field name="qty_invoiced"/>
+                    <field name="qty_to_invoice"/>
+                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="price_subtotal" sum="Total" widget="monetary"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_sales_order_line_filter" model="ir.ui.view">
+            <field name="name">sale.order.line.select</field>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <search string="Search Sales Order">
+                    <filter string="To Invoice" domain="[('qty_to_invoice','&lt;&gt;', 0)]"  help="Sales Order Lines ready to be invoiced"/>
+                    <separator/>
+                    <filter string="My Sales Order Lines" domain="[('salesman_id','=',uid)]" help="Sales Order Lines related to a Sales Order of mine"/>
+                    <field name="order_id"/>
+                    <field name="order_partner_id" operator="child_of"/>
+                    <field name="product_id"/>
+                    <field name="salesman_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Order" domain="[]" context="{'group_by':'order_id'}"/>
+                        <filter string="Salesperson" domain="[]" context="{'group_by':'salesman_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_product_sale_list" model="ir.actions.act_window">
+            <field name="name">Sale Order Lines</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="context">{'search_default_product_id': [active_id], 'default_product_id': active_id}</field>
+            <field name="domain">[('state', 'in', ['sale', 'done'])]</field>
+        </record>
+
+        <record model="ir.ui.view" id="product_form_view_sale_order_button">
+            <field name="name">product.product.sale.order</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" name="%(action_product_sale_list)d"
+                        type="action" icon="fa-usd">
+                        <field string="Sales" name="sales_count" widget="statinfo" />
+                    </button>
+                </div>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_template_form_view_sale_order_button">
+            <field name="name">product.template.sale.order.button</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" name="action_view_sales"
+                        type="object" icon="fa-usd">
+                        <field string="Sales" name="sales_count" widget="statinfo" />
+                    </button>
+                </div>
+                <group name="description" position="after">
+                    <group string="Warning when Selling this Product" colspan="2" groups="sale.group_warning_sale">
+                        <field name="sale_line_warn" nolabel="1"/>
+                        <field name="sale_line_warn_msg" colspan="3" nolabel="1"
+                                attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')]}"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_template_form_view_invoice_policy">
+            <field name="name">product.template.invoice.policy</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <page name="invoicing" position="inside">
+                    <separator string="Invoicing Policy"/>
+                    <group>
+                        <field name="invoice_policy" widget="radio"/>
+                        <field name="track_service" widget="radio" invisible="True"/>
+                    </group>
+                </page>
+            </field>
+        </record>
+
+
+        <!-- Update account invoice search view!-->
+        <record id="account_invoice_groupby_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.groupby</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="team_id"/>
+                </xpath>
+                <xpath expr="//group/filter[@name='status']" position="after">
+                    <filter string="Sales Team" domain="[]" context="{'group_by':'team_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Update account invoice !-->
+        <record model="ir.ui.view" id="account_invoice_form">
+            <field name="name">Account Invoice</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='user_id']" position="after">
+                        <field name="team_id"/>
+                    </xpath>
+                    <xpath expr="//field[@name='partner_id']" position="after">
+                       <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address"/>
+                   </xpath>
+                    <xpath expr="//page/field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="after">
+                        <field name="layout_category_id" groups="sale.group_sale_layout"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="account_invoice_line_form">
+            <field name="name">account.invoice.line.form</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="account.view_invoice_line_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//group/group/field[@name='product_id']" position="after">
+                        <field name="layout_category_id" groups="sale.group_sale_layout"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="product_pricelist_view_tree" model="ir.ui.view">
+            <field name="name">product.pricelist.tree.inherit.product</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view_tree"/>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="before">
+                    <field name="discount_policy" groups="sale.group_discount_per_so_line"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="product_pricelist_view_form" model="ir.ui.view">
+            <field name="name">product.pricelist.form.inherit.product</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view"/>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="before">
+                    <field name="discount_policy" groups="sale.group_discount_per_so_line" widget="radio"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- search by Salesteams -->
+        <record id="action_orders_salesteams" model="ir.actions.act_window">
+            <field name="name">Sales Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
+            <field name="domain">[('state','not in',('draft','sent','cancel'))]</field>
+            <field name="context">{
+                    'search_default_team_id': [active_id],
+                    'default_team_id': active_id,
+                }
+            </field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Create a Quotation, the first step of a new sale.
+              </p><p>
+                Your next actions should flow efficiently: confirm the Quotation to a Sale Order, then create the Invoice and collect the Payment.
+              </p><p>
+                Note that once a Quotation becomes a Sale Order, it will be moved from the Quotations list to the Sales Order list.
+              </p>
+            </field>
+        </record>
+        <record id="action_orders_to_invoice_salesteams" model="ir.actions.act_window">
+            <field name="name">Sales Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
+            <field name="domain">[('state', '=', 'sale'),('invoice_status','=','to invoice')]</field>
+            <field name="context">{
+                    'search_default_team_id': [active_id],
+                    'default_team_id': active_id,
+                }
+            </field>
+        </record>
+
+        <record id="action_quotations_salesteams" model="ir.actions.act_window">
+            <field name="name">Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="sale.view_quotation_tree"/>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="context">{
+                    'hide_sale': True,
+                    'search_default_team_id': [active_id],
+                    'default_team_id': active_id,
+                    'show_address': 1,
+                }
+            </field>
+            <field name="domain">[]</field>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Create a Quotation, the first step of a new sale.
+              </p><p>
+                Your next actions should flow efficiently: confirm the Quotation
+                to a Sale Order, then create the Invoice and collect the Payment.
+              </p><p>
+                Note that once a Quotation becomes a Sale Order, it will be moved
+                from the Quotations list to the Sales Order list.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_invoice_salesteams" model="ir.actions.act_window">
+            <field name="name">Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_id" ref="account.invoice_tree"/>
+            <field name="domain">[
+                ('state', 'not in', ['draft', 'cancel']),
+                ('type', '=', 'out_invoice')]</field>
+            <field name="context">{
+                    'search_default_team_id': [active_id],
+                    'default_team_id': active_id,
+                    'default_type':'out_invoice',
+                    'type':'out_invoice',
+                    'journal_type': 'sale',
+                }
+            </field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        </record>
+
+        <record id="action_invoice_salesteams_view_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="sale.action_invoice_salesteams"/>
+        </record>
+
+        <record id="action_invoice_salesteams_view_form" model="ir.actions.act_window.view">
+            <field name="sequence">2</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.invoice_form"/>
+            <field name="act_window_id" ref="sale.action_invoice_salesteams"/>
+        </record>
+
+        <record id="action_order_report_quotation_salesteam" model="ir.actions.act_window">
+            <field name="name">Quotations Analysis</field>
+            <field name="res_model">sale.report</field>
+            <field name="view_mode">graph</field>
+            <field name="domain">[('state','=','draft'),('team_id', '=', active_id)]</field>
+            <field name="context">{'search_default_order_month':1}</field>
+            <field name="help">This report performs analysis on your quotations. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
+        </record>
+
+        <record id="action_order_report_so_salesteam" model="ir.actions.act_window">
+            <field name="name">Sales Analysis</field>
+            <field name="res_model">sale.report</field>
+            <field name="view_mode">graph</field>
+            <field name="domain">[('state','not in',('draft','cancel')),('team_id', '=', active_id)]</field>
+            <field name="context">{'search_default_order_month':1}</field>
+            <field name="help">This report performs analysis on your sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
+        </record>
+
+        <record id="action_account_invoice_report_salesteam" model="ir.actions.act_window">
+            <field name="name">Invoices Analysis</field>
+            <field name="res_model">account.invoice.report</field>
+            <field name="view_mode">graph</field>
+            <field name="domain">[('team_id', '=', active_id),('state', 'not in', ['draft', 'cancel'])]</field>
+            <field name="context">{'search_default_month':1}</field>
+            <field name="help">From this report, you can have an overview of the amount invoiced to your customer. The search tool can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
+        </record>
+</odoo>

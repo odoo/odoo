@@ -3,26 +3,24 @@
 # * link_tracker
 # 
 # Translators:
-# Grazziano Duarte <g.negocios@outlook.com.br>, 2015
-# Mateus Cerqueira Lopes <mateus1@gmail.com>, 2015
+# Mateus Lopes <mateus1@gmail.com>, 2016
+# Grazziano Duarte <gra.negocia@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Clemilton Clementino <clemylton@hotmail.com>, 2016
+# danimaribeiro <danimaribeiro@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-12-10 01:29+0000\n"
-"Last-Translator: Grazziano Duarte <g.negocios@outlook.com.br>\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/language/pt_BR/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>, 2016\n"
+"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_campaign_id
-msgid "Campaign"
-msgstr "Campanha"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_link_click_ids
@@ -69,7 +67,7 @@ msgstr "Criado em"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_display_name
 msgid "Display Name"
-msgstr "Nome de Exibição"
+msgstr "Nome para Exibição"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_favicon
@@ -103,7 +101,7 @@ msgstr "Protocolo de Internet"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click___last_update
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code___last_update
 msgid "Last Modified on"
-msgstr "Última modificação em"
+msgstr "Última Modificação em"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_write_uid
@@ -129,12 +127,7 @@ msgstr "Vínculo"
 #: model:ir.actions.act_window,name:link_tracker.action_link_tracker
 #: model:ir.ui.menu,name:link_tracker.menu_url_shortener_main
 msgid "Link Tracker"
-msgstr "Link do Rastreador"
-
-#. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_medium_id
-msgid "Medium"
-msgstr "Médio"
+msgstr "Link Tracker"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_count
@@ -162,11 +155,6 @@ msgid "Short URL code"
 msgstr "Código Short URL"
 
 #. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_source_id
-msgid "Source"
-msgstr "Origem"
-
-#. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_view_click_statistics
 msgid "Statistics of Clicks"
 msgstr "Estatisticas de Cliques"
@@ -175,25 +163,6 @@ msgstr "Estatisticas de Cliques"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_url
 msgid "Target URL"
 msgstr "URL de Destino"
-
-#. module: link_tracker
-#: model:ir.model.fields,help:link_tracker.field_link_tracker_campaign_id
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts "
-"Ex: Fall_Drive, Christmas_Special"
-msgstr "Este é o nome que te ajuda a rastrear as diferentes campanhas Ex: Especial de Natal, Páscoa"
-
-#. module: link_tracker
-#: model:ir.model.fields,help:link_tracker.field_link_tracker_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr "Este é o método de entrega. Ex: Cartão Postal, Email, Banner"
-
-#. module: link_tracker
-#: model:ir.model.fields,help:link_tracker.field_link_tracker_source_id
-msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
-msgstr "Esta é a fonte do link. Ex: Site de Busca, outro domínio, ou nome da lista de emails"
 
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
@@ -206,12 +175,6 @@ msgid "Tracked Link"
 msgstr "Link Rastreado"
 
 #. module: link_tracker
-#: model:ir.actions.act_window,name:link_tracker.action_link_tracker_click
-#: model:ir.ui.menu,name:link_tracker.menu_url_shortener_links
-msgid "Tracked Links"
-msgstr "Links Rastreados"
-
-#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_short_url
 msgid "Tracked URL"
 msgstr "URL Rastreada"
@@ -222,7 +185,7 @@ msgid "Visit Page"
 msgstr "Visitar Página"
 
 #. module: link_tracker
-#: code:addons/link_tracker/models/link_tracker.py:138
+#: code:addons/link_tracker/models/link_tracker.py:141
 #, python-format
 msgid "Visit Webpage"
 msgstr "Visitar Site"

@@ -3,14 +3,18 @@
 # * google_drive
 # 
 # Translators:
+# artxcenter <artxcenter@gmail.com>, 2016
+# Anri Haxhi <anrihaxhi@gmail.com>, 2016
+# Full Name <endrit.veseli@inveen.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-01-31 16:40+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Albanian (http://www.transifex.com/odoo/odoo-9/language/sq/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Albanian (https://www.transifex.com/odoo/teams/41243/sq/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -34,7 +38,7 @@ msgid "Active"
 msgstr "Aktiv"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:34
+#: code:addons/google_drive/models/google_drive.py:40
 #, python-format
 msgid "At least one key cannot be found in your Google Drive name pattern"
 msgstr ""
@@ -69,10 +73,10 @@ msgstr "Krijuar nga"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_create_date
 msgid "Created on"
-msgstr "Krijuar me"
+msgstr "Krijuar në"
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:141
+#: code:addons/google_drive/models/google_drive.py:159
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
 msgstr ""
@@ -85,7 +89,7 @@ msgstr "Partner"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_display_name
 msgid "Display Name"
-msgstr "Emri i paraqitur"
+msgstr "Emri i shfaqur"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_filter_id
@@ -93,15 +97,15 @@ msgid "Filter"
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:53
-#: code:addons/google_drive/google_drive.py:73
+#: code:addons/google_drive/models/google_drive.py:59
+#: code:addons/google_drive/models/google_drive.py:80
 #, python-format
 msgid "Go to the configuration panel"
 msgstr ""
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_google_drive_client_id
-msgid "Google Client "
+msgid "Google Client"
 msgstr ""
 
 #. module: google_drive
@@ -121,8 +125,8 @@ msgid "Google Drive Name Pattern"
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:55
-#: code:addons/google_drive/google_drive.py:75
+#: code:addons/google_drive/models/google_drive.py:61
+#: code:addons/google_drive/models/google_drive.py:82
 #, python-format
 msgid "Google Drive is not yet configured. Please contact your administrator."
 msgstr ""
@@ -140,17 +144,17 @@ msgstr "ID"
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Modifikimi i fundit në"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_write_uid
 msgid "Last Updated by"
-msgstr "Modifikuar per here te fundit nga"
+msgstr "Perditësimi i fundit nga"
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_write_date
 msgid "Last Updated on"
-msgstr "Modifikuar per here te fundit me"
+msgstr "Përditësimi i fundit në"
 
 #. module: google_drive
 #: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
@@ -163,21 +167,19 @@ msgid ""
 msgstr ""
 
 #. module: google_drive
-#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model_id
 msgid "Model"
 msgstr ""
 
 #. module: google_drive
-#: constraint:google.drive.config:0
-msgid ""
-"Model of selected filter is not matching with model of current template."
+#: code:addons/google_drive/models/google_drive.py:201
+#, python-format
+msgid "Please enter a valid Google Document URL."
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:173
-#, python-format
-msgid "Please enter a valid Google Document URL."
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config_model
+msgid "Related Model"
 msgstr ""
 
 #. module: google_drive
@@ -186,7 +188,7 @@ msgid "Resource Id"
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:72
+#: code:addons/google_drive/models/google_drive.py:79
 #, python-format
 msgid ""
 "Something went wrong during the token generation. Please request again an "
@@ -210,7 +212,7 @@ msgid "Templates"
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:90
+#: code:addons/google_drive/models/google_drive.py:97
 #, python-format
 msgid "The Google Template cannot be found. Maybe it has been deleted."
 msgstr ""
@@ -230,7 +232,7 @@ msgid ""
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:117
+#: code:addons/google_drive/models/google_drive.py:135
 #, python-format
 msgid ""
 "The permission 'reader' for 'anyone with the link' has not been written on "
@@ -243,7 +245,7 @@ msgid "URI"
 msgstr ""
 
 #. module: google_drive
-#: code:addons/google_drive/google_drive.py:52
+#: code:addons/google_drive/models/google_drive.py:58
 #, python-format
 msgid ""
 "You haven't configured 'Authorization Code' generated from google, Please "

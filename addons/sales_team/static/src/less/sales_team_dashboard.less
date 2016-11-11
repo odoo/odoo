@@ -1,3 +1,5 @@
+@dashboard-bg-color: white;
+
 .o_kanban_view.o_kanban_dashboard.o_salesteam_kanban {
     @sale-table-spacing: 10px;
 
@@ -13,7 +15,7 @@
         .o-flex(1, 0, 100%);
         padding: 10px (@odoo-horizontal-padding - @sale-table-spacing);
 
-        background-color: @odoo-view-background-color;
+        background-color: @dashboard-bg-color;
         position: relative;
 
         .o_welcome_message {
@@ -47,11 +49,11 @@
                 table-layout: fixed;
                 border-spacing: @sale-table-spacing 0px;
                 border-collapse: separate;
-                
+
                 > tbody > tr > td {
                     vertical-align: middle;
                     text-align: center;
-                    border-top: 1px solid @odoo-view-background-color;
+                    border-top: 1px solid @dashboard-bg-color;
                     width: 25%;
 
                     height: 33px;
@@ -101,5 +103,9 @@
 
             }
         }
+    }
+
+    &.o_kanban_nocontent .o_sales_dashboard {
+        margin: 0;
     }
 }

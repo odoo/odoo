@@ -3,19 +3,26 @@
 # * product_expiry
 # 
 # Translators:
+# fanha99 <fanha99@hotmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-08 07:21+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/vi/)\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: product_expiry
+#: model:ir.ui.view,arch_db:product_expiry.report_delivery_document_inherit_product_expiry
+msgid "<span class=\"pull-right\">Expiry Date</span>"
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_alert_date
@@ -107,17 +114,21 @@ msgstr "Ngày loại bỏ"
 msgid ""
 "This is the date on which an alert should be notified about the goods with "
 "this Serial Number."
-msgstr "Đây là ngày mà một cảnh báo sẽ được thông báo về hàng hóa với số sê-ri này."
+msgstr ""
+"Đây là ngày mà một cảnh báo sẽ được thông báo về hàng hóa với số sê-ri này."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_life_date
 msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
-msgstr "Đây là ngày mà hàng hóa với số sê-ri này có thể trở nên nguy hiểm và không thể tiêu thụ."
+msgstr ""
+"Đây là ngày mà hàng hóa với số sê-ri này có thể trở nên nguy hiểm và không "
+"thể tiêu thụ."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_removal_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant_removal_date
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock."
@@ -128,32 +139,42 @@ msgstr "Đây là ngày mà hàng hóa với số sê-ri này sẽ bị xóa b�
 msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
-msgstr "Đây là ngày mà hàng hóa với số sê-ri này bắt đầu xấu đi nhưng chưa trở nên nguy hiểm."
+msgstr ""
+"Đây là ngày mà hàng hóa với số sê-ri này bắt đầu xấu đi nhưng chưa trở nên "
+"nguy hiểm."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_template_alert_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
-msgstr "Khi một số sể-ri mới đươc tạo ra, đây là số ngày trước khi một cảnh báo được thông báo."
+msgstr ""
+"Khi một số sể-ri mới đươc tạo ra, đây là số ngày trước khi một cảnh báo được"
+" thông báo."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_template_life_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
-msgstr "Khi một số sê-ri mới được tạo ra, đây là số ngày trước khi hàng hóa trở nên nguy hiểm và không thể tiêu thụ."
+msgstr ""
+"Khi một số sê-ri mới được tạo ra, đây là số ngày trước khi hàng hóa trở nên "
+"nguy hiểm và không thể tiêu thụ."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_template_removal_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
-msgstr "Khi một số sê-ri mới được tạo ra, đây là số ngày trước khi hàng hóa sẽ bị xóa bỏ khỏi kho."
+msgstr ""
+"Khi một số sê-ri mới được tạo ra, đây là số ngày trước khi hàng hóa sẽ bị "
+"xóa bỏ khỏi kho."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_template_use_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
-msgstr "Khi một số sê-ri mới được tạo ra, đây là số ngày trước khi hàng hóa bắt đầu xấu đi nhưng chưa trở nên nguy hiểm."
+msgstr ""
+"Khi một số sê-ri mới được tạo ra, đây là số ngày trước khi hàng hóa bắt đầu "
+"xấu đi nhưng chưa trở nên nguy hiểm."

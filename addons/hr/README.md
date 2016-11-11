@@ -36,7 +36,7 @@ Break down information silos. Share knowledge and best practices amongst all
 employees. Follow specific people or documents and join groups of interests to
 share expertise and documents.
 
-Interact with your collegues in real time with website live chat.
+Interact with your coworkers in real time with website live chat.
 
 Track time and attendances
 --------------------------

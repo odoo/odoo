@@ -3,26 +3,23 @@
 # * note
 # 
 # Translators:
-# Kris Krnacs, 2015
+# krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Oregional <geza.nagy@oregional.hu>, 2016
+# Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:10+0000\n"
-"PO-Revision-Date: 2016-02-15 10:41+0000\n"
-"Last-Translator: Oregional <geza.nagy@oregional.hu>\n"
-"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/hu/)\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_needaction
-msgid "Action Needed"
-msgstr "Művelet szükséges"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_open
@@ -39,6 +36,11 @@ msgstr "Archívum"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Felragasztós jegyzet kategória"
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
+msgstr "Kattintson egy új címke hozzáadásához."
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -76,11 +78,6 @@ msgid "Date done"
 msgstr "Befejezés dátuma"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_last_post
-msgid "Date of the last message posted on the record."
-msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Delete"
 msgstr "Törlés"
@@ -95,61 +92,26 @@ msgstr "Megjelenített név"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage_fold
 msgid "Folded by Default"
-msgstr "Alapértelmezetten összehajtott"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_follower_ids
-msgid "Followers"
-msgstr "Követők"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Követők (Csatornák)"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_partner_ids
-msgid "Followers (Partners)"
-msgstr "Követők (Partnerek)"
+msgstr "Alapértelmezetten behajtott"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
-msgstr "Csoportosítás..."
+msgstr "Csoportosítás"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_id
 #: model:ir.model.fields,field_description:note.field_note_stage_id
 #: model:ir.model.fields,field_description:note.field_note_tag_id
 msgid "ID"
-msgstr "ID"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_unread
-msgid "If checked new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_needaction
-msgid "If checked, new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_is_follower
-msgid "Is Follower"
-msgstr "Követő"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_last_post
-msgid "Last Message Date"
-msgstr "Utolsó üzenet dátuma"
+msgstr "Azonosító ID"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note___last_update
 #: model:ir.model.fields,field_description:note.field_note_stage___last_update
 #: model:ir.model.fields,field_description:note.field_note_tag___last_update
 msgid "Last Modified on"
-msgstr "Utoljára frissítve"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_write_uid
@@ -163,7 +125,7 @@ msgstr "Utoljára frissítette"
 #: model:ir.model.fields,field_description:note.field_note_stage_write_date
 #: model:ir.model.fields,field_description:note.field_note_tag_write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve"
+msgstr "Utoljára frissítve "
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_03
@@ -172,22 +134,12 @@ msgid "Later"
 msgstr "Később"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_ids
-msgid "Messages"
-msgstr "Üzenetek"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_ids
-msgid "Messages and communication history"
-msgstr "Üzenetek és kommunikáció történet"
-
-#. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
 msgstr "Új"
 
 #. module: note
-#: code:addons/note/note.py:163
+#: code:addons/note/models/note.py:129
 #, python-format
 msgid "New Note"
 msgstr "Új jegyzet"
@@ -197,7 +149,7 @@ msgstr "Új jegyzet"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Note"
-msgstr "Megjegyzés"
+msgstr "Jegyzet"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_memo
@@ -225,22 +177,7 @@ msgstr "Jegyzetek cimkéi"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_04
 msgid "Notes"
-msgstr "Jegyzetek"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_needaction_counter
-msgid "Number of Actions"
-msgstr "Műveletek száma"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note_message_unread_counter
-msgid "Number of unread messages"
-msgstr "Olvasatlan üzenetek száma"
+msgstr "Megjegyzések"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
@@ -250,7 +187,7 @@ msgstr "Tulajdonos"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
+msgid "Owner of the note stage"
 msgstr "A jegyzet szakasz tulajdonosa"
 
 #. module: note
@@ -263,12 +200,12 @@ msgstr "Sorszám"
 #: model:ir.model.fields,field_description:note.field_note_note_stage_id
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Stage"
-msgstr "Szakasz"
+msgstr "Értékesítési szint"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage_name
 msgid "Stage Name"
-msgstr "Szakasz neve"
+msgstr "Értékesítési szint neve"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_stage_form
@@ -280,7 +217,7 @@ msgstr "Jegyzetek szakaszai"
 #: model:ir.ui.menu,name:note.menu_notes_stage
 #: model:ir.ui.view,arch_db:note.view_note_note_tree
 msgid "Stages"
-msgstr "Szakaszok"
+msgstr "Szintek"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_stage_tree
@@ -303,13 +240,15 @@ msgid "Tag name already exists !"
 msgstr "Címke név már létezik!"
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Címkék"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
 msgstr "Ezen a héten"
@@ -326,16 +265,6 @@ msgid "Tomorrow"
 msgstr "Holnap"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_unread
-msgid "Unread Messages"
-msgstr "Olvasatlan üzenetek"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Olvasatlan üzenetek számlálója"
-
-#. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid ""
 "Use notes to organize personal tasks or notes. All\n"
@@ -343,7 +272,12 @@ msgid ""
 "            you can share some notes with other people by inviting followers\n"
 "            on the note. (Useful for meeting minutes, especially if\n"
 "            you activate the pad feature for collaborative writings)."
-msgstr "Használja a jegyzeteket személyes feladatok és jegyzetek szervezéséhez. Az összes\n            jegyzet privát, senki más nem láthatja azokat. Azonban\n            egyes jegyzeteket megoszthat más személyekkel, ha követési meghívót küld részükre a követőknél a \n            jegyzeten belül. (Hasznos a találkozó idején, különösképpen, ha\n            aktiválta a pad funkciót a kollaboratív szerkesztésekhez)."
+msgstr ""
+"Használja a jegyzeteket személyes feladatok és jegyzetek szervezéséhez. Az összes\n"
+"            jegyzet privát, senki más nem láthatja azokat. Azonban\n"
+"            egyes jegyzeteket megoszthat más személyekkel, ha követési meghívót küld részükre a követőknél a \n"
+"            jegyzeten belül. (Hasznos a találkozó idején, különösképpen, ha\n"
+"            aktiválta a pad funkciót a kollaboratív szerkesztésekhez)."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_sequence
@@ -360,4 +294,6 @@ msgstr "Felhasználók"
 msgid ""
 "You can customize how you process your notes/tasks by adding,\n"
 "            removing or modifying columns."
-msgstr "A jegyzetek/feladatok feldolgozásának folyamata testre szabható oszlopok hozzáadásával, törlésével vagy módosításával."
+msgstr ""
+"A jegyzetek/feladatok feldolgozásának folyamata testre szabható \n"
+"              oszlopok hozzáadásával, törlésével vagy módosításával."

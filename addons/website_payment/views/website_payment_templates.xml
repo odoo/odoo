@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
-        <template id="header_footer_custom_payment" inherit_id="website_portal.account" customize_show="True" active="False" name="Payment Methods">
-            <xpath expr="//div[@class='o_my_details']" position="inside">
+        <template id="header_footer_custom_payment" inherit_id="website.footer_default" customize_show="True" active="False" name="Payment Methods">
+            <xpath expr="//div[@id='info']" position="inside">
                 <h4 class="payment_method_title">Payment Method</h4>
                 <ul class="payment_method_list list-inline">
                     <t t-foreach="request.website.payment_acquirers()" t-as="acquirer">
-                        <li><img class="img-rounded" t-att-src="'/payment_%s/static/src/img/%s_icon.png' % (acquirer.provider, acquirer.provider)"/></li>
+                        <li>
+                            <span t-field="acquirer.image_small" t-options='{"widget": "image", "alt-field": "name"}' />
+                        </li>
                     </t>
                 </ul>
             </xpath>
@@ -30,7 +32,7 @@
                   <div class="row">
                         <div class="col-sm-6">
                             <ol class="breadcrumb mt8">
-                                <li><a href="/my/home">My Account</a></li>
+                                <li><a href="/my/home"><i class="fa fa-home"/></a></li>
                                 <li>Payment Methods</li>
                             </ol>
                         </div>
@@ -78,9 +80,11 @@
         </t>
     </template>
 
-    <template id="pay_meth_link" inherit_id="website_portal.account">
+    <template id="pay_meth_link" inherit_id="website_portal.portal_layout" customize_show="True">
         <xpath expr="//div[@class='o_my_details']" position="inside">
-            <a href="/my/payment_method">Manage your payment methods</a>
+            <t t-if="request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False)])">
+                <div class='manage_payment_method mt16'><a href="/my/payment_method">Manage your payment methods</a></div>
+            </t>
         </xpath>
     </template>
 
@@ -104,12 +108,10 @@
                                     <div class="form-group">
                                         <label for="form_amount" class="col-sm-3 control-label">Amount</label>
                                         <div class="col-sm-9">
-                                            <span name="form_amount" class="form-control" t-esc="amount"/>
-                                            <!--
-                                            <span name="form_amount" class="form-control" t-esc="amount" t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
-                                            -->
+                                            <span name="form_amount" class="form-control" t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                                         </div>
                                     </div>
+                                    <div class="col-sm-9 col-sm-offset-3 text-muted mt16" t-raw="acquirer.pre_msg"/>
                                     <div class="col-sm-12 o_website_payment_form" t-raw="payment_form"/>
                                     <div class="col-sm-6 col-sm-offset-6 text-muted mt16">
                                         <img alt="payment_provider_logo" class="pull-right ml8" t-att-src="website.image_url(acquirer, 'image_small')"/>
@@ -117,6 +119,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="oe_structure"/>
                         </div>
                     </div>
                 </div>
@@ -149,7 +152,7 @@
                                 <div class="form-group">
                                     <label for="form_amount" class="col-sm-3 control-label">Amount</label>
                                     <div class="col-sm-9">
-                                        <span name="form_amount" class="form-control" t-esc="tx.amount" t-esc-options='{"widget": "monetary", "display_currency": "tx.currency_id"}'/>
+                                        <span name="form_amount" class="form-control" t-esc="tx.amount" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
@@ -168,4 +171,4 @@
     </template>
 
     </data>
-</openerp>
+</odoo>

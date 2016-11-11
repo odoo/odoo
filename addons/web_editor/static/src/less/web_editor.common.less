@@ -8,6 +8,10 @@ html, body {
     display: none !important;
 }
 
+.editor_enable .css_editable_mode_hidden {
+  display: none !important;
+}
+
 /* ----- Editor (for public user, like forum) ----- */
 .note-toolbar {
     margin-left: 0 !important;
@@ -152,7 +156,7 @@ div.oe_menu_buttons {
     right: -8px;
 }
 
-ul.oe_menu_editor { 
+ul.oe_menu_editor {
     .fa-home {
         display: none;
     }
@@ -237,10 +241,18 @@ a.o_underline {
 @gray-white: #fff;
 
 @color-alpha: #1cc1a9;
-@color-beta: #a24689;
+@color-beta: #875A7B;
 @color-gamma: #BA3C3D;
 @color-delta: #0D6759;
 @color-epsilon: #0B2E59;
+
+//Greyscale transparent colours
+@color-black-25: fade(black, 25%);
+@color-black-50: fade(black, 50%);
+@color-black-75: fade(black, 75%);
+@color-white-25: fade(white, 25%);
+@color-white-50: fade(white, 50%);
+@color-white-75: fade(white, 75%);
 
 .o-create-color-classes(@class_name, @color, @complementary: contrast(@color, @text-color, #FFF, 60%), @content-color: @color) {
     .bg-@{class_name} {
@@ -277,3 +289,11 @@ a.o_underline {
 .o-create-color-classes(~'gray-light', @gray-light);
 .o-create-color-classes(~'gray-lighter', @gray-lighter);
 .o-create-color-classes(~'white', @gray-white);
+
+// Create classes for greyscale transparent colours
+.o-create-color-classes(~'black-25', @color-black-25);
+.o-create-color-classes(~'black-50', @color-black-50);
+.o-create-color-classes(~'black-75', @color-black-75);
+.o-create-color-classes(~'white-25', @color-white-25);
+.o-create-color-classes(~'white-50', @color-white-50);
+.o-create-color-classes(~'white-75', @color-white-75);

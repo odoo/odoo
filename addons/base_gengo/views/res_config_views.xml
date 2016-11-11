@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_general_configuration_form_inherit_base_gengo" model="ir.ui.view">
+        <field name="name">base.config.settings.form.inherit.base.gengo</field>
+        <field name="model">base.config.settings</field>
+        <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='google_analytics']" position="after">
+                <group string="Gengo Translator" name="gengo">
+                    <label for="id" string="Public Key*"/>
+                    <div name="gengo_public_key">
+                        <div name="gengo_public_key">
+                            <field name="gengo_public_key" nolabel="1" placeholder="Add Gengo login Public Key..."/>
+                        </div>
+                    </div>
+                    <label for="id" string="Private Key*"/>
+                    <div name="gengo_private_key">
+                        <div name="gengo_private_key">
+                            <field name="gengo_private_key" password="True" nolabel="1" placeholder="Add Gengo login Private Key..."/>
+                        </div>
+                    </div>
+                    <label for="id" string="Auto Approve Translation*"/>
+                    <div name="gengo_auto_approve">
+                        <div name="gengo_auto_approve">
+                            <field name="gengo_auto_approve"/>
+                            <label for="gengo_auto_approve"/>
+                        </div>
+                    </div>
+                    <label for="id" string="Sandbox Mode*"/>
+                    <div name="gengo_sandbox">
+                        <div name="gengo_sandbox">
+                            <field name="gengo_sandbox"/>
+                            <label for="gengo_sandbox"/>
+                        </div>
+                    </div>
+                    <label for="id" string="Comment*"/>
+                    <div name="gengo_comment">
+                        <div name="gengo_comment">
+                            <field name="gengo_comment" nolabel="1" placeholder="Add your comments here for translator...."/>
+                        </div>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

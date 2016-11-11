@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2015-09-07 14:41+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -147,7 +147,7 @@ msgstr ""
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_interval_number
-msgid "Interval Qty"
+msgid "Internal Qty"
 msgstr ""
 
 #. module: subscription
@@ -198,7 +198,7 @@ msgstr ""
 
 #. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_exec_init
-msgid "Number of documents"
+msgid "Number of Documents"
 msgstr ""
 
 #. module: subscription
@@ -213,7 +213,7 @@ msgid "Partner"
 msgstr ""
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:101
+#: code:addons/subscription/models/subscription.py:92
 #, python-format
 msgid "Please provide another source document.\n"
 "This one does not exist!"
@@ -282,6 +282,11 @@ msgid "Subscription"
 msgstr ""
 
 #. module: subscription
+#: model:ir.ui.view,arch_db:subscription.view_subscription_form
+msgid "Subscription Data"
+msgstr ""
+
+#. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
 #: model:ir.model.fields,field_description:subscription.field_subscription_document_fields_document_id
 #: model:ir.ui.view,arch_db:subscription.document_form
@@ -315,11 +320,6 @@ msgid "Subscriptions"
 msgstr ""
 
 #. module: subscription
-#: model:ir.ui.view,arch_db:subscription.view_subscription_form
-msgid "Subsription Data"
-msgstr ""
-
-#. module: subscription
 #: model:ir.model.fields,field_description:subscription.field_subscription_subscription_user_id
 #: model:ir.ui.view,arch_db:subscription.view_subscription_filter
 msgid "User"
@@ -336,7 +336,7 @@ msgid "Weeks"
 msgstr ""
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:128
+#: code:addons/subscription/models/subscription.py:115
 #, python-format
 msgid "You cannot delete an active subscription!"
 msgstr ""

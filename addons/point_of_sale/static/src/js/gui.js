@@ -85,14 +85,14 @@ var Gui = core.Class.extend({
     // example loading a 'product_details' screen for a specific product.
     // - refresh: if you want the screen to cycle trough show / hide even
     // if you are already on the same screen.
-    show_screen: function(screen_name,params,refresh) {
+    show_screen: function(screen_name,params,refresh,skip_close_popup) {
         var screen = this.screen_instances[screen_name];
         if (!screen) {
             console.error("ERROR: show_screen("+screen_name+") : screen not found");
         }
-
-        this.close_popup();
-
+        if (!skip_close_popup){
+            this.close_popup();
+        }
         var order = this.pos.get_order();
         if (order) {
             var old_screen_name = order.get_screen_data('screen');
@@ -335,7 +335,8 @@ var Gui = core.Class.extend({
         this.chrome.loading_message(_t('Closing ...'));
 
         this.pos.push_order().then(function(){
-            window.location = '/web' + ((session.debug)? '?debug' : '') + '#action=point_of_sale.action_client_pos_menu';
+            var url = "/web#action=point_of_sale.action_client_pos_menu";
+            window.location = session.debug ? $.param.querystring(url, {debug: session.debug}) : url;
         });
     },
 

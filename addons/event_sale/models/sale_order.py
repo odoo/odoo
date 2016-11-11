@@ -1,54 +1,38 @@
 # -*- coding: utf-8 -*-
 
-from openerp import api
-from openerp.osv import fields, osv
+from odoo import api, fields, models
 
 
-class sale_order(osv.osv):
+class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    def action_confirm(self, cr, uid, ids, context=None):
-        res = super(sale_order, self).action_confirm(cr, uid, ids, context=context)
-        for order in self.browse(cr, uid, ids, context=context):
-            redirect_to_event_registration, so_id = any(line.event_id for line in order.order_line), order.id
-            order.order_line._update_registrations(confirm=True)
-        if redirect_to_event_registration:
-            event_ctx = dict(context, default_sale_order_id=so_id)
-            return self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'event_sale', 'action_sale_order_event_registration', event_ctx)
-        else:
-            return res
-
-
-class sale_order_line(osv.osv):
-    _inherit = 'sale.order.line'
-    _columns = {
-        'event_id': fields.many2one(
-            'event.event', 'Event',
-            help="Choose an event and it will automatically create a registration for this event."),
-        'event_ticket_id': fields.many2one(
-            'event.event.ticket', 'Event Ticket',
-            help="Choose an event ticket and it will automatically create a registration for this event ticket."),
-        # those 2 fields are used for dynamic domains and filled by onchange
-        # TDE: really necessary ? ...
-        'event_type_id': fields.related('product_id', 'event_type_id', type='many2one', relation="event.type", string="Event Type", readonly=True),
-        'event_ok': fields.related('product_id', 'event_ok', string='event_ok', type='boolean', readonly=True),
-    }
-
-    def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
-        res = super(sale_order_line, self)._prepare_order_line_invoice_line(cr, uid, line, account_id=account_id, context=context)
-        if line.event_id:
-            event = self.pool['event.event'].read(cr, uid, line.event_id.id, ['name'], context=context)
-            res['name'] = '%s: %s' % (res.get('name', ''), event['name'])
+    @api.multi
+    def action_confirm(self):
+        self.ensure_one()
+        res = super(SaleOrder, self).action_confirm()
+        self.order_line._update_registrations(confirm=True)
+        if any(self.order_line.filtered(lambda line: line.event_id)):
+            return self.env['ir.actions.act_window'].with_context(default_sale_order_id=self.id).for_xml_id('event_sale', 'action_sale_order_event_registration')
         return res
 
-    @api.onchange('product_id')
-    def product_id_change_event(self):
-        if self.product_id.event_ok:
-            values = dict(event_type_id=self.product_id.event_type_id.id,
-                          event_ok=self.product_id.event_ok)
-        else:
-            values = dict(event_type_id=False, event_ok=False)
-        self.update(values)
+
+class SaleOrderLine(models.Model):
+
+    _inherit = 'sale.order.line'
+
+    event_id = fields.Many2one('event.event', string='Event',
+       help="Choose an event and it will automatically create a registration for this event.")
+    event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket', help="Choose "
+        "an event ticket and it will automatically create a registration for this event ticket.")
+    event_ok = fields.Boolean(related='product_id.event_ok', readonly=True)
+
+    @api.multi
+    def _prepare_invoice_line(self, qty):
+        self.ensure_one()
+        res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
+        if self.event_id:
+            res['name'] = '%s: %s' % (res.get('name', ''), self.event_id.name)
+        return res
 
     @api.multi
     def _update_registrations(self, confirm=True, registration_data=None):
@@ -58,7 +42,7 @@ class sale_order_line(osv.osv):
         and create new one for missing one. """
         Registration = self.env['event.registration']
         registrations = Registration.search([('sale_order_line_id', 'in', self.ids)])
-        for so_line in [l for l in self if l.event_id]:
+        for so_line in self.filtered('event_id'):
             existing_registrations = registrations.filtered(lambda self: self.sale_order_line_id.id == so_line.id)
             if confirm:
                 existing_registrations.filtered(lambda self: self.state != 'open').confirm_registration()
@@ -71,10 +55,10 @@ class sale_order_line(osv.osv):
                     registration = registration_data.pop()
                 # TDE CHECK: auto confirmation
                 registration['sale_order_line_id'] = so_line
-                self.env['event.registration'].with_context(registration_force_draft=True).create(
+                Registration.with_context(registration_force_draft=True).create(
                     Registration._prepare_attendee_values(registration))
         return True
 
-    def onchange_event_ticket_id(self, cr, uid, ids, event_ticket_id=False, context=None):
-        price = event_ticket_id and self.pool["event.event.ticket"].browse(cr, uid, event_ticket_id, context=context).price or False
-        return {'value': {'price_unit': price}}
+    @api.onchange('event_ticket_id')
+    def _onchange_event_ticket_id(self):
+        self.price_unit = self.event_ticket_id.price

@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_test
-# 
+#
 # Translators:
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-07 14:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-02-05 10:33+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: account_test
@@ -23,7 +23,9 @@ msgstr ""
 msgid ""
 "<br/>\n"
 "                        <strong>Description:</strong>"
-msgstr "<br/>\n<strong>Popis:</strong>"
+msgstr ""
+"<br/>\n"
+"<strong>Popis:</strong>"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
@@ -50,14 +52,17 @@ msgstr "Aktívny"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
-msgstr "Zaškrtnite ak sú riadky pohybov vyrovnané a majú rovnaký dátum a obdobie"
+msgstr ""
+"Zaškrtnite ak sú riadky pohybov vyrovnané a majú rovnaký dátum a obdobie"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
 msgid ""
-"Check on bank statement that the Closing Balance = Starting Balance + sum of"
-" statement lines"
-msgstr "Skontrolujte na bankovom výpise či Konečný zostatok = Počiatočný zostatok + súčet riadkov výpisu"
+"Check on bank statement that the Closing Balance = Starting Balance + sum of "
+"statement lines"
+msgstr ""
+"Skontrolujte na bankovom výpise či Konečný zostatok = Počiatočný zostatok + "
+"súčet riadkov výpisu"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
@@ -69,14 +74,18 @@ msgstr "Skontrolujte či zaplatené/zladené faktúry nie v stave 'Otvorené'"
 msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
-msgstr "Skontrolujte či zladené účtovné pohyby, ktoré definujú účty Záväzkov a Pohľadávok, patria k rovnakým zladeným výpisom"
+msgstr ""
+"Skontrolujte či zladené účtovné pohyby, ktoré definujú účty Záväzkov a "
+"Pohľadávok, patria k rovnakým zladeným výpisom"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
-"Check that reconciled invoice for Sales/Purchases has reconciled entries for"
-" Payable and Receivable Accounts"
-msgstr "Skontrolujte či zladená faktúra pre Predaje/Nákupy má zladene vstupy pre účty Záväzkov a Pohľadávok"
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
+"Payable and Receivable Accounts"
+msgstr ""
+"Skontrolujte či zladená faktúra pre Predaje/Nákupy má zladene vstupy pre "
+"účty Záväzkov a Pohľadávok"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
@@ -96,27 +105,58 @@ msgstr "Kódová pomoc"
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
-"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
+"Code should always set a variable named `result` with the result of your "
+"test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was "
+"succesful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
-"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
+"If the result of your test is a dictionary, you can set a variable named "
+"`column_order` to choose in\n"
 "what order you want to print `result`'s content.\n"
 "\n"
-"Should you need them, you can also use the following variables into your code:\n"
+"Should you need them, you can also use the following variables into your "
+"code:\n"
 "    * cr: cursor to the database\n"
 "    * uid: ID of the current user\n"
 "\n"
-"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
+"In any ways, the code must be legal python statements with correct "
+"indentation (if needed).\n"
 "\n"
 "Example: \n"
 "    sql = '''SELECT id, name, ref, date\n"
 "             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
+"= 'view')\n"
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
-msgstr "Kód by mal vždy nastaviť premennú pomenovanú 'výsledok' s výsledkom vášho testu, ktorý môźe byť zoznam alebo\nslovník. Ak je 'výsledok' prázdny zoznam, znamená to že test bol úspešný. Inak sa bude\nsnažiť peložiť  vytlačiť obsah 'výsledku'.\n\nAk je výsleodk vášho testu slovník, môžete nastaviť premennú `column_order` pre výber\nporadia v akom chcete vytlačiť obsah 'výsledku'.\n\nAk by ste ich potrebovali, môžete použiť nasledujúce premenné vo vašom kóde:\n* cr: kurzor do databázy\n* uid: ID aktuálneho používateľa\n\nV akomkoľvek prípade, kód musí byť právna python závierka so správnou zarážkou (v prípade potreby).\n\nPríklad: \nsql = '''VYBRAŤ id, name, ref, date\nZ account_move_line \nKDE account_id V (VYBRAŤ id Z account_account KDE type = 'view')\n'''\ncr.execute(sql)\nresult = cr.dictfetchall()"
+msgstr ""
+"Kód by mal vždy nastaviť premennú pomenovanú 'výsledok' s výsledkom vášho "
+"testu, ktorý môźe byť zoznam alebo\n"
+"slovník. Ak je 'výsledok' prázdny zoznam, znamená to že test bol úspešný. "
+"Inak sa bude\n"
+"snažiť peložiť  vytlačiť obsah 'výsledku'.\n"
+"\n"
+"Ak je výsleodk vášho testu slovník, môžete nastaviť premennú `column_order` "
+"pre výber\n"
+"poradia v akom chcete vytlačiť obsah 'výsledku'.\n"
+"\n"
+"Ak by ste ich potrebovali, môžete použiť nasledujúce premenné vo vašom "
+"kóde:\n"
+"* cr: kurzor do databázy\n"
+"* uid: ID aktuálneho používateľa\n"
+"\n"
+"V akomkoľvek prípade, kód musí byť právna python závierka so správnou "
+"zarážkou (v prípade potreby).\n"
+"\n"
+"Príklad: \n"
+"sql = '''VYBRAŤ id, name, ref, date\n"
+"Z account_move_line \n"
+"KDE account_id V (VYBRAŤ id Z account_account KDE type = 'view')\n"
+"'''\n"
+"cr.execute(sql)\n"
+"result = cr.dictfetchall()"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid

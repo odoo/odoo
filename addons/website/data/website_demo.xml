@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="default_website" model="website">
+            <field name="social_twitter">https://twitter.com/Odoo</field>
+            <field name="social_facebook">https://www.facebook.com/Odoo</field>
+            <field name="social_googleplus">https://plus.google.com/+Odooapps</field>
+            <field name="social_linkedin">https://www.linkedin.com/company/odoo</field>
+        </record>
+
+        <record id="base.main_company" model="res.company">
+            <field name="rml_header1">Great Product for Great People</field>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <!--
+            Some demo data for front-end server action generating templates
+        -->
+        <template id="template_partner_post" name="Partner Post and Thanks (Website Server Action Demo)">
+            <t t-call="website.layout">
+                <t t-set="additional_title">Partner Detail</t>
+                <div id="wrap">
+                    <div class="oe_structure">
+                        <section>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h2>Thank you for posting a message !</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <record id="action_partner_post" model="ir.actions.server">
+            <field name="name">Website Partner Post and Thanks Demo</field>
+            <field name="condition">True</field>
+            <field name="website_published" eval="True"/>
+            <field name="website_path">partner_thanks</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="code">
+partner = model
+post_partner_id = request.params.get('partner_id')
+post_body = request.params.get('body')
+if post_partner_id:
+    try:
+        post_partner_id = int(post_partner_id)
+    except:
+        post_partner_id = False
+if post_partner_id:
+    partner = model.browse(post_partner_id).exists()
+if partner and post_body:
+    message = partner.message_post(body=post_body, subtype='mail.mt_comment')
+values = {
+    'partner': partner,
+}
+response = request.website.render("website.template_partner_post", values)
+            </field>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+        </record>
+
+        <template id="template_partner_comment" name="Partner Comment (Website Server Action Demo)">
+<t t-call="website.layout">
+    <t t-set="additional_title">Partners</t>
+    <div id="wrap">
+        <div class="oe_structure">
+            <section>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="text-center">Send a Message to our Partners</h1>
+                            <h3 class="text-muted text-center">Discuss and Comments</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="container">
+            <div class="row">
+                <form class="form-horizontal" action="/website/action/website.action_partner_post" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Recipient</label>
+                        <div class="col-sm-10">
+                            <select t-if="partners" name="partner_id" class="form-control">
+                                <t t-foreach="partners" t-as="partner"><option t-att-value="partner.id" t-esc="partner.name"/></t>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Message</label>
+                        <div class="col-sm-10">
+                            <textarea name="body" rows="10" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default btn-primary">
+                                Send <span class="fa fa-long-arrow-right"/>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</t>
+        </template>
+
+        <record id="action_partner_comment" model="ir.actions.server">
+            <field name="name">Website Partners Comment Form</field>
+            <field name="condition">True</field>
+            <field name="website_published" eval="True"/>
+            <field name="website_path">partner_comment</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="code">
+response = request.render("website.template_partner_comment", {
+    'partners': model.search([('customer', '=', True)]),
+})
+            </field>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+        </record>
+
+        <record id="default_website" model="website">
+            <field name="name">Website localhost</field>
+        </record>
+        <record id="website2" model="website">
+            <field name="name">Website 0.0.0.0</field>
+            <field name="domain">0.0.0.0</field>
+            <field name="social_twitter">https://twitter.com/Odoo</field>
+            <field name="social_facebook">https://www.facebook.com/Odoo</field>
+            <field name="social_googleplus">https://plus.google.com/+Odooapps</field>
+            <field name="social_linkedin">https://www.linkedin.com/company/odoo</field>
+        </record>
+
+        <record id="website2_homepage" model="ir.ui.view">
+            <field name="name">Homepage</field>
+            <field name="type">qweb</field>
+            <field name="key">website.homepage</field>
+            <field name="website_id" ref="website2"/>
+            <field name="arch" type="xml">
+                <t name="Homepage" priority="29" t-name="website.homepage">
+                  <t t-call="website.layout">
+                    <div id="wrap" class="oe_structure oe_empty">
+                      <div class="carousel slide mb32" id="myCarousel0" style="height: 320px;">
+                        <ol class="carousel-indicators hidden">
+                          <li class="active" data-slide-to="0" data-target="#myCarousel0"/>
+                        </ol>
+                        <div class="carousel-inner">
+                          <div class="item image_text oe_img_bg active" style="background-image: url(http://0.0.0.0:8069/web/image/website.s_background_image_11);">
+                            <div class="container">
+                              <div class="row content">
+                                <div class="carousel-content col-md-6 col-sm-12">
+                                  <h2>Homepage 0.0.0.0</h2>
+                                  <h3>Click to customize this text</h3>
+                                  <p>
+                                    <a class="btn btn-success btn-large" href="/page/website.contactus">Contact us</a>
+                                  </p>
+                                </div>
+                                <span class="carousel-img col-md-6 hidden-sm hidden-xs"> </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="carousel-control left hidden" data-slide="prev" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%">
+                          <i class="fa fa-chevron-left"/>
+                        </div>
+                        <div class="carousel-control right hidden" data-slide="next" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%">
+                          <i class="fa fa-chevron-right"/>
+                        </div>
+                      </div>
+                    </div>
+                  </t>
+                </t>
+            </field>
+        </record>
+
+        <record id="website2_main_menu" model="website.menu">
+            <field name="name">Top Menu</field>
+            <field name="website_id" ref="website2"/>
+        </record>
+
+        <record id="website2_menu_homepage" model="website.menu">
+            <field name="name">Home</field>
+            <field name="url">/page/homepage</field>
+            <field name="parent_id" ref="website.website2_main_menu"/>
+            <field name="sequence" type="int">10</field>
+            <field name="website_id" ref="website2"/>
+        </record>
+
+        <record id="website2_menu_contactus" model="website.menu">
+            <field name="name">Contact us</field>
+            <field name="url">/page/website.contactus</field>
+            <field name="parent_id" ref="website.website2_main_menu"/>
+            <field name="sequence" type="int">60</field>
+            <field name="website_id" ref="website2"/>
+        </record>
+
+    </data>
+</odoo>

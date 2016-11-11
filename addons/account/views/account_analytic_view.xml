@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <record id="view_account_analytic_line_form_inherit_account" model="ir.ui.view">
             <field name="name">account.analytic.line.form.inherit.account</field>
@@ -81,5 +81,31 @@
         <menuitem action="analytic.action_account_analytic_account_form" id="account_analytic_def_account"
             parent="menu_analytic_accounting"
             groups="analytic.group_analytic_accounting" sequence="0"/>
+
+
+        <record model="ir.actions.act_window" id="analytic_line_reporting_pivot">
+            <field name="name">Analytic Entries</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="analytic.view_account_analytic_line_pivot"/>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="analytic.view_account_analytic_line_filter"/>
+        </record>
+
+        <menuitem
+            name="Analytic Entries"
+            parent="account_reports_business_intelligence_menu"
+            action="analytic_line_reporting_pivot"
+            id="menu_action_analytic_lines_reporting"
+            sequence="35"
+            groups="analytic.group_analytic_accounting"/>
+
+        <menuitem
+            id="account_analytic_tag_menu"
+            name="Analytic Accounts Tags"
+            parent="menu_analytic_accounting"
+            action="analytic.account_analytic_tag_action"
+            groups="base.group_no_one"/>
+
     </data>
-</openerp>
+</odoo>
