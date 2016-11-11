@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_config_settings_view_form_inherit_pad_project" model="ir.ui.view">
+        <field name="name">project.config.settings.form.inherit.pad.project</field>
+        <field name="model">project.config.settings</field>
+        <field name="inherit_id" ref="project.project_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="use_collaborative_pad" position="after">
+                <div class="col-xs-12 col-md-6 o_setting_box" groups="base.group_no_one">
+                    <div class="o_setting_right_pane">
+                        <strong>Pad Server</strong>
+                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                        <div class="text-muted">
+                            Use your own pad server (advanced)
+                        </div>
+                        <div class="content-group">
+                            <field name='company_id' invisible="1"/>
+                            <div class="row mt16">
+                                <label for="pad_server" class="col-md-3 o_light_label"/>
+                                <field name="pad_server"/>
+                            </div>
+                            <div class="row">
+                                <label for="pad_key" class="col-md-3 o_light_label"/>
+                                <field name="pad_key"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>
