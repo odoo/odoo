@@ -1,48 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <record id="view_config_settings" model="ir.ui.view">
-            <field name="name">project settings</field>
+        <record id="project_config_settings_view_form" model="ir.ui.view">
+            <field name="name">project.config.settings.form</field>
             <field name="model">project.config.settings</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <form class="oe_form_configuration">
                     <header>
-                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        <button string="Save" type="object" name="execute" class="oe_highlight"/>
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <group string="Project Management" name="project_management">
-                        <field name="company_id" invisible="1"/>
-                        <label for="project_time_mode_id" groups="base.group_no_one"/>
-                        <div groups="base.group_no_one">
-                            <field name="project_time_mode_id" domain="[('category_id','=', %(product.uom_categ_wtime)d)]" class="oe_inline"/>
+                    <sheet>
+                        <h2>Team Collaboration</h2>
+                        <div class="row mt16 o_settings_container" title="This replaces task's description text field by a collaborative rich text pad. This is advised if tasks involve several people.">
+                            <div id="use_collaborative_pad" class="col-xs-12 col-md-6 o_setting_box" title="Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_pad"/>
+                                </div>
+                                <div class="o_setting_right_pane" name="pad_project_right_pane">
+                                    <label for="module_pad"/>
+                                    <div class="text-muted">
+                                        Use collaborative rich text pads in tasks
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <field name="module_pad" widget="radio"/>
-                        <label for="id" string="Forecasts"/>
-                        <div>
-                              <div>
-                                  <field name="module_project_forecast" widget="upgrade_boolean"/>
-                                  <label for="module_project_forecast"/>
-                                  <a href="https://www.youtube.com/watch?v=PWKez0gn6Ts" target="_blank"> More Info </a>
-                              </div>
-                         </div>
-                        <field name="module_rating_project" widget="radio"/>
-                    </group>
-                    <group name="timesheets"/>
-                    <div>
-                        <span>(*) This configuration is related to the company you're logged into.</span>
-                    </div>
+                        <h2>Time Management</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_hr_timesheet"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_hr_timesheet"/>
+                                    <div class="text-muted">
+                                        Track time spent on projects and tasks
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_project_timesheet_synchro" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_project_timesheet_synchro"/>
+                                    <div class="text-muted">
+                                        Record time with mobile Timesheet app
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="row mt16 oe_center">
+                                            <div class="col-md-4">
+                                                <a href="http://www.odoo.com/page/timesheet?platform=chrome">
+                                                    <img alt="Google Chrome Store" class="img img-responsive" src="project/static/src/img/chrome_store.png"/>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <a href="http://www.odoo.com/page/timesheet?platform=ios">
+                                                    <img alt="Apple App Store" class="img img-responsive" src="project/static/src/img/app_store.png"/>
+                                                </a>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <a href="http://www.odoo.com/page/timesheet?platform=android">
+                                                    <img alt="Google Play Store" class="img img-responsive" src="project/static/src/img/play_store.png"/>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_project_forecast" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_project_forecast"/>
+                                    <div class="text-muted">
+                                        Manage your resources with Gantt charts
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_hr_holidays"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_hr_holidays"/>
+                                    <div class="text-muted">
+                                        Track leaves to optimize your scheduling
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_hr_timesheet_attendance"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_hr_timesheet_attendance"/>
+                                    <div class="text-muted">
+                                        Track attendances and compare with timesheets
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Billing</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_sale_timesheet"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_sale_timesheet"/>
+                                    <div class="text-muted">
+                                        Sell services and invoice time spent
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_hr_expense"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_hr_expense"/>
+                                    <div class="text-muted">
+                                        Reimburse employee expenses and invoice customers
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Customer Satisfaction</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_rating_project"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_rating_project"/>
+                                    <div class="text-muted">
+                                        Track customer satisfaction on tasks
+                                    </div>
+                                    <div class="content-group" id="msg_module_rating_project">
+                                        <div class="text-warning mt16"  attrs="{'invisible': [('module_rating_project','=',False)]}">
+                                            Save this page and come back here to set up the feature.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Issue Management</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="project_issue">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_project_issue"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_project_issue"/>
+                                    <div class="text-muted">
+                                        Track and solve issues from a Kanban view
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </sheet>
                 </form>
             </field>
         </record>
 
-        <record id="action_config_settings" model="ir.actions.act_window">
+        <record id="project_config_settings_action" model="ir.actions.act_window">
             <field name="name">Configure Project</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">project.config.settings</field>
+            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">inline</field>
         </record>
 
-        <menuitem id="menu_project_general_settings" name="Settings" parent="menu_project_config"
-            sequence="0" action="action_config_settings" groups="base.group_system"/>
+        <menuitem id="project_config_settings_menu_action" name="Settings" parent="menu_project_config"
+            sequence="0" action="project_config_settings_action" groups="base.group_system"/>
 </odoo>

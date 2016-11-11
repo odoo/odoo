@@ -14,6 +14,7 @@ This module allows a customer to give rating on Project Issue.
     'data': [
         'data/project_issue_data.xml',
         'views/project_issue_view.xml',
+        'views/project_config_settings_views.xml',
     ],
     'demo': [
         'data/project_issue_demo.xml',

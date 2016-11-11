@@ -10,25 +10,21 @@ class ProjectConfiguration(models.TransientModel):
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
-    project_time_mode_id = fields.Many2one(related='company_id.project_time_mode_id', string="Project Time Unit *")
-    module_pad = fields.Selection([
-        (0, "Task description is plain text"),
-        (1, "Collaborative rich text on task description")
-        ], string="Pads",
-        help='Lets the company customize which Pad installation should be used to link to new pads '
-             '(for example: http://ietherpad.com/).\n'
-             '-This installs the module pad.')
-    module_rating_project = fields.Selection([
-        (0, "No customer rating"),
-        (1, 'Track customer satisfaction on tasks')
-        ], string="Rating on task",
-        help="This allows customers to give rating on provided services")
+    module_pad = fields.Boolean("Collaborative Pads")
+    module_hr_timesheet = fields.Boolean("Timesheets")
+    module_project_timesheet_synchro = fields.Boolean("Awesome Timesheet")
+    module_rating_project = fields.Boolean(string="Rating on Tasks")
     generate_project_alias = fields.Selection([
         (0, "Do not create an email alias automatically"),
         (1, "Automatically generate an email alias at the project creation")
         ], string="Project Alias",
         help="Odoo will generate an email alias at the project creation from project name.")
-    module_project_forecast = fields.Boolean(string="Forecasts, planning and Gantt charts")
+    module_project_forecast = fields.Boolean(string="Forecasts")
+    module_hr_holidays = fields.Boolean("Leave Management")
+    module_hr_timesheet_attendance = fields.Boolean("Attendances")
+    module_sale_timesheet = fields.Boolean("Time Billing")
+    module_hr_expense = fields.Boolean("Expenses")
+    module_project_issue = fields.Boolean("Issue Tracking")
 
     @api.multi
     def set_default_generate_project_alias(self):

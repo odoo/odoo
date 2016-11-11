@@ -14,6 +14,7 @@ This module adds a PAD in all project form views.
         'pad'
     ],
     'data': [
+        'views/project_config_settings_views.xml',
         'views/project_task.xml'
     ],
     'auto_install': True,
