@@ -405,4 +405,4 @@ class AccountVoucherLine(models.Model):
                     values['price_unit'] = product.standard_price
                 values['price_unit'] = values['price_unit'] * currency.rate
 
-        return {'value': values, 'domain': {}}
+        return {'values': values, 'domain': {}}
