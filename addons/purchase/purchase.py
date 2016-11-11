@@ -271,16 +271,11 @@ class purchase_order(osv.osv):
         line = self.pool.get('purchase.order.line')
         order_line_ids = []
         move_ids = []
-        proc_obj = self.pool.get('procurement.order')
         for order in self.browse(cr, uid, ids, context=context):
             order_line_ids += [po_line.id for po_line in order.order_line]
             move_ids += [po_line.move_dest_id.id for po_line in order.order_line if po_line.move_dest_id]
         if order_line_ids:
             line.write(cr, uid, order_line_ids, {'state': status}, context=context)
-        if order_line_ids and status == 'cancel':
-            procs = proc_obj.search(cr, uid, [('move_id', 'in', move_ids)], context=context)
-            if procs:
-                proc_obj.write(cr, uid, procs, {'state': 'exception'}, context=context)
         return True
 
     def button_dummy(self, cr, uid, ids, context=None):
