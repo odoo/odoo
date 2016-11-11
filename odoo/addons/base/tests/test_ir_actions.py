@@ -90,18 +90,6 @@ class TestServerActions(TestServerActionsBase):
         partners = self.test_partner.search([('name', 'ilike', 'TestingPartner_code')])
         self.assertEqual(len(partners), 1, 'ir_actions_server: 1 new partner should have been created')
 
-    def test_30_client(self):
-        client_action = self.env['ir.actions.client'].create({
-            'name': 'TestAction2',
-            'tag': 'Test',
-        })
-        self.action.write({
-            'state': 'client_action',
-            'action_id': client_action.id,
-        })
-        res = self.action.with_context(self.context).run()
-        self.assertEqual(res['name'], 'TestAction2', 'ir_actions_server: incorrect return result for a client action')
-
     def test_40_crud_create(self):
         _city = 'TestCity'
         _name = 'TestNew'
@@ -145,7 +133,7 @@ class TestServerActions(TestServerActionsBase):
         self.action.write({
             'state': 'object_create',
             'use_create': 'new_other',
-            'crud_model_id': self.res_country_model.id,
+            'create_model_id': self.res_country_model.id,
             'link_new_record': False,
             'fields_lines': [(5,),
                              (0, 0, {'col1': self.res_country_name_field.id, 'value': 'record.name', 'type': 'equation'}),
@@ -162,7 +150,7 @@ class TestServerActions(TestServerActionsBase):
         self.action.write({
             'state': 'object_create',
             'use_create': 'copy_other',
-            'crud_model_id': self.res_country_model.id,
+            'create_model_id': self.res_country_model.id,
             'link_new_record': False,
             'ref_object': 'res.country,%s' % self.test_country.id,
             'fields_lines': [(5,),
@@ -196,7 +184,7 @@ class TestServerActions(TestServerActionsBase):
         # Do: copy current record
         self.action.write({
             'use_write': 'other',
-            'crud_model_id': self.res_country_model.id,
+            'create_model_id': self.res_country_model.id,
             'ref_object': 'res.country,%s' % self.test_country.id,
             'fields_lines': [(5,), (0, 0, {'col1': self.res_country_name_field.id, 'value': 'record.name', 'type': 'equation'})],
         })
@@ -209,8 +197,8 @@ class TestServerActions(TestServerActionsBase):
         # Do: copy a record in another model
         self.action.write({
             'use_write': 'expression',
-            'crud_model_id': self.res_country_model.id,
-            'write_expression': 'record.country_id',
+            'create_model_id': self.res_country_model.id,
+            'write_expression': 'object.country_id',
             'fields_lines': [(5,), (0, 0, {'col1': self.res_country_name_field.id, 'value': 'NewCountry', 'type': 'value'})],
         })
         run_res = self.action.with_context(self.context).run()

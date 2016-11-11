@@ -257,7 +257,7 @@ or by copying an existing record (via :meth:`~odoo.models.Model.copy`)
     ``new``
         creates a record in the model specified by ``model_id``
     ``new_other``
-        creates a record in the model specified by ``crud_model_id``
+        creates a record in the model specified by ``create_model_id``
     ``copy_current``
         copies the record on which the action was invoked
     ``copy_other``
@@ -274,7 +274,7 @@ or by copying an existing record (via :meth:`~odoo.models.Model.copy`)
         If ``value``, the ``value`` field is interpreted as a literal value
         (possibly converted), if ``equation`` the ``value`` field is
         interpreted as a Python expression and evaluated
-``crud_model_id``
+``create_model_id``
     model in which to create a new record, if ``use_create`` is set to
     ``new_other``
 ``ref_object``
@@ -299,10 +299,10 @@ existing records instead of creating one
     ``current``
         write to the current record
     ``other``
-        write to an other record selected via ``crud_model_id`` and
+        write to an other record selected via ``create_model_id`` and
         ``ref_object``
     ``expression``
-        write to an other record whose model is selected via ``crud_model_id``
+        write to an other record whose model is selected via ``create_model_id``
         and whose id is selected by evaluating ``write_expression``
 ``write_expression``
     Python expression returning a record or an object id, used when
@@ -310,7 +310,7 @@ existing records instead of creating one
     should be modified
 ``fields_lines``
     see :ref:`reference/actions/server/object_create`
-``crud_model_id``
+``create_model_id``
     see :ref:`reference/actions/server/object_create`
 ``ref_object``
     see :ref:`reference/actions/server/object_create`

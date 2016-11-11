@@ -29,7 +29,6 @@ Dashboard for CRM will include:
 """,
     'website': 'https://www.odoo.com/page/crm',
     'depends': [
-        'base_action_rule',
         'base_setup',
         'sales_team',
         'mail',
@@ -76,7 +75,6 @@ Dashboard for CRM will include:
         'data/crm_demo.xml',
         'data/crm_lead_demo.xml',
         'data/crm_activity_demo.xml',
-        'data/base_action_rule_demo.xml',
     ],
     'css': ['static/src/css/crm.css'],
     'installable': True,
