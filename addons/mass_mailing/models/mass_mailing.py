@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import hashlib
+import hmac
 from datetime import datetime
 import random
-from hashlib import sha256
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -402,10 +403,10 @@ class MassMailing(models.Model):
         :param str email:
             Email of the resource that will be unsubscribed.
         """
-        icp = self.env["ir.config_parameter"].sudo()
-        salt = icp.get_param("database.secret")
-        source = (self.env.cr.dbname, self.id, res_id, email, salt)
-        return sha256(",".join(map(unicode, source))).hexdigest()
+        secret = self.env["ir.config_parameter"].sudo().get_param(
+            "database.secret")
+        token = (self.env.cr.dbname, self.id, res_id, email)
+        return hmac.new(str(secret), repr(token), hashlib.sha512).hexdigest()
 
     def _compute_next_departure(self):
         cron_next_call = self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').sudo().nextcall
