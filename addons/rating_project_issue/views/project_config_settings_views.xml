@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_config_settings_view_form_inherit_rating_project_issue" model="ir.ui.view">
+        <field name="name">project.config.settings.form.inherit.issue</field>
+        <field name="model">project.config.settings</field>
+        <field name="inherit_id" ref="project_issue.project_config_settings_view_form_inherit_project_issue"/>
+        <field name="arch" type="xml">
+            <div id="msg_module_rating_project_issue" position="replace">
+                <div class="content-group" attrs="{'invisible': [('module_rating_project_issue', '=', False)]}">
+                    <div class="mt16">
+                        <button name="%(project.open_task_type_form)d" icon="fa-arrow-right" type="action" string="Set Email Template to Stages" class="btn-link"/>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

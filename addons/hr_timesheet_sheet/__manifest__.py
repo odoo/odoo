@@ -34,7 +34,6 @@ The validation can be configured in the company:
         'views/hr_timesheet_sheet_templates.xml',
         'views/hr_timesheet_sheet_views.xml',
         'views/hr_department_views.xml',
-        'views/hr_timesheet_sheet_config_settings_views.xml',
     ],
     'installable': True,
     'auto_install': False,
