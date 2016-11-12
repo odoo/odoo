@@ -16,6 +16,16 @@ from odoo.tools.safe_eval import safe_eval, test_python_expr
 
 _logger = logging.getLogger(__name__)
 
+_DEFAULT_PYTHON_CODE = """# Available variables:
+#  - time, datetime, dateutil: Python libraries
+#  - env: Odoo Environement
+#  - model: Model of the record on which the action is triggered
+#  - object: Record on which the action is triggered if there is one, otherwise None
+#  - workflow: Workflow engine
+#  - log : log(message), function to log debug information in logging table
+#  - Warning: Warning Exception to use with raise
+# To return an action, assign: action = {...}
+"""
 
 class IrActions(models.Model):
     _name = 'ir.actions.actions'
@@ -487,10 +497,8 @@ class IrActionsServer(models.Model):
     act_followers = fields.Many2many("res.partner", string="Add Followers")
 
     # Python code
-    code = fields.Text(string='Python Code',
-                       default=DEFAULT_PYTHON_CODE,
-                       help="Write Python code that the action will execute. Some variables are "
-                            "available for use; help about pyhon expression is given in the help tab.")
+    code = fields.Text(string='Python Code', default=_DEFAULT_PYTHON_CODE)
+
     # Multi
     multi_ids = fields.Many2many('ir.actions.server', 'rel_server_actions', 'server_id', 'action_id', string='Actions to Execute')
 
