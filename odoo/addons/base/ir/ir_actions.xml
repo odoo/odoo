@@ -283,8 +283,6 @@
                             <group>
                                 <field name="model_id" invisible="context.get('default_model_id', False)"/>
                                 <field name="state"/>
-                                <field name="act_followers"
-                                    attrs="{'invisible': [('state', '!=', 'followers')], 'required': [('state', '=', 'followers')]}"/>
                                 <field name="create_model_id"
                                     attrs="{'invisible': [('state', '!=', 'create')], 'required': [('state', '=', 'create')]}"/>
                                 <field name="link_field_id"
@@ -299,6 +297,11 @@
                             <page string="Python Code" name='code' autofocus="autofocus"
                                     attrs="{'invisible': [('state', '!=', 'code')]}">
                                 <field name="code" widget="ace" options="{'mode': 'python'}"/>
+                            </page>
+
+                            <page string="Add Followers" name='followers' autofocus="autofocus"
+                                    attrs="{'invisible': [('state', '!=', 'followers')]}"/>
+                                <field name="act_followers" widget="many2many_tags"/>
                             </page>
 
                             <page string="Data to Write" autofocus="autofocus"
