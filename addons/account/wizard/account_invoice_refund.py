@@ -152,6 +152,13 @@ class account_invoice_refund(osv.osv_memory):
                 else:
                     description = inv.name
 
+                origin = ''
+                if inv.type == 'out_invoice':
+                    origin = inv.number
+                elif inv.type == 'in_invoice':
+                    origin = inv.supplier_invoice_number and u'%s | %s' % (
+                        inv.number, inv.supplier_invoice_number) or inv.number
+
                 if not period:
                     raise osv.except_osv(_('Insufficient Data!'), \
                                             _('No period found on the invoice.'))
@@ -159,7 +166,8 @@ class account_invoice_refund(osv.osv_memory):
                 refund_id = inv_obj.refund(cr, uid, [inv.id], date, period, description, journal_id, context=context)
                 refund = inv_obj.browse(cr, uid, refund_id[0], context=context)
                 inv_obj.write(cr, uid, [refund.id], {'date_due': date,
-                                                'check_total': inv.check_total})
+                                                'check_total': inv.check_total,
+                                                'origin': origin})
                 inv_obj.button_compute(cr, uid, refund_id)
 
                 created_inv.append(refund_id[0])
