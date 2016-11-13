@@ -172,19 +172,19 @@ class Holidays(models.Model):
     report_note = fields.Text('HR Comments')
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, store=True, default=lambda self: self.env.uid, readonly=True)
     date_from = fields.Datetime('Start Date', readonly=True, index=True, copy=False,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
     date_to = fields.Datetime('End Date', readonly=True, copy=False,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
     holiday_status_id = fields.Many2one("hr.holidays.status", string="Leave Type", required=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee)
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, track_visibility='onchange')
     manager_id = fields.Many2one('hr.employee', string='First Approval', readonly=True, copy=False,
         help='This area is automatically filled by the user who validate the leave')
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     number_of_days_temp = fields.Float('Allocation', readonly=True, copy=False,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    number_of_days = fields.Float('Number of Days', compute='_compute_number_of_days', store=True)
+    number_of_days = fields.Float('Number of Days', compute='_compute_number_of_days', store=True, track_visibility='onchange')
     meeting_id = fields.Many2one('calendar.event', string='Meeting')
     type = fields.Selection([
             ('remove', 'Leave Request'),
@@ -539,6 +539,7 @@ class Holidays(models.Model):
     ####################################################
     # Messaging methods
     ####################################################
+
     @api.multi
     def _track_subtype(self, init_values):
         if 'state' in init_values and self.state == 'validate':
@@ -551,34 +552,23 @@ class Holidays(models.Model):
             return 'hr_holidays.mt_holidays_refused'
         return super(Holidays, self)._track_subtype(init_values)
 
-    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        """ Override the mail.thread method to handle HR users and officers
-            recipients. Indeed those will have specific action in their notification
-            emails.
-        """
-        group_hr_holidays_user = self.env.ref('hr_holidays.group_hr_holidays_user')
-        for recipient in recipients:
-            if recipient.id in done_ids:
-                continue
-            if recipient.user_ids and group_hr_holidays_user in recipient.user_ids[0].groups_id:
-                group_data['group_hr_holidays_user'] |= recipient
-                done_ids.add(recipient.id)
-        return super(Holidays, self)._notification_group_recipients(message, recipients, done_ids, group_data)
-
     @api.multi
-    def _notification_get_recipient_groups(self, message, recipients):
-        result = super(Holidays, self)._notification_get_recipient_groups(message, recipients)
+    def _notification_recipients(self, message, groups):
+        """ Handle HR users and officers recipients that can validate or refuse holidays
+        directly from email. """
+        groups = super(Holidays, self)._notification_recipients(message, groups)
 
-        app_action = '/mail/method?%s' % url_encode({'model': self._name, 'res_id': self.id, 'method': 'action_validate'})
-        ref_action = '/mail/method?%s' % url_encode({'model': self._name, 'res_id': self.id, 'method': 'action_refuse'})
-
-        actions = []
+        self.ensure_one()
         if self.state == 'confirm':
-            actions.append({'url': app_action, 'title': 'Approve'})
+            app_action = self._notification_link_helper('controller', controller='/hr_holidays/validate')
+            hr_actions = [{'url': app_action, 'title': _('Approve')}]
         if self.state in ['confirm', 'validate', 'validate1']:
-            actions.append({'url': ref_action, 'title': 'Refuse'})
+            ref_action = self._notification_link_helper('controller', controller='/hr_holidays/refuse')
+            hr_actions = [{'url': ref_action, 'title': _('Refuse')}]
 
-        result['group_hr_holidays_user'] = {
-            'actions': actions
-        }
-        return result
+        new_group = (
+            'group_hr_holidays_user', lambda partner: bool(partner.user_ids) and any(user.has_group('hr_holidays.group_hr_holidays_user') for user in partner.user_ids), {
+                'actions': hr_actions,
+            })
+
+        return [new_group] + groups

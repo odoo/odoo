@@ -30,6 +30,12 @@ class PosConfig(models.Model):
     _name = 'pos.config'
 
     def _default_sale_journal(self):
+        journal = self.env.ref('point_of_sale.pos_sale_journal', raise_if_not_found=False)
+        if journal and journal.company_id == self.env.user.company_id:
+            return journal
+        return self._default_invoice_journal()
+
+    def _default_invoice_journal(self):
         return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.user.company_id.id)], limit=1)
 
     def _default_pricelist(self):
@@ -61,6 +67,11 @@ class PosConfig(models.Model):
         domain=[('type', '=', 'sale')],
         help="Accounting journal used to post sales entries.",
         default=_default_sale_journal)
+    invoice_journal_id = fields.Many2one(
+        'account.journal', string='Invoice Journal',
+        domain=[('type', '=', 'sale')],
+        help="Accounting journal used to create invoices.",
+        default=_default_invoice_journal)
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")
     iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer")
     iface_payment_terminal = fields.Boolean(string='Payment Terminal', help="Enables Payment Terminal integration")
@@ -159,6 +170,11 @@ class PosConfig(models.Model):
     def _check_company_journal(self):
         if self.journal_id and self.journal_id.company_id.id != self.company_id.id:
             raise UserError(_("The company of the sale journal is different than the one of point of sale"))
+
+    @api.constrains('company_id', 'invoice_journal_id')
+    def _check_company_journal(self):
+        if self.invoice_journal_id and self.invoice_journal_id.company_id.id != self.company_id.id:
+            raise UserError(_("The invoice journal and the point of sale must belong to the same company"))
 
     @api.constrains('company_id', 'journal_ids')
     def _check_company_payment(self):

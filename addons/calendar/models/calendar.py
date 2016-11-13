@@ -160,7 +160,7 @@ class Attendee(models.Model):
         mails_to_send = self.env['mail.mail']
         for attendee in self:
             if attendee.email or attendee.partner_id.email:
-                ics_file = ics_files[attendee.event_id.id]
+                ics_file = ics_files.get(attendee.event_id.id)
                 mail_id = invitation_template.send_mail(attendee.id)
 
                 vals = {}
@@ -376,7 +376,7 @@ class AlarmManager(models.AbstractModel):
             if meeting.recurrency:
                 b_found = False
                 last_found = False
-                for one_date in meeting.get_recurrent_date_by_event():
+                for one_date in meeting._get_recurrent_date_by_event():
                     in_date_format = one_date.replace(tzinfo=None)
                     last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, max_delta, time_limit, 'notification', after=partner.calendar_last_notif_ack)
                     if last_found:
@@ -452,7 +452,7 @@ class Alarm(models.Model):
 
     name = fields.Char('Name', required=True)
     type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], 'Type', required=True, default='email')
-    duration = fields.Integer('Amount', required=True, default=1)
+    duration = fields.Integer('Remind Before', required=True, default=1)
     interval = fields.Selection(list(_interval_selection.iteritems()), 'Unit', required=True, default='hours')
     duration_minutes = fields.Integer('Duration in minutes', compute='_compute_duration_minutes', store=True, help="Duration in minutes")
 
@@ -648,13 +648,20 @@ class Meeting(models.Model):
                 return round(duration, 2)
             return 0.0
 
+    def _compute_is_highlighted(self):
+        if self.env.context.get('active_model') == 'res.partner':
+            partner_id = self.env.context.get('active_id')
+            for event in self:
+                if event.partner_ids.filtered(lambda s: s.id == partner_id):
+                    event.is_highlighted = True
+
     name = fields.Char('Meeting Subject', required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, track_visibility='onchange', default='draft')
 
     is_attendee = fields.Boolean('Attendee', compute='_compute_attendee')
     attendee_status = fields.Selection(Attendee.STATE_SELECTION, string='Attendee Status', compute='_compute_attendee')
     display_time = fields.Char('Event Time', compute='_compute_display_time')
-    display_start = fields.Date('Date', compute='_compute_display_start', store=True)
+    display_start = fields.Char('Date', compute='_compute_display_start', store=True)
     start = fields.Datetime('Start', required=True, help="Start date of an event, without time for full days events")
     stop = fields.Datetime('Stop', required=True, help="Stop date of an event, without time for full days events")
 
@@ -725,6 +732,7 @@ class Meeting(models.Model):
     attendee_ids = fields.One2many('calendar.attendee', 'event_id', 'Participant', ondelete='cascade')
     partner_ids = fields.Many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees', states={'done': [('readonly', True)]}, default=_default_partners)
     alarm_ids = fields.Many2many('calendar.alarm', 'calendar_alarm_calendar_event_rel', string='Reminders', ondelete="restrict", copy=False)
+    is_highlighted = fields.Boolean(compute='_compute_is_highlighted', string='# Meetings Highlight')
 
     @api.multi
     def _compute_attendee(self):
@@ -850,6 +858,7 @@ class Meeting(models.Model):
             # FIXME: why isn't this in CalDAV?
             import vobject
         except ImportError:
+            _logger.warning("The `vobject` Python module is not installed, so iCal file generation is unavailable. Use 'pip install vobject' to install it")
             return result
 
         for meeting in self:
@@ -915,10 +924,10 @@ class Meeting(models.Model):
                 meeting_attendees |= attendee
                 meeting_partners |= partner
 
-                if current_user.email != partner.email:
-                    attendee._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
-
             if meeting_attendees:
+                to_notify = meeting_attendees.filtered(lambda a: a.email != current_user.email)
+                to_notify._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
+
                 meeting.write({'attendee_ids': [(4, meeting_attendee.id) for meeting_attendee in meeting_attendees]})
             if meeting_partners:
                 meeting.message_subscribe(partner_ids=meeting_partners.ids)
@@ -1127,8 +1136,8 @@ class Meeting(models.Model):
             data['rrule_type'] = 'weekly'
         #repeat monthly by nweekday ((weekday, weeknumber), )
         if rule._bynweekday:
-            data['week_list'] = day_list[rule._bynweekday[0][0]].upper()
-            data['byday'] = str(rule._bynweekday[0][1])
+            data['week_list'] = day_list[list(rule._bynweekday)[0][0]].upper()
+            data['byday'] = str(list(rule._bynweekday)[0][1])
             data['month_by'] = 'day'
             data['rrule_type'] = 'monthly'
 
@@ -1371,7 +1380,7 @@ class Meeting(models.Model):
             if not self._context.get('dont_notify'):
                 if len(meeting.alarm_ids) > 0 or values.get('alarm_ids'):
                     partners_to_notify = meeting.partner_ids.ids
-                    event_attendees_changes = attendees_create and attendees_create[real_ids[0]]
+                    event_attendees_changes = attendees_create and real_ids and attendees_create[real_ids[0]]
                     if event_attendees_changes:
                         partners_to_notify.append(event_attendees_changes['removed_partners'].ids)
                     self.env['calendar.alarm_manager'].notify_next_alarm(partners_to_notify)

@@ -25,17 +25,17 @@
                     <group string="Journal Entries">
                         <field name="journal_id"/>
                         <div>
-                            <label for="account_asset_id" string="Depreciation Asset Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="account_asset_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
                             <label for="account_asset_id" string="Deferred Revenue Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
                         <field name="account_asset_id" nolabel="1" attrs="{'invisible': [('type','=', False)]}"/>
                         <div>
-                            <label for="account_depreciation_id" string="Depreciation Expense Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="account_depreciation_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
                             <label for="account_depreciation_id" string="Recognition Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
                         <field name="account_depreciation_id" nolabel="1"/>
                         <div>
-                            <label for="account_depreciation_expense_id" string="Depreciation Expense Account" attrs="{'invisible': [('type','!=','purchase')]}"/>
+                            <label for="account_depreciation_expense_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
                             <label for="account_depreciation_expense_id" string="Recognition Income Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
                         <field name="account_depreciation_expense_id" nolabel="1"/>
@@ -103,7 +103,7 @@
                     <button name="validate" states="draft" string="Confirm" type="object" class="oe_highlight"/>
                     <button type="object" name="compute_depreciation_board" string="Compute Depreciation" states="draft"/>
                     <button name="set_to_close" states="open" string="Sell or Dispose" type="object" class="oe_highlight"/>
-                    <button name="set_to_draft" states="open" string="Set to Draft" type="object" />
+                    <button name="set_to_draft" string="Set to Draft" type="object" attrs="{'invisible': ['|', ('entry_count', '!=', 0), ('state', '!=', 'open')]}"/>
                     <button name="%(action_asset_modify)d" states="open" string="Modify Depreciation" type="action"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
                 </header>

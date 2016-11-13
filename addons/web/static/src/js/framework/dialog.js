@@ -69,6 +69,7 @@ var Dialog = Widget.extend({
         if(this.$content) {
             this.setElement(this.$content);
         }
+        this.$el.addClass('modal-body ' + this.dialogClass);
     },
 
     set_buttons: function(buttons) {
@@ -118,7 +119,6 @@ var Dialog = Widget.extend({
 
         var self = this;
         this.replace(this.$modal.find(".modal-body")).then(function() {
-            self.$el.addClass('modal-body ' + self.dialogClass);
             self.$modal.modal('show');
             self._opened.resolve();
         });

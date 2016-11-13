@@ -260,7 +260,7 @@ class TestPreview(TransactionCase):
             ['qux', '5', '6'],
         ])
         # Ensure we only have the response fields we expect
-        self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'debug'])
+        self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'advanced_mode', 'debug'])
 
     @unittest.skipUnless(can_import('xlrd'), "XLRD module not available")
     def test_xls_success(self):
@@ -290,7 +290,7 @@ class TestPreview(TransactionCase):
             ['qux', '5', '6'],
         ])
         # Ensure we only have the response fields we expect
-        self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'debug'])
+        self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'advanced_mode', 'debug'])
 
     @unittest.skipUnless(can_import('xlrd.xlsx'), "XLRD/XLSX not available")
     def test_xlsx_success(self):
@@ -320,7 +320,7 @@ class TestPreview(TransactionCase):
             ['qux', '5', '6'],
         ])
         # Ensure we only have the response fields we expect
-        self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'debug'])
+        self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options','advanced_mode', 'debug'])
 
     @unittest.skipUnless(can_import('odf'), "ODFPY not available")
     def test_ods_success(self):
@@ -350,7 +350,7 @@ class TestPreview(TransactionCase):
             ['aux', '5', '6'],
         ])
         # Ensure we only have the response fields we expect
-        self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'debug'])
+        self.assertItemsEqual(result.keys(), ['matches', 'headers', 'fields', 'preview', 'headers_type', 'options', 'advanced_mode', 'debug'])
 
 
 class test_convert_import_data(TransactionCase):
@@ -378,6 +378,31 @@ class test_convert_import_data(TransactionCase):
             ['bar', '3', '4'],
             ['qux', '5', '6'],
         ])
+
+    def test_date_fields(self):
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'res.partner',
+            'file': 'name,date,create_date\n'
+                    '"foo","2013年07月18日","2016-10-12 06:06"\n',
+            'file_type': 'text/csv'
+
+        })
+
+        results = import_wizard.do(
+            ['name', 'date', 'create_date'],
+            {
+                'date_format': '%Y年%m月%d日',
+                'datetime_format': '%Y-%m-%d %H:%M',
+                'quoting': '"',
+                'separator': ',',
+                'headers': True
+            }
+        )
+
+        # if results empty, no errors
+        self.assertItemsEqual(results, [])
+
+
 
     def test_filtered(self):
         """ If ``False`` is provided as field mapping for a column,

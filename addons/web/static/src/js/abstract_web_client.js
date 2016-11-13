@@ -30,6 +30,19 @@ var WebClient = Widget.extend({
         toggle_fullscreen: function (event) {
             this.toggle_fullscreen(event.data.fullscreen);
         },
+        current_action_updated: function (e) {
+            this.current_action_updated(e.data.action);
+        },
+        perform_rpc: function(event) {
+            if (event.data.on_fail) {
+                event.data.on_fail();
+            }
+        },
+        perform_model_rpc: function(event) {
+            if (event.data.on_fail) {
+                event.data.on_fail();
+            }
+        },
     },
     init: function(parent) {
         this.client_options = {};
@@ -109,7 +122,7 @@ var WebClient = Widget.extend({
         window.onerror = function (message, file, line, col, error) {
             var traceback = error ? error.stack : '';
             crash_manager.show_error({
-                type: _t("Client Error"),
+                type: _t("Odoo Client Error"),
                 message: message,
                 data: {debug: file + ':' + line + "\n" + _t('Traceback:') + "\n" + traceback}
             });
@@ -219,6 +232,9 @@ var WebClient = Widget.extend({
             );
             this.connection_notification = false;
         }
+    },
+    // Handler to be overwritten
+    current_action_updated: function () {
     },
     // --------------------------------------------------------------
     // Scrolltop handling

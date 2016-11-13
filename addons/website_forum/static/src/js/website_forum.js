@@ -40,6 +40,33 @@ if(!$('.website_forum').length) {
             $(this).find('.o_forum_tag_follow_box').stop().fadeOut().css('display','none');
     });
 
+    $('.o_forum_profile_pic_edit').on('click', function(ev) {
+        ev.preventDefault();
+        $(this).closest('form').find('.o_forum_file_upload').trigger('click');
+    });
+
+    $('.o_forum_file_upload').on('change', function() {
+        if (this.files.length) {
+            var $form = $(this).closest('form');
+            var reader = new FileReader();
+            reader.onload = function(ev) {
+                $form.find('.o_forum_avatar_img').attr('src', ev.target.result);
+            };
+            reader.readAsDataURL(this.files[0]);
+            $form.find('#forum_clear_image').remove();
+        }
+    });
+
+    $('.o_forum_profile_pic_clear').click(function() {
+        var $form = $(this).closest('form');
+        $form.find('.o_forum_avatar_img').attr("src", "/web/static/src/img/placeholder.png");
+        $form.append($('<input/>', {
+            name: 'clear_image',
+            id: 'forum_clear_image',
+            type: 'hidden',
+        }));
+    });
+
     // Extended user biography toogle
     $('.o_forum_user_info').hover(
         function () {
@@ -136,6 +163,25 @@ if(!$('.website_forum').length) {
                     }
                 }
             });
+    });
+
+    $('.o_js_validation_queue a').on('click', function (ev) {
+        ev.preventDefault();
+        var $link = $(ev.currentTarget);
+        var self = $(this);
+        $(this).parents('.post_to_validate').hide();
+        $.get($link.attr('href'))
+            .fail(function() {
+                self.parents('.o_js_validation_queue > div').addClass('panel-danger').css('background-color', '#FAA');
+                self.parents('.post_to_validate').show();
+            })
+            .done(function() {
+                var left = $('.o_js_validation_queue:visible').length;
+                var type = $('h2.page-header li.active a').data('type');
+                $('#count_post').text(left);
+                $('#moderation_tools a[href*="/'+type+'_"]').find('strong').text(left);
+            });
+
     });
 
     $('.accept_answer').not('.karma_required').on('click', function (ev) {

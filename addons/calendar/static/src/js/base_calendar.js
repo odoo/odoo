@@ -71,7 +71,7 @@ widgets.SidebarFilter.include({
                 class: 'o_add_favorite_calendar',
                 name: "partner_id",
                 type: "many2one",
-                options: '{"no_open": True}',
+                options: '{"no_open": True, "no_create": True}',
                 placeholder: _t("Add Favorite Calendar"),
             },
         });

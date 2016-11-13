@@ -164,6 +164,20 @@ class Channel(models.Model):
             self.with_context(active_test=False).mapped('slide_ids').write({'active': vals['active']})
         return res
 
+    @api.multi
+    def message_post(self, parent_id=False, subtype=None, **kwargs):
+        """ Temporary workaround to avoid spam. If someone replies on a channel
+        through the 'Presentation Published' email, it should be considered as a
+        note as we don't want all channel followers to be notified of this answer. """
+        self.ensure_one()
+        if parent_id:
+            parent_message = self.env['mail.message'].sudo().browse(parent_id)
+            if parent_message.subtype_id and parent_message.subtype_id == self.env.ref('website_slides.mt_channel_slide_published'):
+                if kwargs.get('subtype_id'):
+                    kwargs['subtype_id'] = False
+                subtype = 'mail.mt_note'
+        return super(Channel, self).message_post(parent_id=parent_id, subtype=subtype, **kwargs)
+
 
 class Category(models.Model):
     """ Channel contain various categories to manage its slides """
@@ -425,9 +439,7 @@ class Slide(models.Model):
 
     @api.multi
     def get_access_action(self):
-        """ Override method that generated the link to access the document. Instead
-        of the classic form view, redirect to the slide on the website directly
-        if it is published. """
+        """ Instead of the classic form view, redirect to website if it is published. """
         self.ensure_one()
         if self.website_published:
             return {
@@ -439,15 +451,15 @@ class Slide(models.Model):
         return super(Slide, self).get_access_action()
 
     @api.multi
-    def _notification_get_recipient_groups(self, message, recipients):
-        """ Override to set the access button: everyone can see an access button
-        on their notification email if the slide is published. """
-        res = super(Slide, self)._notification_get_recipient_groups(message, recipients)
-        if all(slide.website_published for slide in self):
-            access_action = self._notification_link_helper('view', model=message.model, res_id=message.res_id)
-            for category, data in res.iteritems():
-                res[category]['button_access'] = {'url': access_action, 'title': _('View Slide')}
-        return res
+    def _notification_recipients(self, message, groups):
+        groups = super(Slide, self)._notification_recipients(message, groups)
+
+        self.ensure_one()
+        if self.website_published:
+            for group_name, group_method, group_data in groups:
+                group_data['has_button_access'] = True
+
+        return groups
 
     def get_related_slides(self, limit=20):
         domain = [('website_published', '=', True), ('channel_id.visibility', '!=', 'private'), ('id', '!=', self.id)]

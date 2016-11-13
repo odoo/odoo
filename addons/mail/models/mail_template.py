@@ -45,7 +45,7 @@ def format_tz(env, dt, tz=False, format=False):
         format_time = langs.time_format or '%I-%M %p'
 
         fdate = ts.strftime(format_date).decode('utf-8')
-        ftime = ts.strftime(format_time)
+        ftime = ts.strftime(format_time).decode('utf-8')
         return "%s %s%s" % (fdate, ftime, (' (%s)' % tz) if tz else '')
 
 try:
@@ -488,7 +488,7 @@ class MailTemplate(models.Model):
                 )
 
             # Add report in attachments: generate once for all template_res_ids
-            if template.report_template and not 'report_template_in_attachment' in self.env.context:
+            if template.report_template:
                 for res_id in template_res_ids:
                     attachments = []
                     report_name = self.render_template(template.report_name, template.model, res_id)

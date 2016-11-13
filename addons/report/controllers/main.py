@@ -105,7 +105,8 @@ class ReportController(Controller):
                     ids = [int(x) for x in docids.split(",")]
                     obj = request.env[report.model].browse(ids)
                     if report.print_report_name and not len(obj) > 1:
-                        filename = safe_eval(report.print_report_name, {'object': obj, 'time': time})
+                        report_name = safe_eval(report.print_report_name, {'object': obj, 'time': time})
+                        filename = "%s.%s" % (report_name, "pdf")
                 response.headers.add('Content-Disposition', content_disposition(filename))
                 response.set_cookie('fileToken', token)
                 return response

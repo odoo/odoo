@@ -48,7 +48,8 @@ class AccountInvoice(models.Model):
                         'account_id':dacc,
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
-                        'account_analytic_id': False,
+                        'account_analytic_id': i_line.account_analytic_id.id,
+                        'analytic_tag_ids': i_line.analytic_tag_ids.ids and [(6, 0, i_line.analytic_tag_ids.ids)] or False,
                     },
 
                     {
@@ -60,7 +61,8 @@ class AccountInvoice(models.Model):
                         'account_id':cacc,
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
-                        'account_analytic_id': False,
+                        'account_analytic_id': i_line.account_analytic_id.id,
+                        'analytic_tag_ids': i_line.analytic_tag_ids.ids and [(6, 0, i_line.analytic_tag_ids.ids)] or False,
                     },
                 ]
         return []
@@ -74,8 +76,8 @@ class AccountInvoiceLine(models.Model):
         return self.product_id.standard_price
 
     def _get_price(self, company_currency, price_unit):
-        if self.invoice_id.currency_id.id != company_currency:
-            price = company_currency.with_context(date=self.invoice_id.date_invoice).compute(price_unit * self.quantity, self.invoice_id.currency_id.id)
+        if self.invoice_id.currency_id.id != company_currency.id:
+            price = company_currency.with_context(date=self.invoice_id.date_invoice).compute(price_unit * self.quantity, self.invoice_id.currency_id)
         else:
             price = price_unit * self.quantity
         return round(price, self.invoice_id.currency_id.decimal_places)

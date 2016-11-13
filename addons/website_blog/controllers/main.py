@@ -4,6 +4,9 @@
 import json
 import werkzeug
 import itertools
+import pytz
+import babel.dates
+from collections import OrderedDict
 
 from odoo import http, fields, _
 from odoo.addons.website.controllers.main import QueryURL
@@ -29,13 +32,20 @@ class WebsiteBlog(http.Controller):
             (r, label) = group['post_date']
             start, end = r.split('/')
             group['post_date'] = label
-            group['date_begin'] = fields.Date.to_string(self._to_date(start))
-            group['date_end'] = fields.Date.to_string(self._to_date(end))
-            group['month'] = self._to_date(start).strftime("%B")
-            group['year'] = self._to_date(start).strftime("%Y")
-        return {year: [m for m in months] for year, months in itertools.groupby(groups, lambda g: g['year'])}
+            group['date_begin'] = start
+            group['date_end'] = end
+
+            locale = request.context.get('lang', 'en_US')
+            start = pytz.UTC.localize(fields.Datetime.from_string(start))
+            tzinfo = pytz.timezone(request.context.get('tz', 'utc') or 'utc')
+
+            group['month'] = babel.dates.format_datetime(start, format='MMMM', tzinfo=tzinfo, locale=locale)
+            group['year'] = babel.dates.format_datetime(start, format='YYYY', tzinfo=tzinfo, locale=locale)
+
+        return OrderedDict((year, [m for m in months]) for year, months in itertools.groupby(groups, lambda g: g['year']))
 
     def _to_date(self, dt):
+        # TODO remove me in master/saas-14
         return fields.Date.from_string(dt)
 
     @http.route([

@@ -7,6 +7,7 @@
     'version': '1.0',
     'category': 'Human Resources',
     'sequence': 23,
+    'summary': 'Review and approve employees time reports',
     'description': """
 This module implements a timesheet system.
 ==========================================

@@ -2,8 +2,13 @@ odoo.define('website_event_sale.tour', function (require) {
 'use strict';
 
 var tour = require('web_tour.tour');
+var base = require("web_editor.base");
 
-tour.register('event_buy_tickets', { test: true, url: '/event' },
+tour.register('event_buy_tickets', {
+    test: true,
+    url: '/event',
+    wait_for: base.ready()
+},
     [
         {
             content: "Go to the `Events` page",

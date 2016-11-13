@@ -179,67 +179,74 @@ ExtendedSearchProposition.DateTime = ExtendedSearchProposition.Field.extend({
     operators: [
         {value: "=", text: _lt("is equal to")},
         {value: "!=", text: _lt("is not equal to")},
-        {value: ">", text: _lt("greater than")},
-        {value: "<", text: _lt("less than")},
-        {value: ">=", text: _lt("greater than or equal to")},
-        {value: "<=", text: _lt("less than or equal to")},
+        {value: ">=", text: _lt("is after")},
+        {value: "<=", text: _lt("is before")},
         {value: "between", text: _lt("is between")},
         {value: "∃", text: _lt("is set")},
         {value: "∄", text: _lt("is not set")}
     ],
-    widget: function () { return datepicker.DateTimeWidget; },
-    get_value: function() {
-        return this.datewidget_1.get_value();
+    get_value: function (index) {
+        return this["datewidget_" + (index || 0)].get_value();
     },
     get_domain: function (field, operator) {
         switch (operator.value) {
-        case '∃': 
+        case '∃':
             return [[field.name, '!=', false]];
-        case '∄': 
+        case '∄':
             return [[field.name, '=', false]];
         case 'between':
-            return [[field.name, '>=', this.datewidget_1.get_value()], [field.name,'<=', this.datewidget_2.get_value()]];
-        default: 
+            return [[field.name, '>=', this.get_value()], [field.name, '<=', this.get_value(1)]];
+        default:
             return [[field.name, operator.value, this.get_value()]];
         }
     },
     show_inputs: function ($operator) {
-        this._super($operator);
-        if ($operator.val() === 'between') {
-            if (!this.datewidget_2) {
-                this.datewidget_2 = new (this.widget())(this);
-                this.datewidget_2.appendTo(this.$el);
+        this._super.apply(this, arguments);
+
+        if ($operator.val() === "between") {
+            if (!this.datewidget_1) {
+                this._create_new_widget("datewidget_1");
+            } else {
+                this.datewidget_1.do_show();
             }
-            else {
-                this.datewidget_2.$el.show();
-            }
-        }
-        else {
-            if (this.datewidget_2) {
-                this.datewidget_2.$el.hide();
+        } else {
+            if (this.datewidget_1) {
+                this.datewidget_1.do_hide();
             }
         }
     },
     toString: function () {
-        var str = formats.format_value(this.get_value(), { type:this.attributes['type'] });
-        if (this.datewidget_2 && this.datewidget_2.get_value()) {
-            str += ' and ' + formats.format_value(this.datewidget_2.get_value(), { type:this.attributes['type'] });
+        var str = formats.format_value(this.get_value(), {type: this.attributes['type']});
+        var date_1_value = this.datewidget_1 && this.get_value(1);
+        if (date_1_value) {
+            str += _lt(" and ") + formats.format_value(date_1_value, {type: this.attributes['type']});
         }
         return str;
     },
     start: function() {
-        var ready = this._super();
-        this.datewidget_1 = new (this.widget())(this);
-        this.datewidget_1.appendTo(this.$el);
-        return ready;
-    }
+        return $.when(
+            this._super.apply(this, arguments),
+            this._create_new_widget("datewidget_0")
+        );
+    },
+    _create_new_widget: function (name) {
+        this[name] = new (this._get_widget_class())(this);
+        return this[name].appendTo(this.$el).then((function () {
+            this[name].set_value(new Date());
+        }).bind(this));
+    },
+    _get_widget_class: function () {
+        return datepicker.DateTimeWidget;
+    },
 });
 
 ExtendedSearchProposition.Date = ExtendedSearchProposition.DateTime.extend({
     attributes: {
         type: 'date'
     },
-    widget: function () { return datepicker.DateWidget; },
+    _get_widget_class: function () {
+        return datepicker.DateWidget;
+    },
 });
 
 ExtendedSearchProposition.Integer = ExtendedSearchProposition.Field.extend({

@@ -31,13 +31,13 @@ class PublisherWarrantyContract(AbstractModel):
         limit_date = datetime.datetime.now()
         limit_date = limit_date - datetime.timedelta(15)
         limit_date_str = limit_date.strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT)
-        nbr_users = Users.search_count([])
-        nbr_active_users = Users.search_count([("login_date", ">=", limit_date_str)])
+        nbr_users = Users.search_count([('active', '=', True)])
+        nbr_active_users = Users.search_count([("login_date", ">=", limit_date_str), ('active', '=', True)])
         nbr_share_users = 0
         nbr_active_share_users = 0
         if "share" in Users._fields:
-            nbr_share_users = Users.search_count([("share", "=", True)])
-            nbr_active_share_users = Users.search_count([("share", "=", True), ("login_date", ">=", limit_date_str)])
+            nbr_share_users = Users.search_count([("share", "=", True), ('active', '=', True)])
+            nbr_active_share_users = Users.search_count([("share", "=", True), ("login_date", ">=", limit_date_str), ('active', '=', True)])
         user = self.env.user
         domain = [('application', '=', True), ('state', 'in', ['installed', 'to upgrade', 'to remove'])]
         apps = self.env['ir.module.module'].sudo().search_read(domain, ['name'])

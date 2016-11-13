@@ -61,11 +61,11 @@ refer to :ref:`setup/enterprise` (except for :ref:`setup/install/source`).
 If you wish to access the Enterprise installers/source code, you can:
 
 * Go to the Download_ page and log in with your customer credentials
-* Download the source on GitHub using git_
+* Download the source on GitHub using git_(available to partners only)
 
 .. note:: If you do not have access to our Enterprise repository, you can request
     it be e-mailing your sales representative or our online support with
-    your subscription number and GitHub username.
+    your subscription number and GitHub username. (available to partners only)
 
 .. warning:: Enterprise deb and rpm packages do not have repositories, so automatic
     update will not work. Reinstalling the latest package version will be needed
@@ -131,7 +131,7 @@ Configuration
 '''''''''''''
 
 The :ref:`configuration file <reference/cmdline/config>` can be found at
-:file:`{%PROGRAMFILES%}\\Odoo 9.0-{id}\\server\\openerp-server.conf`.
+:file:`{%PROGRAMFILES%}\\Odoo 9.0-{id}\\server\\odoo.conf`.
 
 The configuration file can be edited to connect to a remote Postgresql, edit
 file locations or set a dbfilter.
@@ -192,7 +192,7 @@ Configuration
 '''''''''''''
 
 The :ref:`configuration file <reference/cmdline/config>` can be found at
-:file:`/etc/odoo/openerp-server.conf`
+:file:`/etc/odoo/odoo.conf`
 
 When the configuration file is edited, Odoo must be restarted using
 ``service``:
@@ -259,7 +259,7 @@ Configuration
 '''''''''''''
 
 The :ref:`configuration file <reference/cmdline/config>` can be found at
-:file:`/etc/odoo/openerp-server.conf`
+:file:`/etc/odoo/odoo.conf`
 
 When the configuration file is edited, Odoo must be restarted via SystemD:
 
@@ -322,7 +322,7 @@ if you wish to get access), you can use this command to fetch the addons:
 
   $ git clone https://github.com/odoo/enterprise.git
 
-If you use git_, you must modify the :option:`--addons-path <odoo.py --addons-path>`
+If you use git_, you must modify the :option:`--addons-path <odoo-bin --addons-path>`
 parameter of your launch command (``init.d``, custom script, configuration file,
 etc.). The Enterprise addons folder should be included **before** the default
 addons folder.
@@ -331,7 +331,7 @@ For example:
 
 .. code-block:: console
 
-  $ odoo.py --addons-path=~/src/custom_modules,~/src/enterprise,~/src/odoo/addons
+  $ odoo-bin --addons-path=~/src/custom_modules,~/src/enterprise,~/src/odoo/addons
 
 .. warning:: The Enterprise git repository **does not contain the full Odoo
     source code**. You need to clone both the Community and Enterprise repository to
@@ -387,7 +387,7 @@ Source installation requires manually installing dependencies:
       then click :guilabel:`OK`.
 
       The user and password must be passed to Odoo using either the
-      :option:`-w <odoo.py -w>` and :option:`-r <odoo.py -r>` options or
+      :option:`-w <odoo-bin -w>` and :option:`-r <odoo-bin -r>` options or
       :ref:`the configuration file <reference/cmdline/config>`
 
 * Python dependencies listed in the :file:`requirements.txt` file.
@@ -484,7 +484,7 @@ Source installation requires manually installing dependencies:
 Running Odoo
 ------------
 
-Once all dependencies are set up, Odoo can be launched by running ``odoo.py``.
+Once all dependencies are set up, Odoo can be launched by running ``odoo-bin``.
 
 .. warning:: For the Enterprise edition, you must specify the :file:`enterprise`
     addons folder when starting your server. You can do so by providing the path
@@ -512,7 +512,7 @@ Under Windows a typical way to execute odoo would be:
 
 .. code-block:: ps1
 
-    C:\YourOdooPath> python odoo.py -w odoo -r odoo --addons-path=addons,../mymodules --db-filter=mydb$
+    C:\YourOdooPath> python odoo-bin -w odoo -r odoo --addons-path=addons,../mymodules --db-filter=mydb$
 
 Where ``odoo``, ``odoo`` are the postgresql login and password,
 ``../mymodules`` a directory with additional addons and ``mydb`` the default
@@ -522,7 +522,7 @@ Under Unix a typical way to execute odoo would be:
 
 .. code-block:: console
 
-    $ ./odoo.py --addons-path=addons,../mymodules --db-filter=mydb$
+    $ ./odoo-bin --addons-path=addons,../mymodules --db-filter=mydb$
 
 Where ``../mymodules`` is a directory with additional addons and ``mydb`` the
 default db to serve on localhost:8069

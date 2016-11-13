@@ -260,15 +260,6 @@ class Website(Home):
                 modules.button_immediate_upgrade()
         return request.redirect(redirect)
 
-    @http.route('/website/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, key, full=False, bundles=False):
-        """ Get inherit view's informations of the template ``key``. By default, only
-            :returns ``customize_show`` templates (which can be active or not), if
-                ``full=True`` returns inherit view's informations of the template ``key``.
-                ``bundles=True`` returns also the asset bundles
-        """
-        return request.env["ir.ui.view"].customize_template_get(key, full=full, bundles=bundles)
-
     @http.route('/website/translations', type='json', auth="public", website=True)
     def get_website_translations(self, lang, mods=None):
         Modules = request.env['ir.module.module'].sudo()
@@ -370,6 +361,7 @@ class Website(Home):
         ], type='http', auth="public", website=True)
     def actions_server(self, path_or_xml_id_or_id, **post):
         ServerActions = request.env['ir.actions.server']
+        action = action_id = None
 
         # find the action_id: either an xml_id, the path, or an ID
         if isinstance(path_or_xml_id_or_id, basestring) and '.' in path_or_xml_id_or_id:

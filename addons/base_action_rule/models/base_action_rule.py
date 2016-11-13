@@ -124,7 +124,7 @@ class BaseActionRule(models.Model):
 
     def _update_registry(self):
         """ Update the registry after a modification on action rules. """
-        if self.env.registry.ready:
+        if self.env.registry.ready and not self.env.context.get('import_file'):
             # for the sake of simplicity, simply force the registry to reload
             self._cr.commit()
             self.env.reset()
@@ -198,7 +198,14 @@ class BaseActionRule(models.Model):
 
         # subscribe followers
         if self.act_followers and hasattr(records, 'message_subscribe'):
-            records.message_subscribe(self.act_followers.ids)
+            followers = self.env['mail.followers'].sudo().search(
+                [('res_model', '=', records._name),
+                 ('res_id', 'in', records.ids),
+                 ('partner_id', 'in', self.act_followers.ids),
+                 ]
+            )
+            if not len(followers) == len(self.act_followers):
+                records.message_subscribe(self.act_followers.ids)
 
         # execute server actions
         if self.server_action_ids:

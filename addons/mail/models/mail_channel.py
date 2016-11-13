@@ -66,8 +66,7 @@ class Channel(models.Model):
     group_public_id = fields.Many2one('res.groups', string='Authorized Group',
                                       default=lambda self: self.env.ref('base.group_user'))
     group_ids = fields.Many2many(
-        'res.groups', rel='mail_channel_res_group_rel',
-        id1='mail_channel_id', id2='groups_id', string='Auto Subscription',
+        'res.groups', string='Auto Subscription',
         help="Members of those groups will automatically added as followers. "
              "Note that they will be able to manage their subscription manually "
              "if necessary.")
@@ -172,15 +171,16 @@ class Channel(models.Model):
         return result
 
     @api.multi
-    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
+    def _notification_recipients(self, message, groups):
         """ All recipients of a message on a channel are considered as partners.
         This means they will receive a minimal email, without a link to access
         in the backend. Mailing lists should indeed send minimal emails to avoid
         the noise. """
-        for recipient in recipients:
-            group_data['partner'] |= recipient
-            done_ids.add(recipient.id)
-        return super(Channel, self)._notification_group_recipients(message, recipients, done_ids, group_data)
+        groups = super(Channel, self)._notification_recipients(message, groups)
+        for (index, (group_name, group_func, group_data)) in enumerate(groups):
+            if group_name != 'customer':
+                groups[index] = (group_name, lambda partner: False, group_data)
+        return groups
 
     @api.multi
     def message_get_email_values(self, notif_mail=None):

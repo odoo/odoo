@@ -39,18 +39,18 @@
                             <field name="tax_ids" widget="one2many_list" nolabel="1">
                                 <tree name="tax_map_tree" string="Tax Mapping" editable="bottom">
                                     <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]"/>
-                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None), ('price_include', '=', False)]"/>
+                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]"/>
                                 </tree>
                                 <form name="tax_map_form" string="Tax Mapping">
                                     <group>
                                         <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]"/>
-                                        <field name="tax_dest_id" domain="[('type_tax_use', '!=', None), ('price_include', '=', False)]"/>
+                                        <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]"/>
                                     </group>
                                 </form>
                             </field>
                         </group>
                         </page>
-                        <page name="account_mapping" string="Account Mapping">
+                        <page name="account_mapping" string="Account Mapping" groups="account.group_account_user">
                         <group>
                             <field name="account_ids" widget="one2many_list" nolabel="1">
                                 <tree string="Account Mapping" editable="bottom">
@@ -95,20 +95,20 @@
             <field name="priority" eval="20"/>
             <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml">
-                <div name="button_box" position="inside">
-                    <button type="action"
+                <button name="toggle_active" position="before">
+                    <button type="object"
                         class="oe_stat_button"
                         id="invoice_button"
                         icon="fa-pencil-square-o"
-                        name="%(account.action_invoice_refund_out_tree)d"
+                        name="open_partner_history"
                         attrs="{'invisible': [('customer', '=', False)]}"
-                        context="{'search_default_partner_id': active_id,'default_partner_id': active_id}">
+                        context="{'default_partner_id': active_id}">
                         <div class="o_form_field o_stat_info">
                             <span class="o_stat_value"><field name="total_invoiced" widget='monetary' options="{'currency_field': 'currency_id'}"/></span>
                             <span class="o_stat_text">Invoiced</span>
                         </div>
                     </button>
-                </div>
+                </button>
                 <group name="container_row_2" position="inside">
                     <group string="Payments" name="banks">
                         <field name="currency_id" invisible="1"/>
@@ -140,12 +140,12 @@
             <field name="priority" eval="22"/>
             <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml">
-                <div name="button_box" position="inside">
+                <button name="toggle_active" position="before">
                     <button class="oe_stat_button" type="action" name="%(account.action_open_partner_analytic_accounts)d"
                         icon="fa-book" groups="analytic.group_analytic_accounting">
                         <field string="Analytic Accounts" name="contracts_count" widget="statinfo"/>
                     </button>
-                </div>
+                </button>
             </field>
         </record>
 
@@ -173,7 +173,7 @@
             <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml">
                 <page name="sales_purchases" position="after">
-                <page string="Accounting" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
+                <page string="Invoicing" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
                     <group>
                         <group string="Sale" name="acc_sale">
                             <field name="property_payment_term_id" widget="selection"/>

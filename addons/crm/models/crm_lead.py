@@ -47,6 +47,7 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'date_action_next',
     'email_from',
     'email_cc',
+    'website',
     'partner_name']
 
 
@@ -75,6 +76,7 @@ class Lead(FormatAddress, models.Model):
     date_action_last = fields.Datetime('Last Action', readonly=True)
     date_action_next = fields.Datetime('Next Action', readonly=True)
     email_from = fields.Char('Email', help="Email address of the contact", index=True)
+    website = fields.Char('Website', index=True, help="Website of the contact")
     team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
         index=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales team.')
     kanban_state = fields.Selection([('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
@@ -238,6 +240,7 @@ class Lead(FormatAddress, models.Model):
                 'fax': partner.fax,
                 'zip': partner.zip,
                 'function': partner.function,
+                'website': partner.website,
             }
         return {}
 
@@ -374,7 +377,6 @@ class Lead(FormatAddress, models.Model):
         if self.partner_id:
             partner_ids.append(self.partner_id.id)
         action['context'] = {
-            'search_default_opportunity_id': self.id if self.type == 'opportunity' else False,
             'default_opportunity_id': self.id if self.type == 'opportunity' else False,
             'default_partner_id': self.partner_id.id,
             'default_partner_ids': partner_ids,
@@ -656,6 +658,8 @@ class Lead(FormatAddress, models.Model):
         domain = partner_match_domain
         if not include_lost:
             domain += ['&', ('active', '=', True), ('probability', '<', 100)]
+        else:
+            domain += ['|', '&', ('type', '=', 'lead'), ('active', '=', True), ('type', '=', 'opportunity')]
         return self.search(domain)
 
     @api.multi
@@ -727,6 +731,7 @@ class Lead(FormatAddress, models.Model):
             'city': self.city,
             'country_id': self.country_id.id,
             'state_id': self.state_id.id,
+            'website': self.website,
             'is_company': is_company,
             'type': 'contact'
         }
@@ -1027,40 +1032,28 @@ class Lead(FormatAddress, models.Model):
         return super(Lead, self)._track_subtype(init_values)
 
     @api.multi
-    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        """ Override the mail.thread method to handle salesman recipients.
-            Indeed those will have specific action in their notification emails.
-        """
-        group_sale_salesman = self.env.ref('sales_team.group_sale_salesman')
-        for recipient in recipients:
-            if recipient.id in done_ids:
-                continue
-            # FIXME: why not recipient.user_ids[0].has_group(sales_team.group_sale_salesman)?
-            if recipient.user_ids and group_sale_salesman in recipient.user_ids[0].groups_id:
-                group_data['group_sale_salesman'] |= recipient
-                done_ids.add(recipient.id)
-        return super(Lead, self)._notification_group_recipients(message, recipients, done_ids, group_data)
+    def _notification_recipients(self, message, groups):
+        """ Handle salesman recipients that can convert leads into opportunities
+        and set opportunities as won / lost. """
+        groups = super(Lead, self)._notification_recipients(message, groups)
 
-    @api.multi
-    def _notification_get_recipient_groups(self, message, recipients):
-        result = super(Lead, self)._notification_get_recipient_groups(message, recipients)
-
-        lead = self[0]
-        won_action = self._notification_link_helper('method', method='action_set_won')
-        lost_action = self._notification_link_helper('method', method='action_set_lost')
-        convert_action = self._notification_link_helper('method', method='convert_opportunity', partner_id=lead.partner_id.id)
-
-        if lead.type == 'lead':
-            result['group_sale_salesman'] = {
-                'actions': [{'url': convert_action, 'title': 'Convert to opportunity'}]
-            }
+        self.ensure_one()
+        if self.type == 'lead':
+            convert_action = self._notification_link_helper('controller', controller='/lead/convert')
+            salesman_actions = [{'url': convert_action, 'title': _('Convert to opportunity')}]
         else:
-            result['group_sale_salesman'] = {
-                'actions': [
-                    {'url': won_action, 'title': 'Won'},
-                    {'url': lost_action, 'title': 'Lost'}]
-            }
-        return result
+            won_action = self._notification_link_helper('controller', controller='/lead/case_mark_won')
+            lost_action = self._notification_link_helper('controller', controller='/lead/case_mark_lost')
+            salesman_actions = [
+                {'url': won_action, 'title': _('Won')},
+                {'url': lost_action, 'title': _('Lost')}]
+
+        new_group = (
+            'group_sale_salesman', lambda partner: bool(partner.user_ids) and any(user.has_group('sales_team.group_sale_salesman') for user in partner.user_ids), {
+                'actions': salesman_actions,
+            })
+
+        return [new_group] + groups
 
     @api.model
     def message_get_reply_to(self, res_ids, default=None):

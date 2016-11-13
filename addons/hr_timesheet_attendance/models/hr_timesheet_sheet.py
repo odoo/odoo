@@ -122,15 +122,7 @@ class hr_timesheet_sheet_sheet_day(models.Model):
                         sheet_id,
                         timezone,
                         SUM(total_timesheet) as total_timesheet,
-                        CASE WHEN SUM(orphan_attendances) != 0
-                            THEN (SUM(total_attendance) +
-                                CASE WHEN current_date <> name
-                                    THEN 1440
-                                    ELSE (EXTRACT(hour FROM current_time AT TIME ZONE 'UTC' AT TIME ZONE coalesce(timezone, 'UTC')) * 60) + EXTRACT(minute FROM current_time AT TIME ZONE 'UTC' AT TIME ZONE coalesce(timezone, 'UTC'))
-                                END
-                                )
-                            ELSE SUM(total_attendance)
-                        END /60  as total_attendance
+                        SUM(total_attendance) /60 as total_attendance
                     FROM
                         ((
                             select
@@ -139,7 +131,6 @@ class hr_timesheet_sheet_sheet_day(models.Model):
                                 l.date::date as name,
                                 s.id as sheet_id,
                                 sum(l.unit_amount) as total_timesheet,
-                                0 as orphan_attendances,
                                 0.0 as total_attendance
                             from
                                 account_analytic_line l
@@ -156,9 +147,12 @@ class hr_timesheet_sheet_sheet_day(models.Model):
                                 (a.check_in AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))::date as name,
                                 s.id as sheet_id,
                                 0.0 as total_timesheet,
-                                0 as orphan_attendances,
-                                SUM((EXTRACT(hour FROM (a.check_out AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))) * 60 + EXTRACT(minute FROM (a.check_out AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))))
-                                - (EXTRACT(hour FROM (a.check_in AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))) * 60 + EXTRACT(minute FROM (a.check_in AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))))) as total_attendance
+                                SUM(DATE_PART('day', (a.check_out AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))
+                                                      - (a.check_in AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC')) ) * 60 * 24
+                                    + DATE_PART('hour', (a.check_out AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))
+                                                         - (a.check_in AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC')) ) * 60
+                                    + DATE_PART('minute', (a.check_out AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC'))
+                                                           - (a.check_in AT TIME ZONE 'UTC' AT TIME ZONE coalesce(p.tz, 'UTC')) )) as total_attendance
                             from
                                 hr_attendance a
                                 LEFT JOIN hr_timesheet_sheet_sheet s

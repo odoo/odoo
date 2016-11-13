@@ -39,7 +39,7 @@ def migrate_tags_on_taxes(cr, registry):
             ('description', '=', tax_template.description)
         ])
         if len(tax_id.ids) == 1:
-            tax_id.sudo().write({'tag_ids': [(6, 0, [tax_template.tag_ids.ids])]})
+            tax_id.sudo().write({'tag_ids': [(6, 0, tax_template.tag_ids.ids)]})
 
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
@@ -399,7 +399,9 @@ class AccountChartTemplate(models.Model):
             :rtype: dict
         """
         self.ensure_one()
-        account_reconcile_models = self.env['account.reconcile.model.template'].search([])
+        account_reconcile_models = self.env['account.reconcile.model.template'].search([
+            ('account_id.chart_template_id', '=', self.id)
+        ])
         for account_reconcile_model in account_reconcile_models:
             vals = {
                 'name': account_reconcile_model.name,

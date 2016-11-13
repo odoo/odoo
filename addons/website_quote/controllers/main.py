@@ -9,10 +9,11 @@ from odoo.addons.website_mail.controllers.main import _message_post_helper
 
 
 class sale_quote(http.Controller):
-    @http.route([
-        "/quote/<int:order_id>",
-        "/quote/<int:order_id>/<token>"
-    ], type='http', auth="public", website=True)
+    @http.route("/quote/<int:order_id>", type='http', auth="user", website=True)
+    def view_user(self, *args, **kwargs):
+        return self.view(*args, **kwargs)
+
+    @http.route("/quote/<int:order_id>/<token>", type='http', auth="public", website=True)
     def view(self, order_id, pdf=None, token=None, message=False, **post):
         # use sudo to allow accessing/viewing orders for public user
         # only if he knows the private token
@@ -58,10 +59,7 @@ class sale_quote(http.Controller):
         }
 
         if Order.require_payment or values['need_payment']:
-            if token:
-                values['acquirers'] = list(request.env['payment.acquirer'].sudo().search([('website_published', '=', True), ('company_id', '=', Order.company_id.id)]))
-            else:
-                values['acquirers'] = list(request.env['payment.acquirer'].sudo(user=request.uid).search([('website_published', '=', True), ('company_id', '=', Order.company_id.id)]))
+            values['acquirers'] = list(request.env['payment.acquirer'].sudo().search([('website_published', '=', True), ('company_id', '=', Order.company_id.id)]))
             extra_context = {
                 'submit_class': 'btn btn-primary',
                 'submit_txt': _('Pay & Confirm')

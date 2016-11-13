@@ -135,9 +135,9 @@ odoo.define('website.website', function (require) {
 
     var error = function (title, message, url) {
         return new Dialog(null, {
-            title: data.data ? data.data.arguments[0] : "",
+            title: title || "",
             $content: $(qweb.render('website.error_dialog', {
-                message: data.data ? data.data.arguments[1] : data.statusText,
+                message: message || "",
                 backend_url: url,
             })),
         }).open();
@@ -175,9 +175,10 @@ odoo.define('website.website', function (require) {
     });
 
     /* ----- PUBLISHING STUFF ---- */
-    $(document).on('click', '.js_publish_management .js_publish_btn', function () {
+    $(document).on('click', '.js_publish_management .js_publish_btn', function (e) {
+        e.preventDefault();
+
         var $data = $(this).parents(".js_publish_management:first");
-        var self=this;
         ajax.jsonRpc($data.data('controller') || '/website/publish', 'call', {'id': +$data.data('id'), 'object': $data.data('object')})
             .then(function (result) {
                 $data.toggleClass("css_unpublished css_published");

@@ -2,7 +2,7 @@
 <templates>
 
 <t t-name="web_editor.ace_view_editor">
-    <div class="o_ace_view_editor oe_ace_closed">
+    <div class="o_ace_view_editor">
         <div class="form-inline o_ace_view_editor_title">
             <select id="ace-view-list" class="form-control oe_view_list"/>
             <label class="oe_include_bundles">
@@ -20,10 +20,6 @@
         <div id="ace-view-id"/>
         <div id="ace-view-editor"/>
     </div>
-</t>
-
-<t t-name="web_editor.ace_view_option">
-    <option t-att-value="widget.view_id"><t t-esc="widget.view_name"/></option>
 </t>
 
 </templates>

@@ -194,7 +194,6 @@ class StockMove(models.Model):
 
     @api.multi
     def _compute_string_qty_information(self):
-        StockConfig = self.env['stock.config.settings']
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         void_moves = self.filtered(lambda move: move.state in ('draft', 'done', 'cancel') or move.location_id.usage != 'internal')
         other_moves = self - void_moves
@@ -205,9 +204,7 @@ class StockMove(models.Model):
             total_available = move.product_id.uom_id._compute_quantity(total_available, move.product_uom, round=False)
             total_available = float_round(total_available, precision_digits=precision)
             info = str(total_available)
-            # look in the settings if we need to display the UoM name or not
-            config = StockConfig.search([], limit=1, order='id DESC')
-            if config and config.group_uom:
+            if self.user_has_groups('product.group_uom'):
                 info += ' ' + move.product_uom.name
             if move.reserved_availability:
                 if move.reserved_availability != total_available:
@@ -264,11 +261,6 @@ class StockMove(models.Model):
             raise UserError(_('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
 
         propagated_changes_dict = {}
-        #propagation of quantity change
-        if vals.get('product_uom_qty'):
-            propagated_changes_dict['product_uom_qty'] = vals['product_uom_qty']
-        if vals.get('product_uom_id'):
-            propagated_changes_dict['product_uom_id'] = vals['product_uom_id']
         #propagation of expected date:
         propagated_date_field = False
         if vals.get('date_expected'):
@@ -385,7 +377,7 @@ class StockMove(models.Model):
                 # if no specialized push rule has been found yet, we try to find a general one (without route)
                 rules = Push.search(domain + [('route_id', '=', False)], order='sequence')
             # Make sure it is not returning the return
-            if rules and (not move.origin_returned_move_id or move.origin_returned_move_id.location_id.id != rules.location_dest_id.id):
+            if rules and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rules.location_dest_id.id):
                 rules._apply(move)
         return True
 
@@ -634,6 +626,7 @@ class StockMove(models.Model):
             if move.state != 'assigned' and not self.env.context.get('reserve_only_ops'):
                 qty_already_assigned = move.reserved_availability
                 qty = move.product_qty - qty_already_assigned
+                
                 quants = Quant.quants_get_preferred_domain(qty, move, domain=main_domain[move.id], preferred_domain_list=[])
                 Quant.quants_reserve(quants, move)
 

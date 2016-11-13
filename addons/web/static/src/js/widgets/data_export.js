@@ -304,16 +304,21 @@ var DataExport = Dialog.extend({
             });
             self.$('.o_delete_exported_list').click(function() {
                 var select_exp = self.$('.o_exported_lists_select option:selected');
-                if(select_exp.val()) {
-                    self.exports.unlink([parseInt(select_exp.val(), 10)]);
-                    select_exp.remove();
-                    self.$fields_list.empty();
-                    if (self.$('.o_exported_lists_select option').length <= 1) {
-                        self.$('.o_exported_lists').hide();
+                var options = {
+                    confirm_callback: function () {
+                        if (select_exp.val()) {
+                            self.exports.unlink([parseInt(select_exp.val(), 10)]);
+                            select_exp.remove();
+                            self.$fields_list.empty();
+                            if (self.$('.o_exported_lists_select option').length <= 1) {
+                                self.$('.o_exported_lists').hide();
+                            }
+                        }
                     }
-                }
+                };
+                Dialog.confirm(this, _t("Do you really want to delete this export template?"), options);
             });
-        });
+       });
 
         function do_load_export_field(field_list) {
             _.each(field_list, function (field) {
@@ -364,11 +369,11 @@ var DataExport = Dialog.extend({
                 .find('.o_expand_parent')
                 .toggleClass('fa-plus fa-minus')
                 .next()
-                .after(QWeb.render('Export.TreeItems', {'fields': records}));
+                .after(QWeb.render('Export.TreeItems', {'fields': records, 'debug': this.session.debug}));
         } else {
             this.$('.o_left_field_panel').empty().append(
                 $("<div/>").addClass('o_field_tree_structure')
-                           .append(QWeb.render('Export.TreeItems', {'fields': records}))
+                           .append(QWeb.render('Export.TreeItems', {'fields': records, 'debug': this.session.debug}))
             );
         }
 

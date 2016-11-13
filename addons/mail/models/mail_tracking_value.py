@@ -10,6 +10,7 @@ class MailTracking(models.Model):
     _name = 'mail.tracking.value'
     _description = 'Mail Tracking Value'
 
+    # TDE CLEANME: why not a m2o to ir model field ?
     field = fields.Char('Changed Field', required=True, readonly=1)
     field_desc = fields.Char('Field Description', required=True, readonly=1)
     field_type = fields.Char('Field Type')

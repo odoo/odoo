@@ -28,12 +28,15 @@ class ProjectIssue(models.Model):
     partner_id = fields.Many2one('res.partner', string='Contact', index=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     description = fields.Text('Private Note')
-    kanban_state = fields.Selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')], string='Kanban State',
-                                    track_visibility='onchange', required=True, default='normal',
-                                    help="""An Issue's kanban state indicates special situations affecting it:\n
-                                           * Normal is the default situation\n
-                                           * Blocked indicates something is preventing the progress of this issue\n
-                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage""")
+    kanban_state = fields.Selection([
+        ('normal', 'Grey'),
+        ('blocked', 'Red'),
+        ('done', 'Green')], string='Kanban State',
+        copy=False, default='normal', required=True, track_visibility='onchange',
+        help="An Issue's kanban state indicates special situations affecting it:\n"
+             " * Grey is the default situation\n"
+             " * Red indicates something is preventing the progress of this issue\n"
+             " * Green indicates the issue is ready to be pulled to the next stage")
     email_from = fields.Char(string='Email', help="These people will receive email.", index=True)
     email_cc = fields.Char(string='Watchers Emails', help="""These email addresses will be added to the CC field of all inbound
         and outbound emails for this record before being sent. Separate multiple email addresses with a comma""")
@@ -121,8 +124,9 @@ class ProjectIssue(models.Model):
     @api.onchange('project_id')
     def _onchange_project_id(self):
         if self.project_id:
-            self.partner_id = self.project_id.partner_id.id
-            self.email_from = self.project_id.partner_id.email
+            if not self.partner_id and not self.email_from:
+                self.partner_id = self.project_id.partner_id.id
+                self.email_from = self.project_id.partner_id.email
             self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
         else:
             self.partner_id = False
@@ -225,43 +229,24 @@ class ProjectIssue(models.Model):
         return super(ProjectIssue, self)._track_subtype(init_values)
 
     @api.multi
-    def _notification_group_recipients(self, message, recipients, done_ids, group_data):
-        """ Override the mail.thread method to handle project users and officers
-        recipients. Indeed those will have specific action in their notification
-        emails: creating tasks, assigning it. """
-        group_project_user_id = self.env.ref('project.group_project_user').id
-        for recipient in recipients:
-            if recipient.id in done_ids:
-                continue
-            if recipient.user_ids and group_project_user_id in recipient.user_ids[0].groups_id.ids:
-                group_data['group_project_user'] |= recipient
-            elif not recipient.user_ids:
-                group_data['partner'] |= recipient
-            elif all(recipient.user_ids.mapped('share')):
-                group_data['partner'] |= recipient
-            else:
-                group_data['user'] |= recipient
-            done_ids.add(recipient.id)
-        return super(ProjectIssue, self)._notification_group_recipients(message, recipients, done_ids, group_data)
+    def _notification_recipients(self, message, groups):
+        """
+        """
+        groups = super(ProjectIssue, self)._notification_recipients(message, groups)
 
-    @api.multi
-    def _notification_get_recipient_groups(self, message, recipients):
         self.ensure_one()
-        res = super(ProjectIssue, self)._notification_get_recipient_groups(message, recipients)
-
-        actions = []
         if not self.user_id:
             take_action = self._notification_link_helper('assign')
-            actions.append({'url': take_action, 'title': _('I take it')})
+            project_actions = [{'url': take_action, 'title': _('I take it')}]
         else:
-            new_action_id = self.env.ref('project_issue.project_issue_categ_act0').id
-            new_action = self._notification_link_helper('new', action_id=new_action_id)
-            actions.append({'url': new_action, 'title': _('New Issue')})
+            project_actions = []
 
-        res['group_project_user'] = {
-            'actions': actions
-        }
-        return res
+        new_group = (
+            'group_project_user', lambda partner: bool(partner.user_ids) and any(user.has_group('project.group_project_user') for user in partner.user_ids), {
+                'actions': project_actions,
+            })
+
+        return [new_group] + groups
 
     @api.model
     def message_get_reply_to(self, res_ids, default=None):

@@ -298,7 +298,7 @@
                             <div class="modal-body" id="sign-dialog">
                               <p>
                                   <span>I agree that by signing this proposal, I
-                                  accept it on the behalf of </span><b t-field="quotation.company_id"/><span>, for an amount of </span>
+                                  accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
                                   <b data-id="total_amount" t-field="quotation.amount_total"
                                     t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                                   <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
@@ -310,8 +310,8 @@
                             </div>
                             <div class="modal-footer">
                                 <div t-if="not acquirers">
-                                  <button type="submit" t-attf-class="btn btn-primary">Sign &amp; Confirm</button> or
-                                  <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
+                                  <button type="submit" t-attf-class="btn btn-primary">Sign &amp; Confirm</button>
+                                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                 </div>
                             </div>
                           </form>
@@ -325,7 +325,7 @@
                           <div class="modal-body" id="sign-dialog">
                             <p>
                                 <span>I agree that by paying this proposal, I
-                                accept it on the behalf of </span><b t-field="quotation.company_id"/><span>, for an amount of </span>
+                                accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
                                 <b data-id="total_amount" t-field="quotation.amount_total"
                                   t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                                 <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
@@ -337,14 +337,23 @@
                                 <div class="col-md-6">
                                   <h4>Payment Method:</h4>
                                   <ul class="list-unstyled">
+                                    <t t-set="payment_methods_available" t-value="False"/>
                                     <li t-foreach="acquirers or []" t-as="acquirer">
-                                      <label t-if="buttons.get(acquirer.id)">
-                                          <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer"/>
-                                          <img class="media-object" style="width: 60px; display: inline-block;"
-                                              t-att-title="acquirer.name"
-                                              t-att-src="'/payment_%s/static/src/img/%s_icon.png' % (acquirer.provider, acquirer.provider)"/>
-                                              <span t-field="acquirer.name"/>
-                                      </label>
+                                      <t t-if="not acquirer.country_ids or quotation and quotation.partner_id.country_id in acquirer.country_ids">
+                                        <label t-if="buttons.get(acquirer.id)">
+                                            <input t-att-value="acquirer.id" type="radio" name="acquirer" t-att-checked="acquirers[0] == acquirer"/>
+                                            <img class="media-object" style="width: 60px; display: inline-block;"
+                                                t-att-title="acquirer.name"
+                                                t-att-src="'/payment_%s/static/src/img/%s_icon.png' % (acquirer.provider, acquirer.provider)"/>
+                                                <span t-field="acquirer.name"/>
+                                        </label>
+                                        <t t-set="payment_methods_available" t-value="True"/>
+                                      </t>
+                                    </li>
+                                    <li t-if="not payment_methods_available">
+                                      <div class="alert alert-warning">
+                                        <span>No payment gateway is available for your country</span>
+                                      </div>
                                     </li>
                                   </ul>
                                 </div>
@@ -353,9 +362,9 @@
                                         <div t-att-data-id="acquirer.id" class="oe_quote_acquirer_button hidden pull-right">
                                           <div t-raw="buttons.get(acquirer.id)"/>
                                           <div t-field="acquirer.pre_msg"/>
-                                          <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
                                         </div>
                                     </t>
+                                    <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
                                 </div>
                               </div>
                               <!-- end website_sale code -->
@@ -378,8 +387,8 @@
                               <textarea rows="4" name="decline_message" placeholder="Your feedback....." class="form-control"/>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" t-att-id="quotation.id" class="btn btn-primary">Reject</button> or
-                                <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
+                                <button type="submit" t-att-id="quotation.id" class="btn btn-primary">Reject</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                             </div>
                           </form>
                         </div>
@@ -431,7 +440,7 @@
       <xpath expr="//a[@data-target='#modaldecline']" position="before">
           <a type="submit" href="#discussion">
               Ask Changes
-          </a> or
+          </a>
       </xpath>
       <xpath expr="//div[@id='quotation_toolbar']/a[@data-target='#modaldecline']" position="before">
           <a class="btn btn-info" type="submit" href="#discussion">
@@ -571,8 +580,7 @@
             <table class="table table-hover wq-table">
                 <thead>
                     <tr>
-                        <th>Products</th>
-                        <th>Description</th>
+                        <th>Product</th>
                         <th></th>
                         <th class="text-right">Price</th>
                         <th></th>
@@ -581,9 +589,6 @@
                 <tbody>
                     <tr t-foreach="quotation.options" t-as="option">
                         <t t-if="not option.line_id">
-                            <td>
-                                <div t-field="option.product_id.product_tmpl_id.name"/>
-                            </td>
                             <td>
                                 <div t-field="option.name"/>
                             </td>
@@ -696,8 +701,14 @@
           <t t-foreach="quotations" t-as="quotation">
               <tr>
                   <td>
-                      <a t-attf-href="/quote/#{quotation.id}?#{keep_query()}"><t t-esc="quotation.name"/></a>
+                      <t t-if="quotation.sudo().partner_id.commercial_partner_id != request.env.user.partner_id.commercial_partner_id and request.env.user.share">
+                          <a t-attf-href="/quote/#{quotation.id}/#{quotation.access_token}?#{keep_query()}"><t t-esc="quotation.name"/></a>
+                      </t>
+                      <t t-if="not (quotation.sudo().partner_id.commercial_partner_id != request.env.user.partner_id.commercial_partner_id and request.env.user.share)">
+                          <a t-attf-href="/quote/#{quotation.id}?#{keep_query()}"><t t-esc="quotation.name"/></a>
+                      </t>
                   </td>
+                  <td><span t-field="quotation.date_order"/></td>
                   <td><span t-field="quotation.validity_date"/></td>
                       <td>
                         <t t-if="quotation.state == 'cancel'">

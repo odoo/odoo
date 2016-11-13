@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <group name="first" position="after">
                     <group string="Logistics">
-                        <field name="route_ids" widget="many2many_tags"/>
+                        <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
                         <div colspan="2" attrs="{'invisible': [('parent_id', '=', False)]}">
                             The following routes will apply to the products in this category taking into account parent categories: 
                             <field name="total_route_ids" nolabel="1" widget="many2many_tags"/>
@@ -255,7 +255,7 @@
                             name="%(stock.act_make_procurement)d"
                             attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
-                    <div name="button_box" position="inside">
+                    <button name="toggle_active" position="before">
                         <button class="oe_stat_button"
                                name="%(product_open_quants)d"
                                icon="fa-building-o"
@@ -304,7 +304,7 @@
                             name="action_view_routes"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
                             class="oe_stat_button" icon="fa-cogs" groups="stock.group_adv_location"/>
-                    </div>
+                    </button>
                 </data>
             </field>
         </record>
@@ -319,7 +319,7 @@
                         <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                         <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
-                    <div name="button_box" position="inside">
+                    <button name="toggle_active" position="before">
                         <button type="object"
                             name="action_open_quants"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
@@ -369,7 +369,7 @@
                             attrs="{'invisible':[('type', '!=', 'product')]}"
                             class="oe_stat_button" icon="fa-cogs"
                             groups="stock.group_adv_location"/>
-                    </div>
+                    </button>
                 </data>
             </field>
         </record>

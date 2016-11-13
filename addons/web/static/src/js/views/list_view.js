@@ -267,7 +267,7 @@ var ListView = View.extend({
     render_buttons: function($node) {
         if (!this.$buttons) {
             this.$buttons = $(QWeb.render("ListView.buttons", {'widget': this}));
-            this.$buttons.find('.o_list_button_add').click(this.proxy('do_add_record'));
+            this.$buttons.on('click', '.o_list_button_add', this.proxy('do_add_record'));
             this.$buttons.appendTo($node);
         }
     },
@@ -287,7 +287,7 @@ var ListView = View.extend({
             this.sidebar.add_items('other', _.compact([
                 { label: _t("Export"), callback: this.on_sidebar_export },
                 this.fields_view.fields.active && {label: _t("Archive"), callback: this.do_archive_selected},
-                this.fields_view.fields.active && {label: _t("Unarchive"), callback: this.do_unarchive_selected},
+                this.fields_view.fields.active && {label: _t("Restore"), callback: this.do_unarchive_selected},
                 this.is_action_enabled('delete') && { label: _t('Delete'), callback: this.do_delete_selected }
             ]));
 
@@ -470,11 +470,12 @@ var ListView = View.extend({
                 self.records.remove(record);
                 return;
             }
-            _.each(values, function (value, key) {
+            // _.each is broken if a field "length" is present
+            for (var key in values) {
                 if (fields[key] && fields[key].type === 'many2many')
                     record.set(key + '__display', false, {silent: true});
-                record.set(key, value, {silent: true});            
-            });
+                record.set(key, values[key], {silent: true});
+            }
             record.trigger('change', record);
 
             /* When a record is reloaded, there is a rendering lag because of the addition/suppression of 
@@ -758,7 +759,16 @@ var ListView = View.extend({
         });
 
         var aggregates = {};
-        _(columns).each(function (column) {
+        _.each(_.filter(columns, function (column) {
+            if (column.currency_field === 'currency_id' && records && records[0].values['currency_id']) {
+                var currency_ids = _.map(records, function(record) {return record.values['currency_id'][0]});
+                if (_.every(currency_ids, function (currency_id){return currency_id === currency_ids[0]})) {
+                    return column;
+                }
+            } else {
+                return column;
+            }
+        }), function (column) {
             var field = column.id;
             switch (column['function']) {
                 case 'avg':
@@ -1097,7 +1107,7 @@ ListView.List = Class.extend({
             }
         }
         return column.format(record.toForm().data, {
-            model: this.model,
+            model: this.dataset.model,
             id: record.get('id')
         });
     },
@@ -1705,7 +1715,6 @@ var Column = Class.extend({
             id: id,
             tag: tag
         });
-
         this.modifiers = attrs.modifiers ? JSON.parse(attrs.modifiers) : {};
         delete attrs.modifiers;
         _.extend(this, attrs);
@@ -1732,10 +1741,14 @@ var Column = Class.extend({
         if (this.type !== 'integer' && this.type !== 'float' && this.type !== 'monetary') {
             return {};
         }
-        var aggregation_func = this['group_operator'] || 'sum';
-        if (!(aggregation_func in this)) {
+
+        var aggregation_func = (this.sum && 'sum') || (this.avg && 'avg') ||
+                               (this.max && 'max') || (this.min && 'min');
+
+        if (!aggregation_func) {
             return {};
         }
+
         var C = function (fn, label) {
             this['function'] = fn;
             this.label = label;

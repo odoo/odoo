@@ -119,6 +119,78 @@
     .o-animation(fadeInDownSmall, 700ms, @fill-mode: forwards);
 }
 
+// ACE EDITOR
+.o_ace_view_editor {
+    @o-ace-color: #2F3129;
+    background: @o-ace-color;
+    color: white;
+    .o-flex-display();
+    .o-flex-flow(column, nowrap);
+    opacity: 0.97;
+
+    .o_ace_view_editor_title {
+        .o-flex(0, 0, auto);
+        .o-flex-display();
+        .o-align-items(center);
+        .o-justify-content(space-between);
+        padding: @grid-gutter-width/4;
+
+        > * {
+            .o-flex(0, 0, auto);
+            margin: 0 @grid-gutter-width/4;
+
+            &.oe_include_bundles {
+                .o-flex-display();
+                .o-align-items(center);
+                font-size: 11px;
+
+                > .o_checkbox {
+                    margin-right: @grid-gutter-width/4;
+                }
+            }
+        }
+
+        > select {
+            .o-flex(0, 1, auto);
+            min-width: 60px;
+        }
+    }
+    #ace-view-id {
+        .o-flex(0, 0, auto);
+        padding: @grid-gutter-width/4 @grid-gutter-width/2;
+        background-color: lighten(@o-ace-color, 10%);
+    }
+    #ace-view-editor {
+        height: 70%; // in case flex is not supported
+        .o-flex(1, 1, auto);
+        .ace_gutter {
+            cursor: ew-resize;
+
+            .ace_gutter-cell.o_error {
+                position: relative;
+                &::after {
+                    .o-position-absolute(-100%, 0, -100%, 0);
+                    .ace-line-error-mixin();
+                }
+            }
+        }
+        .ace_scroller.o_error::after {
+            .o-position-absolute(0, auto, 0, 0);
+            width: 3px;
+            .ace-line-error-mixin();
+        }
+
+        .ace-line-error-mixin() {
+            content: "";
+            z-index: 1000;
+            display: block;
+            background-color: @brand-danger;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+}
+
 // MODALS
 body .modal {
     // SELECT MEDIA
@@ -132,7 +204,7 @@ body .modal {
                 ul.pager {
                     margin: 0;
                     > li > a {
-                        border-radius: 3px;
+                        border-radius: 0px;
                         margin-left: 2px;
                         padding: 6px 14px;
                     }
@@ -149,20 +221,34 @@ body .modal {
                     }
                 }
             }
-            .dropdown-toggle {
-                line-height: 0;
-                height: 34px;
+
+            .well {
+                border-top-width: 0;
+
+                label {
+                    margin: auto 10px;
+                }
+
+                .btn-group {
+                    margin-right: 10px;
+                }
             }
+
             .o_existing_attachment_cell {
                 @odoo-border-image: 1px;
                 .o_existing_attachment_remove {
                     .o-position-absolute(@odoo-border-image, 15px + @odoo-border-image);
-                    padding: 3px 3px 12px 12px;
-                    background-color: white;
-                    border-bottom: 1px solid black;
-                    border-left: 1px solid black;
-                    border-radius: 0 0 0 100%;
-                    opacity: 0.8;
+                    padding: 3px 5px 5px 5px;
+                    background-color: fade(white, 80%);
+                    text-shadow: 0 0 1px white;
+                    border-radius: 0 0 0 2px;
+                    opacity: 0;
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: white;
+                        color: @o-we-color-danger;
+                    }
                 }
                 .o_image {
                     border: @odoo-border-image solid transparent;
@@ -178,15 +264,29 @@ body .modal {
                     border-color: @odoo-brand-primary;
                     box-shadow: 0px 0px 2px 2px @odoo-brand-secondary;
                 }
+                &:hover {
+                    .o_existing_attachment_remove {
+                        opacity: 1;
+                    }
+                }
             }
-            .font-icons-icons > span {
-                font-size: 30px;
-                margin: 5px;
-                padding: 3px;
-                cursor: pointer;
+            .font-icons-icons {
+                padding: 20px 0;
 
-                &.o_selected {
-                    box-shadow: 0px 0px 2px 2px @odoo-brand-secondary;
+                > span {
+                    text-align: center;
+                    font-size: 22px;
+                    margin: 5px;
+                    width: 50px;
+                    height: 50px;
+                    padding: 15px;
+                    cursor: pointer;
+
+                    &.o_selected {
+                        cursor: auto;
+                        background-color: @o-we-color-paper;
+                        box-shadow: 0px 0px 0px 1px @o-we-color-success;
+                    }
                 }
             }
         }

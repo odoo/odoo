@@ -6,6 +6,10 @@ from odoo.tools.translate import _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import UserError
 
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 class Quant(models.Model):
     """ Quants are the smallest unit of stock physical instances """
@@ -261,8 +265,17 @@ class Quant(models.Model):
 
         # create the quant as superuser, because we want to restrict the creation of quant manually: we should always use this method to create quants
         return self.sudo().create(vals)
-    # compatibility method
-    _quant_create = _quant_create_from_move
+
+    @api.model
+    def _quant_create(self, qty, move, lot_id=False, owner_id=False,
+                      src_package_id=False, dest_package_id=False,
+                      force_location_from=False, force_location_to=False):
+        # FIXME - remove me in master/saas-14
+        _logger.warning("'_quant_create' has been renamed into '_quant_create_from_move'... Overrides are ignored")
+        return self._quant_create_from_move(
+            qty, move, lot_id=lot_id, owner_id=owner_id,
+            src_package_id=src_package_id, dest_package_id=dest_package_id,
+            force_location_from=force_location_from, force_location_to=force_location_to)
 
     @api.multi
     def _quant_update_from_move(self, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False):
@@ -275,8 +288,12 @@ class Quant(models.Model):
         if not entire_pack:
             vals.update({'package_id': dest_package_id})
         self.write(vals)
-    # compatibility method
-    move_quants_write = _quant_update_from_move
+
+    @api.multi
+    def move_quants_write(self, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False):
+        # FIXME - remove me in master/saas-14
+        _logger.warning("'move_quants_write' has been renamed into '_quant_update_from_move'... Overrides are ignored")
+        return self._quant_update_from_move(move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack)
 
     @api.one
     def _quant_reconcile_negative(self, move):
@@ -598,21 +615,17 @@ class QuantPackage(models.Model):
     @api.one
     @api.depends('parent_id', 'children_ids', 'quant_ids.package_id')
     def _compute_children_quant_ids(self):
-        res = dict.fromkeys(self.ids, self.env['stock.quant'])
-        children_quants = self.env['stock.quant'].search(['package_id', 'child_of', self.ids])
-        for quant in children_quants:
-            res[quant.package_id.id] |= quant
         for package in self:
-            package.children_quant_ids = res[package.id].ids
+            package.children_quant_ids = self.env['stock.quant'].search([('package_id', 'child_of', package.id)]).ids
 
     @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id', 'ancestor_ids')
     def _compute_package_info(self):
-        res = {}
-        quants = self.env['stock.quant'].search([('package_id', 'in', self.ids)])  # TDE FIXME: was child_od
-        for quant in quants:
-            res[quant.package_id.id] = {'location_id': quant.location_id.id, 'owner_id': quant.owner_id.id, 'company_id': quant.company_id.id}
         for package in self:
-            values = res.get(package.id, {'location_id': False, 'company_id': self.env.user.company_id.id, 'owner_id': False})
+            quants = package.children_quant_ids
+            if quants:
+                values = quants[0]
+            else:
+                values = {'location_id': False, 'company_id': self.env.user.company_id.id, 'owner_id': False}
             package.location_id = values['location_id']
             package.company_id = values['company_id']
             package.owner_id = values['owner_id']
@@ -655,6 +668,12 @@ class QuantPackage(models.Model):
             package.mapped('children_ids').write({'parent_id': package.parent_id.id})
         self.unlink()
         return self.env['ir.actions.act_window'].for_xml_id('stock', 'action_package_view')
+
+    def action_view_picking(self):
+        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+        pickings = self.env['stock.pack.operation'].search([('result_package_id', 'in', self.ids)]).mapped('picking_id')
+        action['domain'] = [('id', 'in', pickings.ids)]
+        return action
 
     @api.multi
     def view_content_package(self):

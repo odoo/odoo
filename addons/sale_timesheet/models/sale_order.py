@@ -104,7 +104,7 @@ class SaleOrder(models.Model):
             'help': action.help,
             'type': action.type,
             'views': [(form_view_id, 'form')],
-            'target': action.target,
+            'target': 'current',
             'context': action.context,
             'res_model': action.res_model,
             'res_id': self.project_project_id.id,

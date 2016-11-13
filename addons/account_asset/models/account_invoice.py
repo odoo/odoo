@@ -20,7 +20,13 @@ class AccountInvoice(models.Model):
                 asset_ids = self.env['account.asset.asset'].sudo().search([('invoice_id', '=', inv.id), ('company_id', '=', inv.company_id.id)])
                 if asset_ids:
                     asset_ids.write({'active': False})
-            inv.invoice_line_ids.asset_create()
+            context = dict(self.env.context)
+            # Within the context of an invoice,
+            # this default value is for the type of the invoice, not the type of the asset.
+            # This has to be cleaned from the context before creating the asset,
+            # otherwise it tries to create the asset with the type of the invoice.
+            context.pop('default_type', None)
+            inv.invoice_line_ids.with_context(context).asset_create()
         return result
 
 
@@ -28,8 +34,8 @@ class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
     asset_category_id = fields.Many2one('account.asset.category', string='Asset Category')
-    asset_start_date = fields.Date(string='Asset End Date', compute='_get_asset_date', readonly=True, store=True)
-    asset_end_date = fields.Date(string='Asset Start Date', compute='_get_asset_date', readonly=True, store=True)
+    asset_start_date = fields.Date(string='Asset Start Date', compute='_get_asset_date', readonly=True, store=True)
+    asset_end_date = fields.Date(string='Asset End Date', compute='_get_asset_date', readonly=True, store=True)
     asset_mrr = fields.Float(string='Monthly Recurring Revenue', compute='_get_asset_date', readonly=True, digits=dp.get_precision('Account'), store=True)
 
     @api.one

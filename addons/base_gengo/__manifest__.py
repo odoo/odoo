@@ -14,11 +14,11 @@ using the Gengo API. To activate it, you must
 
 This wizard will activate the CRON job and the Scheduler and will start the automatic translation via Gengo Services for all the terms where you requested it.
     """,
-    'depends': ['base'],
+    'depends': ['base_setup'],
     'data': [
         'data/ir_cron_data.xml',
         'views/ir_translation_views.xml',
-        'views/res_company_views.xml',
+        'views/res_config_views.xml',
         'wizard/base_gengo_translations_view.xml',
     ],
     'demo': ['data/res_company_demo.xml'],

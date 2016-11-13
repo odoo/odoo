@@ -54,7 +54,9 @@ def report_configuration():
     This function assumes the configuration has been initialized.
     """
     config = odoo.tools.config
-    _logger.info("OpenERP version %s", __version__)
+    _logger.info("Odoo version %s", __version__)
+    if os.path.isfile(config.rcfile):
+        _logger.info("Using configuration file at " + config.rcfile)
     _logger.info('addons paths: %s', odoo.modules.module.ad_paths)
     host = config['db_host'] or os.environ.get('PGHOST', 'default')
     port = config['db_port'] or os.environ.get('PGPORT', 'default')

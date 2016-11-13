@@ -14,7 +14,7 @@ Worklogs can be maintained to signify number of hours spent by users to handle a
     'website': 'https://www.odoo.com/page/project-management',
     'depends': [
         'project_issue',
-        'hr_timesheet_sheet',
+        'hr_timesheet',
     ],
     'data': [
         'views/project_issue_view.xml',

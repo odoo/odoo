@@ -157,7 +157,8 @@ class View(models.Model):
     inherit_id = fields.Many2one('ir.ui.view', string='Inherited View', ondelete='restrict', index=True)
     inherit_children_ids = fields.One2many('ir.ui.view', 'inherit_id', string='Views which inherit from this one')
     field_parent = fields.Char(string='Child Field')
-    model_data_id = fields.Many2one('ir.model.data', compute='_compute_model_data_id', string="Model Data", store=True)
+    model_data_id = fields.Many2one('ir.model.data', string="Model Data",
+                                    compute='_compute_model_data_id', search='_search_model_data_id')
     xml_id = fields.Char(string="External ID", compute='_compute_xml_id',
                          help="ID of the view defined in xml file")
     groups_id = fields.Many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
@@ -229,12 +230,19 @@ actual arch.
         for view, view_wo_lang in zip(self, self.with_context(lang=None)):
             view_wo_lang.arch = view.arch_base
 
+    @api.depends('write_date')
     def _compute_model_data_id(self):
-        # get the last ir_model_data record corresponding to self
+        # get the first ir_model_data record corresponding to self
         domain = [('model', '=', 'ir.ui.view'), ('res_id', 'in', self.ids)]
-        for data in self.env['ir.model.data'].search_read(domain, ['res_id']):
+        for data in self.env['ir.model.data'].search_read(domain, ['res_id'], order='id desc'):
             view = self.browse(data['res_id'])
             view.model_data_id = data['id']
+
+    def _search_model_data_id(self, operator, value):
+        name = 'name' if isinstance(value, basestring) else 'id'
+        domain = [('model', '=', 'ir.ui.view'), (name, operator, value)]
+        data = self.env['ir.model.data'].search(domain)
+        return [('id', 'in', data.mapped('res_id'))]
 
     def _compute_xml_id(self):
         xml_ids = collections.defaultdict(list)
@@ -646,6 +654,35 @@ actual arch.
 
         return dict(view_data, arch=etree.tostring(arch, encoding='utf-8'))
 
+    def _apply_group(self, model, node, modifiers, fields):
+        """Apply group restrictions,  may be set at view level or model level::
+           * at view level this means the element should be made invisible to
+             people who are not members
+           * at model level (exclusively for fields, obviously), this means
+             the field should be completely removed from the view, as it is
+             completely unavailable for non-members
+
+           :return: True if field should be included in the result of fields_view_get
+        """
+        Model = self.env[model]
+
+        if node.tag == 'field' and node.get('name') in Model._fields:
+            field = Model._fields[node.get('name')]
+            if field.groups and not self.user_has_groups(groups=field.groups):
+                node.getparent().remove(node)
+                fields.pop(node.get('name'), None)
+                # no point processing view-level ``groups`` anymore, return
+                return False
+        if node.get('groups'):
+            can_see = self.user_has_groups(groups=node.get('groups'))
+            if not can_see:
+                node.set('invisible', '1')
+                modifiers['invisible'] = True
+                if 'attrs' in node.attrib:
+                    del node.attrib['attrs']    # avoid making field visible later
+            del node.attrib['groups']
+        return True
+
     #------------------------------------------------------
     # Postprocessing: translation, groups and modifiers
     #------------------------------------------------------
@@ -672,33 +709,6 @@ actual arch.
         if model not in self.env:
             self.raise_view_error(_('Model not found: %(model)s') % dict(model=model), view_id)
         Model = self.env[model]
-
-        def check_group(node):
-            """Apply group restrictions,  may be set at view level or model level::
-               * at view level this means the element should be made invisible to
-                 people who are not members
-               * at model level (exclusively for fields, obviously), this means
-                 the field should be completely removed from the view, as it is
-                 completely unavailable for non-members
-
-               :return: True if field should be included in the result of fields_view_get
-            """
-            if node.tag == 'field' and node.get('name') in Model._fields:
-                field = Model._fields[node.get('name')]
-                if field.groups and not self.user_has_groups(groups=field.groups):
-                    node.getparent().remove(node)
-                    fields.pop(node.get('name'), None)
-                    # no point processing view-level ``groups`` anymore, return
-                    return False
-            if node.get('groups'):
-                can_see = self.user_has_groups(groups=node.get('groups'))
-                if not can_see:
-                    node.set('invisible', '1')
-                    modifiers['invisible'] = True
-                    if 'attrs' in node.attrib:
-                        del node.attrib['attrs']    # avoid making field visible later
-                del node.attrib['groups']
-            return True
 
         if node.tag in ('field', 'node', 'arrow'):
             if node.get('object'):
@@ -748,7 +758,7 @@ actual arch.
                 if node.get(additional_field):
                     fields[node.get(additional_field)] = {}
 
-        if not check_group(node):
+        if not self._apply_group(model, node, modifiers, fields):
             # node must be removed, no need to proceed further with its children
             return fields
 
@@ -1166,4 +1176,4 @@ actual arch.
             try:
                 self.browse(vid)._check_xml()
             except Exception as e:
-                self.raise_view_error("Can't validate view: %s" % e.message, vid)
+                self.raise_view_error("Can't validate view:\n%s" % (e.message or repr(e)), vid)

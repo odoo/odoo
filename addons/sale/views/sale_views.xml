@@ -135,6 +135,7 @@
                     <field name="user_id"/>
                     <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
                     <field name="state"/>
+                    <field name="currency_id" invisible="True"/>
                 </tree>
             </field>
         </record>
@@ -458,7 +459,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph,pivot</field>
+            <field name="view_mode">tree,form,calendar,graph,pivot,kanban</field>
             <field name="context">{}</field>
             <field name="domain">[('invoice_status','=','to invoice')]</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
@@ -483,7 +484,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph,pivot</field>
+            <field name="view_mode">tree,form,calendar,graph,pivot,kanban</field>
             <field name="domain">[('invoice_status','=','upselling')]</field>
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
@@ -574,6 +575,7 @@
         <record id="action_product_sale_list" model="ir.actions.act_window">
             <field name="name">Sale Order Lines</field>
             <field name="res_model">sale.order.line</field>
+            <field name="view_mode">tree</field>
             <field name="context">{'search_default_product_id': [active_id], 'default_product_id': active_id}</field>
             <field name="domain">[('state', 'in', ['sale', 'done'])]</field>
         </record>
@@ -584,12 +586,12 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
             <field name="arch" type="xml">
-                <div name="button_box" position="inside">
+                <button name="toggle_active" position="before">
                     <button class="oe_stat_button" name="%(action_product_sale_list)d"
                         type="action" icon="fa-usd">
                         <field string="Sales" name="sales_count" widget="statinfo" />
                     </button>
-                </div>
+                </button>
             </field>
         </record>
 
@@ -599,12 +601,12 @@
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
             <field name="arch" type="xml">
-                <div name="button_box" position="inside">
+                <button name="toggle_active" position="before">
                     <button class="oe_stat_button" name="action_view_sales"
                         type="object" icon="fa-usd">
                         <field string="Sales" name="sales_count" widget="statinfo" />
                     </button>
-                </div>
+                </button>
                 <group name="description" position="after">
                     <group string="Warning when Selling this Product" colspan="2" groups="sale.group_warning_sale">
                         <field name="sale_line_warn" nolabel="1"/>
@@ -707,7 +709,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
             <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
             <field name="domain">[('state','not in',('draft','sent','cancel'))]</field>
             <field name="context">{
@@ -730,7 +732,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
             <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
             <field name="domain">[('state', '=', 'sale'),('invoice_status','=','to invoice')]</field>
             <field name="context">{
@@ -746,7 +748,7 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="sale.view_quotation_tree"/>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
             <field name="context">{
                     'hide_sale': True,
                     'search_default_team_id': [active_id],
@@ -773,7 +775,7 @@
             <field name="name">Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
             <field name="view_id" ref="account.invoice_tree"/>
             <field name="domain">[
                 ('state', 'not in', ['draft', 'cancel']),

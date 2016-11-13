@@ -35,4 +35,5 @@ actions(Check in/Check out) performed by them.
     'qweb': [
         "static/src/xml/attendance.xml",
     ],
+    'application': True,
 }

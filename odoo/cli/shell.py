@@ -46,7 +46,7 @@ class Shell(Command):
             exec sys.stdin in local_vars
         else:
             if 'env' not in local_vars:
-                print 'No environment set, use `odoo.py shell -d dbname` to get one.'
+                print 'No environment set, use `%s shell -d dbname` to get one.' % sys.argv[0]
             for i in sorted(local_vars):
                 print '%s: %s' % (i, local_vars[i])
 

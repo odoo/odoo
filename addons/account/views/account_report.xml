@@ -12,6 +12,16 @@
             attachment_use="True"
             attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
         />
+        <record id="account_invoices" model="ir.actions.report.xml">
+            <field name="print_report_name">(object.type == 'out_invoice' and object.state == 'draft' and 'Draft Invoice' or
+            object.type == 'out_invoice' and object.state in ('open','paid') and 'Invoice'+'-'+(object.number) or
+            object.type == 'out_refund' and object.state == 'draft' and 'Refund' or
+            object.type == 'out_refund' and 'Refund'+'-'+(object.number) or
+            object.type == 'in_invoice' and object.state == 'draft' and 'Vendor Bill' or
+            object.type == 'in_invoice' and object.state in ('open','paid') and 'Vendor Bill'+'-'+(object.number) or
+            object.type == 'in_refund' and object.state == 'draft' and 'Vendor Refund' or
+            object.type == 'in_refund' and 'Vendor Refund'+'-'+(object.number))</field>
+        </record>
 
         <report 
             id="account_invoice_action_report_duplicate"
@@ -22,6 +32,16 @@
             file="account.report_invoice_duplicate"
             attachment_use="False"
         />
+        <record id="account_invoice_action_report_duplicate" model="ir.actions.report.xml">
+            <field name="print_report_name">(object.type == 'out_invoice' and object.state == 'draft' and 'Duplicate Invoice' or
+            object.type == 'out_invoice' and object.state in ('open','paid') and 'Duplicate Invoice'+'-'+(object.number) or
+            object.type == 'out_refund' and object.state == 'draft' and 'Duplicate Refund' or
+            object.type == 'out_refund' and 'Duplicate Refund'+'-'+(object.number) or
+            object.type == 'in_invoice' and object.state == 'draft' and 'Duplicate Vendor Bill' or
+            object.type == 'in_invoice' and object.state in ('open','paid') and 'Duplicate Vendor Bill'+'-'+(object.number) or
+            object.type == 'in_refund' and object.state == 'draft' and 'Duplicate Vendor Refund' or
+            object.type == 'in_refund' and 'Duplicate Vendor Refund'+'-'+(object.number))</field>
+        </record>
 
         <report 
             id="action_report_print_overdue"
@@ -31,6 +51,9 @@
             name="account.report_overdue"
             file="account.report_overdue"
             />
+        <record id="action_report_print_overdue" model="ir.actions.report.xml">
+            <field name="print_report_name">'Due Payments'+'-'+(object.name)</field>
+        </record>
 
         <report 
             id="action_report_general_ledger"

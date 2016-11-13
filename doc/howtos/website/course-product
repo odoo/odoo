@@ -18,12 +18,12 @@ new file mode 100644
 --- /dev/null
 +++ b/academy/data.xml
 @@ -0,0 +1,6 @@
-+<openerp><data>
++<odoo><data>
 +  <record model="product.public.category" id="category_courses">
 +    <field name="name">Courses</field>
 +    <field name="parent_id" ref="website_sale.categ_others"/>
 +  </record>
-+</data></openerp>
++</data></odoo>
 diff --git a/academy/demo.xml b/academy/demo.xml
 --- a/academy/demo.xml
 +++ b/academy/demo.xml
@@ -57,7 +57,7 @@ diff --git a/academy/demo.xml b/academy/demo.xml
 +            <field name="type">service</field>
 +        </record>
      </data>
- </openerp>
+ </odoo>
 diff --git a/academy/models.py b/academy/models.py
 --- a/academy/models.py
 +++ b/academy/models.py

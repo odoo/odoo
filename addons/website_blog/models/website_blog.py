@@ -32,6 +32,20 @@ class Blog(models.Model):
         return res
 
     @api.multi
+    def message_post(self, parent_id=False, subtype=None, **kwargs):
+        """ Temporary workaround to avoid spam. If someone replies on a channel
+        through the 'Presentation Published' email, it should be considered as a
+        note as we don't want all channel followers to be notified of this answer. """
+        self.ensure_one()
+        if parent_id:
+            parent_message = self.env['mail.message'].sudo().browse(parent_id)
+            if parent_message.subtype_id and parent_message.subtype_id == self.env.ref('website_blog.mt_blog_blog_published'):
+                if kwargs.get('subtype_id'):
+                    kwargs['subtype_id'] = False
+                subtype = 'mail.mt_note'
+        return super(Blog, self).message_post(parent_id=parent_id, subtype=subtype, **kwargs)
+
+    @api.multi
     def all_tags(self, min_limit=1):
         req = """
             SELECT
@@ -87,11 +101,13 @@ class BlogPost(models.Model):
             blog_post.website_url = "/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post))
 
     @api.multi
+    @api.depends('post_date', 'visits')
     def _compute_ranking(self):
         res = {}
         for blog_post in self:
-            age = datetime.now() - fields.Datetime.from_string(blog_post.post_date)
-            res[blog_post.id] = blog_post.visits * (0.5 + random.random()) / max(3, age.days)
+            if blog_post.id:  # avoid to rank one post not yet saved and so withtout post_date in case of an onchange.
+                age = datetime.now() - fields.Datetime.from_string(blog_post.post_date)
+                res[blog_post.id] = blog_post.visits * (0.5 + random.random()) / max(3, age.days)
         return res
 
     def _default_content(self):
@@ -167,6 +183,8 @@ class BlogPost(models.Model):
     def _set_post_date(self):
         for blog_post in self:
             blog_post.published_date = blog_post.post_date
+            if not blog_post.published_date:
+                blog_post._write(dict(post_date=blog_post.create_date)) # dont trigger inverse function
 
     def _check_for_publication(self, vals):
         if vals.get('website_published'):
@@ -197,9 +215,11 @@ class BlogPost(models.Model):
 
     @api.multi
     def get_access_action(self):
-        """ Override method that generated the link to access the document. Instead
-        of the classic form view, redirect to the post on the website directly """
+        """ Instead of the classic form view, redirect to the post on website
+        directly if user is an employee or if the post is published. """
         self.ensure_one()
+        if self.env.user.share and not self.sudo().website_published:
+            return super(BlogPost, self).get_access_action()
         return {
             'type': 'ir.actions.act_url',
             'url': '/blog/%s/post/%s' % (self.blog_id.id, self.id),
@@ -208,15 +228,13 @@ class BlogPost(models.Model):
         }
 
     @api.multi
-    def _notification_get_recipient_groups(self, message, recipients):
-        """ Override to set the access button: everyone can see an access button
-        on their notification email. It will lead on the website view of the
-        post. """
-        res = super(BlogPost, self)._notification_get_recipient_groups(message, recipients)
-        access_action = self._notification_link_helper('view', model=message.model, res_id=message.res_id)
-        for category, data in res.iteritems():
-            res[category]['button_access'] = {'url': access_action, 'title': _('View Blog Post')}
-        return res
+    def _notification_recipients(self, message, groups):
+        groups = super(BlogPost, self)._notification_recipients(message, groups)
+
+        for group_name, group_method, group_data in groups:
+            group_data['has_button_access'] = True
+
+        return groups
 
     @api.multi
     def message_get_message_notify_values(self, message, message_values):

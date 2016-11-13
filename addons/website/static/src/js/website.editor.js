@@ -54,39 +54,38 @@ website.TopBar.include({
 
 website.TopBarCustomize = Widget.extend({
     events: {
-        'mousedown a.dropdown-toggle': 'load_menu',
-        'click ul a[data-view-id]': 'do_customize',
+        'click > ul a[data-view-id]': 'do_customize',
     },
     start: function () {
-        var self = this;
-        this.$menu = self.$el.find('ul');
         this.view_name = $(document.documentElement).data('view-xmlid');
         if (!this.view_name) {
             this.$el.hide();
         }
-        this.loaded = false;
+
+        if (this.$el.is(".open")) {
+            this.load_menu();
+        } else {
+            this.$el.one("mousedown", "> a.dropdown-toggle", this.load_menu.bind(this));
+        }
     },
     load_menu: function () {
-        var self = this;
-        if(this.loaded) {
-            return;
-        }
-        ajax.jsonRpc('/website/customize_template_get', 'call', {
+        var $menu = this.$el.children("ul");
+        ajax.jsonRpc('/web_editor/customize_template_get', 'call', {
             key: this.view_name,
+            full: false
         }).then(function (result) {
+            var current_group = "";
             _.each(result, function (item) {
-                if (item.key === "website.debugger" && !window.location.search.match(/[&?]debug(&|$)/)) return;
-                if (item.header) {
-                    self.$menu.append('<li class="dropdown-header">' + item.name + '</li>');
-                } else {
-                    var $li = $('<li/>', {role: 'presentation'})
-                                .append($('<a/>', {href: '#', 'data-view-id': item.id, role: 'menuitem'})
-                                    .append(qweb.render('web_editor.components.switch', {id: 'switch-' + item.id, label: item.name})));
-                    $li.find('input').prop('checked', !!item.active);
-                    self.$menu.append($li);
+                if (current_group !== item.inherit_id[1]) {
+                    current_group = item.inherit_id[1];
+                    $menu.append("<li class=\"dropdown-header\">" + current_group + "</li>");
                 }
+                var $li = $('<li/>', {role: 'presentation'})
+                            .append($('<a/>', {href: '#', 'data-view-id': item.id, role: 'menuitem'})
+                                .append(qweb.render('web_editor.components.switch', {id: 'switch-' + item.id, label: item.name})));
+                $li.find('input').prop('checked', !!item.active);
+                $menu.append($li);
             });
-            self.loaded = true;
         });
     },
     do_customize: function (e) {
@@ -218,7 +217,7 @@ base.ready().then(function () {
         var $wrap = $("#wrapwrap.homepage #wrap");
         if ($wrap.length && $wrap.html().trim() === "") {
             var $welcome_message = $(qweb.render("website.homepage_editor_welcome_message"));
-            $welcome_message.css("height", $wrap.parent("main").height() - ($wrap.outerHeight(true) - $wrap.height()));
+            $welcome_message.css("min-height", $wrap.parent("main").height() - ($wrap.outerHeight(true) - $wrap.height()));
             $wrap.empty().append($welcome_message);
         }
     }

@@ -389,7 +389,8 @@ class PurchaseOrder(models.Model):
             'date': self.date_order,
             'origin': self.name,
             'location_dest_id': self._get_destination_location(),
-            'location_id': self.partner_id.property_stock_supplier.id
+            'location_id': self.partner_id.property_stock_supplier.id,
+            'company_id': self.company_id.id,
         }
 
     @api.multi
@@ -509,7 +510,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             taxes = line.taxes_id.compute_all(line.price_unit, line.order_id.currency_id, line.product_qty, product=line.product_id, partner=line.order_id.partner_id)
             line.update({
-                'price_tax': taxes['total_included'] - taxes['total_excluded'],
+                'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
                 'price_total': taxes['total_included'],
                 'price_subtotal': taxes['total_excluded'],
             })
@@ -567,7 +568,7 @@ class PurchaseOrderLine(models.Model):
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
-    price_tax = fields.Monetary(compute='_compute_amount', string='Tax', store=True)
+    price_tax = fields.Float(compute='_compute_amount', string='Tax', store=True)
 
     order_id = fields.Many2one('purchase.order', string='Order Reference', index=True, required=True, ondelete='cascade')
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
@@ -1013,6 +1014,14 @@ class ProcurementOrder(models.Model):
                 vals = procurement._prepare_purchase_order_line(po, supplier)
                 self.env['purchase.order.line'].create(vals)
         return res
+
+    @api.multi
+    def open_purchase_order(self):
+        action = self.env.ref('purchase.purchase_order_action_generic')
+        action_dict = action.read()[0]
+        action_dict['res_id'] = self.purchase_id.id
+        action_dict['target'] = 'current'
+        return action_dict
 
 
 class ProductTemplate(models.Model):

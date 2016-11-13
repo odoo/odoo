@@ -110,7 +110,9 @@
                                 <field name="street" placeholder="Street..." class="o_address_street"/>
                                 <field name="street2" placeholder="Street 2..." class="o_address_street"/>
                                 <field name="city" placeholder="City" class="o_address_city"/>
-                                <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                                <field name="state_id" class="o_address_state" placeholder="State"
+                                       options='{"no_open": True}'
+                                       domain="[('country_id', '=', country_id')]"/>
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                             </div>
@@ -173,7 +175,9 @@
                                 <field name="city" placeholder="City" class="o_address_city"
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'zip': zip}"/>
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"
+                                    context="{'country_id': country_id, 'zip': zip}"
+                                    domain="[('country_id', '=', country_id')]"/>
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
@@ -459,7 +463,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="domain">[]</field>
-            <field name="context">{'default_customer':1, 'search_default_customer':1}</field>
+            <field name="context">{'default_customer':1, 'search_default_customer':1, 'default_company_type': 'company','default_is_company': 1}</field>
             <field name="filter" eval="True"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">

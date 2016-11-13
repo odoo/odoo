@@ -10,7 +10,7 @@
             parent="mass_mailing_menu_root" sequence="100"/>
 
         <!--  MASS MAILING CONTACT -->
-        
+
         <!-- Custom reports (aka filters) -->
         <record id="filter_contact_subscription" model="ir.filters">
             <field name="name">List Subscription</field>
@@ -25,7 +25,7 @@
             <field name="domain">[('opt_out','=',True)]</field>
             <field name="context">{'group_by': ['unsubscription_date:month'], 'col_group_by': ['list_id']}</field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_mail_mass_mailing_contact_search">
             <field name="name">mail.mass_mailing.contact.search</field>
             <field name="model">mail.mass_mailing.contact</field>
@@ -64,7 +64,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_mail_mass_mailing_contact_graph">
             <field name="name">mail.mass_mailing.contact.graph</field>
             <field name="model">mail.mass_mailing.contact</field>
@@ -139,14 +139,14 @@
                 <form string="Contact List">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
+                            <button name="%(mass_mailing.action_view_mass_mailing_contacts_from_list)d"
+                                    type="action" icon="fa-user" class="oe_stat_button">
+                                <field name="contact_nbr" string="Recipients" widget="statinfo"/>
+                            </button>
                             <button name="toggle_active" type="object"
                                     class="oe_stat_button" icon="fa-archive">
                                 <field name="active" widget="boolean_button"
                                     options='{"terminology": "archive"}'/>
-                            </button>
-                            <button name="%(mass_mailing.action_view_mass_mailing_contacts_from_list)d"
-                                    type="action" icon="fa-user" class="oe_stat_button">
-                                <field name="contact_nbr" string="Recipients" widget="statinfo"/>
                             </button>
                         </div>
                         <div class="oe_title">
@@ -245,7 +245,7 @@
                     </div>
                     <div class="oe_form_box_info oe_text_center" attrs="{'invisible': [('state', '!=', 'in_queue')]}">
                         <p><strong>
-                            This mass mailing is scheduled to
+                            This mass mailing is scheduled for
                             <field name="next_departure" class="oe_inline"/>
                         </strong></p>
                     </div>
@@ -326,7 +326,7 @@
                                         <div>
                                             <field name="reply_to_mode" widget="radio"
                                                 attrs="{'invisible': [('mailing_model', 'in', ['mail.mass_mailing.contact', 'res.partner'])]}"/>
-                                            <field name="reply_to"  
+                                            <field name="reply_to"
                                                 attrs="{'required': [('reply_to_mode', '=', 'email')]}"/>
                                         </div>
                                         <field name="schedule_date" />
@@ -467,7 +467,7 @@
             <field name="view_mode">form,kanban,tree</field>
             <field name="context">{
                 'search_default_mass_mailing_campaign_id': [active_id],
-                'default_mass_mailing_campaign_id': active_id, 
+                'default_mass_mailing_campaign_id': active_id,
             }
             </field>
             <field name="help" type="html">
@@ -743,7 +743,7 @@
 </field>
         </record>
 
-        <!-- Cron that process the mass mailing queue -->   
+        <!-- Cron that process the mass mailing queue -->
          <record id="ir_cron_mass_mailing_queue" model="ir.cron">
             <field name="name">Process Mass Mailing Queue</field>
             <field eval="True" name="active" />

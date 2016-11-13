@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
         <form>
             <h1>
-                <field name="reason" class="oe_inline"/>
+                <field name="reason" class="oe_inline" placeholder="Reason..."/>
             </h1>
             <group>
                 <group>
@@ -27,8 +27,7 @@
             </group>
             <footer>
                 <button name="create_move" string="Create and post move" type="object" default_focus="1" class="oe_highlight"/>
-                or 
-                <button string="Cancel" class="oe_link" special="cancel" />
+                <button string="Cancel" class="btn btn-default" special="cancel" />
             </footer>
         </form>
         </field>

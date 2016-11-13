@@ -19,7 +19,7 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='button_box']" position="inside">
+                <xpath expr="//button[@name='toggle_active']" position="before">
                     <button name="%(rating_rating_action_task)d" type="action"
                             attrs="{'invisible': [('rating_count', '=', 0)]}"
                             class="oe_stat_button" icon="fa-smile-o">
@@ -104,7 +104,7 @@
                 </p>
             </field>
         </record>
-        <menuitem id="rating_rating_menu_project" action="rating_rating_action_project" parent="project.menu_project_report" sequence="5"/>
+        <menuitem id="rating_rating_menu_project" action="rating_rating_action_project" parent="project.menu_project_report" sequence="40"/>
 
     </data>
 </odoo>

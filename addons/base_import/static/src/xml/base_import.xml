@@ -8,7 +8,7 @@
             <input type="hidden" name="import_id"/>
             <div class="oe_import_box col-sm-9">
                 <div class="col-sm-12">
-                    <p>Select a CSV or Excel file to import. <a href="https://www.odoo.com/documentation/user/10/general/base_import/import_faq.html" target="new" class="pull-right">Help</a></p>
+                    <p>Select a CSV or Excel file to import. <a href="https://www.odoo.com/documentation/user/10.0/general/base_import/import_faq.html" target="new" class="pull-right">Help</a></p>
                 </div>
                 <div class="col-sm-10">
                     <div class="input-group">
@@ -67,9 +67,9 @@
                        id="oe_import_has_header" checked="checked"/>
                 <label for="oe_import_has_header">The first row
                  contains the label of the column</label>
-                <input type="checkbox" class="oe_import_advanced_mode"
+                <input type="checkbox" class="oe_import_advanced_mode" disabled="disabled"
                        id="oe_import_advanced_mode"/>
-                <label for="oe_import_advanced_mode">Show all fields for completion (advanced)</label>
+                <label for="oe_import_advanced_mode">Show fields of relation fields (advanced)</label>
                 <p class="oe_import_noheaders">If the file contains
                 the column names, Odoo can try auto-detecting the
                 field corresponding to the column. This makes imports

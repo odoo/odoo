@@ -148,8 +148,7 @@ class SaleOrder(models.Model):
 
     @api.multi
     def get_access_action(self):
-        """ Override method that generated the link to access the document. Instead
-        of the classic form view, redirect to the online quote if exists. """
+        """ Instead of the classic form view, redirect to the online quote if it exists. """
         self.ensure_one()
         if not self.template_id:
             return super(SaleOrder, self).get_access_action()

@@ -619,7 +619,7 @@ class JsonRequest(WebRequest):
             # If we use jsonp, that's mean we are called from another host
             # Some browser (IE and Safari) do no allow third party cookies
             # We need then to manage http sessions manually.
-            response['session_id'] = self.session_id
+            response['session_id'] = self.session.sid
             mime = 'application/javascript'
             body = "%s(%s);" % (self.jsonp, json.dumps(response),)
         else:
@@ -784,7 +784,7 @@ class HttpRequest(WebRequest):
         if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
             headers = {
                 'Access-Control-Max-Age': 60 * 60 * 24,
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, X-Debug-Mode'
             }
             return Response(status=200, headers=headers)
 

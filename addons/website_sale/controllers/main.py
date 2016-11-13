@@ -586,11 +586,8 @@ class WebsiteSale(http.Controller):
                     order.onchange_partner_id()
                 elif mode[1] == 'shipping':
                     order.partner_shipping_id = partner_id
-                    order.onchange_partner_shipping_id()
 
-                order.order_line._compute_tax_id()
                 order.message_partner_ids = [(4, partner_id), (3, request.website.partner_id.id)]
-
                 if not errors:
                     return request.redirect(kw.get('callback') or '/shop/checkout')
 
@@ -638,6 +635,9 @@ class WebsiteSale(http.Controller):
         if redirection:
             return redirection
 
+
+        order.onchange_partner_shipping_id()
+        order.order_line._compute_tax_id()
         request.session['sale_last_order_id'] = order.id
         request.website.sale_get_order(update_pricelist=True)
         extra_step = request.env.ref('website_sale.extra_info_option')
@@ -771,7 +771,7 @@ class WebsiteSale(http.Controller):
             return request.redirect("/shop/payment?error=no_token_or_missmatch_tx")
 
     @http.route(['/shop/payment/transaction/<int:acquirer_id>'], type='json', auth="public", website=True)
-    def payment_transaction(self, acquirer_id, tx_type='form', token=None):
+    def payment_transaction(self, acquirer_id, tx_type='form', token=None, **kwargs):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button. After having
         created the transaction, the event continues and the user is redirected
@@ -781,7 +781,16 @@ class WebsiteSale(http.Controller):
                                 user is redirected to the checkout page
         """
         Transaction = request.env['payment.transaction'].sudo()
-        order = request.website.sale_get_order()
+
+        # In case the route is called directly from the JS (as done in Stripe payment method)
+        so_id = kwargs.get('so_id')
+        so_token = kwargs.get('so_token')
+        if so_id and so_token:
+            order = request.env['sale.order'].sudo().search([('id', '=', so_id), ('access_token', '=', so_token)])
+        elif so_id:
+            order = request.env['sale.order'].search([('id', '=', so_id)])
+        else:
+            order = request.website.sale_get_order()
         if not order or not order.order_line or acquirer_id is None:
             return request.redirect("/shop/checkout")
 
@@ -901,6 +910,11 @@ class WebsiteSale(http.Controller):
             return request.redirect('/shop')
 
         return request.redirect('/shop/confirmation')
+
+
+    @http.route(['/shop/terms'], type='http', auth="public", website=True)
+    def terms(self, **kw):
+        return request.render("website_sale.terms")
 
     @http.route(['/shop/confirmation'], type='http', auth="public", website=True)
     def payment_confirmation(self, **post):

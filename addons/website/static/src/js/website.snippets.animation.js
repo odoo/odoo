@@ -122,7 +122,7 @@ animation.registry.share = animation.Class.extend({
 animation.registry.media_video = animation.Class.extend({
     selector: ".media_iframe_video",
     start: function () {
-        if (!this.$target.has('.media_iframe_video_size').length) {
+        if (!this.$target.has('> iframe').length) {
             var editor = '<div class="css_editable_mode_display">&nbsp;</div>';
             var size = '<div class="media_iframe_video_size">&nbsp;</div>';
             this.$target.html(editor+size+'<iframe src="'+_.escape(this.$target.data("src"))+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');
@@ -144,6 +144,20 @@ animation.registry.ul = animation.Class.extend({
             $(this).closest('li').next().toggleClass('o_close');
             event.preventDefault();
         });
+    },
+});
+
+/**
+ * This is a fix for apple device (<= IPhone 4, IPad 2)
+ * Standard bootstrap requires data-toggle='collapse' element to be <a/> tags. Unfortunatly one snippet uses a
+ * <div/> tag instead. The fix forces an empty click handler on these div, which allows standard bootstrap to work.
+ *
+ * This should be removed in a future odoo snippets refactoring.
+ */
+animation.registry._fix_apple_collapse = animation.Class.extend({
+    selector: ".s_faq_collapse [data-toggle='collapse']",
+    start: function () {
+        this.$target.off("click._fix_apple_collapse").on("click._fix_apple_collapse", function () {});
     },
 });
 

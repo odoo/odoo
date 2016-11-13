@@ -3,3 +3,4 @@
 
 import ir_translation
 import res_company
+import res_config

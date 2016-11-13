@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
 class Project(models.Model):
@@ -59,3 +60,9 @@ class Task(models.Model):
     subtask_count = fields.Integer(compute='_get_subtask_count', type='integer', string="Sub-task count")
 
     _constraints = [(models.BaseModel._check_recursion, 'Circular references are not permitted between tasks and sub-tasks', ['parent_id'])]
+
+    @api.constrains('parent_id')
+    def _check_subtask_project(self):
+        for task in self:
+            if task.parent_id and task.parent_id.project_id and task.project_id and task.project_id != task.parent_id.project_id.subtask_project_id:
+                raise UserError(_("You can't define a parent task if its project is not correctly configured. The sub-task's project of the parent task's project should be this task's project"))

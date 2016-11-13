@@ -5,7 +5,7 @@
 diff --git a/academy/controllers.py b/academy/controllers.py
 --- a/academy/controllers.py
 +++ b/academy/controllers.py
-@@ -4,8 +4,9 @@ from openerp import http
+@@ -4,8 +4,9 @@ from odoo import http
  class Academy(http.Controller):
      @http.route('/academy/academy/', auth='public')
      def index(self, **kw):

@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import calendar
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_is_zero
 
 
 class AccountAssetCategory(models.Model):
@@ -153,17 +154,29 @@ class AccountAssetAsset(models.Model):
         else:
             if self.method == 'linear':
                 amount = amount_to_depr / (undone_dotation_number - len(posted_depreciation_line_ids))
-                if self.prorata and self.category_id.type == 'purchase':
+                if self.prorata:
                     amount = amount_to_depr / self.method_number
                     if sequence == 1:
-                        days = (self.company_id.compute_fiscalyear_dates(depreciation_date)['date_to'] - depreciation_date).days + 1
-                        amount = (amount_to_depr / self.method_number) / total_days * days
+                        if self.method_period % 12 != 0:
+                            date = datetime.strptime(self.date, '%Y-%m-%d')
+                            month_days = calendar.monthrange(date.year, date.month)[1]
+                            days = month_days - date.day + 1
+                            amount = (amount_to_depr / self.method_number) / month_days * days
+                        else:
+                            days = (self.company_id.compute_fiscalyear_dates(depreciation_date)['date_to'] - depreciation_date).days + 1
+                            amount = (amount_to_depr / self.method_number) / total_days * days
             elif self.method == 'degressive':
                 amount = residual_amount * self.method_progress_factor
                 if self.prorata:
                     if sequence == 1:
-                        days = (self.company_id.compute_fiscalyear_dates(depreciation_date)['date_to'] - depreciation_date).days + 1
-                        amount = (residual_amount * self.method_progress_factor) / total_days * days
+                        if self.method_period % 12 != 0:
+                            date = datetime.strptime(self.date, '%Y-%m-%d')
+                            month_days = calendar.monthrange(date.year, date.month)[1]
+                            days = month_days - date.day + 1
+                            amount = (residual_amount * self.method_progress_factor) / month_days * days
+                        else:
+                            days = (self.company_id.compute_fiscalyear_dates(depreciation_date)['date_to'] - depreciation_date).days + 1
+                            amount = (residual_amount * self.method_progress_factor) / total_days * days
         return amount
 
     def _compute_board_undone_dotation_nb(self, depreciation_date, total_days):
@@ -174,7 +187,7 @@ class AccountAssetAsset(models.Model):
             while depreciation_date <= end_date:
                 depreciation_date = date(depreciation_date.year, depreciation_date.month, depreciation_date.day) + relativedelta(months=+self.method_period)
                 undone_dotation_number += 1
-        if self.prorata and self.category_id.type == 'purchase':
+        if self.prorata:
             undone_dotation_number += 1
         return undone_dotation_number
 
@@ -216,6 +229,8 @@ class AccountAssetAsset(models.Model):
                 sequence = x + 1
                 amount = self._compute_board_amount(sequence, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date)
                 amount = self.currency_id.round(amount)
+                if float_is_zero(amount, precision_rounding=self.currency_id.rounding):
+                    continue
                 residual_amount -= amount
                 vals = {
                     'amount': amount,
@@ -378,7 +393,7 @@ class AccountAssetAsset(models.Model):
 
     @api.multi
     def _compute_entries(self, date, group_entries=False):
-        depreciation_ids = self.env['account.asset.depreciation.line'].with_context(depreciation_date=date).search([
+        depreciation_ids = self.env['account.asset.depreciation.line'].search([
             ('asset_id', 'in', self.ids), ('depreciation_date', '<=', date),
             ('move_check', '=', False)])
         if group_entries:
@@ -413,7 +428,7 @@ class AccountAssetAsset(models.Model):
             'res_model': 'account.move',
             'view_id': False,
             'type': 'ir.actions.act_window',
-            'domain': [('id', 'in', move_ids)]
+            'domain': [('id', 'in', move_ids)],
         }
 
 

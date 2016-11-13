@@ -11,7 +11,7 @@ import sys
 from os.path import dirname, join, split
 
 
-execfile(join(dirname(__file__), '..', 'server', 'openerp', 'release.py'))
+execfile(join(dirname(__file__), '..', 'server', 'odoo', 'release.py'))
 
 
 class OdooService(win32serviceutil.ServiceFramework):
@@ -33,7 +33,7 @@ class OdooService(win32serviceutil.ServiceFramework):
         # We start Odoo as an independent process, but we keep its handle
         service_dir = dirname(sys.argv[0])
         server_dir = split(service_dir)[0]
-        server_path = join(server_dir, 'server', 'openerp-server.exe')
+        server_path = join(server_dir, 'server', 'odoo-bin.exe')
         self.odooprocess = subprocess.Popen(
             [server_path], cwd=server_dir, creationflags=win32process.CREATE_NO_WINDOW
         )

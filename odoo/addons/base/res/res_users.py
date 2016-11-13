@@ -310,10 +310,9 @@ class Users(models.Model):
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        if self._uid != SUPERUSER_ID:
-            groupby_fields = set([groupby] if isinstance(groupby, basestring) else groupby)
-            if groupby_fields.intersection(USER_PRIVATE_FIELDS):
-                raise AccessError(_("Invalid 'group by' parameter"))
+        groupby_fields = set([groupby] if isinstance(groupby, basestring) else groupby)
+        if groupby_fields.intersection(USER_PRIVATE_FIELDS):
+            raise AccessError(_("Invalid 'group by' parameter"))
         return super(Users, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
@@ -497,6 +496,7 @@ class Users(models.Model):
         if not passwd:
             # empty passwords disallowed for obvious security reasons
             raise AccessDenied()
+        db = cls.pool.db_name
         if cls.__uid_cache[db].get(uid) == passwd:
             return
         cr = cls.pool.cursor()

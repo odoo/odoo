@@ -41,7 +41,7 @@ class StockScrap(models.Model):
         required=True, states={'done': [('readonly', True)]}, default=_get_default_location_id)
     scrap_location_id = fields.Many2one(
         'stock.location', 'Scrap Location', default=_get_default_scrap_location_id,
-        domain="[('scrap_location', '=', True)]", states={'done': [('readonly', True)]})
+        domain="[('scrap_location', '=', True)]", required=True, states={'done': [('readonly', True)]})
     scrap_qty = fields.Float('Quantity', default=1.0, required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -93,7 +93,7 @@ class StockScrap(models.Model):
         self.ensure_one()
         return {
             'name': self.name,
-            'origin': self.origin,
+            'origin': self.origin or self.picking_id.name,
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
             'product_uom_qty': self.scrap_qty,
