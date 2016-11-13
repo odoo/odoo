@@ -369,7 +369,7 @@ msgstr "Kleur"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_color_name
 msgid "Color in Report"
-msgstr "Kleur in rapport"
+msgstr "Kleur in rapportage"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
@@ -1214,6 +1214,8 @@ msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \n"
 " You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in Leaves Application to manage the leave days of the employees if the configuration does not allow to use this field."
 msgstr ""
+"De functie achter het veld 'Overgebleven wettelijke verloven' kan alleen worden gebruikt wanneer er maar één verlofsoort is met de optie 'Toestaan om de limiet te overschrijden' uitgevinkt. (%s gevonden). Anders is de update is dubbelzinnig, omdat we niet kunnen bepalen op welke verlofsoort de update gedaan moet worden. \n"
+"U kunt ervoor kiezen om gebruik te van de klassieke menu's 'Verlofaanvragen' en 'Verlof toewijzen' in 'Personeelszaken\\Verloven' om de verlofdagen van het personeel te beheren, indien de configuratie het onmogelijk maakt om dit veld te gebruiken."
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -1243,6 +1245,10 @@ msgid ""
 "The status is 'Refused', when holiday request is refused by manager.\n"
 "The status is 'Approved', when holiday request is approved by manager."
 msgstr ""
+"De status is ingesteld op 'Indienen', wanneer een verlofaanvraag wordt gecreëerd.\n"
+"De status is 'Goed te keuren', wanneer een verlofaanvraag wordt bevestigd door de gebruiker. \n"
+"De status wordt 'Afgewezen', wanneer een verlofaanvraag wordt afgewezen door de manager. \n"
+"De status wordt 'Goedgekeurd', wanneer een verlofaanvraag wordt goedgekeurd door de manager."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_manager_id
@@ -1267,6 +1273,8 @@ msgid ""
 "This color will be used in the leaves summary located in Reporting > Leaves "
 "by Department."
 msgstr ""
+"Deze kleur wordt gebruikt in de verlofsamenvatting, weergegeven bij "
+"Rapportages/Verlof per afdeling"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_leaves_taken

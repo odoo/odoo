@@ -128,7 +128,7 @@ msgstr "<span class=\"o_stat_text\">Tijd<br/> analyse</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Work Center Load</span>"
-msgstr "<span class=\"o_stat_text\">Work Center bezetting</span>"
+msgstr "<span class=\"o_stat_text\">Bewerking bezetting</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -310,6 +310,9 @@ msgid ""
 "An unbuild order will do a reverse bill of materials, unbuilding products\n"
 "            you produced, but you can also use it to unbuild products you purchased."
 msgstr ""
+"Een demontage order doet het omgekeerde van een productieorder, het "
+"demonteert een product naar de componenten waaruit het is geproduceerd Het "
+"is ook mogelijk met producten welke u inkoopt."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
@@ -647,7 +650,7 @@ msgstr "Klik om een nieuwe routing aan te maken."
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "Click to start a new Unbuild Order"
-msgstr "Klik om een nieuw demonteer opdracht aan te maken."
+msgstr "Klik om een nieuw demontage opdracht aan te maken."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
@@ -729,7 +732,7 @@ msgstr "Bevestigd"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_unbuild_id
 msgid "Consume Unbuild Order"
-msgstr "Verbruik uit elkaar haal orders"
+msgstr "Demontage orders"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_consume_line_ids
@@ -1243,13 +1246,14 @@ msgstr "Voorraad mutaties"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_post_visible
 msgid "Inventory Post Visible"
-msgstr ""
+msgstr "Voorraadboeking zichtbaar"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_move_lot_ids
 msgid ""
 "Inventory moves for which you must scan a lot number at this work order"
 msgstr ""
+"Voorraadmutaties waarvoor u een partij moet scannen bij deze werkorder"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_user_working
@@ -1291,6 +1295,9 @@ msgid ""
 "Kit (Phantom): When processing a sales order for this product, the delivery "
 "order will contain the raw materials, instead of the finished product."
 msgstr ""
+"Kit (Phantom): Wanneer een verkooporder voor dit product wordt verwerkt, zal"
+" de uitgaande levering de grondstoffen (componenten) bevatten, in plaats van"
+" het eindproduct."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_laptop_charger
@@ -1387,6 +1394,8 @@ msgid ""
 "Lines need to be deleted, but can not as you still have some quantities to "
 "consume in them. "
 msgstr ""
+"Regels moeten worden verwijderd, maar dat is niet mogelijk omdat er "
+"hoeveelheden zijn te verbruiken."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_location_id
@@ -1619,6 +1628,9 @@ msgid ""
 "Messages can be configured to appear during any operation: receptions, delivery orders,\n"
 "                manufacturing orders, work orders, etc."
 msgstr ""
+"Berichten kunnen worden geconfigureerd om te verschijnen tijdens een bewerking: \n"
+"ontvangsten, uitgaande leveringen, \n"
+"productie orders, werkorders, etc."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1721,6 +1733,8 @@ msgid ""
 "No data to display. You will get here statistics about the\n"
 "              work orders duration related to this routing."
 msgstr ""
+"Geen gegevens om weer te geven. U vindt hier de statistieken over \n"
+"de duur van werkorders gerelateerd aan deze route."
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_maintenance:0
@@ -1785,6 +1799,7 @@ msgstr "Normaal"
 #: model:ir.model.fields,help:mrp.field_stock_scrap_workorder_id
 msgid "Not to restrict or prefer quants, but informative."
 msgstr ""
+"Niet om te beperken of voorkeur te geven aan hoeveelheden, maar informatief."
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1887,18 +1902,18 @@ msgstr "Originele productie hoeveelheid"
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_oee
 #: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_productivity_report
 msgid "Overall Equipment Effectiveness"
-msgstr "Overall Equipment Effectiveness"
+msgstr "Totale effectiviteit apparatuur"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_oee
 msgid "Overall Equipment Effectiveness, based on the last month"
-msgstr "Overall Equipment Effectiveness, gebaseerd op de laatste maand"
+msgstr "Totale effectiviteit van de apparatuur, gebaseerd op de laatste maand"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_oee
 msgid "Overall Equipment Effectiveness: no working or blocked time."
-msgstr ""
+msgstr "Totale effectiviteit apparatuur: niet werkend of uitvaltijd."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_plm
@@ -1996,7 +2011,7 @@ msgstr "Boek voorraad"
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_maintenance:0
 msgid "Preventive and Corrective maintenance management"
-msgstr "Preventief en correctief onderhoudsmanagement"
+msgstr "Beheer preventief en correctief onderhoud"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_ir_attachment_priority
@@ -2365,7 +2380,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_reporting
 msgid "Reporting"
-msgstr "Rapportering"
+msgstr "Rapportages"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_serial
@@ -2705,6 +2720,7 @@ msgstr ""
 msgid ""
 "Technical Field which is False when temporarily filled in in work order"
 msgstr ""
+"Technisch veld weke onwaar is wanner tijdelijk ingevuld in een werkorder"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_is_user_working
@@ -2754,7 +2770,7 @@ msgstr "De capaciteit kan alleen positief zijn."
 #. module: mrp
 #: selection:mrp.bom,ready_to_produce:0
 msgid "The components of 1st operation"
-msgstr "De componenten van de 1ste operatie"
+msgstr "De componenten van de 1ste bewerking"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_routing_id
@@ -2775,6 +2791,10 @@ msgid ""
 "mainly used to compute work center costs during operations and to plan "
 "future loads on work centers based on production planning."
 msgstr ""
+"De lijst van bewerkingen om een gereed product te produceren. De productie "
+"route worden voornamelijk gebruikt om productiestap kosten gedurende de "
+"bewerkingen en toekomstige werkbelasting van de productiestappen te "
+"berekenen gebaseerd op de planning."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_qty_produced
@@ -2886,6 +2906,8 @@ msgid ""
 "Time in minutes. Is the time used in manual mode, or the first time supposed"
 " in real time when there are not any work orders yet."
 msgstr ""
+"Tijd in minuten. Is de tijd gebruikt in handmatige modus, of de eerste keer "
+"verwacht in real-time wanneer er nog geen werkorders zijn."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2985,27 +3007,27 @@ msgstr "Deblokkeer"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild"
-msgstr "Uit elkaar halen"
+msgstr "Demontage"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_unbuild
 #: model:ir.model.fields,field_description:mrp.field_stock_move_unbuild_id
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Order"
-msgstr "Uit elkaar haal orders"
+msgstr "Demontage orders"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:76
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
-msgstr ""
+msgstr "De demontage hoeveelheid kan alleen maar positief zijn,"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_unbuild
 #: model:ir.ui.menu,name:mrp.menu_mrp_unbuild
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Orders"
-msgstr "Uit elkaar haal orders"
+msgstr "Demontage orders"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
@@ -3451,12 +3473,14 @@ msgstr ""
 #, python-format
 msgid "You cannot cancel a move move having already consumed material"
 msgstr ""
+"Het is niet mogelijk een voorraadmutatie te annuleren welke reeds "
+"grondstoffen heeft verbuikt"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:44
 #, python-format
 msgid "You have already processed %d. Please input a quantity higher than %d "
-msgstr ""
+msgstr "U heeft %d al verwerkt. Voer een hoeveelheid hoger dan %d in"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:353

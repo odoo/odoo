@@ -61,6 +61,13 @@ msgid ""
 "    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
 msgstr ""
+"\n"
+"    <p>\n"
+"        <strong>Herinnering${object.name}</strong>\n"
+"    </p>\n"
+"    \n"
+"    <p>U heeft de voortgang niet bijgewerkt van de doelstelling ${object.definition_id.name} (momenteel op {object.completeness}%) voor minimaal ${object.remind_update_delay} dagen. Vergeet niet om dit te doen.</p>\n"
+"            "
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
@@ -209,6 +216,8 @@ msgid ""
 "A goal definition is a technical model of goal defining a condition to reach.\n"
 "                The dates, values to reach or users are defined in goal instance."
 msgstr ""
+"Een doeldefinitie is een technisch model of doeldefinitie die een conditie definieert om te voldoen.\n"
+"De datums, waardes om te behalen of de gebruikers zijn gedefinieerd in de doelstelling instantie."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_condition
@@ -227,6 +236,8 @@ msgid ""
 "A goal is defined by a user and a goal definition.\n"
 "                Goals can be created automatically by using challenges."
 msgstr ""
+"Een doel is gedefinieerd door een gebruiker en een doeldefinitie.\n"
+"Doelen kunnen automatisch aangemaakt worden door uitdagingen te gebruiken."
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -275,6 +286,9 @@ msgid ""
 "                The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                The goals are created for the specified users or member of the group."
 msgstr ""
+"Wijs een lijst van doelen toe aan een groep gebruikers om ze te evalueren. \n"
+"De uitdaging kan over een periode lopen (week, maand...) om doelen automatisch aan te maken. \n"
+"De doelen worden aangemaakt voor de specifieke gebruikers of leden van een groep."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth_user_ids
@@ -1002,7 +1016,7 @@ msgstr "Laatst gewijzigd op"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_last_report_date
 msgid "Last Report Date"
-msgstr "Laatste rapport datum"
+msgstr "Laatste rapportage datum"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_last_update
@@ -1738,6 +1752,10 @@ msgid ""
 "There is no goals associated to this challenge matching your search.\n"
 "            Make sure that your challenge is active and assigned to at least one user."
 msgstr ""
+"Er is geen bijbehorende doelstelling bij deze uitdaging welke overeenkomt met uw zoekactie.\n"
+"Zorg ervoor dat uw uitdaging actief is en is toegewezen aan tenminste één gebruiker.\n"
+"              \n"
+"            "
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_closed
