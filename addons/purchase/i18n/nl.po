@@ -7,15 +7,15 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
-# wilcobergacker <wilcobergacker@gmail.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
+# wilcobergacker <wilcobergacker@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-29 13:59+0000\n"
 "PO-Revision-Date: 2016-09-29 13:59+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
+"Last-Translator: wilcobergacker <wilcobergacker@gmail.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,6 +94,26 @@ msgid ""
 "<p>You can reply to this email if you have any questions.</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
+"\n"
+"<p>Beste ${object.partner_id.name} \n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Vind in bijlage een <strong>${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} ${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    with reference: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"met een bedrag van<strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"van ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>Bij vragen kunt u reageren op deze e-mail.</p>\n"
+"<p>Bedankt,</p>\n"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_stock_dropshipping
@@ -419,6 +439,8 @@ msgid ""
 "Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products.\n"
 "You can configure per product if you directly do a Request for Quotation to one vendor or if you want a Call for Tenders to compare offers from several vendors."
 msgstr ""
+"Aanbestedingen worden gebruikt wanneer u aanvragen wilt genereren voor offertes naar verschillende leveranciers voor een gegeven set van producten. \n"
+"U kan per product configureren of u direct een offerteaanvraag naar een leverancier wilt sturen of dat u meerdere leveranciers wilt vragen voor een offerte om ze te vergelijken."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:812
@@ -833,7 +855,7 @@ msgstr "Blokkeer"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Locked"
-msgstr "Geblokkeerd"
+msgstr "Gesloten Inkooporder"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
@@ -951,6 +973,8 @@ msgid ""
 "On ordered quantities: control bills based on ordered quantities.\n"
 "On received quantities: control bills based on received quantity."
 msgstr ""
+"Op bestelde hoeveelheden: controleer rekeningen gebaseerd op bestelde hoeveelheden.\n"
+"Op ontvangen hoeveelheden: controleer rekeningen gebaseerd op de ontvangen hoeveelheden."
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -1245,6 +1269,8 @@ msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
 msgstr ""
+"Inkoop order wijziging gebruikt wanneer de inkoop order aanpasbaar moet zijn"
+" na bevestigen."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
@@ -1523,6 +1549,8 @@ msgstr "Levering"
 msgid ""
 "Some products may be sold/puchased in different units of measure (advanced)"
 msgstr ""
+"Sommige producten kunnen verkocht/ingekocht worden in verschillende "
+"maateenheden (geavanceerd)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_origin
@@ -1757,6 +1785,8 @@ msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
 "bills."
 msgstr ""
+"Onmogelijk om deze inkooporder te annuleren. U dient eerst de gerelateerde "
+"leveranciersfactuur te annuleren."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -1802,6 +1832,10 @@ msgid ""
 "            and Odoo will fill the bill automatically according to ordered\n"
 "            or received quantities."
 msgstr ""
+"Gebruik dit menu om de facturen te beheren die worden ontvangen van uw "
+"leverancier. Wanneer u een nieuwe factuur ontvangt, selecteer de inkooporder"
+" en Odoo zal de factuur automatisch vullen met de bestelde of geleverde "
+"hoeveelheden."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -1955,6 +1989,8 @@ msgid ""
 "You are decreasing the ordered quantity!\n"
 "You must update the quantities on the reception and/or bills."
 msgstr ""
+"U verminderd de order hoeveelheid!\n"
+"U dient de hoeveelheid van de inkomende levering en/of leveranciersfactuur bij te werken."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
@@ -1972,6 +2008,9 @@ msgid ""
 "                it's a physical product, a consumable or services you buy to\n"
 "                subcontractors."
 msgstr ""
+"U moet een product definiëren voor alles dat u inkoopt, of het nu een \n"
+"fysiek product, verbruiksartikel of een dienst is die u inkoopt bij een uit \n"
+"te besteden opdracht."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1980,6 +2019,9 @@ msgid ""
 "            it's a physical product, a consumable or services you buy to\n"
 "            subcontractors."
 msgstr ""
+"U moet een product definiëren voor alles dat u inkoopt, of het nu een \n"
+"fysiek product, verbruiksartikel of een dienst is die u inkoopt bij een uit \n"
+"te besteden opdracht."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:385

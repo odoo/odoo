@@ -52,6 +52,13 @@ msgid ""
 "                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* Cuando la nómina es creada el estado es 'Borrador'\n"
+"                \n"
+"* Si la nómina está bajo verificación el estado es 'En Espera'.\n"
+"                \n"
+"* Si la nómina está confirmada entonces el estado se cambia a 'Finalizado'.\n"
+"                \n"
+"* Cuando el usuario cancela la nómina el estado es 'Rechazado'."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -248,7 +255,7 @@ msgstr "Cancelar nómina"
 #: code:addons/hr_payroll/models/hr_payroll.py:238
 #, python-format
 msgid "Cannot cancel a payslip that is done."
-msgstr ""
+msgstr "No se puede cancelar una nómina que ya está finalizada."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
@@ -706,6 +713,10 @@ msgid ""
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
+"Es usada para calcular el porcentaje y la cantidad fija, por ejemplo, un "
+"vale de alimentos con una cantidad fija de 1€ por día trabajado puede tener "
+"una cantidad definida en la expresión como "
+"worked_days.WORK100.number_of_days."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
@@ -997,7 +1008,7 @@ msgstr "Nombre de nómina"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
 msgid "Payslip Run"
-msgstr ""
+msgstr "Correr Nómina"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days

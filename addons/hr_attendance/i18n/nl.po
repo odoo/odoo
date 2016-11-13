@@ -109,6 +109,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
 msgstr ""
+"Kan geen nieuwe aanwezigheid aanmaken voor %(empl_name)s, de werknemer heeft"
+" niet uitgeklokt sinds %(datetime)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:72
@@ -118,6 +120,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
 msgstr ""
+"Kan geen nieuwe aanwezigheid aanmaken voor %(empl_name)s, de werknemer heeft"
+" al uitgeklokt op %(datetime)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:111
@@ -133,6 +137,8 @@ msgid ""
 "check in. Your attendances have probably been modified manually by human "
 "resources."
 msgstr ""
+"Kan checkout niet uitvoeren op %(empl_name)s, kon geen overeenkomende "
+"checkin vinden. Uw urenstaten zijn mogelijk manueel gewijzigd door HR."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_in
@@ -292,11 +298,15 @@ msgid ""
 "Employees do not need to enter their PIN to check in manually in the \"Kiosk"
 " Mode\"."
 msgstr ""
+"Werknemer moeten hun pincode niet ingeven om manueel in te checken in de "
+"\"Kiosk modus\"."
 
 #. module: hr_attendance
 #: selection:base.config.settings,group_attendance_use_pin:0
 msgid "Employees must enter their PIN to check in manually in the \"Kiosk Mode\"."
 msgstr ""
+"Werknemers moeten hun PIN ingeven om manueel in te checken in de \"Kiosk "
+"Mode\"."
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
@@ -433,6 +443,7 @@ msgstr "ID gebruikt voor medewerker identificatie. "
 #, python-format
 msgid "If a job is worth doing, it is worth doing well!"
 msgstr ""
+"Als een job het waard is om het te doen is ze het waard om het goed te doen!"
 
 #. module: hr_attendance
 #. openerp-web
@@ -522,6 +533,8 @@ msgstr "PIN"
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_pin
 msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
 msgstr ""
+"PIN gebruikt om In/Uit te checken in Kiosk Modus (indien toegepast in "
+"Configuratie)."
 
 #. module: hr_attendance
 #. openerp-web
@@ -579,6 +592,7 @@ msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
 msgstr ""
+"De badge ID moet uniek zijn, deze is al toegewezen aan de andere werknemer."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:63
@@ -593,6 +607,9 @@ msgid ""
 "Check in/Check out actions. You can also link this feature to an attendance "
 "device using Odoo's web service features."
 msgstr ""
+"De tijdregistratie functionaliteit beoogt werknemer aanwezigheid te beheren "
+"via aan-/afmeld acties. U kunt deze functie ook koppelen met een prikklok "
+"apparaat via Odoo's webservice mogelijkheden."
 
 #. module: hr_attendance
 #. openerp-web
@@ -607,6 +624,8 @@ msgid ""
 "The employee will have access to the \"My Attendances\" menu to check in and"
 " out from his session"
 msgstr ""
+"De werknemer heeft toegang tot het \"Mijn urenstaten\" menu om in te checken"
+" en uit de checken vanuit deze sessie"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
@@ -614,6 +633,8 @@ msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
 msgstr ""
+"De gebruiker moet deze PIN ingeven om manueel in en uit te checken in het "
+"bedrijfsscherm."
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -628,6 +649,8 @@ msgid ""
 "Warning! Last check in was over 12 hours ago.<br/>If this isn't right, "
 "please contact Human Resources."
 msgstr ""
+"Waarschuwing! De laatste controle is meer dan 12 uur geleden.<br/>Contacteer"
+" HR indien dit niet klopt."
 
 #. module: hr_attendance
 #. openerp-web

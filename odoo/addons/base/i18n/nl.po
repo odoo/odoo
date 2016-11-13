@@ -2535,10 +2535,10 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Module voor middelenbeer\n"
+"Module voor resource management.\n"
 "===============================\n"
 "\n"
-"Een bron stelt iets voor dat kan gepland worden (een ontwikkelaar op een taak of een werkcentrum op een productieorder). Deze module beheert een middelen kalender geassocieerd met elk middel. Het beheert ook de bladeren van elk middel.\n"
+"Een bron stelt iets voor dat kan gepland worden (een ontwikkelaar op een taak of een bewerking op een productieorder). Deze module beheert een resource kalender geassocieerd met elk middel. Het beheert ook de bladeren van elk middel.\n"
 "    "
 
 #. module: base
@@ -4748,11 +4748,11 @@ msgstr ""
 "\n"
 "Deze module implementeert een urenstaten systeem.\n"
 "==========================================\n"
-"Elke werknemer kan zijn verwerjte tijd invoeren en opvolgen op verschillende projecten.\n"
+"Elke werknemer kan zijn verwerkte tijd invoeren en opvolgen op verschillende projecten.\n"
 "Een project is een kostenplaats en de gespendeerde tijd op een project genereert kosten op\n"
 "de kostenplaats.\n"
 "\n"
-"Er is veel rapportering op tijd en werknemer opvolging mogelijk.\n"
+"Er is zijn veel rapportages op tijd en werknemer opvolging mogelijk.\n"
 "\n"
 "Het is volledig geïntegreerd met de kostenrekening module. Het laat u toe\n"
 "een beheer op te zetten\n"
@@ -5887,7 +5887,7 @@ msgstr "Een module om het de-installeren te testen"
 #. module: base
 #: model:ir.module.module,description:base.module_test_assetsbundle
 msgid "A module to verify the Assets Bundle mechanism."
-msgstr ""
+msgstr "Een module om het Assets Bundle mechanisme te verifiëren."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits
@@ -9413,6 +9413,9 @@ msgid ""
 " is a customer without access or with a limited access created for sharing "
 "data."
 msgstr ""
+"Of klant (geen gebruiker), of gedeelde gebruiker. Geef aan of de huidige "
+"relatie een klant is zonder toegang of met gelimiteerde toegang aangemaakt "
+"voor het delen van data."
 
 #. module: base
 #: model:res.country,name:base.sv
@@ -11213,6 +11216,10 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"Als deze weergave overgeërfd is,\n"
+"* indien waar zal de weergave altijd de bovenliggende uitbreiden\n"
+"* indien niet waar zal de weergave niet de bovenliggende uitbreiden maar kan dit wel worden ingeschakeld\n"
+"             "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country_state
@@ -11270,6 +11277,9 @@ msgid ""
 " (if you delete a native ACL, it will be re-created when you reload the "
 "module)."
 msgstr ""
+"Als u het actieve veld afvinkt zal het de ACL uitschakelen zonder deze te "
+"verwijderen (Als u een natieve ACL verwijderd wordt deze opnieuw aangemaakt "
+"wanneer u de module herlaad.)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule_active
@@ -11278,6 +11288,9 @@ msgid ""
 "deleting it (if you delete a native record rule, it may be re-created when "
 "you reload the module)."
 msgstr ""
+"Als u het veld actief uitvinkt, zal het de record regel onbruikbaar maken, "
+"zonder deze te verwijderen (indien u een oorspronkelijk record verwijderd, "
+"wordt deze soms opnieuw aangemaakt, bij het herladen van de module)."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -13624,6 +13637,8 @@ msgid ""
 "One2Many fields cannot be synchronized as part of `commercial_fields` or "
 "`address fields`"
 msgstr ""
+"One2many velden kunnen niet gesynchroniseerd worden als deel van "
+"`commercial_fields` of `address fields`"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
@@ -14608,6 +14623,8 @@ msgid ""
 "Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes"
 " inside the view definition"
 msgstr ""
+"Qweb weergave kan geen 'Groups' definitie hebben op het record. Gebruik het "
+"'Groups' attribute binnen de weergave definitie"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
@@ -16542,6 +16559,10 @@ msgid ""
 "                                                fields accessible through other relational fields, for instance\n"
 "                                                <code>partner_id.company_id.name</code>."
 msgstr ""
+"Het veld <strong>Afhankelijkheden</strong> lijst de velden op\n"
+"waar het huidige veld afhankelijk van is. Het is een door komma gesplitste lijst van veldnamen, zoals <code>naam,grootte</code>. U kan ook refereren naar\n"
+"velden die toegankelijk zijn via andere relationele velden, bijvoorbeeld\n"
+"<code>partner_id.company_id.name</code>."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -16971,7 +16992,7 @@ msgstr "Urenstaten, Activiteiten"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_attendance
 msgid "Timesheets/attendances reporting"
-msgstr "Urenstaten/aanwezigheden rapportering"
+msgstr "Urenstaten/aanwezigheden rapportage"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_tz
