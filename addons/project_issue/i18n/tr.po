@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-06-22 03:22+0000\n"
+"PO-Revision-Date: 2016-11-09 13:07+0000\n"
 "Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -27,12 +27,12 @@ msgstr "# E-mailler"
 #. module: project_issue
 #: field:res.partner,issue_count:0
 msgid "# Issues"
-msgstr "# Sorunlar"
+msgstr "# Olay Kayıtları"
 
 #. module: project_issue
 #: field:project.issue.report,nbr:0
 msgid "# of Issues"
-msgstr "# nın Sorunları"
+msgstr "Olay Kaydı Sayısı"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:299
@@ -62,7 +62,7 @@ msgid ""
 "                    complaints, project troubles, material breakdowns, etc.\n"
 "                </p>\n"
 "            "
-msgstr "<p>\n            Odoo sorun izleyicisi, iç istekler, yazılım geliştirme hataları,\n            müşteri şikayetleri, proje zorlukları, malzeme hataları gibi\n            şeyleri etkili bir şeklide yönetmenizi sağlar.\n          </p>\n        "
+msgstr "<p>\n            Odoo olay kaydı izleyicisi, iç istekler, yazılım geliştirme hataları,\n            müşteri şikayetleri, proje zorlukları, malzeme hataları gibi\n            şeyleri etkili bir şeklide yönetmenizi sağlar.\n          </p>\n        "
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
@@ -73,7 +73,7 @@ msgid ""
 "                complaints, project troubles, material breakdowns, etc.\n"
 "            </p>\n"
 "        "
-msgstr "<p>\n            Odoo sorun izleyicisi, iç istekler, yazılım geliştirme hataları,\n            müşteri şikayetleri, proje zorlukları, malzeme hataları gibi\n            şeyleri etkili bir şeklide yönetmenizi sağlar.\n          </p>\n        "
+msgstr "<p>\n            Odoo olay kaydı izleyicisi, iç istekler, yazılım geliştirme hataları,\n            müşteri şikayetleri, proje zorlukları, malzeme hataları gibi\n            şeyleri etkili bir şeklide yönetmenizi sağlar.\n          </p>\n        "
 
 #. module: project_issue
 #: help:project.issue,kanban_state:0
@@ -82,7 +82,7 @@ msgid ""
 " * Normal is the default situation\n"
 " * Blocked indicates something is preventing the progress of this issue\n"
 " * Ready for next stage indicates the issue is ready to be pulled to the next stage"
-msgstr "Bir sorunun kanban durumu özel durumların sorunu etkilediğini belirtir:\n * Normal, varsayılan durumdur\n * Engelli, bir şeyin bu sorunla ilgili işlemleri engellediğini belirtir\n * Sonraki aşama için Hazır, sorunun bir sonraki aşamaya geçirilmeye hazır olduğunu belirtir"
+msgstr "Bir olay kaydının kanban durumu özel durumların olduğunu belirtir:\n * Normal, varsayılan durumdur\n * Engelli, bir şeyin bu olay kaydı ilgili işlemleri engellediğini belirtir\n * Sonraki aşama için Hazır, olay kaydının bir sonraki aşamaya geçirilmeye hazır olduğunu belirtir"
 
 #. module: project_issue
 #: field:project.issue,active:0 field:project.issue.version,active:0
@@ -99,7 +99,7 @@ msgstr "Bir iç not ekle..."
 msgid ""
 "Allows you to configure your incoming mail server, and create issues from "
 "incoming emails."
-msgstr "Gelen eposta sunucunuzu yapılandırmanızı ve gelen epostalardan sorunlar oluşturmanızı sağlar."
+msgstr "Gelen e-posta sunucunuzu yapılandırmanızı ve gelen e-postalardan olay kayıtları oluşturmanızı sağlar."
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -162,7 +162,7 @@ msgstr "Kanal"
 #. module: project_issue
 #: help:account.analytic.account,use_issues:0
 msgid "Check this field if this project manages issues"
-msgstr "Bu projede sorunlar yürütülüyorsa bu alanı işaretleyin"
+msgstr "Bu projede olay kayıtları takip edilecekse bu alanı işaretleyin"
 
 #. module: project_issue
 #: field:project.issue,date_closed:0
@@ -223,7 +223,7 @@ msgstr "Oluşturma Günü"
 #. module: project_issue
 #: field:project.config.settings,fetchmail_issue:0
 msgid "Create issues from an incoming email account "
-msgstr "Gelen bir e-posta hesabından  sorunları oluşturma "
+msgstr "Gelen bir e-posta hesabından olay kayıtları oluşturma "
 
 #. module: project_issue
 #: field:project.issue,create_uid:0 field:project.issue.version,create_uid:0
@@ -397,7 +397,7 @@ msgstr "ID"
 msgid ""
 "If any issue is escalated from the current Project, it will be listed under "
 "the project selected here."
-msgstr "Geçerli Projeden herhangi bir soru yükseltilirse, burada seçilen projelerde listelenecektir."
+msgstr "Geçerli Projeden herhangi bir olay kaydı yükseltilirse, burada seçilen projelerde listelenecektir."
 
 #. module: project_issue
 #: help:project.issue,message_unread:0
@@ -414,67 +414,67 @@ msgstr "Bir Takipçidir"
 #: view:project.issue:project_issue.view_project_issue_filter
 #: field:project.issue,name:0
 msgid "Issue"
-msgstr "Sorun"
+msgstr "Olay Kaydı"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_assigned
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_assigned
 msgid "Issue Assigned"
-msgstr "Sorun Atandı"
+msgstr "Olay Kaydı Atandı"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
 msgid "Issue Blocked"
-msgstr "Sorun Engellendi"
+msgstr "Olay Kaydı Engellendi"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Created"
-msgstr "Sorun Oluşturuldu"
+msgstr "Olay Kaydı Oluşturuldu"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
 #: model:mail.message.subtype,name:project_issue.mt_issue_ready
 msgid "Issue Ready for Next Stage"
-msgstr "Sorun Sonraki Aşamaya Hazır"
+msgstr "Olay Kaydı Sonraki Aşamaya Hazır"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
 msgid "Issue Stage Changed"
-msgstr "Sorun Aşaması Değişti"
+msgstr "Olay Kaydı Aşaması Değişti"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
 msgid "Issue Tracker Search"
-msgstr "Sorun İzleyici Arama"
+msgstr "Olay Kaydı İzleyici Arama"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_tree_view
 msgid "Issue Tracker Tree"
-msgstr "Sorun İzleyici Ağacı"
+msgstr "Olay Kaydı İzleyici Ağacı"
 
 #. module: project_issue
 #: view:project.issue.version:project_issue.project_issue_version_form_view
 #: view:project.issue.version:project_issue.project_issue_version_search_view
 msgid "Issue Version"
-msgstr "Sorun Versiyonu"
+msgstr "Olay Kaydı Versiyonu"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_assigned
 msgid "Issue assigned"
-msgstr "Sorun atandı"
+msgstr "Olay Kaydı Atandı"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
 msgid "Issue blocked"
-msgstr "Sorun engellendi"
+msgstr "Olay Kaydı Engellendi"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue created"
-msgstr "Sorun oluşturuldu"
+msgstr "Olay Kaydı Oluşturuldu"
 
 #. module: project_issue
 #: field:account.analytic.account,use_issues:0
@@ -489,13 +489,13 @@ msgstr "Sorun oluşturuldu"
 #: field:project.project,issue_count:0
 #: view:res.partner:project_issue.res_partner_issues_button_view
 msgid "Issues"
-msgstr "Sorunlar"
+msgstr "Olay Kayıtları"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_project_issue_report
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
 msgid "Issues Analysis"
-msgstr "Sorun Analizi"
+msgstr "Olay Kaydı Analizi"
 
 #. module: project_issue
 #: field:project.issue,kanban_state:0
@@ -558,7 +558,7 @@ msgstr "Mesajlar ve iletişim geçmişi"
 #: view:project.issue:project_issue.view_project_issue_filter
 #: view:project.issue.report:project_issue.view_project_issue_report_filter
 msgid "My Issues"
-msgstr "Sorunlarım"
+msgstr "Olay Kayıtlarım"
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -591,7 +591,7 @@ msgstr "Normal"
 #. module: project_issue
 #: help:project.issue.report,delay_close:0
 msgid "Number of Days to close the project issue"
-msgstr "Proje sorunu kapatmak için gün sayısı"
+msgstr "Proje olay kaydı kapatmak için gün sayısı"
 
 #. module: project_issue
 #: help:project.issue.report,delay_open:0
@@ -646,12 +646,12 @@ msgstr "Proje Yükseltimi"
 #: model:ir.model,name:project_issue.model_project_issue
 #: view:project.issue.report:project_issue.view_project_issue_report_graph
 msgid "Project Issue"
-msgstr "Proje Sorun"
+msgstr "Proje Olay Kaydı"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_graph_view
 msgid "Project Issues"
-msgstr "Proje Sorunları"
+msgstr "Proje Olay Kayıtları"
 
 #. module: project_issue
 #: view:project.issue:project_issue.project_issue_kanban_view
@@ -757,7 +757,7 @@ msgid ""
 "support or after-sales services. You can track the issues per age. You can "
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
-msgstr "Proje sorunlarındaki bu rapor destek ve satış sonrası hizmetlerinizin kalitesini incelemenizi sağlar.  Her aşamadaki sorunları izleyebilirsiniz. Bir sorunu açıp kapatmak için gerekli süreyi, karşılıklı gönderilecek eposta sayısını ve sorunların tükettiği süreyi inceleyebilirsiniz."
+msgstr "Proje olay kayıtlarındaki bu rapor destek ve satış sonrası hizmetlerinizin kalitesini incelemenizi sağlar.  Her aşamadaki olay kayıtlarını izleyebilirsiniz. Bir olay kaydını açıp kapatmak için gerekli süreyi, karşılıklı gönderilecek e-posta sayısını ve olay kayıtlarının tükettiği süreyi inceleyebilirsiniz."
 
 #. module: project_issue
 #: view:project.issue:project_issue.view_project_issue_filter
@@ -810,12 +810,12 @@ msgstr "İzleyici Epostaları"
 #. module: project_issue
 #: field:project.issue,working_hours_open:0
 msgid "Working Hours to assign the Issue"
-msgstr "Sorun için atanan çalışma saatleri"
+msgstr "Olay Kaydı için atanan çalışma saatleri"
 
 #. module: project_issue
 #: field:project.issue,working_hours_close:0
 msgid "Working Hours to close the Issue"
-msgstr "Sorunun kapatılması için çalışma saatleri"
+msgstr "Olay Kaydının kapatılması için çalışma saatleri"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:397
@@ -823,13 +823,13 @@ msgstr "Sorunun kapatılması için çalışma saatleri"
 msgid ""
 "You cannot escalate this issue.\n"
 "The relevant Project has not configured the Escalation Project!"
-msgstr "Bu sorunu yükseltemezsiniz.\nİlgili Proje Yükseltme Projesini henüz yapılandırılmamıştır!"
+msgstr "Bu olay kaydını yükseltemezsiniz.\nİlgili Proje Yükseltme Projesi henüz yapılandırılmamıştır!"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:348
 #, python-format
 msgid "issues"
-msgstr "sorunlar"
+msgstr "Olay Kayıtları"
 
 #. module: project_issue
 #: field:project.project,issue_ids:0
