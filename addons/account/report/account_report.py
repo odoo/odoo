@@ -124,7 +124,7 @@ class report_aged_receivable(osv.osv):
         The reason writing this code here is, we need to check date range from today to first date of fiscal year.
         """
         pool_obj_fy = pooler.get_pool(cr.dbname).get('account.fiscalyear')
-        today = time.strftime('%Y-%m-%d')
+        today = fields.date.context_today(self, cr, uid)
         fy_id = pool_obj_fy.find(cr, uid, exception=False)
         LIST_RANGES = []
         if fy_id:

@@ -75,7 +75,10 @@ class account_invoice_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
         res_prod = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom_id, qty, name, type, partner_id, fposition_id, price_unit, currency_id=currency_id, context=context, company_id=company_id)
-        rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), context=context)
+        rec = self.pool.get('account.analytic.default').account_get(
+            cr, uid, product, partner_id, uid,
+            fields.date.context_today(self, cr, uid, context=context),
+            context=context)
         if rec:
             res_prod['value'].update({'account_analytic_id': rec.analytic_id.id})
         else:
@@ -90,7 +93,10 @@ class stock_picking(osv.osv):
 
     def _get_account_analytic_invoice(self, cursor, user, picking, move_line):
         partner_id = picking.partner_id and picking.partner_id.id or False
-        rec = self.pool.get('account.analytic.default').account_get(cursor, user, move_line.product_id.id, partner_id , user, time.strftime('%Y-%m-%d'), context={})
+        rec = self.pool.get('account.analytic.default').account_get(
+            cursor, user, move_line.product_id.id, partner_id , user,
+            fields.date.context_today(self, cursor, user),
+            context={})
 
         if rec:
             return rec.analytic_id.id
@@ -112,7 +118,11 @@ class sale_order_line(osv.osv):
         anal_def_obj = self.pool.get('account.analytic.default')
 
         for line in inv_line_obj.browse(cr, uid, create_ids, context=context):
-            rec = anal_def_obj.account_get(cr, uid, line.product_id.id, sale_line.order_id.partner_id.id, sale_line.order_id.user_id.id, time.strftime('%Y-%m-%d'), context=context)
+            rec = anal_def_obj.account_get(
+                cr, uid, line.product_id.id, sale_line.order_id.partner_id.id,
+                sale_line.order_id.user_id.id,
+                fields.date.context_today(self, cr, uid, context=context),
+                context=context)
 
             if rec:
                 inv_line_obj.write(cr, uid, [line.id], {'account_analytic_id': rec.analytic_id.id}, context=context)

@@ -89,7 +89,8 @@ class account_payment_populate_statement(osv.osv_memory):
                         'account_id': result['value'].get('account_id', statement.journal_id.default_credit_account_id.id),
                         'company_id': statement.company_id.id,
                         'currency_id': statement.currency.id,
-                        'date': line.date or time.strftime('%Y-%m-%d'),
+                        'date': line.date or fields.date.context_today(
+                            self, cr, uid, context=context),
                         'amount': abs(amount),
                         'period_id': statement.period_id.id,
                         'payment_rate_currency_id': statement.currency.id,

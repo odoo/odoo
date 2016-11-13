@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import time
-
 from openerp.osv import fields, osv
 
 class account_subscription_generate(osv.osv_memory):
@@ -31,7 +29,7 @@ class account_subscription_generate(osv.osv_memory):
        'date': fields.date('Generate Entries Before', required=True),
     }
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': fields.date.context_today,
     }
     def action_generate(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')

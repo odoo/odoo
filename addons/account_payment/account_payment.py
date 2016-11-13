@@ -114,7 +114,7 @@ class payment_order(osv.osv):
         'user_id': lambda self,cr,uid,context: uid,
         'state': 'draft',
         'date_prefered': 'due',
-        'date_created': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_created': fields.date.context_today,
         'reference': lambda self,cr,uid,context: self.pool.get('ir.sequence').get(cr, uid, 'payment.order'),
     }
 
@@ -136,7 +136,9 @@ class payment_order(osv.osv):
 
     def set_done(self, cr, uid, ids, *args):
         wf_service = netsvc.LocalService("workflow")
-        self.write(cr, uid, ids, {'date_done': time.strftime('%Y-%m-%d')})
+        self.write(cr, uid, ids, {
+            'date_done': fields.date.context_today(self, cr, uid),
+        })
         wf_service.trg_validate(uid, 'payment.order', ids[0], 'done', cr)
         return True
 
@@ -251,7 +253,8 @@ class payment_line(osv.osv):
 
         for line in self.browse(cursor, user, ids, context=context):
             ctx = context.copy()
-            ctx['date'] = line.order_id.date_done or time.strftime('%Y-%m-%d')
+            ctx['date'] = line.order_id.date_done or fields.date.context_today(
+                self, cursor, user, context=context)
             res[line.id] = currency_obj.compute(cursor, user, line.currency.id,
                     line.company_currency.id,
                     line.amount_currency, context=ctx)
@@ -278,7 +281,8 @@ class payment_line(osv.osv):
             if order.date_prefered == 'fixed':
                 date = order.date_scheduled
             else:
-                date = time.strftime('%Y-%m-%d')
+                date = fields.date.context_today(self, cr, uid,
+                                                 context=context)
         return date
 
     def _get_ml_inv_ref(self, cr, uid, ids, *a):

@@ -34,7 +34,7 @@ class account_common_report(osv.osv_memory):
         res = {}
         if chart_account_id:
             company_id = self.pool.get('account.account').browse(cr, uid, chart_account_id, context=context).company_id.id
-            now = time.strftime('%Y-%m-%d')
+            now = fields.date.context_today(self, cr, uid, context=context),
             domain = [('company_id', '=', company_id), ('date_start', '<', now), ('date_stop', '>', now)]
             fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, domain, limit=1)
             res['value'] = {'company_id': company_id, 'fiscalyear_id': fiscalyears and fiscalyears[0] or False}
@@ -124,7 +124,7 @@ class account_common_report(osv.osv_memory):
     def _get_fiscalyear(self, cr, uid, context=None):
         if context is None:
             context = {}
-        now = time.strftime('%Y-%m-%d')
+        now = fields.date.context_today(self, cr, uid, context=context)
         company_id = False
         ids = context.get('active_ids', [])
         if ids and context.get('active_model') == 'account.account':

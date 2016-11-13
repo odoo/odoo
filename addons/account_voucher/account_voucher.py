@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import time
 from lxml import etree
 
 from openerp import netsvc
@@ -584,7 +583,10 @@ class account_voucher(osv.osv):
         default['value']['account_id'] = account_id
         default['value']['type'] = ttype or tr_type
 
-        vals = self.onchange_journal(cr, uid, ids, journal_id, line_ids, tax_id, partner_id, time.strftime('%Y-%m-%d'), price, ttype, company_id, context)
+        vals = self.onchange_journal(
+            cr, uid, ids, journal_id, line_ids, tax_id, partner_id,
+            fields.date.context_today(self, cr, uid, context=context),
+            price, ttype, company_id, context)
         default['value'].update(vals.get('value'))
 
         return default
@@ -1483,7 +1485,7 @@ class account_voucher(osv.osv):
             'reference': False
         })
         if 'date' not in default:
-            default['date'] = time.strftime('%Y-%m-%d')
+            default['date'] = fields.date.context_today(self, cr, uid, context=context)
         return super(account_voucher, self).copy(cr, uid, id, default, context)
 
 

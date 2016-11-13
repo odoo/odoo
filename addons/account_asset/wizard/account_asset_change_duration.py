@@ -95,7 +95,7 @@ class asset_modify(osv.osv_memory):
             'method_period': asset.method_period,
             'method_end': asset.method_end,
             'user_id': uid,
-            'date': time.strftime('%Y-%m-%d'),
+            'date': fields.date.context_today(self, cr, uid, context=context),
             'note': data.note,
         }
         history_obj.create(cr, uid, history_vals, context=context)

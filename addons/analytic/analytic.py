@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import time
 from datetime import datetime
 
 from openerp.osv import fields, osv
@@ -212,7 +211,8 @@ class account_analytic_account(osv.osv):
             from_dt = datetime.strptime(template.date_start, tools.DEFAULT_SERVER_DATE_FORMAT)
             to_dt = datetime.strptime(template.date, tools.DEFAULT_SERVER_DATE_FORMAT)
             timedelta = to_dt - from_dt
-            res['value']['date'] = datetime.strftime(datetime.now() + timedelta, tools.DEFAULT_SERVER_DATE_FORMAT)
+            res['value']['date'] = fields.date.context_today(self, cr, uid, context=context,
+                                                             timstamp=datetime.now() + timedelta)
         res['value']['date_start'] = fields.date.today()
         res['value']['quantity_max'] = template.quantity_max
         res['value']['parent_id'] = template.parent_id and template.parent_id.id or False
@@ -246,7 +246,7 @@ class account_analytic_account(osv.osv):
         'state': 'open',
         'user_id': lambda self, cr, uid, ctx: uid,
         'partner_id': lambda self, cr, uid, ctx: ctx.get('partner_id', False),
-        'date_start': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_start': fields.date.context_today,
         'currency_id': _get_default_currency,
     }
 

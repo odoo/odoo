@@ -39,7 +39,7 @@ class account_aged_trial_balance(osv.osv_memory):
     }
     _defaults = {
         'period_length': 30,
-        'date_from': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_from': fields.date.context_today,
         'direction_selection': 'past',
     }
 
