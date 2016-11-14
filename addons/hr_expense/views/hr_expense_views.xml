@@ -454,7 +454,7 @@
                             <field name="account_move_id" invisible="1"/>
                         </group>
                     </group>
-                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft')]" options="{'no_delete': True}">
+                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft')]" options="{'not_delete': True}">
                             <tree>
                                 <field name="date"/>
                                 <field name="name"/>
