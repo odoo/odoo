@@ -5,7 +5,7 @@ var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var data_manager = require('web.data_manager');
 var framework = require('web.framework');
-var Model = require('web.DataModel');
+var data = require('web.data');
 var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
 var Widget = require('web.Widget');
@@ -436,7 +436,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                         _.str.sprintf(_t("Failed to evaluate search criterions")+": \n%s",
                                       JSON.stringify(results.error)));
             }
-            self.dataset._model = new Model(
+            self.dataset._model = new data.Model(
                 self.dataset.model, results.context, results.domain);
             var groupby = results.group_by.length ?
                           results.group_by :

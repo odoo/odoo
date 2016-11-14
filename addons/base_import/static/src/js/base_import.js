@@ -6,7 +6,7 @@ var core = require('web.core');
 var time = require('web.time');
 var ListView = require('web.ListView');
 var KanbanView = require('web_kanban.KanbanView');
-var Model = require('web.DataModel');
+var data = require('web.data');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
@@ -177,7 +177,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         this.parent_context = action.params.context || {};
         // import object id
         this.id = null;
-        this.Import = new Model('base_import.import');
+        this.Import = new data.Model('base_import.import');
         this.session = session;
         action.display_name = _t('Import a File'); // Displayed in the breadcrumbs
         this.do_not_change_match = false;
