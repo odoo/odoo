@@ -292,6 +292,51 @@ body .modal {
         }
     }
 
+    // LINK EDITOR DIALOG
+    .o_link_editor_dialog {
+        .o_link_colorpicker {
+            .o_btn_color{
+                display: inline-block;
+                position: relative;
+                height: 30px;
+                width: 30px;
+                border-radius: 15px;
+                border: 2px solid rgba(0, 0, 0, 0.25);
+                > .fa {
+                    display: none;
+                    position: absolute;
+                    top: 5px;
+                    left: 5px;
+                    font-size: 15px;
+                }
+                &.active > .fa {
+                    display: initial;
+                }
+                > span {
+                    font-weight: 700;
+                    position: absolute;
+                    top: 0px;
+                    left: 8px;
+                    font-size: 18px;
+                }
+            }
+        }
+        .horizontal {
+            border-top: 1px solid #ccc;
+        }
+        .label-preview {
+            margin-left: 40%;
+        }
+        .link-preview {
+            line-height: 4em;
+            > .center {
+                overflow: auto;
+                max-width: 100%;
+                max-height: 200px;
+            }
+        }
+    }
+
     // BACKGROUND IMAGE OPTIONS
     .o_bg_img_opt_modal .o_bg_img_opt {
         margin: 15px 0;

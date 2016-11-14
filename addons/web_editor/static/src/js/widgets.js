@@ -940,10 +940,9 @@ var VideoDialog = Widget.extend({
 var LinkDialog = Dialog.extend({
     template: 'web_editor.dialog.link',
     events: _.extend({}, Dialog.prototype.events, {
-        'change :input.url-source': 'changed',
-        'keyup :input.url': 'onkeyup',
         'keyup :input': 'preview',
-        'click button.remove': 'remove_link',
+        'click .o_btn_color' : 'onclick_color',
+        'change .button-size' : 'changed_size',
         'change input#link-text': function (e) {
             this.text = $(e.target).val();
         },
@@ -958,11 +957,12 @@ var LinkDialog = Dialog.extend({
         this.editable = editable;
         this.data = linkInfo || {};
 
+        this.preview_color = "";
+        this.preview_size = "";
         this.data.className = "";
         if (this.data.range) {
             this.data.iniClassName = $(this.data.range.sc).filter("a").attr("class") || "";
-            this.data.className = this.data.iniClassName.replace(/(^|\s+)btn(-[a-z0-9_-]*)?/gi, ' ');
-
+            this.data.className = this.data.iniClassName.replace(/(^|\s+)btn(-[a-z0-9_-]*)?/gi, '');
             var is_link = this.data.range.isOnAnchor();
             var r = this.data.range;
 
@@ -1039,7 +1039,6 @@ var LinkDialog = Dialog.extend({
     },
     start: function () {
         this.bind_data();
-        this.$('input.url-source:eq(1)').closest('.list-group-item').addClass('active');
         return this._super.apply(this, arguments);
     },
     get_data: function (test) {
@@ -1065,9 +1064,7 @@ var LinkDialog = Dialog.extend({
             def.reject();
         }
 
-        var style = this.$("input[name='link-style-type']:checked").val() || '';
-        var size = this.$("input[name='link-style-size']:checked").val() || '';
-        var classes = (this.data.className || "") + (style && style.length ? " btn " : "") + style + " " + size;
+        var classes = "btn " + this.preview_color + " " + this.preview_size + self.data.className;
         var isNewWindow = this.$('input.window-new').prop('checked');
 
         if ($e.hasClass('email-address') && $e.val().indexOf("@") !== -1) {
@@ -1088,17 +1085,18 @@ var LinkDialog = Dialog.extend({
         var self = this;
         var _super = this._super.bind(this);
         return this.get_data().then(function (url, new_window, label, classes) {
+            if (self.$(".btn-link").hasClass("active")) {
+                classes = classes.replace("btn ", "");
+            }
             self.data.url = url;
             self.data.isNewWindow = new_window;
             self.data.text = label;
             self.data.className = classes.replace(/\s+/gi, ' ').replace(/^\s+|\s+$/gi, '');
-                if (classes.replace(/(^|[ ])(btn-default|btn-success|btn-primary|btn-info|btn-warning|btn-danger)([ ]|$)/gi, ' ')) {
-                    self.data.style = {'background-color': '', 'color': ''};
-                }
             self.final_data = self.data;
         }).then(_super);
     },
     bind_data: function () {
+        var self = this;
         var href = this.data.url;
         var new_window = this.data.isNewWindow;
         var text = this.data.text;
@@ -1108,44 +1106,61 @@ var LinkDialog = Dialog.extend({
         this.$('input.window-new').prop('checked', new_window);
 
         if (classes) {
-            this.$('input[value!=""]').each(function () {
+            this.$('div.o_link_colorpicker div').each(function () {
                 var $option = $(this);
-                if (classes.indexOf($option.val()) !== -1) {
-                    $option.attr("checked", "checked");
+                if (classes.indexOf($option.data("color")) !== -1) {
+                    self.preview_color = $option.data("color");
+                    $option.addClass('active');
                 }
             });
+            this.$('.button-size option').each(function () {
+                var $option = $(this);
+                if (classes.indexOf($option.val()) !== -1) {
+                    self.preview_size = $option.val();
+                    $option.prop("selected", true);
+                }
+            });
+        }else {
+            self.preview_color = "btn-link";
+            this.$(".btn-link").addClass('active');
+            self.preview_size = "btn-md";
+            $(".button-size").val("btn-md");
         }
-
         if (href) {
             var match = /mailto:(.+)/.exec(href);
             if (match) {
-                this.$('input.email-address').val(match = /mailto:(.+)/.exec(href) ? match[1] : '');
+                this.$('input.url-source').val(match = /mailto:(.+)/.exec(href) ? match[0] : '');
             } else {
-                this.$('input.url').val(href);
+                this.$('input.url-source').val(href);
             }
         }
         this.preview();
     },
-    changed: function (e) {
-        $(e.target).closest('.list-group-item')
-            .addClass('active')
-            .siblings().removeClass('active')
-            .addBack().removeClass('has-error');
+    onclick_color: function(event) {
+        this.$(".o_btn_color").removeClass("active");
+        $(event.currentTarget).addClass("active");
+        var color = $(event.currentTarget).attr("data-color");
+        this.preview_color = color;
         this.preview();
     },
-    onkeyup: function (e) {
-        var $e = $(e.target);
-        var is_link = ($e.val()||'').length && $e.val().indexOf("@") === -1;
-        this.$('input.window-new').closest("div").toggle(is_link);
+    changed_size: function(event) {
+        var size = $(event.currentTarget).val();
+        this.preview_size = size;
         this.preview();
     },
     preview: function () {
+        var self = this;
         var $preview = this.$("#link-preview");
         this.get_data(true).then(function (url, new_window, label, classes) {
             $preview.attr("target", new_window ? '_blank' : "")
-                .attr("href", url && url.length ? url : "#")
-                .html((label && label.length ? label : url))
-                .attr("class", classes.replace(/pull-\w+/, '') + " o_btn_preview");
+            .attr("href", url && url.length ? url : "#")
+            .html((label && label.length ? label : url))
+            .attr('class', '');
+            if(self.preview_color == "btn-link") {
+                $preview.attr("class", classes.replace(/pull-\w+/, '').replace('btn ','') + " o_btn_preview");
+            }else {
+                $preview.attr("class", classes.replace(/pull-\w+/, '') + " o_btn_preview");
+            }
         });
     }
 });
