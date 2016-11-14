@@ -7,7 +7,7 @@ var gui = require('point_of_sale.gui');
 var models = require('point_of_sale.models');
 var screens = require('point_of_sale.screens');
 var core = require('web.core');
-var Model = require('web.DataModel');
+var data = require('web.data');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -235,7 +235,7 @@ var TableWidget = PosBaseWidget.extend({
     // sends the table's modification to the server
     save_changes: function(){
         var self   = this;
-        var model  = new Model('restaurant.table');
+        var model  = new data.Model('restaurant.table');
         var fields = _.find(this.pos.models,function(model){ return model.model === 'restaurant.table'; }).fields;
 
         // we need a serializable copy of the table, containing only the fields defined on the server
@@ -269,7 +269,7 @@ var TableWidget = PosBaseWidget.extend({
     // available on the database for the orders that depend on it.
     trash: function(){
         var self  = this;
-        var model = new Model('restaurant.table');
+        var model = new data.Model('restaurant.table');
         return model.call('create_from_ui',[{'active':false,'id':this.table.id}]).then(function(table_id){
             // Removing all references from the table and the table_widget in in the UI ...
             for (var i = 0; i < self.pos.floors.length; i++) {
@@ -405,7 +405,7 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
     set_background_color: function(background) {
         var self = this;
         this.floor.background_color = background;
-        (new Model('restaurant.floor'))
+        (new data.Model('restaurant.floor'))
             .call('write',[[this.floor.id], {'background_color': background}]).fail(function(err, event){
                 self.gui.show_popup('error',{
                     'title':_t('Changes could not be saved'),

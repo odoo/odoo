@@ -4,7 +4,6 @@ odoo.define('web.search_inputs', function (require) {
 var core = require('web.core');
 var data = require('web.data');
 var formats = require('web.formats');
-var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var time = require('web.time');
 var utils = require('web.utils');
@@ -393,7 +392,7 @@ var ManyToOneField = CharField.extend({
     default_operator: {},
     init: function (view_section, field, parent) {
         this._super(view_section, field, parent);
-        this.model = new Model(this.attrs.relation);
+        this.model = new data.Model(this.attrs.relation);
         this.searchview = parent;
     },
 

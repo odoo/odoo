@@ -4,7 +4,7 @@ odoo.define('mail.many2manytags', function (require) {
 var core = require('web.core');
 var form_common = require('web.form_common');
 var form_relational = require('web.form_relational');
-var Model = require('web.DataModel');
+var data = require('web.data');
 
 var _t = core._t;
 
@@ -48,7 +48,7 @@ var FieldMany2ManyTagsEmail = form_relational.FieldMany2ManyTags.extend({
 
     _check_email_popup: function (ids) {
         var self = this;
-        new Model('res.partner').call("search", [[
+        new data.Model('res.partner').call("search", [[
                 ["id", "in", ids], 
                 ["email", "=", false], 
                 ["notify_email", "=", 'always'] ]], 

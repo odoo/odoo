@@ -8,7 +8,6 @@ var core = require('web.core');
 var data = require('web.data');
 var form_common = require('web.form_common');
 var formats = require('web.formats');
-var Model = require('web.DataModel');
 var time = require('web.time');
 var utils = require('web.utils');
 var View = require('web.View');
@@ -503,7 +502,7 @@ var CalendarView = View.extend({
             }
         });
         var defs = _(to_get).map(function (ids, fieldname) {
-            return (new Model(self.fields[fieldname].relation))
+            return (new data.Model(self.fields[fieldname].relation))
                 .call('name_get', ids).then(function (vals) {
                     return [fieldname, vals];
                 });
@@ -839,7 +838,7 @@ var CalendarView = View.extend({
 
                     self.all_attendees = {};
                     if (self.avatar_title !== null) {
-                        new Model(self.avatar_title).query(["name"]).filter([["id", "in", all_attendees]]).all().then(function(result) {
+                        new data.Model(self.avatar_title).query(["name"]).filter([["id", "in", all_attendees]]).all().then(function(result) {
                             _.each(result, function(item) {
                                 self.all_attendees[item.id] = item.name;
                             });

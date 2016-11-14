@@ -7,7 +7,6 @@ var CalendarView = require('web_calendar.CalendarView');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
 var form_common = require('web.form_common');
-var Model = require('web.DataModel');
 var Notification = require('web.notification').Notification;
 var session = require('web.session');
 var WebClient = require('web.WebClient');
@@ -95,7 +94,7 @@ widgets.SidebarFilter.include({
             self._add_filter(session.partner_id, session.name + _lt(" [Me]"), !active_partner);
             self._add_filter(-1, _lt("Everybody's calendars"), false, false);
             //Get my coworkers/contacts
-            return new Model("calendar.contacts")
+            return new data.Model("calendar.contacts")
                 .query(["partner_id"])
                 .filter([["user_id", "=", session.uid]])
                 .all()

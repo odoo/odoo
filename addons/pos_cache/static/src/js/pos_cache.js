@@ -2,7 +2,7 @@ odoo.define('pos_cache.pos_cache', function (require) {
     "use strict";
     var core = require('web.core');
     var models = require('point_of_sale.models');
-    var Model = require('web.DataModel');
+    var data = require('web.data');
     var _t = core._t;
 
     var posmodel_super = models.PosModel.prototype;
@@ -30,7 +30,7 @@ odoo.define('pos_cache.pos_cache', function (require) {
             }
 
             return posmodel_super.load_server_data.apply(this, arguments).then(function () {
-                var records = new Model('pos.config').call('get_products_from_cache',
+                var records = new data.Model('pos.config').call('get_products_from_cache',
                                                            [self.pos_session.config_id[0], product_fields, product_domain]);
 
                 self.chrome.loading_message(_t('Loading') + ' product.product', 1);

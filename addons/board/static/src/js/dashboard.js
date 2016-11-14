@@ -7,7 +7,6 @@ var data = require('web.data');
 var Dialog = require('web.Dialog');
 var FavoriteMenu = require('web.FavoriteMenu');
 var form_common = require('web.form_common');
-var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var ViewManager = require('web.ViewManager');
 
@@ -409,7 +408,7 @@ FavoriteMenu.include({
         this.toggle_dashboard_menu(false);
         c.dashboard_merge_domains_contexts = false;
         var d = pyeval.eval('domain', domain),
-            board = new Model('board.board'),
+            board = new data.Model('board.board'),
             name = self.$add_dashboard_input.val();
         
         return self.rpc('/board/add_to_dashboard', {
