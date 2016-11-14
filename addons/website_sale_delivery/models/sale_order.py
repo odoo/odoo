@@ -72,28 +72,12 @@ class SaleOrder(models.Model):
     def _get_delivery_methods(self):
         """Return the available and published delivery carriers"""
         self.ensure_one()
-        available_carriers = DeliveryCarrier = self.env['delivery.carrier']
-        # Following loop is done to avoid displaying delivery methods who are not available for this order
-        # This can surely be done in a more efficient way, but at the moment, it mimics the way it's
-        # done in delivery_set method of sale.py, from delivery module
+        DeliveryCarrier = self.env['delivery.carrier']
         user = request.env.user
         if user.has_group('website.group_website_publisher') and user.has_group('sales_team.group_sale_manager'):
-            carrier_ids = DeliveryCarrier.search([]).ids
+            return DeliveryCarrier.search([])
         else:
-            carrier_ids = DeliveryCarrier.sudo().search(
-            [('website_published', '=', True)]).ids
-        for carrier_id in carrier_ids:
-            carrier = DeliveryCarrier.browse(carrier_id)
-            try:
-                _logger.debug("Checking availability of carrier #%s" % carrier_id)
-                available = carrier.with_context(order_id=self.id).read(fields=['available'])[0]['available']
-                if available:
-                    available_carriers += carrier
-            except ValidationError as e:
-                # RIM TODO: hack to remove, make available field not depend on a SOAP call to external shipping provider
-                # The validation error is used in backend to display errors in fedex config, but should fail silently in frontend
-                _logger.debug("Carrier #%s removed from e-commerce carrier list. %s" % (carrier_id, e))
-        return available_carriers
+            return DeliveryCarrier.sudo().search([('website_published', '=', True)])
 
     @api.model
     def _get_errors(self, order):

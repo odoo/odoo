@@ -42,7 +42,6 @@ class DeliveryCarrier(models.Model):
     product_sale_ok = fields.Boolean(related='product_id.sale_ok', default=False)
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True, ondelete="cascade")
     price = fields.Float(compute='get_price')
-    available = fields.Boolean(compute='get_price')
     free_if_more_than = fields.Boolean('Free if Order total is more than', help="If the order is more expensive than a certain amount, the customer can benefit from a free shipping", default=False)
     amount = fields.Float(string='Amount', help="Amount of the order to benefit from a free shipping, expressed in the company currency")
     country_ids = fields.Many2many('res.country', 'delivery_carrier_country_rel', 'carrier_id', 'country_id', 'Countries')
@@ -107,10 +106,7 @@ class DeliveryCarrier(models.Model):
     @api.one
     def get_price(self):
         SaleOrder = self.env['sale.order']
-
-        self.available = False
         self.price = False
-
         order_id = self.env.context.get('order_id')
         if order_id:
             # FIXME: temporary hack until we refactor the delivery API in master
@@ -119,7 +115,6 @@ class DeliveryCarrier(models.Model):
             if self.delivery_type not in ['fixed', 'base_on_rule']:
                 try:
                     computed_price = self.get_shipping_price_from_so(order)[0]
-                    self.available = True
                 except UserError as e:
                     # No suitable delivery method found, probably configuration error
                     _logger.info("Carrier %s: %s, not found", self.name, e.name)
@@ -129,7 +124,6 @@ class DeliveryCarrier(models.Model):
                 if carrier:
                     try:
                         computed_price = carrier.get_price_available(order)
-                        self.available = True
                     except UserError as e:
                         # No suitable delivery method found, probably configuration error
                         _logger.info("Carrier %s: %s", carrier.name, e.name)
@@ -152,8 +146,12 @@ class DeliveryCarrier(models.Model):
         :return list: A list of floats, containing the estimated price for the shipping of the sale order
         '''
         self.ensure_one()
-        if hasattr(self, '%s_get_shipping_price_from_so' % self.delivery_type):
-            return getattr(self, '%s_get_shipping_price_from_so' % self.delivery_type)(orders)
+        try:
+            if self.website_published and hasattr(self, '%s_get_shipping_price_from_so' % self.delivery_type):
+                return getattr(self, '%s_get_shipping_price_from_so' % self.delivery_type)(orders)
+        except ValidationError as e:
+            _logger.debug("Carrier #%s cannot compute the shipping price from the sales order. %s" % (self, e))
+        return [-1.0]
 
     def send_shipping(self, pickings):
         ''' Send the package to the service provider
