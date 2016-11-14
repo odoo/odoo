@@ -29,7 +29,7 @@
         <div class="oe_structure"/>
         <div class="container">
             <div class="row mt8">
-                <div class="col-sm-5">
+                <div class="col-sm-12">
                     <ol class="breadcrumb mb0">
                         <li>
                             <a href="/event">Our Events</a>
@@ -38,10 +38,11 @@
                         <li t-if="current_type"><t t-esc="current_type.name"/></li>
                         <li t-if="current_country"><t t-esc="current_country.name"/></li>
                     </ol>
-                </div><div class="col-sm-7">
-                    <t t-call="website.pager" >
-                        <t t-set="classname">pull-right</t>
-                    </t>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-xs-offset-3">
+                    <t t-call="website.pager"/>
                 </div>
             </div>
             <div class="row mt32 mb32">
@@ -77,6 +78,11 @@
                             </div>
                         </li>
                     </ul>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-offset-3">
+                        <t t-call="website.pager"/>
+                    </div>
                 </div>
                 <div class="col-md-3 oe_structure" id="right_column">
                 </div>
