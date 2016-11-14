@@ -279,6 +279,7 @@ function make_channel (data, options) {
         hidden: options.hidden,
         display_needactions: options.display_needactions,
         mass_mailing: data.mass_mailing,
+        group_based_subscription: data.group_based_subscription,
         needaction_counter: data.message_needaction_counter || 0,
         unread_counter: 0,
         last_seen_message_id: data.seen_message_id,

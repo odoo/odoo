@@ -318,6 +318,7 @@ class Channel(models.Model):
                 'channel_type': channel.channel_type,
                 'public': channel.public,
                 'mass_mailing': channel.email_send,
+                'group_based_subscription': bool(channel.group_ids),
             }
             if extra_info:
                 info['info'] = extra_info

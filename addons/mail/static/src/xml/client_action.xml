@@ -97,7 +97,7 @@
                     <i t-if="channel.mass_mailing" class="fa fa-envelope-o" title="Sends messages by email"/>
                 </span>
                 <t t-call="mail.chat.SidebarNeedaction"/>
-                <span t-attf-class="fa fa-times o_mail_partner_unpin #{counter ? 'hide' : ''}"
+                <span t-if="! channel.group_based_subscription" t-attf-class="fa fa-times o_mail_partner_unpin #{counter ? 'hide' : ''}"
                       title="Leave this channel" t-att-data-channel-id="channel.id"/>
             </div>
         </t>
