@@ -167,13 +167,13 @@ class Lead(FormatAddress, models.Model):
     def _compute_kanban_state(self):
         today = date.today()
         for lead in self:
-            kanban_state = 'red'
+            kanban_state = 'grey'
             if lead.date_action:
                 lead_date = fields.Date.from_string(lead.date_action)
                 if lead_date >= today:
                     kanban_state = 'green'
                 else:
-                    kanban_state = 'grey'
+                    kanban_state = 'red'
             lead.kanban_state = kanban_state
 
     @api.depends('date_open')
