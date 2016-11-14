@@ -3,25 +3,25 @@
   @author: Alexis de Lattre <alexis.delattre@akretion.com>
 -->
 <odoo>
-    <record id="receivable_template" model="account.reconcile.model.template">
+    <record id="receivable_reconcile_model" model="account.reconcile.model.template">
         <field name="name">Client</field>
         <field name="account_id" ref="fr_pcg_recv"/>
         <field name="amount_type">percentage</field>
         <field name="amount">100</field>
     </record>
-    <record id="payable_template" model="account.reconcile.model.template">
+    <record id="payable_reconcile_model" model="account.reconcile.model.template">
         <field name="name">Fournisseur</field>
         <field name="account_id" ref="fr_pcg_pay"/>
         <field name="amount_type">percentage</field>
         <field name="amount">100</field>
     </record>
-    <record id="bank_charges_template" model="account.reconcile.model.template">
+    <record id="bank_charges_reconcile_model" model="account.reconcile.model.template">
         <field name="name">Frais bancaires</field>
         <field name="account_id" ref="pcg_6278"/>
         <field name="amount_type">percentage</field>
         <field name="amount">100</field>
     </record>
-    <record id="internal_transfer_template" model="account.reconcile.model.template">
+    <record id="internal_transfer_reconcile_model" model="account.reconcile.model.template">
         <field name="name">Vir. interne</field>
         <field name="account_id" ref="pcg_58"/>
         <field name="amount_type">percentage</field>
