@@ -80,10 +80,11 @@
                         </page>
                         <page string="Notes" name="notes">
                             <group name="description">
-                                <separator string="Description for Quotations" colspan="4"/>
-                                <field name="description_sale" colspan="4" nolabel="1"
-                                    placeholder="This note will be displayed on the quotations."/>
+                                <group string="Description for Quotations">
+                                    <field name="description_sale" nolabel="1" placeholder="This note will be displayed on the quotations."/>
+                                </group>
                             </group>
+                            <group name="warning"/>
                          </page>
                     </notebook>
                 </sheet>
