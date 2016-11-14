@@ -725,7 +725,7 @@ class module(osv.osv):
             to_install_ids = self.search(cr, uid, [('name', 'in', urls.keys()), ('state', '=', 'uninstalled')], context=context)
             post_install_action = self.button_immediate_install(cr, uid, to_install_ids, context=context)
 
-            if already_installed:
+            if already_installed or to_install_ids:
                 # in this case, force server restart to reload python code...
                 cr.commit()
                 openerp.service.server.restart()
