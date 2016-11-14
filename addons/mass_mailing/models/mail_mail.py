@@ -47,8 +47,8 @@ class MailMail(models.Model):
                     'db': self.env.cr.dbname,
                     'res_id': self.res_id,
                     'email': email_to,
-                    'token': self.env['mail.mass_mailing']._unsubscribe_token(
-                        self.mailing_id.id, self.res_id, email_to),
+                    'token': self.mailing_id._unsubscribe_token(
+                        self.res_id, email_to),
                 }),
             }
         )
