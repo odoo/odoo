@@ -338,8 +338,10 @@ $('.oe_website_sale').each(function () {
     var state_options = $("select[name='state_id'] option:not(:first)");
     $(oe_website_sale).on('change', "select[name='country_id']", function () {
         var select = $("select[name='state_id']");
+        var selected_state = select.val();
         state_options.detach();
         var displayed_state = state_options.filter("[data-country_id="+($(this).val() || 0)+"]");
+        select.val(selected_state);
         var nb = displayed_state.appendTo(select).show().size();
         select.parent().toggle(nb>=1);
     });
@@ -348,8 +350,10 @@ $('.oe_website_sale').each(function () {
     var shipping_state_options = $("select[name='shipping_state_id'] option:not(:first)");
     $(oe_website_sale).on('change', "select[name='shipping_country_id']", function () {
         var select = $("select[name='shipping_state_id']");
+        var selected_state = select.val();
         shipping_state_options.detach();
         var displayed_state = shipping_state_options.filter("[data-country_id="+($(this).val() || 0)+"]");
+        select.val(selected_state);
         var nb = displayed_state.appendTo(select).show().size();
         select.parent().toggle(nb>=1);
     });
