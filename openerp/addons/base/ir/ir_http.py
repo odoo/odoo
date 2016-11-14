@@ -264,7 +264,7 @@ class ir_http(osv.AbstractModel):
                     module_path = os.path.join(os.path.normpath(module_path), '')  # join ensures the path ends with '/'
                     module_resource_path = os.path.normpath(module_resource_path)
                     if module_resource_path.startswith(module_path):
-                        with open(module_resource_path, 'r') as f:
+                        with open(module_resource_path, 'rb') as f:
                             content = base64.b64encode(f.read())
                         last_update = str(os.path.getmtime(module_resource_path))
 
