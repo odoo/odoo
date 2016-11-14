@@ -11,6 +11,7 @@ from datetime import datetime
 from subprocess import Popen, PIPE
 from odoo import fields, tools
 from odoo.http import request
+from openerp.tools.translate import xml_translate, _
 from odoo.modules.module import get_resource_path
 import psycopg2
 import werkzeug
@@ -250,16 +251,61 @@ class AssetsBundle(object):
             return self.save_attachment('js', content)
         return attachments[0]
 
+    def xml_translations(self, modules=None, lang=None):
+        if modules is None:
+            m = self.env['ir.module.module'].sudo()
+            modules = [x['name'] for x in m.search_read([('state', '=', 'installed')], ['name'])]
+
+        res_lang = self.env['res.lang'].sudo()
+        langs = res_lang.search([("code", "=", lang)])
+        lang_params = None
+        if langs:
+            lang_params = langs.read(["name", "direction", "date_format", "time_format", "grouping", "decimal_point", "thousands_sep"])[0]
+
+        # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
+        # done server-side when the language is loaded, so we only need to load the user's lang.
+        ir_translation = self.env['ir.translation'].sudo()
+        translations_per_module = {}
+        domain = [('module', 'in', modules), ('lang', '=', lang), ('type', '=', 'code'),
+                  ('comments', 'like', 'openerp-web'), ('name', '=like', '%.xml'), ('value', '!=', '')]
+        messages = ir_translation.search_read(domain, ['module', 'src', 'value', 'lang'], order='module')
+
+        for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
+            translations_per_module.setdefault(mod, {'messages':[]})
+            translations_per_module[mod]['messages'].extend({'id': m['src'], 'string': m['value']} for m in msg_group)
+        return {
+            'lang_parameters': lang_params,
+            'modules': translations_per_module,
+            'multi_lang': len(res_lang.get_installed()) > 1,
+        }
+
     def xml(self, minify=True):
-        inc = '' if minify else 'debug.'
-        inc += self.context.get('lang', 'en_US')
-        attachments = self.get_attachments('xml.js', inc=inc)
+        lang = self.env.context.get('lang', 'en_US')
+        type = '%s.xml.js' % lang
+        if not minify:
+            type = 'debug.%s' % type
+
+        attachments = self.get_attachments(type)
         if not attachments:
             if minify:
                 content = self.xmlsheets[0].to_js(self.name, '\n\n'.join([asset.minify() for asset in self.xmlsheets]))
             else:
                 content = '\n'.join(asset.to_js() for asset in self.xmlsheets)
-            return self.save_attachment('xml.js', content, inc=inc)
+
+            modules = list(set([asset.url.split("/" if "/static/" in asset.url else ".", 1)[0]
+                        for asset in (self.xmlsheets + self.javascripts) if asset.url]))
+            if modules:
+                js = [
+                    'odoo.define("base.ir.translation.%s", function (require) {' % self.name,
+                    '"use strict"',
+                    'var translation = require("web.translation");',
+                    '/* lang: %s, modules: %s */' % (lang, ','.join(modules)),
+                    'translation._t.database.set_bundle(%s)' % json.dumps(self.xml_translations(modules, lang)),
+                    '});'
+                ]
+                content = '%s\n\n%s' % (utf8(content), utf8('\n'.join(js)))
+
+            return self.save_attachment(type, content)
         return attachments[0]
 
     def css(self):
@@ -566,6 +612,37 @@ class XMLsheetAsset(WebAsset):
             datas = super(XMLsheetAsset, self)._fetch_content()
         except AssetError, e:
             return "console.error(%s);" % json.dumps(e.message)
+
+        if not self.bundle.env.context.get('lang'):
+            return datas
+
+        trans = {t['src']: t['value'] for t in self.bundle.env['ir.translation'].sudo().search_read(
+            [('comments', 'like', 'openerp-web'),
+             ('type', '=', 'code'),
+             ('name', 'like', self.url),
+             ('lang', '=', self.bundle.env.lang)],
+            ['src', 'value'], order="value ASC")}
+
+        missing_trans = set()
+        def callback(term):
+            if trans.get(term):
+                return trans[term]
+            if term not in trans and re.search(r'\w', term):
+                missing_trans.add(term)
+            return term
+        datas = xml_translate(callback, datas)
+
+        if missing_trans:
+            query = """ INSERT INTO ir_translation (lang, type, name, src, value, module, comments)
+                        SELECT l.code, 'code', %(name)s, %(src)s, %(src)s, %(module)s, 'openerp-web'
+                        FROM res_lang l
+                        WHERE l.active AND NOT EXISTS (
+                            SELECT 1 FROM ir_translation
+                            WHERE lang=l.code AND type='code' AND name=%(name)s AND src=%(src)s AND module=%(module)s
+                        );
+                    """
+            for src in missing_trans:
+                self.bundle.env.cr.execute(query, {'name': self.url, 'src': src, 'module': self.url.split("/", 1)[0]})
 
         return datas
 

@@ -37,7 +37,7 @@
 
     <t t-name="CalendarView.buttons">
         <div class="o_calendar_buttons">
-            <button t-if="widget.options.action_buttons !== false &amp;&amp; widget.is_action_enabled('create') &amp;&amp; ((widget.field_widget &amp;&amp; (widget.field_widget.open_popup_add)) || (!widget.field_widget))" type="button" class="o_calendar_button_new o_highlight"><t t-esc="widget.options.create_text || _t('Create')"/></button>
+            <button t-if="widget.options.action_buttons !== false &amp;&amp; widget.is_action_enabled('create') &amp;&amp; ((widget.field_widget &amp;&amp; (widget.field_widget.open_popup_add)) || (!widget.field_widget))" type="button" class="o_calendar_button_new o_highlight" t-esc="widget.options.create_text">Create</button>
 
             <button class="o_calendar_button_prev btn btn-sm btn-primary"><span class="fa fa-arrow-left"/></button>
             <button class="o_calendar_button_today btn btn-sm btn-primary">Today</button>
