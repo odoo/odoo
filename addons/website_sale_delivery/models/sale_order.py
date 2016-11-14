@@ -3,7 +3,6 @@
 import logging
 
 from odoo import api, fields, models, _
-from odoo.http import request
 from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -76,11 +75,7 @@ class SaleOrder(models.Model):
         # Following loop is done to avoid displaying delivery methods who are not available for this order
         # This can surely be done in a more efficient way, but at the moment, it mimics the way it's
         # done in delivery_set method of sale.py, from delivery module
-        user = request.env.user
-        if user.has_group('website.group_website_publisher') and user.has_group('sales_team.group_sale_manager'):
-            carrier_ids = DeliveryCarrier.search([]).ids
-        else:
-            carrier_ids = DeliveryCarrier.sudo().search(
+        carrier_ids = DeliveryCarrier.sudo().search(
             [('website_published', '=', True)]).ids
         for carrier_id in carrier_ids:
             carrier = DeliveryCarrier.browse(carrier_id)
