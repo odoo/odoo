@@ -261,6 +261,7 @@ class TestMessagePost(TestMail):
         self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'mass_mail',
             'default_model': 'mail.channel',
+            'default_use_active_domain': True,
             'active_ids': [self.group_pigs.id],
             'active_domain': [('name', 'in', ['%s' % self.group_pigs.name, '%s' % self.group_public.name])],
         }).sudo(self.user_employee).create({
@@ -270,3 +271,20 @@ class TestMessagePost(TestMail):
 
         self.assertEqual(self.group_pigs.message_ids[0].subject, 'From Composer Test')
         self.assertEqual(self.group_public.message_ids[0].subject, 'From Composer Test')
+
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_message_compose_mass_mail_no_active_domain(self):
+        self.env['mail.compose.message'].with_context({
+            'default_composition_mode': 'mass_mail',
+            'default_model': 'mail.channel',
+            'default_use_active_domain': False,
+            'active_ids': [self.group_pigs.id],
+            'active_domain': [('name', 'in', ['%s' % self.group_pigs.name, '%s' % self.group_public.name])],
+        }).sudo(self.user_employee).create({
+            'subject': 'From Composer Test',
+            'body': '${object.description}',
+        }).send_mail()
+
+        self.assertEqual(self.group_pigs.message_ids[0].subject, 'From Composer Test')
+        self.assertFalse(self.group_public.message_ids.ids)
