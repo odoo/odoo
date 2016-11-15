@@ -72,5 +72,6 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _get_display_price(self, product):
         if self.order_id.pricelist_id.discount_policy == 'without_discount':
-            return product.lst_price
+            return self.order_id.company_id.currency_id.compute(
+                product.lst_price, self.order_id.pricelist_id.currency_id)
         return super(SaleOrderLine, self)._get_display_price(product)

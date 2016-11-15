@@ -750,8 +750,8 @@ class StockMove(models.Model):
                         owner_id=pack_operation.owner_id.id, src_package_id=pack_operation.package_id.id,
                         dest_package_id=dest_package_id)
                     if redo_false_quants:
-                        false_quants_move = [x for x in move_rec_updateme.reserved_quant_ids if (not x.lot_id) and (x.owner_id.id == pack_operation.owner_id.id) \
-                                             and (x.location_id.id == pack_operation.location_id.id) and (x.package_id.id != pack_operation.package_id.id)]
+                        false_quants_move = [x for x in move_rec_updateme.reserved_quant_ids if (not x.lot_id) and (x.owner_id.id == pack_operation.owner_id.id) and
+                                             (x.location_id.id == pack_operation.location_id.id) and (x.package_id.id == pack_operation.package_id.id)]
         return True
 
     @api.multi
