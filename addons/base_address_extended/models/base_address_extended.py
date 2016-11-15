@@ -2,67 +2,82 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-from odoo import api, fields, models
 
-#address_pattern = re.compile('^(.*?),? ([0-9]+[a-zA-Z]*)([ -]+([0-9]+[a-zA-Z]*))?[ ]*$')
-#
-#
-#class ResCountryStateCity(models.Model):
-#    _name = 'res.country.state.city'
-#    _order = 'name'
-#
-#    name = fields.Char('City Name', required=True)
-#    state_id = fields.Many2one('res.country.state', 'State')
-#    country_id = fields.Many2one('res.country', 'Country', related='state_id.country_id', store=True, readonly=True)
-#    code = fields.Char('Code')
+from odoo import api, fields, models, _
 
 
-class PartnerAddress(models.Model):
+STREET_FIELDS = ('street_name', 'street_number', 'street_number2')
+
+
+class ResCountry(models.Model):
+    _inherit = 'res.country'
+
+    street_format = fields.Text(help="""You can state here the usual format to use for the \
+streets belonging to this country.\n\nYou can use the python-style string patern with all the field of the street \
+(for example, use '%(street_name)s, %(street_number)s' if you want to display the street name, followed by a coma and the house number)
+            \n%(street_name)s: the name of the street
+            \n%(street_number)s: the house number
+            \n%(street_number2)s: the door number""",
+            default='%(street_number)s/%(street_number2)s %(street_name)s', required=True)
+
+
+class Partner(models.Model):
     _inherit = ['res.partner']
     _name = 'res.partner'
 
-    street_name = fields.Char('Street Name', compute='_split_street', inverse='_compute_street', store=True)
-    street_number = fields.Char('House Number', compute='_split_street', inverse='_compute_street', store=True)
-    street_number2 = fields.Char('Door Number', compute='_split_street', inverse='_compute_street', store=True)
-
-    #city_id = fields.Many2one('res.country.state.city', 'City')
-    #city = fields.Char('City', related='city_id.name', store=True)
+    street_name = fields.Char('Street Name', compute='_split_street', inverse='_set_street', store=True)
+    street_number = fields.Char('House Number', compute='_split_street', inverse='_set_street', store=True)
+    street_number2 = fields.Char('Door Number', compute='_split_street', inverse='_set_street', store=True)
 
     @api.multi
-    def _compute_street(self):
+    def _set_street(self):
+        """Write the street field on the partners when one of the fields in STREET_FIELDS has been touched"""
         for partner in self:
-            adr = partner.street_name or ''
-            if partner.street_number:
-                if adr:
-                    adr += ', '
-                adr += partner.street_number
-            if partner.street_number2:
-                if adr:
-                    adr += '-'
-                adr += partner.street_number2
-            partner.street = adr
-
-    #@api.model
-    #def _address_fields(self):
-    #    return super(PartnerAddress, self)._address_fields() + ['street_raw', 'street_number1', 'street_number2', 'city_id']
+            street_format = partner.country_id.street_format or '%(street_number)s/%(street_number2)s %(street_name)s'
+            street_vals = {field: getattr(partner, field) for field in STREET_FIELDS}
+            partner.street = street_format % street_vals
 
     @api.multi
-    @api.depends('street', 'name')
+    @api.depends('street', 'country_id.street_format')
     def _split_street(self):
+        """Recompute the fields of STREET_FIELDS when a write is made on the street of a partner"""
         for partner in self:
             if not partner.street:
                 partner.street_name = ''
                 partner.street_number = ''
                 partner.street_number2= ''
                 continue
-            street_number = street_number2 = ''
-            adr = partner.street.split(',')
-            partner.street_name = adr[:1][0]
-            if len(adr) > 1:
-                numbers = adr[1].strip().split('-')
-                street_number = numbers[:1][0]
-                street_number2 = len(numbers) > 1 and numbers[1:][0] or ''
-            partner.street_number = street_number
-            partner.street_number2 = street_number2
 
+            street_format = partner.country_id.street_format or '%(street_number)s/%(street_number2)s %(street_name)s'
+            vals = {}
+            previous_pos = 0
+            street_raw = partner.street
+            field_name = None
+            #iter on fields in street_format, detected as '%(' + <field_name> + ')s'
+            for re_match in re.finditer('\\%\\(\w+\\)s', street_format):
+                field_pos = re_match.start()
+                #get the substring between 2 fields to split street_raw and isolate the value of a field
+                splitting_string = street_format[previous_pos:field_pos]
+                skip_field = False
+                if splitting_string and field_name:
+                    #maxsplit set to 1 to unpack only the first element and let the rest untouched
+                    tmp = street_raw.split(splitting_string, 1)
+                    if len(tmp) > 1:
+                        field_value, street_raw = tmp
+                        vals[field_name] = field_value
+                    else:
+                        #manage optional fields: if the field is not found, we skip it and the next value will
+                        #be assigned to the previous field instead of this one.
+                        skip_field = True
+                if not skip_field:
+                    #[2:-2] is used to remove the extra chars ['%', '(', ')', 's']
+                    field_name = re_match.group()[2:-2]
+                if field_name not in STREET_FIELDS:
+                    raise UserError(_("Unrecognized field %s in street format.") % (field_name))
+                previous_pos = re_match.end()
 
+            #the last field value is what remains in street_format minus eventual trailing chars in street_format
+            vals[field_name] = street_raw.rstrip(street_format[previous_pos:])
+            #assign the values to the fields. Note that a write(vals) would cause a recursion since it would bypass the cache
+            for k, v in vals.items():
+                setattr(partner, k, v)
