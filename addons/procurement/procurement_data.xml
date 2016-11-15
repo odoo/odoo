@@ -28,5 +28,11 @@
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
         </record>
+
+        <record model="mail.group" id="group_mrp_scheduler_status">
+            <field name="name">MRP scheduler summary</field>
+            <field name="group_ids" eval="[(4, ref('stock.group_stock_manager'))]"/>
+            <field name="description">Summary of the MRP scheduler</field>
+        </record>
     </data>
 </openerp>
