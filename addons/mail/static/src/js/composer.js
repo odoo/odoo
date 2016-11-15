@@ -571,51 +571,67 @@ var BasicComposer = Widget.extend({
 
     // Attachments
     on_attachment_change: function(event) {
+        var self = this
         var $target = $(event.target);
+        var filesList = $target.get("0").files;
+        var attachments = [];
         if ($target.val() !== '') {
-            var filename = $target.val().replace(/.*[\\\/]/,'');
+            var fname = [];
+            _.each(filesList,function(f){
+                fname.push(f.name);
+            });
             // if the files exits for this answer, delete the file before upload
-            var attachments = [];
-            for (var i in this.get('attachment_ids')) {
-                if ((this.get('attachment_ids')[i].filename || this.get('attachment_ids')[i].name) === filename) {
-                    if (this.get('attachment_ids')[i].upload) {
-                        return false;
+            _.each(this.get('attachment_ids'), function(attachment) {
+               var flag = true;
+                for (var j in fname) {
+                    if (attachment.filename === fname[j]) {
+                        var flag = false;
+                        if (attachment.upload) {
+                            return false;
+                        }
+                        self.AttachmentDataSet.unlink([attachment.id]);
                     }
-                    this.AttachmentDataSet.unlink([this.get('attachment_ids')[i].id]);
-                } else {
-                    attachments.push(this.get('attachment_ids')[i]);
                 }
-            }
+                if (flag){
+                    attachments.push(attachment);
+                }
+            });
+
             // submit filename
             this.$('form.o_form_binary_form').submit();
             this.$attachment_button.prop('disabled', true);
-
-            attachments.push({
-                'id': 0,
-                'name': filename,
-                'filename': filename,
-                'url': '',
-                'upload': true,
-                'mimetype': '',
+            _.each(filesList, function(file, index) {
+                attachments.push({
+                    'id': index,
+                    'name': file.name,
+                    'filename': file.name,
+                    'url': '',
+                    'upload': true,
+                    'mimetype': file.type,
+                });
             });
             this.set('attachment_ids', attachments);
         }
     },
     on_attachment_loaded: function(event, result) {
         var attachment_ids = [];
-        if (result.error || !result.id ) {
+        if (result.error) {
             this.do_warn(result.error);
             attachment_ids = _.filter(this.get('attachment_ids'), function (val) { return !val.upload; });
         } else {
-            _.each(this.get('attachment_ids'), function(a) {
-                if (a.filename === result.filename && a.upload) {
-                    attachment_ids.push({
-                        'id': result.id,
-                        'name': result.name || result.filename,
-                        'filename': result.filename,
-                        'mimetype': result.mimetype,
-                        'url': session.url('/web/content', {'id': result.id, download: true}),
-                    });
+           _.each(this.get('attachment_ids'), function(a) {
+                if (a.upload) {
+                _.each(result.id, function(res,i)  {
+                    if (a.filename == result.filename[i]) {
+                        attachment_ids.push({
+                            'id': result.id[i],
+                            'name': result.filename[i],
+                            'filename': result.filename[i],
+                            'mimetype': result.mimetype[i],
+                            'url': session.url('/web/content', {'id': result.id[i],download: true}),
+                        });
+                    }
+                });
                 } else {
                     attachment_ids.push(a);
                 }

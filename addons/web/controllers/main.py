@@ -23,6 +23,7 @@ import werkzeug.wrappers
 import zlib
 from xml.etree import ElementTree
 from cStringIO import StringIO
+from collections import defaultdict
 
 
 import odoo
@@ -1026,24 +1027,28 @@ class Binary(http.Controller):
     @http.route('/web/binary/upload_attachment', type='http', auth="user")
     @serialize_exception
     def upload_attachment(self, callback, model, id, ufile):
+        attachment = {}
+        args = {}
+        multiple_files = defaultdict(set)
+        multiple_files['ufile'] = request.httprequest.files.getlist('ufile')
         Model = request.env['ir.attachment']
         out = """<script language="javascript" type="text/javascript">
                     var win = window.top.window;
                     win.jQuery(win).trigger(%s, %s);
                 </script>"""
         try:
-            attachment = Model.create({
-                'name': ufile.filename,
-                'datas': base64.encodestring(ufile.read()),
-                'datas_fname': ufile.filename,
-                'res_model': model,
-                'res_id': int(id)
-            })
-            args = {
-                'filename': ufile.filename,
-                'mimetype': ufile.content_type,
-                'id':  attachment.id
-            }
+            for ufile, files in multiple_files.items():
+                for f in files:
+                    attachment = Model.create({
+                        'name': f.filename,
+                        'datas': base64.encodestring(f.read()),
+                        'datas_fname': f.filename,
+                        'res_model': model,
+                        'res_id': int(id),
+                        })
+                args.setdefault('filename', []).append(f.filename)
+                args.setdefault('mimetype', []).append(f.content_type)
+                args.setdefault('id', []).append(attachment.id)
         except Exception:
             args = {'error': _("Something horrible happened")}
             _logger.exception("Fail to upload attachment %s" % ufile.filename)
