@@ -134,12 +134,15 @@ class account_register_payments(models.TransientModel):
             raise UserError(_("In order to pay multiple invoices at once, they must use the same currency."))
 
         total_amount = sum(inv.residual * MAP_INVOICE_TYPE_PAYMENT_SIGN[inv.type] for inv in invoices)
+        communication = ' '.join([ref for ref in invoices.mapped('reference') if ref])
+
         rec.update({
             'amount': abs(total_amount),
             'currency_id': invoices[0].currency_id.id,
             'payment_type': total_amount > 0 and 'inbound' or 'outbound',
             'partner_id': invoices[0].commercial_partner_id.id,
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
+            'communication': communication,
         })
         return rec
 
