@@ -18,9 +18,9 @@ class ProjectTaskType(models.Model):
         'mail.template',
         string='Rating Email Template',
         domain=lambda self: self._default_domain_rating_template_id(),
-        help="Select an email template. An email will be sent to the customer when the task reach this step.")
+        help="If set and if the project's rating configuration is 'Rating when changing stage', then an email will be sent to the customer when the task reaches this step.")
     auto_validation_kanban_state = fields.Boolean('Automatic kanban status', default=False,
-        help="Automatically modify the kanban state when the customer reply to the feedback for this stage.\n"
+        help="Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
             " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
             " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n")
 
