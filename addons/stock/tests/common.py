@@ -32,11 +32,12 @@ class TestStockCommon(common.TransactionCase):
         self.categ_unit = self.ModelDataObj.xmlid_to_res_id('product.product_uom_categ_unit')
         self.categ_kgm = self.ModelDataObj.xmlid_to_res_id('product.product_uom_categ_kgm')
 
-        # Product Created A, B, C, D
+        # Product Created A, B, C, D, E
         self.productA = self.ProductObj.create({'name': 'Product A', 'type': 'product'})
         self.productB = self.ProductObj.create({'name': 'Product B', 'type': 'product'})
         self.productC = self.ProductObj.create({'name': 'Product C', 'type': 'product'})
         self.productD = self.ProductObj.create({'name': 'Product D', 'type': 'product'})
+        self.productE = self.ProductObj.create({'name': 'Product E', 'type': 'product'})
 
         # Configure unit of measure.
         self.uom_kg = self.UomObj.create({
