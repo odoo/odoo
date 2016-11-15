@@ -38,7 +38,7 @@
                 </div>
             </t>
             <div t-if="issues" class="panel panel-default">
-                <table class="table table-hover status_table">
+                <div class="table-responsive"><table class="table table-hover status_table">
                     <thead>
                         <tr class="active">
                             <th>Issue</th>
@@ -57,7 +57,7 @@
                             </td>
                         </tr>
                     </t>
-                </table>
+                </table></div>
             </div>
             <div t-if="pager" class="o_portal_pager text-center">
                 <t t-call="website.pager"/>
