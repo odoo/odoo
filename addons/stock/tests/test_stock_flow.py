@@ -1147,3 +1147,50 @@ class TestStockFlow(TestStockCommon):
         quants = self.StockQuantObj.search([('product_id', '=', lotproduct.id), ('location_id', '=', self.stock_location), ('lot_id', '=', False)])
         total_qty = sum([quant.qty for quant in quants])
         self.assertEqual(total_qty, 0, 'Expecting 0 units lot of lotproduct, but we got %.4f on location stock!' % (total_qty))
+
+    def test_30_reconcile_negative_quants(self):
+        self.assertFalse(self.StockQuantObj.search([('product_id', '=', self.productA.id)]))
+        picking = self.PickingObj.create(
+            {'move_lines': [(0,0, {
+                'product_id': self.productA.id,
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+                'product_uom_qty': 1,
+                'product_uom': self.uom_unit.id,
+                'name': 'test',
+            })],
+             'picking_type_id': self.picking_type_out}
+        )
+        picking.force_assign()
+        picking.do_prepare_partial()
+        picking.action_done()
+        quant = self.StockQuantObj.search(
+            [('product_id', '=', self.productA.id),
+             ('location_id', '=', self.stock_location)])
+        self.assertEqual(quant.qty, -1)
+        quant = self.StockQuantObj.search(
+            [('product_id', '=', self.productA.id),
+             ('location_id', '=', self.customer_location)])
+        self.assertEqual(quant.qty, 1)
+        return_picking = self.PickingObj.create(
+            {'move_lines': [(0,0, {
+                'product_id': self.productA.id,
+                'location_dest_id': self.stock_location,
+                'location_id': self.customer_location,
+                'product_uom_qty': 1,
+                'product_uom': self.uom_unit.id,
+                'name': 'test',
+            })],
+             'picking_type_id': self.picking_type_in}
+        )
+        return_picking.action_assign()
+        return_picking.do_prepare_partial()
+        return_picking.action_done()
+        quant = self.StockQuantObj.search(
+            [('product_id', '=', self.productA.id),
+             ('location_id', '=', self.customer_location)])
+        self.assertFalse(quant)
+        quant = self.StockQuantObj.search(
+            [('product_id', '=', self.productA.id),
+             ('location_id', '=', self.stock_location)])
+        self.assertFalse(quant, "Negative quant was not reconciled")

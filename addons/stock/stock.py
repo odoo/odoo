@@ -572,7 +572,6 @@ class stock_quant(osv.osv):
             dom += [('lot_id', '=', quant.lot_id.id)]
         dom += [('owner_id', '=', quant.owner_id.id)]
         dom += [('package_id', '=', quant.package_id.id)]
-        dom += [('id', '!=', quant.propagated_from_id.id)]
         quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, dom, context=context)
         product_uom_rounding = quant.product_id.uom_id.rounding
         for quant_neg, qty in quants:
