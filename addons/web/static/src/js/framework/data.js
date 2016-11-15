@@ -1091,10 +1091,54 @@ function compute_domain (expr, fields) {
         switch (op.toLowerCase()) {
             case '=':
             case '==':
+                if (_.isArray(field_value)) {
+                    if (val == true) {
+                        if (field_value.length != 0) {
+                            stack.push(true);
+                            break;
+                        }
+                        if (field_value.length == 0) {
+                            stack.push(false);
+                            break;
+                        }
+                    }
+                    if (val == false) {
+                        if (field_value.length == 0) {
+                            stack.push(true);
+                            break;
+                        }
+                        if (field_value.length != 0) {
+                            stack.push(false);
+                            break;
+                        }
+                    }
+                }
                 stack.push(_.isEqual(field_value, val));
                 break;
             case '!=':
             case '<>':
+                if (_.isArray(field_value)) {
+                    if (val == true) {
+                        if (field_value.length != 0) {
+                            stack.push(false);
+                            break;
+                        }
+                        if (field_value.length == 0) {
+                            stack.push(true);
+                            break;
+                        }
+                    }
+                    if (val == false) {
+                        if (field_value.length == 0) {
+                            stack.push(false);
+                            break;
+                        }
+                        if (field_value.length != 0) {
+                            stack.push(true);
+                            break;
+                        }
+                    }
+                }
                 stack.push(!_.isEqual(field_value, val));
                 break;
             case '<':
@@ -1116,6 +1160,29 @@ function compute_domain (expr, fields) {
             case 'not in':
                 if (!_.isArray(val)) val = [val];
                 stack.push(!_(val).contains(field_value));
+                break;
+            case 'child_of':
+                if ((field_value.length == 0) && (val.length == 0)) {
+                    stack.push(true);
+                    break;
+                }
+                if (field_value.length == 0) {
+                    stack.push(false);
+                    break;
+                }
+                if (!_.isArray(val)) val = [val];
+                var itens_esquerda = field_value[0][2];
+                var itens_direita = val;
+                var qtd_direita = itens_direita.length;
+                var encontrou = false;
+
+                while (qtd_direita--) {
+                    var item_direita = itens_direita[qtd_direita];
+                    encontrou = _(itens_esquerda).contains(item_direita);
+                    if (encontrou) break;
+                }
+
+                stack.push(encontrou);
                 break;
             default:
                 console.warn(
