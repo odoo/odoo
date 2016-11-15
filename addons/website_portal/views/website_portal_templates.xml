@@ -92,19 +92,21 @@
             </div>
             <div id="wrap">
                 <div class="container mb64">
-                    <div class="col-md-8">
-                        <t t-raw="0"/>
-                    </div>
-                    <div id="o_my_sidebar" class="col-md-3 col-md-offset-1 o_my_sidebar">
-                        <div class="o_my_contact" t-if="sales_rep">
-                            <t t-call="website_portal.contact"/>
+                    <div class="row">
+                        <div class="col-md-9 col-lg-8">
+                            <t t-raw="0"/>
                         </div>
-                        <div class="o_my_details">
-                            <h3 class="page-header">Your Details <a href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
-                            <div t-field="user.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
-                        </div>
-                        <div class="o_my_archives" t-if="archive_groups">
-                            <t t-call="website_portal.portal_archive_groups"/>
+                        <div id="o_my_sidebar" class="col-md-3 col-lg-offset-1 o_my_sidebar">
+                            <div class="o_my_contact" t-if="sales_rep">
+                                <t t-call="website_portal.contact"/>
+                            </div>
+                            <div class="o_my_details">
+                                <h3 class="page-header">Your Details <a href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
+                                <div t-field="user.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
+                            </div>
+                            <div class="o_my_archives" t-if="archive_groups">
+                                <t t-call="website_portal.portal_archive_groups"/>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -71,7 +71,7 @@
             <p>There are currently no quotes for your account.</p>
         </t>
         <t t-if="quotations">
-            <table class="table table-hover o_my_status_table">
+            <div class="table-responsive"><table class="table table-hover o_my_status_table">
                 <thead>
                   <tr class="active">
                       <th>Quotation #</th>
@@ -100,7 +100,7 @@
                         </td>
                     </tr>
                 </t>
-            </table>
+            </table></div>
             <div t-if="pager" class="o_portal_pager text-center">
               <t t-call="website.pager"/>
             </div>
@@ -118,7 +118,7 @@
             <p>There are currently no orders for your account.</p>
         </t>
         <t t-if="orders">
-            <table class="table table-hover o_my_status_table">
+            <div class="table-responsive"><table class="table table-hover o_my_status_table">
                 <thead>
                   <tr class="active">
                     <th>Sale Order #</th>
@@ -147,7 +147,7 @@
                         <td><span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/></td>
                     </tr>
                 </t>
-            </table>
+            </table></div>
             <div t-if="pager" class="o_portal_pager text-center">
               <t t-call="website.pager"/>
             </div>
@@ -165,7 +165,7 @@
             <p>There are currently no invoices for your account.</p>
         </t>
         <t t-if="invoices">
-            <table class="table table-hover o_my_status_table">
+            <div class="table-responsive"><table class="table table-hover o_my_status_table">
                 <thead>
                   <tr class="active">
                     <th>Invoice #</th>
@@ -200,7 +200,7 @@
                         <td><span t-field="invoice.residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
                     </tr>
                 </t>
-            </table>
+            </table></div>
             <div t-if="pager" class="o_portal_pager text-center">
                 <t t-call="website.pager"/>
             </div>
