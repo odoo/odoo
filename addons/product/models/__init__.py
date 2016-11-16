@@ -5,6 +5,7 @@
 
 from . import base_config_settings
 from . import decimal_precision
+from . import ir_http
 
 # don't try to be a good boy and sort imports alphabetically.
 # `product.template` should be initialised before `product.product`

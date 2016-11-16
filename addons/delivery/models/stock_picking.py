@@ -2,9 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
-
 from odoo.addons import decimal_precision as dp
+from odoo.exceptions import UserError
 
 
 class StockQuantPackage(models.Model):
@@ -47,13 +46,6 @@ class StockMoveLine(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    def _default_uom(self):
-        weight_uom_id = self.env.ref('product.product_uom_kgm', raise_if_not_found=False)
-        if not weight_uom_id:
-            uom_categ_id = self.env.ref('product.product_uom_categ_kgm').id
-            weight_uom_id = self.env['product.uom'].search([('category_id', '=', uom_categ_id), ('factor', '=', 1)], limit=1)
-        return weight_uom_id
-
     @api.one
     @api.depends('move_line_ids')
     def _compute_packages(self):
@@ -86,7 +78,6 @@ class StockPicking(models.Model):
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
     carrier_tracking_url = fields.Char(string='Tracking URL', compute='_compute_carrier_tracking_url')
     number_of_packages = fields.Integer(string='Number of Packages', copy=False)
-    weight_uom_id = fields.Many2one('product.uom', string='Unit of Measure', required=True, readonly="1", help="Unit of measurement for Weight", default=_default_uom)
     package_ids = fields.Many2many('stock.quant.package', compute='_compute_packages', string='Packages')
     weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight')
     shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight')

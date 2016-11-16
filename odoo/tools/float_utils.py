@@ -179,6 +179,18 @@ def float_split(value, precision_digits):
     units, cents = float_split_str(value, precision_digits)
     return int(units), int(cents)
 
+def float_get_decimals(precision):
+    """ returns the number of decimals digits from a precision value.
+              precision    return
+        E.g.:     0.001 ->      3
+                 0.0007 ->      4
+                 0.0777 ->      2
+                     10 ->      0
+    """
+    if 0 < precision < 1:
+        return int(math.ceil(math.log10(1.0 / precision)))
+    return 0
+
 
 if __name__ == "__main__":
 

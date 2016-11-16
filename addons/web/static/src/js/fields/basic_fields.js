@@ -477,11 +477,120 @@ var FieldDateTime = FieldDate.extend({
     },
 });
 
-var FieldMonetary = InputField.extend({
-    className: 'o_field_monetary o_field_number',
+var MeasureField = InputField.extend({
+    className: 'o_field_measure o_field_number',
+    supportedFieldTypes: ['float'],
+    resetOnAnyFieldChange: true, // likely have to listen to measure changes
+
+    /**
+     * Abstract widget to display float fields that represent measured values.
+     * They need to add the symbol of the measurement ($, €, kg, m³, ...).
+     *
+     * These are displayed differently than other inputs in edit mode:
+     * they are defined by a div containing the input and a span with the symbol.
+     *
+     * If no measure is defined, we fallback to the default input behavior
+     * instead.
+     *
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        this._setMeasure();
+        this.formatType = 'measure';
+
+        if (this.mode === 'edit') {
+            this.tagName = 'div';
+            this.className += ' o_input';
+
+            // use the formatFloat function in edit
+            this.formatType = 'float';
+        }
+
+        this.formatOptions.measure = this.measure;
+        this.formatOptions.digits = [16, 2];
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * For measured fields, 0 is a valid value.
+     *
+     * @override
+     */
+    isSet: function () {
+        return this.value === 0 || this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * For measured fields, the input is inside a div, alongside a span
+     * containing the measurement label ($, €, kg, m³, ...).
+     *
+     * @override
+     * @private
+     */
+    _renderEdit: function () {
+        this.$el.empty();
+
+        // Prepare and add the input
+        this._prepareInput().appendTo(this.$el);
+
+        if (this.measure) {
+            // Prepare and add the measure symbol
+            var $measure = $('<span>', {text: this.measure.symbol});
+            if (this.measure.position === "after") {
+                this.$el.append($measure);
+            } else {
+                this.$el.prepend($measure);
+            }
+        }
+    },
+    /**
+     * @override
+     * @private
+     */
+    _renderReadonly: function () {
+        this.$el.html(this._formatValue(this.value));
+    },
+    /**
+     * Re-gets the measure as its value may have changed.
+     * @see MeasuredField.resetOnAnyFieldChange
+     *
+     * @override
+     * @private
+     */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        this._setMeasure();
+    },
+    /**
+     * Deduces the measure description from the field options and view state.
+     * The description is then available at this.measure.
+     *
+     * @abstract
+     * @private
+     */
+    _setMeasure: function () {
+        // measure example given:
+        /** this.measure = {
+         *     symbol: 'Volt',
+         *     digits: [69, 2],
+         *     position: 'after',
+         * };
+         */
+    },
+})
+
+var FieldMonetary = MeasureField.extend({
     tagName: 'span',
     supportedFieldTypes: ['float', 'monetary'],
-    resetOnAnyFieldChange: true, // Have to listen to currency changes
 
     /**
      * Float fields using a monetary widget have an additional currency_field
@@ -500,31 +609,10 @@ var FieldMonetary = InputField.extend({
     init: function () {
         this._super.apply(this, arguments);
 
-        this._setCurrency();
-
-        if (this.mode === 'edit') {
-            this.tagName = 'div';
-            this.className += ' o_input';
-
-            // use the formatFloat function in edit
-            this.formatType = 'float';
+        if (this.mode !== 'edit') {
+            this.formatType = 'monetary';
         }
-
-        this.formatOptions.currency = this.currency;
-        this.formatOptions.digits = [16, 2];
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * For monetary fields, 0 is a valid value.
-     *
-     * @override
-     */
-    isSet: function () {
-        return this.value === 0 || this._super.apply(this, arguments);
+        this.formatOptions.currency = this.measure;
     },
 
     //--------------------------------------------------------------------------
@@ -532,56 +620,16 @@ var FieldMonetary = InputField.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * For monetary fields, the input is inside a div, alongside a span
-     * containing the currency symbol.
-     *
-     * @override
-     * @private
-     */
-    _renderEdit: function () {
-        this.$el.empty();
-
-        // Prepare and add the input
-        this._prepareInput().appendTo(this.$el);
-
-        if (this.currency) {
-            // Prepare and add the currency symbol
-            var $currencySymbol = $('<span>', {text: this.currency.symbol});
-            if (this.currency.position === "after") {
-                this.$el.append($currencySymbol);
-            } else {
-                this.$el.prepend($currencySymbol);
-            }
-        }
-    },
-    /**
-     * @override
-     * @private
-     */
-    _renderReadonly: function () {
-        this.$el.html(this._formatValue(this.value));
-    },
-    /**
-     * Re-gets the currency as its value may have changed.
-     * @see FieldMonetary.resetOnAnyFieldChange
-     *
-     * @override
-     * @private
-     */
-    _reset: function () {
-        this._super.apply(this, arguments);
-        this._setCurrency();
-    },
-    /**
      * Deduces the currency description from the field options and view state.
-     * The description is then available at this.currency.
+     * The description is then available at this.measure.
      *
+     * @override
      * @private
      */
-    _setCurrency: function () {
+    _setMeasure: function () {
         var currencyField = this.nodeOptions.currency_field || this.field.currency_field || 'currency_id';
         var currencyID = this.record.data[currencyField] && this.record.data[currencyField].res_id;
-        this.currency = session.get_currency(currencyID);
+        this.measure = session.get_currency(currencyID);
     },
 });
 
@@ -2401,6 +2449,7 @@ return {
     InputField: InputField,
     AttachmentImage: AttachmentImage,
     LabelSelection: LabelSelection,
+    MeasureField: MeasureField,
     StateSelectionWidget: StateSelectionWidget,
     FavoriteWidget: FavoriteWidget,
     PriorityWidget: PriorityWidget,

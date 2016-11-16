@@ -2028,22 +2028,22 @@ QUnit.module('basic_fields', {
             },
         });
 
-        assert.strictEqual(form.$('.o_field_monetary').html(), "$&nbsp;9.10",
+        assert.strictEqual(form.$('.o_field_measure').html(), "$&nbsp;9.10",
             "readonly value should contain the currency");
 
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('.o_field_monetary > input').val(), "9.10",
+        assert.strictEqual(form.$('.o_field_measure > input').val(), "9.10",
             "input value in edition should only contain the value, without the currency");
 
         form.$('input[type="checkbox"]').click(); // Change the field on which the monetary depends
-        assert.strictEqual(form.$('.o_field_monetary > input').length, 1,
+        assert.strictEqual(form.$('.o_field_measure > input').length, 1,
             "After the onchange, the monetary <input/> should not have been duplicated");
 
         var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
         form.$('.o_field_many2one input').click();
         $dropdown.find('li:not(.o_m2o_dropdown_option):last').mouseenter().click();
-        assert.strictEqual(form.$('.o_field_monetary > span').html(), "€",
+        assert.strictEqual(form.$('.o_field_measure > span').html(), "€",
             "After currency change, the monetary field currency should have been updated");
 
         form.destroy();
@@ -2074,7 +2074,7 @@ QUnit.module('basic_fields', {
             },
         });
 
-        assert.strictEqual(form.$('.o_field_monetary').html(), "9.10&nbsp;€",
+        assert.strictEqual(form.$('.o_field_measure').html(), "9.10&nbsp;€",
             "field monetary should be formatted with correct currency");
 
         form.destroy();

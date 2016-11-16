@@ -10,8 +10,7 @@
                       context="{'form_view_ref':'delivery.product_packaging_delivery_form'}"/>
                     <label for="shipping_weight" attrs="{'invisible': [('delivery_packaging_id', '=', False)]}"/>
                     <div class="o_row" attrs="{'invisible': [('delivery_packaging_id', '=', False)]}">
-                        <field name="shipping_weight"/>
-                        <span>kg</span>
+                        <field name="shipping_weight" widget="weight"/>
                     </div>
                 </group>
                 <footer>
