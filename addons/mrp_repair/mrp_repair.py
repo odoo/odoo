@@ -141,7 +141,16 @@ class mrp_repair(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Delivery Location', readonly=True, required=True, states={'draft': [('readonly', False)], 'confirmed': [('readonly', True)]}),
         'lot_id': fields.many2one('stock.production.lot', 'Repaired Lot', domain="[('product_id','=', product_id)]", help="Products repaired are all belonging to this lot", oldname="prodlot_id"),
         'guarantee_limit': fields.date('Warranty Expiration', states={'confirmed': [('readonly', True)]}),
-        'operations': fields.one2many('mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True, states={'draft': [('readonly', False)]}, copy=True),
+        'operations': fields.one2many(
+            'mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True,
+            states={
+                'draft': [('readonly', False)],
+                'confirmed': [('readonly', False)],
+                'under_repair': [('readonly', False)],
+                'ready': [('readonly', False)],
+                '2binvoiced': [('readonly', False)],
+                'invoice_except': [('readonly', False)],},
+            copy=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', help='Pricelist of the selected partner.'),
         'partner_invoice_id': fields.many2one('res.partner', 'Invoicing Address'),
         'invoice_method': fields.selection([
