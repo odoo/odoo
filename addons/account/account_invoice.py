@@ -810,8 +810,7 @@ class account_invoice(models.Model):
             if not inv.date_invoice:
                 # FORWARD-PORT UP TO SAAS-6
                 if inv.currency_id != company_currency and inv.tax_line:
-                    raise except_orm(
-                        _('Warning!'),
+                    raise UserError(
                         _('No invoice date!'
                             '\nThe invoice currency is not the same than the company currency.'
                             ' An invoice date is required to determine the exchange rate to apply. Do not forget to update the taxes!'
