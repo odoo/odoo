@@ -9,6 +9,46 @@
                     <field name="company_share_product"/>
                     <label string="Common Product Catalog" class="o_light_label" for="company_share_product"/>
                 </xpath>
+
+                <div id="units_of_measure" position="replace">
+                    <h2>Displayed Units of Measures</h2>
+                    <div class="row mt16 o_settings_container" id="units_of_measure">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label string="Weight Unit of Measure"/>
+                                <div class="text-muted">
+                                    By default, weigths will be displayed in this unit of measure.
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="weight_uom_id" string="Weight Measure" class="col-xs-3 col-md-3 o_light_label"/>
+                                        <field name="weight_uom_id" class="oe_inline" options="{'no_create_edit': True, 'no_open': True}" required="1"/>
+                                    </div>
+                                </div>
+                                <div class="content-group">
+                                    <button name="%(product.product_uom_form_action)d" icon="fa-arrow-right" type="action" string="Units Of Measure" class="btn-link"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label string="Volume Unit of Measure"/>
+                                <div class="text-muted">
+                                    By default, volumes will be displayed in this unit of measure.
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label for="volume_uom_id" string="Volume Measure" class="col-xs-3 col-md-3 o_light_label"/>
+                                        <field name="volume_uom_id" class="oe_inline" options="{'no_create_edit': True, 'no_open': True}" required="1"/>
+                                    </div>
+                                </div>
+                                <div class="content-group">
+                                    <button name="%(product.product_uom_form_action)d" icon="fa-arrow-right" type="action" string="Units Of Measure" class="btn-link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </field>
         </record>
 </odoo>
