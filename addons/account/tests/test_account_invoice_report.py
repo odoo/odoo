@@ -1,8 +1,8 @@
-from openerp.tests.common import SingleTransactionCase
+from openerp.tests.common import TransactionCase
 import time
 
 
-class TestInvoiceAnalysis(SingleTransactionCase):
+class TestInvoiceAnalysis(TransactionCase):
     def setUp(self):
         super(TestInvoiceAnalysis, self).setUp()
         self.account_invoice_model = self.env['account.invoice']
@@ -129,4 +129,6 @@ class TestInvoiceAnalysis(SingleTransactionCase):
         self.assertEqual(invoice_report_line.user_currency_price_total, 76.42)
         # CHF total
         self.assertEqual(invoice_report_line.price_total, 100)
+        self.assertEqual(
+            self.env.ref('base.res_partner_8').total_invoiced, 200)
 
