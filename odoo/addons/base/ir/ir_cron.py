@@ -22,7 +22,6 @@ def str2tuple(s):
     return safe_eval('tuple(%s)' % (s or ''))
 
 _intervalTypes = {
-    'work_days': lambda interval: relativedelta(days=interval),
     'days': lambda interval: relativedelta(days=interval),
     'hours': lambda interval: relativedelta(hours=interval),
     'weeks': lambda interval: relativedelta(days=7*interval),
@@ -49,7 +48,6 @@ class ir_cron(models.Model):
     interval_number = fields.Integer(default=1, help="Repeat every x.")
     interval_type = fields.Selection([('minutes', 'Minutes'),
                                       ('hours', 'Hours'),
-                                      ('work_days', 'Work Days'),
                                       ('days', 'Days'),
                                       ('weeks', 'Weeks'),
                                       ('months', 'Months')], string='Interval Unit', default='months')
