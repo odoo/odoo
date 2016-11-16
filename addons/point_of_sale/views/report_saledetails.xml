@@ -62,11 +62,13 @@
                 <thead><tr>
                     <th>Name</th>
                     <th>Total</th>
+                    <th>On Bruto</th>
                 </tr></thead>
                 <tbody>
                 <tr t-foreach='taxes' t-as='tax'>
                     <td><t t-esc="tax['name']" /></td>
                     <td><t t-esc="tax['total']" /></td>
+                    <td><t t-esc="tax['related']" /></td>
                 </tr>
                 </tbody>
             </table>
