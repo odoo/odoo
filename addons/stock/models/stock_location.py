@@ -165,7 +165,7 @@ class Route(models.Model):
 class PushedFlow(models.Model):
     _name = "stock.location.path"
     _description = "Pushed Flow"
-    _order = "name"
+    _order = "sequence, name"
 
     name = fields.Char('Operation Name', required=True)
     company_id = fields.Many2one(
