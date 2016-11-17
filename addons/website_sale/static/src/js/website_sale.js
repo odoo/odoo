@@ -349,7 +349,7 @@ odoo.define('website_sale.website_sale', function (require) {
                                 //$("input[name='phone']").attr('placeholder', data.phone_code !== 0 ? '+'+ data.phone_code : '');
 
                                 // populate states and display
-                                var selectStates = $("select[name='state_id']");
+                                var selectStates = $("select[name='state_id']:visible");
                                 // dont reload state at first loading (done in qweb)
                                 if (selectStates.data('init')===1) {
                                     selectStates.data('init', 0);
