@@ -4224,22 +4224,31 @@ class BaseModel(object):
 
         parents_changed = []
         parent_order = self._parent_order or self._order
-        if self._parent_store and (self._parent_name in vals):
+        if self._parent_store:
             # The parent_left/right computation may take up to
             # 5 seconds. No need to recompute the values if the
-            # parent is the same.
+            # parent and order field are the same.
             # Note: to respect parent_order, nodes must be processed in
             # order, so ``parents_changed`` must be ordered properly.
-            parent_val = vals[self._parent_name]
-            if parent_val:
-                query = "SELECT id FROM %s WHERE id IN %%s AND (%s != %%s OR %s IS NULL) ORDER BY %s" % \
-                                (self._table, self._parent_name, self._parent_name, parent_order)
-                cr.execute(query, (tuple(ids), parent_val))
-            else:
-                query = "SELECT id FROM %s WHERE id IN %%s AND (%s IS NOT NULL) ORDER BY %s" % \
-                                (self._table, self._parent_name, parent_order)
-                cr.execute(query, (tuple(ids),))
-            parents_changed = map(operator.itemgetter(0), cr.fetchall())
+            query = "SELECT id FROM %s WHERE id IN %%s" % (self._table,)
+            query_params = [tuple(ids)]
+            query_clause = []
+            field_names = [self._parent_name]
+            for param in parent_order.split(','):
+                field_names.append(param.strip())
+            for field_name in field_names:
+                if field_name in vals:
+                    field_value = vals[field_name]
+                    if field_value:
+                        query_clause.append("%s != %%s OR %s IS NULL" % (field_name, field_name))
+                        query_params.append(field_value)
+                    else:
+                        query_clause.append("%s IS NOT NULL" % field_name)
+            if query_clause:
+                query_clause = ' OR '.join(query_clause)
+                query += ' AND (' + query_clause + ')' + " ORDER BY %s" % parent_order
+                cr.execute(query, tuple(query_params))
+                parents_changed = map(operator.itemgetter(0), cr.fetchall())
 
         upd0 = []
         upd1 = []
@@ -4337,17 +4346,15 @@ class BaseModel(object):
             if self.pool._init:
                 self.pool._init_parent[self._name] = True
             else:
-                order = self._parent_order or self._order
-                parent_val = vals[self._parent_name]
-                if parent_val:
-                    clause, params = '%s=%%s' % (self._parent_name,), (parent_val,)
-                else:
-                    clause, params = '%s IS NULL' % (self._parent_name,), ()
-
                 for id in parents_changed:
-                    cr.execute('SELECT parent_left, parent_right FROM %s WHERE id=%%s' % (self._table,), (id,))
-                    pleft, pright = cr.fetchone()
+                    cr.execute('SELECT parent_left, parent_right, %s FROM %s WHERE id=%%s' % (self._parent_name, self._table,), (id,))
+                    pleft, pright, parent_val = cr.fetchone()
                     distance = pright - pleft + 1
+
+                    if parent_val:
+                        clause, params = '%s=%%s' % (self._parent_name,), (parent_val,)
+                    else:
+                        clause, params = '%s IS NULL' % (self._parent_name,), ()
 
                     # Positions of current siblings, to locate proper insertion point;
                     # this can _not_ be fetched outside the loop, as it needs to be refreshed
@@ -4570,21 +4577,25 @@ class BaseModel(object):
                 self.pool._init_parent[self._name] = True
             else:
                 parent = vals.get(self._parent_name, False)
+                where_clause = ' where '+self._parent_name
                 if parent:
-                    cr.execute('select parent_right from '+self._table+' where '+self._parent_name+'=%s order by '+(self._parent_order or self._order), (parent,))
-                    pleft_old = None
-                    result_p = cr.fetchall()
-                    for (pleft,) in result_p:
-                        if not pleft:
-                            break
-                        pleft_old = pleft
-                    if not pleft_old:
-                        cr.execute('select parent_left from '+self._table+' where id=%s', (parent,))
-                        pleft_old = cr.fetchone()[0]
-                    pleft = pleft_old
+                    where_clause += '=%s'
+                    where_params = (parent,)
                 else:
-                    cr.execute('select max(parent_right) from '+self._table)
-                    pleft = cr.fetchone()[0] or 0
+                    where_clause += ' is null'
+                    where_params = tuple()
+                cr.execute('select parent_right from '+self._table + where_clause+' order by '+(self._parent_order or self._order), where_params)
+                pleft_old = None
+                result_p = cr.fetchall()
+                for (pleft,) in result_p:
+                    if not pleft:
+                        break
+                    pleft_old = pleft
+                if not pleft_old and parent:
+                    cr.execute('select parent_left from '+self._table+' where id=%s', (parent,))
+                    pleft = cr.fetchone()[0]
+                else:
+                    pleft = pleft_old or -1
                 cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1, pleft+2, id_new))
