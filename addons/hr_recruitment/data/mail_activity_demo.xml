@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<openerp>
+  <data noupdate="1">
+    <record id="activity_log_1" model="mail.activity.log">
+        <field name="res_id" ref="hr_recruitment.hr_case_salesman0" />
+        <field name="model">hr.applicant</field>
+        <field name="next_activity_id" ref="mail.mail_activity_data_email" />
+        <field name="date_action" eval="time.strftime('%Y-%m-15 18:15:00')"/>
+        <field name="title_action">Send mail regarding our interview</field>
+    </record>
+    <record id="activity_log_2" model="mail.activity.log">
+        <field name="res_id" ref="hr_recruitment.hr_case_traineemca0" />
+        <field name="model">hr.applicant</field>
+        <field name="next_activity_id" ref="mail.mail_activity_data_call" />
+        <field name="date_action" eval="time.strftime('%Y-%m-10 18:15:00')"/>
+        <field name="title_action">Call to define real needs about training</field>
+    </record>
+    <record id="activity_log_3" model="mail.activity.log">
+        <field name="res_id" ref="hr_recruitment.hr_case_fresher0" />
+        <field name="model">hr.applicant</field>
+        <field name="next_activity_id" ref="mail.mail_activity_data_email" />
+        <field name="date_action" eval="time.strftime('%Y-%m-5 18:15:00')"/>
+        <field name="title_action">Send mail regarding our interview</field>
+    </record>
+    <record id="activity_log_4" model="mail.activity.log">
+        <field name="res_id" ref="hr_recruitment.hr_case_yrsexperienceinphp0" />
+        <field name="model">hr.applicant</field>
+        <field name="next_activity_id" ref="mail.mail_activity_data_call" />
+        <field name="date_action" eval="time.strftime('%Y-%m-24 18:15:00')"/>
+        <field name="title_action">Call to define real needs about training</field>
+    </record>
+    <record id="activity_log_5" model="mail.activity.log">
+        <field name="res_id" ref="hr_recruitment.hr_case_marketingjob0" />
+        <field name="model">hr.applicant</field>
+        <field name="next_activity_id" ref="mail.mail_activity_data_email" />
+        <field name="date_action" eval="time.strftime('%Y-%m-20 18:15:00')"/>
+        <field name="title_action">Send mail regarding our interview</field>
+    </record>
+    <record id="activity_log_6" model="mail.activity.log">
+        <field name="res_id" ref="hr_recruitment.hr_case_financejob0" />
+        <field name="model">hr.applicant</field>
+        <field name="next_activity_id" ref="mail.mail_activity_data_email" />
+        <field name="date_action" eval="time.strftime('%Y-%m-18 18:15:00')"/>
+        <field name="title_action">Send mail regarding our interview</field>
+    </record>
+    <record id="activity_log_7" model="mail.activity.log">
+        <field name="res_id" ref="hr_recruitment.hr_case_traineemca1" />
+        <field name="model">hr.applicant</field>
+        <field name="next_activity_id" ref="mail.mail_activity_data_email" />
+        <field name="date_action" eval="time.strftime('%Y-%m-15 18:15:00')"/>
+        <field name="title_action">Send mail regarding our interview</field>
+    </record>
+    <record id="activity_log_8" model="mail.activity.log">
+        <field name="res_id" ref="hr_recruitment.hr_case_programmer" />
+        <field name="model">hr.applicant</field>
+        <field name="next_activity_id" ref="mail.mail_activity_data_email" />
+        <field name="date_action" eval="time.strftime('%Y-%m-24 18:15:00')"/>
+        <field name="title_action">Send mail regarding our interview</field>
+    </record>
+    <record id="activity_log_9" model="mail.activity.log">
+        <field name="res_id" ref="hr_recruitment.hr_case_advertisement" />
+        <field name="model">hr.applicant</field>
+        <field name="next_activity_id" ref="mail.mail_activity_data_email" />
+        <field name="date_action" eval="time.strftime('%Y-%m-15 18:15:00')"/>
+        <field name="title_action">Send mail regarding our interview</field>
+    </record>
+  </data>
+</openerp>

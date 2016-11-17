@@ -17,6 +17,7 @@
                 <script type="text/javascript" src="/mail/static/src/js/tour.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/window_manager.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/mail_activity.js"></script>
 
                 <link rel="stylesheet" href="/mail/static/src/less/announcement.less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/client_action.less" type="text/less"/>
@@ -27,6 +28,7 @@
                 <link rel="stylesheet" href="/mail/static/src/less/followers.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/thread.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/systray.less" type="text/less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/mail_activity.less"/>
             </xpath>
         </template>
 
@@ -48,6 +50,13 @@
                 </a>
             </p>
             <p style="color:#9E588B;">Powered by <a href="https://www.odoo.com">Odoo</a>.</p>
+        </template>
+
+        <template id="message_activity_assigned">
+            <p>Activity: <t t-esc="activity.next_activity_id.name"/> - <t t-esc="activity.title_action"/></p>
+            <ul>
+                <li>Assigned to: <t t-esc="activity.user_id.name"/></li>
+            </ul>
         </template>
 
     </data>

@@ -6,11 +6,14 @@ var composer = require('mail.composer');
 var ChatThread = require('mail.ChatThread');
 var utils = require('mail.utils');
 
+var activity_log = require('mail.ActivityLog');
 var config = require('web.config');
 var core = require('web.core');
 var form_common = require('web.form_common');
 var framework = require('web.framework');
+var Model = require("web.Model");
 var web_utils = require('web.utils');
+var Widget = require('web.Widget');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -280,6 +283,9 @@ var Chatter = form_common.AbstractField.extend({
     events: {
         "click .o_chatter_button_new_message": "on_open_composer_new_message",
         "click .o_chatter_button_log_note": "on_open_composer_log_note",
+        "click .o_add_activity": function(ev){
+            this.activity.on_open_schedule_activity(ev);
+        },
     },
 
     init: function () {
@@ -313,6 +319,11 @@ var Chatter = form_common.AbstractField.extend({
             this.$('.o_chatter_topbar').append(this.followers.$el);
             this.followers.on('redirect', chat_manager, chat_manager.redirect);
             this.followers.on('followers_update', this, this.on_followers_update);
+        }
+
+        if(!this.options.no_activity) {
+            this.activity = new activity_log.ActivityLogList(this, this.view.datarecord.id, this.view.model);
+            this.activity.appendTo(this.$('.o_mail_activity'));
         }
 
         this.thread = new ChatThread(this, {
@@ -468,6 +479,11 @@ var Chatter = form_common.AbstractField.extend({
             this.mute_new_message_button(false);
         }
 
+        // fetch and render activity of current document
+        if (this.activity){
+            this.activity.update_activity(this.model, this.res_id);
+        }
+
         // fetch and render messages of current document
         return this.fetch_and_render_thread(this.msg_ids);
     },
@@ -501,7 +517,7 @@ var Chatter = form_common.AbstractField.extend({
         this.composer.on('input_focused', this, function () {
             this.composer.mention_set_prefetched_partners(this.mention_suggestions || []);
         });
-        this.composer.insertBefore(this.$('.o_mail_thread')).then(function () {
+        this.composer.insertBefore(this.$('.o_mail_activity')).then(function () {
             // destroy existing composer
             if (old_composer) {
                 old_composer.destroy();

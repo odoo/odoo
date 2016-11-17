@@ -135,8 +135,6 @@ class Applicant(models.Model):
     date_closed = fields.Datetime("Closed", readonly=True, index=True)
     date_open = fields.Datetime("Assigned", readonly=True, index=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
-    date_action = fields.Date("Next Action Date")
-    title_action = fields.Char("Next Action", size=64)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')
     job_id = fields.Many2one('hr.job', "Applied Job")
     salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages")

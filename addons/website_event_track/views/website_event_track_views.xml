@@ -11,6 +11,8 @@
                         <field name="color"/>
                         <field name="speaker_ids"/>
                         <field name="website_url"/>
+                        <field name="activity_log_ids" />
+                        <field name="activity_state" />
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown" groups="base.group_user">
@@ -33,6 +35,9 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <field name="priority" widget="priority"/>
+                                        <div class="o_kanban_inline_block ml4">
+                                            <field name="activity_log_ids" widget="kanban_activity" />
+                                        </div>
                                     </div>
                                     <div class="oe_kanban_footer_left">
                                         <t t-foreach="record.speaker_ids.raw_value.slice(0,11)" t-as="speaker">
@@ -74,6 +79,18 @@
                     <field name="state"/>
                     <field name="speaker_ids"/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <separator/>
+                    <filter string="My Activities" name="my_activity"
+                        domain="[('activity_log_ids.user_id', '=', uid)]"/>
+                    <filter string="Today Activities" name="today_activity"
+                        domain="[('activity_log_ids.date_action', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="This Week Activities" name="this_week_activity"
+                        domain="['&amp;', ('activity_log_ids.date_action', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                 ('activity_log_ids.date_action', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                        ]"/>
+                    <filter string="Overdue Activities" name="overdue_activity"
+                        domain="[('activity_log_ids.date_action', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">

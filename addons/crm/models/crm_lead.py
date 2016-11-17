@@ -116,12 +116,6 @@ class Lead(FormatAddress, models.Model):
     probability = fields.Float('Probability', group_operator="avg", default=lambda self: self._default_probability())
     planned_revenue = fields.Float('Expected Revenue', track_visibility='always')
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
-
-    # CRM Actions
-    next_activity_id = fields.Many2one("crm.activity", string="Next Activity", index=True)
-    date_action = fields.Date('Next Activity Date', index=True)
-    title_action = fields.Char('Next Activity Summary')
-
     color = fields.Integer('Color Index', default=0)
     partner_address_name = fields.Char('Partner Contact Name', related='partner_id.name', readonly=True)
     partner_address_email = fields.Char('Partner Contact Email', related='partner_id.email', readonly=True)
@@ -269,18 +263,6 @@ class Lead(FormatAddress, models.Model):
     def _onchange_state(self):
         if self.state_id:
             self.country_id = self.state_id.country_id.id
-
-    @api.onchange('next_activity_id')
-    def _onchange_next_activity_id(self):
-        values = {
-            'title_action': False,
-            'date_action': False,
-        }
-        if self.next_activity_id:
-            values['title_action'] = self.next_activity_id.description
-            if self.next_activity_id.days:
-                values['date_action'] = fields.Datetime.to_string(datetime.now() + timedelta(days=self.next_activity_id.days))
-        self.update(values)
 
     # ----------------------------------------
     # ORM override (CRUD, fields_view_get, ...)
@@ -934,7 +916,7 @@ class Lead(FormatAddress, models.Model):
                 if date_deadline < date.today():
                     result['closing']['overdue'] += 1
             # Next activities
-            if opp.next_activity_id and opp.date_action:
+            for log in opp.activity_log_ids.filtered("next_activity_id"):
                 date_action = fields.Date.from_string(opp.date_action)
                 if date_action == date.today():
                     result['activity']['today'] += 1
@@ -964,12 +946,11 @@ class Lead(FormatAddress, models.Model):
                 l.type
             FROM mail_message M
                 LEFT JOIN crm_lead L ON (M.res_id = L.id)
-                INNER JOIN crm_activity A ON (M.subtype_id = A.subtype_id)
+                INNER JOIN mail_activity A ON (M.subtype_id = A.subtype_id)
             WHERE
                 (M.model = 'crm.lead') AND (L.user_id = %s) AND (L.type = 'opportunity')
         """, (self._uid,))
         activites_done = self._cr.dictfetchall()
-
         for activity in activites_done:
             if activity['date']:
                 date_act = fields.Date.from_string(activity['date'])

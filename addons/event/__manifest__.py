@@ -30,6 +30,7 @@ Key Features
         'views/event_config_settings_views.xml',
         'views/event_templates.xml',
         'views/res_partner_views.xml',
+        'views/mail_activity_views.xml',
         'data/email_template_data.xml',
     ],
     'demo': [
