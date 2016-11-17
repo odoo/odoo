@@ -62,11 +62,6 @@ tour.register('project_tour', {
         actions.auto(".o_kanban_record .oe_kanban_action[data-type=edit]");
     },
 }, {
-    trigger: ".o_form_button_edit",
-    extra_trigger: '.o_form_project_tasks',
-    content: _t('Click on this button to modify the task.'),
-    position: "bottom"
-}, {
     trigger: ".o_form_field.o_task_user_field",
     extra_trigger: '.o_form_project_tasks.o_form_editable',
     content: _t('<b>Assign the task</b> to someone. <i>You can create and invite a new user on the fly.</i>'),
