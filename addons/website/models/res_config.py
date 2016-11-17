@@ -26,7 +26,6 @@ class WebsiteConfigSettings(models.TransientModel):
     social_linkedin = fields.Char(related='website_id.social_linkedin')
     social_youtube = fields.Char(related='website_id.social_youtube')
     social_googleplus = fields.Char(related='website_id.social_googleplus')
-    compress_html = fields.Boolean('Compress rendered HTML for a better Google PageSpeed result', related='website_id.compress_html')
     cdn_activated = fields.Boolean('Use a Content Delivery Network (CDN)', related='website_id.cdn_activated')
     cdn_url = fields.Char(related='website_id.cdn_url')
     cdn_filters = fields.Text(related='website_id.cdn_filters')
