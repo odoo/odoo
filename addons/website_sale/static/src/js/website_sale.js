@@ -335,9 +335,9 @@ $('.oe_website_sale').each(function () {
         $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
     });
 
-    var state_options = $("select[name='state_id'] option:not(:first)");
+    var state_options = $("select[name='state_id']:visible option:not(:first)");
     $(oe_website_sale).on('change', "select[name='country_id']", function () {
-        var select = $("select[name='state_id']");
+        var select = $("select[name='state_id']:visible");
         var selected_state = select.val();
         state_options.detach();
         var displayed_state = state_options.filter("[data-country_id="+($(this).val() || 0)+"]");
