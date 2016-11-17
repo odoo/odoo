@@ -21,6 +21,18 @@
                         <field name="alias_domain" placeholder="mycompany.odoo.com" class="oe_inline"/>
                     </div>
                 </xpath>
+                <xpath expr="//group[@name='authentication']" position='before'>
+                    <group name="activity">
+                        <label for="id" string="Activities"/>
+                        <div>
+                            <div>
+                                <button class="oe_link" name="%(mail_activity_type_action)d" type="action">
+                                    <span>Configure the chatter activities</span>
+                                </button>
+                            </div>
+                        </div>
+                    </group>
+                </xpath>
             </field>
         </record>
     </data>

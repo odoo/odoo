@@ -31,6 +31,19 @@
                         <filter string="Available for mass mailing"
                                 name='not_opt_out' domain="[('opt_out', '=', False)]"
                                 help="Partners that did not ask not to be included in mass mailing campaigns" />
+                        <separator/>
+                        <filter string="My Activities" name="activities_my"
+                                domain="[('activity_ids.user_id', '=', uid)]"/>
+                        <filter string="Today Activities" name="activities_today"
+                                domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        <filter string="This Week Activities" name="activities_week"
+                                domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                         ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                                ]"/>
+                        <filter string="Overdue Activities" name="overdue_activity"
+                                domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                                help="Show all records which has next action date is before today"/>
+                        <separator/>
                     </filter>
             </field>
         </record>

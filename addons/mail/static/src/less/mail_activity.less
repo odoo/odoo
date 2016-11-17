@@ -1,0 +1,105 @@
+/* Common */
+.o_mail_activity {
+    &.o_form_field {
+        display: block;
+    }
+
+    .o_thread_date_separator.o_border_dashed {
+        border-bottom: dashed #eeeeee 2px;
+    }
+
+    .o_thread_message_core.o_mail_note {
+        padding: 0px 3px;
+    }
+
+    .o_activity_color_default {
+        color: @gray;
+    }
+
+    .o_activity_color_planned {
+        color: @brand-primary;
+    }
+    .o_activity_color_overdue {
+        color: @brand-danger;
+    }
+    .o_activity_color_today {
+        color: @brand-success;
+    }
+
+    .o_activity_link {
+        color: @gray;
+        &:hover {
+            color: @brand-success;
+        }
+    }
+
+}
+
+/* Kanban View */
+.o_kanban_record {
+    .o_kanban_inline_block {
+        display: inline-block;
+    }
+
+    .o_mail_activity {
+        .o_activity_btn {
+            span.fa {
+                vertical-align: -35%;
+            }
+        }
+
+        .o_activity_link_kanban {
+            visibility: hidden;
+        }
+
+        ul.o_activity {
+            width: 290px;
+
+            & > li:last-child {
+                background-color: @odoo-brand-lightsecondary;
+                color: @gray-dark;
+                line-height: 3em;
+            }
+            li > ul.o_activity_log {
+                max-height: 300px;
+                overflow-y: auto;
+                color: @text-color;
+
+                li {
+                    width: 100%;
+                    display: inline-block;
+
+                    &.o_activity_label {
+                        line-height: 2.5em;
+                        padding: 0px 5px;
+                        background-color: @odoo-brand-lightsecondary;
+                    }
+
+                    &.o_schedule_activity {
+                        padding: 8px 10px 8px 0px;
+                        vertical-align: middle;
+                        &:hover {
+                            background-color: @gray-lighter;
+                            .o_activity_link_kanban {
+                                visibility: visible;
+                            }
+                        }
+
+                        .o_activity_title {
+                            width: 85%;
+                            padding: 0px 5px 0px 10px;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                    }
+                }
+            }
+
+            .o_no_activity {
+                padding: 10px;
+                cursor: initial;
+            }
+        }
+    }
+}

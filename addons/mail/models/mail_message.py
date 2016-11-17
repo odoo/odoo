@@ -61,6 +61,9 @@ class Message(models.Model):
              "message, comment for other messages such as user replies",
         oldname='type')
     subtype_id = fields.Many2one('mail.message.subtype', 'Subtype', ondelete='set null', index=True)
+    mail_activity_type_id = fields.Many2one(
+        'mail.activity.type', 'Mail Activity Type',
+        index=True, ondelete='set null')
     # origin
     email_from = fields.Char(
         'From', default=_get_default_from,
