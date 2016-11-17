@@ -3,7 +3,7 @@ odoo.define('web_settings_dashboard', function (require) {
 
 var core = require('web.core');
 var Widget = require('web.Widget');
-var Model = require('web.Model');
+var data = require('web.data');
 var session = require('web.session');
 var PlannerCommon = require('web.planner.common');
 var framework = require('web.framework');
@@ -91,7 +91,7 @@ var DashboardInvitations = Widget.extend({
             $target.prop('disabled', true);
             $target.find('i.fa-cog').removeClass('hidden');
             // Try to create user accountst
-            new Model("res.users")
+            new data.Model("res.users")
                 .call("web_dashboard_create_users", [user_emails])
                 .then(function() {
                     self.reload();
@@ -167,7 +167,7 @@ var DashboardPlanner = Widget.extend({
 
     willStart:function(){
         var self = this;
-        return new Model('web.planner').query().all().then(function(res) {
+        return new data.Model('web.planner').query().all().then(function(res) {
             self.planners = res;
             _.each(self.planners, function(planner) {
                 self.planner_by_menu[planner.menu_id[0]] = planner;

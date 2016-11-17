@@ -2,7 +2,7 @@ odoo.define('web.DataManager', function (require) {
 "use strict";
 
 var core = require('web.core');
-var Model = require('web.DataModel');
+var data = require('web.data');
 var session = require('web.session');
 var utils = require('web.utils');
 
@@ -14,7 +14,7 @@ function traverse(tree, f) {
 
 return core.Class.extend({
     init: function () {
-        this.Filters = new Model('ir.filters');
+        this.Filters = new data.Model('ir.filters');
         this._init_cache();
     },
 

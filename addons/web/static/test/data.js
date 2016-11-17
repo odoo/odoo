@@ -27,7 +27,7 @@ odoo.define_section('web.dataset', ['web.data'], function (test, mock) {
     });
 });
 
-odoo.define_section('data.model.group_by', ['web.DataModel'], function (test, mock) {
+odoo.define_section('data.model.group_by', ['web.data'], function (test, mock) {
 
     var group_result = [
         { bar: 3, bar_count: 5, __context: {}, __domain: [['bar', '=', 3]], },
@@ -35,7 +35,7 @@ odoo.define_section('data.model.group_by', ['web.DataModel'], function (test, mo
         { bar: 8, bar_count: 0, __context: {}, __domain: [['bar', '=', 8]], }
     ];
 
-    test('basic', function (assert, Model) {
+    test('basic', function (assert, data) {
         assert.expect(7);
         mock.add('foo:read_group', function (args, kwargs) {
             assert.deepEqual(kwargs.fields, ['bar'],
@@ -57,7 +57,7 @@ odoo.define_section('data.model.group_by', ['web.DataModel'], function (test, mo
             ], length: 5};
         });
 
-        var m = new Model('foo');
+        var m = new data.Model('foo');
 
         return m.query().group_by('bar')
         .then(function (groups) {
@@ -72,9 +72,9 @@ odoo.define_section('data.model.group_by', ['web.DataModel'], function (test, mo
 
     });
 
-    test('noleaf', function (assert, Model) {
+    test('noleaf', function (assert, data) {
         assert.expect(5);
-        var m = new Model('foo', {group_by_no_leaf: true});
+        var m = new data.Model('foo', {group_by_no_leaf: true});
         mock.add('foo:read_group', function (args, kwargs) {
             assert.deepEqual(kwargs.fields, ['bar'],
                       "should read grouping field");
@@ -93,15 +93,15 @@ odoo.define_section('data.model.group_by', ['web.DataModel'], function (test, mo
         });
     });
 
-    test('nogroup', function (assert, Model) {
-        var m = new Model('foo');
+    test('nogroup', function (assert, data) {
+        var m = new data.Model('foo');
         strictEqual(m.query().group_by(), null, "should not group");
     });
 
-    test('empty.noleaf', function (assert, Model) {
+    test('empty.noleaf', function (assert, data) {
         assert.expect(1);
 
-        var m = new Model('foo',  {group_by_no_leaf: true});
+        var m = new data.Model('foo',  {group_by_no_leaf: true});
         
         mock.add('foo:read_group', function (args, kwargs) {
             return [{__context: [], __domain: []}];

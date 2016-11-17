@@ -13,7 +13,6 @@ var Dialog = require('web.Dialog');
 var common = require('web.form_common');
 var formats = require('web.formats');
 var framework = require('web.framework');
-var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var session = require('web.session');
 var utils = require('web.utils');
@@ -742,7 +741,7 @@ var FieldSelection = common.AbstractField.extend(common.ReinitializeFieldMixin, 
         var self = this;
         var def;
         if (this.field.type === "many2one") {
-            var model = new Model(this.field.relation);
+            var model = new data.Model(this.field.relation);
             def = model.call("name_search", ['', this.get("domain")], {"context": this.build_context()});
         } else {
             var values = _.reject(this.field.selection, function (v) { return v[0] === false && v[1] === ''; });
@@ -1391,7 +1390,7 @@ var FieldStatus = common.AbstractField.extend({
         if (this.distant_fields) {
             return $.when(this.distant_fields);
         }
-        return new Model(self.field.relation).call("fields_get", [[this.options.fold_field]]).then(function(fields) {
+        return new data.Model(self.field.relation).call("fields_get", [[this.options.fold_field]]).then(function(fields) {
             self.distant_fields = fields;
             return fields;
         });

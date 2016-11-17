@@ -3,7 +3,7 @@ odoo.define('web.Apps', function (require) {
 
 var core = require('web.core');
 var framework = require('web.framework');
-var Model = require('web.DataModel');
+var data = require('web.data');
 var session = require('web.session');
 var web_client = require('web.web_client');
 var Widget = require('web.Widget');
@@ -42,7 +42,7 @@ var Apps = Widget.extend({
         if (apps_client) {
             return check_client_available(apps_client);
         } else {
-            var Mod = new Model('ir.module.module');
+            var Mod = new data.Model('ir.module.module');
             return Mod.call('get_apps_server').then(function(u) {
                 var link = $(_.str.sprintf('<a href="%s"></a>', u))[0];
                 var host = _.str.sprintf('%s//%s', link.protocol, link.host);
@@ -91,7 +91,7 @@ var Apps = Widget.extend({
                 });
             },
             'Model': function(m) {
-                var M = new Model(m.model);
+                var M = new data.Model(m.model);
                 M[m.method].apply(M, m.args).then(function(r) {
                     var w = self.$ifr[0].contentWindow;
                     w.postMessage({id: m.id, result: r}, client.origin);
@@ -110,7 +110,7 @@ var Apps = Widget.extend({
         var count = m.count;
         var get_upd_menu_id = function() {
             if (_.isUndefined(self._upd_menu_id)) {
-                var IMD = new Model('ir.model.data');
+                var IMD = new data.Model('ir.model.data');
                 return IMD.call('get_object_reference', ['base', 'menu_module_updates']).then(function(r) {
                     var mid = r[1];
                     if(r[0] !== 'ir.ui.menu') {

@@ -4,7 +4,6 @@ odoo.define('account.move_line_quickadd', function (require) {
 var core = require('web.core');
 var data = require('web.data');
 var ListView = require('web.ListView');
-var Model = require('web.DataModel');
 
 var QWeb = core.qweb;
 
@@ -43,7 +42,7 @@ var QuickAddListView = ListView.extend({
             self.$el.parent().find('.oe_account_select_journal').removeAttr('disabled');
             self.$el.parent().find('.oe_account_select_period').removeAttr('disabled');
         });
-        var mod = new Model("account.move.line", self.dataset.context, self.dataset.domain);
+        var mod = new data.Model("account.move.line", self.dataset.context, self.dataset.domain);
         defs.push(mod.call("default_get", [['journal_id','period_id'],self.dataset.context]).then(function(result) {
             self.current_period = result['period_id'];
             self.current_journal = result['journal_id'];

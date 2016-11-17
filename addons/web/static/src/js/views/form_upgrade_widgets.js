@@ -5,7 +5,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var form_widgets = require('web.form_widgets');
 var framework = require('web.framework');
-var Model = require('web.DataModel');
+var data = require('web.data');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -54,7 +54,7 @@ var AbstractFieldUpgrade = {
     },
 
     confirm_upgrade: function() {
-        new Model("res.users").call("search_count", [[["share", "=", false]]]).then(function(data) {
+        new data.Model("res.users").call("search_count", [[["share", "=", false]]]).then(function(data) {
             framework.redirect("https://www.odoo.com/odoo-enterprise/upgrade?num_users=" + data);
         });
     },

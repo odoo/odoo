@@ -7,7 +7,6 @@ var crash_manager = require('web.crash_manager');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
 var FormRenderingEngine = require('web.FormRenderingEngine');
-var Model = require('web.DataModel');
 var Pager = require('web.Pager');
 var Sidebar = require('web.Sidebar');
 var utils = require('web.utils');
@@ -458,7 +457,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                             var condition = fieldname + '=' + value_;
 
                             if (value_) {
-                                defs.push(self.alive(new Model('ir.values').call(
+                                defs.push(self.alive(new data.Model('ir.values').call(
                                     'get_defaults', [self.model, condition]
                                 )).then(function (results) {
                                     if (!results.length) {

@@ -22,7 +22,6 @@ var form_relational = require('web.form_relational'); // necessary
 var form_widgets = require('web.form_widgets'); // necessary
 var framework = require('web.framework');
 var ListView = require('web.ListView');
-var Model = require('web.DataModel');
 var pyeval = require('web.pyeval');
 var Registry = require('web.Registry');
 var SearchView = require('web.SearchView');
@@ -96,7 +95,7 @@ openerp.web.FormView = FormView;
 openerp.web.json_node_to_xml = utils.json_node_to_xml;
 
 openerp.web.ListView = ListView;
-openerp.web.Model = Model;
+openerp.web.Model = data.Model;
 openerp.web.normalize_format = time.strftime_to_moment_format;
 openerp.web.py_eval = pyeval.py_eval;
 openerp.web.pyeval = pyeval;

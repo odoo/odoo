@@ -9,7 +9,7 @@ var crash_manager = require('web.crash_manager');
 var data_manager = require('web.data_manager');
 var formats = require('web.formats');
 var framework = require('web.framework');
-var Model = require('web.DataModel');
+var data = require('web.data');
 var session = require('web.session');
 var Sidebar = require('web.Sidebar');
 var utils = require('web.utils');
@@ -34,7 +34,7 @@ var PivotView = View.extend({
 
     init: function() {
         this._super.apply(this, arguments);
-        this._model = new Model(this.model, {group_by_no_leaf: true});
+        this._model = new data.Model(this.model, {group_by_no_leaf: true});
 
         this.measures = {};
         this.groupable_fields = {};

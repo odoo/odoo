@@ -7,7 +7,6 @@ var config = require('web.config');
 var Bus = require('web.Bus');
 var core = require('web.core');
 var data = require('web.data');
-var Model = require('web.Model');
 var session = require('web.session');
 var time = require('web.time');
 var web_client = require('web.web_client');
@@ -18,10 +17,10 @@ var LIMIT = 25;
 var preview_msg_max_size = 350;  // optimal for native english speakers
 var ODOOBOT_ID = "ODOOBOT";
 
-var MessageModel = new Model('mail.message', session.context);
-var ChannelModel = new Model('mail.channel', session.context);
-var UserModel = new Model('res.users', session.context);
-var PartnerModel = new Model('res.partner', session.context);
+var MessageModel = new data.Model('mail.message', session.context);
+var ChannelModel = new data.Model('mail.channel', session.context);
+var UserModel = new data.Model('res.users', session.context);
+var PartnerModel = new data.Model('res.partner', session.context);
 
 // Private model
 //----------------------------------------------------------------------------------
@@ -696,7 +695,7 @@ var chat_manager = {
                 subtype_id: data.subtype_id,
             });
 
-            var model = new Model(options.model);
+            var model = new data.Model(options.model);
             return model.call('message_post', [options.res_id], msg).then(function (msg_id) {
                 return MessageModel.call('message_format', [msg_id]).then(function (msgs) {
                     msgs[0].model = options.model;
@@ -952,7 +951,7 @@ var chat_manager = {
                 }
             });
         } else {
-            new Model(res_model).call('get_formview_id', [[res_id], session.context]).then(function (view_id) {
+            new data.Model(res_model).call('get_formview_id', [[res_id], session.context]).then(function (view_id) {
                 redirect_to_document(res_model, res_id, view_id);
             });
         }

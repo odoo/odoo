@@ -8,7 +8,6 @@ var data_manager = require('web.data_manager');
 var DataExport = require('web.DataExport');
 var formats = require('web.formats');
 var common = require('web.list_common');
-var Model = require('web.DataModel');
 var Pager = require('web.Pager');
 var pyeval = require('web.pyeval');
 var session = require('web.session');
@@ -1086,7 +1085,7 @@ ListView.List = Class.extend({
                     // 2. an array of ids
                     ids = value;
                 }
-                new Model(column.relation)
+                new data.Model(column.relation)
                     .call('name_get', [ids, this.dataset.get_context()]).done(function (names) {
                         // FIXME: nth horrible hack in this poor listview
                         record.set(column.id + '__display',
@@ -1645,7 +1644,7 @@ function synchronized(fn) {
 
 var DataGroup =  Class.extend({
    init: function(parent, model, domain, context, group_by, level) {
-       this.model = new Model(model, context, domain);
+       this.model = new data.Model(model, context, domain);
        this.group_by = group_by;
        this.context = context;
        this.domain = domain;

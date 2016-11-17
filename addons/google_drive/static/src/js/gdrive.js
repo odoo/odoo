@@ -2,7 +2,6 @@ odoo.define('google_drive.google_drive', function (require) {
 "use strict";
 
 var data = require('web.data');
-var Model = require('web.DataModel');
 var Sidebar = require('web.Sidebar');
 
 Sidebar.include({
@@ -58,7 +57,7 @@ Sidebar.include({
     },
 
     fetch: function (model, fields, domain, ctx) {
-        return new Model(model).query(fields).filter(domain).context(ctx).all();
+        return new data.Model(model).query(fields).filter(domain).context(ctx).all();
     },
 
     on_google_doc: function (doc_item) {
