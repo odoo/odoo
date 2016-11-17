@@ -66,7 +66,7 @@ class AccountInvoiceLine(models.Model):
                 'partner_id': self.invoice_id.partner_id.id,
                 'company_id': self.invoice_id.company_id.id,
                 'currency_id': self.invoice_id.company_currency_id.id,
-                'date': self.asset_start_date or self.invoice_id.date_invoice,
+                'date': self.invoice_id.date_invoice,
                 'invoice_id': self.invoice_id.id,
             }
             changed_vals = self.env['account.asset.asset'].onchange_category_id_values(vals['category_id'])
