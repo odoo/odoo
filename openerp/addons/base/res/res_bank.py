@@ -67,7 +67,7 @@ class ResPartnerBank(models.Model):
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.user.company_id, ondelete='cascade')
 
     _sql_constraints = [
-        ('unique_number', 'unique(sanitized_acc_number)', 'Account Number must be unique'),
+        ('unique_number', 'unique(sanitized_acc_number, company_id)', 'Account Number must be unique'),
     ]
 
     @api.one
