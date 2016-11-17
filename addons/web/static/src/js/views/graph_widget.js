@@ -98,7 +98,8 @@ return Widget.extend({
                     "there is no active filter in the search bar."),
             }));
         } else {
-            this['display_' + this.mode]();
+            var chart = this['display_' + this.mode]();
+            chart.tooltip.chartContainer(this.$el[0]);
         }
     },
     display_bar: function () {
@@ -182,6 +183,8 @@ return Widget.extend({
         chart(svg);
         this.to_remove = chart.update;
         nv.utils.onWindowResize(chart.update);
+
+        return chart;
     },
     display_pie: function () {
         var data = [],
@@ -232,6 +235,8 @@ return Widget.extend({
         chart(svg);
         this.to_remove = chart.update;
         nv.utils.onWindowResize(chart.update);
+
+        return chart;
     },
     display_line: function () {
         if (this.data.length < 2) {
@@ -309,7 +314,9 @@ return Widget.extend({
 
         chart(svg);
         this.to_remove = chart.update;
-        nv.utils.onWindowResize(chart.update);  
+        nv.utils.onWindowResize(chart.update);
+
+        return chart;
     },
     destroy: function () {
         nv.utils.offWindowResize(this.to_remove);

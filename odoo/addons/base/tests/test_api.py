@@ -273,6 +273,13 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(set(partner2.child_ids), set(children2))
         self.env.check_cache()
 
+        # convert from the cache format to the write format
+        partner = partner1
+        partner.country_id, partner.child_ids
+        data = partner._convert_to_write(partner._cache)
+        self.assertEqual(data['country_id'], partner.country_id.id)
+        self.assertEqual(data['child_ids'], [(6, 0, partner.child_ids.ids)])
+
     @mute_logger('odoo.models')
     def test_60_prefetch(self):
         """ Check the record cache prefetching """
