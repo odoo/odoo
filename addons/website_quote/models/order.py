@@ -189,27 +189,21 @@ class sale_order(osv.osv):
         lines = [(5,)]
         quote_template = self.pool.get('sale.quote.template').browse(cr, uid, template_id, context=context)
         for line in quote_template.quote_line:
-            res = self.pool.get('sale.order.line').product_id_change(cr, uid, False,
-                False, line.product_id.id, line.product_uom_qty, line.product_uom_id.id, line.product_uom_qty,
-                line.product_uom_id.id, line.name, partner, False, True, time.strftime('%Y-%m-%d'),
-                False, fiscal_position_id, True, context)
-            data = res.get('value', {})
-            if pricelist_id:
-                uom_context = context.copy()
-                uom_context['uom'] = line.product_uom_id.id
-                price = pricelist_obj.price_get(cr, uid, [pricelist_id], line.product_id.id, 1, context=uom_context)[pricelist_id]
-            else:
-                price = line.price_unit
-
-            if 'tax_id' in data:
-                data['tax_id'] = [(6, 0, data['tax_id'])]
-            else:
-                fpos = (fiscal_position_id and self.pool['account.fiscal.position'].browse(cr, uid, fiscal_position_id)) or False
-                taxes = fpos.map_tax(line.product_id.product_tmpl_id.taxes_id).ids if fpos else line.product_id.product_tmpl_id.taxes_id.ids
-                data['tax_id'] = [(6, 0, taxes)]
+            product = line.product_id.with_context(
+                lang=context.get('lang'),
+                partner=partner,
+                quantity=line.product_uom_qty,
+                date_order=time.strftime('%Y-%m-%d'),
+                pricelist=pricelist_id,
+                uom=line.product_uom_id.id,
+                fiscal_position=fiscal_position_id
+            )
+            data = {}
+            if product.taxes_id:
+                data['tax_id'] = [(6, 0, product.taxes_id.ids)]
             data.update({
                 'name': line.name,
-                'price_unit': price,
+                'price_unit': product.price,
                 'discount': line.discount,
                 'product_uom_qty': line.product_uom_qty,
                 'product_id': line.product_id.id,
