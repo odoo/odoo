@@ -1,6 +1,6 @@
 {%- set mod = name|snake -%}
 {%- set model = "%s.%s"|format(mod, mod) -%}
-<openerp>
+<odoo>
   <data>
     <!-- explicit list view definition -->
     <!--
@@ -58,4 +58,4 @@
               action="{{mod}}.action_server"/>
     -->
   </data>
-</openerp>
+</odoo>

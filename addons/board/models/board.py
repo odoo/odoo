@@ -4,7 +4,7 @@
 from odoo import api, models
 
 
-class Board(models.Model):
+class Board(models.AbstractModel):
     _name = 'board.board'
     _description = "Board"
     _auto = False

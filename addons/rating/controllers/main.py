@@ -38,5 +38,6 @@ class Rating(http.Controller):
         if request.session.uid:
             return werkzeug.utils.redirect('/web#model=%s&id=%s&view_type=form' % (record_sudo._name, record_sudo.id))
         return request.render('rating.rating_external_page_view', {
-            'web_base_url': request.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            'web_base_url': request.env['ir.config_parameter'].sudo().get_param('web.base.url'),
+            'rating': rating,
         })

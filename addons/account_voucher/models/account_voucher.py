@@ -356,7 +356,7 @@ class AccountVoucherLine(models.Model):
             self.company_id.id,
             self.voucher_id.currency_id.id,
             self.voucher_id.voucher_type)
-        for fname, fvalue in onchange_res['values'].iteritems():
+        for fname, fvalue in onchange_res['value'].iteritems():
             setattr(self, fname, fvalue)
 
     def _get_account(self, product, fpos, type):
