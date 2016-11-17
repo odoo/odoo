@@ -88,3 +88,14 @@
     (data, format) = netsvc.LocalService('report.purchase.requisition').create(cr, uid, [ref('purchase_requisition.requisition1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'purchase_requisition-purchase_requisition_report.'+format), 'wb+').write(data)
+-
+  I check that I cannot cancel the requisision
+-
+  !python {model: purchase.requisition}: |
+    from openerp.osv.osv import except_osv
+    try:
+        self.tender_cancel(cr, uid, [ref("requisition1")])
+    except except_osv, exc:
+        assert exc.args == (u'Unable to cancel this purchase order.', u'First cancel all receptions related to this purchase order.')
+    else:
+        assert False, 'tender_cancel should have failed'
