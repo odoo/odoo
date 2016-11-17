@@ -59,7 +59,7 @@ if partner and post_body:
 values = {
     'partner': partner,
 }
-response = request.website.render("website.template_partner_post", values)
+response = request.website.render("website.template_partner_post", {'partner': partner})
             </field>
             <field name="state">code</field>
             <field name="type">ir.actions.server</field>

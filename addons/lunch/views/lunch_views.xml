@@ -419,9 +419,7 @@
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_lunch_product" />
             <field name="state">code</field>
-            <field name="code">
-if env.context.get('active_ids'):
-    model.browse(context['active_ids']).toggle_active()</field>
+            <field name="code">records.toggle_active()</field>
         </record>
 
         <record id="ir_values_lunch_archive_product" model="ir.values">

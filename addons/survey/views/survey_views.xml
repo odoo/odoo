@@ -622,8 +622,8 @@
             <field name="model_id" ref="model_survey_survey" />
             <field name="state">code</field>
             <field name="code">
-                if context.get('active_ids'):
-                    test_answers = env['survey.user_input'].search([('survey_id', 'in', context['active_ids']), ('test_entry', '=', 'True')]).unlink()
+if records:
+    env['survey.user_input'].search([('survey_id', 'in', records.ids), ('test_entry', '=', 'True')]).unlink()
             </field>
         </record>
 

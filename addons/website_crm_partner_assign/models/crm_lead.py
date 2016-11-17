@@ -40,6 +40,7 @@ class CrmLead(models.Model):
 
     @api.multi
     def assign_salesman_of_assigned_partner(self):
+        # TODO: fix it
         salesmans_leads = {}
         for lead in self:
             if (lead.stage_id.probability > 0 and lead.stage_id.probability < 100) or lead.stage_id.sequence == 1:

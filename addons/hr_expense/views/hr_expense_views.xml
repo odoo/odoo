@@ -735,8 +735,8 @@
             <field name="model_id" ref="model_hr_expense"/>
             <field name="state">code</field>
             <field name="code">
-                if context.get('active_model') == 'hr.expense' and context.get('active_ids'):
-                    action = env['hr.expense'].browse(context['active_ids']).submit_expenses()
+if records:
+    action = records.submit_expenses()
             </field>
         </record>
 
