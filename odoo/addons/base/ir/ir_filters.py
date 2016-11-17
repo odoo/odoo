@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -35,6 +37,11 @@ class IrFilters(models.Model):
         self.ensure_one()
         default = dict(default or {}, name=_('%s (copy)') % self.name)
         return super(IrFilters, self).copy(default)
+
+    @api.multi
+    def _get_eval_domain(self):
+        self.ensure_one()
+        return ast.literal_eval(self.domain)
 
     @api.model
     def _get_action_domain(self, action_id=None):
