@@ -5,8 +5,8 @@
         <field name="model_id" ref="model_lunch_order_line"/>
         <field name="state">code</field>
         <field name="code">
-if env.context.get('active_ids'):
-    model.browse(context['active_ids']).order()
+if records:
+    records.order()
         </field>
     </record>
 
@@ -23,10 +23,7 @@ if env.context.get('active_ids'):
         <field name="name">Receive meals</field>
         <field name="model_id" ref="model_lunch_order_line"/>
         <field name="state">code</field>
-        <field name="code">
-if env.context.get('active_ids'):
-    model.browse(context['active_ids']).confirm()
-        </field>
+        <field name="code">records.confirm()</field>
     </record>
 
     <record id="ir_lunch_order_line_action_confirm" model="ir.values">
@@ -42,10 +39,7 @@ if env.context.get('active_ids'):
         <field name="name">Cancel meals</field>
         <field name="model_id" ref="model_lunch_order_line"/>
         <field name="state">code</field>
-        <field name="code">
-if env.context.get('active_ids'):
-    model.browse(context['active_ids']).cancel()
-        </field>
+        <field name="code">records.cancel()</field>
     </record>
 
     <record id="ir_lunch_order_line_action_cancel" model="ir.values">
