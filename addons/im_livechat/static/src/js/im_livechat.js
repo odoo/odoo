@@ -8,6 +8,7 @@ var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
+var TypingNotifier = require('mail.TypingNotifier');
 
 var ChatWindow = require('mail.ChatWindow');
 
@@ -69,6 +70,7 @@ var LivechatButton = Widget.extend({
         bus.on('notification', this, function (notifications) {
             var self = this;
             _.each(notifications, function (notification) {
+                self.notified_typing.apply(self, notification)
                 if (self.channel && (notification[0] === self.channel.uuid)) {
                     self.add_message(notification[1]);
                     self.render_messages();
@@ -79,6 +81,13 @@ var LivechatButton = Widget.extend({
             });
         });
         return this._super();
+    },
+
+    notified_typing: function(channel, status){
+        if (this.channel && status && channel[1] === 'typing.notification'){
+            this.channel.typing_status = status.state;
+            this.typing_notifier.notified_typing(this.channel);
+        }
     },
 
     load_qweb_template: function(){
@@ -139,8 +148,11 @@ var LivechatButton = Widget.extend({
             placeholder: this.options.input_placeholder || "",
         };
         var is_folded = (channel.state === 'folded');
+        this.channel.typing_status = 'cancel';
         this.chat_window = new ChatWindow(this, channel.id, channel.name, is_folded, channel.message_unread_counter, options);
+        this.typing_notifier = new TypingNotifier(this.chat_window);
         this.chat_window.appendTo($('body')).then(function () {
+            self.typing_notifier.attachTo(self.chat_window.$('.typing_status'));
             self.chat_window.$el.css({right: 0, bottom: 0});
             self.$el.hide();
         });
@@ -171,6 +183,12 @@ var LivechatButton = Widget.extend({
                 self.chat_window.update_unread(0);
             }
         }, 100));
+        this.chat_window.on("notify_typing", this, function (status) {
+            session.rpc("/im_livechat/notify_typing", {
+                    uuid: this.channel.uuid,
+                    status: status,
+                });
+        });
     },
 
     close_chat: function () {

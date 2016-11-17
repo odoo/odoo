@@ -237,6 +237,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
         this.basic_composer.on('post_message', this, this.on_post_message);
         this.basic_composer.on('input_focused', this, this.on_composer_input_focused);
+        this.basic_composer.on('notify_typing', this, this.notify_typing);
         this.extended_composer.on('post_message', this, this.on_post_message);
         this.extended_composer.on('input_focused', this, this.on_composer_input_focused);
 
@@ -264,6 +265,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 chat_manager.bus.on('update_starred', self, self.throttled_render_sidebar);
                 chat_manager.bus.on('update_channel_unread_counter', self, self.throttled_render_sidebar);
                 chat_manager.bus.on('update_dm_presence', self, self.throttled_render_sidebar);
+                chat_manager.bus.on('notified_typing', self, self.notified_typing);
                 self.thread.$el.on("scroll", null, _.debounce(function () {
                     if (self.thread.is_at_bottom()) {
                         chat_manager.mark_channel_as_seen(self.channel);
@@ -425,6 +427,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                     });
                 }
                 chat_manager.mark_channel_as_seen(channel);
+                chat_manager.notified_typing(channel);
                 self.clear_needactions_def = chat_manager.mark_all_as_read(channel);
             }
 
@@ -589,6 +592,18 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             .fail(function () {
                 // todo: display notification
             });
+    },
+    // send notification
+    notify_typing: function(status) {
+        if (_.contains(['dm', 'livechat'], this.channel.type)) {
+            chat_manager.notify_typing(this.channel.id, status);
+        }
+    },
+    // receive notification
+    notified_typing: function(channel) {
+        if (this.channel.id === channel.id){
+            this.basic_composer.typing_notifier.notified_typing(channel);
+        }
     },
     on_new_message: function (message) {
         var self = this;

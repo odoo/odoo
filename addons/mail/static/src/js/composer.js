@@ -10,6 +10,7 @@ var dom_utils = require('web.dom_utils');
 var Model = require('web.Model');
 var session = require('web.session');
 var Widget = require('web.Widget');
+var TypingNotifier = require('mail.TypingNotifier');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -420,6 +421,8 @@ var BasicComposer = Widget.extend({
 
         this.PartnerModel = new Model('res.partner');
         this.ChannelModel = new Model('mail.channel');
+
+        this.typing_notifier = new TypingNotifier(this);
     },
 
     start: function () {
@@ -457,6 +460,7 @@ var BasicComposer = Widget.extend({
 
         // Mention
         this.mention_manager.prependTo(this.$('.o_composer'));
+        this.typing_notifier.attachTo(this.$('.typing_status'));
 
         return this._super();
     },

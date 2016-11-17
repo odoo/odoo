@@ -81,6 +81,11 @@ class LivechatController(http.Controller):
     def history(self, channel_id, limit):
         return request.env["mail.channel"].browse(channel_id).channel_fetch_message(limit=limit)
 
+    @http.route('/im_livechat/notify_typing', type="json", auth='public')
+    def notify_typing(self, uuid, status, **kwargs):
+        channel = request.env['mail.channel'].search([('uuid', '=', uuid)], limit=1)
+        channel.notify_typing(status)
+
     @http.route('/im_livechat/feedback', type='json', auth='public')
     def feedback(self, uuid, rate, reason=None, **kwargs):
         Channel = request.env['mail.channel']

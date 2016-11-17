@@ -67,7 +67,9 @@ function open_chat (session, options) {
         chat_session.window.on("fold_channel", null, function (channel_id, folded) {
             chat_manager.fold_channel(channel_id, folded);
         });
-
+        chat_session.window.on("notify_typing", null, function (channel_id, status) {
+            chat_manager.notify_typing(channel_id, status);
+        });
         chat_session.window.on("post_message", null, function (message, channel_id) {
             chat_manager
                 .post_message(message, {channel_id: channel_id})
@@ -354,6 +356,13 @@ core.bus.on('web_client_ready', null, function () {
             display_state.$hidden_windows_dropdown.html(render_hidden_sessions_dropdown().html());
             reposition_hidden_sessions_dropdown();
         }
+    });
+    chat_manager.bus.on('notified_typing', null, function(channel){
+        _.each(chat_sessions, function (session) {
+            if (channel.id === session.id) {
+                session.window.notified_typing(channel);
+            }
+        });
     });
 
     chat_manager.bus.on('update_dm_presence', null, function (channel) {
