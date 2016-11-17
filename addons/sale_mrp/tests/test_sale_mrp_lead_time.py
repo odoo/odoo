@@ -75,13 +75,13 @@ class TestSaleMrpLeadTime(TestStockCommon):
 
         # Check schedule date of picking
         out_date = fields.Datetime.from_string(order.date_order) + timedelta(days=self.product_1.sale_delay) - timedelta(days=company.security_lead)
-        out_schedule_date = fields.Datetime.to_string(out_date)
-        self.assertEqual(order.picking_ids[0].min_date, out_schedule_date, 'Schedule date of picking should be equal to: Order date + Customer Lead Time - Sales Safety Days.')
+        min_date = fields.Datetime.from_string(order.picking_ids[0].min_date)
+        self.assertTrue(abs(min_date - out_date) <= timedelta(seconds=1), 'Schedule date of picking should be equal to: Order date + Customer Lead Time - Sales Safety Days.')
 
         # Check schedule date of manufacturing order
         mo_date = out_date - timedelta(days=self.product_1.produce_delay) - timedelta(days=company.manufacturing_lead)
-        mo_schedule_date = fields.Datetime.to_string(mo_date)
-        self.assertEqual(manufacturing_order.date_planned_start, mo_schedule_date, "Schedule date of manufacturing order should be equal to: Schedule date of picking - product's Manufacturing Lead Time - company's Manufacturing Lead Time.")
+        date_planned_start = fields.Datetime.from_string(manufacturing_order.date_planned_start)
+        self.assertTrue(abs(date_planned_start - mo_date) <= timedelta(seconds=1), "Schedule date of manufacturing order should be equal to: Schedule date of picking - product's Manufacturing Lead Time - company's Manufacturing Lead Time.")
 
     def test_01_product_route_level_delays(self):
         """ In order to check schedule dates, set product's Manufacturing Lead Time
@@ -123,21 +123,22 @@ class TestSaleMrpLeadTime(TestStockCommon):
 
         # Check schedule date of ship type picking
         out = order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_1.out_type_id)
+        out_min_date = fields.Datetime.from_string(out.min_date)
         out_date = fields.Datetime.from_string(order.date_order) + timedelta(days=self.product_1.sale_delay) - timedelta(days=out.move_lines[0].rule_id.delay)
-        out_schedule_date = fields.Datetime.to_string(out_date)
-        self.assertEqual(out.min_date, out_schedule_date, 'Schedule date of ship type picking should be equal to: order date + Customer Lead Time - pull rule delay.')
+        self.assertTrue(abs(out_min_date - out_date) <= timedelta(seconds=1), 'Schedule date of ship type picking should be equal to: order date + Customer Lead Time - pull rule delay.')
 
         # Check schedule date of pack type picking
         pack = order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_1.pack_type_id)
+        pack_min_date = fields.Datetime.from_string(pack.min_date)
         pack_date = out_date - timedelta(days=pack.move_lines[0].rule_id.delay)
-        pack_schedule_date = fields.Datetime.to_string(pack_date)
-        self.assertEqual(pack.min_date, pack_schedule_date, 'Schedule date of pack type picking should be equal to: Schedule date of ship type picking - pull rule delay.')
+        self.assertTrue(abs(pack_min_date - pack_date) <= timedelta(seconds=1), 'Schedule date of pack type picking should be equal to: Schedule date of ship type picking - pull rule delay.')
 
         # Check schedule date of pick type picking
         pick = order.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_1.pick_type_id)
-        self.assertEqual(pick.min_date, pack_schedule_date, 'Schedule date of pick type picking should be equal to: Schedule date of pack type picking.')
+        pick_min_date = fields.Datetime.from_string(pick.min_date)
+        self.assertTrue(abs(pick_min_date - pack_date) <= timedelta(seconds=1), 'Schedule date of pick type picking should be equal to: Schedule date of pack type picking.')
 
         # Check schedule date of manufacturing order
         mo_date = pack_date - timedelta(days=self.product_1.produce_delay)
-        mo_schedule_date = fields.Datetime.to_string(mo_date)
-        self.assertEqual(manufacturing_order.date_planned_start, mo_schedule_date, "Schedule date of manufacturing order should be equal to: Schedule date of pack type picking - product's Manufacturing Lead Time.")
+        date_planned_start = fields.Datetime.from_string(manufacturing_order.date_planned_start)
+        self.assertTrue(abs(date_planned_start - mo_date) <= timedelta(seconds=1), "Schedule date of manufacturing order should be equal to: Schedule date of pack type picking - product's Manufacturing Lead Time.")
