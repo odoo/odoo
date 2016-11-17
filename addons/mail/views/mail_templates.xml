@@ -17,6 +17,8 @@
                 <script type="text/javascript" src="/mail/static/src/js/tour.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/window_manager.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/activity.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/web_kanban_activity.js"></script>
 
                 <link rel="stylesheet" href="/mail/static/src/less/announcement.less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/client_action.less" type="text/less"/>
@@ -27,6 +29,7 @@
                 <link rel="stylesheet" href="/mail/static/src/less/followers.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/thread.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/systray.less" type="text/less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/mail_activity.less"/>
             </xpath>
         </template>
 
@@ -48,6 +51,31 @@
                 </a>
             </p>
             <p style="color:#9E588B;">Powered by <a href="https://www.odoo.com">Odoo</a>.</p>
+        </template>
+
+        <template id="message_activity_done">
+<div>
+    <p>
+        <strong><span t-attf-class="fa #{activity.activity_type_id.icon}"/></strong> <span t-field="activity.activity_type_id.name"/> done
+        by <span t-field="activity.user_id.name"/>:
+        <span t-if="activity.summary" t-field="activity.summary"/>
+    </p>
+    <div t-field="activity.note"/>
+</div>
+        </template>
+
+        <template id="message_activity_assigned">
+<div>
+    <p>
+        Planned <span t-field="activity.activity_type_id.name"/> related to <t t-esc="object.name_get()[0][1]"/>:
+        <soan t-if="activity.summary" t-field="activity.summary"/>
+    </p>
+    <ul>
+        <li>Scheduled for: <span t-field="activity.date_deadline"/></li>
+        <li>Assigned to: <span t-field="activity.user_id.name"/></li>
+    </ul>
+    <div t-if="activity.note" t-field="activity.note"/>
+</div>
         </template>
 
     </data>
