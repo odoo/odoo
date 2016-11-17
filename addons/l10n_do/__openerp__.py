@@ -97,8 +97,6 @@ en Odoo):
         'data/fiscal_position_template.xml',
         # configuration wizard, views, reports...
         'data/account_chart_template.yml',
-        # Regulatory sequences for NCF (Número de Comprobante Fiscal)
-        'data/ir_sequence.xml',
         ],
     'test': [],
     'demo': [],
