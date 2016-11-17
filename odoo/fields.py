@@ -456,13 +456,13 @@ class Field(object):
             if not attrs.get('readonly'):
                 attrs['inverse'] = self._inverse_sparse
 
+        self.set_all_attrs(attrs)
+
         # check for renamed attributes (conversion errors)
         for key1, key2 in RENAMED_ATTRS:
             if key1 in attrs:
                 _logger.warning("Field %s: parameter %r is no longer supported; use %r instead.",
                                 self, key1, key2)
-
-        self.set_all_attrs(attrs)
 
         # prefetch only stored, column, non-manual and non-deprecated fields
         if not (self.store and self.column_type) or self.manual or self.deprecated:
