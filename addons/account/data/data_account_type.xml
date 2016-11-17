@@ -2,78 +2,79 @@
 <openerp>
     <data noupdate="1">
         <!-- account.account.type -->
-        <record id="data_account_type_receivable" model="account.account.type">
-            <field name="name">Receivable</field>
-            <field name="type">receivable</field>
-            <field eval="True" name="include_initial_balance"/>
+        <record model="account.account.type" id="data_account_type_receivable">
+          <field name="name">Receivable</field>
+          <field name="type">receivable</field>
+          <field name="include_initial_balance" eval="True"/>
         </record>
-        <record id="data_account_type_payable" model="account.account.type">
-            <field name="name">Payable</field>
-            <field name="type">payable</field>
-            <field eval="True" name="include_initial_balance"/>
+        <record model="account.account.type" id="data_account_type_payable">
+          <field name="name">Payable</field>
+          <field name="type">payable</field>
+          <field name="include_initial_balance" eval="True"/>
         </record>
-        <record id="data_account_type_liquidity" model="account.account.type">
-            <field name="name">Bank and Cash</field>
-            <field name="type">liquidity</field>
-            <field eval="True" name="include_initial_balance"/>
+        <record model="account.account.type" id="data_account_type_liquidity">
+          <field name="name">Bank and Cash</field>
+          <field name="type">liquidity</field>
+          <field name="include_initial_balance" eval="True"/>
         </record>
-        <record id="data_account_type_current_assets" model="account.account.type">
-            <field name="name">Current Assets</field>
-            <field name="type">other</field>
-            <field eval="True" name="include_initial_balance"/>
+        <record model="account.account.type" id="data_account_type_current_assets">
+          <field name="name">Current Assets</field>
+          <field name="type">other</field>
+          <field name="include_initial_balance" eval="True"/>
         </record>
-        <record id="data_account_type_non_current_assets" model="account.account.type">
-            <field name="name">Non-current Assets</field>
-            <field name="type">other</field>
-            <field eval="True" name="include_initial_balance"/>
+        <record model="account.account.type" id="data_account_type_non_current_assets">
+          <field name="name">Non-current Assets</field>
+          <field name="type">other</field>
+          <field name="include_initial_balance" eval="True"/>
         </record>
-        <record id="data_account_type_prepayments" model="account.account.type">
-            <field name="name">Prepayments</field>
-            <field name="type">other</field>
-            <field eval="True" name="include_initial_balance"/>
+        <record model="account.account.type" id="data_account_type_prepayments">
+          <field name="name">Prepayments</field>
+          <field name="type">other</field>
+          <field name="include_initial_balance" eval="True"/>
         </record>
-        <record id="data_account_type_fixed_assets" model="account.account.type">
-            <field name="name">Fixed Assets</field>
-            <field name="type">other</field>
-            <field eval="True" name="include_initial_balance"/>
+        <record model="account.account.type" id="data_account_type_fixed_assets">
+          <field name="name">Fixed Assets</field>
+          <field name="type">other</field>
+          <field name="include_initial_balance" eval="True"/>
         </record>
-        <record id="data_account_type_current_liabilities" model="account.account.type">
-            <field name="name">Current Liabilities</field>
-            <field name="type">other</field>
-            <field eval="True" name="include_initial_balance"/>
+        <record model="account.account.type" id="data_account_type_current_liabilities">
+          <field name="name">Current Liabilities</field>
+          <field name="type">other</field>
+          <field name="include_initial_balance" eval="True"/>
         </record>
-        <record id="data_account_type_non_current_liabilities" model="account.account.type">
-            <field name="name">Non-current Liabilities</field>
-            <field name="type">other</field>
-            <field eval="True" name="include_initial_balance"/>
+        <record model="account.account.type" id="data_account_type_non_current_liabilities">
+          <field name="name">Non-current Liabilities</field>
+          <field name="type">other</field>
+          <field name="include_initial_balance" eval="True"/>
         </record>
-        <record id="data_account_type_equity" model="account.account.type">
-            <field name="name">Equity</field>
-            <field eval="True" name="include_initial_balance"/>
+        <record model="account.account.type" id="data_account_type_equity">
+          <field name="name">Equity</field>
+          <field name="include_initial_balance" eval="True"/>
         </record>
-        <record id="data_unaffected_earnings" model="account.account.type">
-            <field name="name">Current Year Earnings</field>
-            <field eval="True" name="include_initial_balance"/>
+        <record model="account.account.type" id="data_unaffected_earnings">
+          <field name="name">Current Year Earnings</field>
+          <field name="include_initial_balance" eval="True"/>
         </record>
-        <record id="data_account_type_other_income" model="account.account.type">
-            <field name="name">Other Income</field>
-            <field name="type">other</field>
+        <record model="account.account.type" id="data_account_type_other_income">
+          <field name="name">Other Income</field>
+          <field name="type">other</field>
         </record>
-        <record id="data_account_type_revenue" model="account.account.type">
-            <field name="name">Income</field>
-            <field name="type">other</field>
+        <record model="account.account.type" id="data_account_type_revenue">
+          <field name="name">Income</field>
+          <field name="type">other</field>
         </record>
-        <record id="data_account_type_depreciation" model="account.account.type">
-            <field name="name">Depreciation</field>
-            <field name="type">other</field>
+        <record model="account.account.type" id="data_account_type_depreciation">
+          <field name="name">Depreciation</field>
+          <field name="type">other</field>
         </record>
-        <record id="data_account_type_expenses" model="account.account.type">
-            <field name="name">Expenses</field>
-            <field name="type">other</field>
+        <record model="account.account.type" id="data_account_type_expenses">
+          <field name="name">Expenses</field>
+          <field name="type">other</field>
         </record>
-        <record id="data_account_type_direct_costs" model="account.account.type">
-            <field name="name">Cost of Revenue</field>
-            <field name="type">other</field>
+        <record model="account.account.type" id="data_account_type_direct_costs">
+          <field name="name">Cost of Revenue</field>
+          <field name="type">other</field>
         </record>
     </data>
 </openerp>
+
