@@ -692,7 +692,7 @@ class AccountInvoice(models.Model):
                 line['currency_id'] = False
                 line['amount_currency'] = False
                 line['price'] = self.currency_id.round(line['price'])
-            if self.type in ('out_invoice', 'in_refund'):
+            if self.type in ('in_invoice', 'out_refund'):
                 total += line['price']
                 total_currency += line['amount_currency'] or line['price']
                 line['price'] = - line['price']
