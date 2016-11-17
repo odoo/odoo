@@ -51,7 +51,7 @@ class SaleOrder(models.Model):
         refund is not directly linked to the SO.
         """
         for order in self:
-            invoice_ids = order.order_line.mapped('invoice_lines').mapped('invoice_id')
+            invoice_ids = order.order_line.mapped('invoice_lines').mapped('invoice_id').filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
             # Search for invoices which have been 'cancelled' (filter_refund = 'modify' in
             # 'account.invoice.refund')
             # use like as origin may contains multiple references (e.g. 'SO01, SO02')
@@ -602,6 +602,10 @@ class SaleOrderLine(models.Model):
     @api.model
     def _get_analytic_track_service(self):
         return []
+
+    @api.model
+    def _get_purchase_price(self, pricelist, product, product_uom, date):
+        return {}
 
     @api.model
     def create(self, values):

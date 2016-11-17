@@ -37,6 +37,7 @@ class TestStockCommon(common.TransactionCase):
         self.productB = self.ProductObj.create({'name': 'Product B', 'type': 'product'})
         self.productC = self.ProductObj.create({'name': 'Product C', 'type': 'product'})
         self.productD = self.ProductObj.create({'name': 'Product D', 'type': 'product'})
+        self.productE = self.ProductObj.create({'name': 'Product E', 'type': 'product'})
 
         # Configure unit of measure.
         self.uom_kg = self.UomObj.create({
