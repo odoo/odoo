@@ -40,19 +40,14 @@ class CrmLead(models.Model):
 
     @api.multi
     def assign_salesman_of_assigned_partner(self):
-        # TODO: fix it
         salesmans_leads = {}
         for lead in self:
             if (lead.stage_id.probability > 0 and lead.stage_id.probability < 100) or lead.stage_id.sequence == 1:
-                partner_assigned_related_user = self.env['res.users'].search([('partner_id', '=', lead.partner_assigned_id.id)], limit=1)
-                if lead.partner_assigned_id and partner_assigned_related_user and partner_assigned_related_user != lead.user_id:
-                    salesman_id = partner_assigned_related_user.id
-                    if salesmans_leads.get(salesman_id):
-                        salesmans_leads[salesman_id].append(lead.id)
-                    else:
-                        salesmans_leads[salesman_id] = lead.ids
-        for salesman_id, lead_ids in salesmans_leads.items():
-            leads = self.browse(lead_ids)
+                if lead.partner_assigned_id and lead.partner_assigned_id.user_id != lead.user_id:
+                    salesmans_leads.setdefault(lead.partner_assigned_id.user_id.id, []).append(lead.id)
+
+        for salesman_id, leads_ids in salesmans_leads.items():
+            leads = self.browse(leads_ids)
             leads.write({'user_id': salesman_id})
             for lead in leads:
                 lead._onchange_user_id()
