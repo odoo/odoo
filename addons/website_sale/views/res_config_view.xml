@@ -7,10 +7,10 @@
         <field name="arch" type="xml">
             <div id="features_settings" position="after">
                 <h2>Pricing</h2>
-                <div class="row mt16" id="sale_pricing_settings">
+                <div class="row mt16 oe_flex_container" id="sale_pricing_settings">
                     <div class="col-md-6" id="pricelists_setting">
                         <div class="input-group">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon oe_group_addon24">
                                 <input type="checkbox"/>
                             </span>
                             <div class="form-control" style="float: none;">
@@ -31,10 +31,10 @@
                     </div>
                 </div>
                 <h2>Product Catalog</h2>
-                <div class="row mt16" id="sale_product_catalog_settings">
+                <div class="row mt16 oe_flex_container" id="sale_product_catalog_settings">
                     <div class="col-md-6" id="product_image_setting">
                         <div class="input-group">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon oe_group_addon24">
                                 <field name="group_website_multiimage" widget="checkbox"/>
                             </span>
                             <div class="form-control" style="float: none;">
@@ -47,7 +47,7 @@
                     </div>
                     <div class="col-md-6" id="sale_option_setting">
                         <div class="input-group">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon oe_group_addon24">
                                 <field name="module_website_sale_options" widget="checkbox"/>
                             </span>
                             <div class="form-control" style="float: none;">
@@ -60,10 +60,10 @@
                     </div>
                 </div>
                 <h2>Checkout Process</h2>
-                <div class="row mt16" id="sale_checkout_settings">
+                <div class="row mt16 oe_flex_container" id="sale_checkout_settings">
                     <div class="col-md-6" id="checkout_mail_setting">
                         <div class="input-group">
-                            <span class="input-group-addon"/>
+                            <span class="input-group-addon oe_group_addon24"/>
                             <div class="form-control" style="float: none;">
                                 <label string="Confirmation Email"/>
                                 <div class="text-muted">
@@ -72,8 +72,8 @@
                                 <div class="content-group">
                                     <hr class="mt8 mb8" />
                                     <div class="row">
-                                        <label for="order_mail_template" class="col-md-3 oe_light_label"/>
-                                        <field name="order_mail_template" class="col-md-9 oe_inline"/>
+                                        <label for="order_mail_template" class="col-md-4 oe_light_label"/>
+                                        <field name="order_mail_template" class="col-md-8 oe_inline"/>
                                     </div>
                                 </div>
                             </div>
@@ -81,7 +81,7 @@
                     </div>
                     <div class="col-md-6" id="checkout_assignation_setting">
                         <div class="input-group">
-                            <span class="input-group-addon"/>
+                            <span class="input-group-addon oe_group_addon24"/>
                             <div class="form-control" style="float: none;">
                                 <label string="Assignation"/>
                                 <div class="text-muted">
@@ -90,12 +90,12 @@
                                 <div class="content-group">
                                     <hr class="mt8 mb8" />
                                     <div groups="base.group_no_one" class="row">
-                                        <label class="oe_light_label col-md-3" string="Default Sales Team" for="salesteam_id" groups="base.group_no_one"/>
-                                        <field name="salesteam_id" class='col-md-9 oe_inline'/>
+                                        <label class="oe_light_label col-md-4" string="Default Sales Team" for="salesteam_id" groups="base.group_no_one"/>
+                                        <field name="salesteam_id" class='col-md-8 oe_inline'/>
                                     </div>
                                     <div groups="base.group_no_one" class="row">
-                                        <label class="oe_light_label col-md-3" string="Default Salesperson" for="salesperson_id" groups="base.group_no_one"/>
-                                        <field name="salesperson_id" class='col-md-9 oe_inline'/>
+                                        <label class="oe_light_label col-md-4" string="Default Salesperson" for="salesperson_id" groups="base.group_no_one"/>
+                                        <field name="salesperson_id" class='col-md-8 oe_inline'/>
                                     </div>
                                 </div>
                             </div>
@@ -103,13 +103,13 @@
                     </div>
                 </div>
                 <h2>Invoicing</h2>
-                <div class="row mt16" id="sale_invoicing_settings">
+                <div class="row mt16 oe_flex_container" id="sale_invoicing_settings">
                 </div>
                 <h2>Shipping</h2>
-                <div class="row mt16" id="sale_shipping_settings">
+                <div class="row mt16 oe_flex_container" id="sale_shipping_settings">
                     <div class="col-md-6" id="shipping_provider_setting">
                         <div class="input-group">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon oe_group_addon24">
                                 <field name="module_delivery"/>
                             </span>
                             <div class="form-control" style="float: none;">
@@ -119,26 +119,28 @@
                                 </div>
                                 <div class="content-group">
                                     <hr class="mt8 mb8" />
-                                    <div class="pull-left">
-                                        <field name="module_delivery_ups" widget="upgrade_boolean"/>
-                                        <label for="module_delivery_ups" class="oe_light_label oe_inline"/>
-                                        <span class="label label-primary oe_inline">Enterprise</span>
-                                    </div><div class="pull-left">
-                                        <field name="module_delivery_fedex" widget="upgrade_boolean"/>
-                                        <label for="module_delivery_fedex" class="oe_light_label oe_inline"/>
-                                        <span class="label label-primary oe_inline">Enterprise</span>
-                                    </div><div class="pull-left">
-                                        <field name="module_delivery_temando" widget="upgrade_boolean"/>
-                                        <label for="module_delivery_temando" class="oe_light_label oe_inline"/>
-                                        <span class="label label-primary oe_inline">Enterprise</span>
-                                    </div><div class="pull-left">
-                                        <field name="module_delivery_usps" widget="upgrade_boolean"/>
-                                        <label for="module_delivery_usps" class="oe_light_label oe_inline"/>
-                                        <span class="label label-primary oe_inline">Enterprise</span>
-                                    </div><div class="pull-left">
-                                        <field name="module_delivery_dhl" widget="upgrade_boolean"/>
-                                        <label for="module_delivery_dhl" class="oe_light_label oe_inline"/>
-                                        <span class="label label-primary oe_inline">Enterprise</span>
+                                    <div class="oe_flex_container">
+                                        <div>
+                                            <field name="module_delivery_ups" widget="upgrade_boolean"/>
+                                            <label for="module_delivery_ups" class="oe_light_label oe_inline"/>
+                                            <span class="label label-primary oe_inline">Enterprise</span>
+                                        </div><div>
+                                            <field name="module_delivery_fedex" widget="upgrade_boolean"/>
+                                            <label for="module_delivery_fedex" class="oe_light_label oe_inline"/>
+                                            <span class="label label-primary oe_inline">Enterprise</span>
+                                        </div><div>
+                                            <field name="module_delivery_temando" widget="upgrade_boolean"/>
+                                            <label for="module_delivery_temando" class="oe_light_label oe_inline"/>
+                                            <span class="label label-primary oe_inline">Enterprise</span>
+                                        </div><div>
+                                            <field name="module_delivery_usps" widget="upgrade_boolean"/>
+                                            <label for="module_delivery_usps" class="oe_light_label oe_inline"/>
+                                            <span class="label label-primary oe_inline">Enterprise</span>
+                                        </div><div>
+                                            <field name="module_delivery_dhl" widget="upgrade_boolean"/>
+                                            <label for="module_delivery_dhl" class="oe_light_label oe_inline"/>
+                                            <span class="label label-primary oe_inline">Enterprise</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -146,7 +148,7 @@
                     </div>
                     <div class="col-md-6" id="delivery_method_setting">
                         <div class="input-group">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon oe_group_addon24">
                                 <field name="module_website_sale_delivery"/>
                             </span>
                             <div class="form-control" style="float: none;">
@@ -163,10 +165,10 @@
                     </div>
                 </div>
                 <h2>eCommerce Integrations</h2>
-                <div class="row mt16" id="sale_integration_settings">
+                <div class="row mt16 oe_flex_container" id="sale_integration_settings">
                     <div class="col-md-6" id="ebay_install_setting">
                         <div class="input-group">
-                            <span class="input-group-addon">
+                            <span class="input-group-addon oe_group_addon24">
                                 <field name="module_sale_ebay" widget="upgrade_boolean"/>
                             </span>
                             <div class="form-control" style="float: none;">
