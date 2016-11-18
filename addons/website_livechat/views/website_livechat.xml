@@ -124,7 +124,7 @@
                             <h3>The Team</h3>
                             <t t-foreach="team" t-as="user" class="media">
                                 <div class="media">
-                                    <div class="pull-left">
+                                    <div class="pull-left" t-if='user.image_small'>
                                         <img t-att-src="'data:image/png;base64,' + user.image_small" class="img-rounded" t-att-alt="user.name"/>
                                     </div>
                                     <div class="media-body">
