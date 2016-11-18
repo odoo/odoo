@@ -73,22 +73,23 @@
             <field name="view_id" ref="crm.crm_opportunity_report_view_pivot"/>
             <field name="domain">[('type', '=', 'opportunity'), ('team_id', '=', active_id)]</field>
             <field name="context">{'active_test': True}</field>
-            <field name="help">Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the teams of the sales pipeline.</field>
+            <field name="help">Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the channels of the sales pipeline.</field>
         </record>
 
         <record id="sales_team_form_view_in_crm" model="ir.ui.view">
                 <field name="name">crm.team.form.inherit</field>
                 <field name="model">crm.team</field>
                 <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
+                <field name="priority">12</field>
                 <field name="arch" type="xml">
                     <xpath expr="//div[@name='options_active']" position="inside">
                         <div class="o_row">
-                            <span groups="crm.group_use_lead" class="o_row">
+                            <field name="use_opportunities"/>
+                            <label for="use_opportunities"/>
+                            <span groups="crm.group_use_lead" class="o_row" attrs="{'invisible': [('use_opportunities', '=', False)]}">
                                 <field name="use_leads"/>
                                 <label for="use_leads" string="Leads"/>
                             </span>
-                            <field name="use_opportunities"/>
-                            <label for="use_opportunities"/>
                         </div>
                     </xpath>
                    <xpath expr="//field[@name='user_id']" position="after">
@@ -133,7 +134,7 @@
         </record>
 
         <record id="crm_team_act_tree" model="ir.actions.act_window">
-            <field name="name">Cases by Sales Team</field>
+            <field name="name">Cases by Sales Channel</field>
             <field name="res_model">crm.team</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="sales_team.crm_team_view_tree"/>
@@ -176,21 +177,26 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="inside">
-                        <div class="mb4" t-if="record.use_opportunities.raw_value">
-                            <a name="%(crm.action_report_crm_opportunity_salesteam)d" type="action">
-                                Pipeline Analysis
+                    <xpath expr="//t[@name='first_options']" position="after">
+                        <div class="row" t-if="record.unassigned_leads_count.raw_value">
+                            <a name="%(crm_case_form_view_salesteams_lead)d" type="action" context="{'search_default_unassigned': True}">
+                                <field name="unassigned_leads_count"/>
+                                <t t-if="record.unassigned_leads_count.raw_value == 1">Unassigned Lead</t>
+                                <t t-else="">Unassigned Leads</t>
                             </a>
                         </div>
-                        <div class="mb4" t-if="record.use_opportunities.raw_value">
-                            <a name="%(crm.crm_activity_report_action_team)d" type="action">
-                                Activities Analysis
-                            </a>
+                        <div class="row" t-if="record.opportunities_count.raw_value">
+                            <div class="col-xs-8">
+                                <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action"> <!-- context="{'search_default_probability': NOT or < 100}" -->
+                                    <field name="opportunities_count"/>
+                                    <t t-if="record.opportunities_count.raw_value == 1">Open Opportunity</t>
+                                    <t t-else="">Open Opportunities</t>
+                                </a>
+                            </div>
+                            <div class="col-xs-4 text-right">
+                                <field name="opportunities_amount" widget="monetary"/>
+                            </div>
                         </div>
-                    </xpath>
-
-                    <xpath expr="//div[contains(@class, 'o_kanban_primary_left')]" position="inside">
-                        <button t-if="record.use_opportunities.raw_value" class="btn btn-primary" name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Pipeline</button>
                     </xpath>
 
                     <xpath expr="//div[contains(@class, 'o_kanban_manage_view')]" position="inside">
@@ -223,6 +229,11 @@
                         <div t-if="record.use_opportunities.raw_value">
                             <a name="%(action_report_crm_opportunity_salesteam)d" type="action">
                                 Opportunities
+                            </a>
+                        </div>
+                        <div class="mb4" t-if="record.use_opportunities.raw_value">
+                            <a name="%(crm.crm_activity_report_action_team)d" type="action">
+                                Activities Analysis
                             </a>
                         </div>
                     </xpath>

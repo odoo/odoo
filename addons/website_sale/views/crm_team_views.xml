@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_order_action_abandoned_carts" model="ir.actions.act_window">
+        <field name="name">Abandoned Carts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="domain" eval="[('state', '=', 'draft'), ('partner_id', '!=', ref('base.public_user')), ('date_order', '&lt;=', (datetime.now() - relativedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')), ('order_line', '!=', False)]"/>
+        <field name="context">{
+                'search_default_team_id': [active_id],
+                'default_team_id': active_id,
+            }
+        </field>
+    </record>
+
+    <record id="crm_team_salesteams_view_kanban_inherit_website_sale" model="ir.ui.view"> 
+        <field name="name">crm.team.kanban</field>
+        <field name="model">crm.team</field>
+        <field name="inherit_id" ref="sales_team.crm_team_salesteams_view_kanban"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//templates" position="before">
+                    <field name="team_type"/>
+                </xpath>
+                <xpath expr="//t[@name='third_options']" position="after">
+                    <div class="row" t-if="record.team_type.raw_value == 'website' &amp;&amp; record.abandoned_carts_count.raw_value">
+                        <div class="col-xs-8">
+                            <div>
+                                <a name="%(sale_order_action_abandoned_carts)d" type="action" class="o_quotation_view_button">
+                                    <field name="abandoned_carts_count"/>
+                                    <t t-if="record.abandoned_carts_count.raw_value != 1">Abandoned Carts</t>
+                                    <t t-else="">Abandoned Cart</t>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <field name="abandoned_carts_amount" widget="monetary"/>
+                        </div>
+                    </div>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+</odoo>

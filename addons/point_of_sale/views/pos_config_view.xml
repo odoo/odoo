@@ -8,7 +8,7 @@
                 <sheet>
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
-                    <group col="4">
+                    <group name="pos_config_main_options" col="4">
                         <field name="picking_type_id" widget="selection" groups="stock.group_stock_multi_locations" />
                         <field name="stock_location_id" groups="stock.group_stock_multi_locations"/>
                         <field name="company_id" groups="base.group_multi_company"/>
@@ -94,7 +94,7 @@
         <field name="model">pos.config</field>
         <field name="arch" type="xml">
             <search string="Point of Sale Config">
-                <field name="name" />
+                <field name="name"/>
                 <filter string="Inactive" domain="[('active', '=', False)]" />
                 <field name="stock_location_id" groups="stock.group_stock_multi_locations" />
             </search>

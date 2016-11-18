@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from dateutil.relativedelta import relativedelta
+
+from odoo import api, fields, models, _
 from odoo.tools.safe_eval import safe_eval
+from odoo.exceptions import ValidationError
 
 
 class Team(models.Model):
@@ -10,11 +13,42 @@ class Team(models.Model):
     _inherit = ['mail.alias.mixin', 'crm.team']
 
     resource_calendar_id = fields.Many2one('resource.calendar', string="Working Time", help="Used to compute open days")
-    use_leads = fields.Boolean('Leads',
-        help="The first contact you get with a potential customer is a lead you qualify before converting it into a real business opportunity. Check this box to manage leads in this sales team.")
-    use_opportunities = fields.Boolean('Opportunities', default=True, help="Check this box to manage opportunities in this sales team.")
-    alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True, help="The email address associated with this team. New emails received will automatically create new leads assigned to the team.")
+    use_leads = fields.Boolean('Leads', help="The first contact you get with a potential customer is a lead you qualify before converting it into a real "
+                                             "business opportunity. Check this box to assign leads to this sales channel.")
+    use_opportunities = fields.Boolean('Pipeline', help="Check this box to manage opportunities in this sales channel.")
+    alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True, help="The email address associated with this channel. New emails received will automatically create new leads assigned to the channel.")
+    unassigned_leads_count = fields.Integer(
+        compute='_compute_unassigned_leads_count',
+        string='Unassigned Leads', readonly=True)
+    opportunities_count = fields.Integer(
+        compute='_compute_opportunities',
+        string='Number of open opportunities', readonly=True)
+    opportunities_amount = fields.Integer(
+        compute='_compute_opportunities',
+        string='Amount of quotations to invoice', readonly=True)
+    dashboard_graph_model = fields.Selection(selection_add=[('pipeline', 'Pipeline')])
 
+    def _compute_unassigned_leads_count(self):
+        leads_data = self.env['crm.lead'].read_group([
+            ('team_id', 'in', self.ids),
+            ('type', '=', 'lead'),
+            ('user_id', '=', False),
+        ], ['team_id'], ['team_id'])
+        counts = dict((data['team_id'][0], data['team_id_count']) for data in leads_data)
+        for team in self:
+            team.unassigned_leads_count = counts.get(team.id, 0)
+
+    def _compute_opportunities(self):
+        opportunity_data = self.env['crm.opportunity.report'].read_group([
+            ('team_id', 'in', self.ids),
+            ('probability', '<', 100),
+            ('type', '=', 'opportunity'),
+        ], ['expected_revenue', 'team_id'], ['team_id'])
+        counts = dict((data['team_id'][0], data['team_id_count']) for data in opportunity_data)
+        amounts = dict((data['team_id'][0], data['expected_revenue']) for data in opportunity_data)
+        for team in self:
+            team.opportunities_count = counts.get(team.id, 0)
+            team.opportunities_amount = amounts.get(team.id, 0)
 
     def get_alias_model_name(self, vals):
         return 'crm.lead'
@@ -31,6 +65,24 @@ class Team(models.Model):
     def _onchange_use_leads_opportunities(self):
         if not self.use_leads and not self.use_opportunities:
             self.alias_name = False
+        if not self.use_opportunities and self.use_leads:
+            self.use_leads = False
+
+    @api.onchange('team_type')
+    def _onchange_team_type(self):
+        if self.team_type == 'sales':
+            self.use_opportunities = True
+            self.use_leads = lambda self: self.user_has_groups('crm.group_use_lead')
+            self.dashboard_graph_model = 'pipeline'
+        else:
+            self.use_opportunities = False
+            self.use_leads = False
+        return super(Team, self)._onchange_team_type()
+
+    @api.constrains('dashboard_graph_model', 'use_opportunities')
+    def _check_graph_model(self):
+        if not self.use_opportunities and self.dashboard_graph_model == 'pipeline':
+            raise ValidationError(_("Dashboard graph content cannot be Pipeline if the sales channel doesn't use it. (Pipeline is unchecked.)"))
 
     @api.model
     def create(self, vals):
@@ -55,11 +107,11 @@ class Team(models.Model):
         if not user_team_id:
             user_team_id = self.search([], limit=1).id
             action['help'] = """<p class='oe_view_nocontent_create'>Click here to add new opportunities</p><p>
-    Looks like you are not a member of a sales team. You should add yourself
-    as a member of one of the sales team.
+    Looks like you are not a member of a sales channel. You should add yourself
+    as a member of one of the sales channel.
 </p>"""
             if user_team_id:
-                action['help'] += "<p>As you don't belong to any sales team, Odoo opens the first one by default.</p>"
+                action['help'] += "<p>As you don't belong to any sales channel, Odoo opens the first one by default.</p>"
 
         action_context = safe_eval(action['context'], {'uid': self.env.uid})
         if user_team_id:
@@ -78,3 +130,64 @@ class Team(models.Model):
             ]
         action['context'] = action_context
         return action
+
+    def _compute_dashboard_button_name(self):
+        opportunity_teams = self.filtered('use_opportunities')
+        opportunity_teams.update({'dashboard_button_name': _("Pipeline")})
+        super(Team, self - opportunity_teams)._compute_dashboard_button_name()
+
+    def action_primary_channel_button(self):
+        if self.use_opportunities:
+            action = self.env.ref('crm.crm_case_form_view_salesteams_opportunity').read()[0]
+            return action
+        return super(Team, self).action_primary_channel_button()
+
+    def _graph_get_dates(self, today):
+        """ return a coherent start and end date for the dashboard graph according to the graph settings.
+        """
+        if self.dashboard_graph_model == 'pipeline':
+            if self.dashboard_graph_group == 'month':
+                start_date = today.replace(day=1)
+            elif self.dashboard_graph_group == 'week':
+                start_date = today - relativedelta(days=today.isocalendar()[2] - 1)
+            else:
+                start_date = today
+
+            if self.dashboard_graph_period == 'week':
+                end_date = today + relativedelta(weeks=1)
+            elif self.dashboard_graph_period == 'year':
+                end_date = today + relativedelta(years=1)
+            else:
+                end_date = today + relativedelta(months=1)
+
+            # we take the end of the preceding month/week/day if we group by month/week/day
+            # (to avoid having twice the same month/week/day from different years/month/week)
+            if self.dashboard_graph_group == 'month':
+                end_date = end_date.replace(day=1) - relativedelta(days=1)
+            elif self.dashboard_graph_group == 'week':
+                end_date -= relativedelta(days=end_date.isocalendar()[2])
+            else:
+                end_date -= relativedelta(days=1)
+
+            return [start_date, end_date]
+        return super(Team, self)._graph_get_dates(today)
+
+    def _graph_date_column(self):
+        if self.dashboard_graph_model == 'pipeline':
+            return 'date_deadline'
+        return super(Team, self)._graph_date_column()
+
+    def _graph_y_query(self):
+        if self.dashboard_graph_model == 'pipeline':
+            return 'SUM(expected_revenue)'
+        return super(Team, self)._graph_y_query()
+
+    def _graph_sql_table(self):
+        if self.dashboard_graph_model == 'pipeline':
+            return 'crm_opportunity_report'
+        return super(Team, self)._graph_sql_table()
+
+    def _graph_title_and_key(self):
+        if self.dashboard_graph_model == 'pipeline':
+            return [_('Pipeline'), _('Expected Revenue')]
+        return super(Team, self)._graph_title_and_key()

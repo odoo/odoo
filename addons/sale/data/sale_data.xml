@@ -7,6 +7,12 @@
             <field name="object">sale.order</field>
         </record>
 
+        <record model="crm.team" id="sales_team.team_sales_department">
+            <field name="use_quotations" eval="True"/>
+            <field name="use_invoices" eval="True"/>
+            <field name="dashboard_graph_model">sales</field>
+        </record>
+
         <!-- notify all employees of module installation -->
         <record model="mail.message" id="module_install_notification">
             <field name="model">mail.channel</field>

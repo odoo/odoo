@@ -23,7 +23,6 @@ modules.
         'views/partner_views.xml',
         'views/sale_order_views.xml',
         'views/crm_lead_views.xml',
-        'views/crm_team_views.xml',
         'views/sale_crm_template.xml',
     ],
     'auto_install': True,

@@ -15,7 +15,7 @@ tour.register('sale_tour', {
 }, {
     trigger: ".oe_kanban_action_button",
     extra_trigger: '.o_salesteam_kanban',
-    content: _t("Let\'s have a look at the quotations of this sales team."),
+    content: _t("Let\'s have a look at the quotations of this sales channel."),
     position: "bottom",
     id: "quotation_button_on_dashboard",
 }, {

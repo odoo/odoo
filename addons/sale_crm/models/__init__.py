@@ -3,5 +3,6 @@
 
 import account_invoice
 import crm_lead
+import crm_team
 import res_users
 import sale_order

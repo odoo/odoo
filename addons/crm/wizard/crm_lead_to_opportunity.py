@@ -50,7 +50,7 @@ class Lead2OpportunityPartner(models.TransientModel):
     ], 'Conversion Action', required=True)
     opportunity_ids = fields.Many2many('crm.lead', string='Opportunities')
     user_id = fields.Many2one('res.users', 'Salesperson', index=True)
-    team_id = fields.Many2one('crm.team', 'Sales Team', oldname='section_id', index=True)
+    team_id = fields.Many2one('crm.team', 'Sales Channel', oldname='section_id', index=True)
 
     @api.onchange('action')
     def onchange_action(self):
@@ -175,7 +175,7 @@ class Lead2OpportunityMassConvert(models.TransientModel):
         return res
 
     user_ids = fields.Many2many('res.users', string='Salesmen')
-    team_id = fields.Many2one('crm.team', 'Sales Team', index=True, oldname='section_id')
+    team_id = fields.Many2one('crm.team', 'Sales Channel', index=True, oldname='section_id')
     deduplicate = fields.Boolean('Apply deduplication', default=True, help='Merge with existing leads/opportunities of each partner')
     action = fields.Selection([
         ('each_exist_or_create', 'Use existing partner or create'),

@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Sales Teams',
+    'name': 'Sales Channels',
     'version': '1.0',
     'category': 'Sales',
-    'summary': 'Sales Team',
+    'summary': 'Sales Channels',
     'description': """
-Using this application you can manage Sales Team  with CRM and/or Sales 
+Using this application you can manage Sales Channels  with CRM and/or Sales
 =======================================================================
  """,
     'website': 'https://www.odoo.com/page/crm',
-    'depends': ['base','mail'],
+    'depends': ['base', 'mail'],
     'data': ['security/sales_team_security.xml',
              'security/ir.model.access.csv',
              'data/sales_team_data.xml',
