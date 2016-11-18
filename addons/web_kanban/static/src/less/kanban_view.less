@@ -8,6 +8,7 @@
 @o-kanban-inside-vgutter: 8px;
 @o-kanban-inside-hgutter: 8px;
 @o-kanban-inside-hgutter-mobile: @odoo-horizontal-padding;
+@o-kanban-progressbar-height: 20px;
 
 // mixins
 .o-kanban-icon() {
@@ -310,7 +311,7 @@
         }
         .o_progressbar {
             .o-flex-display();
-            height: 20px;
+            height: @o-kanban-progressbar-height;
 
             .o_progressbar_title {
                 .o-flex(0, 0, auto);

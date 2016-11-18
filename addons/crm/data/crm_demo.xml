@@ -8,5 +8,10 @@
         <record id="sales_team.team_sales_department" model="crm.team">
             <field name="member_ids" eval="[(4, ref('base.user_demo'))]"/>
         </record>
+
+        <record id="sales_team.crm_team_1" model="crm.team">
+            <field name="use_opportunities">True</field>
+            <field name="dashboard_graph_model">pipeline</field>
+        </record>
     </data>
 </odoo>

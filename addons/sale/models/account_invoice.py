@@ -17,7 +17,7 @@ class AccountInvoice(models.Model):
         if invoice_type == 'out_invoice':
             return self.env.user.company_id.sale_note
 
-    team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_default_team, oldname='section_id')
+    team_id = fields.Many2one('crm.team', string='Sales Channel', default=_get_default_team, oldname='section_id')
     comment = fields.Text(default=_default_comment)
     partner_shipping_id = fields.Many2one(
         'res.partner',

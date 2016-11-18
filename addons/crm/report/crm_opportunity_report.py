@@ -26,7 +26,7 @@ class OpportunityReport(models.Model):
     delay_expected = fields.Float('Overpassed Deadline', digits=(16, 2), readonly=True, group_operator="avg")
 
     user_id = fields.Many2one('res.users', string='User', readonly=True)
-    team_id = fields.Many2one('crm.team', 'Sales Team', oldname='section_id', readonly=True)
+    team_id = fields.Many2one('crm.team', 'Sales Channel', oldname='section_id', readonly=True)
     nbr_activities = fields.Integer('# of Activities', readonly=True)
     city = fields.Char('City')
     country_id = fields.Many2one('res.country', string='Country', readonly=True)

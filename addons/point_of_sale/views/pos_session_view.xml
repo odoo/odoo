@@ -150,7 +150,7 @@
         <field name="arch" type="xml">
             <search string="Point of Sale Session">
                 <field name="name" />
-                <filter string="Open" domain="[('state', '=', 'opened')]" />
+                <filter name="open_sessions" string="Open" domain="[('state', '=', 'opened')]" />
                 <separator/>
                 <filter string="Today" domain="[('start_at', '>=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" />
                 <field name="config_id" />

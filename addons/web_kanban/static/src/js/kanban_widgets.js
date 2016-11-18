@@ -310,9 +310,11 @@ var DashboardGraph = AbstractField.extend({
                             });
                             return label;
                         });
+                    if (self.data[0].title) {
+                        self.chart.xAxis.axisLabel(self.data[0].title);
+                    }
                     self.chart.yAxis
                         .tickFormat(d3.format(',.2f'));
-
                     break;
 
                 case "bar":

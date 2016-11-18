@@ -13,7 +13,7 @@ class WebsiteConfigSettings(models.TransientModel):
             return self.env.ref('sale.email_template_edi_sale').id
 
     salesperson_id = fields.Many2one('res.users', related='website_id.salesperson_id', string='Salesperson')
-    salesteam_id = fields.Many2one('crm.team', related='website_id.salesteam_id', string='Sales Team')
+    salesteam_id = fields.Many2one('crm.team', related='website_id.salesteam_id', string='Sales Channel', domain=[('team_type', '!=', 'pos')])
     module_delivery = fields.Boolean("Manage shipping internally")
     module_website_sale_delivery = fields.Boolean("Shipping Costs")
     # field used to have a nice radio in form view, resuming the 2 fields above

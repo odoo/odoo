@@ -167,7 +167,7 @@ class Website(models.Model):
     pricelist_id = fields.Many2one('product.pricelist', compute='_compute_pricelist_id', string='Default Pricelist')
     currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', string='Default Currency')
     salesperson_id = fields.Many2one('res.users', string='Salesperson')
-    salesteam_id = fields.Many2one('crm.team', string='Sales Team')
+    salesteam_id = fields.Many2one('crm.team', string='Sales Channel')
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
                                     string='Price list available for this Ecommerce/Website')
 

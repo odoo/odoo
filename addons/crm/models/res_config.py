@@ -7,8 +7,8 @@ from odoo import api, fields, models
 class CRMSettings(models.TransientModel):
     _inherit = 'sale.config.settings'
 
-    generate_sales_team_alias = fields.Boolean("Automatically generate an email alias at the sales team creation",
-        help="Odoo will generate an email alias based on the sales team name")
+    generate_sales_team_alias = fields.Boolean("Automatically generate an email alias at the sales channel creation",
+        help="Odoo will generate an email alias based on the sales channel name")
     alias_prefix = fields.Char('Default Alias Name for Leads')
     alias_domain = fields.Char('Alias Domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
     default_generate_lead_from_alias = fields.Boolean(default_model='sale.config.settings')

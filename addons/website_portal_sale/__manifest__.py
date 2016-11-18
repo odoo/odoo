@@ -15,6 +15,7 @@ Add your sales document in the frontend portal. Your customers will be able to c
         'website_payment',
     ],
     'data': [
+        'views/crm_team_views.xml',
         'views/website_portal_sale_templates.xml',
         'views/sale_order_views.xml',
         'security/ir.model.access.csv',

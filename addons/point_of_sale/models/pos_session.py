@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
+
 
 class PosSession(models.Model):
     _name = 'pos.session'
@@ -24,7 +26,7 @@ class PosSession(models.Model):
             orders.with_context(force_company=company_id)._create_account_move_line(session, move)
             for order in session.order_ids.filtered(lambda o: o.state != 'done'):
                 if order.state not in ('paid', 'invoiced'):
-                    raise UserError(_("You cannot confirm all orders of this session, because they have not the 'paid' status"))
+                    raise UserError(_("You cannot confirm all orders of this session, because they don't have the 'paid' status"))
                 order.action_pos_order_done()
 
     config_id = fields.Many2one(
@@ -52,7 +54,7 @@ class PosSession(models.Model):
     sequence_number = fields.Integer(string='Order Sequence Number', help='A sequence number that is incremented with each order', default=1)
     login_number = fields.Integer(string='Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session', default=0)
 
-    cash_control = fields.Boolean(compute='_compute_cash_all',    string='Has Cash Control')
+    cash_control = fields.Boolean(compute='_compute_cash_all', string='Has Cash Control')
     cash_journal_id = fields.Many2one('account.journal', compute='_compute_cash_all', string='Cash Journal', store=True)
     cash_register_id = fields.Many2one('account.bank.statement', compute='_compute_cash_all', string='Cash Register', store=True)
 

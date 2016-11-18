@@ -28,7 +28,9 @@
         </record>
 
         <record model="crm.team" id="sales_team.salesteam_website_sales">
-            <field name="use_quotations" eval="False"/>
+            <field name="active" eval="True"/>
+            <field name="dashboard_graph_model">sales</field>
+            <field name="dashboard_graph_period">week</field>
         </record>
 
         <record model="website" id="website.default_website">

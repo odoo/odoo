@@ -8,7 +8,7 @@ class Partner(models.Model):
 
     _inherit = 'res.partner'
 
-    team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id')
+    team_id = fields.Many2one('crm.team', string='Sales Channel', oldname='section_id')
     opportunity_ids = fields.One2many('crm.lead', 'partner_id', string='Opportunities', domain=[('type', '=', 'opportunity')])
     meeting_ids = fields.Many2many('calendar.event', 'calendar_event_res_partner_rel', 'res_partner_id', 'calendar_event_id', string='Meetings')
     opportunity_count = fields.Integer("Opportunity", compute='_compute_opportunity_count')

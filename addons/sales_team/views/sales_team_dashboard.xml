@@ -9,6 +9,8 @@
                 <field name="user_id"/>
                 <field name="member_ids"/>
                 <field name="color"/>
+                <field name="dashboard_graph_type"/>
+                <field name="currency_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{kanban_color(record.color.raw_value)}">
@@ -21,10 +23,19 @@
                                 </div>
                             </div>
                             <div class="container o_kanban_card_content o_visible">
-                                <div class="row">
+                                <div class="row o_kanban_card_upper_content">
                                     <div class="col-xs-6 o_kanban_primary_left" name="to_replace_in_sale_crm">
+                                        <button type="object" class="btn btn-primary" name="action_primary_channel_button"><field name="dashboard_button_name"/></button>
                                     </div>
-                                    <div class="col-xs-6 o_kanban_primary_right">
+                                    <div class="col-xs-6 o_kanban_primary_right" groups="sales_team.group_sale_salesman_all_leads">
+                                        <t name="first_options"/>
+                                        <t name="second_options"/>
+                                        <t name="third_options"/>
+                                    </div>
+                                </div>
+                                <div class="row" groups="sales_team.group_sale_salesman_all_leads">
+                                    <div class="col-xs-12 o_kanban_primary_bottom">
+                                        <t t-call="SalesTeamDashboardGraph"/>
                                     </div>
                                 </div>
                             </div><div class="container o_kanban_card_manage_pane o_invisible">
@@ -55,6 +66,11 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </t>
+                    <t t-name="SalesTeamDashboardGraph">
+                        <div t-if="record.dashboard_graph_data.raw_value" class="o_sales_team_kanban_graph_section">
+                            <field name="dashboard_graph_data" t-att-graph_type="record.dashboard_graph_type.raw_value" widget="dashboard_graph"/>
                         </div>
                     </t>
                 </templates>

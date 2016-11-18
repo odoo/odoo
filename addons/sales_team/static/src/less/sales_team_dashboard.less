@@ -6,7 +6,87 @@
     .o_kanban_record {
         min-height: 250px;
         @media (min-width: @screen-sm-min) {
-            min-width: 420px;
+            min-width: 450px;
+        }
+        .o_kanban_card_upper_content {
+            margin-bottom: @odoo-horizontal-padding*3 + @o-kanban-progressbar-height + 85px;
+        }
+        .o_sales_team_kanban_graph_section {
+            margin-bottom: @odoo-horizontal-padding*2 + @o-kanban-progressbar-height;
+            .o-position-absolute(@bottom: 0, @left: 0, @right: 0);
+            .o_graph_linechart {
+                > svg {
+                    height: 75px;
+
+                    // X axis
+                    g.nv-x.nv-axis {
+                        // move the labels up, so they aren't hidden below the graph, and the lines back down.
+                        transform: translateY(50px);
+                        line {
+                            transform: translateY(25px);
+                        }
+                        .nv-axislabel{
+                            transform:translateY(-78px);
+                            font-weight: bold;
+                        }
+
+                        // Remove max and min labels
+                        g.nv-axisMaxMin {
+                            display: none;
+                        }
+                        g.tick.major {
+                            // Don't know why, but leads to strange bold text
+                            // stroke: @odoo-brand-primary;
+
+                            line {
+                                display: none;
+                            }
+                        }
+                    }
+
+                    // !important are needed because nvd3 uses inline style on elements
+
+                    // Remove strokes
+                    g.nv-linesWrap {
+                        g.nv-group.nv-series-0 {
+                            fill-opacity: 0.3 !important;
+
+                            .nv-point {
+                                visibility: hidden;
+                                r: 3;
+                                fill: white;
+                                stroke-width: 2;
+                            }
+                        }
+                    }
+                }
+            }
+            .o_graph_barchart {
+                > svg {
+                    height: 75px;
+                    overflow: visible;
+                    g.nv-barsWrap {
+                        g.nv-group.nv-series-0 {
+                            g.nv-bar {
+                                fill: @odoo-brand-primary !important;
+                            }
+                        }
+                    }
+
+                    // lower the graph a bit as it's too high
+                    g.nvd3.nv-wrap {
+                        transform: translateY(10px);
+                    }
+                    // X axis
+                    g.nv-x.nv-axis .nv-axislabel{
+                        transform:translateY(-78px);
+                        font-weight: bold;
+                    }
+                    g.nv-y.nv-axis {
+                        transform: translateY(10px);
+                    }
+                }
+            }
         }
     }
 
