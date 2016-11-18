@@ -1955,6 +1955,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                     });
                 } else if (error.code === 200) {    // OpenERP Server Errors
                     self.gui.show_popup('error-traceback',{
+                        'blob': self.pos.prepare_blob(error.data,'Error'),
                         'title': error.data.message || _t("Server Error"),
                         'body': error.data.debug || _t('The server encountered an error while receiving your order.'),
                     });

@@ -248,7 +248,7 @@ exports.PosModel = Backbone.Model.extend({
        },
     },{
         model:  'res.users',
-        fields: ['name','pos_security_pin','groups_id','barcode'],
+        fields: ['name','pos_security_pin','groups_id','barcode','email'],
         domain: function(self){ return [['company_id','=',self.user.company_id[0]],'|', ['groups_id','=', self.config.group_pos_manager_id[0]],['groups_id','=', self.config.group_pos_user_id[0]]]; },
         loaded: function(self,users){ 
             // we attribute a role to the user, 'cashier' or 'manager', depending
@@ -804,6 +804,7 @@ exports.PosModel = Backbone.Model.extend({
                 // Hide error if already shown before ... 
                 if ((!self.get('failed') || options.show_error) && !options.to_invoice) {
                     self.gui.show_popup('error-traceback',{
+                        'blob': self.prepare_blob(error.data,'Error'),
                         'title': error.data.message,
                         'body':  error.data.debug
                     });
@@ -955,6 +956,23 @@ exports.PosModel = Backbone.Model.extend({
         if (orders.length) {
             this.get('orders').add(orders);
         }
+    },
+
+    prepare_blob: function(data,debug_type) {
+        if (typeof data === "object") {
+            data = JSON.stringify(data);
+        }
+
+        var blob = new Blob([data],{type: 'text/plain'});
+        var URL = window.URL || window.webkitURL;
+        var url_blob = URL.createObjectURL(blob);
+        var filename = debug_type+"_"+(new Date()).toUTCString().replace(/\ |:|,/g,'_')+".txt";
+
+        return {
+            url_blob:url_blob,
+            filename:filename,
+            isAttDownload: (document.createElement('a').download != "undefined")
+        };
     },
         
 });

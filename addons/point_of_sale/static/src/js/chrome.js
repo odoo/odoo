@@ -9,7 +9,6 @@ var core = require('web.core');
 var ajax = require('web.ajax');
 var CrashManager = require('web.CrashManager');
 
-
 var _t = core._t;
 var QWeb = core.qweb;
 
@@ -278,13 +277,25 @@ var DebugWidget = PosBaseWidget.extend({
         });
 
         this.$('.button.export_unpaid_orders').click(function(){
-            self.gui.download_file(self.pos.export_unpaid_orders(),
-                "unpaid_orders_" + (new Date()).toUTCString().replace(/\ /g,'_') + '.json');
+            var data = self.pos.export_unpaid_orders();
+            var blob = self.pos.prepare_blob(data,'unpaid_orders');
+
+            self.gui.show_popup('exportconfirmwidget', {
+                'title': 'Export unpaid orders',
+                'body': data,
+                'blob':blob,
+            });                
         });
 
         this.$('.button.export_paid_orders').click(function() {
-            self.gui.download_file(self.pos.export_paid_orders(),
-                "paid_orders_" + (new Date()).toUTCString().replace(/\ /g,'_') + '.json');
+            var data = self.pos.export_paid_orders();
+            var blob = self.pos.prepare_blob(data,'paid_orders');
+
+            self.gui.show_popup('exportconfirmwidget', {
+                'title': 'Export paid orders',
+                'body': data,
+                'blob':blob,
+            });
         });
 
         this.$('.button.import_orders input').on('change', function(event) {
@@ -518,7 +529,9 @@ var Chrome = PosBaseWidget.extend({
     // displays a system error with the error-traceback
     // popup.
     show_error: function(error) {
+        var self = this;
         this.gui.show_popup('error-traceback',{
+            'blob': self.pos.prepare_blob(error,'Error'),
             'title': error.message,
             'body':  error.message + '\n' + error.data.debug + '\n',
         });

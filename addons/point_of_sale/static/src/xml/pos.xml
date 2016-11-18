@@ -975,9 +975,15 @@
                     <div class="button cancel">
                         Ok
                     </div>
+                <t t-if="widget.options.blob">
                     <div class="button icon download">
-                        <i class="fa fa-download"></i>
-                    </div>
+                        <t t-if="widget.options.blob.isAttDownload">
+                    <a t-attf-href="{{ widget.options.blob.url_blob }}" t-attf-download="{{ widget.options.blob.filename }}">
+                        <i class="fa fa-download" style="color: rgb(168,89,89);"></i>
+                    </a>
+                </t>
+                </div>
+               </t>
                     <div class="button icon email">
                         <i class="fa fa-paper-plane"></i>
                     </div>
@@ -1592,6 +1598,32 @@
                 <li class="return lastitem">return</li>
             </ul>
             <p class="close_button">close</p>
+        </div>
+    </t>
+
+        <t t-name="ExportConfirmWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-alert">
+                <p class="title"><t t-esc=" widget.options.title || 'Export' " /></p>
+                <p class="body traceback"><t t-esc=" widget.options.body || '' "/></p>
+                <div class="footer">
+                    <div class="button cancel">
+                        Ok
+                    </div>
+                <t t-if="widget.options.blob">
+                    <div class="button icon download">
+                        <t t-if="widget.options.blob.isAttDownload">
+                    <a t-attf-href="{{ widget.options.blob.url_blob }}" t-attf-download="{{ widget.options.blob.filename }}">
+                        <i class="fa fa-download"></i>
+                    </a>
+                </t>
+                </div>
+               </t>
+                    <div class="button icon email"  >
+                        <i class="fa fa-paper-plane"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </t>
 
