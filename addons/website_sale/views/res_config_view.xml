@@ -5,54 +5,185 @@
         <field name="model">website.config.settings</field>
         <field name="inherit_id" ref="website.view_website_config_settings"/>
         <field name="arch" type="xml">
-            <group name="social" position="before">
-                <group name="delivery" string="eCommerce">
-                    <field name="group_website_multiimage" widget="radio"/>
-                    <field name="module_website_sale_options" widget="radio"/>
-                    <field name="group_sale_pricelist" class="oe_inline" invisible="1"/>
-                    <field name="group_pricelist_item" class="oe_inline" invisible="1"/>
-                    <field name="group_product_pricelist" class="oe_inline" invisible="1"/>
-                    <field name="sale_pricelist_setting_split_1" widget="radio"/>
-                    <field name="sale_pricelist_setting_split_2" widget="radio" attrs="{'invisible': [('sale_pricelist_setting_split_1', '=', False)]}"/>
-                    <field name="module_website_sale_delivery" invisible="1"/>
-                    <field name="module_delivery" invisible="1"/>
-                    <field name="sale_delivery_settings" widget="radio"/>
-                    <label for="module_delivery_ups" string="Shipping Connectors"/>
-                    <div>
-                        <div>
-                            <field name="module_delivery_ups" widget="upgrade_boolean"/>
-                            <label for="module_delivery_ups"/>
-                        </div><div>
-                            <field name="module_delivery_fedex" widget="upgrade_boolean"/>
-                            <label for="module_delivery_fedex"/>
-                        </div><div>
-                            <field name="module_delivery_temando" widget="upgrade_boolean"/>
-                            <label for="module_delivery_temando"/>
-                        </div><div>
-                            <field name="module_delivery_usps" widget="upgrade_boolean"/>
-                            <label for="module_delivery_usps"/>
-                        </div><div>
-                            <field name="module_delivery_dhl" widget="upgrade_boolean"/>
-                            <label for="module_delivery_dhl"/>
+            <div id="features_settings" position="after">
+                <h2>Pricing</h2>
+                <div class="row mt16" id="sale_pricing_settings">
+                    <div class="col-md-6" id="pricelists_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <input type="checkbox"/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label string="Pricelists"/>
+                                <div class="text-muted">
+                                    Apply specific prices per country, discount, etc.
+                                </div>
+                                <div class="content-group">
+                                    <hr class="mt8 mb8" />
+                                    <field name="group_sale_pricelist" class="oe_inline" invisible="1"/>
+                                    <field name="group_pricelist_item" class="oe_inline" invisible="1"/>
+                                    <field name="group_product_pricelist" class="oe_inline" invisible="1"/>
+                                    <field name="sale_pricelist_setting_split_1" class="oe_light_label" widget="radio"/>
+                                    <field name="sale_pricelist_setting_split_2" class="oe_light_label" widget="radio" attrs="{'invisible': [('sale_pricelist_setting_split_1', '=', False)]}"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <label for="module_sale_ebay" string="Merchant Connectors"/>
-                    <div>
-                        <field name="module_sale_ebay" widget="upgrade_boolean"/>
-                        <label for="module_sale_ebay"/>
-                        <a href="https://www.odoo.com/slides/slide/odoo-integration-with-ebay-216" target="_blank"> More Info</a>
+                </div>
+                <h2>Product Catalog</h2>
+                <div class="row mt16" id="sale_product_catalog_settings">
+                    <div class="col-md-6" id="product_image_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <field name="group_website_multiimage" widget="checkbox"/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label string="Multi-Images"/>
+                                <div class="text-muted">
+                                    Display an images carousel on product pages.
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <label string="Default Sales Team" for="salesteam_id" groups="base.group_no_one"/>
-                    <div groups="base.group_no_one" class="oe_inline">
-                        <field name="salesteam_id"/>
+                    <div class="col-md-6" id="sale_option_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <field name="module_website_sale_options" widget="checkbox"/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label string="Optional Products"/>
+                                <div class="text-muted">
+                                    Suggest optional products when adding to cart.
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <label string="Default Salesperson" for="salesperson_id" groups="base.group_no_one"/>
-                    <div groups="base.group_no_one" class="oe_inline">
-                        <field name="salesperson_id"/>
+                </div>
+                <h2>Checkout Process</h2>
+                <div class="row mt16" id="sale_checkout_settings">
+                    <div class="col-md-6" id="checkout_mail_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon"/>
+                            <div class="form-control" style="float: none;">
+                                <label string="Confirmation Email"/>
+                                <div class="text-muted">
+                                    Choose or edit the mail sent at the end of the checkout.
+                                </div>
+                                <div class="content-group">
+                                    <hr class="mt8 mb8" />
+                                    <div class="row">
+                                        <label for="order_mail_template" class="col-md-3 oe_light_label"/>
+                                        <field name="order_mail_template" class="col-md-9 oe_inline"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <field name="order_mail_template"/>
-                </group>
-            </group>
+                    <div class="col-md-6" id="checkout_assignation_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon"/>
+                            <div class="form-control" style="float: none;">
+                                <label string="Assignation"/>
+                                <div class="text-muted">
+                                    Assign incoming orders to a specific sales channel and salesperson.
+                                </div>
+                                <div class="content-group">
+                                    <hr class="mt8 mb8" />
+                                    <div groups="base.group_no_one" class="row">
+                                        <label class="oe_light_label col-md-3" string="Default Sales Team" for="salesteam_id" groups="base.group_no_one"/>
+                                        <field name="salesteam_id" class='col-md-9 oe_inline'/>
+                                    </div>
+                                    <div groups="base.group_no_one" class="row">
+                                        <label class="oe_light_label col-md-3" string="Default Salesperson" for="salesperson_id" groups="base.group_no_one"/>
+                                        <field name="salesperson_id" class='col-md-9 oe_inline'/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2>Invoicing</h2>
+                <div class="row mt16" id="sale_invoicing_settings">
+                </div>
+                <h2>Shipping</h2>
+                <div class="row mt16" id="sale_shipping_settings">
+                    <div class="col-md-6" id="shipping_provider_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <field name="module_delivery"/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label string="Shipping Costs"/>
+                                <div class="text-muted">
+                                    Select delivery methods in sales orders and get shipping costs computed automatically (from rules or carrier connectors).
+                                </div>
+                                <div class="content-group">
+                                    <hr class="mt8 mb8" />
+                                    <div class="pull-left">
+                                        <field name="module_delivery_ups" widget="upgrade_boolean"/>
+                                        <label for="module_delivery_ups" class="oe_light_label oe_inline"/>
+                                        <span class="label label-primary oe_inline">Enterprise</span>
+                                    </div><div class="pull-left">
+                                        <field name="module_delivery_fedex" widget="upgrade_boolean"/>
+                                        <label for="module_delivery_fedex" class="oe_light_label oe_inline"/>
+                                        <span class="label label-primary oe_inline">Enterprise</span>
+                                    </div><div class="pull-left">
+                                        <field name="module_delivery_temando" widget="upgrade_boolean"/>
+                                        <label for="module_delivery_temando" class="oe_light_label oe_inline"/>
+                                        <span class="label label-primary oe_inline">Enterprise</span>
+                                    </div><div class="pull-left">
+                                        <field name="module_delivery_usps" widget="upgrade_boolean"/>
+                                        <label for="module_delivery_usps" class="oe_light_label oe_inline"/>
+                                        <span class="label label-primary oe_inline">Enterprise</span>
+                                    </div><div class="pull-left">
+                                        <field name="module_delivery_dhl" widget="upgrade_boolean"/>
+                                        <label for="module_delivery_dhl" class="oe_light_label oe_inline"/>
+                                        <span class="label label-primary oe_inline">Enterprise</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="delivery_method_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <field name="module_website_sale_delivery"/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label string="Delivery Method Selection"/>
+                                <div class="text-muted">
+                                    Let your customers choose the delivery method when checking out on the website.
+                                </div>
+                                <div class="content-group">
+                                    <hr class="mt8 mb8" />
+                                    <field name="sale_delivery_settings" class="oe_light_label" widget="radio"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2>eCommerce Integrations</h2>
+                <div class="row mt16" id="sale_integration_settings">
+                    <div class="col-md-6" id="ebay_install_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <field name="module_sale_ebay" widget="upgrade_boolean"/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label string="eBay"/>
+                                <span class="pull-right label label-primary">Enterprise</span>
+                                <div class="text-muted">
+                                    Sell on eBay to boost the visibilty of your products.
+                                </div>
+                                <div class="content-group">
+                                    <hr class="mt8 mb8" />
+                                    <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </field>
     </record>
 </odoo>

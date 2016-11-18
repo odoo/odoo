@@ -5,18 +5,19 @@
         <field name="model">website.config.settings</field>
         <field name="inherit_id" ref="website.view_website_config_settings"/>
         <field name="arch" type="xml">
-            <group name="google_analytics" position="after">
-                <group string="CRM" groups="base.group_no_one">
-                    <label string="Default Sales Team" for="crm_default_team_id"/>
-                    <div class="oe_inline">
-                        <field name="crm_default_team_id"/>
+            <xpath expr="//div[@id='contact_form_install_setting']/div/div/div[@class='content-group']" position="replace">
+                <div class="content-group">
+                    <hr class="mt8 mb8" />
+                    <div class="row">
+                        <label class="col-md-3 oe_light_label" string="Default Sales Team" for="crm_default_team_id"/>
+                        <field name="crm_default_team_id" class="col-md-9 oe_inline"/>
                     </div>
-                    <label string="Default Salesperson" for="crm_default_user_id"/>
-                    <div class="oe_inline">
-                        <field name="crm_default_user_id"/>
+                    <div class="row">
+                        <label class="col-md-3 oe_light_label" string="Default Salesperson" for="crm_default_user_id"/>
+                        <field name="crm_default_user_id" class="col-md-9 oe_inline"/>
                     </div>
-                </group>
-            </group>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>
