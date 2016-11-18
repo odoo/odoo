@@ -554,8 +554,11 @@ var ListView = View.extend({
             if (self.display_nocontent_helper()) {
                 self.no_result();
             } else {
-                // Load previous page if the current one is empty
-                if (self.records.length === 0 && self.dataset.size() > 0) {
+                if (self.records.length && self.current_min === 1) {
+                    // Reload the list view if we delete all the records of the first page
+                    self.reload();
+                } else if (self.records.length && self.dataset.size() > 0) {
+                    // Load previous page if the current one is empty
                     self.pager.previous();
                 }
                 // Reload the list view if we are not on the last page
@@ -760,7 +763,7 @@ var ListView = View.extend({
 
         var aggregates = {};
         _.each(_.filter(columns, function (column) {
-            if (column.currency_field === 'currency_id' && records && records[0].values['currency_id']) {
+            if (column.currency_field && records.length > 0 && records[0].values['currency_id']) {
                 var currency_ids = _.map(records, function(record) {return record.values['currency_id'][0]});
                 if (_.every(currency_ids, function (currency_id){return currency_id === currency_ids[0]})) {
                     return column;

@@ -162,7 +162,7 @@
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <separator />
                     <filter domain="[('state', '=', 'draft')]" string="To Submit" name="to_report" help="New Expense"/>
-                    <filter domain="[('state', '=', 'report')]" string="Reported" name="submitted" help="Confirmed Expenses"/>
+                    <filter domain="[('state', '=', 'reported')]" string="Reported" name="submitted" help="Confirmed Expenses"/>
                     <filter domain="[('state', '=', 'refused')]" string="Refused" name="refused" help="Refused Expenses"/>
                     <filter domain="[('state', '!=', 'cancel')]" string="Not Refused" name="uncancelled" help="Actual expense sheets, not the refused ones"/>
                     <separator />
