@@ -7,11 +7,36 @@
         <field name="model">website.config.settings</field>
         <field name="inherit_id" ref="website.view_website_config_settings"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='social']" position="after">
-                <group string="Website Slides">
-                    <field name="website_slide_google_app_key" />
-                </group>
-            </xpath>
+            <div id="communication_settings" position="after">
+                <h2 class="mt32">Slides</h2>
+                <div class="row mt16" id="slides_settings">
+                    <div class="col-md-6" id="slides_google_content_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <input type="checkbox"/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label string="Google Content"/>
+                                <div class="text-muted">
+                                    Use your own Google Project to embed Google Drive documents and Youtube videos.
+                                </div>
+                                <div class="content-group">
+                                    <hr class="mt8 mb8" />
+                                    <div class="row">
+                                        <label class="col-md-3 oe_light_label" for="website_slide_google_app_key"/>
+                                        <field name="website_slide_google_app_key" class="col-md-9 oe_inline"/>
+                                    </div>
+                                </div>
+                                <div>
+                                    <a href="https://console.developers.google.com/flows/enable_api?apiid=drive,youtube">
+                                        Create a Google Project and Get a Key
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </field>
     </record>
 

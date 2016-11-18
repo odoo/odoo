@@ -7,11 +7,12 @@
         <field name="model">website.config.settings</field>
         <field name="inherit_id" ref="website.view_website_config_settings"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='social']" position="inside">
-                <label for="channel_id"/>
-                <div name="channel_id">
-                    <div class="oe_inline">
-                        <field name="channel_id"/>
+            <xpath expr="//div[@id='live_chat_install_setting']/div/div/div[@class='content-group']" position="replace">
+                <div class="content-group">
+                    <hr class="mt8 mb8" />
+                    <div class="row">
+                        <label class="col-md-3 oe_light_label" for="channel_id"/>
+                        <field name="channel_id" class="col-md-9 oe_inline"/>
                     </div>
                 </div>
             </xpath>
