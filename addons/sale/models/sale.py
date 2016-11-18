@@ -670,6 +670,10 @@ class SaleOrderLine(models.Model):
         return new_procs
 
     @api.model
+    def _get_purchase_price(self, pricelist, product, product_uom, date):
+        return {}
+
+    @api.model
     def create(self, values):
         onchange_fields = ['name', 'price_unit', 'product_uom', 'tax_id']
         if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):

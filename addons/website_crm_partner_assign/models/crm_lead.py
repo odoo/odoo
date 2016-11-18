@@ -33,10 +33,8 @@ class CrmLead(models.Model):
         if not partner_assigned:
             self.date_assign = False
         else:
-            self.write({
-                'date_assign': fields.Date.context_today(self),
-                'user_id': partner_assigned.user_id,
-            })
+            self.date_assign = fields.Date.context_today(self)
+            self.user_id = partner_assigned.user_id
 
     @api.multi
     def assign_salesman_of_assigned_partner(self):
