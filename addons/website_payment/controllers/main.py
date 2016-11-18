@@ -19,7 +19,7 @@ class WebsitePayment(http.Controller):
         render_context = {
             'return_url': '/my/payment_method',
             'json': False,
-            'submit_class': 'btn btn-primary btn-sm mb8 mt8 pull-right',
+            'submit_class': 'btn btn-primary btn-sm mb8 mt8 pull-right btn-payment-submit',
             'bootstrap_formatting': True,
             'error': {},
             'error_message': [],
