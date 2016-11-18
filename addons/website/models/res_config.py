@@ -43,6 +43,10 @@ class WebsiteConfigSettings(models.TransientModel):
     # when multi-website is implemented
     google_maps_api_key = fields.Char(string='Google Maps API Key')
 
+    # TODO: remove me in master / saas-14
+    compress_html = fields.Boolean('Compress rendered HTML', related='website_id.compress_html')
+
+
     def set_google_maps_api_key(self):
         self.env['ir.config_parameter'].set_param(
             'google_maps_api_key', (self.google_maps_api_key or '').strip(), groups=['base.group_system'])
