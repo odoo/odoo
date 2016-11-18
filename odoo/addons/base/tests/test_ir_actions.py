@@ -46,7 +46,7 @@ class TestServerActionsBase(common.TransactionCase):
             'condition': 'True',
             'model_id': self.res_partner_model.id,
             'state': 'code',
-            'code': 'obj.write({"comment": "MyComment"})',
+            'code': 'record.write({"comment": "MyComment"})',
         })
 
 
@@ -82,9 +82,8 @@ class TestServerActions(TestServerActionsBase):
     def test_10_code(self):
         self.action.write({
             'state': 'code',
-            'code': ("partner_name = obj.name + '_code'\n"
-                     "obj.env['res.partner'].create({'name': partner_name})\n"
-                     "workflow"),
+            'code': ("partner_name = record.name + '_code'\n"
+                     "record.env['res.partner'].create({'name': partner_name})"),
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: code server action correctly finished should return False')
@@ -104,7 +103,7 @@ class TestServerActions(TestServerActionsBase):
             'condition': 'True',
             'model_id': self.res_partner_model.id,
             'state': 'code',
-            'code': 'obj.write({"comment": "MyComment"})',
+            'code': 'record.write({"comment": "MyComment"})',
         })
         action3 = self.action.create({
             'name': 'TestAction3',
@@ -112,7 +111,7 @@ class TestServerActions(TestServerActionsBase):
             'condition': 'True',
             'model_id': self.res_country_model.id,
             'state': 'code',
-            'code': 'obj.write({"code": "ZZ"})',
+            'code': 'record.write({"code": "ZZ"})',
         })
 
         # Data: create workflows
@@ -253,8 +252,8 @@ class TestServerActions(TestServerActionsBase):
             'crud_model_id': self.res_country_model.id,
             'link_new_record': False,
             'fields_lines': [(5,),
-                             (0, 0, {'col1': self.res_country_name_field.id, 'value': 'obj.name', 'type': 'equation'}),
-                             (0, 0, {'col1': self.res_country_code_field.id, 'value': 'obj.name[0:2]', 'type': 'equation'})],
+                             (0, 0, {'col1': self.res_country_name_field.id, 'value': 'record.name', 'type': 'equation'}),
+                             (0, 0, {'col1': self.res_country_code_field.id, 'value': 'record.name[0:2]', 'type': 'equation'})],
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
@@ -303,7 +302,7 @@ class TestServerActions(TestServerActionsBase):
             'use_write': 'other',
             'crud_model_id': self.res_country_model.id,
             'ref_object': 'res.country,%s' % self.test_country.id,
-            'fields_lines': [(5,), (0, 0, {'col1': self.res_country_name_field.id, 'value': 'obj.name', 'type': 'equation'})],
+            'fields_lines': [(5,), (0, 0, {'col1': self.res_country_name_field.id, 'value': 'record.name', 'type': 'equation'})],
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
@@ -315,7 +314,7 @@ class TestServerActions(TestServerActionsBase):
         self.action.write({
             'use_write': 'expression',
             'crud_model_id': self.res_country_model.id,
-            'write_expression': 'object.country_id',
+            'write_expression': 'record.country_id',
             'fields_lines': [(5,), (0, 0, {'col1': self.res_country_name_field.id, 'value': 'NewCountry', 'type': 'value'})],
         })
         run_res = self.action.with_context(self.context).run()

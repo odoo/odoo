@@ -9,7 +9,7 @@ import time
 from pytz import timezone
 
 import odoo
-from odoo import api, fields, models, tools, workflow, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import MissingError, UserError, ValidationError
 from odoo.report.report_sxw import report_sxw, report_rml
 from odoo.tools.safe_eval import safe_eval, test_python_expr
@@ -920,17 +920,6 @@ class IrActionsServer(models.Model):
             # record
             'record': record,
             'records': records,
-
-            # TODO: REMOVE ME IN saas-14
-            'workflow': workflow,
-            # deprecated use record, records
-            'object': record,
-            'obj': record,
-            # Deprecated use env or model instead
-            'pool': self.pool,
-            'cr': self._cr,
-            'context': self._context,
-            'user': self.env.user,
             # helpers
             'log': log,
         })
@@ -967,7 +956,7 @@ class IrActionsServer(models.Model):
                 if not expr:
                     continue
                 # call the multi method
-                run_self = self.with_context(eval_context['context'])
+                run_self = self.with_context(eval_context['env'].context)
                 func = getattr(run_self, 'run_action_%s_multi' % action.state)
                 res = func(action, eval_context=eval_context)
 
@@ -977,7 +966,7 @@ class IrActionsServer(models.Model):
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id
                     run_self = self.with_context(active_ids=[active_id], active_id=active_id)
-                    eval_context["context"] = run_self._context
+                    eval_context["env"].context = run_self._context
                     expr = safe_eval(str(condition), eval_context)
                     if not expr:
                         continue

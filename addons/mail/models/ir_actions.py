@@ -48,8 +48,8 @@ class ServerActions(models.Model):
         to the currently executed action will be set in the queue instead of
         sent directly. This will avoid possible break in transactions. """
         eval_context = super(ServerActions, self)._get_eval_context(action=action)
-        # re-dictify, because eval_context['context'] is a frozendict
-        ctx = dict(eval_context.get('context', {}))
+        ctx = dict(eval_context['env'].context)
         ctx['mail_notify_force_send'] = False
-        eval_context['context'] = ctx
+        eval_context['env'].context = ctx
         return eval_context
+
