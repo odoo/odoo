@@ -1596,7 +1596,6 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
 
             this.aceEditor = ace.edit(this.$('.ace-view-editor')[0]);
             this.aceEditor.setOptions({"maxLines": Infinity});
-            this.aceEditor.setTheme("ace/theme/monokai");
             this.aceEditor.$blockScrolling = true;
 
             var scrollIntoViewIfNeeded = _.throttle(function () {
