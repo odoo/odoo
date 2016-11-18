@@ -18,7 +18,7 @@ Share and Publish Videos, Presentations and Documents'
 """,
     'depends': ['website', 'website_mail'],
     'data': [
-        'view/res_config.xml',
+        'view/website_config_settings_views.xml',
         'view/website_slides.xml',
         'view/website_slides_embed.xml',
         'view/website_slides_backend.xml',
