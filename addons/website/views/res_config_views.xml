@@ -379,16 +379,16 @@
                                             <div class="text-muted">
                                                 Use a CDN to serve your website's content with high availability and high performance from anywhere.
                                             </div>
-                                            <div class="content-group">
+                                            <div class="content-group" attrs="{'invisible': [('cdn_activated', '=', False)]}">
                                                 <hr class="mt8 mb8" />
-                                                <div attrs="{'invisible': [('cdn_activated', '=', False)]}" class="row">
+                                                <div class="row">
                                                     <label class="col-md-4 oe_light_label" for="cdn_url"/>
                                                     <field name="cdn_url" class="col-md-8 oe_inline"
                                                            attrs="{'required': [('cdn_activated', '=', True)]}"
                                                            placeholder="//mycompany.mycdn.com/"
                                                            t-translation="off"/>
                                                 </div>
-                                                <div attrs="{'invisible': [('cdn_activated', '=', False)]}" class="row">
+                                                <div class="row">
                                                     <label class="col-md-4 oe_light_label" for="cdn_filters"/>
                                                     <field name="cdn_filters" class="col-md-8 oe_inline"
                                                            attrs="{'required': [('cdn_activated', '=', True)]}"/>
