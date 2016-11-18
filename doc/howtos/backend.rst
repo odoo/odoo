@@ -1241,7 +1241,7 @@ Workflows are also used to track processes that evolve over time.
     Add a ``state`` field to the *Session* model. It will be used to define
     a workflow-ish.
 
-    A sesion can have three possible states: Draft (default), Confirmed and
+    A session can have three possible states: Draft (default), Confirmed and
     Done.
 
     In the session form, add a (read-only) field to
