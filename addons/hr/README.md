@@ -76,11 +76,11 @@ Boost Engagement With Gamification
 
 Inspire achievement with challenges, goals and rewards. Define clear objectives
 and provide real time feedback and tangible results. Showcase the top
-performers to the entire team and publicly recognize a job well done.
+performers to the entire channel and publicly recognize a job well done.
 
 ### Leaderboards
 
-Promote leaders and competition amongst sales team with performance ratios.
+Promote leaders and competition amongst sales channel with performance ratios.
 
 ### Personal Objectives
 

@@ -23,7 +23,7 @@ class TestCrm(TestMail):
         })
 
         cls.sales_team_1 = cls.env['crm.team'].create({
-            'name': 'Test Sales Team',
+            'name': 'Test Sales Channel',
             'alias_name': 'test_sales_team',
         })
 

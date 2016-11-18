@@ -16,6 +16,7 @@ Odoo E-Commerce
         'data/web_planner_data.xml',
         'views/views.xml',
         'views/backend.xml',
+        'views/crm_team_views.xml',
         'views/templates.xml',
         'views/payment.xml',
         'views/product_attribute_views.xml',

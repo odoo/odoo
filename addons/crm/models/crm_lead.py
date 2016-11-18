@@ -74,8 +74,8 @@ class Lead(models.Model):
     date_action_next = fields.Datetime('Next Action', readonly=True)
     email_from = fields.Char('Email', help="Email address of the contact", index=True)
     website = fields.Char('Website', index=True, help="Website of the contact")
-    team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
-        index=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales team.')
+    team_id = fields.Many2one('crm.team', string='Sales Channel', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
+        index=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales channel.')
     kanban_state = fields.Selection([('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
         string='Activity State', compute='_compute_kanban_state')
     email_cc = fields.Text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
@@ -267,7 +267,7 @@ class Lead(models.Model):
 
     @api.model
     def create(self, vals):
-        # set up context used to find the lead's sales team which is needed
+        # set up context used to find the lead's sales channel which is needed
         # to correctly set the default stage_id
         context = dict(self._context or {})
         if vals.get('type') and not self._context.get('default_type'):
@@ -566,7 +566,7 @@ class Lead(models.Model):
             The resulting lead/opportunity will be the most important one (based on its confidence level)
             updated with values from other opportunities to merge.
             :param user_id : the id of the saleperson. If not given, will be determined by `_merge_data`.
-            :param team : the id of the sales team. If not given, will be determined by `_merge_data`.
+            :param team : the id of the sales channel. If not given, will be determined by `_merge_data`.
             :return crm.lead record resulting of th merge
         """
         if len(self.ids) <= 1:
@@ -590,7 +590,7 @@ class Lead(models.Model):
         # the first (head opp) will be a priority.
         merged_data = opportunities._merge_data(list(CRM_LEAD_FIELDS_TO_MERGE))
 
-        # force value for saleperson and sales team
+        # force value for saleperson and sales channel
         if user_id:
             merged_data['user_id'] = user_id
         if team_id:
@@ -599,7 +599,7 @@ class Lead(models.Model):
         # merge other data (mail.message, attachments, ...) from tail into head
         opportunities_head.merge_dependences(opportunities_tail)
 
-        # check if the stage is in the stages of the sales team. If not, assign the stage with the lowest sequence
+        # check if the stage is in the stages of the sales channel. If not, assign the stage with the lowest sequence
         if merged_data.get('team_id'):
             team_stage_ids = self.env['crm.stage'].search(['|', ('team_id', '=', merged_data['team_id']), ('team_id', '=', False)], order='sequence')
             if merged_data.get('stage_id') not in team_stage_ids.ids:
@@ -645,7 +645,7 @@ class Lead(models.Model):
     def _convert_opportunity_data(self, customer, team_id=False):
         """ Extract the data from a lead to create the opportunity
             :param customer : res.partner record
-            :param team_id : identifier of the sales team to determine the stage
+            :param team_id : identifier of the sales channel to determine the stage
         """
         if not team_id:
             team_id = self.team_id.id if self.team_id else False
@@ -868,7 +868,7 @@ class Lead(models.Model):
         return self.message_post(body=message)
 
     # ----------------------------------------
-    # Sales Team Dashboard
+    # Sales Channel Dashboard
     # ----------------------------------------
 
     @api.model

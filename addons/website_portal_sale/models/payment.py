@@ -6,6 +6,7 @@ from odoo.tools import float_compare
 
 _logger = logging.getLogger(__name__)
 
+
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
