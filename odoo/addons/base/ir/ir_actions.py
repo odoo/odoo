@@ -475,7 +475,7 @@ class IrActionsServer(models.Model):
     condition = fields.Char(default="True",
                             help="Condition verified before executing the server action. If it "
                                  "is not verified, the action will not be executed. The condition is "
-                                 "a Python expression, like 'object.list_price > 5000'. A void "
+                                 "a Python expression, like 'record.list_price > 5000'. A void "
                                  "condition is considered as always True. Help about python expression "
                                  "is given in the help tab.")
     state = fields.Selection(selection=lambda self: self._get_states(),

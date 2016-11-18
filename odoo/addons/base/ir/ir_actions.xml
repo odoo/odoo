@@ -464,7 +464,6 @@ env["res.partner"].create({"name": partner_name})
                     <field name="name"/>
                     <field name="state"/>
                     <field name="model_id"/>
-                    <field name="sequence"/>
                 </tree>
             </field>
         </record>
@@ -567,7 +566,7 @@ env["res.partner"].create({"name": partner_name})
             <field name="model_id" ref="model_res_config"/>
             <field name="state">code</field>
             <field name="code">
-config = self.next(cr, uid, [], context=context) or {}
+config = model.next() or {}
 if config.get('type') not in ('ir.actions.act_window_close',):
     action = config
 </field>

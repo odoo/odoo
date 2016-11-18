@@ -103,6 +103,8 @@ class SaleOrder(models.Model):
                 'state': 'draft',
                 'customer_lead': self._get_customer_lead(line.product_id.product_tmpl_id),
             }
+            if self.pricelist_id:
+                data.update(self.env['sale.order.line']._get_purchase_price(self.pricelist_id, line.product_id, line.product_uom_id, fields.Date.context_today(self)))
             order_lines.append((0, 0, data))
 
         self.order_line = order_lines

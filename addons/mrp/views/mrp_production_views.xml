@@ -25,9 +25,7 @@
             <field name="name">Plan Orders</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="state">code</field>
-            <field name="code">
-                object.browse(object.env.context['active_ids']).button_plan()
-            </field>
+            <field name="code">records.button_plan()</field>
         </record>
 
         <record id="run_procurement_order_action" model="ir.values">
