@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem id="hr_timesheet_menu_configuration" name="Configuration" parent="timesheet_menu_root"
+        groups="group_hr_timesheet_user" sequence="100"/>
+
+    <record id="hr_timesheet_config_settings_view_form" model="ir.ui.view">
+        <field name="name">hr.timesheet.config.settings.view.form</field>
+        <field name="model">hr.timesheet.config.settings</field>
+        <field name="arch" type="xml">
+            <form class="oe_form_configuration">
+                <header>
+                    <button string="Save" type="object" name="execute" class="oe_highlight"/>
+                    <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                </header>
+                <sheet>
+                    <h2>Timesheet Apps</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_project_timesheet_synchro" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_project_timesheet_synchro"/>
+                                <div class="text-muted">
+                                    Synchronize time spent with web/mobile app
+                                </div>
+                                <div class="content-group">
+                                    <div class="row mt16 oe_center">
+                                        <div class="col-md-4">
+                                            <a href="http://www.odoo.com/page/timesheet?platform=chrome">
+                                                <img alt="Google Chrome Store" class="img img-responsive" src="project/static/src/img/chrome_store.png"/>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <a href="http://www.odoo.com/page/timesheet?platform=ios">
+                                                <img alt="Apple App Store" class="img img-responsive" src="project/static/src/img/app_store.png"/>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <a href="http://www.odoo.com/page/timesheet?platform=android">
+                                                <img alt="Google Play Store" class="img img-responsive" src="project/static/src/img/play_store.png"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Billing</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_sale_timesheet"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_sale_timesheet"/>
+                                <div class="text-muted">
+                                    Sell services and invoice time spent
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Recommended Apps</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_project_forecast" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_project_forecast"/>
+                                <div class="text-muted">
+                                    Manage your resources with Gantt charts
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_hr_expense"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_hr_expense"/>
+                                <div class="text-muted">
+                                    Reimburse employee expenses and invoice customers
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_hr_holidays"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_hr_holidays"/>
+                                <div class="text-muted">
+                                    Track leaves to optimize your scheduling
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_hr_timesheet_attendance"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_hr_timesheet_attendance"/>
+                                <div class="text-muted">
+                                    Track attendances and compare with timesheets
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_timesheet_config_settings_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">hr.timesheet.config.settings</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+    </record>
+
+    <menuitem id="hr_timesheet_config_settings_menu_action" name="Settings" parent="hr_timesheet_menu_configuration"
+        action="hr_timesheet_config_settings_action" sequence="0"/>
+</odoo>
