@@ -155,6 +155,8 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             history.append(partners_amount)
 
         for partner in partners:
+            if partner['partner_id'] is None:
+                partner['partner_id'] = False
             at_least_one_amount = False
             values = {}
             undue_amt = 0.0
