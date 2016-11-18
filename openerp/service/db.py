@@ -21,6 +21,8 @@ from openerp.exceptions import UserError
 import openerp.release
 import openerp.sql_db
 import openerp.tools
+from openerp.sql_db import db_connect
+from openerp.modules import load_information_from_description_file
 
 _logger = logging.getLogger(__name__)
 
@@ -338,6 +340,17 @@ def list_dbs(force=False):
         except Exception:
             res = []
     res.sort()
+    # do not show incompatible databases
+    res_copy = list(res)
+    for database_name in res_copy:
+        with closing(db_connect(database_name).cursor()) as cursor:
+            BASE_VERSION = load_information_from_description_file('base')['version']
+            cursor.execute("select exists(select * from information_schema.tables where table_name='ir_module_module')")
+            if cursor.fetchone()[0]:
+                cursor.execute("SELECT 1 FROM ir_module_module WHERE name=%s AND latest_version=%s", ('base', BASE_VERSION))
+                if not cursor.fetchone():del res[res.index(database_name)]
+            else:
+                del res[res.index(database_name)]
     return res
 
 def exp_list(document=False):
