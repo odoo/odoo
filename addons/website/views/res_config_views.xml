@@ -7,435 +7,437 @@
             <field name="model">website.config.settings</field>
             <field name="arch" type="xml">
                 <form string="Configure Website" class="oe_form_configuration">
-                    <header>
-                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
-                    </header>
-                    <div>
-                        <field name="website_id" invisible="1"/>
-                        <h2 class="mt32">Company Information</h2>
-                        <h2 class="mt32">Webmaster</h2>
-                        <div class="row mt16" id="webmaster_settings">
-                            <div class="col-md-6" id="languages_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon" />
-                                    <div class="form-control" style="float: none;">
-                                        <label for="language_ids"/>
-                                        <div class="text-muted">
-                                            Translate your website in several languages.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
+                    <sheet>
+                        <header>
+                            <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                            <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                        </header>
+                        <div>
+                            <field name="website_id" invisible="1"/>
+                            <h2 class="mt32">Company Information</h2>
+                            <h2 class="mt32">Webmaster</h2>
+                            <div class="row mt16 oe_flex_container" id="webmaster_settings">
+                                <div class="col-md-6" id="languages_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24" />
+                                        <div class="form-control" style="float: none;">
+                                            <label for="language_ids"/>
+                                            <div class="text-muted">
+                                                Translate your website in several languages.
+                                            </div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <div>
+                                                    <field name="language_ids" class="oe_light_label" widget="many2many_checkboxes"/>
+                                                </div>
+                                            </div>
                                             <div>
-                                                <field name="language_ids" class="oe_light_label" widget="many2many_checkboxes"/>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <button type="action" name="%(base.action_view_base_language_install)d" string="Download New Languages" class="oe_link"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6" id="default_language_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon" />
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Default Language"/>
-                                        <div class="text-muted">
-                                            Select the default language of your website.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <div class="row">
-                                                <label class="col-md-3 oe_light_label" for="default_lang_id"/>
-                                                <field name="default_lang_id" widget="selection" class="col-md-9 oe_inline"/>
+                                                <button type="action" name="%(base.action_view_base_language_install)d" string="Download New Languages" class="oe_link"/>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6" id="domain_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon" />
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Browser Thumbnail"/>
-                                        <div class="text-muted">
-                                            Give a customized look to browser thumbnail when navigating on your website.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <div class="row">
-                                                <label class="col-md-3 oe_light_label" for="website_name"/>
-                                                <field name="website_name" class="col-md-9 oe_inline"/>
+                                <div class="col-md-6" id="default_language_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24" />
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Default Language"/>
+                                            <div class="text-muted">
+                                                Select the default language of your website.
                                             </div>
-                                            <div class="row">
-                                                <label class="col-md-3 oe_light_label" for="favicon" />
-                                                <field name="favicon" widget="image" class="col-md-9 oe_inline"/>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <div class="row">
+                                                    <label class="col-md-4 oe_light_label" for="default_lang_id"/>
+                                                    <field name="default_lang_id" widget="selection" class="col-md-8 oe_inline"/>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6" id="google_analytics_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon" />
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Google Analytics"/>
-                                        <div class="text-muted">
-                                            Track and analyze visiting behaviors in Google Analytics.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <div class="row">
-                                                <label class="col-md-3 oe_light_label" for="google_analytics_key"/>
-                                                <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y" class="col-md-9 oe_inline"/>
+                                <div class="col-md-6" id="domain_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24" />
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Browser Thumbnail"/>
+                                            <div class="text-muted">
+                                                Give a customized look to browser thumbnail when navigating on your website.
+                                            </div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <div class="row">
+                                                    <label class="col-md-4 oe_light_label" for="website_name"/>
+                                                    <field name="website_name" class="col-md-8 oe_inline"/>
+                                                </div>
+                                                <div class="row">
+                                                    <label class="col-md-4 oe_light_label" for="favicon" />
+                                                    <field name="favicon" widget="image" class="col-md-8 oe_inline"/>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6" id="google_maps_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon" />
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Google Maps"/>
-                                        <div class="text-muted">
-                                            Show your company location on Google Maps in Contact Us page.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <div class="row">
-                                                <label class="col-md-3 oe_light_label" for="google_maps_api_key" string="API Key"/>
-                                                <field name="google_maps_api_key" class="col-md-9 oe_inline"/>
+                                <div class="col-md-6" id="google_analytics_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24" />
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Google Analytics"/>
+                                            <div class="text-muted">
+                                                Track and analyze visiting behaviors in Google Analytics.
                                             </div>
-                                        </div>
-                                        <div>
-                                            <a href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend,static_maps_backend&amp;keyType=CLIENT_SIDE&amp;reusekey=true">Create a Google Project and get a key</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h2 class="mt32">Social Media</h2>
-                        <div class="row mt16" id="social_media_settings">
-                            <div class="col-md-6" id="social_media_links_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon" />
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Social Media Links"/>
-                                        <div class="text-muted">
-                                            Add your social media links to your website footer.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <div name="social_facebook" class="row">
-                                                <label class="col-md-3 oe_light_label" for="social_facebook"/>
-                                                <field name="social_facebook" placeholder="https://www.facebook.com/Odoo" class="col-md-9 oe_inline"/>
-                                            </div>
-                                            <div name="social_twitter" class="row">
-                                                <label class="col-md-3 oe_light_label" for="social_twitter"/>
-                                                <field name="social_twitter" placeholder="https://twitter.com/Odoo" class="col-md-9 oe_inline"/>
-                                            </div>
-                                            <div name="social_youtube" class="row">
-                                                <label class="col-md-3 oe_light_label" for="social_youtube"/>
-                                                <field name="social_youtube" placeholder="https://www.youtube.com/user/OpenERPonline" class="col-md-9 oe_inline"/>
-                                            </div>
-                                            <div name="social_googleplus" class="row">
-                                                <label class="col-md-3 oe_light_label" for="social_googleplus"/>
-                                                <field name="social_googleplus" placeholder="https://plus.google.com/+Odooapps" class="col-md-9 oe_inline"/>
-                                            </div>
-                                            <div name="social_linkedin" class="row">
-                                                <label class="col-md-3 oe_light_label" for="social_linkedin"/>
-                                                <field name="social_linkedin" placeholder="https://www.linkedin.com/company/odoo" class="oe_inline col-md-9"/>
-                                            </div>
-                                            <div name="social_github" class="row">
-                                                <label class="col-md-3 oe_light_label" for="social_github"/>
-                                                <field name="social_github" placeholder="https://youraccount.github.io" class="oe_inline col-md-9"/>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <div class="row">
+                                                    <label class="col-md-4 oe_light_label" for="google_analytics_key"/>
+                                                    <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y" class="col-md-8 oe_inline"/>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6" id="twitter_roller_install_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <input type="checkbox"/>
-                                    </span>
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Twitter Roller"/>
-                                        <div class="text-muted">
-                                            Display a Twitter wall on your website.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h2 class="mt32">Features</h2>
-                        <div class="row mt16" id="features_settings">
-                            <div class="col-md-6" id="ecommerce_install_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <input type="checkbox"/>
-                                        <!--field name="module_website_sale" widget="upgrade_boolean"/-->
-                                    </span>
-                                    <div class="form-control" style="float: none;">
-                                        <label string="eCommerce"/>
-                                        <div class="text-muted">
-                                            Boost your online sales with sleek product pages.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6" id="jobs_install_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <input type="checkbox"/>
-                                    </span>
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Jobs"/>
-                                        <div class="text-muted">
-                                            Promote your job announces and attract new talents.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6" id="blog_install_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <input type="checkbox"/>
-                                    </span>
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Blogs"/>
-                                        <div class="text-muted">
-                                            Build up a community with an efficient content strategy.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6" id="slides_install_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <input type="checkbox"/>
-                                    </span>
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Slides"/>
-                                        <div class="text-muted">
-                                            Share videos, presentations and documents.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6" id="subscriptions_install_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <input type="checkbox"/>
-                                    </span>
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Subscriptions"/>
-                                        <span class="pull-right label label-primary">Enterprise</span>
-                                        <div class="text-muted">
-                                            Sell recurring services with automated billing and payments.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6" id="event_ticket_install_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <input type="checkbox"/>
-                                    </span>
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Event Tickets"/>
-                                        <div class="text-muted">
-                                            Organize events and sell tickets online.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h2 class="mt32">Communication</h2>
-                        <div class="row mt16" id="communication_settings">
-                            <div class="col-md-6" id="contact_form_install_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <input type="checkbox"/>
-                                    </span>
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Contact Form"/>
-                                        <div class="text-muted">
-                                            Fill in your CRM Pipeline from a ready-to-use contact form.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6" id="custom_forms_install_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <field name="module_website_form_editor"/>
-                                    </span>
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Custom Forms"/>
-                                        <span class="pull-right label label-primary">Enterprise</span>
-                                        <div class="text-muted">
-                                            New snippet to build customized forms: emails, leads, issues and extra information in the checkout process.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6" id="live_chat_install_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <input type="checkbox"/>
-                                    </span>
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Live Chat"/>
-                                        <div class="text-muted">
-                                            Chat with your visitors in real time.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6" id="forum_install_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <input type="checkbox"/>
-                                    </span>
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Forum"/>
-                                        <div class="text-muted">
-                                            Reduce the time and resources spent on support with a website forum.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h2 class="mt32">Performance Optimization</h2>
-                        <div class="row mt16" id="performance_settings">
-                            <div class="col-md-6" id="compressing_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <field name="compress_html"/>
-                                    </span>
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Compress HTML"/>
-                                        <div class="text-muted">
-                                            Compress rendered HTML for a better Google PageSpeed result.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6" id="cdn_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <field name="cdn_activated"/>
-                                    </span>
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Content Delivery Network"/>
-                                        <div class="text-muted">
-                                            Use a CDN to serve your website's content with high availability and high performance from anywhere.
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <div attrs="{'invisible': [('cdn_activated', '=', False)]}" class="row">
-                                                <label class="col-md-3 oe_light_label" for="cdn_url"/>
-                                                <field name="cdn_url" class="col-md-9 oe_inline"
-                                                       attrs="{'required': [('cdn_activated', '=', True)]}"
-                                                       placeholder="//mycompany.mycdn.com/"
-                                                       t-translation="off"/>
+                                <div class="col-md-6" id="google_maps_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24" />
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Google Maps"/>
+                                            <div class="text-muted">
+                                                Show your company location on Google Maps in Contact Us page.
                                             </div>
-                                            <div attrs="{'invisible': [('cdn_activated', '=', False)]}" class="row">
-                                                <label class="col-md-3 oe_light_label" for="cdn_filters"/>
-                                                <field name="cdn_filters" class="col-md-9 oe_inline"
-                                                       attrs="{'required': [('cdn_activated', '=', True)]}"/>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <div class="row">
+                                                    <label class="col-md-4 oe_light_label" for="google_maps_api_key" string="API Key"/>
+                                                    <field name="google_maps_api_key" class="col-md-8 oe_inline"/>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <h2 class="mt32">Advanced features</h2>
-                        <div class="row mt16" id="advanced_settings">
-                            <div class="col-md-6" id="version_setting">
-                                <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <field name="module_website_version"/>
-                                    </span>
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Multiple versions"/>
-                                        <div class="text-muted">
-                                            Allow multiple versions of same page and A/B testing (advanced).
-                                        </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
                                             <div>
-                                                <a href="https://www.odoo.com/slides/slide/how-a-b-testing-can-help-you-optimize-your-website-341" target="_blank">More Info about A/B testing and optimization.</a>
+                                                <a href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend,static_maps_backend&amp;keyType=CLIENT_SIDE&amp;reusekey=true">Create a Google Project and get a key</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6" id="menu_setting" groups="base.group_no_one">
-                                <div class="input-group">
-                                    <span class="input-group-addon"/>
-                                    <div class="form-control" style="float: none;">
-                                        <label string="Menu"/>
-                                        <div class="text-muted">
+                            <h2 class="mt32">Social Media</h2>
+                            <div class="row mt16 oe_flex_container" id="social_media_settings">
+                                <div class="col-md-6" id="social_media_links_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24" />
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Social Media Links"/>
+                                            <div class="text-muted">
+                                                Add your social media links to your website footer.
+                                            </div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <div name="social_facebook" class="row">
+                                                    <label class="col-md-4 oe_light_label" for="social_facebook"/>
+                                                    <field name="social_facebook" placeholder="https://www.facebook.com/Odoo" class="col-md-8 oe_inline"/>
+                                                </div>
+                                                <div name="social_twitter" class="row">
+                                                    <label class="col-md-4 oe_light_label" for="social_twitter"/>
+                                                    <field name="social_twitter" placeholder="https://twitter.com/Odoo" class="col-md-8 oe_inline"/>
+                                                </div>
+                                                <div name="social_youtube" class="row">
+                                                    <label class="col-md-4 oe_light_label" for="social_youtube"/>
+                                                    <field name="social_youtube" placeholder="https://www.youtube.com/user/OpenERPonline" class="col-md-8 oe_inline"/>
+                                                </div>
+                                                <div name="social_googleplus" class="row">
+                                                    <label class="col-md-4 oe_light_label" for="social_googleplus"/>
+                                                    <field name="social_googleplus" placeholder="https://plus.google.com/+Odooapps" class="col-md-8 oe_inline"/>
+                                                </div>
+                                                <div name="social_linkedin" class="row">
+                                                    <label class="col-md-4 oe_light_label" for="social_linkedin"/>
+                                                    <field name="social_linkedin" placeholder="https://www.linkedin.com/company/odoo" class="oe_inline col-md-8"/>
+                                                </div>
+                                                <div name="social_github" class="row">
+                                                    <label class="col-md-4 oe_light_label" for="social_github"/>
+                                                    <field name="social_github" placeholder="https://youraccount.github.io" class="oe_inline col-md-8"/>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="content-group">
-                                            <hr class="mt8 mb8" />
-                                            <button type="action"
-                                                name="%(website.action_website_menu)d"
-                                                string="Configure website menus" class="oe_link"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="twitter_roller_install_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24">
+                                            <input type="checkbox"/>
+                                        </span>
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Twitter Roller"/>
+                                            <div class="text-muted">
+                                                Display a Twitter wall on your website.
+                                            </div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h2 class="mt32">Features</h2>
+                            <div class="row mt16 oe_flex_container" id="features_settings">
+                                <div class="col-md-6" id="ecommerce_install_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24">
+                                            <input type="checkbox"/>
+                                            <!--field name="module_website_sale" widget="upgrade_boolean"/-->
+                                        </span>
+                                        <div class="form-control" style="float: none;">
+                                            <label string="eCommerce"/>
+                                            <div class="text-muted">
+                                                Boost your online sales with sleek product pages.
+                                            </div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="jobs_install_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24">
+                                            <input type="checkbox"/>
+                                        </span>
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Jobs"/>
+                                            <div class="text-muted">
+                                                Promote your job announces and attract new talents.
+                                            </div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="blog_install_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24">
+                                            <input type="checkbox"/>
+                                        </span>
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Blogs"/>
+                                            <div class="text-muted">
+                                                Build up a community with an efficient content strategy.
+                                            </div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="slides_install_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24">
+                                            <input type="checkbox"/>
+                                        </span>
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Slides"/>
+                                            <div class="text-muted">
+                                                Share videos, presentations and documents.
+                                            </div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="subscriptions_install_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24">
+                                            <input type="checkbox"/>
+                                        </span>
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Subscriptions"/>
+                                            <span class="pull-right label label-primary">Enterprise</span>
+                                            <div class="text-muted">
+                                                Sell recurring services with automated billing and payments.
+                                            </div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="event_ticket_install_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24">
+                                            <input type="checkbox"/>
+                                        </span>
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Event Tickets"/>
+                                            <div class="text-muted">
+                                                Organize events and sell tickets online.
+                                            </div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h2 class="mt32">Communication</h2>
+                            <div class="row mt16 oe_flex_container" id="communication_settings">
+                                <div class="col-md-6" id="contact_form_install_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24">
+                                            <input type="checkbox"/>
+                                        </span>
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Contact Form"/>
+                                            <div class="text-muted">
+                                                Fill in your CRM Pipeline from a ready-to-use contact form.
+                                            </div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="custom_forms_install_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24">
+                                            <field name="module_website_form_editor"/>
+                                        </span>
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Custom Forms"/>
+                                            <span class="pull-right label label-primary">Enterprise</span>
+                                            <div class="text-muted">
+                                                New snippet to build customized forms: emails, leads, issues and extra information in the checkout process.
+                                            </div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="live_chat_install_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24">
+                                            <input type="checkbox"/>
+                                        </span>
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Live Chat"/>
+                                            <div class="text-muted">
+                                                Chat with your visitors in real time.
+                                            </div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="forum_install_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24">
+                                            <input type="checkbox"/>
+                                        </span>
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Forum"/>
+                                            <div class="text-muted">
+                                                Reduce the time and resources spent on support with a website forum.
+                                            </div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h2 class="mt32">Performance Optimization</h2>
+                            <div class="row mt16 oe_flex_container" id="performance_settings">
+                                <div class="col-md-6" id="compressing_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24">
+                                            <field name="compress_html"/>
+                                        </span>
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Compress HTML"/>
+                                            <div class="text-muted">
+                                                Compress rendered HTML for a better Google PageSpeed result.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="cdn_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24">
+                                            <field name="cdn_activated"/>
+                                        </span>
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Content Delivery Network"/>
+                                            <div class="text-muted">
+                                                Use a CDN to serve your website's content with high availability and high performance from anywhere.
+                                            </div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <div attrs="{'invisible': [('cdn_activated', '=', False)]}" class="row">
+                                                    <label class="col-md-4 oe_light_label" for="cdn_url"/>
+                                                    <field name="cdn_url" class="col-md-8 oe_inline"
+                                                           attrs="{'required': [('cdn_activated', '=', True)]}"
+                                                           placeholder="//mycompany.mycdn.com/"
+                                                           t-translation="off"/>
+                                                </div>
+                                                <div attrs="{'invisible': [('cdn_activated', '=', False)]}" class="row">
+                                                    <label class="col-md-4 oe_light_label" for="cdn_filters"/>
+                                                    <field name="cdn_filters" class="col-md-8 oe_inline"
+                                                           attrs="{'required': [('cdn_activated', '=', True)]}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h2 class="mt32">Advanced features</h2>
+                            <div class="row mt16 oe_flex_container" id="advanced_settings">
+                                <div class="col-md-6" id="version_setting">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24">
+                                            <field name="module_website_version"/>
+                                        </span>
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Multiple versions"/>
+                                            <div class="text-muted">
+                                                Allow multiple versions of same page and A/B testing (advanced).
+                                            </div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <div>
+                                                    <a href="https://www.odoo.com/slides/slide/how-a-b-testing-can-help-you-optimize-your-website-341" target="_blank">More Info about A/B testing and optimization.</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="menu_setting" groups="base.group_no_one">
+                                    <div class="input-group">
+                                        <span class="input-group-addon oe_group_addon24"/>
+                                        <div class="form-control" style="float: none;">
+                                            <label string="Menu"/>
+                                            <div class="text-muted">
+                                            </div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <button type="action"
+                                                    name="%(website.action_website_menu)d"
+                                                    string="Configure website menus" class="oe_link"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </sheet>
                 </form>
             </field>
         </record>
