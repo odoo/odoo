@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
         <!-- Chart of Accounts Template -->
-        <record id="transfer_acount_id" model="account.account.template">
+        <record id="transfer_account_id" model="account.account.template">
             <field name="name">Transferencias de Efectivo</field>
             <field name="code">11010100</field>
             <field eval="True" name="reconcile"/>
@@ -14,9 +14,9 @@
             <field name="code_digits">8</field>
             <field name="cash_account_code_prefix">110101</field>
             <field name="bank_account_code_prefix">110102</field>
-            <field name="transfer_account_id" ref="transfer_acount_id"/>
+            <field name="transfer_account_id" ref="transfer_account_id"/>
         </record>
-        <record id="transfer_acount_id" model="account.account.template">
+        <record id="transfer_account_id" model="account.account.template">
             <field name="chart_template_id" ref="do_chart_template"/>
         </record>
     </data>
