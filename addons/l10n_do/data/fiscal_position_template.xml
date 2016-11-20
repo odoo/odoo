@@ -5,41 +5,53 @@
         <!-- Fiscal Position Templates     -->
         <!-- = = = = = = = = = = = = = = = -->
         <!-- Principal Fiscal Position for Dominican Republic internally -->
-        <record id="position_nonformal" model="account.fiscal.position.template">
+        <record id="position_buyer_final" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Proveedor Informal (Bienes)</field>
+            <field name="name">Consumidor Final</field>
         </record>
-        <record id="position_person" model="account.fiscal.position.template">
+        <record id="position_buyer_moral" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Persona Física</field>
+            <field name="name">Consumidor Fiscal</field>
         </record>
-        <record id="position_exterior" model="account.fiscal.position.template">
+        <record id="position_provider_moral" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Proveedor del Exterior</field>
-        </record>
-        <record id="position_gov" model="account.fiscal.position.template">
-            <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Gubernamental</field>
-        </record>
-        <record id="position_especial" model="account.fiscal.position.template">
-            <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Regímenes Especiales</field>
-        </record>
-        <record id="position_nonprofit" model="account.fiscal.position.template">
-            <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">No lucrativas</field>
+            <field name="name">Proveedor Fiscal</field>
         </record>
         <record id="position_construction_moral" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Proveedor Moral (Construcción)</field>
+            <field name="name">Proveedor Fiscal (Construcción)</field>
         </record>
         <record id="position_construction_person" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="name">Persona Física (Construcción)</field>
         </record>
+        <record id="position_person" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">Persona Física</field>
+        </record>
+        <record id="position_nonformal" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">Proveedor Informal (Bienes)</field>
+        </record>
+        <record id="position_exterior" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">Proveedor del Exterior</field>
+        </record>
         <record id="position_expenses" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="name">Gastos Menores</field>
+        </record>
+        <record id="position_gov" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">Gubernamental</field>
+        </record>
+        <record id="position_nonprofit" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">No lucrativas</field>
+        </record>
+        <record id="position_especial" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">Regímenes Especiales</field>
         </record>
         <!-- = = = = = = = = = = = = = = = -->
         <!-- Fiscal Position Tax Templates -->
@@ -118,9 +130,9 @@
             <field name="position_id" ref="position_exterior"/>
             <field name="tax_dest_id" ref="tax_0_all"/>
         </record>
-        <!-- = = = = = = = = = = = = = = = -->
-        <!-- Fiscal Position Acc.s Template -->
-        <!-- = = = = = = = = = = = = = = = -->
+        <!-- = = = = = = = = = = = = = = = = = -->
+        <!-- Fiscal Position Accounts Template -->
+        <!-- = = = = = = = = = = = = = = = = = -->
         <!-- Locales -->
         <!-- Persona Física de Servicios -->
         <record id="fiscal_position_account_2" model="account.fiscal.position.account.template">
