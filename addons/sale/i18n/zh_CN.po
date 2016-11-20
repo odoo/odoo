@@ -3,25 +3,14 @@
 # * sale
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
-# Gary Wei <Gary.wei@elico-corp.com>, 2016
-# 苏州远鼎 <tiexinliu@126.com>, 2016
-# zhining wu <wzn63@21cn.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
-# waveyeung <waveyeung@qq.com>, 2016
-# zhangpeiqing <zpq001@live.com>, 2016
-# Talway <9010446@qq.com>, 2016
-# Ted Wang <feiyuwang2012@gmail.com>, 2016
-# tony cai <65714679@qq.com>, 2016
-# Skyy rao <raozhangshun@163.com>, 2016
+# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-10-10 08:42+0000\n"
-"Last-Translator: Skyy rao <raozhangshun@163.com>, 2016\n"
+"POT-Creation-Date: 2016-11-14 15:53+0000\n"
+"PO-Revision-Date: 2016-11-14 15:53+0000\n"
+"Last-Translator: Jeffery Chen Fan <jeffery9@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,11 +96,9 @@ msgstr "# 销售订单"
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
 msgid ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 msgstr ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and '草稿' "
-"or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -322,7 +309,7 @@ msgid "Addresses in Sales Orders"
 msgstr "在销售订单中的地址"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:146
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:153
 #, python-format
 msgid "Advance: %s"
 msgstr "预收: %s"
@@ -766,7 +753,7 @@ msgid "Do not personalize sales orders and invoice reports"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:85
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:84
 #, python-format
 msgid "Down Payment"
 msgstr "首付"
@@ -792,7 +779,7 @@ msgid "Down payment (percentage)"
 msgstr "首付(百分比)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:82
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:81
 #, python-format
 msgid "Down payment of %s%%"
 msgstr "首付百分比 %s%%"
@@ -1140,7 +1127,7 @@ msgid ""
 "Create a task and track hours: Create a task on the sale order validation and track the work hours."
 msgstr ""
 "手动设置订单数量：基于手动输入的数量发票，而无需创建一个帐户分析。\n"
-"合同时间表：基于跟踪小时的相关时间表发票。\n"
+"合同工时表：基于跟踪小时的相关时间表发票。\n"
 "创建任务和跟踪时间：创建对销售订单验证任务，并跟踪工作时间。"
 
 #. module: sale
@@ -1948,7 +1935,7 @@ msgstr "设为报价单"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Setup default terms and conditions in your company settings."
-msgstr "在您的公司设置中设置默认的条款和条件。"
+msgstr "在你的公司设置中设置默认的条款和条件。"
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
@@ -2098,7 +2085,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:144
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:147
 #, python-format
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
@@ -2106,7 +2093,7 @@ msgid ""
 msgstr "此产品用于开具首付发票，应该为“服务”类型。请使用其它产品或更新本产品。"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:142
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:145
 #, python-format
 msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
@@ -2115,13 +2102,13 @@ msgid ""
 msgstr "此产品用于首付开票，开票策略应该设为“订购数量”。请更新你的存款产品，以创建存款发票。"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:79
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:78
 #, python-format
 msgid "The value of the down payment amount must be positive."
 msgstr "首付必须为正数。"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:75
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:74
 #, python-format
 msgid ""
 "There is no income account defined for this product: \"%s\". You may have to"
@@ -2178,7 +2165,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Timesheets on project"
-msgstr "项目的工时单"
+msgstr "项目的工时表"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -2305,7 +2292,7 @@ msgid "Warning"
 msgstr "警告"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:853
+#: code:addons/sale/models/sale.py:854
 #, python-format
 msgid "Warning for %s"
 msgstr "%s 的警告"
@@ -2357,7 +2344,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:882
+#: code:addons/sale/models/sale.py:883
 #, python-format
 msgid ""
 "You can not remove a sale order line.\n"

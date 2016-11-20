@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:43+0000\n"
-"PO-Revision-Date: 2016-10-10 08:43+0000\n"
+"POT-Creation-Date: 2016-11-14 15:53+0000\n"
+"PO-Revision-Date: 2016-11-14 15:53+0000\n"
 "Last-Translator: Liliana Stronciu <liliana.stronciu@aeromnia.aero>, 2016\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
@@ -119,7 +119,7 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:640
+#: code:addons/mail/models/mail_channel.py:639
 #, python-format
 msgid " This channel is private. People must be invited to join it."
 msgstr ""
@@ -147,7 +147,7 @@ msgid "%s (copy)"
 msgstr "%s (copia)"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:232
+#: code:addons/mail/models/mail_thread.py:234
 #, python-format
 msgid "%s created"
 msgstr "%s creato"
@@ -180,7 +180,7 @@ msgid "-------- Show older messages --------"
 msgstr "-------- Mostra messaggi precedenti --------"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:644
+#: code:addons/mail/models/mail_channel.py:643
 #, python-format
 msgid ""
 "<br><br>\n"
@@ -191,7 +191,7 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:551
+#: code:addons/mail/models/mail_channel.py:550
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">created <a href=\"#\" "
@@ -201,8 +201,8 @@ msgstr ""
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:474
-#: code:addons/mail/models/mail_channel.py:527
+#: code:addons/mail/models/mail_channel.py:473
+#: code:addons/mail/models/mail_channel.py:526
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">joined <a href=\"#\" "
@@ -210,7 +210,7 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:169
+#: code:addons/mail/models/mail_channel.py:168
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">left <a href=\"#\" "
@@ -823,13 +823,13 @@ msgid "Choose an example"
 msgstr "Scegliere un esempio"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:338
+#: code:addons/mail/models/mail_thread.py:340
 #, python-format
 msgid "Click here to add new %(document)s or send an email to: %(email_link)s"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:354
+#: code:addons/mail/models/mail_thread.py:356
 #, python-format
 msgid "Click here to add new %s"
 msgstr "Fai click per aggiungere %s"
@@ -1487,7 +1487,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:686
+#: code:addons/mail/models/mail_thread.py:700
 #: code:addons/mail/static/src/xml/followers.xml:21
 #, python-format
 msgid "Follow"
@@ -2041,6 +2041,12 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/controllers/main.py:43
+#, python-format
+msgid "Invalid token in route %s"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/chat_manager.js:620
 #, python-format
@@ -2338,7 +2344,7 @@ msgstr "Permesso"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_channel.py:653
+#: code:addons/mail/models/mail_channel.py:652
 #: code:addons/mail/static/src/xml/client_action.xml:101
 #, python-format
 msgid "Leave this channel"
@@ -2355,11 +2361,10 @@ msgstr ""
 msgid ""
 "List of partners that will be added as follower of the current document."
 msgstr ""
-"Lista di partners che verranno aggiunti come followers al documento "
-"corrente."
+"Lista di partner che verranno aggiunti come followers al documento corrente."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:664
+#: code:addons/mail/models/mail_channel.py:663
 #, python-format
 msgid "List users in the current channel"
 msgstr ""
@@ -2381,7 +2386,7 @@ msgstr "Conversazione Livechat"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:37
+#: code:addons/mail/static/src/js/chatter.js:38
 #, python-format
 msgid "Log"
 msgstr "Log"
@@ -3396,7 +3401,7 @@ msgstr "Espressione"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:186
+#: code:addons/mail/static/src/js/chatter.js:187
 #, python-format
 msgid "Please complete partner's informations"
 msgstr "Prego completare le informazioni del Partner"
@@ -3416,7 +3421,7 @@ msgstr "Impostare il Modello Base prima di settare i dettagli dell'azione."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:640
+#: code:addons/mail/static/src/js/composer.js:645
 #, python-format
 msgid "Please, wait while the file is uploading."
 msgstr "Per favore, attendi mentre il file viene caricato."
@@ -3637,7 +3642,7 @@ msgid "Rich-text/HTML message"
 msgstr "Messaggio Rich-text/HTML"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:820
+#: code:addons/mail/models/mail_thread.py:834
 #, python-format
 msgid "Routing mail with Message-Id %s: route %s: %s"
 msgstr ""
@@ -3802,7 +3807,7 @@ msgid "Shortcut"
 msgstr "Scorciatoia"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:633
+#: code:addons/mail/models/mail_channel.py:632
 #, python-format
 msgid "Show an helper message"
 msgstr ""
@@ -4113,7 +4118,7 @@ msgstr "A (email)"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_recipient_ids
 #: model:ir.model.fields,field_description:mail.field_mail_template_partner_to
 msgid "To (Partners)"
-msgstr "A (Partners)"
+msgstr "A (Partner)"
 
 #. module: mail
 #. openerp-web
@@ -4211,7 +4216,7 @@ msgstr "Annulla"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:690
+#: code:addons/mail/models/mail_thread.py:704
 #: code:addons/mail/static/src/xml/followers.xml:23
 #, python-format
 msgid "Unfollow"
@@ -4395,7 +4400,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:640
+#: code:addons/mail/static/src/js/composer.js:645
 #, python-format
 msgid "Uploading error"
 msgstr "Errore di caricamento"
@@ -4430,14 +4435,14 @@ msgid "Users"
 msgstr "Utenti"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:677
+#: code:addons/mail/models/mail_channel.py:676
 #, python-format
 msgid "Users in this channel: %s %s and you."
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:658
-#: code:addons/mail/models/mail_thread.py:660
+#: code:addons/mail/models/mail_thread.py:672
+#: code:addons/mail/models/mail_thread.py:674
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
 #, python-format
 msgid "View"
@@ -4507,19 +4512,19 @@ msgid "You added <b>%s</b> to the conversation."
 msgstr "Hai aggiunto <b>%s</b> alla conversazione."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:674
+#: code:addons/mail/models/mail_channel.py:673
 #, python-format
 msgid "You are alone in this channel."
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:643
+#: code:addons/mail/models/mail_channel.py:642
 #, python-format
 msgid "You are in a private conversation with <b>@%s</b>."
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:638
+#: code:addons/mail/models/mail_channel.py:637
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr ""
@@ -4545,7 +4550,7 @@ msgstr ""
 "Accedi al pannello di configurazione per aggiungere un nuovo utente."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:134
+#: code:addons/mail/models/mail_channel.py:133
 #, python-format
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
@@ -4555,7 +4560,7 @@ msgstr ""
 " è richiesto da altri moduli."
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:345
+#: code:addons/mail/models/mail_thread.py:347
 #, python-format
 msgid ""
 "You could also add a new %(document)s by sending an email to: "
@@ -4614,13 +4619,13 @@ msgid "Your template should define email_from"
 msgstr "Il tuo template dovrebbe specificare un campo email_from"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:954
+#: code:addons/mail/models/mail_thread.py:968
 #, python-format
 msgid "alias %s does not accept unknown author"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:950
+#: code:addons/mail/models/mail_thread.py:964
 #, python-format
 msgid "alias %s restricted to internal followers"
 msgstr ""
@@ -4646,7 +4651,7 @@ msgid "created"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:311
+#: code:addons/mail/models/mail_thread.py:313
 #, python-format
 msgid "document"
 msgstr "documenti"
@@ -4708,19 +4713,19 @@ msgid "mention(s) marked as read."
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:929
+#: code:addons/mail/models/mail_thread.py:943
 #, python-format
 msgid "model %s does not accept document creation"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:924
+#: code:addons/mail/models/mail_thread.py:938
 #, python-format
 msgid "model %s does not accept document update"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:917
+#: code:addons/mail/models/mail_thread.py:931
 #, python-format
 msgid ""
 "model %s does not accept document update, fall back on document creation"
@@ -4752,7 +4757,7 @@ msgid "on"
 msgstr "il"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:899
+#: code:addons/mail/models/mail_thread.py:913
 #, python-format
 msgid ""
 "posting a message without model should be with a null res_id (private "
@@ -4760,7 +4765,7 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:903
+#: code:addons/mail/models/mail_thread.py:917
 #, python-format
 msgid ""
 "posting a message without model should be with a parent_id (private message)"
@@ -4796,19 +4801,19 @@ msgid "record:"
 msgstr "record:"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:921
+#: code:addons/mail/models/mail_thread.py:935
 #, python-format
 msgid "reply to missing document (%s,%s)"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:914
+#: code:addons/mail/models/mail_thread.py:928
 #, python-format
 msgid "reply to missing document (%s,%s), fall back on new document creation"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:899
+#: code:addons/mail/models/mail_thread.py:913
 #, python-format
 msgid "resetting thread_id"
 msgstr ""
@@ -4819,12 +4824,12 @@ msgid "sales"
 msgstr "vendite"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:903
-#: code:addons/mail/models/mail_thread.py:921
-#: code:addons/mail/models/mail_thread.py:924
-#: code:addons/mail/models/mail_thread.py:929
-#: code:addons/mail/models/mail_thread.py:950
-#: code:addons/mail/models/mail_thread.py:954
+#: code:addons/mail/models/mail_thread.py:917
+#: code:addons/mail/models/mail_thread.py:935
+#: code:addons/mail/models/mail_thread.py:938
+#: code:addons/mail/models/mail_thread.py:943
+#: code:addons/mail/models/mail_thread.py:964
+#: code:addons/mail/models/mail_thread.py:968
 #, python-format
 msgid "skipping"
 msgstr ""
@@ -4837,7 +4842,7 @@ msgid "this document"
 msgstr "questo documento"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:892
+#: code:addons/mail/models/mail_thread.py:906
 #, python-format
 msgid "unknown target model %s"
 msgstr ""

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-10-10 08:42+0000\n"
+"POT-Creation-Date: 2016-11-14 15:53+0000\n"
+"PO-Revision-Date: 2016-11-14 15:53+0000\n"
 "Last-Translator: cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2016\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -136,11 +136,9 @@ msgstr "# Satış Siparişi"
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
 msgid ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 msgstr ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -426,7 +424,7 @@ msgid "Addresses in Sales Orders"
 msgstr "Satış Siparişinde  Adresler"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:146
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:153
 #, python-format
 msgid "Advance: %s"
 msgstr "Avans: %s"
@@ -877,7 +875,7 @@ msgid "Do not personalize sales orders and invoice reports"
 msgstr "Satış Siparişi ve Fatura raporlarının özelleştirilmesini engelle"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:85
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:84
 #, python-format
 msgid "Down Payment"
 msgstr "Peşinat"
@@ -903,7 +901,7 @@ msgid "Down payment (percentage)"
 msgstr "Peşinat (yüzde)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:82
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:81
 #, python-format
 msgid "Down payment of %s%%"
 msgstr "%s%% Peşinatı"
@@ -1486,7 +1484,7 @@ msgstr "Sipariş Durumu"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Qty"
-msgstr "Miktarı"
+msgstr "Miktar"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1606,12 +1604,12 @@ msgstr "Fiyat Düşür"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr "Fiyatı vergiler hariç düşür"
+msgstr "Fiyatı Vergisiz Düşür"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr "Fiyatı vergiler dahil düşür"
+msgstr "Fiyatı Vergilerle Düşür"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_pricelist
@@ -2069,7 +2067,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send by Email"
-msgstr "E-posta olarak gönder"
+msgstr "Epostayla Gönder"
 
 #. module: sale
 #: selection:sale.config.settings,module_website_quote:0
@@ -2099,7 +2097,7 @@ msgstr "Faturalandırılacak satırları seçin"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
-msgstr "Fiyat Teklifine çevir"
+msgstr "Teklife Dönüştür"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2260,7 +2258,7 @@ msgstr ""
 "eklenecektir"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:144
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:147
 #, python-format
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
@@ -2270,7 +2268,7 @@ msgstr ""
 "ürünün yerine başkasını kullanınız."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:142
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:145
 #, python-format
 msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
@@ -2282,13 +2280,13 @@ msgstr ""
 "buna göre güncelleyiniz"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:79
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:78
 #, python-format
 msgid "The value of the down payment amount must be positive."
 msgstr "Peşinat miktarı pozitif olmalıdır."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:75
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:74
 #, python-format
 msgid ""
 "There is no income account defined for this product: \"%s\". You may have to"
@@ -2306,7 +2304,7 @@ msgstr "Faturalandırılabilir satır yok."
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "This Year"
-msgstr "Bu sene"
+msgstr "Bu Yıl"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -2488,7 +2486,7 @@ msgid "Warning"
 msgstr "Uyarı"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:853
+#: code:addons/sale/models/sale.py:854
 #, python-format
 msgid "Warning for %s"
 msgstr "%s için uyarı"
@@ -2544,7 +2542,7 @@ msgstr ""
 "önce ilgili kayıdı iptal etmelisiniz."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:882
+#: code:addons/sale/models/sale.py:883
 #, python-format
 msgid ""
 "You can not remove a sale order line.\n"

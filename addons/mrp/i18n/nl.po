@@ -1283,6 +1283,9 @@ msgid ""
 "materials.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
 msgstr ""
+"Laat leeg indien u produceert op de locatie waar het gereed product nodig "
+"is. Stel een locatie in als u produceert op een vaste locatie. Dat kan de "
+"locatie van een relatie zijn indien u de fabricage outsourced."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -2333,6 +2336,8 @@ msgid ""
 "Recursion error!  A product with a Bill of Material should not have itself "
 "in its BoM or child BoMs!"
 msgstr ""
+"Herhaling fout! Het product mag geen onderdeel zijn van de materiaallijst of"
+" onderliggende materiaallijsten."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_code
@@ -2807,6 +2812,8 @@ msgid ""
 "The operation where the components are consumed, or the finished products "
 "created."
 msgstr ""
+"De locatie waar de onderdelen verbruikt zijn, of het eind product is "
+"gemaakt."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_routing_id
@@ -2815,6 +2822,9 @@ msgid ""
 "production orders will  be executed through work orders, otherwise "
 "everything is processed in the production order itself. "
 msgstr ""
+"De werkzaamheden voor de productie van deze materiaallijst. Wanneer een "
+"route is opgegeven, zullen de productie orders worden uitgevoerd door middel"
+" van werk orders, anders wordt alles verwerkt in de productieorder zelf."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking_type
@@ -2833,6 +2843,9 @@ msgid ""
 "create work orders afterwardswhich alters the execution of the manufacturing"
 " order. "
 msgstr ""
+"De routing bevat alle productie stappen en hoe lang deze duren. Dit zal "
+"werkorders genereren waarmee de uitvoering van de productie order wordt "
+"bepaald."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -3100,6 +3113,10 @@ msgid ""
 "                products, process, or actions to take care of. (e.g; Warning, the bill of material changed,\n"
 "                check the details in new worksheet)"
 msgstr ""
+"Gebruik berichten om productie of magazijn medewerkers te waarschuwen over "
+"eventuele veranderingen in de producten, processen, of acties (Bijv; "
+"Waarschuwing, de materiaallijst is veranderd, controleer de details van uw "
+"werk opdracht)."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_user_id
@@ -3178,6 +3195,10 @@ msgid ""
 " picking type. That allows to define procurement rules which trigger "
 "different manufacturing orders with different BoMs. "
 msgstr ""
+"When a procurement has a ‘produce’ route with a picking type set, it will "
+"try to create a Manufacturing Order for that product using a BoM of the same"
+" picking type. That allows to define procurement rules which trigger "
+"different manufacturing orders with different BoMs. "
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -3202,6 +3223,8 @@ msgid ""
 "Will determine if the next work order will be planned after the previous one"
 " or after the first Quantity To Process of the previous one."
 msgstr ""
+"Wordt bepaald of de volgende werk order wordt gepland na de vorige of na de "
+"hoeveelheid te verwerken van de vorige."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -3490,6 +3513,9 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
+"U moet ten minste één productiviteit verlies categorie te definiëren in "
+"'Productiviteit'. Maak er één aan via de Productie app, menu: Configuratie /"
+" Productiviteitsverlies."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:349
@@ -3499,6 +3525,9 @@ msgid ""
 "'Productivity'. Create one from the Manufacturing app, menu: Configuration /"
 " Productivity Losses."
 msgstr ""
+"U moet ten minste één productiviteit verlies categorie te definiëren in "
+"'Productiviteit'. Maak er één aan via de Productie app, menu: Configuratie /"
+" Productiviteitsverlies."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:401
@@ -3508,6 +3537,9 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
+"U moet ten minste één inactieve productiviteit categorie te definiëren in "
+"'Productiviteit'. Maak er één aan via de Productie app, menu: Configuratie /"
+" Productiviteitsverlies."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:99
