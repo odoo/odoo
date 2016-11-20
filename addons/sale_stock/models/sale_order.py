@@ -135,7 +135,7 @@ class SaleOrderLine(models.Model):
         if not self.product_id or not self.product_uom_qty or not self.product_uom:
             self.product_packaging = False
             return {}
-        if self.product_id.type == 'product':
+        if self.product_id.type == 'product' and not self.state == 'sale' :
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
             if float_compare(self.product_id.virtual_available, product_qty, precision_digits=precision) == -1:
@@ -147,10 +147,7 @@ class SaleOrderLine(models.Model):
                             (self.product_uom_qty, self.product_uom.name, self.product_id.virtual_available, self.product_id.uom_id.name, self.product_id.qty_available, self.product_id.uom_id.name)
                     }
                     return {'warning': warning_mess}
-        return {}
 
-    @api.onchange('product_uom_qty')
-    def _onchange_product_uom_qty(self):
         if self.state == 'sale' and self.product_id.type in ['product', 'consu'] and self.product_uom_qty < self._origin.product_uom_qty:
             warning_mess = {
                 'title': _('Ordered quantity decreased!'),
