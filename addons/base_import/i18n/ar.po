@@ -12,10 +12,10 @@
 # Akram Alfusayal <akram_ma@hotmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"POT-Creation-Date: 2016-11-14 15:54+0000\n"
+"PO-Revision-Date: 2016-11-14 15:54+0000\n"
 "Last-Translator: Akram Alfusayal <akram_ma@hotmail.com>, 2016\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -26,14 +26,14 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:595
+#: code:addons/base_import/static/src/js/base_import.js:598
 #, python-format
 msgid "(%d more)"
 msgstr "(%d إضافي)"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:373
+#: code:addons/base_import/static/src/js/base_import.js:375
 #, python-format
 msgid ""
 "A single column was found in the file, this often means the file separator "
@@ -49,24 +49,23 @@ msgid "Cancel"
 msgstr "إلغاء"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:608
-#, python-format
-msgid ""
-"Column %s contains incorrect values (value: %s does not match date format"
-msgstr ""
-
-#. module: base_import
-#: code:addons/base_import/models/base_import.py:590
+#: code:addons/base_import/models/base_import.py:599
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
 msgstr ""
 
 #. module: base_import
+#: code:addons/base_import/models/base_import.py:619
+#, python-format
+msgid "Column %s contains incorrect values. Error in line %d: %s"
+msgstr ""
+
+#. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:244
-#: code:addons/base_import/static/src/js/base_import.js:255
-#: code:addons/base_import/static/src/js/base_import.js:262
-#: code:addons/base_import/static/src/js/base_import.js:274
+#: code:addons/base_import/static/src/js/base_import.js:245
+#: code:addons/base_import/static/src/js/base_import.js:256
+#: code:addons/base_import/static/src/js/base_import.js:263
+#: code:addons/base_import/static/src/js/base_import.js:275
 #, python-format
 msgid "Comma"
 msgstr "فاصلة"
@@ -108,8 +107,8 @@ msgid "Created on"
 msgstr "أنشئ في"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:151
-#: code:addons/base_import/models/base_import.py:156
+#: code:addons/base_import/models/base_import.py:152
+#: code:addons/base_import/models/base_import.py:157
 #, python-format
 msgid "Database ID"
 msgstr "معرف قاعدة البيانات"
@@ -123,7 +122,14 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:127
+#: code:addons/base_import/static/src/js/base_import.js:126
+#, python-format
+msgid "Datetime Format:"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:128
 #, python-format
 msgid "Decimal Separator:"
 msgstr ""
@@ -148,15 +154,15 @@ msgstr "اسم العرض"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:416
+#: code:addons/base_import/static/src/js/base_import.js:419
 #, python-format
 msgid "Don't import"
 msgstr "لا تستورد"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:263
-#: code:addons/base_import/static/src/js/base_import.js:281
+#: code:addons/base_import/static/src/js/base_import.js:264
+#: code:addons/base_import/static/src/js/base_import.js:282
 #, python-format
 msgid "Dot"
 msgstr ""
@@ -169,21 +175,27 @@ msgid "Encoding:"
 msgstr "الترميز:"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:233
+#: code:addons/base_import/models/base_import.py:621
+#, python-format
+msgid "Error Parsing Date [%s:L%d]: %s"
+msgstr ""
+
+#. module: base_import
+#: code:addons/base_import/models/base_import.py:234
 #, python-format
 msgid "Error cell found while reading XLS/XLSX file: %s"
 msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:572
+#: code:addons/base_import/static/src/js/base_import.js:575
 #, python-format
 msgid "Everything seems valid."
 msgstr "كل شيء يبدو صالحاً."
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:116
-#: code:addons/base_import/models/base_import.py:150
+#: code:addons/base_import/models/base_import.py:117
+#: code:addons/base_import/models/base_import.py:151
 #, python-format
 msgid "External ID"
 msgstr "المعرف الخارجي"
@@ -217,7 +229,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:619
+#: code:addons/base_import/static/src/js/base_import.js:622
 #, python-format
 msgid "Get all possible values"
 msgstr "الحصول على كل القيم المحتملة"
@@ -231,7 +243,7 @@ msgstr "المساعدة"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:606
+#: code:addons/base_import/static/src/js/base_import.js:609
 #, python-format
 msgid "Here are the possible values:"
 msgstr "إليك القيم المتاحة:"
@@ -299,7 +311,7 @@ msgstr "استيراد"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:181
+#: code:addons/base_import/static/src/js/base_import.js:182
 #, python-format
 msgid "Import a File"
 msgstr ""
@@ -398,7 +410,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:482
+#: code:addons/base_import/static/src/js/base_import.js:485
 #, python-format
 msgid "Normal Fields"
 msgstr "Normal Fields"
@@ -422,14 +434,7 @@ msgstr "معرف الأب"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:122
-#, python-format
-msgid "Quoting:"
-msgstr "Quoting:"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:483
+#: code:addons/base_import/static/src/js/base_import.js:486
 #, python-format
 msgid "Relation Fields"
 msgstr "Relation Fields"
@@ -450,7 +455,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:245
+#: code:addons/base_import/static/src/js/base_import.js:246
 #, python-format
 msgid "Semicolon"
 msgstr "Semicolon"
@@ -476,17 +481,24 @@ msgstr "Some Value"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:247
+#: code:addons/base_import/static/src/js/base_import.js:248
 #, python-format
 msgid "Space"
 msgstr "Space"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:246
+#: code:addons/base_import/static/src/js/base_import.js:247
 #, python-format
 msgid "Tab"
 msgstr "Tab"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/base_import.js:122
+#, python-format
+msgid "Text Delimiter:"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -499,9 +511,9 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:126
+#: code:addons/base_import/static/src/js/base_import.js:127
 #, python-format
-msgid "Thousand Separator:"
+msgid "Thousands Separator:"
 msgstr ""
 
 #. module: base_import
@@ -512,13 +524,13 @@ msgid "Track history during import"
 msgstr "Track history during import"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:198
+#: code:addons/base_import/models/base_import.py:199
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:199
+#: code:addons/base_import/models/base_import.py:200
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
@@ -548,14 +560,14 @@ msgid "Value"
 msgstr "القيمة"
 
 #. module: base_import
-#: code:addons/base_import/models/base_import.py:528
+#: code:addons/base_import/models/base_import.py:537
 #, python-format
 msgid "You must configure at least one field to import"
 msgstr "You must configure at least one field to import"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:589
+#: code:addons/base_import/static/src/js/base_import.js:592
 #, python-format
 msgid "at row %d"
 msgstr "at row %d"
@@ -632,7 +644,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/base_import.js:591
+#: code:addons/base_import/static/src/js/base_import.js:594
 #, python-format
 msgid "between rows %d and %d"
 msgstr "between rows %d and %d"

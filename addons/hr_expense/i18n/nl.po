@@ -11,10 +11,10 @@
 # Eric Geens <ericgeens@yahoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 13:59+0000\n"
-"PO-Revision-Date: 2016-09-29 13:59+0000\n"
+"POT-Creation-Date: 2016-11-14 15:53+0000\n"
+"PO-Revision-Date: 2016-11-14 15:53+0000\n"
 "Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -160,6 +160,11 @@ msgid "Accounting Date"
 msgstr "Boekhouddatum"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Accounting Entries"
+msgstr "Administratieve boekingen"
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Actual expense sheets, not the refused ones"
 msgstr "Actuele declaraties, exclusief de geweigerde"
@@ -264,7 +269,7 @@ msgid "Click here to create new expenses."
 msgstr "Klik hier om een nieuwe declaratie aan te maken."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:287
+#: code:addons/hr_expense/models/hr_expense.py:304
 #, python-format
 msgid "Click to add a new expense,"
 msgstr "Klik hier om een nieuwe declaratie aan te maken,"
@@ -588,13 +593,13 @@ msgid "Expenses by Month"
 msgstr "Declaraties per maand"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:381
+#: code:addons/hr_expense/models/hr_expense.py:399
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr "Declaraties moeten dot dezelfde werknemer behoren."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:486
+#: code:addons/hr_expense/models/hr_expense.py:511
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -604,7 +609,7 @@ msgstr ""
 "genereren."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:385
+#: code:addons/hr_expense/models/hr_expense.py:403
 #, python-format
 msgid "Expenses must have been paid by the same entity (Company or employee)"
 msgstr ""
@@ -704,7 +709,7 @@ msgstr "HR declaratie weigeringsreden wizard"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_8892
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_8893
 msgid "ID"
 msgstr "ID"
 
@@ -806,7 +811,7 @@ msgid "New Mail"
 msgstr "Nieuwe e-mail"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:235
+#: code:addons/hr_expense/models/hr_expense.py:251
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
@@ -816,13 +821,13 @@ msgstr ""
 "configureer er één aub."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:204
+#: code:addons/hr_expense/models/hr_expense.py:218
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
 msgstr "Geen thuisadres gevonden voor werknemer %s, configureer er één aub."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:200
+#: code:addons/hr_expense/models/hr_expense.py:197
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr ""
@@ -935,7 +940,7 @@ msgid "Planner"
 msgstr "Planner"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:239
+#: code:addons/hr_expense/models/hr_expense.py:255
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
@@ -1340,7 +1345,7 @@ msgstr ""
 "beheren."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:483
+#: code:addons/hr_expense/models/hr_expense.py:508
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr ""
@@ -1373,6 +1378,12 @@ msgstr ""
 "in het onderwerp van het e-mail om deze ook toe te voegen aan de declaratie."
 
 #. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:425
+#, python-format
+msgid "You cannot delete a posted expense."
+msgstr "U kan een geboekte declaratie niet verwijderen."
+
+#. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:106
 #, python-format
 msgid "You cannot report expenses for different employees in the same report!"
@@ -1403,7 +1414,7 @@ msgid "Your Email Address"
 msgstr "Uw E-mailadres"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:465
+#: code:addons/hr_expense/models/hr_expense.py:490
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
@@ -1440,7 +1451,7 @@ msgid "or"
 msgstr "of"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:288
+#: code:addons/hr_expense/models/hr_expense.py:305
 #, python-format
 msgid "or send receipts by email to %s."
 msgstr "of stuur per e-mail naar %s."

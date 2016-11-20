@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:43+0000\n"
-"PO-Revision-Date: 2016-10-10 08:43+0000\n"
+"POT-Creation-Date: 2016-11-14 15:53+0000\n"
+"PO-Revision-Date: 2016-11-14 15:53+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -111,7 +111,7 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:640
+#: code:addons/mail/models/mail_channel.py:639
 #, python-format
 msgid " This channel is private. People must be invited to join it."
 msgstr "Ez egy privát csatorna. Meghívottként csatlakozhat hozzá."
@@ -143,7 +143,7 @@ msgid "%s (copy)"
 msgstr "%s (másolat)"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:232
+#: code:addons/mail/models/mail_thread.py:234
 #, python-format
 msgid "%s created"
 msgstr "%s létrehozva"
@@ -178,7 +178,7 @@ msgid "-------- Show older messages --------"
 msgstr "-------- Régebbi üzenetek mutatása --------"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:644
+#: code:addons/mail/models/mail_channel.py:643
 #, python-format
 msgid ""
 "<br><br>\n"
@@ -194,7 +194,7 @@ msgstr ""
 "            Beilleszthet régebbi válaszokat az üzenetébe ide írva <b>:hivatkozas</b>.<br>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:551
+#: code:addons/mail/models/mail_channel.py:550
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">created <a href=\"#\" "
@@ -204,8 +204,8 @@ msgstr ""
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:474
-#: code:addons/mail/models/mail_channel.py:527
+#: code:addons/mail/models/mail_channel.py:473
+#: code:addons/mail/models/mail_channel.py:526
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">joined <a href=\"#\" "
@@ -215,7 +215,7 @@ msgstr ""
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:169
+#: code:addons/mail/models/mail_channel.py:168
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">left <a href=\"#\" "
@@ -864,7 +864,7 @@ msgid "Choose an example"
 msgstr "Válasszon egy példát"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:338
+#: code:addons/mail/models/mail_thread.py:340
 #, python-format
 msgid "Click here to add new %(document)s or send an email to: %(email_link)s"
 msgstr ""
@@ -872,7 +872,7 @@ msgstr ""
 "%(email_link)s"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:354
+#: code:addons/mail/models/mail_thread.py:356
 #, python-format
 msgid "Click here to add new %s"
 msgstr "Kattintson ide egy új %s hozzáadáshoz"
@@ -1538,7 +1538,7 @@ msgstr "Behajtott"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:686
+#: code:addons/mail/models/mail_thread.py:700
 #: code:addons/mail/static/src/xml/followers.xml:21
 #, python-format
 msgid "Follow"
@@ -2099,6 +2099,12 @@ msgstr ""
 "nélkül) vagy egyedi-feljegyzés feljegyzésbeállító"
 
 #. module: mail
+#: code:addons/mail/controllers/main.py:43
+#, python-format
+msgid "Invalid token in route %s"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/chat_manager.js:620
 #, python-format
@@ -2396,7 +2402,7 @@ msgstr "Távollét"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_channel.py:653
+#: code:addons/mail/models/mail_channel.py:652
 #: code:addons/mail/static/src/xml/client_action.xml:101
 #, python-format
 msgid "Leave this channel"
@@ -2419,7 +2425,7 @@ msgstr ""
 "követéséhez."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:664
+#: code:addons/mail/models/mail_channel.py:663
 #, python-format
 msgid "List users in the current channel"
 msgstr "A jelenlegi csatornát használók listázása"
@@ -2441,7 +2447,7 @@ msgstr "Élő társalgás"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:37
+#: code:addons/mail/static/src/js/chatter.js:38
 #, python-format
 msgid "Log"
 msgstr "Napló"
@@ -3462,7 +3468,7 @@ msgstr "Üres mező kifejezés"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:186
+#: code:addons/mail/static/src/js/chatter.js:187
 #, python-format
 msgid "Please complete partner's informations"
 msgstr "Kérem egészítse ki a partner információkat"
@@ -3482,7 +3488,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:640
+#: code:addons/mail/static/src/js/composer.js:645
 #, python-format
 msgid "Please, wait while the file is uploading."
 msgstr "Kérem várjon amíg a fájl feltöltődik."
@@ -3709,7 +3715,7 @@ msgid "Rich-text/HTML message"
 msgstr "Rich-text/HTML üzenet"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:820
+#: code:addons/mail/models/mail_thread.py:834
 #, python-format
 msgid "Routing mail with Message-Id %s: route %s: %s"
 msgstr "Útvonal email Üzenet-id azonosítóval %s: útvonal %s: %s"
@@ -3874,7 +3880,7 @@ msgid "Shortcut"
 msgstr "Gyorsbillentyű"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:633
+#: code:addons/mail/models/mail_channel.py:632
 #, python-format
 msgid "Show an helper message"
 msgstr "Mutass egy súgó üzenetet"
@@ -4286,7 +4292,7 @@ msgstr "Visszavonás"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:690
+#: code:addons/mail/models/mail_thread.py:704
 #: code:addons/mail/static/src/xml/followers.xml:23
 #, python-format
 msgid "Unfollow"
@@ -4469,7 +4475,7 @@ msgstr "Feltöltés"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:640
+#: code:addons/mail/static/src/js/composer.js:645
 #, python-format
 msgid "Uploading error"
 msgstr "Feltöltési hiba"
@@ -4504,14 +4510,14 @@ msgid "Users"
 msgstr "Felhasználók"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:677
+#: code:addons/mail/models/mail_channel.py:676
 #, python-format
 msgid "Users in this channel: %s %s and you."
 msgstr "Felhasználók ebben a csatornában: %s %s és Ön."
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:658
-#: code:addons/mail/models/mail_thread.py:660
+#: code:addons/mail/models/mail_thread.py:672
+#: code:addons/mail/models/mail_thread.py:674
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
 #, python-format
 msgid "View"
@@ -4583,19 +4589,19 @@ msgid "You added <b>%s</b> to the conversation."
 msgstr "Hozzáadta a <b>%s</b> ehhez a beszélgetéshez."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:674
+#: code:addons/mail/models/mail_channel.py:673
 #, python-format
 msgid "You are alone in this channel."
 msgstr "Egyedül van ebben a csatornában."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:643
+#: code:addons/mail/models/mail_channel.py:642
 #, python-format
 msgid "You are in a private conversation with <b>@%s</b>."
 msgstr "Privát megbeszélése van vele: <b>@%s</b>."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:638
+#: code:addons/mail/models/mail_channel.py:637
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "Ebben a csatornában van: <b>#%s</b>."
@@ -4621,7 +4627,7 @@ msgstr ""
 " Új felhasználó létrehozásához kérem menjen a beállítások panelre."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:134
+#: code:addons/mail/models/mail_channel.py:133
 #, python-format
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
@@ -4631,7 +4637,7 @@ msgstr ""
 " másik moduloknak."
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:345
+#: code:addons/mail/models/mail_thread.py:347
 #, python-format
 msgid ""
 "You could also add a new %(document)s by sending an email to: "
@@ -4692,13 +4698,13 @@ msgid "Your template should define email_from"
 msgstr "Sablonjának meg kell határoznia az email_from formát"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:954
+#: code:addons/mail/models/mail_thread.py:968
 #, python-format
 msgid "alias %s does not accept unknown author"
 msgstr "%s álnév nem fogadja el az ismeretlen szerzőt"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:950
+#: code:addons/mail/models/mail_thread.py:964
 #, python-format
 msgid "alias %s restricted to internal followers"
 msgstr "%s álnév korlátozott a belső követőknek"
@@ -4724,7 +4730,7 @@ msgid "created"
 msgstr "létrehozta"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:311
+#: code:addons/mail/models/mail_thread.py:313
 #, python-format
 msgid "document"
 msgstr "dokumentum"
@@ -4786,19 +4792,19 @@ msgid "mention(s) marked as read."
 msgstr "megemlítés(ek) elolvasottként jelölve."
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:929
+#: code:addons/mail/models/mail_thread.py:943
 #, python-format
 msgid "model %s does not accept document creation"
 msgstr "%s modell nem fogadja el a dokumentum létrehozást"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:924
+#: code:addons/mail/models/mail_thread.py:938
 #, python-format
 msgid "model %s does not accept document update"
 msgstr "%s modell nem fogadja el a dokumentum frissítést"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:917
+#: code:addons/mail/models/mail_thread.py:931
 #, python-format
 msgid ""
 "model %s does not accept document update, fall back on document creation"
@@ -4832,7 +4838,7 @@ msgid "on"
 msgstr "ezen"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:899
+#: code:addons/mail/models/mail_thread.py:913
 #, python-format
 msgid ""
 "posting a message without model should be with a null res_id (private "
@@ -4842,7 +4848,7 @@ msgstr ""
 "üzenet), beérkezett %s"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:903
+#: code:addons/mail/models/mail_thread.py:917
 #, python-format
 msgid ""
 "posting a message without model should be with a parent_id (private message)"
@@ -4880,20 +4886,20 @@ msgid "record:"
 msgstr "feljegyzés:"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:921
+#: code:addons/mail/models/mail_thread.py:935
 #, python-format
 msgid "reply to missing document (%s,%s)"
 msgstr "válasz hiányzó dokumentumra (%s,%s)"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:914
+#: code:addons/mail/models/mail_thread.py:928
 #, python-format
 msgid "reply to missing document (%s,%s), fall back on new document creation"
 msgstr ""
 "válasz hiányzó dokumentumra (%s,%s), új dokumentum létrehozáson visszalép"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:899
+#: code:addons/mail/models/mail_thread.py:913
 #, python-format
 msgid "resetting thread_id"
 msgstr "Visszaállítja a thread_id"
@@ -4904,12 +4910,12 @@ msgid "sales"
 msgstr "értékesítés"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:903
-#: code:addons/mail/models/mail_thread.py:921
-#: code:addons/mail/models/mail_thread.py:924
-#: code:addons/mail/models/mail_thread.py:929
-#: code:addons/mail/models/mail_thread.py:950
-#: code:addons/mail/models/mail_thread.py:954
+#: code:addons/mail/models/mail_thread.py:917
+#: code:addons/mail/models/mail_thread.py:935
+#: code:addons/mail/models/mail_thread.py:938
+#: code:addons/mail/models/mail_thread.py:943
+#: code:addons/mail/models/mail_thread.py:964
+#: code:addons/mail/models/mail_thread.py:968
 #, python-format
 msgid "skipping"
 msgstr "átugorja"
@@ -4922,7 +4928,7 @@ msgid "this document"
 msgstr "ez a dokumentum"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:892
+#: code:addons/mail/models/mail_thread.py:906
 #, python-format
 msgid "unknown target model %s"
 msgstr "ismeretlen cél modell %s"

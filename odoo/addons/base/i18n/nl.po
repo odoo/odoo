@@ -13,10 +13,10 @@
 # wilcobergacker <wilcobergacker@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 14:00+0000\n"
-"PO-Revision-Date: 2016-09-29 14:00+0000\n"
+"POT-Creation-Date: 2016-11-14 15:54+0000\n"
+"PO-Revision-Date: 2016-11-14 15:54+0000\n"
 "Last-Translator: wilcobergacker <wilcobergacker@gmail.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -637,7 +637,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Maak kassabetalingen met kredietkaarten mogelijk\n"
+"Maak kassabetalingen met Credit Card mogelijk\n"
 "=============================================\n"
 "\n"
 "De module geeft klanten de mogelijkheid om hun bestelling met een creditcart te betalen. De transactie worden verwerkt via Mercury (ontworpen door \n"
@@ -2538,7 +2538,7 @@ msgstr ""
 "Module voor resource management.\n"
 "===============================\n"
 "\n"
-"Een bron stelt iets voor dat kan gepland worden (een ontwikkelaar op een taak of een bewerking op een productieorder). Deze module beheert een resource kalender geassocieerd met elk middel. Het beheert ook de bladeren van elk middel.\n"
+"Een bron stelt iets voor dat kan gepland worden (een ontwikkelaar op een taak of een bewerking op een productieorder). Deze module beheert een resource kalender gekoppeld aan resources. Het beheert ook de bladeren van elk middel.\n"
 "    "
 
 #. module: base
@@ -4271,9 +4271,9 @@ msgstr ""
 "  - Aflever Orders\n"
 "  - Producten (publieke)\n"
 "  - Facturen\n"
-"  - Betalingen/Teruggaves\n"
+"  - Betalingen/Credits\n"
 "\n"
-"Als online betalingen ingesteld zijn, krijgen gebruikers van het portaal ook de mogelijkheid om hun onbetaalde Verkoop Orders en Facturen online te betalen. Paypal is standaard al geinstalleerd, u hoeft alleen een Paypal rekening in te stellen in de Accounting/Invoicing settings.\n"
+"Als online betalingen ingesteld zijn, krijgen gebruikers van het portaal ook de mogelijkheid om hun onbetaalde Verkoop Orders en Facturen online te betalen. Paypal is standaard al geïnstalleerd, u hoeft alleen een Paypal rekening in te stellen in de Accounting/Invoicing settings.\n"
 "    "
 
 #. module: base
@@ -5233,7 +5233,7 @@ msgstr ""
 "Voertuigen, leasing, verzekeringen, kosten\n"
 "==================================\n"
 "Met deze module helpt Odoo u voertuigen te beheren, de\n"
-"contracten geassocieerde met de voertuigen en ook de diensten, brandstof\n"
+"contracten gekoppeld aan de voertuigen en ook de diensten, brandstof\n"
 "logs, kosten en veel andere opties die nodig zijn voor het beheer\n"
 "van uw vloot of voertuig(en)\n"
 "\n"
@@ -5243,7 +5243,7 @@ msgstr ""
 "* Beheer contracten voor voertuigen\n"
 "* Herinnering wanneer een contract een vervaldatum bereikt\n"
 "* Voeg diensten, brandstof logs, brandstof waardes toe voor alle voertuigen\n"
-"* Toon alle kosten geassocieerd met een voertuig of een type van dienst\n"
+"* Toon alle kosten gekoppeld aan een voertuig of een type van dienst\n"
 "* Analyse grafiek voor kosten\n"
 
 #. module: base
@@ -5458,14 +5458,14 @@ msgstr "%p - Equivalent van AM of PM.\""
 #. module: base
 #: code:addons/base/ir/ir_filters.py:36
 #: code:addons/base/res/res_partner.py:325
-#: code:addons/base/res/res_users.py:143 code:addons/base/res/res_users.py:404
-#: code:addons/base/res/res_users.py:406
+#: code:addons/base/res/res_users.py:143 code:addons/base/res/res_users.py:403
+#: code:addons/base/res/res_users.py:405
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
 
 #. module: base
-#: code:addons/models.py:5628
+#: code:addons/models.py:5634
 #, python-format
 msgid ""
 "%s This might be '%s' in the current model, or a field of the same name in "
@@ -5485,7 +5485,7 @@ msgid "%y - Year without century [00,99].\""
 msgstr "%y - Jaar zonder eeuw [00,99].\""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1093
+#: code:addons/base/ir/ir_model.py:1114
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -5825,7 +5825,7 @@ msgid "<u><strong>Views</strong></u>"
 msgstr "<u><strong>Weergaven</strong></u>"
 
 #. module: base
-#: code:addons/models.py:3227
+#: code:addons/models.py:3234
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
 msgstr ""
@@ -6325,7 +6325,7 @@ msgid ""
 "Configuration:\n"
 "--------------\n"
 "After installing this module, you need to configure the LDAP parameters in the\n"
-"Configuration tab of the Company details. Different companies may have different\n"
+"General Settings menu. Different companies may have different\n"
 "LDAP servers, as long as they have unique usernames (usernames need to be unique\n"
 "in Odoo, even across multiple companies).\n"
 "\n"
@@ -6369,7 +6369,7 @@ msgid ""
 "\n"
 "User Template:\n"
 "--------------\n"
-"In the LDAP configuration on the Company form, it is possible to select a *User\n"
+"In the LDAP configuration on the General Settings, it is possible to select a *User\n"
 "Template*. If set, this user will be used as template to create the local users\n"
 "whenever someone authenticates for the first time via LDAP authentication. This\n"
 "allows pre-setting the default groups and menus of the first-time users.\n"
@@ -6382,71 +6382,41 @@ msgid ""
 "         user with the same login (and a blank password), then rename this new\n"
 "         user to a username that does not exist in LDAP, and setup its groups\n"
 msgstr ""
-"Voegt ondersteuning toe voor authenticatie met LDAP server.\n"
-"===============================================\n"
-"Deze module laat gebruikers toe om aan te melden met hun LDAP gebruikersnaam\n"
-"en wachtwoord, en\n"
-"zal automatisch Odoo gebruikers vanuit deze gebruikers aanmaken, direct.\n"
+"Voegt ondersteuning toe voor authenticatie met LDAP server. =============================================== \n"
+"Deze module laat gebruikers toe om aan te melden met hun LDAP gebruikersnaam en wachtwoord, en zal automatisch Odoo gebruikers vanuit deze gebruikers aanmaken, direct. \n"
 "\n"
-"**Opmerkingen:** Deze module werkt alleen op servers die de Python ``ldap`` module geïnstalleerd hebben.\n"
+"**Opmerkingen:** Deze module werkt alleen op servers die de Python ``ldap`` module geïnstalleerd hebben. \n"
 "\n"
 "Configuratie:\n"
-"--------------\n"
+" -------------- \n"
 "Na het installeren van deze module moet u de LDAP parameters configureren in het\n"
-"Configuratie tabblad van de bedrijfsgegevens. Verschillende bedrijven hebben mogelijk verschillende\n"
-"LDAP servers, zolang ze unieke gebruikersnamen hebben (gebruikersnamen moeten uniek zijn\n"
-"in Odoo, zelfs doorheen meerdere bedrijven).\n"
+"Configuratie tabblad van de bedrijfsgegevens. Verschillende bedrijven\n"
+"hebben mogelijk verschillende LDAP servers, zolang ze unieke gebruikersnamen hebben (gebruikersnamen moeten uniek zijn in Odoo, zelfs doorheen meerdere bedrijven). \n"
 "\n"
-"Anonieme LDAP binding is ook ondersteund (voor LDAP servers die het toestaan), door\n"
-"simpelweg de LDAP gebruikersnaam en wachtwoord leeg te laten in de LDAP configuratie.\n"
-"Dit staat geen anonieme authenticatie toe voor gebruikers, het is enkel voor het hoofd\n"
-"LDAP account dat gebruikt wordt om te verifiëren of een gebruiker bestaat voor deze te proberen\n"
-"te authenticeren.\n"
+"Anonieme LDAP binding is ook ondersteund (voor LDAP servers die het toestaan), door simpelweg de LDAP gebruikersnaam en wachtwoord leeg te laten in de LDAP configuratie. Dit staat geen anonieme authenticatie toe voor gebruikers, het is enkel voor het hoofd LDAP account dat gebruikt wordt om te verifiëren of een gebruiker bestaat voor deze te proberen te authenticeren. \n"
 "\n"
-"De connectie beveiligen met STARTTLS is beschikbaar voor LDAP servers die het\n"
-"ondersteunen, door de optie te activeren in de LDAP configuratie.\n"
+"De connectie beveiligen met STARTTLS is beschikbaar voor LDAP servers die het ondersteunen, door de optie te activeren in de LDAP configuratie. Voor verdere opties om de LDAP te configureren kijkt u best op de ldap.config manpage: manpage:`ldap.conf(5)` \n"
 "\n"
-"Voor verdere opties om de LDAP te configureren kijkt u best op de ldap.config\n"
-"manpage: manpage:`ldap.conf(5)`\n"
-"\n"
-"Veiligheidsoverwegingen\n"
+"Veiligheidsoverwegingen \n"
 "------------------------\n"
-"LDAP wachtwoorden wordt nooit bewaard in de Odoo database, de LDAP server\n"
-"wordt gequeried wanneer een gebruiker zich moet authenticeren. Er gebeurt geen duplicatie\n"
-"van de wachtwoorden, en wachtwoorden worden slechts op één plaats beheerd.\n"
+"LDAP wachtwoorden wordt nooit bewaard in de Odoo database, de LDAP server wordt gequeried wanneer een gebruiker zich moet authenticeren. Er gebeurt geen duplicatie van de wachtwoorden, en wachtwoorden worden slechts op één plaats beheerd (voor LDAP gebruikers). \n"
 "\n"
-"Het is ook mogelijk om lokale Odoo gebruikers in uw database te hebben samen met\n"
-"LDAP-geauthenticeerde gebruikers (de administrator is een voor de hand liggend voorbeeld).\n"
+"Het is ook mogelijk om lokale Odoo gebruikers in uw database te hebben samen met LDAP-geauthenticeerde gebruikers (de administrator is een voor de hand liggend voorbeeld). \n"
 "\n"
-"Dit is hoe het werkt:\n"
-"---------------------\n"
-"* Het systeem probeert eerst de gebruiker te authenticeren tegen de lokale Odoo\n"
-"database;\n"
-"* Als de authenticatie mislukt (bijvoorbeeld omdat de gebruiker geen lokaal\n"
-"wachtwoord heeft), probeert het systeem vervolgens tegen LDAP te authenticeren;\n"
+"Dit is hoe het werkt: \n"
+"--------------------- \n"
+"* Het systeem probeert eerst de gebruiker te authenticeren tegen de lokale Odoo database; \n"
+"* Als de authenticatie mislukt (bijvoorbeeld omdat de gebruiker geen lokaal wachtwoord heeft), probeert het systeem vervolgens tegen LDAP te authenticeren;\n"
 "\n"
-"Omdat een LDAP gebruiker standaard geen wachtwoord in de lokale Odoo database\n"
-"heeft opgeslagen (wat betekend geen toegang), mislukt de eerste stap altijd en de LDAP server wordt\n"
-"gequeried om te authenticeren.\n"
+"Omdat een LDAP gebruiker standaard geen wachtwoord in de lokale Odoo database heeft opgeslagen (wat betekend geen toegang), mislukt de eerste stap altijd en de LDAP server wordt gequeried om te authenticeren. \n"
 "\n"
-"STARTTLS activeren verzekert u dat de authenticatie query naar de LDAP server\n"
-"geëncrypteerd is.\n"
+"STARTTLS activeren verzekert u dat de authenticatie query naar de LDAP server geëncrypteerd is. \n"
 "\n"
-"Gebruikersjabloon:\n"
-"--------------\n"
-"In de LDAP configuratie van uw bedrijfsformulier is het mogelijk om een \"Gebruikersjabloon\"\n"
-"te selecteren. Indien ingesteld zal deze gebruiker gebruikt worden als sjabloon om de lokale gebruikers aan te maken\n"
-"wanneer iemand voor het eerste authenticeert met de LDAP authenticatie. Dit\n"
-"staat pre-configuratie van de standaard groepen en menu's toe voor eerste keer gebruikers.\n"
+"Gebruikersjabloon: \n"
+"-------------- \n"
+"In de LDAP configuratie van uw bedrijfsformulier is het mogelijk om een \"Gebruikersjabloon\" te selecteren. Indien ingesteld zal deze gebruiker gebruikt worden als sjabloon om de lokale gebruikers aan te maken wanneer iemand voor het eerste authenticeert met de LDAP authenticatie. Dit staat pre-configuratie van de standaard groepen en menu's toe voor eerste keer gebruikers. \n"
 "\n"
-"**Waarschuwing:** Indien u een wachtwoord instelt voor de gebruikersjabloon zal dit wachtwoord worden\n"
-"toegewezen aan elke nieuwe LDAP gebruiker, wat effectief een\n"
-"*master password* instelt voor deze gebruiker (tot deze manueel gewijzigd is).\n"
-"U\n"
-"wilt dit normaal niet. Een gemakkelijke manier om een sjabloongebruiker op te zetten is om\n"
-"in te loggen met een valide LDAP gebruiker, Odoo een lege lokale\n"
-"gebruiker aan te maken met dezelfde login (en een blanco wachtwoord), hernoem vervolgens deze nieuwe\n"
-"gebruiker naar een gebruikersnaam die niet bestaat in LDAP, en zet de groepen op\n"
+"**Waarschuwing:** Indien u een wachtwoord instelt voor de gebruikersjabloon zal dit wachtwoord worden toegewezen aan elke nieuwe LDAP gebruiker, wat effectief een *master password* instelt voor deze gebruiker (tot deze manueel gewijzigd is). U wilt dit normaal niet. Een gemakkelijke manier om een sjabloongebruiker op te zetten is om in te loggen met een valide LDAP gebruiker, Odoo een lege lokale gebruiker aan te maken met dezelfde login (en een blanco wachtwoord), hernoem vervolgens deze nieuwe gebruiker naar een gebruikersnaam die niet bestaat in LDAP, en zet de groepen op\n"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_administration
@@ -6460,8 +6430,8 @@ msgid ""
 msgstr "Administratieve onderverdelen van een land."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:658 code:addons/base/ir/ir_model.py:717
-#: code:addons/base/ir/ir_model.py:1203
+#: code:addons/base/ir/ir_model.py:679 code:addons/base/ir/ir_model.py:738
+#: code:addons/base/ir/ir_model.py:1224
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr "Administrator toegang is nodig om een module te kunnen verwijderen."
@@ -7343,7 +7313,7 @@ msgid "Can not upgrade module '%s'. It is not installed."
 msgstr "Kan module '%s' niet bijwerken. Deze is niet geïnstalleerd."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:526
+#: code:addons/base/ir/ir_model.py:547
 #, python-format
 msgid "Can only rename one field at a time!"
 msgstr "Kan maar één naam hernoemen per keer!"
@@ -7400,7 +7370,7 @@ msgid "Cannot duplicate configuration!"
 msgstr "Het is niet mogelijk de instellingen te dupliceren!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:528
+#: code:addons/base/ir/ir_model.py:549
 #, python-format
 msgid "Cannot rename field to %s, because that field already exists!"
 msgstr "Kan veldnaam niet wijzigen naar %s want het veld bestaat al!"
@@ -7491,19 +7461,19 @@ msgstr ""
 " te breken."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:514
+#: code:addons/base/ir/ir_model.py:534
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr "Het wijzigen van het model van een veld is niet toegestaan!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:492
+#: code:addons/base/ir/ir_model.py:512
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr "Het veranderen van het opslagsysteem voor veld \"%s\" is niet toegestaan."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:517
+#: code:addons/base/ir/ir_model.py:537
 #, python-format
 msgid ""
 "Changing the type of a field is not yet supported. Please drop it and create"
@@ -8226,7 +8196,7 @@ msgid "Costa Rica - Accounting"
 msgstr "Costa Rica - Boekhouding"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:606
+#: code:addons/base/res/res_partner.py:601
 #, python-format
 msgid "Couldn't create contact without email address!"
 msgstr "Niet mogelijk een contact aan te maken zonder e-mail adres"
@@ -8697,7 +8667,7 @@ msgid "Custom Shortcuts"
 msgstr "Eigen sneltoetsen"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:464
+#: code:addons/base/ir/ir_model.py:484
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "Eigen velden dienen een naam te hebben die begint met 'x_' !"
@@ -8804,7 +8774,7 @@ msgid "Database Structure"
 msgstr "Databasestructuur"
 
 #. module: base
-#: code:addons/models.py:3152
+#: code:addons/models.py:3159
 #, python-format
 msgid ""
 "Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
@@ -9283,7 +9253,7 @@ msgid "Document Management"
 msgstr "Documentbeheer"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:864 code:addons/base/ir/ir_model.py:867
+#: code:addons/base/ir/ir_model.py:885 code:addons/base/ir/ir_model.py:888
 #, python-format
 msgid "Document model"
 msgstr "Document model"
@@ -9423,7 +9393,7 @@ msgid "El Salvador"
 msgstr "El Salvador"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:572
+#: code:addons/base/ir/ir_ui_view.py:581
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr "Element '%s' kan niet worden gevonden in de bovenliggende weergave"
@@ -9480,7 +9450,7 @@ msgid "Employees"
 msgstr "Werknemers"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:327
+#: code:addons/base/ir/ir_model.py:331
 #, python-format
 msgid "Empty dependency in %r"
 msgstr "Lege afhankelijkheid in %r"
@@ -9529,7 +9499,7 @@ msgid "Error ! You cannot create recursive companies."
 msgstr "Fout! U kunt geen recursieve bedrijven aanmaken."
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:433
+#: code:addons/base/ir/ir_ui_view.py:442
 #, python-format
 msgid ""
 "Error context:\n"
@@ -9539,13 +9509,13 @@ msgstr ""
 "Weergave`%(view_name)s`"
 
 #. module: base
-#: code:addons/models.py:1049
+#: code:addons/models.py:1056
 #, python-format
 msgid "Error details:"
 msgstr "Meer info over fout:"
 
 #. module: base
-#: code:addons/models.py:1062
+#: code:addons/models.py:1069
 #, python-format
 msgid "Error while validating constraint"
 msgstr "Fout bij bevestigen beperking"
@@ -9911,19 +9881,19 @@ msgid "Field"
 msgstr "Veld"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:152
+#: code:addons/base/ir/ir_model.py:156
 #, python-format
 msgid "Field \"Model\" cannot be modified on models."
 msgstr "Veld \"Model\" kan niet gewijzigd worden op modellen."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:156
+#: code:addons/base/ir/ir_model.py:160
 #, python-format
 msgid "Field \"Transient Model\" cannot be modified on models."
 msgstr "Veld \"Transient Model\" kan niet gewijzigd worden op modellen."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:154
+#: code:addons/base/ir/ir_model.py:158
 #, python-format
 msgid "Field \"Type\" cannot be modified on models."
 msgstr "Veld \"Soort\" kan niet gewijzigd worden op modellen."
@@ -9960,7 +9930,7 @@ msgid "Field Type"
 msgstr "Soort veld"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:886
+#: code:addons/base/ir/ir_ui_view.py:895
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr "Veld '%(field_name)s' bestaat niet"
@@ -10201,13 +10171,13 @@ msgid "For relationship fields, the technical name of the target model"
 msgstr "Voor relatievelden, de technische naam van het doelmodel"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:457
+#: code:addons/base/ir/ir_model.py:477
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr "Voor selectievelden moeten de selectie-opties opgegeven worden!"
 
 #. module: base
-#: code:addons/models.py:3287
+#: code:addons/models.py:3294
 #, python-format
 msgid ""
 "For this kind of document, you may only access records you created yourself.\n"
@@ -11512,13 +11482,13 @@ msgstr ""
 "sturen."
 
 #. module: base
-#: code:addons/models.py:1285
+#: code:addons/models.py:1292
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr "Onvoldoende velden voor kalenderweergave!"
 
 #. module: base
-#: code:addons/models.py:1295
+#: code:addons/models.py:1302
 #, python-format
 msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
@@ -11589,7 +11559,7 @@ msgid "Introspection report on objects"
 msgstr "Zelfcontrole op rapporten en objecten"
 
 #. module: base
-#: code:addons/models.py:3995
+#: code:addons/models.py:4001
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -11601,7 +11571,7 @@ msgstr ""
 "asc/desc voor de sortering)"
 
 #. module: base
-#: code:addons/base/res/res_users.py:316
+#: code:addons/base/res/res_users.py:315
 #, python-format
 msgid "Invalid 'group by' parameter"
 msgstr "Incorrecte 'groep door' instelling"
@@ -11651,7 +11621,7 @@ msgid "Invalid model name %r in action definition."
 msgstr "Foutieve modelnaam %r in actie definitie."
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:564
+#: code:addons/base/ir/ir_ui_view.py:573
 #, python-format
 msgid "Invalid position attribute: '%s'"
 msgstr "Ongeldige positie kenmerk: '%s'"
@@ -11663,7 +11633,7 @@ msgid "Invalid prefix or suffix for sequence '%s'"
 msgstr "Ongeldig voor- of navoegsel voor reeks '%s'"
 
 #. module: base
-#: code:addons/base/res/res_users.py:324
+#: code:addons/base/res/res_users.py:323
 #, python-format
 msgid "Invalid search criterion"
 msgstr "Ongeldige zoekcriteria"
@@ -11675,7 +11645,7 @@ msgid "Invalid type"
 msgstr "Ongeldige soort"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:297 code:addons/base/ir/ir_ui_view.py:299
+#: code:addons/base/ir/ir_ui_view.py:298 code:addons/base/ir/ir_ui_view.py:300
 #, python-format
 msgid "Invalid view definition"
 msgstr "Ongeldige weergave definitie"
@@ -12584,6 +12554,10 @@ msgid ""
 "Manage partner tags to better classify them for tracking and analysis purposes.\n"
 "                    A partner may have several categories and categories have a hierarchical structure: a partner with a category has also the parent category."
 msgstr ""
+"Beheer relatie labels om ze beter te classificeren voor tracering en analyse"
+" doeleinden. Een relatie mag meerdere categorieën hebben en categorieën "
+"hebben een hiërarchische structuur: een relatie met een categorie heeft ook "
+"de bovenliggende categorie."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_title_contact
@@ -12608,6 +12582,9 @@ msgid ""
 "                                    Automatic: Runs whenever the system is reconfigured.\n"
 "                                    Launch Manually Once: after having been launched manually, it sets automatically to Done."
 msgstr ""
+"Handmatig: Handmatig gestart. \n"
+"Automatisch: Wordt gestart als het systeem is geconfigureerd. \n"
+"Start eenmalig handmatig: Na handmatig te zijn gestart, wordt het automatisch ingesteld op gereed."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_14
@@ -12631,13 +12608,13 @@ msgid "Many2One"
 msgstr "Many2one"
 
 #. module: base
-#: code:addons/fields.py:2268
+#: code:addons/fields.py:2294
 #, python-format
 msgid "Many2many comodel does not exist: %r"
 msgstr "Many2Many comodel bestaat niet: %r"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:471
+#: code:addons/base/ir/ir_model.py:491
 #, python-format
 msgid "Many2one %s on model %s does not exist!"
 msgstr "Many2one %s voor model %s bestaat niet!"
@@ -12848,19 +12825,19 @@ msgid "Missing SMTP Server"
 msgstr "Ontbrekende SMTP Server"
 
 #. module: base
-#: code:addons/models.py:3256
+#: code:addons/models.py:3263
 #, python-format
 msgid "Missing document(s)"
 msgstr "Ontbrekend(e) document(en)"
 
 #. module: base
-#: code:addons/models.py:5613
+#: code:addons/models.py:5619
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr "Ontbrekende verplichte waarde voor het veld '%s' (%s)"
 
 #. module: base
-#: code:addons/models.py:5610
+#: code:addons/models.py:5616
 #, python-format
 msgid "Missing required value for the field '%s'."
 msgstr "Ontbrekende verplichte waarde voor het veld '%s'."
@@ -12905,7 +12882,7 @@ msgid "Model"
 msgstr "Model"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:467
+#: code:addons/base/ir/ir_model.py:487
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "Model %s bestaat niet!"
@@ -12980,7 +12957,7 @@ msgstr ""
 "Modelnaam van de methode welke wordt aangeroepen, bijv. 'res.partner'."
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:702 code:addons/base/ir/ir_ui_view.py:837
+#: code:addons/base/ir/ir_ui_view.py:711 code:addons/base/ir/ir_ui_view.py:846
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr "Model niet gevonden: %(model)s"
@@ -13293,7 +13270,7 @@ msgid "New Zealand - Accounting"
 msgstr "New Zealand - Accounting"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:530
+#: code:addons/base/ir/ir_model.py:551
 #, python-format
 msgid ""
 "New field name must still start with x_ , because it is a custom field!"
@@ -13361,7 +13338,7 @@ msgid "Niue"
 msgstr "Niue"
 
 #. module: base
-#: code:addons/models.py:1393
+#: code:addons/models.py:1400
 #, python-format
 msgid "No default view of type '%s' could be found !"
 msgstr "Geen standaardweergave gevonden voor type '%s' !"
@@ -13372,7 +13349,7 @@ msgid "No gap"
 msgstr "Aaneengesloten"
 
 #. module: base
-#: code:addons/fields.py:2110
+#: code:addons/fields.py:2132
 #, python-format
 msgid "No inverse field %r found for %r"
 msgstr "Geen omgekeerd veld %r gevonden voor %r"
@@ -13399,13 +13376,13 @@ msgid "Non Updatable"
 msgstr "Niet bij te werken"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:336
+#: code:addons/base/ir/ir_model.py:340
 #, python-format
 msgid "Non-relational field %r in dependency %r"
 msgstr "Niet gerelateerd veld %r in afhankelijkheid %r"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:293
+#: code:addons/base/ir/ir_model.py:297
 #, python-format
 msgid "Non-relational field name '%s' in related field '%s'"
 msgstr "Niet gerelateerde veldnaam '%s' in gerelateerd veld '%s'"
@@ -13611,7 +13588,7 @@ msgid "On delete property for many2one fields"
 msgstr "'On delete' eigenschap voor many2one velden"
 
 #. module: base
-#: code:addons/models.py:3256
+#: code:addons/models.py:3263
 #, python-format
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
@@ -13621,7 +13598,7 @@ msgstr ""
 "opnieuw na het verversen van uw scherm."
 
 #. module: base
-#: code:addons/models.py:3620
+#: code:addons/models.py:3626
 #, python-format
 msgid ""
 "One of the records you are trying to modify has already been deleted "
@@ -13631,7 +13608,7 @@ msgstr ""
 "type: %s)."
 
 #. module: base
-#: code:addons/base/res/res_partner.py:386
+#: code:addons/base/res/res_partner.py:381
 #, python-format
 msgid ""
 "One2Many fields cannot be synchronized as part of `commercial_fields` or "
@@ -13685,9 +13662,12 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Alleen van toepassing als de weergave overerft van een andere (inherit_id is niet Onwaar/Null). \n"
+"* Indien extensie (standaard), als deze weergave wordt aangevraagd wordt de dichtste primaire weergave gezocht (via inherit_id), vervolgens worden alle weergaven die hier van overerven toegepast\n"
+"* Indien primair, de dichtstbijzijnde weergave wordt volledig opgelost (zelfs als het een andere model dan deze gebruikt), vervolgens worden de weergave zijn overerving specificaties (<xpath/>) toegepast, en het resultaat wordt gebruikt als deze weergave zijn arch.\n"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:864
+#: code:addons/base/ir/ir_model.py:885
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
@@ -14023,7 +14003,7 @@ msgid "Partners Geolocation"
 msgstr "Relatie geolocatie"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:747
+#: code:addons/base/res/res_partner.py:742
 #, python-format
 msgid "Partners: "
 msgstr "Relaties:"
@@ -14192,7 +14172,7 @@ msgid "Plano de contas SNC para Portugal"
 msgstr "SNC Rekeningschema voor Portugal"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:867
+#: code:addons/base/ir/ir_model.py:888
 #, python-format
 msgid ""
 "Please contact your system administrator if you think this is an error."
@@ -14456,14 +14436,14 @@ msgid "Properties"
 msgstr "Eigenschappen"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:509
+#: code:addons/base/ir/ir_model.py:529
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
 "them through Python code, preferably through a custom addon!"
 msgstr ""
 "Eigenschappen van basisvelden kunnen niet op deze manier gewijzigd worden! "
-"Wijzigt u deze door middel van Python-code, bij voorkeur in een eigen addon!"
+"Wijzig deze door middel van Python-code, bij voorkeur in een eigen module!"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_theme_install
@@ -14617,7 +14597,7 @@ msgid "Quotations, Sales Orders, Invoicing"
 msgstr "Offertes, verkooporders en facturen"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:306
+#: code:addons/base/ir/ir_ui_view.py:307
 #, python-format
 msgid ""
 "Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes"
@@ -14728,7 +14708,7 @@ msgstr ""
 "opnieuw aub"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:353 code:addons/models.py:4380
+#: code:addons/base/ir/ir_actions.py:353 code:addons/models.py:4386
 #, python-format
 msgid "Record does not exist or has been deleted."
 msgstr "Regel bestaat niet of werd verwijderd."
@@ -14767,7 +14747,7 @@ msgid "Recursion found in child server actions"
 msgstr "Recursie gevonden in de onderliggende server acties"
 
 #. module: base
-#: code:addons/models.py:3726
+#: code:addons/models.py:3732
 #, python-format
 msgid "Recursivity Detected."
 msgstr "Recursiviteit ontdekt."
@@ -14816,13 +14796,13 @@ msgid "Related Server Action"
 msgstr "Gerelateerde server actie"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:305
+#: code:addons/base/ir/ir_model.py:309
 #, python-format
 msgid "Related field '%s' does not have comodel '%s'"
 msgstr "Gerelateerd veld '%s' heeft geen comodel '%s'"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:303
+#: code:addons/base/ir/ir_model.py:307
 #, python-format
 msgid "Related field '%s' does not have type '%s'"
 msgstr "Gerelateerd veld '%s' heeft geen soort '%s'"
@@ -14878,7 +14858,7 @@ msgid "Remove the contextual action related to this server action"
 msgstr "Verwijder de contextuele actie behorende bij deze server actie"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:494
+#: code:addons/base/ir/ir_model.py:514
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "Hernoemen sparse veld \"%s\" is niet toegestaan"
@@ -14976,7 +14956,7 @@ msgid "Resellers"
 msgstr "Detailhandelaars"
 
 #. module: base
-#: code:addons/models.py:882
+#: code:addons/models.py:885
 #, python-format
 msgid "Resolve other errors first"
 msgstr "Andere fouten eerst oplossen"
@@ -15762,25 +15742,25 @@ msgstr "Soms BIC of Swift genoemd."
 
 #. module: base
 #: code:addons/base/ir/ir_attachment.py:329
-#: code:addons/base/ir/ir_model.py:858
+#: code:addons/base/ir/ir_model.py:879
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr "Sorry, u heeft geen toegang tot dit document."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:860
+#: code:addons/base/ir/ir_model.py:881
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr "Sorry, u mag dit soort documenten niet aanmaken."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:861
+#: code:addons/base/ir/ir_model.py:882
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr "Sorry, u mag dit document niet verwijderen."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:859
+#: code:addons/base/ir/ir_model.py:880
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr "Sorry, het is u niet toegestaan om dit document te wijzigen"
@@ -15791,7 +15771,7 @@ msgid "Sort"
 msgstr "Sorteer"
 
 #. module: base
-#: code:addons/models.py:4128
+#: code:addons/models.py:4134
 #, python-format
 msgid "Sorting field %s not found on model %s"
 msgstr "Sorteerveld %s niet gevonden bij model %s"
@@ -16400,7 +16380,7 @@ msgstr ""
 "U kunt dit veld gebruiken voor snelzoeken."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:276
+#: code:addons/base/ir/ir_model.py:280
 #, python-format
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
@@ -16525,6 +16505,14 @@ msgstr "Het database object waaraan deze bijlage wordt gekoppeld."
 #: model:ir.model.fields,help:base.field_wkf_transition_act_to
 msgid "The destination activity."
 msgstr "De doel activiteit."
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:438
+#, python-format
+msgid "The field '%s' cannot be removed because the field '%s' depends on it."
+msgstr ""
+"Het veld '%s' kan niet verwijderd worden omdat het veld '%s' er van "
+"afhankelijk is."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -16655,7 +16643,7 @@ msgid ""
 "workflow associated with it."
 msgstr ""
 "De model die de werk flow ontvangt. Hou er rekening mee dat er een werk flow"
-" geassocieerd moet zijn."
+" gekoppeld moet zijn."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_model_id
@@ -16772,8 +16760,8 @@ msgid "The record id this is attached to."
 msgstr "Het record id waaraan dit is verbonden."
 
 #. module: base
-#: code:addons/models.py:2945 code:addons/models.py:3161
-#: code:addons/models.py:3246
+#: code:addons/models.py:2952 code:addons/models.py:3168
+#: code:addons/models.py:3253
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
@@ -16805,7 +16793,7 @@ msgid "The state code."
 msgstr "Code staat/provincie"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:389
+#: code:addons/base/ir/ir_model.py:393
 #, python-format
 msgid "The table %r if used for other, possibly incompatible fields."
 msgstr ""
@@ -16826,7 +16814,7 @@ msgstr ""
 "filter publiek en beschikbaar voor alle gebruikers."
 
 #. module: base
-#: code:addons/models.py:5625
+#: code:addons/models.py:5631
 #, python-format
 msgid "The value for the field '%s' already exists."
 msgstr "De waarde van het veld '%s' bestaat al."
@@ -16847,7 +16835,7 @@ msgstr ""
 "deze voordat u een nieuwe standaard filter"
 
 #. module: base
-#: code:addons/models.py:2500
+#: code:addons/models.py:2507
 #, python-format
 msgid "There is no reference available for %s"
 msgstr "Er is geen referentie beschikbaar voor %s"
@@ -16865,7 +16853,7 @@ msgid "This Window"
 msgstr "Dit venster"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:432
+#: code:addons/base/ir/ir_model.py:449
 #, python-format
 msgid "This column contains module data and cannot be removed!"
 msgstr "Deze kolom bevat module data en kan niet verwijderd worden!"
@@ -17384,7 +17372,7 @@ msgid "Ukraine"
 msgstr "Oekraïne"
 
 #. module: base
-#: code:addons/models.py:3367
+#: code:addons/models.py:3374
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
@@ -17466,25 +17454,25 @@ msgid "Unknown"
 msgstr "Onbekend"
 
 #. module: base
-#: code:addons/models.py:1016
+#: code:addons/models.py:1023
 #, python-format
 msgid "Unknown database identifier '%s'"
 msgstr "Onbekende database identifier '%s'"
 
 #. module: base
-#: code:addons/models.py:881
+#: code:addons/models.py:884
 #, python-format
 msgid "Unknown error during import:"
 msgstr "Onbekende fout tijdens het importeren:"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:334
+#: code:addons/base/ir/ir_model.py:338
 #, python-format
 msgid "Unknown field %r in dependency %r"
 msgstr "Onbekend veld %r in afhankelijkheid %r"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:291
+#: code:addons/base/ir/ir_model.py:295
 #, python-format
 msgid "Unknown field name '%s' in related field '%s'"
 msgstr "Onbekende veldnaam '%s' in gerelateerd veld '%s'"
@@ -17999,7 +17987,7 @@ msgstr "Magazijnbeheer: waves"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:474
-#: code:addons/base/ir/ir_model.py:313 code:addons/base/ir/ir_model.py:388
+#: code:addons/base/ir/ir_model.py:317 code:addons/base/ir/ir_model.py:392
 #: code:addons/base/res/res_partner.py:337
 #, python-format
 msgid "Warning"
@@ -18012,7 +18000,7 @@ msgid "Warning!"
 msgstr "Waarschuwing!"
 
 #. module: base
-#: code:addons/models.py:5345
+#: code:addons/models.py:5351
 #, python-format
 msgid "Warnings"
 msgstr "Waarschuwingen"
@@ -18476,7 +18464,7 @@ msgstr ""
 "kopiëren/plakken die linkt naar uw bestand"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:495
+#: code:addons/base/res/res_partner.py:490
 #, python-format
 msgid ""
 "You can not change the company as the partner/user has multiple user linked "
@@ -18497,7 +18485,7 @@ msgstr ""
 "Het is niet mogelijk om twee lettertypes met dezelfde naam te registreren"
 
 #. module: base
-#: code:addons/base/res/res_users.py:382
+#: code:addons/base/res/res_users.py:381
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -18540,13 +18528,13 @@ msgid "You cannot create recursive Partner hierarchies."
 msgstr "Het is niet mogelijk een recursieve relatie hiërarchie te maken."
 
 #. module: base
-#: code:addons/base/res/res_users.py:341
+#: code:addons/base/res/res_users.py:340
 #, python-format
 msgid "You cannot deactivate the admin user."
 msgstr "U kan de admin gebruiker niet deactiveren."
 
 #. module: base
-#: code:addons/base/res/res_users.py:343
+#: code:addons/base/res/res_users.py:342
 #, python-format
 msgid "You cannot deactivate the user you're currently logged in as."
 msgstr "U kan de gebruiker waarmee u bent aangemeld niet deactiveren."
@@ -19119,7 +19107,7 @@ msgstr ""
 "aanmaakt"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:430
+#: code:addons/base/ir/ir_ui_view.py:439
 #, python-format
 msgid "n/a"
 msgstr "n/b"

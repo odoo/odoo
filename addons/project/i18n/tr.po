@@ -154,17 +154,17 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
 msgid "# Days to Assign"
-msgstr ""
+msgstr "# Atanma Günü"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_closing_days
 msgid "# Days to Close"
-msgstr ""
+msgstr "# Kapanış Günü"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
 msgid "# Days to Deadline"
-msgstr ""
+msgstr "# Zaman Sınırı Günü"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -276,6 +276,8 @@ msgstr ""
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">Yeni bir proje oluşturmak için "
+"tıklayın.</p>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -425,6 +427,10 @@ msgid ""
 "                                        <strong> Tasks</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<span class=\"fa fa-check-square-o\"/>\n"
+"<strong> Görevler</strong>\n"
+"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -434,6 +440,10 @@ msgid ""
 "                                        <strong> Timesheets</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<span class=\"fa fa-clock-o\"/>\n"
+"<strong> Zaman Çizelgeleri</strong>\n"
+"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -443,6 +453,10 @@ msgid ""
 "                                        <strong> Issues</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<span class=\"fa fa-exclamation-circle\"/>\n"
+"<strong> Sorunlar</strong>\n"
+"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -926,7 +940,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Add/remove from favorite"
-msgstr ""
+msgstr "Favoriden ekle / kaldır"
 
 #. module: project
 #. openerp-web
@@ -1913,11 +1927,12 @@ msgstr "İyi şanslar!"
 msgid ""
 "Green: the Task is ready for next stage (the job for this stage is complete)"
 msgstr ""
+"Yeşil: Görev bir sonraki aşamaya hazırdır (bu aşama için iş tamamlanmıştır)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Grey: the Task is in progress (someone is working on it)"
-msgstr ""
+msgstr "Gri: Görev devam ediyor (birileri üzerinde çalışıyor)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1957,7 +1972,7 @@ msgstr ""
 #: code:addons/project/models/project.py:567
 #, python-format
 msgid "I take it"
-msgstr ""
+msgstr "Ben alıyorum"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_id
@@ -2497,7 +2512,7 @@ msgstr ""
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
-msgstr ""
+msgstr "Sadece davet edildiğinde"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3562,14 +3577,14 @@ msgstr ""
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by all employees"
-msgstr ""
+msgstr "Tüm çalışanlar tarafından görülebilir"
 
 #. module: project
 #: code:addons/project/models/project.py:205
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
-msgstr ""
+msgstr "İzleyici müşteriler görebilir"
 
 #. module: project
 #. openerp-web

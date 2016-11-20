@@ -323,9 +323,10 @@ msgid ""
 "attached to this opportunity.</p><p class=\"mb0\">Type <i>'@'</i> to mention"
 " people - it's like cc-ing on emails.</p>"
 msgstr ""
-"<p><b>Отправь сообщения</b> адресатам и получи ответы, автоматически "
-"прикрепляемые к конкретной возможности.</p><p class=\"mb0\">Пригласи людей "
-"добавив <i>'@'</i> к их имени.</p>"
+"<p><b>Отправляйте сообщения</b> адресатам и получайте ответы, автоматически "
+"прикрепляемые к конкретному запросу.</p><p class=\"mb0\">При указании "
+"<i>'@'</i> перед именем пользователя ему будет отправлено уведомление - как "
+"добавление в копию в почте.</p>"
 
 #. module: crm
 #: model:ir.actions.server,body_html:crm.action_email_reminder_lead
@@ -337,10 +338,10 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
-"<p>Привет ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>Возможность <strong>${object.name}</strong> не исследовалась как минимум 5 дней.</p>\n"
+"<p>Здравстствуйте, ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>По запросу <strong>${object.name}</strong> нет активности как минимум 5 дней.</p>\n"
 "%if object.description:\n"
-"<p>Вот описание этой возможности: </p><p><i>${object.description}</i>\n"
+"<p>Описание запроса: </p><p><i>${object.description}</i>\n"
 "%endif\n"
 "</p><p>Спасибо!</p>\n"
 
@@ -3626,6 +3627,8 @@ msgid ""
 "Ready to boost you sales? Your <b>sales pipeline</b> can be found here, "
 "under this app."
 msgstr ""
+"Готовы к росту продаж? Всё, что относится к <b>продажам</b>, находится "
+"здесь, в этом приложении."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason

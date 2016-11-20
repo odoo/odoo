@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-10-10 08:42+0000\n"
+"POT-Creation-Date: 2016-11-14 15:53+0000\n"
+"PO-Revision-Date: 2016-11-14 15:53+0000\n"
 "Last-Translator: ook rio <riokoko5@gmail.com>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -104,8 +104,8 @@ msgstr ""
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
 msgid ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 msgstr ""
 
 #. module: sale
@@ -235,7 +235,7 @@ msgstr ""
 msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
-msgstr ""
+msgstr "<span>(*) 自分が現在ログインしている会社の設定</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -315,7 +315,7 @@ msgid "Addresses in Sales Orders"
 msgstr "受注内のアドレス"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:146
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:153
 #, python-format
 msgid "Advance: %s"
 msgstr ""
@@ -323,12 +323,12 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Advanced pricing based on formulas (discounts, margins, rounding)"
-msgstr ""
+msgstr "数式に基づいた高度な価格設定 (値引、マージン、丸め)"
 
 #. module: sale
 #: selection:sale.config.settings,group_warning_sale:0
 msgid "All the products and the customers can be used in sales orders"
-msgstr ""
+msgstr "全ての製品と顧客は受注で使用可"
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
@@ -369,7 +369,7 @@ msgstr ""
 #: selection:sale.config.settings,group_warning_sale:0
 msgid ""
 "An informative or blocking warning can be set on a product or a customer"
-msgstr ""
+msgstr "製品や顧客での警告表示設定を有効可"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_project_id
@@ -391,7 +391,7 @@ msgstr "分析行"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_analytic_tag_ids
 msgid "Analytic Tags"
-msgstr ""
+msgstr "分析タグ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_config_settings_group_analytic_account_for_sales
@@ -625,12 +625,12 @@ msgstr "デフォルト請求方法"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company_sale_note
 msgid "Default Terms and Conditions"
-msgstr ""
+msgstr "デフォルトの諸条件"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_note
 msgid "Default Terms and Conditions *"
-msgstr ""
+msgstr "デフォルトの諸条件 *"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_deposit_product_id_setting
@@ -756,10 +756,10 @@ msgstr "見積と受注にマージンを表示"
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
 msgid "Do not personalize sales orders and invoice reports"
-msgstr ""
+msgstr "受注および請求レポートをパーソナライズしない"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:85
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:84
 #, python-format
 msgid "Down Payment"
 msgstr "前受金"
@@ -785,7 +785,7 @@ msgid "Down payment (percentage)"
 msgstr "前受金 (パーセント)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:82
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:81
 #, python-format
 msgid "Down payment of %s%%"
 msgstr "%s%% の前受金"
@@ -1183,7 +1183,7 @@ msgstr "名称"
 #. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
 msgid "Never allow to modify a confirmed sales order"
-msgstr ""
+msgstr "確認された受注の修正は許可しない"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:102
@@ -1414,7 +1414,7 @@ msgstr ""
 msgid ""
 "Personalize the sales orders and invoice report with categories, subtotals "
 "and page-breaks"
-msgstr ""
+msgstr "受注および請求レポートのカテゴリ、小計、改ページ等をパーソナライズ"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:276
@@ -1816,7 +1816,7 @@ msgstr "受注統計"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_layout
 msgid "Sales Reports Layout"
-msgstr ""
+msgstr "販売レポートレイアウト"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_team
@@ -1905,7 +1905,7 @@ msgstr "Eメールで送信"
 #. module: sale
 #: selection:sale.config.settings,module_website_quote:0
 msgid "Send quotations your customer can approve & pay online (advanced)"
-msgstr ""
+msgstr "顧客はオンラインで見積を承認し、支払う (高度)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
@@ -1938,19 +1938,19 @@ msgstr "会社設定にて、デフォルトの取引条件を定義してくだ
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "Show incoterms on sales orders and invoices"
-msgstr ""
+msgstr "受注および請求にインコタームズを表示"
 
 #. module: sale
 #: model:res.groups,comment:sale.group_show_price_total
 #: selection:sale.config.settings,sale_show_tax:0
 msgid "Show line subtotals with taxes included (B2C)"
-msgstr ""
+msgstr "明細小計を税込で表示 (B2C)"
 
 #. module: sale
 #: model:res.groups,comment:sale.group_show_price_subtotal
 #: selection:sale.config.settings,sale_show_tax:0
 msgid "Show line subtotals without taxes (B2B)"
-msgstr ""
+msgstr "明細小計を税抜で表示 (B2B)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_pricelist
@@ -1981,7 +1981,7 @@ msgstr ""
 #: selection:sale.config.settings,group_uom:0
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
-msgstr ""
+msgstr "販売時/購買時に異なる単位を使用することがある (高度)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -2025,7 +2025,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_show_tax
 msgid "Tax Display"
-msgstr ""
+msgstr "税表示"
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_subtotal
@@ -2083,7 +2083,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:144
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:147
 #, python-format
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
@@ -2091,7 +2091,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:142
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:145
 #, python-format
 msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
@@ -2100,13 +2100,13 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:79
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:78
 #, python-format
 msgid "The value of the down payment amount must be positive."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:75
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:74
 #, python-format
 msgid ""
 "There is no income account defined for this product: \"%s\". You may have to"
@@ -2286,7 +2286,7 @@ msgid "Warning"
 msgstr "警告"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:853
+#: code:addons/sale/models/sale.py:854
 #, python-format
 msgid "Warning for %s"
 msgstr "%s の警告です。"
@@ -2338,7 +2338,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:882
+#: code:addons/sale/models/sale.py:883
 #, python-format
 msgid ""
 "You can not remove a sale order line.\n"

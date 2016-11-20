@@ -15,14 +15,13 @@
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2016
 # m_aciek <maciej.olko@gmail.com>, 2016
 # Maciej Wichowski <maciej.wichowski@openglobe.pl>, 2016
-# Michał <michal.gorecki@esnc.pl>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-10-10 08:42+0000\n"
-"Last-Translator: Michał <michal.gorecki@esnc.pl>, 2016\n"
+"POT-Creation-Date: 2016-11-14 15:53+0000\n"
+"PO-Revision-Date: 2016-11-14 15:53+0000\n"
+"Last-Translator: Maciej Wichowski <maciej.wichowski@openglobe.pl>, 2016\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -147,11 +146,9 @@ msgstr "# zamówień sprzedaży"
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
 msgid ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 msgstr ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -365,7 +362,7 @@ msgid "Addresses in Sales Orders"
 msgstr "Adresy na zamówieniach sprzedaży"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:146
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:153
 #, python-format
 msgid "Advance: %s"
 msgstr "zaliczka: %s"
@@ -815,7 +812,7 @@ msgid "Do not personalize sales orders and invoice reports"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:85
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:84
 #, python-format
 msgid "Down Payment"
 msgstr "Zaliczka"
@@ -841,7 +838,7 @@ msgid "Down payment (percentage)"
 msgstr "Zaliczki (procentowo)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:82
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:81
 #, python-format
 msgid "Down payment of %s%%"
 msgstr "Zaliczka dla %s%%"
@@ -1071,8 +1068,8 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
-"Wybierz jak chcesz fakturować to zamówienie. Zostanie utworzony projekt "
-"faktury, który może być modyfikowany przed zatwierdzeniem."
+"Faktury będą tworzone jako projekty faktur, które możesz\n"
+"modyfikować przed zatwierdzeniem."
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -2164,7 +2161,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:144
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:147
 #, python-format
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
@@ -2174,7 +2171,7 @@ msgstr ""
 " inny produkt lub poprawić obecnie zdefiniowany."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:142
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:145
 #, python-format
 msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
@@ -2186,13 +2183,13 @@ msgstr ""
 "produkt, aby utworzyć fakturę zaliczkową."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:79
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:78
 #, python-format
 msgid "The value of the down payment amount must be positive."
 msgstr "Wartość zaliczki musi być dodatnia"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:75
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:74
 #, python-format
 msgid ""
 "There is no income account defined for this product: \"%s\". You may have to"
@@ -2378,7 +2375,7 @@ msgid "Warning"
 msgstr "Ostrzeżenie"
 
 #. module: sale
-#: code:addons/sale/models/sale.py:853
+#: code:addons/sale/models/sale.py:854
 #, python-format
 msgid "Warning for %s"
 msgstr "Ostrzeżenie do %s"
@@ -2432,7 +2429,7 @@ msgstr ""
 " dokument przed usunięciem."
 
 #. module: sale
-#: code:addons/sale/models/sale.py:882
+#: code:addons/sale/models/sale.py:883
 #, python-format
 msgid ""
 "You can not remove a sale order line.\n"

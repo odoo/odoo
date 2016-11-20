@@ -8,8 +8,8 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
 # Topi Aura <topi@aurat.fi>, 2016
-# Timo Koukkari <timo.koukkari@seamk.fi>, 2016
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
+# Timo Koukkari <timo.koukkari@seamk.fi>, 2016
 # Miku Laitinen <miku.laitinen@gmail.com>, 2016
 # salmemik <salmemik@gmail.com>, 2016
 msgid ""
@@ -29,12 +29,12 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
 msgid "$18"
-msgstr ""
+msgstr "18 €"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
 msgid "$20"
-msgstr ""
+msgstr "20 €"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
@@ -42,6 +42,8 @@ msgid ""
 "% <br/>\n"
 "                                            <strong>Clicks</strong>"
 msgstr ""
+"% <br/>\n"
+"                                            <strong>Klikkausta</strong>"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
@@ -49,6 +51,8 @@ msgid ""
 "%<br/>\n"
 "                                            <strong>Replied</strong>"
 msgstr ""
+"%<br/>\n"
+"                                            <strong>Vastausta</strong>"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mass_mailing.py:431
@@ -223,7 +227,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_ab_pc
 msgid "A/B Testing percentage"
-msgstr ""
+msgstr "A/B-testausprosentti"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_unique_ab_testing
@@ -239,7 +243,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_active
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_active
 msgid "Active"
-msgstr "Active"
+msgstr "Aktiivinen"
 
 #. module: mass_mailing
 #: selection:mass.mailing.config.settings,group_mass_mailing_campaign:0
@@ -322,7 +326,7 @@ msgstr "Viestin palautus"
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: selection:mail.mail.statistics,state:0
 msgid "Bounced"
-msgstr "Palanneita"
+msgstr "Hylätty"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_bounced_ratio
@@ -370,7 +374,7 @@ msgstr "Kampanjat"
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mass_mailing_configuration
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr "Peruuta"
 
 #. module: mass_mailing
 #. openerp-web
@@ -427,7 +431,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Clicks"
-msgstr ""
+msgstr "Klikkausta"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_color
@@ -649,7 +653,7 @@ msgstr "Dokumenttimalli"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_mailing_domain
 msgid "Domain"
-msgstr "Domene"
+msgstr "Domain"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mass_mailing.py:439
@@ -657,7 +661,7 @@ msgstr "Domene"
 #: selection:mail.statistics.report,state:0
 #, python-format
 msgid "Draft"
-msgstr "Borrador"
+msgstr "Luonnos"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
@@ -693,7 +697,7 @@ msgstr "Sähköpostin ohjattu koostaminen"
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_form
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Emails Sent"
-msgstr ""
+msgstr "Lähetettyä"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_statistics_ids
@@ -744,7 +748,7 @@ msgstr "Älä sisällytä massapostituksesta kieltäytyneitä"
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
 msgid "Extended Filters..."
-msgstr "Filtros extendidos..."
+msgstr "Extended Filters..."
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
@@ -772,7 +776,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_email_from
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_email_from
 msgid "From"
-msgstr "Alkaen"
+msgstr "Lähettäjä"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_gamification_badge
@@ -863,7 +867,7 @@ msgstr ""
 #: selection:mail.mass_mailing,state:0
 #, python-format
 msgid "In Queue"
-msgstr ""
+msgstr "Lähetysjonossa"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_fleet_vehicle
@@ -1224,7 +1228,7 @@ msgstr "Viesti-ID"
 #. module: mass_mailing
 #: model:mail.mass_mailing,body_html:mass_mailing.mass_mail_1
 msgid "Michael Fletcher"
-msgstr ""
+msgstr "Maija Meikäläinen"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
@@ -1279,7 +1283,7 @@ msgstr "Ei tukea"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_clicks_ratio
 msgid "Number of Clicks"
-msgstr ""
+msgstr "Klikkausten lukumäärä"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_contact_nbr
@@ -1289,7 +1293,7 @@ msgstr "Yhteystietojen lukumäärä"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_clicks_ratio
 msgid "Number of clicks"
-msgstr ""
+msgstr "Klikkausten lukumäärä"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
@@ -1412,7 +1416,7 @@ msgstr "Esikatselu"
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_three_cols
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_two_cols
 msgid "Read More..."
-msgstr ""
+msgstr "Lue lisää..."
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
@@ -1476,7 +1480,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 #: selection:mail.mail.statistics,state:0
 msgid "Replied"
-msgstr "Vastattu"
+msgstr "Vastauksia"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_replied_ratio
@@ -1528,7 +1532,7 @@ msgstr "Aikatauluta"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_schedule_date
 msgid "Schedule in the Future"
-msgstr ""
+msgstr "Ajasta tulevaisuuteen"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_scheduled
@@ -1612,7 +1616,7 @@ msgstr "Lähetä kaikille"
 #: selection:mail.mass_mailing,state:0
 #, python-format
 msgid "Sending"
-msgstr ""
+msgstr "Lähetetään"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mass_mailing.py:439

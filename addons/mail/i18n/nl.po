@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:43+0000\n"
-"PO-Revision-Date: 2016-10-10 08:43+0000\n"
+"POT-Creation-Date: 2016-11-14 15:53+0000\n"
+"PO-Revision-Date: 2016-11-14 15:53+0000\n"
 "Last-Translator: Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -196,7 +196,7 @@ msgstr ""
 "</div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:640
+#: code:addons/mail/models/mail_channel.py:639
 #, python-format
 msgid " This channel is private. People must be invited to join it."
 msgstr "Dit kanaal is privé. Mensen moeten uitgenodigd zijn om toe te treden."
@@ -228,7 +228,7 @@ msgid "%s (copy)"
 msgstr "%s (kopie)"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:232
+#: code:addons/mail/models/mail_thread.py:234
 #, python-format
 msgid "%s created"
 msgstr "%s aangemaakt"
@@ -263,7 +263,7 @@ msgid "-------- Show older messages --------"
 msgstr "-------- Toon oude berichten --------"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:644
+#: code:addons/mail/models/mail_channel.py:643
 #, python-format
 msgid ""
 "<br><br>\n"
@@ -279,7 +279,7 @@ msgstr ""
 "U kunt een standaard antwoord in uw bericht toevoegen door te typen <b>:shortcut</b>.<br>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:551
+#: code:addons/mail/models/mail_channel.py:550
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">created <a href=\"#\" "
@@ -289,8 +289,8 @@ msgstr ""
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:474
-#: code:addons/mail/models/mail_channel.py:527
+#: code:addons/mail/models/mail_channel.py:473
+#: code:addons/mail/models/mail_channel.py:526
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">joined <a href=\"#\" "
@@ -300,7 +300,7 @@ msgstr ""
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:169
+#: code:addons/mail/models/mail_channel.py:168
 #, python-format
 msgid ""
 "<div class=\"o_mail_notification\">left <a href=\"#\" "
@@ -349,6 +349,10 @@ msgid ""
 " notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
+"<p><b>Schrijf een bericht</b> aan de leden van het kanaal hier.</p> <p>U "
+"kunt aan iemand refereren met <i>'@'</i> of naar een ander kanaal linken met"
+" <i>'#'</i>. Start uw bericht met <i>'/'</i> om een lijst te krijgen met de "
+"mogelijke commandos.</p>"
 
 #. module: mail
 #. openerp-web
@@ -359,6 +363,10 @@ msgid ""
 " groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
+"<p>Kanalen maken het gemakkelijk om informatie over verschillende "
+"onderwerpen en groepen te organiseren.</p> <p>Probeer <b>uw eerste kanaal "
+"</b> aan te maken (bijvoorbeeld verkoop, marketing, product XYZ, "
+"vrijdagmiddag borrel, etc ).</p>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -944,7 +952,7 @@ msgid "Choose an example"
 msgstr "Kies een voorbeeld"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:338
+#: code:addons/mail/models/mail_thread.py:340
 #, python-format
 msgid "Click here to add new %(document)s or send an email to: %(email_link)s"
 msgstr ""
@@ -952,7 +960,7 @@ msgstr ""
 "naar: %(email_link)s"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:354
+#: code:addons/mail/models/mail_thread.py:356
 #, python-format
 msgid "Click here to add new %s"
 msgstr "Klik hier om nieuw %s toe te voegen"
@@ -1352,6 +1360,8 @@ msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
 msgstr ""
+"Bewaar geen kopie van de e-mail in de document communicatie geschiedenis "
+"(alleen bij mass-mailing)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
@@ -1620,7 +1630,7 @@ msgstr "Gevouwen"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:686
+#: code:addons/mail/models/mail_thread.py:700
 #: code:addons/mail/static/src/xml/followers.xml:21
 #, python-format
 msgid "Follow"
@@ -2109,6 +2119,8 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible."
 msgstr ""
+"Indien ingesteld, zal de wachtrij de e-mail te sturen na de datum. Indien "
+"niet ingesteld, zal de e-mail zo snel mogelijk worden verstuurd."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_scheduled_date
@@ -2117,6 +2129,9 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. Jinja2 placeholders may be used."
 msgstr ""
+"Indien ingesteld, zal de wachtrij managerde e-mail sturen na de datum. "
+"Indien niet ingesteld, zal de e-mail zo snel mogelijk worden verstuurd. "
+"Jinja2 placeholders kunnen worden gebruikt."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_base_config_settings_alias_domain
@@ -2174,6 +2189,12 @@ msgid ""
 msgstr ""
 "Foutieve record set: moet als model aangesproken worden (zonder records) of "
 "op één recordset"
+
+#. module: mail
+#: code:addons/mail/controllers/main.py:43
+#, python-format
+msgid "Invalid token in route %s"
+msgstr "Ongeldige token in route %s"
 
 #. module: mail
 #. openerp-web
@@ -2473,7 +2494,7 @@ msgstr "Verlof"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_channel.py:653
+#: code:addons/mail/models/mail_channel.py:652
 #: code:addons/mail/static/src/xml/client_action.xml:101
 #, python-format
 msgid "Leave this channel"
@@ -2496,7 +2517,7 @@ msgstr ""
 "document."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:664
+#: code:addons/mail/models/mail_channel.py:663
 #, python-format
 msgid "List users in the current channel"
 msgstr "Lijst van gebruikers in het huidige kanaal"
@@ -2518,7 +2539,7 @@ msgstr "Live chat"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:37
+#: code:addons/mail/static/src/js/chatter.js:38
 #, python-format
 msgid "Log"
 msgstr "Log"
@@ -3537,7 +3558,7 @@ msgstr "Tijdelijke aanduiding expressie"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:186
+#: code:addons/mail/static/src/js/chatter.js:187
 #, python-format
 msgid "Please complete partner's informations"
 msgstr "Vul de volledige relatie informatie in"
@@ -3556,7 +3577,7 @@ msgstr "Slel het basis model in voordat u de actie details instelt."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:640
+#: code:addons/mail/static/src/js/composer.js:645
 #, python-format
 msgid "Please, wait while the file is uploading."
 msgstr "Een ogenblik geduld a.u.b., het bestand wordt geupload."
@@ -3780,7 +3801,7 @@ msgid "Rich-text/HTML message"
 msgstr "Rich-text/HTML bericht"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:820
+#: code:addons/mail/models/mail_thread.py:834
 #, python-format
 msgid "Routing mail with Message-Id %s: route %s: %s"
 msgstr "Routing e-mail met bericht-Id %s: route %s: %s"
@@ -3945,7 +3966,7 @@ msgid "Shortcut"
 msgstr "Afkorting"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:633
+#: code:addons/mail/models/mail_channel.py:632
 #, python-format
 msgid "Show an helper message"
 msgstr "Geen een help bericht weer"
@@ -4361,7 +4382,7 @@ msgstr "Ongedaan maken"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:690
+#: code:addons/mail/models/mail_thread.py:704
 #: code:addons/mail/static/src/xml/followers.xml:23
 #, python-format
 msgid "Unfollow"
@@ -4543,7 +4564,7 @@ msgstr "Uploaden"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:640
+#: code:addons/mail/static/src/js/composer.js:645
 #, python-format
 msgid "Uploading error"
 msgstr "Fout bij uploaden"
@@ -4578,14 +4599,14 @@ msgid "Users"
 msgstr "Gebruikers"
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:677
+#: code:addons/mail/models/mail_channel.py:676
 #, python-format
 msgid "Users in this channel: %s %s and you."
 msgstr "Gebruikers in dit kanaal: %s %s en u."
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:658
-#: code:addons/mail/models/mail_thread.py:660
+#: code:addons/mail/models/mail_thread.py:672
+#: code:addons/mail/models/mail_thread.py:674
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
 #, python-format
 msgid "View"
@@ -4655,19 +4676,19 @@ msgid "You added <b>%s</b> to the conversation."
 msgstr "U heeft <b>%s</b> toegevoegd aan de conversatie."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:674
+#: code:addons/mail/models/mail_channel.py:673
 #, python-format
 msgid "You are alone in this channel."
 msgstr "U bent alleen in dit kanaal."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:643
+#: code:addons/mail/models/mail_channel.py:642
 #, python-format
 msgid "You are in a private conversation with <b>@%s</b>."
 msgstr "U zit in een privé conversatie met <b>@%s</b>."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:638
+#: code:addons/mail/models/mail_channel.py:637
 #, python-format
 msgid "You are in channel <b>#%s</b>."
 msgstr "U bent in kanaal <b>#%s</b>."
@@ -4693,7 +4714,7 @@ msgstr ""
 " Ga naar de instellingen om een nieuwe gebruiker aan te maken."
 
 #. module: mail
-#: code:addons/mail/models/mail_channel.py:134
+#: code:addons/mail/models/mail_channel.py:133
 #, python-format
 msgid ""
 "You cannot delete those groups, as the Whole Company group is required by "
@@ -4703,7 +4724,7 @@ msgstr ""
 "modules."
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:345
+#: code:addons/mail/models/mail_thread.py:347
 #, python-format
 msgid ""
 "You could also add a new %(document)s by sending an email to: "
@@ -4764,13 +4785,13 @@ msgid "Your template should define email_from"
 msgstr "Uw sjabloon moet email_from definiëren"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:954
+#: code:addons/mail/models/mail_thread.py:968
 #, python-format
 msgid "alias %s does not accept unknown author"
 msgstr "alias %s accepteert geen onbekende auteurs"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:950
+#: code:addons/mail/models/mail_thread.py:964
 #, python-format
 msgid "alias %s restricted to internal followers"
 msgstr "alias %s is gerestricteerd tot interne volgers"
@@ -4796,7 +4817,7 @@ msgid "created"
 msgstr "aangemaakt"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:311
+#: code:addons/mail/models/mail_thread.py:313
 #, python-format
 msgid "document"
 msgstr "document"
@@ -4858,19 +4879,19 @@ msgid "mention(s) marked as read."
 msgstr "vermelding(en) gemarkeerd als gelezen."
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:929
+#: code:addons/mail/models/mail_thread.py:943
 #, python-format
 msgid "model %s does not accept document creation"
 msgstr "model %s accepteert geen document aanmaak"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:924
+#: code:addons/mail/models/mail_thread.py:938
 #, python-format
 msgid "model %s does not accept document update"
 msgstr "model %s accepteert geen document updates"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:917
+#: code:addons/mail/models/mail_thread.py:931
 #, python-format
 msgid ""
 "model %s does not accept document update, fall back on document creation"
@@ -4903,19 +4924,23 @@ msgid "on"
 msgstr "op"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:899
+#: code:addons/mail/models/mail_thread.py:913
 #, python-format
 msgid ""
 "posting a message without model should be with a null res_id (private "
 "message), received %s"
 msgstr ""
+"het plaatsen van bericht zonder model word als een null res_id (privé "
+"bericht), ontvangen %s"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:903
+#: code:addons/mail/models/mail_thread.py:917
 #, python-format
 msgid ""
 "posting a message without model should be with a parent_id (private message)"
 msgstr ""
+"het plaatsen van een bericht zonder model zou moeten zijn met een parent_id "
+"(privé bericht)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
@@ -4947,13 +4972,13 @@ msgid "record:"
 msgstr "regel:"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:921
+#: code:addons/mail/models/mail_thread.py:935
 #, python-format
 msgid "reply to missing document (%s,%s)"
 msgstr "antwoord op ontbrekend document (%s,%s)"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:914
+#: code:addons/mail/models/mail_thread.py:928
 #, python-format
 msgid "reply to missing document (%s,%s), fall back on new document creation"
 msgstr ""
@@ -4961,7 +4986,7 @@ msgstr ""
 "aanmaken"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:899
+#: code:addons/mail/models/mail_thread.py:913
 #, python-format
 msgid "resetting thread_id"
 msgstr "resetting thread_id"
@@ -4972,12 +4997,12 @@ msgid "sales"
 msgstr "verkoop"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:903
-#: code:addons/mail/models/mail_thread.py:921
-#: code:addons/mail/models/mail_thread.py:924
-#: code:addons/mail/models/mail_thread.py:929
-#: code:addons/mail/models/mail_thread.py:950
-#: code:addons/mail/models/mail_thread.py:954
+#: code:addons/mail/models/mail_thread.py:917
+#: code:addons/mail/models/mail_thread.py:935
+#: code:addons/mail/models/mail_thread.py:938
+#: code:addons/mail/models/mail_thread.py:943
+#: code:addons/mail/models/mail_thread.py:964
+#: code:addons/mail/models/mail_thread.py:968
 #, python-format
 msgid "skipping"
 msgstr "overslaan"
@@ -4990,7 +5015,7 @@ msgid "this document"
 msgstr "dit document"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:892
+#: code:addons/mail/models/mail_thread.py:906
 #, python-format
 msgid "unknown target model %s"
 msgstr "onbekend doel model %s"
