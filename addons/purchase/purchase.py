@@ -374,6 +374,8 @@ class PurchaseOrder(models.Model):
                     'name': partner.id,
                     'sequence': max(line.product_id.seller_ids.mapped('sequence')) + 1 if line.product_id.seller_ids else 1,
                     'product_uom': line.product_uom.id,
+                    'product_tmpl_id': line.product_id.product_tmpl_id.id,
+                    'product_id': line.product_id.id,
                     'min_qty': 0.0,
                     'price': self.currency_id.compute(line.price_unit, currency),
                     'currency_id': currency.id,
@@ -666,7 +668,7 @@ class PurchaseOrderLine(models.Model):
             self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id.filtered(lambda r: r.company_id.id == company_id))
         else:
             self.taxes_id = fpos.map_tax(self.product_id.supplier_taxes_id)
-
+        
         self._suggest_quantity()
         self._onchange_quantity()
 
@@ -676,14 +678,14 @@ class PurchaseOrderLine(models.Model):
     def _onchange_quantity(self):
         if not self.product_id:
             return
-
+             
         seller = self.product_id._select_seller(
             self.product_id,
             partner_id=self.partner_id,
             quantity=self.product_qty,
             date=self.order_id.date_order and self.order_id.date_order[:10],
             uom_id=self.product_uom)
-
+        
         if seller or not self.date_planned:
             self.date_planned = self._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
