@@ -48,7 +48,7 @@ class MailMail(models.Model):
                     'res_id': self.res_id,
                     'email': email_to,
                     'token': self.mailing_id._unsubscribe_token(
-                        self.res_id, email_to),
+                        self.res_id),
                 }),
             }
         )

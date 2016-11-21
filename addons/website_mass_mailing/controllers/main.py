@@ -8,22 +8,27 @@ from odoo.addons.mass_mailing.controllers.main import MassMailController
 class MassMailController(MassMailController):
 
     @route('/mail/mailing/<int:mailing_id>/unsubscribe', type='http', website=True, auth='public')
-    def mailing(self, mailing_id, email=None, res_id=None, **post):
+    def mailing(self, mailing_id, email=None, res_id=None, token="", **post):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
+        mailing._unsubscribe_token(res_id, token)
         if mailing.exists():
             if mailing.mailing_model == 'mail.mass_mailing.contact':
                 contacts = request.env['mail.mass_mailing.contact'].sudo().search([('email', '=', email)])
                 return request.render('website_mass_mailing.page_unsubscribe', {
                     'contacts': contacts,
                     'email': email,
-                    'mailing_id': mailing_id})
+                    'mailing_id': mailing_id,
+                    'token': token,
+                    'res_id': res_id,
+                })
             else:
                 super(MassMailController, self).mailing(mailing_id, email=email, res_id=res_id, **post)
                 return request.render('website_mass_mailing.page_unsubscribed')
 
     @route('/mail/mailing/unsubscribe', type='json', auth='none')
-    def unsubscribe(self, mailing_id, opt_in_ids, opt_out_ids, email):
+    def unsubscribe(self, mailing_id, res_id, token, opt_in_ids, opt_out_ids, email):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
+        mailing._unsubscribe_token(res_id, token)
         if mailing.exists():
             mailing.update_opt_out(email, opt_in_ids, False)
             mailing.update_opt_out(email, opt_out_ids, True)

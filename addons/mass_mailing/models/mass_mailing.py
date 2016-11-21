@@ -7,7 +7,8 @@ from datetime import datetime
 import random
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessDenied, UserError
+from odoo.tools import consteq
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.translate import html_translate
 
@@ -390,7 +391,7 @@ class MassMailing(models.Model):
             self.browse(row.pop('mailing_id')).update(row)
 
     @api.multi
-    def _unsubscribe_token(self, res_id, email):
+    def _unsubscribe_token(self, res_id, compare=None):
         """Generate a secure hash for this mailing list and parameters.
 
         This is appended to the unsubscription URL and then checked at
@@ -400,13 +401,20 @@ class MassMailing(models.Model):
         :param int res_id:
             ID of the resource that will be unsubscribed.
 
-        :param str email:
-            Email of the resource that will be unsubscribed.
+        :param str compare:
+            Received token to be compared with the good one.
+
+        :raise AccessDenied:
+            Will happen if you provide :param:`compare` and it does not match
+            the good token.
         """
         secret = self.env["ir.config_parameter"].sudo().get_param(
             "database.secret")
-        token = (self.env.cr.dbname, self.id, int(res_id), str(email))
-        return hmac.new(str(secret), repr(token), hashlib.sha512).hexdigest()
+        key = (self.env.cr.dbname, self.id, int(res_id))
+        token = hmac.new(str(secret), repr(key), hashlib.sha512).hexdigest()
+        if compare is not None and not consteq(token, compare):
+            raise AccessDenied()
+        return token
 
     def _compute_next_departure(self):
         cron_next_call = self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').sudo().nextcall

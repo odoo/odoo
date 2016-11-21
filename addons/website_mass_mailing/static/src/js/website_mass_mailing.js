@@ -134,7 +134,9 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
         e.preventDefault();
 
         var email = $("input[name='email']").val();
+        var token = $("input[name='token']").val();
         var mailing_id = parseInt($("input[name='mailing_id']").val());
+        var res_id = parseInt($("input[name='res_id']").val());
 
         var checked_ids = [];
         $("input[type='checkbox']:checked").each(function(i){
@@ -146,7 +148,7 @@ odoo.define('mass_mailing.unsubscribe', function (require) {
           unchecked_ids[i] = parseInt($(this).val());
         });
 
-        ajax.jsonRpc('/mail/mailing/unsubscribe', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id})
+        ajax.jsonRpc('/mail/mailing/unsubscribe', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id, 'res_id': res_id, 'token': token})
             .then(function(result) {
                 $('.alert-info').html('Your changes has been saved.').removeClass('alert-info').addClass('alert-success');
             })
