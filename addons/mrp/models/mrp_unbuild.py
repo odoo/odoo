@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 class MrpUnbuild(models.Model):
     _name = "mrp.unbuild"
     _description = "Unbuild Order"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'id desc'
 
     def _get_default_location_id(self):
