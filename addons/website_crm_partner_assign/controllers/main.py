@@ -259,11 +259,9 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
 
         # search partners matching current search parameters
         partner_ids = partner_obj.sudo().search(
-            base_partner_domain, order="grade_id DESC, display_name ASC")  # todo in trunk: order="grade_id DESC, implemented_count DESC", offset=pager['offset'], limit=self._references_per_page
+            base_partner_domain, order="grade_sequence DESC, implemented_count DESC, display_name ASC, id ASC",
+            offset=pager['offset'], limit=self._references_per_page)
         partners = partner_ids.sudo()
-        # remove me in trunk
-        partners = sorted(partners, key=lambda x: (x.grade_id.sequence if x.grade_id else 0, len([i for i in x.implemented_partner_ids if i.website_published])), reverse=True)
-        partners = partners[pager['offset']:pager['offset'] + self._references_per_page]
 
         google_map_partner_ids = ','.join(map(str, [p.id for p in partners]))
         google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
