@@ -260,7 +260,7 @@ class HrExpense(models.Model):
                     'name': aml_name,
                     'price_unit': expense.unit_amount,
                     'quantity': expense.quantity,
-                    'price': expense.total_amount,
+                    'price': -expense.total_amount,
                     'account_id': account.id,
                     'product_id': expense.product_id.id,
                     'uom_id': expense.product_uom_id.id,
@@ -270,7 +270,7 @@ class HrExpense(models.Model):
 
             # Calculate tax lines and adjust base line
             taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id)
-            account_move[-1]['price'] = taxes['total_excluded']
+            account_move[-1]['price'] = -taxes['total_excluded']
             account_move[-1]['tax_ids'] = expense.tax_ids.ids
             for tax in taxes['taxes']:
                 account_move.append({
