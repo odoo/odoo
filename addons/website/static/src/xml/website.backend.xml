@@ -12,27 +12,47 @@
         </div>
     </t>
 
-    <t t-name="website.dashboard_visits">
-        <div class="row o_dashboard_visits">
-            <div class="col-xs-12 o_box">
-                <h2>Visits</h2>
-                <div t-if="widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id">
-                    <div class="row js_analytics_components"/>
-                    <a href="#" t-if="widget.groups.system" class="js_link_analytics_settings">Edit my Analytics Client ID</a>
+    <t t-name="website.dashboard_common">
+        <div class="row o_dashboard_common">
+            <div class="o_box">
+                <div class="o_inner_box o_main" title="Website">
+                    <a href="#" class="o_dashboard_action" name="website.action_website">
+                        <i class="fa fa-globe fa-3x"></i><br/>
+                        Website
+                    </a>
                 </div>
-                <div t-if="!(widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id)" class="col-md-12">
-                    <div class="o_demo_background">
-                        <div class="o_layer">
-                        </div>
-                        <div class="o_buttons text-center">
-                            <h3>There is no data currently available.</h3>
-                            <button t-if="widget.groups.system" class="btn btn-sm btn-primary js_link_analytics_settings center-block mb8">Link my Analytics Account</button>
-                            <h5 t-if="!widget.groups.system">You do not have sufficient access rights to configure the Google Analytics account.</h5>
+                <t t-if="widget.groups.system &amp;&amp; widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id">
+                    <div class="o_inner_box o_secondary" title="Visitors">
+                        <div class="o_highlight"><b class='CurrentActiveUsers'></b></div>
+                        Current Visitors
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.dashboard_visits">
+        <t t-if="widget.groups.system">
+            <div class="row o_dashboard_visits">
+                <div class="col-xs-12 o_box">
+                    <h2>Visits</h2>
+                    <div t-if="widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id">
+                        <div class="row js_analytics_components"/>
+                        <a href="#" class="js_link_analytics_settings">Edit my Analytics Client ID</a>
+                    </div>
+                    <div t-if="!(widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id)" class="col-md-12">
+                        <div class="o_demo_background">
+                            <div class="o_layer">
+                            </div>
+                            <div class="o_buttons text-center">
+                                <h3>There is no data currently available.</h3>
+                                <button class="btn btn-sm btn-primary js_link_analytics_settings center-block mb8">Link my Analytics Account</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </t>
     </t>
 
     <div t-name="website.unauthorized_analytics" class="col-xs-12 js_unauthorized_message mb16">
@@ -46,10 +66,11 @@
     </div>
 
     <t t-name="website.DateRangeButtons">
-        <div class="btn-group btn-group-sm o_date_range_buttons">
-            <button class="btn btn-sm btn-default js_date_range active" data-date="week">Week</button>
-            <button class="btn btn-sm btn-default js_date_range" data-date="month">Month</button>
-            <button class="btn btn-sm btn-default js_date_range" data-date="year">Year</button>
+        <div class="btn-group btn-group-sm o_date_range_buttons pull-right">
+            <button class="btn btn-sm btn-default js_date_range active" data-date="week">Last Week</button>
+            <button class="btn btn-sm btn-default js_date_range" data-date="month">Last Month</button>
+            <button class="btn btn-sm btn-default js_date_range" data-date="year">Last Year</button>
+            <button class="btn btn-sm btn-default js_date_range" data-date="no_filter">No Filter</button>
         </div>
     </t>
 </templates>

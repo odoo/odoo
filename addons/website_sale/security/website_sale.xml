@@ -41,7 +41,7 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
-    <record id="sales_team.group_sale_manager" model="res.groups">
+    <record id="sales_team.group_sale_salesman" model="res.groups">
         <field name="implied_ids" eval="[(4, ref('website.group_website_publisher'))]"/>
     </record>
 </odoo>

@@ -6,6 +6,7 @@ var ajax = require('web.ajax');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var formats = require('web.formats');
 var Model = require('web.Model');
 var session = require('web.session');
 var utils = require('web.utils');
@@ -19,6 +20,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     template: "website.WebsiteDashboardMain",
     events: {
         'click .js_link_analytics_settings': 'on_link_analytics_settings',
+        'click .o_dashboard_action': 'on_dashboard_action_clicked',
     },
 
     init: function(parent, context) {
@@ -53,15 +55,22 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
 
     fetch_data: function() {
         var self = this;
-        return ajax.jsonRpc('/website/fetch_dashboard_data', 'call', {
+        var def = $.Deferred();
+        ajax.jsonRpc('/website/fetch_dashboard_data', 'call', {
             'date_from': this.date_from.format('YYYY-MM-DD'),
             'date_to': this.date_to.format('YYYY-MM-DD'),
         }).done(function(result) {
-            self.data = result;
-            self.dashboards_data = result.dashboards;
-            self.currency_id = result.currency_id;
-            self.groups = result.groups;
+            if (!result.groups) {
+                self.do_action('website.action_website');
+            } else {
+                self.data = result;
+                self.dashboards_data = result.dashboards;
+                self.currency_id = result.currency_id;
+                self.groups = result.groups;
+                def.resolve();
+            }
         });
+        return def;
     },
 
     on_link_analytics_settings: function(ev) {
@@ -105,6 +114,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
 
     render_dashboards: function() {
         var self = this;
+        this.$('.o_website_dashboard').prepend(QWeb.render('website.dashboard_common', {widget: this}));
         _.each(this.dashboards_templates, function(template) {
             self.$('.o_website_dashboard').append(QWeb.render(template, {widget: self}));
         });
@@ -155,7 +165,9 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
                 self.render_graph('#o_graph_' + e.name, self.dashboards_data[e.name].graph);
             }
         });
-        this.render_graph_analytics(this.dashboards_data.visits.ga_client_id);
+        if (this.data.groups.system) {
+            this.render_graph_analytics(this.dashboards_data.visits.ga_client_id);
+        }
     },
 
     render_graph_analytics: function(client_id) {
@@ -215,6 +227,17 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     on_reverse_breadcrumb: function() {
         web_client.do_push_state({});
         this.update_cp();
+    },
+
+    on_dashboard_action_clicked: function(ev) {
+        ev.preventDefault();
+        var $action = $(ev.currentTarget);
+        var action_name = $action.attr('name');
+        var action_context = $action.data('context');
+        this.do_action(action_name, {
+            additional_context: action_context,
+            on_reverse_breadcrumb: this.on_reverse_breadcrumb
+        });
     },
 
     update_cp: function() {
@@ -441,6 +464,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
 
                 this.container.innerHTML = opts.template || this.template;
                 this.container.querySelector('b').innerHTML = this.activeUsers;
+                document.querySelector('.CurrentActiveUsers').innerHTML = this.activeUsers;
             },
 
             pollActiveUsers_: function() {
@@ -474,6 +498,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
 
             onChange_: function(delta) {
                 var valueContainer = this.container.querySelector('b');
+                document.querySelector('.CurrentActiveUsers').innerHTML = this.activeUsers;
                 if (valueContainer) { valueContainer.innerHTML = this.activeUsers; }
 
                 this.emit('change', {activeUsers: this.activeUsers, delta: delta});
@@ -517,16 +542,15 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             return i % keep_one_of === 0;
         });
     },
-    format_number: function(value, symbol) {
-        value = utils.human_number(value);
-        if (symbol === 'currency') {
-            return this.render_monetary_field(value, this.currency_id);
-        } else {
-            return value + (symbol || '');
-        }
+    format_number: function(value, currency_id, symbol) {
+        var currency = session.get_currency(currency_id);
+        var digits_precision = currency && currency.digits;
+        return formats.format_value(value || 0, {type: "float", digits: digits_precision}) + symbol;
     },
     render_monetary_field: function(value, currency_id) {
         var currency = session.get_currency(currency_id);
+        var digits_precision = currency && currency.digits;
+        value = formats.format_value(value || 0, {type: "float", digits: digits_precision});
         if (currency) {
             if (currency.position === "after") {
                 value += currency.symbol;

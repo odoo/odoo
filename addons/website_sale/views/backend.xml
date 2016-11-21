@@ -27,7 +27,9 @@
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
         <field name="arch" type="xml">
             <search>
-                <filter string="From Website" name="from_website" domain="[('team_id.website_ids', '!=', False)]"/>
+                <filter string="Confirmed Orders" name="confirm_order" domain="[('state', 'in', ('sale', 'done'))]"/>
+                <separator/>
+                <filter string="From Website" name="from_website" domain="[('team_id.team_type', '=', 'website')]"/>
             </search>
         </field>
     </record>
@@ -36,8 +38,7 @@
         <field name="name">eCommerce Orders</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('state', 'in', ('sale', 'done'))]</field>
-        <field name="context">{'show_sale': True, 'search_default_from_website': 1}</field>
+        <field name="context">{'show_sale': True, 'search_default_confirm_order': 1, 'search_default_from_website': 1}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
         <field name="help">You don't have any confirmed order from the website.</field>
     </record>
@@ -47,30 +48,9 @@
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('state', '=', 'sent')]</field>
-        <field name="context">{'show_sale': True, 'search_default_from_website': 1}</field>
+        <field name="context">{'show_sale': True, 'search_default_from_website': 1, 'create': False}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
         <field name="help">You don't have any unpaid order from the website.</field>
-    </record>
-
-    <record id="action_abandonned_orders_ecommerce" model="ir.actions.act_window">
-        <field name="name">Abandoned eCommerce Orders</field>
-        <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('state', '=', 'cancel')]</field>
-        <field name="context">{'show_sale': True, 'search_default_from_website': 1}</field>
-        <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
-        <field name="help">You don't have any cancelled order from the website.</field>
-    </record>
-
-    <record id="action_invoices_ecommerce" model="ir.actions.act_window">
-        <field name="name">Invoices</field>
-        <field name="res_model">account.invoice</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('team_id.website_ids', '!=', False)]</field>
-        <field name="view_id" ref="account.invoice_tree"/>
-        <field name="context">{'type':'out_invoice'}</field>
-        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
     </record>
 
     <record id="website_product_pricelist3" model="ir.actions.act_window">
@@ -84,22 +64,87 @@
         <field name="context">{"default_base":'list_price'}</field>
     </record>
 
-    <menuitem id="menu_orders" name="Orders" parent="website.menu_website_configuration" sequence="2"/>
-    <menuitem id="menu_catalog" name="Catalog" parent="website.menu_website_configuration" sequence="3"/>
+    <record id="sale_order_action_order_to_invoice" model="ir.actions.act_window">
+        <field name="name">Orders To Invoice</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state', '=', 'sale'), ('invoice_status', '=', 'no')]</field>
+        <field name="context">{'show_sale': True, 'search_default_from_website': 1}</field>
+        <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
+        <field name="help">You don't have any order from the website.</field>
+    </record>
+
+    <record id="payment_transaction_action_awaiting_payments" model="ir.actions.act_window">
+        <field name="name">Awaiting Payments</field>
+        <field name="res_model">payment.transaction</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state', '=', 'pending'), ('sale_order_id.state', '!=', 'cancel')]</field>
+        <field name="context">{'create': False}</field>
+        <field name="view_id" ref="payment.transaction"/>
+        <field name="help">You don't have any awaiting payments from the website.</field>
+    </record>
+
+    <record id="payment_transaction_action_payments_to_capture" model="ir.actions.act_window">
+        <field name="name">Payments To Capture</field>
+        <field name="res_model">payment.transaction</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state', '=', 'authorized'), ('sale_order_id.state', '!=', 'cancel')]</field>
+        <field name="context">{'create': False}</field>
+        <field name="view_id" ref="payment.transaction"/>
+        <field name="help">You don't have any payments to capture from the website.</field>
+    </record>
+
+     <record id="menu_action_sale_order_reports" model="ir.actions.act_window">
+        <field name="name">Sales</field>
+        <field name="res_model">sale.report</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="domain">[('state','not in',('draft', 'cancel', 'sent')), ('team_id.team_type', '=', 'website')]</field>
+        <field name="search_view_id" ref="sale.view_order_product_search"/>
+        <field name="help">You don't have any order from the website.</field>
+    </record>
+
+    <!-- js can not eval (datetime.now() - timedelta(hours=1)) -->
+    <record id="sale_order_action_abandonned_carts" model="ir.actions.server">
+        <field name="name">Abandoned Carts</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="state">code</field>
+        <field name="code">action = env['sale.order'].get_abandoned_carts()</field>
+    </record>
+
+    <record id="sale_order_action_active_carts" model="ir.actions.server">
+        <field name="name">Active Carts</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="state">code</field>
+        <field name="code">action = env['sale.order'].get_active_carts()</field>
+    </record>
+
+    <menuitem id="menu_orders" name="Orders" parent="website.menu_website_configuration" sequence="2" groups="sales_team.group_sale_salesman"/>
+    <menuitem id="menu_catalog" name="Catalog" parent="website.menu_website_configuration" action="product_template_action" sequence="3" groups="sales_team.group_sale_salesman"/>
+    <menuitem id="menu_reporting" name="Reporting" parent="website.menu_website_configuration" sequence="99" groups="sales_team.group_sale_manager"/>
     <menuitem id="menu_ecommerce_settings" parent="website.menu_website_global_configuration" name="eCommerce"/>
+    <menuitem id="menu_product_settings" parent="website.menu_website_global_configuration" name="Products"/>
 
     <!-- Orders sub-menus -->
     <menuitem id="menu_orders_orders" name="Orders" parent="menu_orders" action="action_orders_ecommerce" sequence="1"/>
     <menuitem id="menu_orders_unpaid_orders" name="Unpaid Orders" parent="menu_orders" action="action_unpaid_orders_ecommerce" sequence="2"/>
-    <menuitem id="menu_orders_abandonned_orders" name="Abandoned Orders" parent="menu_orders" action="action_abandonned_orders_ecommerce" sequence="3"/>
-    <menuitem id="menu_orders_invoices" name="Invoices" parent="menu_orders" action="action_invoices_ecommerce" sequence="4"/>
+    <menuitem id="menu_orders_abandonned_orders" name="Abandoned Carts" parent="menu_orders" action="sale_order_action_abandonned_carts" sequence="3"/>
+    <menuitem id="menu_orders_customers" name="Customers" parent="menu_orders" action="base.action_partner_customer_form" sequence="4"/>
 
     <!-- Catalog sub-menus -->
-    <menuitem id="menu_catalog_products" name="Products" parent="menu_catalog" action="product_template_action" sequence="1"/>
+    <menuitem id="menu_catalog_products" name="Products" parent="menu_catalog" action="product_template_action" groups="product.group_product_variant" sequence="1"/>
+    <menuitem id="product_catalog_variants" name="Product Variants" parent="menu_catalog" action="product.product_normal_action" groups="product.group_product_variant" sequence="2"/>
     <menuitem id="menu_catalog_pricelists" name="Pricelists" parent="menu_catalog" action="product.product_pricelist_action2" groups="product.group_sale_pricelist" sequence="3"/>
-    <menuitem id="menu_catalog_categories" parent="menu_ecommerce_settings" action="product_public_category_action" sequence="2"/>
+
+    <!-- Reporting sub-menus -->
+    <menuitem id="menu_report_sales" name="Sales" parent="menu_reporting" action="menu_action_sale_order_reports" sequence="1"/>
 
     <!-- Configuration sub-menus -->
-    <menuitem id="menu_ecommerce_payment_acquirers" parent="menu_ecommerce_settings" name="Payment Acquirers" action="payment.action_payment_acquirer"/>
+    <menuitem id="menu_ecommerce_payment_acquirers" parent="menu_ecommerce_settings" name="Payment Methods" action="payment.action_payment_acquirer"/>
+    <menuitem id="menu_product_attribute_action" parent="menu_product_settings" action="product.attribute_action" groups="product.group_product_variant" sequence="1"/>
+    <menuitem id="menu_catalog_variants_action" parent="menu_product_settings" action="product.variants_action" groups="product.group_product_variant" sequence="2"/>
+    <menuitem id="menu_catalog_categories" name="Website Categories" parent="menu_product_settings" action="product_public_category_action" sequence="3"/>
+    <menuitem id="menu_internal_product_categories" name="Internal Categories" parent="menu_product_settings" action="product.product_category_action_form" sequence="4"/>
 
 </odoo>

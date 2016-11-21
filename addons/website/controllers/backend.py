@@ -12,13 +12,14 @@ class WebsiteBackend(http.Controller):
 
         params = request.env['ir.config_parameter']
         ga_client_id = params.sudo().get_param('google_management_client_id', default='')
-
-        return {
-            'groups': {'system': request.env['res.users'].has_group('base.group_system')},
-            'currency': request.env.user.company_id.currency_id.id,
-            'dashboards': {
-                'visits': {
-                    'ga_client_id': ga_client_id,
+        system = request.env['res.users'].has_group('website.group_website_designer')
+        if system:
+            return {
+                'groups': {'system': system},
+                'dashboards': {
+                    'visits': {
+                        'ga_client_id': ga_client_id,
+                    }
                 }
             }
-        }
+        return {}
