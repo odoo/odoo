@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import hashlib
+import hmac
 from datetime import datetime
 import random
 
@@ -386,6 +388,25 @@ class MassMailing(models.Model):
             row['replied_ratio'] = 100.0 * row['replied'] / total
             row['bounced_ratio'] = 100.0 * row['bounced'] / total
             self.browse(row.pop('mailing_id')).update(row)
+
+    @api.multi
+    def _unsubscribe_token(self, res_id, email):
+        """Generate a secure hash for this mailing list and parameters.
+
+        This is appended to the unsubscription URL and then checked at
+        unsubscription time to ensure no malicious unsubscriptions are
+        performed.
+
+        :param int res_id:
+            ID of the resource that will be unsubscribed.
+
+        :param str email:
+            Email of the resource that will be unsubscribed.
+        """
+        secret = self.env["ir.config_parameter"].sudo().get_param(
+            "database.secret")
+        token = (self.env.cr.dbname, self.id, res_id, email)
+        return hmac.new(str(secret), repr(token), hashlib.sha512).hexdigest()
 
     def _compute_next_departure(self):
         cron_next_call = self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').sudo().nextcall

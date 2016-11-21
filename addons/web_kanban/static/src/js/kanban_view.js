@@ -520,7 +520,7 @@ var KanbanView = View.extend({
 
     open_record: function (event, options) {
         if (this.dataset.select_id(event.data.id)) {
-            this.do_switch_view('form', null, options); //, null, { mode: "edit" });
+            this.do_switch_view('form', options);
         } else {
             this.do_warn("Kanban: could not find id#" + event.data.id);
         }

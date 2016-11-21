@@ -26,15 +26,12 @@ class TestMassMailing(models.TransientModel):
                 'reply_to': mailing.reply_to,
                 'email_to': test_mail,
                 'subject': mailing.name,
-                'body_html': '',
+                'body_html': mailing.body_html,
                 'notification': True,
                 'mailing_id': mailing.id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
             }
             mail = self.env['mail.mail'].create(mail_values)
-            unsubscribe_url = mail._get_unsubscribe_url(test_mail)
-            body = tools.append_content_to_html(mailing.body_html, unsubscribe_url, plaintext=False, container_tag='p')
-            mail.write({'body_html': body})
             mails |= mail
         mails.send()
         return True

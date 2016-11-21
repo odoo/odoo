@@ -661,9 +661,17 @@ var chat_manager = {
 
     post_message: function (data, options) {
         options = options || {};
+
+        // This message will be received from the mail composer as html content subtype
+        // but the urls will not be linkified. If the mail composer takes the responsibility
+        // to linkify the urls we end up with double linkification a bit everywhere.
+        // Ideally we want to keep the content as text internally and only make html
+        // enrichment at display time but the current design makes this quite hard to do.
+        var body = utils.linkify(_.str.trim(data.content));
+
         var msg = {
             partner_ids: data.partner_ids,
-            body: _.str.trim(data.content),
+            body: body,
             attachment_ids: data.attachment_ids,
         };
         if ('subject' in data) {

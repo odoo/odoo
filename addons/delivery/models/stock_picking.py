@@ -93,7 +93,11 @@ class StockPicking(models.Model):
     @api.onchange('carrier_id')
     def onchange_carrier(self):
         if self.carrier_id.delivery_type in ['fixed', 'base_on_rule']:
-            self.carrier_price = self.carrier_id.price
+            order = self.sale_id
+            if order:
+                self.carrier_price = self.carrier_id.get_price_available(order)
+            else:
+                self.carrier_price = self.carrier_id.price
 
     @api.depends('product_id', 'move_lines')
     def _cal_weight(self):
@@ -149,7 +153,7 @@ class StockPicking(models.Model):
         self.carrier_price = res['exact_price']
         self.carrier_tracking_ref = res['tracking_number']
         order_currency = self.sale_id.currency_id or self.company_id.currency_id
-        msg = _("Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost: %.2f %s") % (self.carrier_id.name, self.carrier_tracking_ref, self.carrier_price, order_currency.name)
+        msg = _("Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: %.2f %s") % (self.carrier_id.name, self.carrier_tracking_ref, self.carrier_price, order_currency.name)
         self.message_post(body=msg)
 
     @api.multi

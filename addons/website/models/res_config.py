@@ -26,7 +26,6 @@ class WebsiteConfigSettings(models.TransientModel):
     social_linkedin = fields.Char(related='website_id.social_linkedin')
     social_youtube = fields.Char(related='website_id.social_youtube')
     social_googleplus = fields.Char(related='website_id.social_googleplus')
-    compress_html = fields.Boolean('Compress rendered HTML for a better Google PageSpeed result', related='website_id.compress_html')
     cdn_activated = fields.Boolean('Use a Content Delivery Network (CDN)', related='website_id.cdn_activated')
     cdn_url = fields.Char(related='website_id.cdn_url')
     cdn_filters = fields.Text(related='website_id.cdn_filters')
@@ -43,6 +42,10 @@ class WebsiteConfigSettings(models.TransientModel):
     # Set as global config parameter since methods using it are not website-aware. To be changed
     # when multi-website is implemented
     google_maps_api_key = fields.Char(string='Google Maps API Key')
+
+    # TODO: remove me in master / saas-14
+    compress_html = fields.Boolean('Compress rendered HTML', related='website_id.compress_html')
+
 
     def set_google_maps_api_key(self):
         self.env['ir.config_parameter'].set_param(

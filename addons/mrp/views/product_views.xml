@@ -22,7 +22,7 @@
              <field name="arch" type="xml">
                  <xpath expr="//filter[@name='consumable']" position="after">
                      <separator/>
-                    <filter string="Components" name="components" domain="[('bom_ids','not in',[])]"/>
+                    <filter string="BoM Components" name="components" domain="[('bom_ids','not in',[])]"/>
                  </xpath>
              </field>
         </record>
