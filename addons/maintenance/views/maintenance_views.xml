@@ -25,6 +25,18 @@
                 <separator/>
                 <filter string="My Requests" name="my_requests" domain="[('owner_user_id', '=', uid)]"/>
                 <separator/>
+                <filter string="My Activities" name="activities_my"
+                    domain="[('activity_ids.user_id', '=', uid)]"/>
+                <filter string="Today Activities" name="activities_today"
+                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Upcoming Activities (7 days)" name="activities_week"
+                    domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                             ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                    ]"/>
+                <filter string="Overdue Activities" name="activities_overdue"
+                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
+                <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
@@ -87,6 +99,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
@@ -107,6 +120,8 @@
                 <field name="category_id"/>
                 <field name="kanban_state"/>
                 <field name="message_needaction_counter"/>
+                <field name="activity_ids" />
+                <field name="activity_state" />
                 <templates>
                     <t t-name="kanban-tooltip">
                        <ul class="oe_kanban_tooltip">
@@ -140,11 +155,15 @@
                                     <span t-if="record.category_id.raw_value"><field name="category_id"/></span>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
+                                    <div class="o_kanban_inline_block ml4 mr4">
+                                        <field name="activity_ids" widget="kanban_activity" />
+                                    </div>
+                                    <field name="kanban_state" widget="kanban_state_selection"/>
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.owner_user_id.raw_value)" t-att-title="record.owner_user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
-                                    <div class="pull-left" groups="base.group_user">
-                                        <field name="kanban_state" widget="kanban_state_selection"/>
+                                    <div class="pull-left mr4 mt4">
                                         <field name="priority" widget="priority"/>
                                     </div>
+
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
@@ -336,6 +355,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
@@ -358,6 +378,8 @@
                 <field name="maintenance_open_count"/>
                 <field name="next_action_date"/>
                 <field name="technician_user_id"/>
+                <field name="activity_ids" />
+                <field name="activity_state" />
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
@@ -386,6 +408,9 @@
                                     <div t-if="record.owner_user_id.raw_value"><field name="owner_user_id"/></div>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
+                                    <div class="o_kanban_inline_block">
+                                        <field name="activity_ids" widget="kanban_activity" />
+                                    </div>
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.owner_user_id.raw_value)" t-att-title="record.owner_user_id.value" width="27" height="27" class="oe_kanban_avatar"/>
                                 </div>
                                 <div class="oe_kanban_footer_left mt4 label label-danger" t-if="record.maintenance_open_count.raw_value" >
@@ -438,6 +463,17 @@
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
+                <filter string="My Activities" name="activities_my"
+                    domain="[('activity_ids.user_id', '=', uid)]"/>
+                <filter string="Today Activities" name="activities_today"
+                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Upcoming Activities (7 days)" name="activities_week"
+                    domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                             ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                    ]"/>
+                <filter string="Overdue Activities" name="activities_overdue"
+                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
                 <!-- <filter string="Archived" name="inactive" domain="[('active','=',False)]"/> -->
                 <group  expand='0' string='Group by...'>
                     <filter string='Technicians' domain="[]" context="{'group_by': 'technician_user_id'}"/>
