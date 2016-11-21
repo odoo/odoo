@@ -53,7 +53,7 @@ class Survey(models.Model):
     _name = 'survey.survey'
     _description = 'Survey'
     _rec_name = 'title'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     def _default_stage(self):
         return self.env['survey.stage'].search([], limit=1).id
