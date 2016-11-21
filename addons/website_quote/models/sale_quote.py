@@ -20,7 +20,6 @@ class SaleQuoteTemplate(models.Model):
     require_payment = fields.Selection([
         (0, 'Not mandatory on website quote validation'),
         (1, 'Immediate after website order validation'),
-        (2, 'Immediate after website order validation and save a token'),
     ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote")
     mail_template_id = fields.Many2one('mail.template', 'Confirmation Mail',
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")

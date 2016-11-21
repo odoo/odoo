@@ -67,7 +67,6 @@ class SaleOrder(models.Model):
     require_payment = fields.Selection([
         (0, 'Not mandatory on website quote validation'),
         (1, 'Immediate after website order validation'),
-        (2, 'Immediate after website order validation and save a token'),
     ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote")
 
     @api.one
@@ -180,15 +179,6 @@ class SaleOrder(models.Model):
             if order.template_id and order.template_id.mail_template_id:
                 self.template_id.mail_template_id.send_mail(order.id)
         return res
-
-    @api.multi
-    def _get_payment_type(self):
-        self.ensure_one()
-        if self.require_payment == 2:
-            return 'form_save'
-        else:
-            return 'form'
-
 
 class SaleOrderOption(models.Model):
     _name = "sale.order.option"

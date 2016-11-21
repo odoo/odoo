@@ -183,7 +183,6 @@ class sale_quote(http.Controller):
         if not Transaction:
             Transaction = PaymentTransaction.create({
                 'acquirer_id': acquirer_id,
-                'type': Order._get_payment_type(),
                 'amount': Order.amount_total,
                 'currency_id': Order.pricelist_id.currency_id.id,
                 'partner_id': Order.partner_id.id,
