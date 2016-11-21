@@ -757,19 +757,19 @@
                                                         <div class="form-group">
                                                             <label class="control-label" for="next_activity">Next Activity</label>
                                                             <select class="form-control next_activity" name="next_activity">
-                                                                <t t-foreach="activities" t-as="activity">
-                                                                    <option t-att-data="activity.id" t-att-selected="activity.id == opportunity.next_activity_id.id" t-att-name="activity.name" t-att-days="activity.days" t-att-description="activity.description"><t t-esc="activity.name"/></option>
+                                                                <t t-foreach="activity_types" t-as="activity_type">
+                                                                    <option t-att-data="activity_type.id" t-att-selected="activity_type.id == user_activity.activity_type_id.id" t-att-name="activity_type.name" t-att-days="activity_type.days" t-att-summary="activity_type.summary"><t t-esc="activity_type.name"/></option>
                                                                 </t>
                                                             </select>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="control-label" for="title_action">Details Next Activity</label>
-                                                            <textarea row="3" name="title_action" class="form-control title_action"><t t-esc="opportunity.title_action"/></textarea>
+                                                            <label class="control-label" for="activity_summary">Details Next Activity</label>
+                                                            <textarea row="3" name="activity_summary" class="form-control activity_summary"><t t-esc="user_activity.summary"/></textarea>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="control-label" for="date_action">Next Activity Date</label>
+                                                            <label class="control-label" for="activity_date_deadline">Next Activity Date</label>
                                                             <div class='input-group date'>
-                                                                <input type="text" name="date_action" t-att-value="opportunity.date_action" class="form-control date_action" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD" />
+                                                                <input type="text" name="activity_date_deadline" t-att-value="user_activity.date_deadline" class="form-control activity_date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD" />
                                                                 <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
                                                             </div>
                                                         </div>
@@ -782,16 +782,16 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" t-if="user_activity">
                                         <label class="col-xs-4">Next Activity</label>
                                         <span class="col-xs-8">
-                                            <span t-field="opportunity.next_activity_id"/>
-                                            <span t-if="opportunity.date_action">&#160;on&#160;</span>
-                                            <span t-field="opportunity.date_action"/>
+                                            <span t-field="user_activity.activity_type_id"/>
+                                            <span t-if="user_activity.date_deadline">&#160;on&#160;</span>
+                                            <span t-field="user_activity.date_deadline"/>
                                         </span>
                                     </div>
-                                    <div class="row">
-                                        <span class="col-xs-8 col-xs-offset-4" t-field="opportunity.title_action"/>
+                                    <div class="row" t-if="user_activity">
+                                        <span class="col-xs-8 col-xs-offset-4" t-field="user_activity.summary"/>
                                     </div>
                                 </div>
                             </div>
