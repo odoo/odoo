@@ -611,7 +611,7 @@ class pos_session(osv.osv):
             order_ids = [order.id for order in session.order_ids if order.state == 'paid']
 
             # FORWARD-PORT UP TO SAAS-12
-            journal_id = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'pos.closing.journal_id', default=session.config_id.journal_id.id, context=context)
+            journal_id = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'pos.closing.journal_id_%s' % (company_id), default=session.config_id.journal_id.id, context=context)
             move_id = pos_order_obj._create_account_move(cr, uid, session.start_at, session.name, int(journal_id), company_id, context=context)
 
             pos_order_obj._create_account_move_line(cr, uid, order_ids, session, move_id, context=local_context)
@@ -957,9 +957,10 @@ class pos_order(osv.osv):
         picking_obj.force_assign(cr, uid, [picking_id], context=context)
         # Mark pack operations as done
         pick = picking_obj.browse(cr, uid, picking_id, context=context)
-        for pack in pick.pack_operation_ids:
+        for pack in pick.pack_operation_ids.filtered(lambda x: x.product_id.tracking == 'none'):
             self.pool['stock.pack.operation'].write(cr, uid, [pack.id], {'qty_done': pack.product_qty}, context=context)
-        picking_obj.action_done(cr, uid, [picking_id], context=context)
+        if not any([(x.product_id.tracking != 'none') for x in pick.pack_operation_ids]):
+            picking_obj.action_done(cr, uid, [picking_id], context=context)
 
     def create_picking(self, cr, uid, ids, context=None):
         """Create a picking for each order and validate it."""
@@ -1040,7 +1041,9 @@ class pos_order(osv.osv):
             if move_list and not return_picking_id and not order_picking_id:
                 move_obj.action_confirm(cr, uid, move_list, context=context)
                 move_obj.force_assign(cr, uid, move_list, context=context)
-                move_obj.action_done(cr, uid, move_list, context=context)
+                active_move_list = [x.id for x in move_obj.browse(cr, uid, move_list, context=context) if x.product_id.tracking == 'none']
+                if active_move_list:
+                    move_obj.action_done(cr, uid, active_move_list, context=context)
 
         return True
 
@@ -1290,7 +1293,7 @@ class pos_order(osv.osv):
             if move_id is None:
                 # Create an entry for the sale
                 # FORWARD-PORT UP TO SAAS-12
-                journal_id = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'pos.closing.journal_id', default=order.sale_journal.id, context=context)
+                journal_id = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'pos.closing.journal_id_%s' % (current_company.id), default=order.sale_journal.id, context=context)
                 move_id = self._create_account_move(cr, uid, order.session_id.start_at, order.name, int(journal_id), order.company_id.id, context=context)
 
             move = account_move_obj.browse(cr, SUPERUSER_ID, move_id, context=context)

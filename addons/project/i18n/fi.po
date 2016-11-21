@@ -5,6 +5,7 @@
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015-2016
+# Melina Mantyla <melina.mantyla@web-veistamo.fi>, 2016
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 msgid ""
@@ -12,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-09-26 10:46+0000\n"
-"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
+"PO-Revision-Date: 2016-10-28 18:40+0000\n"
+"Last-Translator: Melina Mantyla <melina.mantyla@web-veistamo.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +57,7 @@ msgstr "&times;"
 msgid ""
 "(Un)archiving a project automatically (un)archives its tasks and issues. Do "
 "you want to proceed?"
-msgstr ""
+msgstr "Projektin automaattinen arkistosta palauttaminen palauttaa sen tehtävät ja tapaukset. Haluatko jatkaa?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -93,7 +94,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "<span attrs=\"{'invisible':[('use_tasks', '=', False)]}\">as </span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible':[('use_tasks', '=', False)]}\">nimeltään: </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -132,7 +133,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"o_label\">Documents</span>"
-msgstr ""
+msgstr "<span class=\"o_label\">Dokumentit</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -150,7 +151,7 @@ msgid ""
 "                                            <span class=\"fa fa-mobile\"/>\n"
 "                                            <strong> From your Mobile phone</strong>\n"
 "                                        </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n<span class=\"fa fa-mobile\"/>\n<strong> Matkapuhelimestasi</strong>\n</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -186,7 +187,7 @@ msgid ""
 "                                            <span class=\"fa fa-tasks\"/>\n"
 "                                            <strong> Directly in Odoo</strong>\n"
 "                                        </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n<span class=\"fa fa-tasks\"/>\n<strong> Suoraan Odoossa</strong>\n</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -440,12 +441,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>For issues:</strong>"
-msgstr ""
+msgstr "<strong>Tapauksille:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>For tasks:</strong>"
-msgstr ""
+msgstr "<strong>Tehtäville:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -685,7 +686,7 @@ msgstr ""
 #. module: project
 #: selection:project.config.settings,module_project_issue_sheet:0
 msgid "Activate timesheets on issues"
-msgstr ""
+msgstr "Aktivoi tuntikortit tapauksissa"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_active
@@ -744,7 +745,7 @@ msgstr "Aliasmalli"
 #: code:addons/project/project.py:121
 #, python-format
 msgid "All Employees Project: all employees can access"
-msgstr ""
+msgstr "Yrityksen sisäinen projekti: kaikilla työntekijöillä pääsy"
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -1050,7 +1051,7 @@ msgstr "Yritys"
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_company_uom_id
 #: model:ir.model.fields,field_description:project.field_project_project_company_uom_id
 msgid "Company UOM"
-msgstr ""
+msgstr "Yrityksen yksikkö"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
@@ -1118,7 +1119,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:project.open_view_project_all
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project."
-msgstr ""
+msgstr "Luo uusi projekti."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1214,7 +1215,7 @@ msgstr "Asiakkaan sähköposti"
 #: code:addons/project/project.py:120
 #, python-format
 msgid "Customer Project: visible in portal if the customer is a follower"
-msgstr ""
+msgstr "Asiakasprojekti: näkyvissä portaalissa jos asiakas on seuraaja"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1406,7 +1407,7 @@ msgstr ""
 #. module: project
 #: selection:project.config.settings,group_time_work_estimation_tasks:0
 msgid "Do not estimate working time on tasks"
-msgstr ""
+msgstr "Älä arvioi tehtävien työmäärää"
 
 #. module: project
 #: selection:project.config.settings,module_project_timesheet:0
@@ -1416,7 +1417,7 @@ msgstr ""
 #. module: project
 #: selection:project.config.settings,module_project_issue_sheet:0
 msgid "Do not track working hours on issues"
-msgstr ""
+msgstr "Älä laske työtunteja tapauksissa"
 
 #. module: project
 #. openerp-web
@@ -1591,7 +1592,7 @@ msgstr "Lisätiedot"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Extra features"
-msgstr ""
+msgstr "Lisäominaisuudet"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1627,7 +1628,7 @@ msgstr "Seuraa tätä projektia saadaksesi automaattisesti tiedon muutoksista te
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Followed by Me"
-msgstr ""
+msgstr "Minun seuraamani"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_message_follower_ids
@@ -1765,7 +1766,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid "Here, you can create new tasks"
-msgstr ""
+msgstr "Tässä voit luoda uusia tehtäviä"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -2272,7 +2273,7 @@ msgstr ""
 #. module: project
 #: selection:project.config.settings,module_sale_service:0
 msgid "No automatic task creation"
-msgstr ""
+msgstr "Ei automaattista tehtävänluontia"
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -2541,7 +2542,7 @@ msgstr "Näkyvyys"
 #: code:addons/project/project.py:122
 #, python-format
 msgid "Private Project: followers only"
-msgstr ""
+msgstr "Yksityinen projekti: vain seuraajille"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2565,7 +2566,7 @@ msgstr "Projekti"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_generate_project_alias
 msgid "Project Alias"
-msgstr ""
+msgstr "Projektin alias"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -2641,7 +2642,7 @@ msgstr "Projektit"
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Projects using this stage"
-msgstr ""
+msgstr "Tätä vaihetta käyttävät projektit"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_project_issue_sheet
@@ -3010,7 +3011,7 @@ msgstr "Tunnisteet"
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Tags of project's tasks, issues..."
-msgstr ""
+msgstr "Projektin tehtävien, asioiden, jne. tunnisteet."
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
@@ -3350,7 +3351,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_timesheet_synchro
 msgid "Timesheet app for Chrome/Android/iOS"
-msgstr ""
+msgstr "Tuntikorttisovellus Chromelle/Androidille/iOS:lle"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_use_timesheets
@@ -3361,7 +3362,7 @@ msgstr "Tuntikortit"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_issue_sheet
 msgid "Timesheets Invoicing"
-msgstr ""
+msgstr "Tuntikorttien laskutus"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3379,7 +3380,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_timesheet
 msgid "Timesheets on Project"
-msgstr ""
+msgstr "Projektin tuntikortit"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3426,7 +3427,7 @@ msgstr "Jäljellä oleva aika yhteensä, voidaan uudelleenarvioida säännöllis
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_account_type
 msgid "Type of Account"
-msgstr ""
+msgstr "Tilin tyyppi"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search

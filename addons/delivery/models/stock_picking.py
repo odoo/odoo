@@ -52,7 +52,7 @@ class StockPicking(models.Model):
                 weight += uom_obj._compute_qty_obj(packop.product_uom_id , packop.product_qty, packop.product_id.uom_id) * packop.product_id.weight
         self.weight_bulk = weight
 
-    carrier_price = fields.Float(string="Shipping Cost", readonly=True)
+    carrier_price = fields.Float(string="Shipping Cost")
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
     carrier_id = fields.Many2one("delivery.carrier", string="Carrier")
     volume = fields.Float(copy=False)
@@ -62,6 +62,15 @@ class StockPicking(models.Model):
     weight_uom_id = fields.Many2one('product.uom', string='Unit of Measure', required=True, readonly="1", help="Unit of measurement for Weight", default=_default_uom)
     package_ids = fields.Many2many('stock.quant.package', compute='_compute_packages', string='Packages')
     weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight')
+
+    @api.onchange('carrier_id')
+    def onchange_carrier(self):
+        if self.carrier_id.delivery_type in ['fixed', 'base_on_rule']:
+            order = self.sale_id
+            if order:
+                self.carrier_price = self.carrier_id.get_price_available(order)
+            else:
+                self.carrier_price = self.carrier_id.price
 
     @api.depends('product_id', 'move_lines')
     def _cal_weight(self):

@@ -35,7 +35,7 @@
                     </field>
                     <field name="standard_price" position="replace">
                         <field name="standard_price"
-                            attrs="{'readonly':['&amp;', ('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])], 'invisible': [('product_variant_count', '&gt;', 1)]}" class="oe_inline"
+                            attrs="{'readonly':['&amp;', ('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}" class="oe_inline"
                             widget='monetary' options="{'currency_field': 'currency_id'}"/>
                     </field>
                     <div name="standard_price_uom" position="after">

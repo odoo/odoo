@@ -130,6 +130,12 @@ var GraphView = View.extend({
             this.widget.set_measure(this.active_measure);
         }
     },
+    destroy: function () {
+        if (this.$buttons) {
+            this.$buttons.find('button').off(); // remove jquery's tooltip() handlers
+        }
+        return this._super.apply(this, arguments);
+    },
 });
 
 core.view_registry.add('graph', GraphView);
