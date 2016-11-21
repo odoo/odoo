@@ -3,7 +3,6 @@
 
 import res_users
 import calendar
-import crm_activity
 import crm_lead
 import crm_stage
 import crm_team
