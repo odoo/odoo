@@ -26,6 +26,6 @@ class BaseConfigSettings(models.TransientModel):
         self.ensure_one()
         IrConfigParam = self.env['ir.config_parameter']
         # we store the repr of the values, since the value of the parameter is a required string
-        IrConfigParam.set_param('auth_signup.reset_password', repr(self.auth_signup_reset_password))
-        IrConfigParam.set_param('auth_signup.allow_uninvited', repr(self.auth_signup_uninvited))
-        IrConfigParam.set_param('auth_signup.template_user_id', repr(self.auth_signup_template_user_id.id))
+        IrConfigParam.set_param('auth_signup.reset_password', repr(self.auth_signup_reset_password), groups=['base.group_system'])
+        IrConfigParam.set_param('auth_signup.allow_uninvited', repr(self.auth_signup_uninvited), groups=['base.group_system'])
+        IrConfigParam.set_param('auth_signup.template_user_id', repr(self.auth_signup_template_user_id.id), groups=['base.group_system'])

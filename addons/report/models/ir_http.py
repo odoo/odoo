@@ -9,5 +9,5 @@ class IrHttp(models.AbstractModel):
 
     def session_info(self):
         res = super(IrHttp, self).session_info()
-        res['web.base.url'] = self.env['ir.config_parameter'].sudo().get_param('web.base.url', default='')
+        res['web.base.url'] = self.env['ir.config_parameter'].get_param('web.base.url', default='')
         return res

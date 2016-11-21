@@ -87,7 +87,7 @@ class AcquirerPaypal(models.Model):
 
     @api.multi
     def paypal_form_generate_values(self, values):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
 
         paypal_tx_values = dict(values)
         paypal_tx_values.update({

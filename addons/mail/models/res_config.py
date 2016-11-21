@@ -37,4 +37,4 @@ class BaseConfiguration(models.TransientModel):
     @api.multi
     def set_alias_domain(self):
         for record in self:
-            self.env['ir.config_parameter'].set_param("mail.catchall.domain", record.alias_domain or '')
+            self.env['ir.config_parameter'].set_param("mail.catchall.domain", record.alias_domain or '', groups=['base.group_system'])

@@ -70,7 +70,7 @@ class ImLivechatChannel(models.Model):
     def _compute_script_external(self):
         view = self.env['ir.model.data'].get_object('im_livechat', 'external_loader')
         values = {
-            "url": self.env['ir.config_parameter'].sudo().get_param('web.base.url'),
+            "url": self.env['ir.config_parameter'].get_param('web.base.url'),
             "dbname": self._cr.dbname,
         }
         for record in self:
@@ -79,7 +79,7 @@ class ImLivechatChannel(models.Model):
 
     @api.multi
     def _compute_web_page_link(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         for record in self:
             record.web_page = "%s/im_livechat/support/%i" % (base_url, record.id)
 

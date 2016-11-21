@@ -745,7 +745,7 @@ class MailThread(models.AbstractModel):
         alias of the document, if it exists. Override this method to implement
         a custom behavior about reply-to for generated emails. """
         model_name = self.env.context.get('thread_model') or self._name
-        alias_domain = self.env['ir.config_parameter'].get_param("mail.catchall.domain")
+        alias_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
         res = dict.fromkeys(res_ids, False)
 
         # alias domain: check for aliases and catchall
@@ -768,7 +768,7 @@ class MailThread(models.AbstractModel):
             # left ids: use catchall
             left_ids = set(res_ids).difference(set(aliases.keys()))
             if left_ids:
-                catchall_alias = self.env['ir.config_parameter'].get_param("mail.catchall.alias")
+                catchall_alias = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
                 if catchall_alias:
                     aliases.update(dict((res_id, '%s@%s' % (catchall_alias, alias_domain)) for res_id in left_ids))
             # compute name of reply-to
@@ -1012,7 +1012,7 @@ class MailThread(models.AbstractModel):
             raise TypeError('message must be an email.message.Message at this point')
         MailMessage = self.env['mail.message']
         Alias, dest_aliases = self.env['mail.alias'], self.env['mail.alias']
-        bounce_alias = self.env['ir.config_parameter'].get_param("mail.bounce.alias")
+        bounce_alias = self.env['ir.config_parameter'].sudo().get_param("mail.bounce.alias")
         fallback_model = model
 
         # get email.message.Message variables for future processing

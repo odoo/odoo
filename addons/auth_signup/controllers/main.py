@@ -70,10 +70,10 @@ class AuthSignupHome(Home):
     def get_auth_signup_config(self):
         """retrieve the module config (which features are enabled) for the login page"""
 
-        IrConfigParam = request.env['ir.config_parameter']
+        IrConfigParam = request.env['ir.config_parameter'].sudo()
         return {
-            'signup_enabled': IrConfigParam.sudo().get_param('auth_signup.allow_uninvited') == 'True',
-            'reset_password_enabled': IrConfigParam.sudo().get_param('auth_signup.reset_password') == 'True',
+            'signup_enabled': IrConfigParam.get_param('auth_signup.allow_uninvited') == 'True',
+            'reset_password_enabled': IrConfigParam.get_param('auth_signup.reset_password') == 'True',
         }
 
     def get_auth_signup_qcontext(self):
