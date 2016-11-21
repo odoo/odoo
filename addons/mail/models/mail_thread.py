@@ -2092,16 +2092,6 @@ class MailThread(models.AbstractModel):
         if not any(relation in updated_fields for relation in relation_fields) and not user_field_lst:
             return True
 
-        # legacy behavior: if values is not given, compute the values by browsing
-        # @TDENOTE: remove me in 8.0
-        if values is None:
-            record = self[0]
-            for updated_field in updated_fields:
-                field_value = getattr(record, updated_field)
-                if isinstance(field_value, models.BaseModel):
-                    field_value = field_value.id
-                values[updated_field] = field_value
-
         # find followers of headers, update structure for new followers
         headers = set()
         for subtype in subtypes:
