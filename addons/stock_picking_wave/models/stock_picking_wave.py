@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 
 class StockPickingWave(models.Model):
-    _inherit = "mail.thread"
+    _inherit = ['mail.thread']
     _name = "stock.picking.wave"
     _description = "Picking Wave"
     _order = "name desc"
