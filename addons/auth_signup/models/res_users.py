@@ -75,6 +75,7 @@ class ResUsers(models.Model):
     @api.model
     def _signup_create_user(self, values):
         """ create a new user from the template user """
+        # we expect self.uid == SUPERUSER_ID
         IrConfigParam = self.env['ir.config_parameter']
         template_user_id = literal_eval(IrConfigParam.get_param('auth_signup.template_user_id', 'False'))
         template_user = self.browse(template_user_id)

@@ -14,6 +14,7 @@
         <record id="default_template_user_config" model="ir.config_parameter">
             <field name="key">auth_signup.template_user_id</field>
             <field name="value" ref="default_template_user"/>
+            <field name="group_ids" eval="[(4, ref('base.group_system'))]"/>
         </record>
 
         <!-- Email template for reset password -->
