@@ -113,8 +113,8 @@
                 <form string="Register Payment" version="7">
                     <header>
                         <button name="post" class="oe_highlight" states="draft" string="Confirm" type="object"/>
-                        <button name="action_draft" states="cancel" string="Set to Draft" type="object"/>
-                        <field name="state" widget="statusbar" statusbar_visible="posted,reconciled"/>
+                        <button name="action_draft" class="oe_highlight" states="cancel" string="Set To Draft" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted,reconciled,cancel"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
