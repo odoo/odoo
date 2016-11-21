@@ -265,6 +265,11 @@ class AccountConfigSettings(models.TransientModel):
         if self.group_analytic_accounting:
             self.module_account_accountant = True
 
+    @api.onchange('module_account_budget')
+    def onchange_module_account_budget(self):
+        if self.module_account_budget:
+            self.group_analytic_accounting = True
+
     @api.multi
     def open_company(self):
         return {
