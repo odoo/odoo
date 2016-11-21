@@ -106,28 +106,6 @@ class account_invoice(osv.osv):
                 ]
         return []
 
-    def _prepare_refund(self, cr, uid, invoice, date_invoice=None, date=None, description=None, journal_id=None, context=None):
-        invoice_data = super(account_invoice, self)._prepare_refund(cr, uid, invoice, date_invoice, date,
-                                                                    description, journal_id, context=context)
-        #for anglo-saxon accounting
-        if invoice.company_id.anglo_saxon_accounting and invoice.type == 'in_invoice':
-            fiscal_position = self.pool.get('account.fiscal.position')
-            for dummy, dummy, line_dict in invoice_data['invoice_line_ids']:
-                if line_dict.get('product_id'):
-                    product = self.pool.get('product.product').browse(cr, uid, line_dict['product_id'], context=context)
-                    counterpart_acct_id = product.property_stock_account_output and \
-                            product.property_stock_account_output.id
-                    if not counterpart_acct_id:
-                        counterpart_acct_id = product.categ_id.property_stock_account_output_categ_id and \
-                                product.categ_id.property_stock_account_output_categ_id.id
-                    if counterpart_acct_id:
-                        fpos = invoice.fiscal_position_id or False
-                        line_dict['account_id'] = fiscal_position.map_account(cr, uid,
-                                                                              fpos,
-                                                                              counterpart_acct_id)
-        return invoice_data
-
-
 #----------------------------------------------------------
 # Stock Location
 #----------------------------------------------------------
