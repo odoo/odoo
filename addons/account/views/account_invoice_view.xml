@@ -335,6 +335,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
@@ -523,6 +524,18 @@
                     <field name="date" string="Period"/>
                     <separator/>
                     <filter domain="[('user_id','=',uid)]" help="My Invoices"/>
+                    <separator/>
+                    <filter string="My Activities" name="activities_my"
+                        domain="[('activity_ids.user_id', '=', uid)]"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Upcoming Activities (7 days)" name="activities_week"
+                        domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                 ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                        ]"/>
+                    <filter string="Overdue Activities" name="activities_overdue"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
                     <group expand="0" string="Group By">
                         <filter name="group_by_partner_id" string="Partner" context="{'group_by':'commercial_partner_id'}"/>
                         <filter string="Salesperson" context="{'group_by':'user_id'}"/>
