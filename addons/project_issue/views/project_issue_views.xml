@@ -60,6 +60,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
@@ -86,6 +87,21 @@
             </field>
         </record>
 
+        <record id="project_issue_view_tree_activity" model="ir.ui.view">
+            <field name="name">project.issue.view.tree.activity</field>
+            <field name="model">project.issue</field>
+            <field name="arch" type="xml">
+                <tree string="Next Activities" decoration-danger="activity_date_deadline &lt; current_date" default_order="activity_date_deadline">
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="activity_date_deadline"/>
+                    <field name="activity_type_id"/>
+                    <field name="activity_summary"/>
+                    <field name="stage_id"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="view_project_issue_filter" model="ir.ui.view">
             <field name="name">project.issue.search.view</field>
             <field name="model">project.issue</field>
@@ -105,6 +121,18 @@
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <separator/>
+                    <filter string="My Activities" name="activities_my"
+                        domain="[('activity_ids.user_id', '=', uid)]"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Upcoming Activities (7 days)" name="activities_week"
+                        domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                 ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                        ]"/>
+                    <filter string="Overdue Activities" name="activities_overdue"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
                     <group expand="0" string="Group By" >
                         <filter string="Assigned to" name="Responsible" context="{'group_by':'user_id'}" />
                         <filter string="Project" name="project" context="{'group_by':'project_id'}" />
@@ -150,6 +178,8 @@
                     <field name="legend_blocked"/>
                     <field name="legend_done"/>
                     <field name="legend_normal"/>
+                    <field name="activity_ids" />
+                    <field name="activity_state" />
                     <templates>
                         <t t-name="kanban-tooltip">
                            <ul class="oe_kanban_tooltip">
@@ -182,6 +212,9 @@
                                         </t>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
+                                        <div class="o_kanban_inline_block ml4 mr4">
+                                            <field name="activity_ids" widget="kanban_activity" />
+                                        </div>
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                         <div class="pull-left" groups="base.group_user">
                                             <field name="kanban_state" widget="kanban_state_selection"/>
@@ -315,6 +348,28 @@
             </field>
         </record>
 
+        <record id="project_issue_action_activity" model="ir.actions.act_window">
+            <field name="name">My Next Issue Activities</field>
+            <field name="res_model">project.issue</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban,calendar</field>
+            <field name="view_id" ref="project_issue_view_tree_activity"/>
+            <field name="context">{'search_default_activities_my':1}</field>
+            <field name="domain">[('activity_date_deadline', '!=', False)]</field>
+            <field name="help" type="html">
+                <p>
+                    Currently there are not any activity scheduled.
+                </p>
+            </field>
+        </record>
+
         <menuitem id="menu_project_issue_track" name="Issues" parent="project.menu_project_management"
                 action="project_issue_categ_act0" sequence="15"/>
+
+
+        <menuitem id="project_issue_menu_activity"
+            name="Next Issue Activities"
+            parent="project.menu_project_management"
+            action="project_issue_action_activity"
+            sequence="25"/>
 </odoo>
