@@ -31,10 +31,10 @@ var TopBarContent = Widget.extend({
         var def = $.Deferred();
         if ($("[data-content_menu_id]").length) {
             var select = new SelectEditMenuDialog();
-            select.appendTo(document.body);
             select.on('save', this, function (root) {
                 def.resolve(root);
             });
+            select.open();
         } else {
             def.resolve(null);
         }
