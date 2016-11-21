@@ -96,7 +96,7 @@
         <record model="ir.rule" id="res_partner_portal_public_rule">
             <field name="name">res_partner: portal/public: read access on my commercial partner</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="domain_force">[('id', 'child_of', user.commercial_partner_id.id)]</field>
+            <field name="domain_force">['|','|','|',('id', 'child_of', user.commercial_partner_id.id),('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
             <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
