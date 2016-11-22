@@ -22,7 +22,7 @@ class Tag(models.Model):
     _name = "note.tag"
     _description = "Note Tag"
 
-    name = fields.Char('Tag Name', required=True)
+    name = fields.Char('Tag Name', required=True, translate=True)
     color = fields.Integer('Color Index')
 
     _sql_constraints = [
