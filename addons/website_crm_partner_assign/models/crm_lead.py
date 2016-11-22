@@ -33,25 +33,19 @@ class CrmLead(models.Model):
         if not partner_assigned:
             self.date_assign = False
         else:
-            self.write({
-                'date_assign': fields.Date.context_today(self),
-                'user_id': partner_assigned.user_id,
-            })
+            self.date_assign = fields.Date.context_today(self)
+            self.user_id = partner_assigned.user_id
 
     @api.multi
     def assign_salesman_of_assigned_partner(self):
         salesmans_leads = {}
         for lead in self:
             if (lead.stage_id.probability > 0 and lead.stage_id.probability < 100) or lead.stage_id.sequence == 1:
-                partner_assigned_related_user = self.env['res.users'].search([('partner_id', '=', lead.partner_assigned_id.id)], limit=1)
-                if lead.partner_assigned_id and partner_assigned_related_user and partner_assigned_related_user != lead.user_id:
-                    salesman_id = partner_assigned_related_user.id
-                    if salesmans_leads.get(salesman_id):
-                        salesmans_leads[salesman_id].append(lead.id)
-                    else:
-                        salesmans_leads[salesman_id] = lead.ids
-        for salesman_id, lead_ids in salesmans_leads.items():
-            leads = self.browse(lead_ids)
+                if lead.partner_assigned_id and lead.partner_assigned_id.user_id != lead.user_id:
+                    salesmans_leads.setdefault(lead.partner_assigned_id.user_id.id, []).append(lead.id)
+
+        for salesman_id, leads_ids in salesmans_leads.items():
+            leads = self.browse(leads_ids)
             leads.write({'user_id': salesman_id})
             for lead in leads:
                 lead._onchange_user_id()
@@ -249,3 +243,30 @@ class CrmLead(models.Model):
                 'priority': values['priority'],
                 'date_deadline': values['date_deadline'] if values['date_deadline'] else False,
             })
+
+    @api.model
+    def create_opp_portal(self, values):
+        if self.env.user.partner_id.grade_id or self.env.user.commercial_partner_id.grade_id:
+            user = self.env.user
+            self = self.sudo()
+        if not (values['contact_name'] and values['description'] and values['title']):
+            return {
+                'errors': _('All fields are required !')
+            }
+        tag_own = self.env.ref('website_crm_partner_assign.tag_portal_lead_own_opp', False)
+        values = {
+            'contact_name': values['contact_name'],
+            'name': values['title'],
+            'description': values['description'],
+            'priority': '2',
+            'partner_assigned_id': user.partner_id.id,
+        }
+        if tag_own:
+            values['tag_ids'] = [(4, tag_own.id, False)]
+
+        lead = self.create(values)
+        lead.assign_salesman_of_assigned_partner()
+        lead.convert_opportunity(lead.partner_id.id)
+        return {
+            'id': lead.id
+        }

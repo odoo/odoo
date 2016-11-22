@@ -44,10 +44,6 @@ class WebsiteBlog(http.Controller):
 
         return OrderedDict((year, [m for m in months]) for year, months in itertools.groupby(groups, lambda g: g['year']))
 
-    def _to_date(self, dt):
-        # TODO remove me in master/saas-14
-        return fields.Date.from_string(dt)
-
     @http.route([
         '/blog',
         '/blog/page/<int:page>',

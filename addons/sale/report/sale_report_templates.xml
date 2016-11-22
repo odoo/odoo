@@ -40,9 +40,12 @@
                     <strong>Your Reference:</strong>
                     <p t-field="doc.client_order_ref"/>
                 </div>
-                <div t-if="doc.date_order" class="col-xs-3">
-                    <strong t-if="doc.state not in ['draft','sent']">Date Ordered:</strong>
-                    <strong t-if="doc.state in ['draft','sent']">Quotation Date:</strong>
+                <div t-if="doc.confirmation_date and doc.state not in ['draft','sent']" class="col-xs-3">
+                    <strong>Date Ordered:</strong>
+                    <p t-field="doc.confirmation_date"/>
+                </div>
+                <div t-if="doc.date_order and doc.state in ['draft','sent']" class="col-xs-3">
+                    <strong>Quotation Date:</strong>
                     <p t-field="doc.date_order"/>
                 </div>
                 <div t-if="doc.user_id.name" class="col-xs-3">

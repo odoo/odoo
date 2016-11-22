@@ -8,7 +8,7 @@
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
                     <div class="text-center o_web_settings_dashboard_apps"></div>
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col"> 
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
                     <div class="text-center o_web_settings_dashboard_invitations"></div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
@@ -102,7 +102,7 @@
             Need more help? <a href="https://www.odoo.com/documentation/user">Browse the documentation.</a>
         </div>
     </t>
-    
+
     <t t-name="DashboardPlanner.PlannersList">
         <div class="row o_web_settings_dashboard_planners_list">
             <t t-if="!planners.length">
@@ -112,11 +112,12 @@
                 <div t-attf-class="col-xs-2 col-md-3 col-lg-2 o_web_settings_dashboard_planner_progress_text o_web_settings_dashboard_progress_#{p.progress}">
                     <t t-esc="p.progress"/>%
                 </div>
-                <div t-attf-class="col-xs-10 col-md-9 col-lg-10 o_web_settings_dashboard_planner_progress_bar o_web_settings_dashboard_progress_#{p.progress}">
-                    <div class="o_web_settings_dashboard_progress_title text-left" t-att-data-menu-id="p.menu_id[0]">
+                <div t-attf-class="col-xs-10 col-md-9 col-lg-10 o_web_settings_dashboard_planner_progress_bar o_web_settings_dashboard_progress_#{p.progress}"
+                    t-att-data-menu-id="p.menu_id[0]">
+                    <div class="o_web_settings_dashboard_progress_title text-left">
                         <t t-esc="p.menu_id[1]"></t> <i class="fa fa-arrow-right pull-right"/>
                     </div>
-                    <div class="progress" t-att-data-menu-id="p.menu_id[0]">
+                    <div class="progress">
                         <div class="progress-bar" role="progressbar" t-attf-style="width:#{p.progress}%">
                         </div>
                     </div>

@@ -54,7 +54,7 @@ class AccountAnalyticLine(models.Model):
             if not sol:
                 sol = self.env['sale.order.line'].search([
                     ('order_id.project_id', '=', self.account_id.id),
-                    ('state', '=', 'sale'),
+                    ('state', 'in', ('sale', 'done')),
                     ('product_id.track_service', '=', 'timesheet'),
                     ('product_id.type', '=', 'service')],
                     limit=1)

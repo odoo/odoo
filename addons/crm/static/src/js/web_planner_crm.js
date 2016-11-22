@@ -4,10 +4,9 @@ odoo.define('planner_crm.planner', function (require) {
 var planner = require('web.planner.common');
 
 planner.PlannerDialog.include({
-    prepare_planner_event: function() {
-        var self = this;
+    prepare_planner_event: function () {
         this._super.apply(this, arguments);
-        if(self.planner['planner_application'] == 'planner_crm') {
+        if (this.planner['planner_application'] === 'planner_crm') {
             var stages = {
                 'solution_selling': [
                     'Territory', 'Qualified', 'Qualified Sponsor',
@@ -31,8 +30,8 @@ planner.PlannerDialog.include({
                 'odoo_default': [
                     'New', 'Qualified', 'Proposition', 'Negotiation', 'Won', 'Lost', '',
                     '', '', '', '', '', '', '']
-            }
-            self.$el.on('change', '#input_element_pipeline', function(ev) {
+            };
+            this.$el.on('change', '#input_element_pipeline', function(ev) {
                 var option = $(ev.target).find(":selected").val();
                 if (_.has(stages, option)) {
                     var values = stages[option];
