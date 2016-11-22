@@ -1144,7 +1144,7 @@ class Tag(models.Model):
     _name = "crm.lead.tag"
     _description = "Category of lead"
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, translate=True)
     color = fields.Integer('Color Index')
 
     _sql_constraints = [
