@@ -442,7 +442,9 @@ class PurchaseOrder(models.Model):
     @api.multi
     def action_set_date_planned(self):
         for order in self:
-            order.order_line.update({'date_planned': order.date_planned})
+            #DO NOT FORWARD PORT
+            for line in order.order_line:
+                line.update({'date_planned': order.date_planned})
 
 
 class PurchaseOrderLine(models.Model):
