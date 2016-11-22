@@ -548,9 +548,6 @@ var DataSet =  Class.extend(mixins.PropertiesMixin, {
     name_create: function(name, context) {
         return this._model.call('name_create', [name], {context: this.get_context(context)});
     },
-    exec_workflow: function (id, signal) {
-        return this._model.exec_workflow(id, signal);
-    },
     get_context: function(request_context) {
         return this._model.context(request_context);
     },
@@ -939,10 +936,6 @@ var BufferedDataSet = DataSetStatic.extend({
     call_button: function (method, args) {
         this.evict_record(args[0][0]);
         return this._super(method, args);
-    },
-    exec_workflow: function (id, signal) {
-        this.evict_record(id);
-        return this._super(id, signal);
     },
     alter_ids: function(n_ids, options) {
         var dirty = !_.isEqual(this.ids, n_ids);

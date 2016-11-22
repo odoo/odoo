@@ -428,9 +428,6 @@ The urls in the actions list can be generated automatically by calling the
           self-explanatory
         ``unfollow``
           self-explanatory
-        ``workflow``
-          trigger a workflow signal; the signal's name should be
-          provided as the kwarg ``signal``
         ``method``
           call a method on the record; the method's name should be
           provided as the kwarg ``method``
