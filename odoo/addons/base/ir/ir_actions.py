@@ -470,7 +470,7 @@ class IrActionsServer(models.Model):
     name = fields.Char(string='Action Name', translate=True)
     type = fields.Char(default='ir.actions.server')
 
-    condition = fields.Char(default="True",
+    condition = fields.Char(default="True", groups='base.group_system',
                             help="Condition verified before executing the server action. If it "
                                  "is not verified, the action will not be executed. The condition is "
                                  "a Python expression, like 'record.list_price > 5000'. A void "
@@ -498,7 +498,7 @@ class IrActionsServer(models.Model):
     action_id = fields.Many2one('ir.actions.actions', string='Client Action',
                                 help="Select the client action that has to be executed.")
     # Python code
-    code = fields.Text(string='Python Code',
+    code = fields.Text(string='Python Code', groups='base.group_system',
                        default=DEFAULT_PYTHON_CODE,
                        help="Write Python code that the action will execute. Some variables are "
                             "available for use; help about pyhon expression is given in the help tab.")
@@ -580,7 +580,7 @@ class IrActionsServer(models.Model):
 
     @api.constrains('code')
     def _check_python_code(self):
-        for action in self.filtered('code'):
+        for action in self.sudo().filtered('code'):
             msg = test_python_expr(expr=action.code.strip(), mode="exec")
             if msg:
                 raise ValidationError(msg)
@@ -756,7 +756,7 @@ class IrActionsServer(models.Model):
 
     @api.model
     def run_action_code_multi(self, action, eval_context=None):
-        safe_eval(action.code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
+        safe_eval(action.sudo().code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
         if 'action' in eval_context:
             return eval_context['action']
 
@@ -894,7 +894,7 @@ class IrActionsServer(models.Model):
         """
         for action in self:
             eval_context = self._get_eval_context(action)
-            condition = action.condition
+            condition = action.sudo().condition
             if condition is False:
                 # Void (aka False) conditions are considered as True
                 condition = True
