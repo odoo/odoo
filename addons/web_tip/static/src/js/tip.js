@@ -300,6 +300,8 @@ var Tip = Class.extend({
         if (this.$element) {
             this.$element.popover('destroy');
             this.$element.removeClass('oe_tip_show_element');
+        }
+        if (this.$breathing) {
             this.$breathing.off().remove();
         }
         if (this.$helper) {
