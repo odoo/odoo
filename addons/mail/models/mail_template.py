@@ -285,7 +285,7 @@ class MailTemplate(models.Model):
             html = '<div>%s</div>' % html
             root = lxml.html.fromstring(html)
 
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         (base_scheme, base_netloc, bpath, bparams, bquery, bfragment) = urlparse.urlparse(base_url)
 
         def _process_link(url):

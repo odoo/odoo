@@ -33,7 +33,7 @@ class Forum(models.Model):
         TDE TODO: move me somewhere else, auto_init ? """
         forum_uuids = self.env['ir.config_parameter'].search([('key', '=', 'website_forum.uuid')])
         if not forum_uuids:
-            forum_uuids.set_param('website_forum.uuid', str(uuid.uuid4()), ['base.group_system'])
+            forum_uuids.set_param('website_forum.uuid', str(uuid.uuid4()))
 
     @api.model
     def _get_default_faq(self):

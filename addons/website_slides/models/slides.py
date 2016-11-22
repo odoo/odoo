@@ -146,7 +146,7 @@ class Channel(models.Model):
     @api.depends('name')
     def _compute_website_url(self):
         super(Channel, self)._compute_website_url()
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for channel in self:
             if channel.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
@@ -347,7 +347,7 @@ class Slide(models.Model):
     embed_code = fields.Text('Embed Code', readonly=True, compute='_get_embed_code')
 
     def _get_embed_code(self):
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
             if record.datas and (not record.document_id or record.slide_type in ['document', 'presentation']):
                 record.embed_code = '<iframe src="%s/slides/embed/%s?page=1" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (base_url, record.id, 315, 420)
@@ -365,7 +365,7 @@ class Slide(models.Model):
     @api.depends('name')
     def _compute_website_url(self):
         super(Slide, self)._compute_website_url()
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for slide in self:
             if slide.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 # link_tracker is not in dependencies, so use it to shorten url only if installed.
@@ -473,7 +473,7 @@ class Slide(models.Model):
             yield record
 
     def _post_publication(self):
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
             publish_template = slide.channel_id.publish_template_id
             html_body = publish_template.with_context({'base_url': base_url}).render_template(publish_template.body_html, 'slide.slide', slide.id)
@@ -486,7 +486,7 @@ class Slide(models.Model):
 
     @api.one
     def send_share_email(self, email):
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         return self.channel_id.share_template_id.with_context({'email': email, 'base_url': base_url}).send_mail(self.id)
 
     # --------------------------------------------------

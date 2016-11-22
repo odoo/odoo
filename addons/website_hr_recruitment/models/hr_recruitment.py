@@ -17,7 +17,7 @@ class RecruitmentSource(models.Model):
     @api.one
     @api.depends('source_id', 'source_id.name', 'job_id')
     def _compute_url(self):
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for source in self:
             source.url = urljoin(base_url, "%s?%s" % (source.job_id.website_url,
                 url_encode({
