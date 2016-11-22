@@ -79,7 +79,7 @@ class BlogTag(models.Model):
     _inherit = ['website.seo.metadata']
     _order = 'name'
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, translate=True)
     post_ids = fields.Many2many('blog.post', string='Posts')
 
     _sql_constraints = [

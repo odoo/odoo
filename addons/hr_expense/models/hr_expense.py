@@ -459,7 +459,7 @@ class HrExpenseSheet(models.Model):
         self.department_id = self.employee_id.department_id
 
     @api.one
-    @api.depends('expense_line_ids')
+    @api.depends('expense_line_ids', 'expense_line_ids.total_amount')
     def _compute_amount(self):
         self.total_amount = sum(self.expense_line_ids.mapped('total_amount'))
 
