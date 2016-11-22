@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# RGB Consulting <odoo@rgbconsulting.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-02-23 13:09+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-07-01 09:47+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-8/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,7 +83,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hola ${object.partner_id.name},</p>\n    \n    <p>Aquesta és una ${object.state in ('draft', 'sent') and 'sol·licitud de pressupost' or 'confirmació de comanda de compra'} de ${object.company_id.name}: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCIES</strong><br />\n       &nbsp;&nbsp;Núm. de comanda: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Total de la comanda: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Data de la comanda: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Referència de la comanda: ${object.origin}<br />\n       % endif\n       % if object.partner_ref:\n       &nbsp;&nbsp;La seva referència: ${object.partner_ref}<br />\n       % endif\n       % if object.validator:\n       &nbsp;&nbsp;El seu contacte: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>Si té algun dubte, no dubti en contactar-nos.</p>\n    <p>Gràcies!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telèfon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: purchase
 #: model:email.template,body_html:purchase.email_template_edi_purchase
@@ -147,14 +148,14 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hola ${object.partner_id.name},</p>\n    \n    <p>Aquesta és una${object.state in ('draft', 'sent') and 'sol·licitud de pressupost' or 'confirmació de comanda de compra'} de ${object.company_id.name}: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCIES</strong><br />\n       &nbsp;&nbsp;Núm. de comanda: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Data de la comanda: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Referència de la comanda: ${object.origin}<br />\n       % endif\n       % if object.partner_ref:\n       &nbsp;&nbsp;La seva referència: ${object.partner_ref}<br />\n       % endif\n       % if object.validator:\n       &nbsp;&nbsp;El seu contacte: <a href=\"mailto:${object.validator.email or ''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n       % endif\n    </p>\n\n    <br/>\n    <p>Si té algun dubte, no dubti en contactar-nos.</p>\n    <p>Gràcies!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telèfon:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: purchase
 #: help:purchase.config.settings,module_stock_dropshipping:0
 msgid ""
 "\n"
 "Creates the dropship route and add more complex tests-This installs the module stock_dropshipping."
-msgstr ""
+msgstr "\nCrea la ruta de dropship i afegeix testos més complexos.\n- Això instala el mòdul stock_dropshipping."
 
 #. module: purchase
 #: help:purchase.order.line,state:0
@@ -163,24 +164,24 @@ msgid ""
 "* The 'Confirmed' status is set automatically as confirm when purchase order in confirm status.                                        \n"
 "* The 'Done' status is set automatically when purchase order is set as done.                                        \n"
 "* The 'Cancelled' status is set automatically when user cancel purchase order."
-msgstr ""
+msgstr "* L'estat 'Esborrany' s'estableix automàticament quan es creï la comanda de compra.\n* L'estat 'Confirmat' s'estableix quan es confirma la comanda de compra.\n* L'estat 'Realitzat' s'estableix automàticament quan la comanda de compra es realitza.\n* L'estat 'Cancel·lat' s'estableix quan l'usuari cancel·la la comanda de compra."
 
 #. module: purchase
 #: code:addons/purchase/stock.py:198
 #, python-format
 msgid " Buy"
-msgstr ""
+msgstr "Compra"
 
 #. module: purchase
 #: field:product.product,purchase_count:0
 #: field:product.template,purchase_count:0
 msgid "# Purchases"
-msgstr ""
+msgstr "# Compres"
 
 #. module: purchase
 #: field:res.partner,supplier_invoice_count:0
 msgid "# Supplier Invoices"
-msgstr ""
+msgstr "Nº factures proveïdor"
 
 #. module: purchase
 #: field:purchase.report,nbr:0
@@ -195,12 +196,12 @@ msgstr "# de la comanda de compra "
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} Comanda (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase_done
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Comanda (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -219,7 +220,7 @@ msgid ""
 "                    document in Odoo.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per registrar una factura de proveïdor.\n</p><p>\nLes factures de proveïdor poden ser pregenerades basades en les comandes o als rebuts. Això permet acarar les factures que reben del seu proveïdor amb els documents esborrany d'Odoo.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -232,7 +233,7 @@ msgid ""
 "                    of the products and the supplier invoice.\n"
 "                </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nAquest proveïdor no té cap comanda de venda. Premi per crear un nou SdP.\n</p><p>\nLa sol·licitud de pressupost és el primer pas del flux de compres. Una vegada convertit en una comanda de compra, serà capaç de controlar la recepció dels productes i de la factura de proveïdor.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_pricelist_version_action
@@ -246,7 +247,7 @@ msgid ""
 "                etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per afegir una versió de tarifa.\n</p><p>\nPot haver-hi més d'una versió de tarifa, que serà vàlid durant un cert període de temps. Alguns exemples de versions són: preus principals, 2010, 2011, vendes d'estiu, etc.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_picking_tree_picking_to_invoice
@@ -260,7 +261,7 @@ msgid ""
 "                You can generate a supplier invoice based on those receipts.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per crear una recepció.\n</p><p> \nAquí pot gestionar totes les recepcions de productes de les comandes de compra on el mètode de facturació és 'Basat en les recepcions' i per les que encara no ha generat cap factura.\nPot generar una factura de proveïdor basada en aquests rebuts.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -274,7 +275,7 @@ msgid ""
 "                the products received and control the supplier invoices.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per crear un pressupost que serà convertit en una comanda de venda.\n</p><p>\nUtilitzi aquest menú per buscar les seves comandes de compra per referència, proveïdor, productes, etc. Per cada comanda de venda, pot controlar la discussió relativa amb el proveïdor, controlar els productes rebuts i controlar les factures de proveïdor.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -290,7 +291,7 @@ msgid ""
 "                by Odoo based on inventory needs.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per a crear una nova sol·licitud de pressupost.\n</p><p>\nEl pressupost conte l'historial de la discussió/negociació que ha tingut amb el seu proveïdor. Una vegada confirmada, la sol·licitud de pressupost es converteix en una comanda de compra.\n</p><p>\nLa majoria dels pressupostos de comandes de compra es creen automàticament per Odoo basats en les necessitats d'inventari.\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -306,7 +307,7 @@ msgid ""
 "            draft invoice and validate it.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per crear una factura esborrany.\n</p><p>\nUtilitzi aquest menú per controlar les factures a ser rebudes dels seus proveïdors. Odoo genera factures esborrany des de les seves comandes de compra o de les recepcions, dependent de la seva configuració.\n</p><p>\nUna vegada rebuda una factura d'un proveïdor, pot casar-la amb la factura esborrany i validar-la.\n</p>"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -323,7 +324,7 @@ msgid ""
 "            available suppliers, etc.\n"
 "          </p>\n"
 "        "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per a definir un nou producte.\n</p><p>\nHauria de definir un producte per cada cosa que compra, tant si és un producte físic, un consumible o un servei a subcontractistes.\n</p><p>\nEl formulari de producte conté informació detallada per millorar el procés de compra: preus, logística d'abastiment, dades de comptabilitat, proveïdors disponibles, etc.\n</p>\n        "
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
@@ -335,7 +336,7 @@ msgid ""
 "                draft supplier invoice based on the lines from this list.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\nAquí pot seguir totes les línies de les comandes de compra on la seva facturació sigui \"Basada en les línies de comanda de compra\", i per les quals encara no ha rebut factura de proveïdor. Pot generar factures de compra esborrany basades en línies d'aquesta llista.\n</p>\n            "
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_partner_cat
@@ -345,12 +346,12 @@ msgstr "Llibreta d'adreces"
 #. module: purchase
 #: model:res.groups,name:purchase.group_advance_bidding
 msgid "Advance bidding process"
-msgstr ""
+msgstr "Procés de licitació avançat"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
 msgid "Alerts by products or supplier"
-msgstr ""
+msgstr "Avisos per producte o proveïdor"
 
 #. module: purchase
 #: help:purchase.config.settings,module_warning:0
@@ -358,7 +359,7 @@ msgid ""
 "Allow to configure notification on products and trigger them when a user wants to purchase a given product or a given supplier.\n"
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "Supplier: don't forget to ask for an express delivery."
-msgstr ""
+msgstr "Permet configurar notificacions al producte i llençar-les quan un usuari vulgui comprar el producte corresponent o al proveïdor concret.\nExemples: Producte: aquest producte és obsolet. No vendre'n més de 5. Proveïdor: no oblidar preguntar per l'entrega ràpida."
 
 #. module: purchase
 #: help:account.config.settings,module_purchase_analytic_plans:0
@@ -366,19 +367,19 @@ msgstr ""
 msgid ""
 "Allows the user to maintain several analysis plans. These let you split lines on a purchase order between several accounts and analytic plans.\n"
 "-This installs the module purchase_analytic_plans."
-msgstr ""
+msgstr "Permet a l'usuari mantenir diversos plans analítics. Això li deixa dividir les línies d'una comanda de compra entre diversos comptes i plans analítics.\n- Això instal·la el mòdul purchase_analytic_plans."
 
 #. module: purchase
 #: help:purchase.config.settings,group_purchase_pricelist:0
 msgid ""
 "Allows to manage different prices based on rules per category of Supplier.\n"
 "Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
+msgstr "Permet gestionar diferents preus basats en regles per categoria de proveïdor.\nExemple: 10% per distribuïdors, promoció de 5 € en aquest producte, etc."
 
 #. module: purchase
 #: help:purchase.config.settings,group_costing_method:0
 msgid "Allows you to compute product cost price based on average cost."
-msgstr ""
+msgstr "Permet calcular el preu del cost del producte basat al preu mitjà."
 
 #. module: purchase
 #: help:purchase.config.settings,group_uom:0
@@ -390,7 +391,7 @@ msgstr "Ens permet seleccionar i mantenir diferents unitats de mesura per als pr
 #: help:account.config.settings,group_analytic_account_for_purchases:0
 #: help:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Allows you to specify an analytic account on purchase orders."
-msgstr ""
+msgstr "Permet assignar un compte analític específic a les comandes de compra."
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
@@ -400,13 +401,13 @@ msgstr "Compte analític"
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr ""
+msgstr "Comptabilitat analítica per les compres"
 
 #. module: purchase
 #: field:account.config.settings,group_analytic_account_for_purchases:0
 #: field:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Analytic accounting for purchases"
-msgstr ""
+msgstr "Comptabilitat analítica per les compres"
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
@@ -416,7 +417,7 @@ msgstr "Aplica"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Approve Order"
-msgstr ""
+msgstr "Aprovar comanda"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_request_for_quotation_filter
@@ -427,17 +428,17 @@ msgstr "Aprovada"
 #. module: purchase
 #: view:purchase.order.group:purchase.view_purchase_order_group
 msgid "Are you sure you want to merge these orders?"
-msgstr ""
+msgstr "Està segur que desitja ajuntar aquestes comandes?"
 
 #. module: purchase
 #: field:purchase.order.line,procurement_ids:0
 msgid "Associated procurements"
-msgstr ""
+msgstr "Abastiments associats"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
 msgid "Average Delivery Time"
-msgstr ""
+msgstr "Termini mitjà d'entrega"
 
 #. module: purchase
 #: field:purchase.report,price_average:0
@@ -447,12 +448,12 @@ msgstr "Preu mitjà"
 #. module: purchase
 #: field:stock.warehouse,buy_pull_id:0
 msgid "BUY rule"
-msgstr ""
+msgstr "Regla de compra"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on Purchase Order lines"
-msgstr ""
+msgstr "Basada en línies d'ordres de compra"
 
 #. module: purchase
 #: help:purchase.order,invoice_method:0
@@ -460,39 +461,39 @@ msgid ""
 "Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n"
 "Based on generated invoice: create a draft invoice you can validate later.\n"
 "Based on incoming shipments: let you create an invoice when receipts are validated."
-msgstr ""
+msgstr "Basada en línies de comanda de compra: col·loca línies individuals en 'Control de factures / a les línies de comandes de compra', des d'on es podrà crear selectivament una factura.\nBasada en les factures generades: crea una factura esborrany que pot ser validat més tard.\nBasada en les recepcions: li deixa crear una factura que es valida quan ho fa la recepció."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on generated draft invoice"
-msgstr ""
+msgstr "Basada en les factures esborrany generades"
 
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 #: selection:purchase.order,invoice_method:0
 msgid "Based on incoming shipments"
-msgstr ""
+msgstr "Basada en recepcions"
 
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 msgid "Based on purchase order lines"
-msgstr ""
+msgstr "Basada en línies d'ordres de compra"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 #: selection:purchase.order,state:0
 msgid "Bid Received"
-msgstr ""
+msgstr "Oferta rebuda"
 
 #. module: purchase
 #: field:purchase.order,bid_date:0
 msgid "Bid Received On"
-msgstr ""
+msgstr "Oferta rebuda el"
 
 #. module: purchase
 #: field:purchase.order,bid_validity:0
 msgid "Bid Valid Until"
-msgstr ""
+msgstr "Oferta valida fins"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1171 code:addons/purchase/stock.py:192
@@ -511,13 +512,13 @@ msgid ""
 "Calls for bids are used when you want to generate requests for quotations to several suppliers for a given set of products.\n"
 "            You can configure per product if you directly do a Request for Quotation\n"
 "            to one supplier or if you want a Call for Bids to compare offers from several suppliers."
-msgstr ""
+msgstr "Les licitacions s'utilitzen quan es vol generar sol·licituds de pressupostos a diferents proveïdors per un conjunt de productes donat. Pot configurar per producte si fa una SdP directament a un proveïdor, o si vol licitar per comparar ofertes de diversos proveïdors."
 
 #. module: purchase
 #: view:product.template:purchase.product_template_search_view_purchase
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
-msgstr ""
+msgstr "Pot ser comprat"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1189
@@ -525,13 +526,13 @@ msgstr ""
 msgid ""
 "Can not cancel this procurement as the related purchase order has been "
 "confirmed already.  Please cancel the purchase order first. "
-msgstr ""
+msgstr "No es pot cancel·lar aquest abastiment, ja que la comanda de compra relacionada ja ha estat confirmada. Cancel·li primer la comanda de compra."
 
 #. module: purchase
 #: code:addons/purchase/stock.py:195
 #, python-format
 msgid "Can't find any generic Buy route."
-msgstr ""
+msgstr "No es pot trobar cap ruta genèrica de 'Compra'"
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
@@ -551,7 +552,7 @@ msgstr "Cancel·lada"
 #: code:addons/purchase/purchase.py:1016
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr ""
+msgstr "No es pot eliminar una línia de comanda de venda que estigui en estat '%s'"
 
 #. module: purchase
 #: field:purchase.report,category_id:0
@@ -561,12 +562,12 @@ msgstr "Categoria"
 #. module: purchase
 #: view:purchase.report:purchase.view_purchase_order_search
 msgid "Category of product"
-msgstr ""
+msgstr "Categoria del producte"
 
 #. module: purchase
 #: field:purchase.config.settings,group_advance_purchase_requisition:0
 msgid "Choose from several bids in a call for bids"
-msgstr ""
+msgstr "Escollir entre diverses ofertes en la licitació"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
@@ -584,7 +585,7 @@ msgstr "Companyia"
 #: code:addons/purchase/purchase.py:515
 #, python-format
 msgid "Compose Email"
-msgstr ""
+msgstr "Compondre correu electrònic"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
@@ -601,7 +602,7 @@ msgstr "Error de configuració!"
 #: model:ir.actions.act_window,name:purchase.action_purchase_configuration
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Configure Purchases"
-msgstr ""
+msgstr "Configurar compres"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
@@ -611,7 +612,7 @@ msgstr "Confirma"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Confirm Order"
-msgstr ""
+msgstr "Confirmar comanda"
 
 #. module: purchase
 #: selection:purchase.order.line,state:0
@@ -647,12 +648,12 @@ msgstr "Moneda"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Customer Address"
-msgstr ""
+msgstr "Direcció del client"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
 msgid "Customer Address (Direct Delivery)"
-msgstr ""
+msgstr "Direcció del client (Enviament directe)"
 
 #. module: purchase
 #: field:purchase.order,date_approve:0 field:purchase.report,date_approve:0
@@ -677,12 +678,12 @@ msgstr "Data en què la comanda de compra s'ha aprovat."
 #. module: purchase
 #: help:purchase.order,bid_validity:0
 msgid "Date on which the bid expired"
-msgstr ""
+msgstr "Data en què l'oferta expira"
 
 #. module: purchase
 #: help:purchase.order,bid_date:0
 msgid "Date on which the bid was received"
-msgstr ""
+msgstr "Data en què es va rebre l'oferta"
 
 #. module: purchase
 #: help:purchase.report,date:0
@@ -712,36 +713,36 @@ msgstr "Versió tarifa de compra per defecte"
 #. module: purchase
 #: field:purchase.config.settings,default_invoice_method:0
 msgid "Default invoicing control method"
-msgstr ""
+msgstr "Mètode de control de facturació per defecte"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:555
 #, python-format
 msgid "Define an expense account for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Defineix un compte de despeses per aquest producte: \"%s\" (id: %d)."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:599
 #, python-format
 msgid "Define purchase journal for this company: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Defineix el diari de compres per aquesta companyia: \"%s\" (id: %d)."
 
 #. module: purchase
 #: field:purchase.order,picking_type_id:0
 msgid "Deliver To"
-msgstr ""
+msgstr "Entregar a"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Deliveries & Invoices"
-msgstr ""
+msgstr "Entregues i factures"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
 msgid ""
 "Depicts the date where the Quotation should be validated and converted into "
 "a Purchase Order, by default it's the creation date."
-msgstr ""
+msgstr "Indica la data a què el pressupost hauria de ser validat i convertit en una comanda de compra. Per defecte, és la data de creació."
 
 #. module: purchase
 #: field:purchase.order.line,name:0
@@ -758,14 +759,14 @@ msgstr "Destí"
 #. module: purchase
 #: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
 msgid "Do you want to generate the supplier invoices?"
-msgstr ""
+msgstr "Vol generar les factures del proveïdor?"
 
 #. module: purchase
 #: help:stock.picking,reception_to_invoice:0
 msgid ""
 "Does the picking contains some moves related to a purchase order invoiceable"
 " on the receipt?"
-msgstr ""
+msgstr "L'albarà té alguns moviments relatius a una comanda de compra fracturable a la recepció?"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.order.line,state:0
@@ -781,19 +782,19 @@ msgstr "Esborrany"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Draft PO"
-msgstr ""
+msgstr "OC en esborrany"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1384
 #, python-format
 msgid "Draft Purchase Order created"
-msgstr ""
+msgstr "Comanda de compra en esborrant creada"
 
 #. module: purchase
 #: code:addons/purchase/edi/purchase_order.py:132
 #, python-format
 msgid "EDI Pricelist (%s)"
-msgstr ""
+msgstr "Tarifa EDI (%s)"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_email_templates
@@ -831,7 +832,7 @@ msgstr "Data prevista"
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
 msgid "Expected Month"
-msgstr ""
+msgstr "Més esperat"
 
 #. module: purchase
 #: view:purchase.report:purchase.view_purchase_order_search
@@ -851,7 +852,7 @@ msgstr "Seguidors"
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_double_validation:0
 msgid "Force two levels of approvals"
-msgstr ""
+msgstr "Forçar dos nivells d'aprovació"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
@@ -864,7 +865,7 @@ msgstr "Agrupa per"
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_search
 msgid "Hide cancelled lines"
-msgstr ""
+msgstr "Amaga les línies cancel·lades"
 
 #. module: purchase
 #: help:purchase.order,message_summary:0
@@ -888,25 +889,25 @@ msgstr "Si està marcat hi ha missatges nous pendents."
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_2_stock_picking
 msgid "In Shipments"
-msgstr ""
+msgstr "En recepcions"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:337
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
-msgstr ""
+msgstr "Per esborrar una comanda de compra, ha de cancel·lar-lo primer."
 
 #. module: purchase
 #: help:purchase.config.settings,group_advance_purchase_requisition:0
 msgid ""
 "In the process of a public bidding, you can compare the bid lines and choose for each requested product from which bid you\n"
 "            buy which quantity"
-msgstr ""
+msgstr "Al procés d'una licitació publica, pot comparar les línies de licitació i escollir per a cada producte sol·licitat de què licitant vol comprar i quina quantitat"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 msgid "Incoming  Products"
-msgstr ""
+msgstr "Productes a rebre"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
@@ -922,7 +923,7 @@ msgstr "Albarans d'entrada"
 #. module: purchase
 #: view:stock.picking:purchase.view_picking_in_search_picking_inherit
 msgid "Incoming Shipments to Invoice"
-msgstr ""
+msgstr "Recepcions a facturar"
 
 #. module: purchase
 #: field:purchase.order,incoterm_id:0
@@ -934,7 +935,7 @@ msgstr "Incoterm"
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
+msgstr "Els termes de comerç internacional són una sèrie de condicions comercials utilitzades en les transaccions internacionals."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:337 code:addons/purchase/purchase.py:1016
@@ -970,24 +971,24 @@ msgstr "Línies de factura"
 #. module: purchase
 #: field:purchase.order,invoiced:0
 msgid "Invoice Received"
-msgstr ""
+msgstr "Factura rebuda"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1500
 #, python-format
 msgid "Invoice paid"
-msgstr ""
+msgstr "Factura pagada"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1480
 #, python-format
 msgid "Invoice received"
-msgstr ""
+msgstr "Factura rebuda"
 
 #. module: purchase
 #: field:stock.picking,reception_to_invoice:0
 msgid "Invoiceable on incoming shipment?"
-msgstr ""
+msgstr "Facturable a la recepció?"
 
 #. module: purchase
 #: field:purchase.order,invoiced_rate:0 field:purchase.order.line,invoiced:0
@@ -1003,7 +1004,7 @@ msgstr "Factures"
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_form
 msgid "Invoices and Incoming Shipments"
-msgstr ""
+msgstr "Factures i recepcions"
 
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
@@ -1018,12 +1019,12 @@ msgstr "Mètode facturació"
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Invoicing Process"
-msgstr ""
+msgstr "Procés de facturació"
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Invoicing Settings"
-msgstr ""
+msgstr "Configuració de facturació"
 
 #. module: purchase
 #: field:purchase.order,message_is_follower:0
@@ -1038,7 +1039,7 @@ msgstr "Indica que un albarà ha estat realitzat."
 #. module: purchase
 #: help:purchase.order,invoiced:0
 msgid "It indicates that an invoice has been validated"
-msgstr ""
+msgstr "Indica que una factura ha estat validada."
 
 #. module: purchase
 #: field:purchase.order,journal_id:0
@@ -1069,33 +1070,33 @@ msgstr "Actualitzat per última vegada el dia"
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Location & Warehouse"
-msgstr ""
+msgstr "Ubicació i magatzem"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:159
 #, python-format
 msgid "Make sure you have at least an incoming picking type defined"
-msgstr ""
+msgstr "Asseguri's que té almenys un tipus d'albarà d'entrada definit"
 
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_requisition:0
 msgid "Manage calls for bids"
-msgstr ""
+msgstr "Gestionar licitacions"
 
 #. module: purchase
 #: field:purchase.config.settings,group_uom:0
 msgid "Manage different units of measure for products"
-msgstr ""
+msgstr "Gestionar diferents unitats de mesura pels productes"
 
 #. module: purchase
 #: field:purchase.config.settings,module_stock_dropshipping:0
 msgid "Manage dropshipping"
-msgstr ""
+msgstr "Gestionar lliuraments"
 
 #. module: purchase
 #: field:purchase.config.settings,group_purchase_pricelist:0
 msgid "Manage pricelist per supplier"
-msgstr ""
+msgstr "Gestionar tarifes per proveïdor"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -1118,7 +1119,7 @@ msgid ""
 "Margin of error for supplier lead times. When the systemgenerates Purchase "
 "Orders for procuring products,they will be scheduled that many days earlier "
 "to cope with unexpected supplier delays."
-msgstr ""
+msgstr "Marge d'error pels terminis d'entrega del proveïdor. Quan el sistema genera comandes de compra dels productes abastits, seran planificats aquests dies abans per lidiar amb retards no esperats del proveïdor."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
@@ -1143,7 +1144,7 @@ msgstr "Historial de missatges i comunicació"
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
 msgid "Monthly Purchases"
-msgstr ""
+msgstr "Compres mensuals"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -1159,19 +1160,19 @@ msgstr "Nou correu"
 #: code:addons/purchase/purchase.py:1222
 #, python-format
 msgid "No address defined for the supplier"
-msgstr ""
+msgstr "No s'ha definit una adreça pel proveïdor"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1220
 #, python-format
 msgid "No default supplier defined for this product"
-msgstr ""
+msgstr "No s'ha definit cap proveïdor per defecte per aquest producte"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1218
 #, python-format
 msgid "No supplier defined for this product !"
-msgstr ""
+msgstr "No s'ha definit un proveïdor per aquest producte!"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
@@ -1188,24 +1189,24 @@ msgstr "Notes"
 #: model:ir.actions.act_window,name:purchase.action_invoice_pending
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "On Draft Invoices"
-msgstr ""
+msgstr "Sobre factures esborrany"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_picking_tree_picking_to_invoice
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_picking_to_invoice
 msgid "On Incoming Shipments"
-msgstr ""
+msgstr "En enviaments entrants"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
 msgid "On Purchase Order Lines"
-msgstr ""
+msgstr "A partir de les línies de les comandes de compra"
 
 #. module: purchase
 #: model:ir.actions.client,name:purchase.action_client_purchase_menu
 msgid "Open Purchase Menu"
-msgstr ""
+msgstr "Obrir el menú de 'Compres'"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_request_for_quotation_filter
@@ -1217,7 +1218,7 @@ msgstr "Data comanda"
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
 msgid "Order Date:"
-msgstr ""
+msgstr "Data de comanda:"
 
 #. module: purchase
 #: field:purchase.order,order_line:0
@@ -1240,7 +1241,7 @@ msgstr "Referència comanda"
 #. module: purchase
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "La referència de la comanda ha de ser única per companyia!"
 
 #. module: purchase
 #: field:purchase.report,state:0
@@ -1250,7 +1251,7 @@ msgstr "Estat de la comanda"
 #. module: purchase
 #: view:purchase.report:purchase.view_purchase_order_search
 msgid "Order of Day"
-msgstr ""
+msgstr "Ordre del dia"
 
 #. module: purchase
 #: view:purchase.report:purchase.view_purchase_order_search
@@ -1260,23 +1261,23 @@ msgstr "Comandes"
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
 msgid "Our Order Reference:"
-msgstr ""
+msgstr "La nostra referència de comanda:"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Correu sortint"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1363
 #, python-format
 msgid "PO: %s"
-msgstr ""
+msgstr "OC: %s"
 
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase_done
 msgid "PO_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "OC_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1304,7 +1305,7 @@ msgstr "Albarà"
 #: code:addons/purchase/purchase.py:413
 #, python-format
 msgid "Please create Invoices."
-msgstr ""
+msgstr "Si us plau, creï factures."
 
 #. module: purchase
 #: view:purchase.order.group:purchase.view_purchase_order_group
@@ -1318,7 +1319,7 @@ msgid ""
 " \n"
 " Lines will only be merged if: \n"
 " * Order lines are exactly the same except for the product,quantity and unit"
-msgstr ""
+msgstr "Tingui en compte que:\n\nLes comandes només es fusionaran si:\n* Estan en estat esborrany\n* Pertanyen al mateix proveïdor\n* Tenen la mateixa ubicació d'existències\n* Tenen la mateixa tarifa de preus\n\nLes línies de comanda de compra només es fusionaran si:\n* Son exactament idèntiques, excepte per la quantitat o la unitat."
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_order_group.py:45
@@ -1329,12 +1330,12 @@ msgstr "Seleccioneu múltiples comandes a fusionar en la vista llistat."
 #. module: purchase
 #: selection:purchase.config.settings,default_invoice_method:0
 msgid "Pre-generate draft invoices based on purchase orders"
-msgstr ""
+msgstr "Pregenerar factures esborrany basades en les comandes de compra"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_price_per_supplier
 msgid "Price Per Supplier"
-msgstr ""
+msgstr "Preu per proveïdor"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase_type
@@ -1361,7 +1362,7 @@ msgstr "Llistes de preus"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Print RFQ"
-msgstr ""
+msgstr "Imprimir SdP"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -1419,14 +1420,14 @@ msgstr "Productes per categoria"
 #: code:addons/purchase/purchase.py:851
 #, python-format
 msgid "Products received"
-msgstr ""
+msgstr "Productes rebuts"
 
 #. module: purchase
 #: help:purchase.config.settings,module_purchase_double_validation:0
 msgid ""
 "Provide a double validation mechanism for purchases exceeding minimum amount.\n"
 "-This installs the module purchase_double_validation."
-msgstr ""
+msgstr "Proveeix d'un mecanisme de doble validació per les compres que excedeixin un import mínim.\n- Això instal·la el mòdul purchase_double_vlidation."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -1450,7 +1451,7 @@ msgstr "Els anàlisis de compra us permet comprovar i analitzar fàcilment l'his
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Purchase Confirmed"
-msgstr ""
+msgstr "Compra confirmada"
 
 #. module: purchase
 #: field:res.company,po_lead:0
@@ -1525,17 +1526,17 @@ msgstr "Tarifa de compra"
 #: code:addons/purchase/purchase.py:1386
 #, python-format
 msgid "Purchase line created and linked to an existing Purchase Order"
-msgstr ""
+msgstr "Línia de compra creada i enllaçada a una comanda de compra existent"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_request_for_quotation_filter
 msgid "Purchase orders that include lines not invoiced."
-msgstr ""
+msgstr "Comanda de compra que inclouen línies no facturades."
 
 #. module: purchase
 #: field:stock.warehouse,buy_to_resupply:0
 msgid "Purchase to resupply this warehouse"
-msgstr ""
+msgstr "Comprar per reabastir aquest magatzem"
 
 #. module: purchase
 #: field:purchase.report,negociation:0
@@ -1562,7 +1563,7 @@ msgstr "Comandes de compra"
 msgid ""
 "Put an address if you want to deliver directly from the supplier to the "
 "customer. Otherwise, keep empty to deliver to your own company."
-msgstr ""
+msgstr "Col·loqui una direcció si vol enviar directament del proveïdor al client. En cas contrari, deixiu en blanc per enviar a la seva pròpia companyia."
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -1579,7 +1580,7 @@ msgstr "Quantitat"
 #: code:addons/purchase/purchase.py:1388
 #, python-format
 msgid "Quantity added in existing Purchase Order Line"
-msgstr ""
+msgstr "Quantitat afegida a la línia de comanda de compra existent"
 
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
@@ -1596,53 +1597,53 @@ msgstr "Petició pressupost"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "RFQ & Bid"
-msgstr ""
+msgstr "SdP i licitació"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr ""
+msgstr "SdP aprovada"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr ""
+msgstr "SdP confirmada"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
 msgid "RFQ Done"
-msgstr ""
+msgstr "SdP feta"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:327 code:addons/purchase/purchase.py:945
 #, python-format
 msgid "RFQ created"
-msgstr ""
+msgstr "SdP creada"
 
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase
 msgid "RFQ_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "SdP_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr ""
+msgstr "SdP i compres"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Print RFQ"
-msgstr ""
+msgstr "Reimprimir  SdP"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Send RFQ by Email"
-msgstr ""
+msgstr "Reenviar SdP per correu electrònic"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Receive Invoice"
-msgstr ""
+msgstr "Rebre factura"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1657,7 +1658,7 @@ msgstr "Rebuda"
 #. module: purchase
 #: field:purchase.order,shipped_rate:0
 msgid "Received Ratio"
-msgstr ""
+msgstr "Proporció rebuda"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_tree
@@ -1669,14 +1670,14 @@ msgstr "Referència"
 #. module: purchase
 #: field:purchase.report,product_uom:0
 msgid "Reference Unit of Measure"
-msgstr ""
+msgstr "Unitat de mesura de referència"
 
 #. module: purchase
 #: help:purchase.order,origin:0
 msgid ""
 "Reference of the document that generated this purchase order request; a "
 "sales order or an internal procurement request."
-msgstr ""
+msgstr "Referència del document que va generar aquesta sol·licitud de comanda de compra; una comanda de compra o una petició interna d'abastiment."
 
 #. module: purchase
 #: help:purchase.order,partner_ref:0
@@ -1684,7 +1685,7 @@ msgid ""
 "Reference of the sales order or bid sent by your supplier. It's mainly used "
 "to do the matching when you receive the products as this reference is "
 "usually written on the delivery order sent by your supplier."
-msgstr ""
+msgstr "Referència de la comanda de venda o licitació enviada al seu proveïdor. S'utilitza principalment per realitzar el casament quan rep els productes, ja que aquesta referència es sol escriure a l'albarà enviat pel seu proveïdor."
 
 #. module: purchase
 #: view:website:purchase.report_purchasequotation_document
@@ -1694,7 +1695,7 @@ msgstr "Records,"
 #. module: purchase
 #: field:purchase.order,related_location_id:0
 msgid "Related location"
-msgstr ""
+msgstr "Ubicació relacionada"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
@@ -1730,7 +1731,7 @@ msgstr "Responsable"
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Routes"
-msgstr ""
+msgstr "Rutes"
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -1747,7 +1748,7 @@ msgstr "Cerca comanda de compra"
 #. module: purchase
 #: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
 msgid "Select an Open Sales Order"
-msgstr ""
+msgstr "Seleccioni una comanda de venda oberta"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1114
@@ -1755,17 +1756,17 @@ msgstr ""
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product"
 " Unit of Measure."
-msgstr ""
+msgstr "La unitat de mesura seleccionada no pertany a la mateixa categoria que la unitat de mesura del producte."
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Send PO by Email"
-msgstr ""
+msgstr "Enviar OC per correu electrònic"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Send RFQ by Email"
-msgstr ""
+msgstr "Enviar SdP per correu electrònic"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1781,7 +1782,7 @@ msgstr "Excepció d'enviament"
 #: view:website:purchase.report_purchaseorder_document
 #: view:website:purchase.report_purchasequotation_document
 msgid "Shipping address:"
-msgstr ""
+msgstr "Adreça d'enviament:"
 
 #. module: purchase
 #: field:purchase.order,origin:0
@@ -1791,7 +1792,7 @@ msgstr "Document d'origen"
 #. module: purchase
 #: help:product.template,purchase_ok:0
 msgid "Specify if the product can be selected in a purchase order line."
-msgstr ""
+msgstr "Especifica si el producte pot ser seleccionat en una línia d'una comanda de compra."
 
 #. module: purchase
 #: field:purchase.order,state:0
@@ -1835,12 +1836,12 @@ msgstr "Proveïdor"
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Supplier Features"
-msgstr ""
+msgstr "Característiques del proveïdor"
 
 #. module: purchase
 #: view:res.partner:purchase.res_partner_view_purchase_account_buttons
 msgid "Supplier Inv."
-msgstr ""
+msgstr "Factura del proveïdor"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:444
@@ -1865,12 +1866,12 @@ msgstr "Impostos"
 #. module: purchase
 #: field:purchase.order,notes:0
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Termes i condicions "
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "Termes i condicions..."
 
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
@@ -1890,7 +1891,7 @@ msgstr "La tarifa fixa la moneda usada per aquesta comanda de compra. També cal
 msgid ""
 "The product \"%s\" has been defined with your company as reseller which "
 "seems to be a configuration error!"
-msgstr ""
+msgstr "El producte \"%s\" ha estat definit amb la seva companyia com distribuïdor, pel que deu ser un error de configuració!"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1134
@@ -1898,7 +1899,7 @@ msgstr ""
 msgid ""
 "The selected supplier has a minimal quantity set to %s %s, you should not "
 "purchase less."
-msgstr ""
+msgstr "El proveïdor seleccionat té la quantitat mínima establerta a %s %s, pel que no hauria de comprar menys."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1130
@@ -1916,7 +1917,7 @@ msgid ""
 " order is paid and received, the status becomes 'Done'. If a cancel action "
 "occurs in the invoice or in the receipt of goods, the status becomes in "
 "exception."
-msgstr ""
+msgstr "L'estat de la comanda de compra o de la petició de pressupostos. Una petició de pressupost és una comanda de compra en estat 'Esborrany'. Quan la petició és confirmada per l'usuari, el seu estat passa a 'Confirmat'. Llavors el proveïdor ha de confirmar la comanda per a què l'estat passi a 'Aprovat'. Quan la comanda de compra és pagada i rebuda, l'estat passa a 'Realitzat'. Si es cancel·la la factura o en la recepció de béns, l'estat passa a excepció."
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
@@ -1932,7 +1933,7 @@ msgstr "Import total"
 #: code:addons/purchase/purchase.py:1335
 #, python-format
 msgid "There is no supplier associated to product %s"
-msgstr ""
+msgstr "No hi ha producte associat al producte %s"
 
 #. module: purchase
 #: help:purchase.order,minimum_planned_date:0
@@ -1946,7 +1947,7 @@ msgstr "Això es calcula com la mínima data planificada per a tots els producte
 msgid ""
 "This is the list of receipts that have been generated for this purchase "
 "order."
-msgstr ""
+msgstr "Aquesta és la llista de recepcions que s'han generat per aquesta comanda de compra."
 
 #. module: purchase
 #: help:res.partner,property_product_pricelist_purchase:0
@@ -1958,7 +1959,7 @@ msgstr "Aquesta tarifa serà utilitzada, en comptes de la tarifa per defecte, pe
 #. module: purchase
 #: help:purchase.order,picking_type_id:0
 msgid "This will determine picking type of incoming shipment"
-msgstr ""
+msgstr "Això eliminarà el tipus d'albarà de la recepció"
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
@@ -1979,7 +1980,7 @@ msgstr "Total import base"
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
 msgid "Total Without Taxes"
-msgstr ""
+msgstr "Total base"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_tree
@@ -1990,20 +1991,20 @@ msgstr "Import total"
 #: code:addons/purchase/purchase.py:694
 #, python-format
 msgid "Unable to cancel the purchase order %s."
-msgstr ""
+msgstr "No es pot cancel·lar la comanda de compra %s."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:700
 #, python-format
 msgid "Unable to cancel this purchase order."
-msgstr ""
+msgstr "No s'ha pogut cancel·lar aquesta comanda de compra."
 
 #. module: purchase
 #: help:purchase.order,name:0
 msgid ""
 "Unique number of the purchase order, computed automatically when the "
 "purchase order is created."
-msgstr ""
+msgstr "Número únic de la comanda de compra, calculat automàticament quan es crea la comanda."
 
 #. module: purchase
 #: field:purchase.order.line,price_unit:0
@@ -2014,12 +2015,12 @@ msgstr "Preu un."
 #. module: purchase
 #: field:purchase.report,quantity:0
 msgid "Unit Quantity"
-msgstr ""
+msgstr "Quantitat de la unitat"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr ""
+msgstr "Categoria d'unitat de mesura"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
@@ -2045,17 +2046,17 @@ msgstr "Base imposable"
 #. module: purchase
 #: field:purchase.config.settings,group_costing_method:0
 msgid "Use 'Real Price' or 'Average' costing methods."
-msgstr ""
+msgstr "Utilitzar mètodes de cost 'preu real' o 'mig'."
 
 #. module: purchase
 #: field:account.config.settings,module_purchase_analytic_plans:0
 msgid "Use multiple analytic accounts on orders"
-msgstr ""
+msgstr "Utilitzar múltiples comptes analítiques a les comandes"
 
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_analytic_plans:0
 msgid "Use multiple analytic accounts on purchase orders"
-msgstr ""
+msgstr "Utilitzar múltiples comptes analítiques a les comandes de compra"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -2076,7 +2077,7 @@ msgstr "Validat per"
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
 msgid "Validated By:"
-msgstr ""
+msgstr "Validat per:"
 
 #. module: purchase
 #: field:purchase.order,validator:0
@@ -2120,25 +2121,25 @@ msgstr "Historial de comunicacions de la pàgina web"
 #. module: purchase
 #: help:stock.warehouse,buy_to_resupply:0
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr ""
+msgstr "Quan es comprin productes, podran ser enviats a aquest magatzem."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:538
 #, python-format
 msgid "You cannot confirm a purchase order without any purchase order line."
-msgstr ""
+msgstr "No pot confirmar un ordre de compra sense cap línia de comanda."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:695
 #, python-format
 msgid "You have already received some goods for it.  "
-msgstr ""
+msgstr "Vostè ja ha rebut algunes mercaderies"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:701
 #, python-format
 msgid "You must first cancel all invoices related to this purchase order."
-msgstr ""
+msgstr "Primer ha de cancel·lar totes les factures relacionades amb aquest tipus de compra."
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document

@@ -4,16 +4,17 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
-# 珠海-老天 <liangjia@qq.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015
 # mrshelly <mrshelly@hotmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-03-12 06:57+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2016-07-22 06:34+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +59,7 @@ msgid ""
 "                order proposition, manufacturing order, etc.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n单击创建需求订单 . \n</p><p>\n需求订单用来记录指定库位的指定产品的需要。需求订单通常是从 根据销售订单、拉式物流规则或者最小库存规则自动生成的。\n</p><p>\n当需求订单被确认时，他自动建立必须的业务操作来满足需要：采购单  ，生产单等等。\n</p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n单击创建补货订单 . \n</p><p>\n补货订单用来记录指定库位的指定产品的需要。补货订单通常是从 根据销售订单、拉式物流规则或者最小库存规则自动生成的。\n</p><p>\n当补货订单被确认时，他自动建立必须的业务操作来满足需要：采购单  ，生产单等等。\n</p>\n            "
 
 #. module: procurement
 #: field:procurement.rule,action:0
@@ -117,12 +118,12 @@ msgstr "公司"
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr "在背后计算所有补货"
+msgstr "在背景计算所有补货"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
 msgid "Compute all schedulers"
-msgstr "计算所有排程器"
+msgstr "计算所有调度"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -156,7 +157,7 @@ msgstr "交货方法"
 #. module: procurement
 #: field:procurement.order,name:0
 msgid "Description"
-msgstr "描述"
+msgstr "说明"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -206,7 +207,7 @@ msgstr "一般信息"
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
 msgid "Group By"
-msgstr "分组"
+msgstr "分组于"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
@@ -359,7 +360,7 @@ msgstr "补货订单"
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_group
 msgid "Procurement Requisition"
-msgstr "补货申请"
+msgstr "补货请求"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_rule
@@ -412,7 +413,7 @@ msgstr "沿用选项"
 #. module: procurement
 #: field:procurement.rule,group_propagation_option:0
 msgid "Propagation of Procurement Group"
-msgstr "补货组的沿用"
+msgstr "补货组沿用"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
@@ -444,7 +445,7 @@ msgstr "参考"
 msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
-msgstr "创建此需求单的原始单据号。\n此项由Odoo自动填写。"
+msgstr "创建此补货单的原始单据号。\n此项由Odoo自动填写。"
 
 #. module: procurement
 #: field:procurement.order,rule_id:0
@@ -460,12 +461,12 @@ msgstr "运行补货"
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Run Schedulers"
-msgstr "计划排程器"
+msgstr "运行调度"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Running"
-msgstr "正在处理"
+msgstr "运行中"
 
 #. module: procurement
 #: field:procurement.order,date_planned:0
@@ -475,12 +476,12 @@ msgstr "计划日期"
 #. module: procurement
 #: view:procurement.order:procurement.view_procurement_filter
 msgid "Scheduled Month"
-msgstr "月计划"
+msgstr "计划月份"
 
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Scheduler Parameters"
-msgstr "排程器参数"
+msgstr "调度参数"
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
@@ -495,7 +496,7 @@ msgstr "搜索补货"
 #. module: procurement
 #: field:procurement.rule,sequence:0
 msgid "Sequence"
-msgstr "序列"
+msgstr "序号"
 
 #. module: procurement
 #: field:procurement.order,origin:0

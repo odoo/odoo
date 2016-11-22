@@ -5,14 +5,15 @@
 # Translators:
 # danimaribeiro <danimaribeiro@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# grazziano <g.negocios@outlook.com.br>, 2016
 # Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-04 00:04+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
+"PO-Revision-Date: 2016-07-11 01:35+0000\n"
+"Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +34,7 @@ msgid ""
 "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n"
 "* When the user cancels the work order it will be set in 'Canceled' status.\n"
 "* When order is completely processed that time it is set in 'Finished' status."
-msgstr "* Quando uma ordem de serviço é criado é definido como 'Provisório'.\n* Quando o usuário define ordem de serviço no início, o modo de tempo que será definido como \"Em andamento\".\n* Quando a ordem de serviço está em execução, durante esse tempo, se o usuário quer parar ou fazer alterações em ordem, então pode definir como 'pendente'\n* Quando o usuário cancela a ordem de serviço será definido como 'cancelado'.\n* Quando a ordem é completamente processado é definida como 'concluído'."
+msgstr "* Quando uma ordem de serviço é criada é definida como 'Provisório'.\n* Quando o usuário define uma ordem de serviço como início, ela será definida como \"Em andamento\".\n* Quando a ordem de serviço está em execução, durante esse tempo, se o usuário quer parar ou fazer alterações na ordem, pode definir como 'Pendente'\n* Quando o usuário cancela a ordem de serviço será definido como 'Cancelado'.\n* Quando a ordem é completamente processada é definida como 'Concluído'."
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
@@ -48,7 +49,7 @@ msgid ""
 "            manufacturing and planning depending on the available workload.\n"
 "          </p>\n"
 "        "
-msgstr "<p class=\"oe_view_nocontent_create\">\n            Clique para iniciar uma nova ordem de serviço.\n          </p><p>\n            Para fabricar ou montar produtos, e usar matérias primas e \n            produtos acabados, você também precisa lidar com operações de produção.\n            Operações de produção são chamadas de Ordens de Serviço. As diversas \n            operações terão impactos diferentes nos custos de produção e planejamento\ndependendo da carga de trabalho.\n          </p>\n        "
+msgstr "<p class=\"oe_view_nocontent_create\">\nClique para iniciar uma nova ordem de serviço.\n</p><p>\nPara fabricar ou montar produtos, e usar matérias primas e \nprodutos acabados, você também precisa lidar com operações de produção.\nOperações de produção são chamadas de Ordens de Serviço. As diversas \noperações terão impactos diferentes nos custos de produção e planejamento\ndependendo da carga de trabalho.\n</p>\n        "
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
@@ -64,7 +65,7 @@ msgid ""
 "            products are produced.\n"
 "          </p>\n"
 "        "
-msgstr "<p class=\"oe_view_nocontent_create\">\n            Clique para iniciar uma nova ordem serviço. \n          </p><p>\nOrdens de Trabalho a lista de operações a serem realizadas para cada\n             ordem de produção. Uma vez que você começar a primeira encomenda de uma\n             ordem de produção, da ordem de fabricação é automaticamente\n             marcado como começou. Depois de terminar a última operação de uma\n             ordem de produção, o MO é concluída automaticamente e os respectivos\n             produtos são produzidos.\n          </p>\n        "
+msgstr "<p class=\"oe_view_nocontent_create\">\nClique para iniciar uma nova ordem de trabalho. \n</p><p>\nOrdens de Trabalho são a lista de operações a serem realizadas para cada\nordem de produção. Uma vez que você começar a primeira ordem de trabalho de uma\nordem de produção, a ordem de produção é automaticamente\nmarcada como iniciada. Depois de terminar a última operação de uma\nordem de produção, o OP é concluída automaticamente e os respectivos\nprodutos são produzidos.\n</p>\n        "
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.mrp_production_workcenter_form_view_inherit
@@ -103,12 +104,12 @@ msgstr "Cancelado"
 msgid ""
 "Check this to be able to move independently all production orders, without "
 "moving dependent ones."
-msgstr "Selecione isso para ser capaz de mover de forma independente todas as OP, sem mover as dependentes."
+msgstr "Marque isto para ser capaz de mover de forma independente todas as ordens de produção, sem mover as dependentes."
 
 #. module: mrp_operations
 #: field:stock.move,move_dest_id_lines:0
 msgid "Children Moves"
-msgstr "Movimento dos Filhos"
+msgstr "Movimentos de Filhos"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,code_id:0
@@ -158,7 +159,7 @@ msgstr "Atraso"
 #: view:mrp.workorder:mrp_operations.view_report_mrp_workorder_filter
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Done"
-msgstr "Feito"
+msgstr "Concluído"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:mrp_operations.view_mrp_production_workcenter_form_view_filter
@@ -551,7 +552,7 @@ msgstr "Status"
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_stock_move
 msgid "Stock Move"
-msgstr "Mov. de Estoque"
+msgstr "Movimento de Estoque"
 
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,delay:0

@@ -332,6 +332,19 @@ class TestNewFields(common.TransactionCase):
         discussion_field = discussion.fields_get(['name'])['name']
         self.assertEqual(message_field['help'], discussion_field['help'])
 
+    def test_25_related_multi(self):
+        """ test write() on several related fields based on a common computed field. """
+        foo = self.env['test_new_api.foo'].create({'name': 'A', 'value1': 1, 'value2': 2})
+        bar = self.env['test_new_api.bar'].create({'name': 'A'})
+        self.assertEqual(bar.foo, foo)
+        self.assertEqual(bar.value1, 1)
+        self.assertEqual(bar.value2, 2)
+
+        foo.invalidate_cache()
+        bar.write({'value1': 3, 'value2': 4})
+        self.assertEqual(foo.value1, 3)
+        self.assertEqual(foo.value2, 4)
+
     def test_26_inherited(self):
         """ test inherited fields. """
         # a bunch of fields are inherited from res_partner
@@ -448,6 +461,20 @@ class TestNewFields(common.TransactionCase):
             [('author_partner.name', '=', 'Demo User')])
         self.assertEqual(messages, self.env.ref('test_new_api.message_0_1'))
 
+    def test_60_x2many_domain(self):
+        """ test the cache consistency of a x2many field with a domain """
+        discussion = self.env.ref('test_new_api.discussion_0')
+        message = discussion.messages[0]
+        self.assertNotIn(message, discussion.important_messages)
+
+        message.important = True
+        self.assertIn(message, discussion.important_messages)
+
+        # writing on very_important_messages should call its domain method
+        self.assertIn(message, discussion.very_important_messages)
+        discussion.write({'very_important_messages': [(5,)]})
+        self.assertFalse(discussion.very_important_messages)
+        self.assertFalse(message.exists())
 
 
 class TestMagicFields(common.TransactionCase):

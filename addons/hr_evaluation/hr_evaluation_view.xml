@@ -174,11 +174,11 @@
                     <label for="employee_id" class="oe_edit_only"/>
                     <h1>
                         <field name="employee_id" class="oe_inline" attrs="{'readonly': [('state', '=', 'done')]}" on_change="onchange_employee_id(employee_id)"/>
-                        <field name="date" attrs="{'readonly': [('state', '=', 'done')]}"/>
                     </h1>
                     <label for="plan_id" class="oe_edit_only"/>
                     <h2><field name="plan_id" attrs="{'readonly': [('state', '=', 'done')]}"/></h2>
                     <group>
+                        <field name="date" attrs="{'readonly': [('state', '=', 'done')]}"/>
                         <group colspan="4" attrs="{'invisible':['|', ('state','=','draft'), ('state', '=', 'wait')]}">
                             <field name="rating" attrs="{'readonly':[('state','&lt;&gt;','progress')]}"/>
                             <field name="date_close" readonly="1"/>

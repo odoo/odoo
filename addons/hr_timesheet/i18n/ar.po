@@ -5,13 +5,14 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # hoxhe aits <hoxhe0@gmail.com>, 2015
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-06 05:31+0000\n"
-"Last-Translator: hoxhe aits <hoxhe0@gmail.com>\n"
+"PO-Revision-Date: 2016-05-12 17:16+0000\n"
+"Last-Translator: Mohammed Ibrahim <m.ibrahim@mussder.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +43,7 @@ msgid ""
 "                customers if required.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لتسجيل الأنشطة \n</p><p>\nيمكنك تسجيل ومتابعة ساعات العمل عن طريق مشروع كل يوم\n.كل الوقت مشروع ستصبح التكلفة في\nالمحاسبه التحليله / عقد و يمكن إعادة فواتير \nالزبائن إذا لزم الأمر.\n</p>"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -63,7 +64,7 @@ msgid ""
 "                on expenses (e.g. reinvoicing of travel costs).\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p>\nلا نشاط على هذا العقد .\n</p><p>\nفي أوبنيرب، يتم تنفيذ العقود والمشاريع باستخدام\nالحساب التحليلي. لذلك، يمكنك تتبع التكاليف والإيرادات لتحليل\nالهوامش بسهولة.\n</p><p>\nسيتم إنشاء تكاليف تلقائيا عند تسجيل المورد\nالفواتير والمصاريف و الجداول الزمنيه .\n</p><p>\nسيتم إنشاء إيرادات تلقائيا عند إنشاء العملاء\nالفواتير. يمكن إنشاء فواتير العملاء بناء على أوامر بيع\n(الثابتة الفواتير السعر)، على الجداول الزمنية (على أساس العمل المنجز) أو\nعلى المصروفات (على سبيل المثال إعادة الفواتير من تكاليف السفر).\n</p>"
 
 #. module: hr_timesheet
 #: selection:hr.sign.in.project,state:0 selection:hr.sign.out.project,state:0
@@ -114,12 +115,12 @@ msgstr "تغيير العمل"
 msgid ""
 "Changing the date will let this entry appear in the timesheet of the new "
 "date."
-msgstr ""
+msgstr "تغيير التاريخ تدع هذا القيد تظهر في الجدول الزمني لموعد جديد. "
 
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
 msgid "Check this field if this project manages timesheets"
-msgstr ""
+msgstr "حدد هذا الحقل إذا كان هذا مديري مشاريع الجداول الزمنية"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
@@ -209,7 +210,7 @@ msgstr "هوية الموظف"
 msgid ""
 "Employee is not created for this user. Please create one from configuration "
 "panel."
-msgstr ""
+msgstr "لم يتم إنشاء الموظف لهذا المستخدم. يرجى إنشاء واحد من لوحة التكوين . "
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,name:0 field:hr.sign.out.project,name:0
@@ -277,7 +278,7 @@ msgstr "المعرّف"
 msgid ""
 "If you want to reinvoice working time of employees, link this employee to a "
 "service to determinate the cost price of the job."
-msgstr ""
+msgstr "إذا كنت ترغب في إعادة الفاتورة وقت العاملين، ربط هذا الموظف إلى الخدمة لتحديد سعر التكلفة من العمل."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -318,7 +319,7 @@ msgstr "شهر"
 msgid ""
 "No 'Analytic Journal' is defined for employee %s \n"
 "Define an employee for the selected user and assign an 'Analytic Journal'!"
-msgstr ""
+msgstr "لا يوجد \"يوميه تحليله لهذا الموظف %s\nقم بتعريف موظف للمستخدم الذى قمت بإختياره و قم بتعيين 'يوميه تحليله' !"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:191
@@ -326,7 +327,7 @@ msgstr ""
 msgid ""
 "No analytic account is defined on the project.\n"
 "Please set one or we cannot automatically fill the timesheet."
-msgstr ""
+msgstr " لم يتم تعريف حساب تحليلي للمشروع.\nالرجاء تعيين واحد أو أننا لا نستطيع ملء الجدول الزمني تلقائيا. "
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:158
@@ -334,7 +335,7 @@ msgstr ""
 msgid ""
 "No analytic journal defined for '%s'.\n"
 "You should assign an analytic journal on the employee form."
-msgstr ""
+msgstr "لم يتم تعيين يوميه تحليله %s\nيجب تعيين يوميه تحليلية على نموذج الموظف."
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
@@ -403,7 +404,7 @@ msgstr "تسجيل الدخول / تسجيل الخروج"
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
 msgid "Sign in / Sign out by Project"
-msgstr ""
+msgstr "تسجيل الدخول/تسجيل الخروج على المشروع "
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -443,7 +444,7 @@ msgstr "سجل الدوام"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_accounts_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheet_accounts
 msgid "Timesheet Accounts"
-msgstr ""
+msgstr "حسابات الجدول الزمنى "
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -467,12 +468,12 @@ msgstr "خط سجل الدوام"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet Month"
-msgstr ""
+msgstr "سجل دوام الشهر"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Month"
-msgstr ""
+msgstr "سجل الدوام بالشهر "
 
 #. module: hr_timesheet
 #: field:account.analytic.account,use_timesheets:0
@@ -543,7 +544,7 @@ msgid ""
 "You should create an analytic account structure depending on your needs to "
 "analyse costs and revenues. In Odoo, analytic accounts are also used to "
 "track customer contracts."
-msgstr ""
+msgstr "يجب إنشاء هيكل حساب تحليلي حسب احتياجاتك لتحليل التكاليف والإيرادات . في أوبنيرب، تستخدم الحسابات التحليلية أيضا لتتبع عقود العملاء ."
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search

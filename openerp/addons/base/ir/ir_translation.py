@@ -241,7 +241,7 @@ class ir_translation(osv.osv):
         'Language code of translation item must be among known languages' ), ]
 
     def _auto_init(self, cr, context=None):
-        super(ir_translation, self)._auto_init(cr, context)
+        res = super(ir_translation, self)._auto_init(cr, context)
 
         # FIXME: there is a size limit on btree indexed values so we can't index src column with normal btree.
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_ltns',))
@@ -264,6 +264,8 @@ class ir_translation(osv.osv):
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (name, lang, type)')
             cr.commit()
+
+        return res
 
     def _check_selection_field_value(self, cr, uid, field, value, context=None):
         if field == 'lang':

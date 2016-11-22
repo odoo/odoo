@@ -4,14 +4,17 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012,2014
-# leangjia <liangjia@qq.com>, 2015
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015-2016
+# liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-08-07 12:18+0000\n"
-"Last-Translator: leangjia <liangjia@qq.com>\n"
+"PO-Revision-Date: 2016-09-03 18:06+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +57,7 @@ msgstr "动作类型"
 #. module: hr_attendance
 #: help:hr.config.settings,group_hr_attendance:0
 msgid "Allocates attendance group to all users."
-msgstr "分配出席组给全体用户"
+msgstr "分配出席群组给全体用户"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
@@ -190,12 +193,12 @@ msgstr "结束日期"
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr "错误！签入（或签出）动作必须在签出（或签入）动作之后。"
+msgstr "错误！登录（或注销）动作必须在注销（或登录）动作之后。"
 
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter
 msgid "Group By"
-msgstr "分组"
+msgstr "分组于"
 
 #. module: hr_attendance
 #: view:hr.attendance:hr_attendance.view_hr_attendance_filter
@@ -231,7 +234,7 @@ msgstr "最后一次更新"
 #: code:addons/hr_attendance/static/src/js/attendance.js:33
 #, python-format
 msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
-msgstr "上次签入时间是：%s,<br />%s.<br />，单击此处签出。"
+msgstr "上次登录时间是：%s,<br />%s.<br />鼠标再点击一下就是注销。"
 
 #. module: hr_attendance
 #: field:hr.attendance.error,max_delay:0
@@ -301,7 +304,7 @@ msgstr "原因"
 #: view:hr.employee:hr_attendance.hr_attendance_employee
 #, python-format
 msgid "Sign In"
-msgstr "签入"
+msgstr "登录"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:175
@@ -314,7 +317,7 @@ msgstr "签出"
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
 msgid "Sign in"
-msgstr "签入"
+msgstr "登录"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
@@ -325,17 +328,17 @@ msgstr "签出"
 #: help:hr.attendance,action_desc:0
 msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
-msgstr "为额外时间的签入/签出指定原因"
+msgstr "为额外时间的登录/注销指定原因"
 
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
 msgid "Specifies the reason for Signing In/Signing Out."
-msgstr "签入/签出的具体原因"
+msgstr "登录/注销的具体原因"
 
 #. module: hr_attendance
 #: field:hr.attendance.error,init_date:0
 msgid "Starting Date"
-msgstr "开始日期"
+msgstr "起始日期"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
@@ -343,7 +346,7 @@ msgid ""
 "The Time Tracking functionality aims to manage employee attendances from "
 "Sign in/Sign out actions. You can also link this feature to an attendance "
 "device using Odoo's web service features."
-msgstr "时间跟踪功能目的在于根据员工的签入/签出操作进行员工考勤管理。您也可以使用Odoo的网页服务特性将此功能连接至一考勤设备。"
+msgstr "时间跟踪功能目的在于根据员工的登录/注销动作进行员工考勤管理。您也可以使用Odoo的网页服务特性将此功能连接至一考勤设备。"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -387,4 +390,4 @@ msgstr "你试图%s  前面的日期到另外的事件！尝试联系 人力资�
 #. module: hr_attendance
 #: view:hr.attendance.error:hr_attendance.view_hr_attendance_error
 msgid "or"
-msgstr "or"
+msgstr "或"

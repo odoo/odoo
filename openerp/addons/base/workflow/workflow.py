@@ -160,13 +160,14 @@ class wkf_instance(osv.osv):
         'transition_ids': fields.many2many('workflow.transition', 'wkf_witm_trans', 'inst_id', 'trans_id'),
     }
     def _auto_init(self, cr, context=None):
-        super(wkf_instance, self)._auto_init(cr, context)
+        res = super(wkf_instance, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_instance_res_type_res_id_state_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX wkf_instance_res_type_res_id_state_index ON wkf_instance (res_type, res_id, state)')
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_instance_res_id_wkf_id_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX wkf_instance_res_id_wkf_id_index ON wkf_instance (res_id, wkf_id)')
+        return res
 
 wkf_instance()
 
@@ -195,10 +196,11 @@ class wkf_triggers(osv.osv):
         'workitem_id': fields.many2one('workflow.workitem', 'Workitem', required=True, ondelete="cascade"),
     }
     def _auto_init(self, cr, context=None):
-        super(wkf_triggers, self)._auto_init(cr, context)
+        res = super(wkf_triggers, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_triggers_res_id_model_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX wkf_triggers_res_id_model_index ON wkf_triggers (res_id, model)')
+        return res
 wkf_triggers()
 
 

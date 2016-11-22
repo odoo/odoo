@@ -3,18 +3,20 @@
 # * account
 # 
 # Translators:
-# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
 # DD FS <fatihpiristine@gmail.com>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # gezgin biri <gezginbiri@hotmail.com>, 2015
 # Murat Kaplan <muratk@projetgrup.com>, 2015-2016
+# Muzaffer YILDIRIM <muzoenespolat@gmail.com>, 2016
+# thermodynamic thermodynamic <emirhanayar2004@gmail.com>, 2016
 # Tolga Han Duyuler <peccavi01@hotmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-04-23 18:49+0000\n"
+"PO-Revision-Date: 2016-10-22 12:32+0000\n"
 "Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -630,7 +632,7 @@ msgstr "Hesap"
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
-msgstr "Geçikmiş Hesaplar Mizan Raporu"
+msgstr "Geçici Mizan Yaşlandırma"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_balance
@@ -1180,7 +1182,7 @@ msgstr "Gelişmiş Ayarlar"
 #: model:ir.actions.report.xml,name:account.action_report_aged_partner_balance
 #: model:ir.ui.menu,name:account.menu_aged_trial_balance
 msgid "Aged Partner Balance"
-msgstr "Gecikmiş İş Ortağı Bakiyesi"
+msgstr "İş Ortağı Bakiye Yaşlandırma"
 
 #. module: account
 #: view:account.aged.trial.balance:account.account_aged_balance_view
@@ -1191,7 +1193,7 @@ msgid ""
 "Odoo then calculates a table of credit balance by period. So if you request "
 "an interval of 30 days Odoo generates an analysis of creditors for the past "
 "month, past two months, and so on."
-msgstr "İş Ortağı Gecikmiş Bakiyesi, alacaklarınızın belirli aralıklarla yapılan daha ayrıntılı bir raporudur. Bu rapor açıldığında, Odoo firma adını, mali dönemi ve sonra araştırılacak zaman aralığını (gün olarak) sorar. Sonra Odoo döneme göre alacak bakiyelerini bir tablo olarak hesaplar. Yani 30 günlük bir aralıkta isterseniz, Odoo geçen ayın, geçen iki ayın vb alacaklrın bir analizini oluşturur."
+msgstr "İş Ortağı Yaşlandırılmış Bakiyesi, alacaklarınızın belirli aralıklarla yapılan daha ayrıntılı bir raporudur. Bu rapor açıldığında, Odoo firma adını, mali dönemi ve sonra araştırılacak zaman aralığını (gün olarak) sorar. Sonra Odoo döneme göre alacak bakiyelerini bir tablo olarak hesaplar. Yani 30 günlük bir aralıkta isterseniz, Odoo geçen ayın, geçen iki ayın vb alacaklrın bir analizini oluşturur."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
@@ -1624,14 +1626,14 @@ msgstr "Yalnızca iş ortağının bir KDV numarası varsa uygula."
 msgid ""
 "Apply when the shipping or invoicing country is in this country group, and "
 "no position matches the country directly."
-msgstr ""
+msgstr "Nakliye veya faturalama ülke bu ülke grubunda olduğunu ve hiçbir pozisyon doğrudan ülkeyi eşleştiğinde uygulayın."
 
 #. module: account
 #: help:account.fiscal.position,country_id:0
 msgid ""
 "Apply when the shipping or invoicing country matches. Takes precedence over "
 "positions matching on a country group."
-msgstr ""
+msgstr "Nakliye veya faturalama ülke bu ülke grubunda olduğunu ve hiçbir pozisyon doğrudan ülkeyi eşleştiğinde uygulayın."
 
 #. module: account
 #: view:validate.account.move:account.validate_account_move_view
@@ -2589,7 +2591,7 @@ msgstr "Mali Yıl Seç"
 #: code:addons/account/static/src/js/account_widgets.js:1297
 #, python-format
 msgid "Choose counterpart"
-msgstr ""
+msgstr "Meslektaşınızı seçin"
 
 #. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
@@ -4054,7 +4056,7 @@ msgstr "Girişler"
 #: model:ir.actions.act_window,name:account.action_account_entries_report_all
 #: model:ir.ui.menu,name:account.menu_action_account_entries_report_all
 msgid "Entries Analysis"
-msgstr "Girişlerin Analizi"
+msgstr "Kayıtların Analizi"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_project_account_analytic_line_form
@@ -6614,7 +6616,7 @@ msgstr "Bu Şirket için Mali Yıl Tanımlanmamış"
 #. module: account
 #: field:account.move.line,blocked:0
 msgid "No Follow-up"
-msgstr "İzleme Yok"
+msgstr "Takip Yok"
 
 #. module: account
 #: code:addons/account/account_invoice.py:799

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 07:11+0000\n"
+"POT-Creation-Date: 2016-05-25 12:58+0000\n"
+"PO-Revision-Date: 2016-07-24 18:32+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-8/language/he/)\n"
 "MIME-Version: 1.0\n"
@@ -591,6 +591,18 @@ msgid "Display Mode"
 msgstr ""
 
 #. module: gamification
+#: field:gamification.badge,display_name:0
+#: field:gamification.badge.user,display_name:0
+#: field:gamification.badge.user.wizard,display_name:0
+#: field:gamification.challenge,display_name:0
+#: field:gamification.challenge.line,display_name:0
+#: field:gamification.goal,display_name:0
+#: field:gamification.goal.definition,display_name:0
+#: field:gamification.goal.wizard,display_name:0
+msgid "Display Name"
+msgstr "השם המוצג"
+
+#. module: gamification
 #: field:gamification.goal.definition,display_mode:0
 msgid "Displayed as"
 msgstr ""
@@ -654,7 +666,7 @@ msgstr ""
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "Everyone"
-msgstr ""
+msgstr "כולם"
 
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0
@@ -1002,6 +1014,18 @@ msgstr "הוא עוקב"
 #: field:gamification.challenge,message_last_post:0
 msgid "Last Message Date"
 msgstr "תאריך הודעה אחרונה"
+
+#. module: gamification
+#: field:gamification.badge,__last_update:0
+#: field:gamification.badge.user,__last_update:0
+#: field:gamification.badge.user.wizard,__last_update:0
+#: field:gamification.challenge,__last_update:0
+#: field:gamification.challenge.line,__last_update:0
+#: field:gamification.goal,__last_update:0
+#: field:gamification.goal.definition,__last_update:0
+#: field:gamification.goal.wizard,__last_update:0
+msgid "Last Modified on"
+msgstr "תאריך שינוי אחרון"
 
 #. module: gamification
 #: field:gamification.challenge,last_report_date:0
@@ -1636,6 +1660,24 @@ msgid ""
 msgstr ""
 
 #. module: gamification
+#: code:addons/gamification/models/goal.py:160
+#, python-format
+msgid ""
+"The model configuration for the definition %s seems incorrect, please check it.\n"
+"\n"
+"%s not found"
+msgstr ""
+
+#. module: gamification
+#: code:addons/gamification/models/goal.py:158
+#, python-format
+msgid ""
+"The model configuration for the definition %s seems incorrect, please check it.\n"
+"\n"
+"%s not stored"
+msgstr ""
+
+#. module: gamification
 #: help:gamification.goal.definition,model_id:0
 msgid "The model object for the field to evaluate"
 msgstr ""
@@ -1757,7 +1799,7 @@ msgstr ""
 #. module: gamification
 #: field:gamification.challenge.line,definition_suffix:0
 msgid "Unit"
-msgstr ""
+msgstr "יחידה"
 
 #. module: gamification
 #: field:gamification.badge,message_unread:0

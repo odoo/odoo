@@ -68,16 +68,16 @@ class account_config_settings(osv.osv_memory):
 
         'sale_journal_id': fields.many2one('account.journal', 'Sale journal'),
         'sale_sequence_prefix': fields.related('sale_journal_id', 'sequence_id', 'prefix', type='char', string='Invoice sequence'),
-        'sale_sequence_next': fields.related('sale_journal_id', 'sequence_id', 'number_next', type='integer', string='Next invoice number'),
+        'sale_sequence_next': fields.related('sale_journal_id', 'sequence_id', 'number_next_actual', type='integer', string='Next invoice number'),
         'sale_refund_journal_id': fields.many2one('account.journal', 'Sale refund journal'),
         'sale_refund_sequence_prefix': fields.related('sale_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Credit note sequence'),
-        'sale_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next credit note number'),
+        'sale_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next_actual', type='integer', string='Next credit note number'),
         'purchase_journal_id': fields.many2one('account.journal', 'Purchase journal'),
         'purchase_sequence_prefix': fields.related('purchase_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier invoice sequence'),
-        'purchase_sequence_next': fields.related('purchase_journal_id', 'sequence_id', 'number_next', type='integer', string='Next supplier invoice number'),
+        'purchase_sequence_next': fields.related('purchase_journal_id', 'sequence_id', 'number_next_actual', type='integer', string='Next supplier invoice number'),
         'purchase_refund_journal_id': fields.many2one('account.journal', 'Purchase refund journal'),
         'purchase_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier credit note sequence'),
-        'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next supplier credit note number'),
+        'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next_actual', type='integer', string='Next supplier credit note number'),
 
         'module_account_check_writing': fields.boolean('Pay your suppliers by check',
             help='This allows you to check writing and printing.\n'
@@ -248,7 +248,7 @@ class account_config_settings(osv.osv_memory):
                     values.update({
                         journal.type + '_journal_id': journal.id,
                         journal.type + '_sequence_prefix': journal.sequence_id.prefix,
-                        journal.type + '_sequence_next': journal.sequence_id.number_next,
+                        journal.type + '_sequence_next': journal.sequence_id.number_next_actual,
                     })
             # update taxes
             ir_values = self.pool.get('ir.values')

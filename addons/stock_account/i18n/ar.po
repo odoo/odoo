@@ -4,13 +4,14 @@
 # 
 # Translators:
 # hoxhe aits <hoxhe0@gmail.com>, 2015
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-06 05:31+0000\n"
-"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
+"PO-Revision-Date: 2016-05-16 12:20+0000\n"
+"Last-Translator: Mohammed Ibrahim <m.ibrahim@mussder.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,7 +64,7 @@ msgstr "متوسط السعر"
 #. module: stock_account
 #: field:stock.config.settings,module_stock_landed_costs:0
 msgid "Calculate landed costs on products"
-msgstr ""
+msgstr "حساب التكلفه الاضافيه على المنتجات "
 
 #. module: stock_account
 #: view:stock.change.standard.price:stock_account.view_change_standard_price
@@ -95,7 +96,7 @@ msgid ""
 "Choose the accounting period where you want to value the stock moves created"
 " by the inventory instead of the default one (chosen by the inventory end "
 "date)"
-msgstr ""
+msgstr "اختيار الفترة المحاسبية لتقييم تحركات المخزون التي تم أنشاءها مع المخزون بدلا من الافتراضيه (المختاره بتاريخ إنتهاء  المخزون )"
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
@@ -104,7 +105,7 @@ msgid ""
 "\n"
 "                        This will filter the stock operation that weren't done at the selected date, to retreive the quantity\n"
 "                        you had, and gives you the inventory value according to the standard price used at that time."
-msgstr ""
+msgstr "اختر التاريخ الذي ترغب فيه الحصول على تقييم المخزون من المنتجات الخاصة بك. \n\nسيؤدي ذلك إلى تصفية عمليه المخزون التي لم تتم في التاريخ المحدد، لإستعادة الكمية \nيعطيك قيمة المخزون وفقا للسعر القياسي المستخدم في ذلك الوقت."
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
@@ -204,12 +205,12 @@ msgstr "خطأ!"
 #. module: stock_account
 #: field:stock.inventory,period_id:0
 msgid "Force Valuation Period"
-msgstr ""
+msgstr "قوة فترة التقييم "
 
 #. module: stock_account
 #: field:stock.config.settings,group_stock_inventory_valuation:0
 msgid "Generate accounting entries per stock movement"
-msgstr ""
+msgstr "توليد القيود المحاسبية لحركة المخزون"
 
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_search
@@ -243,14 +244,14 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "إذا تم تمكين تقييم الوقت الحقيقي للمنتج، سيقوم النظام تلقائيا بإرسال  دفتر قيود اليومية المقابلة لتحركات المخزون ، مع سعر المنتج كما هو محدد من قبل فى 'طريقه التكلفه' حساب تباين المخزون المعين على فئة المنتج سوف تمثل قيمة المخزون الحالي، و مدخلات المخزون و حساب مخرجات المخزون سوف يعقد نظيره يتحرك للمنتجات الواردة والصادرة. "
 
 #. module: stock_account
 #: help:stock.config.settings,module_stock_landed_costs:0
 msgid ""
 "Install the module that allows to affect landed costs on pickings, and split"
 " them onto the different products."
-msgstr ""
+msgstr "ثبت الوحدة النمطية التي تسمح بتأثير التكاليف الاضافيه على الالتقاطات، وتقسيمها على المنتجات المختلفة."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -343,7 +344,7 @@ msgstr "نقل"
 #: code:addons/stock_account/product.py:116
 #, python-format
 msgid "No difference between standard price and new price!"
-msgstr ""
+msgstr "لا يوجد إختلاف بين السعر القياسى و السعر الجديد "
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_invoice_onshipping.py:91
@@ -382,7 +383,7 @@ msgid ""
 "    Stock Valuation Account: %s\n"
 "    Stock Journal: %s\n"
 "    "
-msgstr ""
+msgstr "واحد من المعلومات التالية مفقود على فئة المنتج أو المنتج، ويمنع قيود التقييم المحاسبيه من الانشاء :\nالمنتج : ق%\nحساب مدخلات المخزون : ق%\nحساب مخرجات المخزون : ق%\nحساب تقييم المخزون : ق%\nيوميه المخزون : ق%"
 
 #. module: stock_account
 #: field:stock.history,date:0
@@ -412,7 +413,7 @@ msgstr "المشتريات"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "قاعده المشتريات "
 
 #. module: stock_account
 #: view:stock.history:stock_account.view_stock_history_report_search
@@ -460,12 +461,12 @@ msgstr "الوقت الحقيقي (الآلي)"
 #. module: stock_account
 #: selection:stock.invoice.onshipping,journal_type:0
 msgid "Refund Purchase"
-msgstr ""
+msgstr "مردودات المشتريات "
 
 #. module: stock_account
 #: selection:stock.invoice.onshipping,journal_type:0
 msgid "Refund Sale"
-msgstr ""
+msgstr "مردودات المبيعات "
 
 #. module: stock_account
 #: view:wizard.valuation.history:stock_account.view_wizard_valuation_history
@@ -497,7 +498,7 @@ msgstr "السعر القياسي"
 #: code:addons/stock_account/product.py:144
 #, python-format
 msgid "Standard Price changed"
-msgstr ""
+msgstr "تغيير السعر المعيارى "
 
 #. module: stock_account
 #: help:product.template,cost_method:0
@@ -505,7 +506,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually every year).\n"
 "                    Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                    Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
-msgstr ""
+msgstr "السعر المعياري: يتم تحديث سعر التكلفة يدويا في نهاية فترة محددة (عادة كل سنة) .\nمتوسط السعر: يتم إعادة حساب سعر التكلفة في كل شحنة واردة وتستخدم لتقييم المنتج. \nالسعر الحقيقي: سعر تكلفة المعروض هو سعر المنتج النهائى  (سوف يكون استخدامه في حالة فقدان المخزون على سبيل المثال)."
 
 #. module: stock_account
 #: field:product.category,property_stock_account_input_categ:0
@@ -570,7 +571,7 @@ msgstr "قيمة المخزون في تاريخ "
 msgid ""
 "This allows to automatically launch the invoicing wizard if the delivery is to be invoiced when you send or deliver goods.\n"
 "-This installs the module stock_invoice_directly."
-msgstr ""
+msgstr "هذا يسمح لإطلاق تلقائيا المعالج الفواتير للتسليم هو أن تكون الفاتورة عند إرسال أو تسليم البضاعة \n -This installs the module stock_invoice_directly. "
 
 #. module: stock_account
 #: selection:procurement.order,invoice_state:0
@@ -599,7 +600,7 @@ msgid ""
 "being moved from an internal location into this location, instead of the "
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
+msgstr "تستخدم في الوقت الحقيقي لتقييم المخزون. عندما وضعت على الموقع الوهمى (نوع غير الداخلية)، وسيتم استخدام هذا الحساب لعقد قيمة المنتجات التي يجري نقلها من مكان داخلي في هذا الموقع، بدلا من حساب المخزون الناتج من تعيين منتج. هذا لا يؤثر على المواقع الداخلية. "
 
 #. module: stock_account
 #: help:stock.location,valuation_out_account_id:0
@@ -609,7 +610,7 @@ msgid ""
 "being moved out of this location and into an internal location, instead of "
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
+msgstr "تستخدم في الوقت الحقيقي للتقييم المخزون. عندما وضعت على موقع الوهمى (نوع غير الداخلية)، وسيتم استخدام هذا الحساب لعقد قيمة المنتجات التي خرجت من هذا المكان وإلى المكان الداخلي، بدلا من حساب المخزون الناتج عام تعيين على المنتج. هذا أي تأثير للمواقع الداخلية."
 
 #. module: stock_account
 #: field:stock.history,price_unit_on_quant:0
@@ -639,7 +640,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr ""
+msgstr "عند القيام في الوقت الحقيقي بتقييم المخزون، سوف يتم نشر عناصر اليوميه المناظره لجميع تحركات المخزون الواردة في هذا الحساب، ما لم يكن هناك حساب تقييم معين على موقع المصدر. عندما لم يتم التعيين على المنتج، يتم استخدام واحدة من فئة المنتج."
 
 #. module: stock_account
 #: help:product.category,property_stock_account_output_categ:0
@@ -649,7 +650,7 @@ msgid ""
 "specific valuation account set on the destination location. This is the "
 "default value for all products in this category. It can also directly be set"
 " on each product"
-msgstr ""
+msgstr "عند القيام في الوقت الحقيقي بتقييم المخزون، سوف يتم نشر عناصر اليوميه المناظره لجميع تحركات المخزون الصادرة في هذا الحساب، ما لم يكن هناك حساب تقييم معين على موقع الوصول . هذه هي القيمة الافتراضية لجميع المنتجات في هذه الفئة. ويمكن أيضا أن توضع مباشرة على كل منتج "
 
 #. module: stock_account
 #: help:product.template,property_stock_account_output:0
@@ -658,7 +659,7 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr ""
+msgstr "عند القيام في الوقت الحقيقي بتقييم المخزون، سوف يتم نشر عناصر اليوميه المناظره لجميع تحركات المخزون الصادرة في هذا الحساب، ما لم يكن هناك حساب تقييم معين على موقع الوصول. عندما يتم تعيين على المنتج، يتم استخدام واحدة من فئة المنتج."
 
 #. module: stock_account
 #: help:product.category,property_stock_journal:0
@@ -677,7 +678,7 @@ msgstr "عندما يكون الوقت الحقيقي لتقييم الجرد م
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history
 msgid "Wizard that opens the stock valuation history table"
-msgstr ""
+msgstr "المعالج الذي يفتح جدول تاريخ تقييم المخزون"
 
 #. module: stock_account
 #: view:stock.change.standard.price:stock_account.view_change_standard_price

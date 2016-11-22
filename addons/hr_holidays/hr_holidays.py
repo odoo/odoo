@@ -444,7 +444,7 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_cancel(self, cr, uid, ids, context=None):
-        for record in self.browse(cr, uid, ids):
+        for record in self.browse(cr, uid, ids, context=context):
             # Delete the meeting
             if record.meeting_id:
                 record.meeting_id.unlink()

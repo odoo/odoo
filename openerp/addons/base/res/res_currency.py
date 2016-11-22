@@ -44,7 +44,7 @@ class res_currency(osv.osv):
             context = {}
         res = {}
 
-        date = context.get('date') or time.strftime('%Y-%m-%d')
+        date = context.get('date') or fields2.Datetime.now()
         for id in ids:
             cr.execute('SELECT rate FROM res_currency_rate '
                        'WHERE currency_id = %s '
@@ -134,16 +134,6 @@ class res_currency(osv.osv):
             ids = [ids]
         reads = self.read(cr, uid, ids, ['name','symbol'], context=context, load='_classic_write')
         return [(x['id'], tools.ustr(x['name'])) for x in reads]
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
-        if not default:
-            default = {}
-        default.update(name=_("%s (copy)")
-                       % (self.browse(cr, uid, id, context=context).name))
-        return super(res_currency, self).copy(
-            cr, uid, id, default=default, context=context)
 
     @api.v8
     def round(self, amount):

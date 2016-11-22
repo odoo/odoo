@@ -1339,7 +1339,7 @@ class account_move(osv.osv):
                    'SET state=%s '\
                    'WHERE id IN %s',
                    ('posted', tuple(valid_moves),))
-        self.invalidate_cache(cr, uid, context=context)
+        self.invalidate_cache(cr, uid, ['state', ], valid_moves, context=context)
         return True
 
     def button_validate(self, cursor, user, ids, context=None):
@@ -2303,8 +2303,7 @@ class account_model(osv.osv):
         pt_obj = self.pool.get('account.payment.term')
         period_obj = self.pool.get('account.period')
 
-        if context is None:
-            context = {}
+        context = dict(context or {})
 
         if data.get('date', False):
             context = dict(context)

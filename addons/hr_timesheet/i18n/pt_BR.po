@@ -4,15 +4,17 @@
 # 
 # Translators:
 # danimaribeiro <danimaribeiro@gmail.com>, 2015
+# danimaribeiro <danimaribeiro@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# grazziano <g.negocios@outlook.com.br>, 2016
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-11 23:11+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
+"PO-Revision-Date: 2016-07-09 16:57+0000\n"
+"Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,7 +45,7 @@ msgid ""
 "                customers if required.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n              Clique para registrar as atividades\n              </p><p>\nVocê pode se cadastrar e controlar as horas de seus funcionamentos para cada projeto\n                 todos os dias. Todo o tempo gasto em um projeto vai se tornar um custo na\n                 contabilidade analítica / contrato e pode ser re-faturados aos clientes, se necessário.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nClique para registrar as atividades.\n</p><p>\nVocê pode se cadastrar e acompanhar as suas horas de trabalho por cada projeto\ntodos os dias. Todo o tempo gasto em um projeto vai se tornar um custo na\ncontabilidade analítica/contrato e pode ser re-faturado aos clientes, se necessário.\n</p>\n            "
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -64,7 +66,7 @@ msgid ""
 "                on expenses (e.g. reinvoicing of travel costs).\n"
 "              </p>\n"
 "            "
-msgstr "<p>\n                 Ainda não tem actividade neste contrato.\n               </ p> <p>\n                 Em Openerp, contratos e projectos são implementados usando\n                 conta analítica. Assim, você pode controlar os custos e receitas para analisar\n                 suas margens facilmente.\n               </ p> <p>\n                 Os custos serão criados automaticamente quando você se cadastra fornecedor\n                 facturas, despesas ou quadros de horários.\n               </ p> <p>\n                 A receita será criado automaticamente quando você cria cliente\n                 faturas. Faturas de clientes podem ser criados com base em ordens de venda\n                 (fixo faturas de preços), em quadros de horários (com base no trabalho feito) ou\n                 em despesas (por exemplo reinvoicing das despesas de viagem).\n               </ p>\n            "
+msgstr "<p>\nAinda não tem atividade neste contrato.\n</p> <p>\nNo Odoo, contratos e projetos são implementados usando\numa conta analítica. Assim, você pode acompanhar os custos e receitas para analisar\nsuas margens facilmente.\n</p> <p>\nOs custos serão criados automaticamente quando você cadastra faturas\nde fornecedor, despesas ou quadros de horários.\n</p> <p>\nA receita será criada automaticamente quando você cria faturas\nde cliente. Faturas de clientes podem ser criadas com base em pedidos de venda\n(faturas de preços fixos), em quadros de horários (com base no trabalho concluído) ou\nem despesas (por exemplo refaturamento das despesas de viagem).\n</p>\n            "
 
 #. module: hr_timesheet
 #: selection:hr.sign.in.project,state:0 selection:hr.sign.out.project,state:0
@@ -210,7 +212,7 @@ msgstr "ID do Funcionário"
 msgid ""
 "Employee is not created for this user. Please create one from configuration "
 "panel."
-msgstr "Empregado não é criado para esse usuário. Por favor, crie um a partir do painel de configuração."
+msgstr "Funcionário não está criado para esse usuário. Por favor, crie um a partir do painel de configuração."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,name:0 field:hr.sign.out.project,name:0
@@ -278,7 +280,7 @@ msgstr "ID"
 msgid ""
 "If you want to reinvoice working time of employees, link this employee to a "
 "service to determinate the cost price of the job."
-msgstr "Se você quiser reivindicar tempo de funcionários trabalhando, coligar este empregado a um serviço para determinar o preço de custo do trabalho."
+msgstr "Se você quiser refaturar tempo de funcionários trabalhando, associe este funcionário a um serviço para determinar o preço de custo do trabalho."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -468,7 +470,7 @@ msgstr "Linha de Apontamento de Horas"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet Month"
-msgstr "Mês quadro de horários"
+msgstr "Mês do Quadro de Horários"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
@@ -536,7 +538,7 @@ msgstr "Descrição do Trabalho"
 #. module: hr_timesheet
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
 msgid "Work done in the last period"
-msgstr "Trabalho feito no último período"
+msgstr "Trabalho realizado no último período"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_define_analytic_structure
@@ -544,7 +546,7 @@ msgid ""
 "You should create an analytic account structure depending on your needs to "
 "analyse costs and revenues. In Odoo, analytic accounts are also used to "
 "track customer contracts."
-msgstr "Você deve criar uma estrutura conta analítico dependendo de suas necessidades para analisar os custos e receitas. Em Openerp, contas analíticas também são usados para rastrear contratos de clientes."
+msgstr "Você deve criar uma estrutura de conta analítica dependendo de suas necessidades para analisar os custos e receitas. No Odoo, contas analíticas também são usadas para acompanhar contratos de clientes."
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search

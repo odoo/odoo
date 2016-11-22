@@ -7,6 +7,7 @@
 # Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2016
 # 智源软件 <likaiyuan2006@gmail.com>, 2015
 # Shan Leiping <ccdos@163.com>, 2015
 # Talway <9010446@qq.com>, 2015
@@ -20,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-04-05 07:14+0000\n"
+"PO-Revision-Date: 2016-07-22 05:35+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -124,7 +125,7 @@ msgid ""
 "                schedule a production using the matching bill of materials.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建属性组。\n              </p><p>\n                可以定义特定的属性组用来分配到\n                BoM表和销售订单。 属性组能让Odoo\n                根据销售人员在销售订单上选择的属性\n                自动选择相应的BoM。\n              </p><p>\n                例如，在属性组“保修” ，您有2个\n                属性: 1 年保修。3 年保修。 根据\n                销售订单上的选择，Odoo 会l\n                自动选择对应的BoM表排单生产。\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                点击创建属性组。\n              </p><p>\n                可以定义特定的属性组用来分配到\n                BoM表和销售订单。 属性组能让Odoo\n                根据销售人员在销售订单上选择的属性\n                自动选择相应的BoM。\n              </p><p>\n                例如，在属性组“保修” ，您有2个\n                属性: 1 年保修。3 年保修。 根据\n                销售订单上的选择，Odoo 会自动\n                选择对应的BoM表排单生产。\n              </p>\n            "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -275,7 +276,7 @@ msgstr "批准"
 msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
-msgstr "生成该产品的平均延时天数。在多级BoM的情况下，部件的制造提前期将被累加"
+msgstr "生成该产品的平均延迟天数。在多级BoM的情况下，部件的制造提前时间将被累加的。"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -683,7 +684,7 @@ msgstr "说明"
 msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
-msgstr "工作中心的描述。该工作中心要执行周期的解释。"
+msgstr "工作中心的说明。在此解释下关于此工作中心的一个周期。"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -725,14 +726,14 @@ msgstr "额外信息"
 msgid ""
 "Fill this only if you want automatic analytic accounting entries on "
 "production orders."
-msgstr "如果你要自动在生成订单进行辅助核算，只需填入这里"
+msgstr "仅当你想要在生产订单自动生成分析会计分录，填写这个。"
 
 #. module: mrp
 #: help:mrp.workcenter,product_id:0
 msgid ""
 "Fill this product to easily track your production costs in the analytic "
 "accounting."
-msgstr "填入产品将更容易在辅助核算中跟踪你的生产成本。"
+msgstr "填入产品将更容易在分析会计中跟踪你的生产成本。"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
@@ -797,7 +798,7 @@ msgstr "用于显示顺序"
 #. module: mrp
 #: view:mrp.property:mrp.view_mrp_property_search
 msgid "Group By"
-msgstr "分组"
+msgstr "分组于"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -806,7 +807,7 @@ msgstr "分组"
 #: view:mrp.routing:mrp.mrp_routing_search_view
 #: view:mrp.workcenter:mrp.view_mrp_workcenter_search
 msgid "Group By..."
-msgstr "分组..."
+msgstr "分组于..."
 
 #. module: mrp
 #: help:mrp.bom,message_summary:0 help:mrp.production,message_summary:0
@@ -980,12 +981,12 @@ msgstr "管理产品的修理 "
 #. module: mrp
 #: field:mrp.config.settings,group_mrp_routings:0
 msgid "Manage routings and work orders "
-msgstr "管理工艺和工作中心 "
+msgstr "管理工艺和工单"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
 msgid "Manager"
-msgstr "经理"
+msgstr "管理者"
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:33 code:addons/mrp/stock.py:256
@@ -1020,7 +1021,7 @@ msgstr "生产效率"
 #: field:product.template,produce_delay:0
 #: field:res.company,manufacturing_lead:0
 msgid "Manufacturing Lead Time"
-msgstr "生产提前期"
+msgstr "生产提前时间"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -1184,14 +1185,14 @@ msgstr "工时数"
 msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
-msgstr "该工作中心必须要在工艺的指定操作上做的迭代次数"
+msgstr "对于工艺的指定操作，该工作中心必须要做的迭代次数"
 
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
 msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
-msgstr "此工作中心可以并行作业的数量。如果这个工作中心是5个工人的工作组，那么每周期的能力是5。"
+msgstr "此工作中心可以并行的操作数量。如果这个工作中心表示5个工人的工作组，那么每周期能力是5。"
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_client_mrp_menu
@@ -1375,7 +1376,7 @@ msgstr "数量"
 #. module: mrp
 #: field:mrp.bom,product_rounding:0 field:mrp.bom.line,product_rounding:0
 msgid "Product Rounding"
-msgstr "产品四舍五入"
+msgstr "产品舍入"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_template
@@ -1539,12 +1540,12 @@ msgstr "属性"
 #. module: mrp
 #: view:mrp.property.group:mrp.mrp_property_group_form_view
 msgid "Properties categories"
-msgstr "属性分类"
+msgstr "属性类别"
 
 #. module: mrp
 #: field:mrp.property,composition:0
 msgid "Properties composition"
-msgstr "属性成分"
+msgstr "属性组成"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property
@@ -1644,7 +1645,7 @@ msgstr "负责人"
 #. module: mrp
 #: help:mrp.bom,product_rounding:0 help:mrp.bom.line,product_rounding:0
 msgid "Rounding applied on the product quantity."
-msgstr "应用在产品数量上的四舍五入"
+msgstr "应用在产品数量上的舍入"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing
@@ -1671,7 +1672,7 @@ msgid ""
 "Routing indicates all the Work Centers used, for how long and/or cycles.If "
 "Routing is indicated then,the third tab of a production order (Work Centers)"
 " will be automatically pre-completed."
-msgstr "工艺表示要用到的所有工作中心，需要多少时间或周期次数。如果这里输入了工艺，制造订单的第三个选项卡（工艺）会自动填充。"
+msgstr "工艺标示所有在使用的工作中心，需要多长时间或周期数。如果工艺标示了，那么生产订单的第三个选项卡（工作中心）会自动预先完成填充。"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
@@ -1807,7 +1808,7 @@ msgstr "来源位置"
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
 msgid "Specify Cost of Work Center per cycle."
-msgstr "输入每周期的工作中心成本"
+msgstr "每周期特定工作中心的成本"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
@@ -1835,7 +1836,7 @@ msgstr "状态"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
 msgid "Stock Move"
-msgstr "库存调拨"
+msgstr "库存移动"
 
 #. module: mrp
 #: field:report.mrp.inout,value:0
@@ -1865,7 +1866,7 @@ msgstr "每一单位的供应商价格"
 #. module: mrp
 #: help:stock.move,consumed_for:0
 msgid "Technical field used to make the traceability of produced products"
-msgstr "技术字段常被用于追溯产品制造"
+msgstr "技术字段常被用于产成品的追溯"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:333 code:addons/mrp/mrp.py:421
@@ -1882,7 +1883,7 @@ msgid ""
 "product. The routing is mainly used to compute work center costs during "
 "operations and to plan future loads on work centers based on production "
 "plannification."
-msgstr "制造产成品需要的工序列表（也就是工作中心的列表）。工艺主要用于计算工作中心在制造过程中的成本和在生产计划过程中规划工作中心的工作负载"
+msgstr "生产成品需要的工序列表（也就是工作中心的列表）。工艺主要用于计算工作中心在制造过程中的成本和在生产计划过程中规划工作中心的工作负载"
 
 #. module: mrp
 #: help:mrp.bom,routing_id:0 help:mrp.bom.line,routing_id:0
@@ -1953,7 +1954,7 @@ msgstr "准备小时数"
 msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified"
 " routing."
-msgstr "该工作中心要完成指定工艺的操作所花费的小时数"
+msgstr "该工作中心要完成指定工艺的操作的小时数"
 
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
@@ -1986,12 +1987,12 @@ msgstr "总数量"
 #. module: mrp
 #: field:product.template,track_production:0
 msgid "Track Manufacturing Lots"
-msgstr "追踪生产批次"
+msgstr "跟踪制造批次"
 
 #. module: mrp
 #: field:mrp.product.produce,track_production:0
 msgid "Track production"
-msgstr "追踪生产"
+msgstr "跟踪生产"
 
 #. module: mrp
 #: view:mrp.bom:mrp.view_mrp_bom_filter
@@ -2238,13 +2239,13 @@ msgstr "工作成本：%s %s"
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
 #: field:mrp.production.workcenter.line,name:0
 msgid "Work Order"
-msgstr "工票"
+msgstr "工单"
 
 #. module: mrp
 #: view:mrp.production:mrp.mrp_production_form_view
 #: view:website:mrp.report_mrporder
 msgid "Work Orders"
-msgstr "工票"
+msgstr "工单"
 
 #. module: mrp
 #: view:website:mrp.report_mrporder

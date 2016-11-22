@@ -225,7 +225,7 @@
                             <field name="date_order"/>
                             <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id, context)" domain="[('code','=','incoming')]" options="{'no_create': True}" context="{'special_shortened_wh_name': True}" groups="stock.group_locations"/>
+                            <field name="picking_type_id" on_change="onchange_picking_type_id(picking_type_id, context)" domain="[('code','=','incoming')]" options="{'no_create': True}" groups="stock.group_locations"/>
                             <field name="related_usage" invisible="1"/>
                             <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id, context)"
                                 attrs="{'invisible':[('related_usage','!=','customer')],
@@ -274,7 +274,7 @@
                             <group>
                                 <group>
                                     <field name="minimum_planned_date"/>
-                                    <field name="location_id" groups="stock.group_locations"/>
+                                    <field name="location_id" groups="stock.group_locations" on_change="onchange_location_id(location_id, context)"/>
                                     <field name="shipped" groups="base.group_no_one"/>
                                 </group>
                                 <group>
@@ -415,7 +415,7 @@
             <field name="name">purchase.order.line.form</field>
             <field name="model">purchase.order.line</field>
             <field name="arch" type="xml">
-                <form string="Purchase Order Line">
+                <form string="Purchase Order Line" create="false">
                     <sheet>
                         <group>
                             <group>

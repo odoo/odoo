@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2015-11-28 08:22+0000\n"
+"PO-Revision-Date: 2016-10-13 15:43+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -575,7 +575,7 @@ msgstr "期間は会計に関連する活動を記録すべき会計エントリ
 #: code:addons/account/account_bank_statement.py:736
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr ""
+msgstr "選択された仕訳明細は既に消込済です。"
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -703,7 +703,7 @@ msgstr "アカウント共通レポート"
 #. module: account
 #: field:account.analytic.line,currency_id:0
 msgid "Account Currency"
-msgstr ""
+msgstr "会計通貨"
 
 #. module: account
 #: field:account.fiscal.position.account,account_dest_id:0
@@ -1159,7 +1159,7 @@ msgstr "追加情報"
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Additional notes..."
-msgstr ""
+msgstr "補注"
 
 #. module: account
 #: field:account.account,adjusted_balance:0
@@ -2021,12 +2021,12 @@ msgstr ""
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product
 msgid "By Product"
-msgstr ""
+msgstr "製品ごと"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product_category
 msgid "By Product Category"
-msgstr ""
+msgstr "製品カテゴリごと"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_refund
@@ -2036,7 +2036,7 @@ msgstr ""
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_salespersons
 msgid "By Salespersons"
-msgstr ""
+msgstr "販売担当者ごと"
 
 #. module: account
 #: help:account.fiscal.position,active:0
@@ -2133,7 +2133,7 @@ msgstr "選択請求書を取消"
 #. module: account
 #: view:account.bank.statement:account.view_bank_statement_form
 msgid "Cancel Statement"
-msgstr ""
+msgstr "取引明細書を取消"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_cancel
@@ -2188,7 +2188,7 @@ msgstr ""
 #: code:addons/account/account.py:1550
 #, python-format
 msgid "Cannot create moves for different companies."
-msgstr ""
+msgstr "異なる会社の口座には、資金移動できません。"
 
 #. module: account
 #: code:addons/account/account_invoice.py:830
@@ -2708,7 +2708,7 @@ msgstr "コメント: "
 #: field:account.invoice,commercial_partner_id:0
 #: help:account.invoice.report,commercial_partner_id:0
 msgid "Commercial Entity"
-msgstr ""
+msgstr "取引先"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_common_menu
@@ -2940,7 +2940,7 @@ msgstr "確認済"
 #: code:addons/account/static/src/js/account_widgets.js:534
 #, python-format
 msgid "Congrats, you're all done !"
-msgstr ""
+msgstr "よくできました！"
 
 #. module: account
 #: field:account.account,child_consol_ids:0
@@ -3518,7 +3518,7 @@ msgstr "曜日"
 #: help:account.bank.statement,message_last_post:0
 #: help:account.invoice,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "記録上の最後のメッセージが投稿された日"
 
 #. module: account
 #: help:res.partner,last_reconciliation_date:0
@@ -4852,7 +4852,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:8
 #, python-format
 msgid "Good Job!"
-msgstr ""
+msgstr "よく出来ました！"
 
 #. module: account
 #. openerp-web
@@ -5961,7 +5961,7 @@ msgstr "検証（請求書）日の期間を使うために空のままにしま
 #: code:addons/account/static/src/js/account_widgets.js:1299
 #, python-format
 msgid "Keep open"
-msgstr ""
+msgstr "オープンのまま残す"
 
 #. module: account
 #. openerp-web
@@ -5988,7 +5988,7 @@ msgstr "前回の期末残高"
 #: field:account.bank.statement,message_last_post:0
 #: field:account.invoice,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "最終メッセージ日"
 
 #. module: account
 #: field:account.account,write_uid:0
@@ -6494,7 +6494,7 @@ msgstr "私のエントリー"
 #. module: account
 #: view:account.invoice:account.view_account_invoice_filter
 msgid "My Invoices"
-msgstr ""
+msgstr "自分の請求書"
 
 #. module: account
 #: field:account.account,name:0 field:account.account.template,name:0
@@ -6611,7 +6611,7 @@ msgstr ""
 #. module: account
 #: field:account.move.line,blocked:0
 msgid "No Follow-up"
-msgstr ""
+msgstr "要フォロー"
 
 #. module: account
 #: code:addons/account/account_invoice.py:799
@@ -6887,7 +6887,7 @@ msgstr "仕訳帳を開く"
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:195
 #, python-format
 msgid "Open balance"
-msgstr ""
+msgstr "期首残高"
 
 #. module: account
 #: view:account.move.bank.reconcile:account.view_account_move_bank_reconcile
@@ -7183,7 +7183,7 @@ msgstr "取引先元帳"
 #. module: account
 #: field:account.bank.statement.line,partner_name:0
 msgid "Partner Name"
-msgstr ""
+msgstr "取引先名"
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
@@ -7463,7 +7463,7 @@ msgstr "期間のタイプ"
 #: view:website:account.report_journal
 #: view:website:account.report_salepurchasejournal
 msgid "Period:"
-msgstr ""
+msgstr "期間:"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing
@@ -7660,7 +7660,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:account.invoice_form
 msgid "Pro Forma Invoice"
-msgstr ""
+msgstr "見積送状"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -8965,7 +8965,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,date_start:0
 msgid "Start date"
-msgstr ""
+msgstr "開始日"
 
 #. module: account
 #: field:account.period,date_start:0
@@ -10454,7 +10454,7 @@ msgstr "借方合計"
 #. module: account
 #: field:res.partner,total_invoiced:0
 msgid "Total Invoiced"
-msgstr ""
+msgstr "請求額合計"
 
 #. module: account
 #: field:res.partner,debit:0
@@ -11344,7 +11344,7 @@ msgstr ""
 msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
-msgstr ""
+msgstr "この仕訳帳では転機済仕訳への修正が許可されていません。\n取消には仕訳帳設定の調整が必要です。"
 
 #. module: account
 #: code:addons/account/account.py:1124
@@ -11599,7 +11599,7 @@ msgstr "日数"
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "e.g. sales@odoo.com"
-msgstr ""
+msgstr "例: sales@odoo.com"
 
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings

@@ -1,0 +1,1187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- Plantilla de códigos de impuestos según fiscalidad española.
+
+        Pedro M. Baeza (Serv. Tecnol. Avanzados) - pedro.baeza@serviciosbaeza.com (2013-05-19)
+          Refactorización general
+
+        Pedro M. Baeza (Serv. Tecnol. Avanzados) - pedro.baeza@serviciosbaeza.com (2014-03-20)
+          Eliminación IVAs obsoletos 7%, 8%, 16% y 18%
+          Eliminación IRPFs obsoletos 18% y 19%
+          Eliminación recargos de equivalencia obsoletos 1% y 4%
+
+        Pablo Cayuela (Aserti Global Solutions) - soporte@aserti.com (2014-04-01)
+          Añadidos códigos para el IVA agrario
+          Cambio en los nombres para reflejar que los antiguos códigos de
+          adquisiciones intracomunitarias de bienes incluyen también servicios
+
+        Pedro M. Baeza (Serv. Tecnol. Avanzados) - pedro.baeza@serviciosbaeza.com (2015-03-06)
+        Carlos Liébana (FactorLibre) - carlos.liebana@factorlibre.com
+        Hugo Santos (FactorLibre) - hugo.santos@factorlibre.com
+        Albert Cabedo (GAFIC consultores) - albert@gafic.com
+          Refatorización completa de códigos de impuestos
+          Estructura segun modelos de Hacienda
+
+        Vicent Cubells <vicent@vcubells.net> (2015-09-01)
+          Nuevos códigos de impuesto para 19,5% arrendamientos
+
+        Albert Cabedo (GAFIC consultores) <albert@gafic.com> (2015-11-13)
+          Códigos de impuesto para IVA Soportado no sujeto
+        -->
+
+    <record id="account_tax_code_template_root" model="account.tax.code.template">
+      <field name="name">Plan de impuestos español</field>
+    </record>
+    <record id="account_tax_code_template_303" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_root"/>
+      <field name="code">303</field>
+      <field name="name">&lt;Mod. 303&gt; Impuesto sobre el valor añadido</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_ITDC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_303"/>
+      <field name="code">ITDC</field>
+      <field name="name">[27] IVA total devengado. Cuota</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_RGIDC4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITDC"/>
+      <field name="code">RGIDC4</field>
+      <field name="name">[03] Régimen general IVA devengado. Cuota (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_RGIDC10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITDC"/>
+      <field name="code">RGIDC10</field>
+      <field name="name">[06] Régimen general IVA devengado. Cuota (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_RGIDC21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITDC"/>
+      <field name="code">RGIDC21</field>
+      <field name="name">[09] Régimen general IVA devengado. Cuota (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIDBYSC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITDC"/>
+      <field name="code">AIDBYSC</field>
+      <field name="name">[11] Adquisiciones intracomunitarias de Bienes y Servicios. Cuota</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIDBYSC"/>
+      <field name="code">AIBC</field>
+      <field name="name">Adquisiciones intracomunitarias Bienes. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AISC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIDBYSC"/>
+      <field name="code">AISC</field>
+      <field name="name">Adquisiciones intracomunitarias Servicios. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_OOCIDSPEAIC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITDC"/>
+      <field name="code">OOCIDSPEAIC</field>
+      <field name="name">[13] Otras operaciones con inversión del sujeto pasivo excepto. adq. intracom. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_MBYCRC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITDC"/>
+      <field name="code">MBYCRC</field>
+      <field name="name">[15] Modificación bases y cuotas repercutido. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_REC05" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITDC"/>
+      <field name="code">REC05</field>
+      <field name="name">[18] Recargo equivalencia. Cuota (0,5%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_REC014" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITDC"/>
+      <field name="code">REC014</field>
+      <field name="name">[21] Recargo equivalencia. Cuota (1,4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_REC52" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITDC"/>
+      <field name="code">REC52</field>
+      <field name="name">[24] Recargo equivalencia. Cuota (5,2%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_MBYCDRDERC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITDC"/>
+      <field name="code">MBYCDRDERC</field>
+      <field name="name">[26] Modificaciones bases y cuotas del recargo de equivalencia repercutido. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_ITADC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_303"/>
+      <field name="code">ITADC</field>
+      <field name="name">[45] IVA total a deducir. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_SOICC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITADC"/>
+      <field name="code">SOICC</field>
+      <field name="name">[29] Soportado operaciones interiores corrientes. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_SOICC4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_SOICC"/>
+      <field name="code">SOICC4</field>
+      <field name="name">Soportado operaciones interiores corrientes. Cuota. (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_SOICC10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_SOICC"/>
+      <field name="code">SOICC10</field>
+      <field name="name">Soportado operaciones interiores corrientes. Cuota. (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_SOICC21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_SOICC"/>
+      <field name="code">SOICC21</field>
+      <field name="name">Soportado operaciones interiores corrientes. Cuota. (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_REDC05" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_SOICC"/>
+      <field name="code">REDC05</field>
+      <field name="name">Recargo equivalencia ded. Cuota (0,5%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_REDC014" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_SOICC"/>
+      <field name="code">REDC014</field>
+      <field name="name">Recargo equivalencia ded. Cuota (1,4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_REDC52" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_SOICC"/>
+      <field name="code">REDC52</field>
+      <field name="name">Recargo equivalencia ded. Cuota (5,2%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_SOIBIC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITADC"/>
+      <field name="code">SOIBIC</field>
+      <field name="name">[31] Soportado operaciones interiores bienes inversión. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_SOIBIC4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_SOIBIC"/>
+      <field name="code">SOIBIC4</field>
+      <field name="name">Soportado operaciones interiores bienes inversión. Cuota. (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_SOIBIC10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_SOIBIC"/>
+      <field name="code">SOIBIC10</field>
+      <field name="name">Soportado operaciones interiores bienes inversión. Cuota. (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_SOIBIC21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_SOIBIC"/>
+      <field name="code">SOIBIC21</field>
+      <field name="name">Soportado operaciones interiores bienes inversión. Cuota. (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_DIBCC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITADC"/>
+      <field name="code">DIBCC</field>
+      <field name="name">[33] Devengo importaciones bienes y serv. corr. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_DIBYSCC4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_DIBCC"/>
+      <field name="code">DIBYSCC4</field>
+      <field name="name">Devengo importaciones bienes y serv. corr. Cuota. (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_DIBYSCC10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_DIBCC"/>
+      <field name="code">DIBYSCC10</field>
+      <field name="name">Devengo importaciones bienes y serv. corr. Cuota. (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_DIBYSCC21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_DIBCC"/>
+      <field name="code">DIBYSCC21</field>
+      <field name="name">Devengo importaciones bienes y serv. corr. Cuota. (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_DIBIC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITADC"/>
+      <field name="code">DIBIC</field>
+      <field name="name">[35] Devengo importaciones bienes inversión. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_DIBIC4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_DIBIC"/>
+      <field name="code">DIBIC4</field>
+      <field name="name">Devengo importaciones bienes inversión. Cuota. (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_DIBIC10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_DIBIC"/>
+      <field name="code">DIBIC10</field>
+      <field name="name">Devengo importaciones bienes inversión. Cuota. (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_DIBIC21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_DIBIC"/>
+      <field name="code">DIBIC21</field>
+      <field name="name">Devengo importaciones bienes inversión. Cuota. (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBYSCC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITADC"/>
+      <field name="code">AIBYSCC</field>
+      <field name="name">[37] Adquisiciones intracomunitarias bienes y servicios corrientes. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBYSCC4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCC"/>
+      <field name="code">AIBYSCC4</field>
+      <field name="name">Adquisiciones intracomunitarias bienes y serv. corr. Cuota. (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBCC4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCC4"/>
+      <field name="code">AIBCC4</field>
+      <field name="name">Adquisiciones intracomunitarias bienes. corr. Cuota. (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AISCC4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCC4"/>
+      <field name="code">AISCC4</field>
+      <field name="name">Adquisiciones intracomunitarias servicios. corr. Cuota. (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBYSCC10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCC"/>
+      <field name="code">AIBYSCC10</field>
+      <field name="name">Adquisiciones intracomunitarias bienes y serv. corr. Cuota. (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBCC10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCC10"/>
+      <field name="code">AIBCC10</field>
+      <field name="name">Adquisiciones intracomunitarias bienes. corr. Cuota. (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AISCC10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCC10"/>
+      <field name="code">AISCC10</field>
+      <field name="name">Adquisiciones intracomunitarias servicios. corr. Cuota. (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBYSCC21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCC"/>
+      <field name="code">AIBYSCC21</field>
+      <field name="name">Adquisiciones intracomunitarias bienes y serv. corr. Cuota. (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBCC21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCC21"/>
+      <field name="code">AIBCC21</field>
+      <field name="name">Adquisiciones intracomunitarias bienes. corr. Cuota. (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AISCC21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCC21"/>
+      <field name="code">AISCC21</field>
+      <field name="name">Adquisiciones intracomunitarias servicios. corr. Cuota. (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBIC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITADC"/>
+      <field name="code">AIBIC</field>
+      <field name="name">[39] Adquisiciones intracomunitarias bienes inversión. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBIC4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBIC"/>
+      <field name="code">AIBIC4</field>
+      <field name="name">Adquisiciones intracomunitarias bienes inversión. Cuota. (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBIC10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBIC"/>
+      <field name="code">AIBIC10</field>
+      <field name="name">Adquisiciones intracomunitarias bienes inversión. Cuota. (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBIC21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBIC"/>
+      <field name="code">AIBIC21</field>
+      <field name="name">Adquisiciones intracomunitarias bienes inversión. Cuota. (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_RDDSC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITADC"/>
+      <field name="code">RDDSC</field>
+      <field name="name">[41] Rectificación de deducciones soportado. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_CREAGYP12" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITADC"/>
+      <field name="code">CREAGYP12</field>
+      <field name="name">[42] Compensaciones Régimen Especial A., G. y P. (12%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_RBDIC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITADC"/>
+      <field name="code">RBDIC</field>
+      <field name="name">[43] Regularización bienes de inversión. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_RPADPDDPC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITADC"/>
+      <field name="code">RPADPDDPC</field>
+      <field name="name">[44] Regularización por aplicación del porcentaje definitivo de prorrata. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IERCDCC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_303"/>
+      <field name="code">IERCDCC</field>
+      <field name="name">[63] Importes entregas rég. criterio de caja. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IARCDCC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_303"/>
+      <field name="code">IARCDCC</field>
+      <field name="name">[75] Importes adquisiciones rég. criterio de caja. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_RYSBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_303"/>
+      <field name="code">RYSBI</field>
+      <field name="name">Repercutido y soportado. Base Imponible.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IDBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_RYSBI"/>
+      <field name="code">IDBI</field>
+      <field name="name">IVA devengado. Base Imponible.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_RGIDBI4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IDBI"/>
+      <field name="code">RGIDBI4</field>
+      <field name="name">[01] Régimen general IVA devengado. Base imponible (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_RGIDBI10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IDBI"/>
+      <field name="code">RGIDBI10</field>
+      <field name="name">[04] Régimen general IVA devengado. Base imponible (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_RGIDBI21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IDBI"/>
+      <field name="code">RGIDBI21</field>
+      <field name="name">[07] Régimen general IVA devengado. Base imponible (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIDBYSBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IDBI"/>
+      <field name="code">AIDBYSBI</field>
+      <field name="name">[10] Adquisiciones intracomunitarias de Bienes y Servicios. Base imponible</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIDBYSBI"/>
+      <field name="code">AIBBI</field>
+      <field name="name">Adquisiciones intracomunitarias Bienes. Base imponible.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AISBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIDBYSBI"/>
+      <field name="code">AISBI</field>
+      <field name="name">Adquisiciones intracomunitarias Servicios. Base Imponible.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_OCIDSPEAIBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IDBI"/>
+      <field name="code">OCIDSPEAIBI</field>
+      <field name="name">[12] Otras operaciones con inversión del sujeto pasivo excepto. adq. intracom. Base Imponible.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_MBYCRBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IDBI"/>
+      <field name="code">MBYCRBI</field>
+      <field name="name">[14] Modificación bases y cuotas repercutido. Base Imponible.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_REBI05" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IDBI"/>
+      <field name="code">REBI05</field>
+      <field name="name">[16] Recargo equivalencia. Base Imponible. (0,5%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_REBI014" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IDBI"/>
+      <field name="code">REBI014</field>
+      <field name="name">[19] Recargo equivalencia. Base Imponible. (1,4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_REBI52" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IDBI"/>
+      <field name="code">REBI52</field>
+      <field name="name">[22] Recargo equivalencia. Base Imponible. (5,2%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_MBYCDRDERBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IDBI"/>
+      <field name="code">MBYCDRDERBI</field>
+      <field name="name">[25] Modificaciones bases y cuotas del recargo de equivalencia Repercutido. Base Imponible.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_EIDBYS" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IDBI"/>
+      <field name="code">EIDBYS</field>
+      <field name="name">[59] Entregas intracomunitarias de bienes y servicios</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_EIDB" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_EIDBYS"/>
+      <field name="code">EIDB</field>
+      <field name="name">Entregas intracomunitarias de bienes</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_PDSI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_EIDBYS"/>
+      <field name="code">PDSI</field>
+      <field name="name">Prestación de servicios intracomunitarios</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_EYOA" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IDBI"/>
+      <field name="code">EYOA</field>
+      <field name="name">[60] Exportaciones y operaciones asimiladas</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_ONSOCIDSPQOEDAD" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IDBI"/>
+      <field name="code">ONSOCIDSPQOEDAD</field>
+      <field name="name">[61] Operaciones no sujetas o con inversión del sujeto pasivo que originan el derecho a deducción</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_VISP" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ONSOCIDSPQOEDAD"/>
+      <field name="code">VISP</field>
+      <field name="name">Venta con Inversión del Sujeto Pasivo Nacional</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_ERCDCBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IDBI"/>
+      <field name="code">ERCDCBI</field>
+      <field name="name">[62] Entregas rég. criterio de caja. Base Imponible.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_ISBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_RYSBI"/>
+      <field name="code">ISBI</field>
+      <field name="name">IVA soportado. Base Imponible.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_OICBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ISBI"/>
+      <field name="code">OICBI</field>
+      <field name="name">[28] Operaciones interiores corrientes. Base Imponible.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_OICBI4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_OICBI"/>
+      <field name="code">OICBI4</field>
+      <field name="name">Operaciones interiores corrientes. Base Imponible. (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_OICBI10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_OICBI"/>
+      <field name="code">OICBI10</field>
+      <field name="name">Operaciones interiores corrientes. Base Imponible. (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_OICBI21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_OICBI"/>
+      <field name="code">OICBI21</field>
+      <field name="name">Operaciones interiores corrientes. Base Imponible. (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_REDBI05" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_OICBI"/>
+      <field name="code">REDBI05</field>
+      <field name="name">Recargo equivalencia ded. Base imponible (0,5%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_REDBI014" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_OICBI"/>
+      <field name="code">REDBI014</field>
+      <field name="name">Recargo equivalencia ded. Base imponible (1,4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_REDBI52" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_OICBI"/>
+      <field name="code">REDBI52</field>
+      <field name="name">Recargo equivalencia ded. Base imponible (5,2%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_OIBIBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ISBI"/>
+      <field name="code">OIBIBI</field>
+      <field name="name">[30] Operaciones interiores bienes inversión. Base Imponible.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_OIBIBI4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_OIBIBI"/>
+      <field name="code">OIBIBI4</field>
+      <field name="name">Operaciones interiores bienes inversión. Base Imponible. (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_OIBIBI10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_OIBIBI"/>
+      <field name="code">OIBIBI10</field>
+      <field name="name">Operaciones interiores bienes inversión. Base Imponible. (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_OIBIBI21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_OIBIBI"/>
+      <field name="code">OIBIBI21</field>
+      <field name="name">Operaciones interiores bienes inversión. Base Imponible. (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IBCBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ISBI"/>
+      <field name="code">IBCBI</field>
+      <field name="name">[32] Importaciones bienes y servicios corrientes. Base Imponible.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IBYSCBI4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IBCBI"/>
+      <field name="code">IBYSCBI4</field>
+      <field name="name">Importaciones bienes y servicios corrientes. Base Imponible. (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IBYSCBI10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IBCBI"/>
+      <field name="code">IBYSCBI10</field>
+      <field name="name">Importaciones bienes y servicios corrientes. Base Imponible. (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IBYSCBI21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IBCBI"/>
+      <field name="code">IBYSCBI21</field>
+      <field name="name">Importaciones bienes y servicios corrientes. Base Imponible. (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IBIBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ISBI"/>
+      <field name="code">IBIBI</field>
+      <field name="name">[34] Importaciones bienes inversión. Base Imponible.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IBIBI4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IBIBI"/>
+      <field name="code">IBIBI4</field>
+      <field name="name">Importaciones bienes inversión. Base Imponible. (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IBIBI10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IBIBI"/>
+      <field name="code">IBIBI10</field>
+      <field name="name">Importaciones bienes inversión. Base Imponible. (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IBIBI21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IBIBI"/>
+      <field name="code">IBIBI21</field>
+      <field name="name">Importaciones bienes inversión. Base Imponible. (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBYSCBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ISBI"/>
+      <field name="code">AIBYSCBI</field>
+      <field name="name">[36] Adquisiciones intracomunitarias bienes y serv. corrientes. Base Imponible.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBYSCBI4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCBI"/>
+      <field name="code">AIBYSCBI4</field>
+      <field name="name">Adquisiciones intracomunitarias bienes y serv. corr. Base Imponible. (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBCBI4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCBI4"/>
+      <field name="code">AIBCBI4</field>
+      <field name="name">Adquisiciones intracomunitarias bienes. corr. Base Imponible. (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AISCBI4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCBI4"/>
+      <field name="code">AISCBI4</field>
+      <field name="name">Adquisiciones intracomunitarias servicios. corr. Base Imponible. (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBYSCBI10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCBI"/>
+      <field name="code">AIBYSCBI10</field>
+      <field name="name">Adquisiciones intracomunitarias bienes y serv. corr. Base Imponible. (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBCBI10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCBI10"/>
+      <field name="code">AIBCBI10</field>
+      <field name="name">Adquisiciones intracomunitarias bienes. corr. Base Imponible. (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AISCBI10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCBI10"/>
+      <field name="code">AISCBI10</field>
+      <field name="name">Adquisiciones intracomunitarias servicios. corr. Base Imponible. (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBYSCBI21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCBI"/>
+      <field name="code">AIBYSCBI21</field>
+      <field name="name">Adquisiciones intracomunitarias bienes y serv. corr. Base Imponible. (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBCBI21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCBI21"/>
+      <field name="code">AIBCBI21</field>
+      <field name="name">Adquisiciones intracomunitarias bienes. corr. Base Imponible. (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AISCBI21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBYSCBI21"/>
+      <field name="code">AISCBI21</field>
+      <field name="name">Adquisiciones intracomunitarias servicios. corr. Base Imponible. (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBIBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ISBI"/>
+      <field name="code">AIBIBI</field>
+      <field name="name">[38] Adquisiciones intracomunitarias bienes inversión. Base Imponible.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBIBI4" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBIBI"/>
+      <field name="code">AIBIBI4</field>
+      <field name="name">Adquisiciones intracomunitarias bienes inversión. Base Imponible. (4%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBIBI10" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBIBI"/>
+      <field name="code">AIBIBI10</field>
+      <field name="name">Adquisiciones intracomunitarias bienes inversión. Base Imponible. (10%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AIBIBI21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIBIBI"/>
+      <field name="code">AIBIBI21</field>
+      <field name="name">Adquisiciones intracomunitarias bienes inversión. Base Imponible. (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_RDDSBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ISBI"/>
+      <field name="code">RDDSBI</field>
+      <field name="name">[40] Rectificación de deducciones soportado. Base Imponible.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IARCDCBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ISBI"/>
+      <field name="code">IARCDCBI</field>
+      <field name="name">[74] Importes adquisiciones rég. criterio de caja. Base Imponible.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_CREAGYPBI12" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ISBI"/>
+      <field name="code">CREAGYPBI12</field>
+      <field name="name">Compensaciones Régimen Especial A., G. y P. Base Imponible. (12%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_390" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_root"/>
+      <field name="code">390</field>
+      <field name="name">&lt;Mod. 390&gt; Resumen anual del IVA (Información extra fuera del 303)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_OESDAD" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_390"/>
+      <field name="code">OESDAD</field>
+      <field name="name">[105] Operaciones exentas sin derecho a deducción</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_AEBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_390"/>
+      <field name="code">AEBI</field>
+      <field name="name">[230] Adquisiciones interiores exentas</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_SNDBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_390"/>
+      <field name="code">SNDBI</field>
+      <field name="name">[232] Bases imponibles del I.V.A. soportado no deducible</field>
+      <field name="sign">1.0</field>
+    </record>
+     <record id="account_tax_code_template_SNJBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_390"/>
+      <field name="code">SNJBI</field>
+      <field name="name">Bases imponibles del I.V.A. soportado no sujetas</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_SNDC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_390"/>
+      <field name="code">SNDC</field>
+      <field name="name">Soportado no deducible. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_111" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_root"/>
+      <field name="code">111</field>
+      <field name="name">&lt;Mod. 111&gt; IRPF retenciones practicadas</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_ITRPC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_111"/>
+      <field name="code">ITRPC</field>
+      <field name="name">[28] IRPF total retenciones practicadas. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPATC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPC"/>
+      <field name="code">IRPATC</field>
+      <field name="name">[03] IRPF retenciones practicadas a trabajadores. Cuota (dinerarios)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPATCE" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPC"/>
+      <field name="code">IRPATCE</field>
+      <field name="name">[06] IRPF retenciones practicadas a trabajadores. Cuota (en especie)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_ITRPCAE" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPC"/>
+      <field name="code">ITRPCAE</field>
+      <field name="name">[09] IRPF total retenciones practicadas. Cuota. Actividades Económicas (dinerarios)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPC1" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPCAE"/>
+      <field name="code">IRPC1</field>
+      <field name="name">IRPF retenciones practicadas. Cuota (1%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPC15" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPCAE"/>
+      <field name="code">IRPC15</field>
+      <field name="name">IRPF retenciones practicadas. Cuota (15%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPC18" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPCAE"/>
+      <field name="code">IRPC18</field>
+      <field name="name">IRPF retenciones practicadas. Cuota (18%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPC19" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPCAE"/>
+      <field name="code">IRPC19</field>
+      <field name="name">IRPF retenciones practicadas. Cuota (19%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPC2" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPCAE"/>
+      <field name="code">IRPC2</field>
+      <field name="name">IRPF retenciones practicadas. Cuota (2%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPC20" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPCAE"/>
+      <field name="code">IRPC20</field>
+      <field name="name">IRPF retenciones practicadas. Cuota (20%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPC21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPCAE"/>
+      <field name="code">IRPC21</field>
+      <field name="name">IRPF retenciones practicadas. Cuota (21%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPC7" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPCAE"/>
+      <field name="code">IRPC7</field>
+      <field name="name">IRPF retenciones practicadas. Cuota (7%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPC9" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPCAE"/>
+      <field name="code">IRPC9</field>
+      <field name="name">IRPF retenciones practicadas. Cuota (9%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_ITRPCAEE" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPC"/>
+      <field name="code">ITRPCAEE</field>
+      <field name="name">[12] IRPF total retenciones practicadas. Cuota. Actividades Económicas (en especie)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPCPM" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPC"/>
+      <field name="code">IRPCPM</field>
+      <field name="name">[15] IRPF retenciones practicadas. Cuota Premios metalico</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPCPEE" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPC"/>
+      <field name="code">IRPCPEE</field>
+      <field name="name">[18] IRPF retenciones practicadas. Cuota Premios en especie</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPCGPD" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPC"/>
+      <field name="code">IRPCGPD</field>
+      <field name="name">[21] IRPF retenciones practicadas. Cuota Ganancias patrimoniales dinerarias</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPCGPEE" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPC"/>
+      <field name="code">IRPCGPEE</field>
+      <field name="name">[24] IRPF retenciones practicadas. Cuota Ganancias patrimoniales en especie</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPCDI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRPC"/>
+      <field name="code">IRPCDI</field>
+      <field name="name">[27] IRPF retenciones practicadas. Cuota Derechos imagen</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_111"/>
+      <field name="code">IRPBI</field>
+      <field name="name">IRPF retenciones practicadas. Base imponible</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPATBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBI"/>
+      <field name="code">IRPATBI</field>
+      <field name="name">[02] IRPF retenciones practicadas a trabajadores. Base imponible (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPF_RET_PRA_TRA_21_BI_E" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBI"/>
+      <field name="code">IRPTBIE</field>
+      <field name="name">[05] IRPF retenciones practicadas a trabajadores. Base imponible (en especie)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPBIAE" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBI"/>
+      <field name="code">IRPBIAE</field>
+      <field name="name">[08] IRPF retenciones practicadas. Base imponible Actividades Económicas (dinerarios)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPBI1" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBIAE"/>
+      <field name="code">IRPBI1</field>
+      <field name="name">IRPF retenciones practicadas. Base imponible (1%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPBI15" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBIAE"/>
+      <field name="code">IRPBI15</field>
+      <field name="name">IRPF retenciones practicadas. Base imponible (15%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPBI18" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBIAE"/>
+      <field name="code">IRPBI18</field>
+      <field name="name">IRPF retenciones practicadas. Base imponible (18%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPBI19" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBIAE"/>
+      <field name="code">IRPBI19</field>
+      <field name="name">IRPF retenciones practicadas. Base imponible (19%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPBI2" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBIAE"/>
+      <field name="code">IRPBI2</field>
+      <field name="name">IRPF retenciones practicadas. Base imponible (2%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPBI20" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBIAE"/>
+      <field name="code">IRPBI20</field>
+      <field name="name">IRPF retenciones practicadas. Base imponible (20%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPBI21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBIAE"/>
+      <field name="code">IRPBI21</field>
+      <field name="name">IRPF retenciones practicadas. Base imponible (21%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPBI7" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBIAE"/>
+      <field name="code">IRPBI7</field>
+      <field name="name">IRPF retenciones practicadas. Base imponible (7%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPBI9" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBIAE"/>
+      <field name="code">IRPBI9</field>
+      <field name="name">IRPF retenciones practicadas. Base imponible (9%) Act. Económicas (dinerarias)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPBIAEE" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBI"/>
+      <field name="code">IRPBIAEE</field>
+      <field name="name">[11] IRPF retenciones practicadas. Base imponible Actividades Económicas (en especie)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPBIPM" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBI"/>
+      <field name="code">IRPBIPM</field>
+      <field name="name">[14] IRPF retenciones practicadas. Base imponible Premios metalico</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPBIPEE" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBI"/>
+      <field name="code">IRPBIPEE</field>
+      <field name="name">[17] IRPF retenciones practicadas. Base imponible Premios en especie</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPBIGPD" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBI"/>
+      <field name="code">IRPBIGPD</field>
+      <field name="name">[20] IRPF retenciones practicadas. Base imponible Ganancias patrimoniales dinerarias</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPBIGPEE" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBI"/>
+      <field name="code">IRPBIGPEE</field>
+      <field name="name">[23] IRPF retenciones practicadas. Base imponible Ganancias patrimoniales en especie</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPBIDI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRPBI"/>
+      <field name="code">IRPBIDI</field>
+      <field name="name">[26] IRPF retenciones practicadas. Base imponible Derechos Imagen</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_115" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_root"/>
+      <field name="code">115</field>
+      <field name="name">&lt;Mod. 115&gt; Retenciones arrendamientos</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_RBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_115"/>
+      <field name="code">RBI</field>
+      <field name="name">[2] Retenciones. Base Imponible</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPAABI19" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_RBI"/>
+      <field name="code">IRPAABI19</field>
+      <field name="name">Retenciones practicadas a arrendamientos. Base imponible (19%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPAABI195" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_RBI"/>
+      <field name="code">IRPAABI195</field>
+      <field name="name">Retenciones practicadas a arrendamientos. Base imponible (19,5%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPAABI20" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_RBI"/>
+      <field name="code">IRPAABI20</field>
+      <field name="name">Retenciones practicadas a arrendamientos. Base imponible (20%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPAABI21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_RBI"/>
+      <field name="code">IRPAABI21</field>
+      <field name="name">Retenciones practicadas a arrendamientos. Base imponible (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_RLC115" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_115"/>
+      <field name="code">RLC115</field>
+      <field name="name">[3] Resultado liquidación. Cuotas. &lt;Mod. 115&gt;</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPAAC19" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_RLC115"/>
+      <field name="code">IRPAAC19</field>
+      <field name="name">Retenciones practicadas a arrendamientos. Cuota (19%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPAAC195" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_RLC115"/>
+      <field name="code">IRPAAC195</field>
+      <field name="name">Retenciones practicadas a arrendamientos. Cuota (19,5%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPAAC20" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_RLC115"/>
+      <field name="code">IRPAAC20</field>
+      <field name="name">Retenciones practicadas a arrendamientos. Cuota (20%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRPAAC21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_RLC115"/>
+      <field name="code">IRPAAC21</field>
+      <field name="name">Retenciones practicadas a arrendamientos. Cuota (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_123" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_root"/>
+      <field name="code">123</field>
+      <field name="name">&lt;Mod. 123&gt; IRPF Retenciones a cuenta</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACBI" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_123"/>
+      <field name="code">IRACBI</field>
+      <field name="name">[02] IRPF retenciones a cuenta. Base imponible</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACBI1" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRACBI"/>
+      <field name="code">IRACBI1</field>
+      <field name="name">IRPF retenciones a cuenta. Base imponible (1%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACBI2" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRACBI"/>
+      <field name="code">IRACBI2</field>
+      <field name="name">IRPF retenciones a cuenta. Base imponible (2%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACBI7" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRACBI"/>
+      <field name="code">IRACBI7</field>
+      <field name="name">IRPF retenciones a cuenta. Base imponible (7%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACBI9" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRACBI"/>
+      <field name="code">IRACBI9</field>
+      <field name="name">IRPF retenciones a cuenta. Base imponible (9%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACBI15" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRACBI"/>
+      <field name="code">IRACBI15</field>
+      <field name="name">IRPF retenciones a cuenta. Base imponible (15%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACBI18" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRACBI"/>
+      <field name="code">IRACBI18</field>
+      <field name="name">IRPF retenciones a cuenta. Base imponible (18%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACBI19" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRACBI"/>
+      <field name="code">IRACBI19</field>
+      <field name="name">IRPF retenciones a cuenta. Base imponible (19%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACBI20" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRACBI"/>
+      <field name="code">IRACBI20</field>
+      <field name="name">IRPF retenciones a cuenta. Base imponible (20%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACBI21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_IRACBI"/>
+      <field name="code">IRACBI21</field>
+      <field name="name">IRPF retenciones a cuenta. Base imponible (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_ITRACC" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_123"/>
+      <field name="code">ITRACC</field>
+      <field name="name">[03] IRPF total retenciones a cuenta. Cuota.</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACC1" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRACC"/>
+      <field name="code">IRACC1</field>
+      <field name="name">IRPF retenciones a cuenta. Cuota (1%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACC2" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRACC"/>
+      <field name="code">IRACC2</field>
+      <field name="name">IRPF retenciones a cuenta. Cuota (2%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACC7" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRACC"/>
+      <field name="code">IRACC7</field>
+      <field name="name">IRPF retenciones a cuenta. Cuota (7%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACC9" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRACC"/>
+      <field name="code">IRACC9</field>
+      <field name="name">IRPF retenciones a cuenta. Cuota (9%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACC15" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRACC"/>
+      <field name="code">IRACC15</field>
+      <field name="name">IRPF retenciones a cuenta. Cuota (15%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACC18" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRACC"/>
+      <field name="code">IRACC18</field>
+      <field name="name">IRPF retenciones a cuenta. Cuota (18%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACC19" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRACC"/>
+      <field name="code">IRACC19</field>
+      <field name="name">IRPF retenciones a cuenta. Cuota (19%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACC20" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRACC"/>
+      <field name="code">IRACC20</field>
+      <field name="name">IRPF retenciones a cuenta. Cuota (20%)</field>
+      <field name="sign">1.0</field>
+    </record>
+    <record id="account_tax_code_template_IRACC21" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_ITRACC"/>
+      <field name="code">IRACC21</field>
+      <field name="name">IRPF retenciones a cuenta. Cuota (21%)</field>
+      <field name="sign">1.0</field>
+    </record>
+
+    <record id="account_tax_code_template_AIBIBIA" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIDBYSBI"/>
+      <field name="code">AIBIBIA</field>
+      <field name="name">Adquisiciones intracomunitarias Bienes Inversión. Base imponible. AutoRepercutido</field>
+      <field name="sign">1.0</field>
+    </record>
+
+    <record id="account_tax_code_template_AIBICA" model="account.tax.code.template">
+      <field name="parent_id" ref="account_tax_code_template_AIDBYSC"/>
+      <field name="code">AIBICA</field>
+      <field name="name">Adquisiciones intracomunitarias Bienes Inversión. Cuota. AutoRepercutido</field>
+      <field name="sign">1.0</field>
+    </record>
+
+    </data>
+</openerp>

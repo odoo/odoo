@@ -4,13 +4,14 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# RGB Consulting <odoo@rgbconsulting.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-08 15:14+0000\n"
-"PO-Revision-Date: 2016-02-16 09:28+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-07-01 09:53+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-8/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +54,7 @@ msgid ""
 "PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
 "            "
-msgstr ""
+msgstr "\n<p>Hola,</p>\n<p>${ctx['partner_id'].name}:</p>\n<ol> % for lead in ctx['partner_leads']:\n     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Assumpte no definit'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Nom del contacte no definit'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'País no definit' }, ${lead.lead_id.email_from or 'E-mail no definit'}, ${lead.lead_id.phone or ''} </li></br>\n% endfor\n</ol>\n% if ctx.get('partner_in_portal'):\n<p>Si us plau, connecti's al <a href=\"${object.get_portal_url()}\">portal de l'associat</a> per obtenir més detalls. En cada iniciativa hi ha dos botons en la cantonada superior esquerra que ha de prémer després d'haver contactat amb la iniciativa: \"M'interessa\" i \"No m'interessa\".</p>\n% else:\n<p>\n    Vostè encara no té accés al portal de la nostra base de dades.\nSi us plau, contacti amb \n    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'el seu administrador de comptes %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'nosaltres'}.\n</p>\n% endif\n<p>La iniciativa s'enviarà a un altre associat si no es comunica amb el contacte de la iniciativa abans de 20 dies.</p>\n\n<p>Gracies,</p>\n\n<pre>\n${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n</pre>\n% if not ctx['partner_id'].user_id:\nPD: Sembla que vostè no té un administrador de comptes assignat a vostè, si us plau, posi's amb contacte amb nosaltres.\n% endif\n            "
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,nbr:0
@@ -63,26 +64,26 @@ msgstr "# de casos"
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,opp:0
 msgid "# of Opportunity"
-msgstr ""
+msgstr "nre. d'oportunitats"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:48
 #, python-format
 msgid "<p>I am interested by this lead.</p>"
-msgstr ""
+msgstr "<p>Estic interessat amb aquesta iniciativa.</p>"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:53
 #, python-format
 msgid "<p>I am not interested by this lead. I %scontacted the lead.</p>"
-msgstr ""
+msgstr "<p>No estic interessat en aquesta iniciativa. %s s'ha contactat amb aquesta iniciativa.</p>"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:55
 #, python-format
 msgid ""
 "<p>I am not interested by this lead. I have not contacted the lead.</p>"
-msgstr ""
+msgstr "<p>No estic interessat amb aquesta iniciativa. No he contactat amb aquesta iniciativa.</p>"
 
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,activation:0
@@ -101,17 +102,17 @@ msgstr "Actiu"
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,date_assign:0
 msgid "Assign Date"
-msgstr ""
+msgstr "Assignar data"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Assign Month"
-msgstr ""
+msgstr "Assignar mes"
 
 #. module: crm_partner_assign
 #: model:ir.actions.server,name:crm_partner_assign.action_assign_salesman_according_assigned_partner
 msgid "Assign salesman of assigned partner"
-msgstr ""
+msgstr "Assignar comercial del client assignat"
 
 #. module: crm_partner_assign
 #: field:crm.lead,date_assign:0
@@ -121,7 +122,7 @@ msgstr "Data d'assignació"
 #. module: crm_partner_assign
 #: model:crm.case.stage,name:crm_partner_assign.stage_portal_lead_assigned
 msgid "Assigned"
-msgstr ""
+msgstr "Assignat"
 
 #. module: crm_partner_assign
 #: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
@@ -143,12 +144,12 @@ msgstr "Empresa assignada"
 #: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
 #: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Automatic Assignation"
-msgstr ""
+msgstr "Assignació automàtica"
 
 #. module: crm_partner_assign
 #: help:crm.lead.forward.to.partner,body:0
 msgid "Automatically sanitized HTML contents"
-msgstr ""
+msgstr "Contingut HTML automàticament sanejat"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,probability:0
@@ -163,7 +164,7 @@ msgstr "Informe d'iniciatives CRM"
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_partner_report_assign
 msgid "CRM Partner Report"
-msgstr ""
+msgstr "Informe de l'empresa CRM"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
@@ -174,7 +175,7 @@ msgstr "Canceŀla"
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
 msgid "Categorization"
-msgstr ""
+msgstr "Categorització"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,date_closed:0
@@ -189,7 +190,7 @@ msgstr "Comentari"
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
 msgid "Communication"
-msgstr ""
+msgstr "Comunicació"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
@@ -200,12 +201,12 @@ msgstr "Companyia"
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmar"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
 msgid "Contact"
-msgstr ""
+msgstr "Contacte"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,body:0
@@ -236,7 +237,7 @@ msgstr "Data de creació"
 #: field:res.partner.activation,create_uid:0
 #: field:res.partner.grade,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Creat per"
 
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,create_date:0
@@ -245,7 +246,7 @@ msgstr ""
 #: field:res.partner.activation,create_date:0
 #: field:res.partner.grade,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Creat el"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_lead_partner_filter
@@ -258,22 +259,22 @@ msgstr "Client"
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
 msgid "Customer Name"
-msgstr ""
+msgstr "Nom del client"
 
 #. module: crm_partner_assign
 #: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Date Partnership"
-msgstr ""
+msgstr "Data d'associació"
 
 #. module: crm_partner_assign
 #: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Date Review"
-msgstr ""
+msgstr "Data de revisió"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,delay_open:0
 msgid "Delay to Assign"
-msgstr ""
+msgstr "Demora per assignar"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,delay_close:0
@@ -283,24 +284,24 @@ msgstr "Retard per tancar"
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
 msgid "Details"
-msgstr ""
+msgstr "Detalls"
 
 #. module: crm_partner_assign
 #: field:crm.lead.channel.interested,contacted:0
 msgid "Did you contact the lead?"
-msgstr ""
+msgstr "S'ha contactat amb el contacte de la iniciativa?"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Do you have contacted the customer?"
-msgstr ""
+msgstr "S'ha contactat amb el client?"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:102
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:105
 #, python-format
 msgid "Email Error"
-msgstr ""
+msgstr "Error d'e-mail"
 
 #. module: crm_partner_assign
 #: view:crm.lead.forward.to.partner:crm_partner_assign.crm_lead_forward_to_partner_form
@@ -311,14 +312,14 @@ msgstr "Plantilla de correu electrònic"
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:87
 #, python-format
 msgid "Email Template Error"
-msgstr ""
+msgstr "Error en l'e-mail de plantilla"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/crm_lead.py:34
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:44
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Error!"
 
 #. module: crm_partner_assign
 #: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
@@ -328,7 +329,7 @@ msgstr "Escalat"
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_opportunity_portal_tree
 msgid "Expected Revenues"
-msgstr ""
+msgstr "Ingressos esperats"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
@@ -338,12 +339,12 @@ msgstr "Filtres estesos..."
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,partner_id:0
 msgid "Forward Leads To"
-msgstr ""
+msgstr "Reenviar iniciatives a"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,forward_type:0
 msgid "Forward selected leads to"
-msgstr ""
+msgstr "Reenviar iniciatives seleccionades a"
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.action_crm_send_mass_forward
@@ -354,7 +355,7 @@ msgstr "Reenvia a empresa"
 #. module: crm_partner_assign
 #: model:email.template,subject:crm_partner_assign.email_template_lead_forward_mail
 msgid "Fwd: Lead: ${ctx['partner_id'].name}"
-msgstr ""
+msgstr "Fwd: Iniciativa: ${ctx['partner_id'].name}"
 
 #. module: crm_partner_assign
 #: field:crm.lead,partner_latitude:0
@@ -380,7 +381,7 @@ msgstr "Longitud Geo"
 #: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
 #: view:crm.lead:crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Geolocation"
-msgstr ""
+msgstr "Geolocalització"
 
 #. module: crm_partner_assign
 #: help:res.partner,partner_weight:0 help:res.partner.grade,partner_weight:0
@@ -403,7 +404,7 @@ msgstr "Nom del nivell"
 #. module: crm_partner_assign
 #: field:res.partner,partner_weight:0 field:res.partner.grade,partner_weight:0
 msgid "Grade Weight"
-msgstr ""
+msgstr "Pes de grau"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_filter
@@ -420,13 +421,13 @@ msgstr "Alt"
 #: view:crm.lead:crm_partner_assign.crm_lead_portal_form
 #: view:crm.lead:crm_partner_assign.crm_lead_portal_tree
 msgid "I'm interested"
-msgstr ""
+msgstr "M'interessa"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_lead_portal_form
 #: view:crm.lead:crm_partner_assign.crm_lead_portal_tree
 msgid "I'm not interested"
-msgstr ""
+msgstr "No m'interessa"
 
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,id:0 field:crm.lead.channel.interested,id:0
@@ -449,12 +450,12 @@ msgstr "Implementat per"
 #. module: crm_partner_assign
 #: field:crm.lead.channel.interested,interested:0
 msgid "Interested by this lead"
-msgstr ""
+msgstr "Interessat per la iniciativa"
 
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,period_id:0
 msgid "Invoice Period"
-msgstr ""
+msgstr "Període de factura"
 
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,write_uid:0
@@ -494,7 +495,7 @@ msgstr "Iniciativa"
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,lead_link:0
 msgid "Lead  Single Links"
-msgstr ""
+msgstr "Enllaços de la iniciativa"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:crm_partner_assign.view_report_crm_lead_assign_graph
@@ -504,12 +505,12 @@ msgstr "Assignar iniciativa"
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.crm_lead_channel_interested_act
 msgid "Lead Feedback"
-msgstr ""
+msgstr "Avaluació de la iniciativa"
 
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,lead_location:0
 msgid "Lead Location"
-msgstr ""
+msgstr "Ubicació de la iniciativa"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead
@@ -524,7 +525,7 @@ msgstr "Iniciativa/Oportunitat"
 #: model:ir.actions.act_window,name:crm_partner_assign.action_portal_leads
 #: model:ir.ui.menu,name:crm_partner_assign.openerp_portal_menu_sales_leads_current
 msgid "Leads"
-msgstr ""
+msgstr "Iniciatives"
 
 #. module: crm_partner_assign
 #: model:ir.ui.menu,name:crm_partner_assign.portal_leads
@@ -550,7 +551,7 @@ msgstr "Probabilitat màx."
 #: view:crm.lead:crm_partner_assign.crm_lead_partner_filter
 #: view:crm.lead:crm_partner_assign.crm_opportunity_partner_filter
 msgid "My Assigned Partners"
-msgstr ""
+msgstr "Les meves empreses assignades"
 
 #. module: crm_partner_assign
 #: field:res.partner.activation,name:0
@@ -580,7 +581,7 @@ msgstr "Número de dies per obrir el cas"
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Once the lead is processed, it will be in your \"Opportunities\" menu."
-msgstr ""
+msgstr "Una vegada que es processi la iniciativa, apareixerà al seu menú de \"oportunitats\"."
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,opening_date:0
@@ -627,13 +628,13 @@ msgstr "Empresa"
 #. module: crm_partner_assign
 #: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
 msgid "Partner Activation"
-msgstr ""
+msgstr "Activació de l'empresa"
 
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.res_partner_activation_act
 #: model:ir.ui.menu,name:crm_partner_assign.res_partner_activation_config_mi
 msgid "Partner Activations"
-msgstr ""
+msgstr "Activacions de l'empresa"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.view_crm_lead_geo_assign_form
@@ -654,22 +655,22 @@ msgstr "Nivell de l'empresa"
 #. module: crm_partner_assign
 #: field:crm.lead.assignation,partner_location:0
 msgid "Partner Location"
-msgstr ""
+msgstr "Ubicació de l'empresa"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_lead_portal_form
 msgid "Partner Name"
-msgstr ""
+msgstr "Nom de l'empresa"
 
 #. module: crm_partner_assign
 #: view:res.partner:crm_partner_assign.view_crm_partner_assign_form
 msgid "Partner Review"
-msgstr ""
+msgstr "Revisió d'empresa"
 
 #. module: crm_partner_assign
 #: view:crm.partner.report.assign:crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Partner assigned Analysis"
-msgstr ""
+msgstr "Anàlisis de l'empresa assignada"
 
 #. module: crm_partner_assign
 #: help:crm.lead,partner_assigned_id:0
@@ -680,7 +681,7 @@ msgstr "Empresa a la qual aquest cas ha estat reexpedit/assignat."
 #: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_partner_assign
 #: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_partner_assign_tree
 msgid "Partnership Analysis"
-msgstr ""
+msgstr "Anàlisis de la col·laboració"
 
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,date_partnership:0
@@ -697,7 +698,7 @@ msgstr "Ingressos previstos"
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:92
 #, python-format
 msgid "Portal Group Error"
-msgstr ""
+msgstr "Error del grup del portal"
 
 #. module: crm_partner_assign
 #: view:crm.lead:crm_partner_assign.crm_opportunity_portal_form
@@ -740,7 +741,7 @@ msgstr "Enviar Correu"
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 #: view:crm.lead.forward.to.partner:crm_partner_assign.crm_lead_forward_to_partner_form
 msgid "Send Mail"
-msgstr ""
+msgstr "Enviar correu"
 
 #. module: crm_partner_assign
 #: field:res.partner.activation,sequence:0 field:res.partner.grade,sequence:0
@@ -763,29 +764,29 @@ msgstr "Assumpte"
 #: code:addons/crm_partner_assign/crm_lead.py:34
 #, python-format
 msgid "The CRM Channel Interested Action is missing"
-msgstr ""
+msgstr "Falta l'acció d'interessat del canal de CRM"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:88
 #, python-format
 msgid "The Forward Email Template is not in the database"
-msgstr ""
+msgstr "La plantilla de redirecció d'e-mail no existeix en la base de dades"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:93
 #, python-format
 msgid "The Portal group cannot be found"
-msgstr ""
+msgstr "No es troba el grup del portal"
 
 #. module: crm_partner_assign
 #: help:crm.lead.channel.interested,contacted:0
 msgid "The lead has been contacted"
-msgstr ""
+msgstr "La iniciativa ha estat contactada"
 
 #. module: crm_partner_assign
 #: model:crm.case.stage,name:crm_partner_assign.stage_portal_lead_recycle
 msgid "To Recycle"
-msgstr ""
+msgstr "Per reciclar"
 
 #. module: crm_partner_assign
 #: field:crm.partner.report.assign,turnover:0
@@ -811,38 +812,38 @@ msgstr "Usuari"
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "Very High"
-msgstr ""
+msgstr "Molt alta"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "Very Low"
-msgstr ""
+msgstr "Molt baixa"
 
 #. module: crm_partner_assign
 #: help:crm.lead.channel.interested,comment:0
 msgid "What are the elements that have led to this decision?"
-msgstr ""
+msgstr "Quins són els elements que l'han portat a aquesta decisió?"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 msgid "What is the next action? When? What is the expected revenue?"
-msgstr ""
+msgstr "Quina és la següent acció? Quan? Quins són els seus ingressos esperats?"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
 msgid "Why aren't you interested by this lead?"
-msgstr ""
+msgstr "Per què no està interessat en aquesta iniciativa?"
 
 #. module: crm_partner_assign
 #: code:addons/crm_partner_assign/wizard/crm_channel_interested.py:44
 #, python-format
 msgid "You must contact the lead before saying that you are interested"
-msgstr ""
+msgstr "Ha de contactar amb la iniciativa abans d'expressar el seu interès."
 
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,forward_type:0
 msgid "a single partner: manual selection of partner"
-msgstr ""
+msgstr "una única empresa: selecció manual de l'empresa"
 
 #. module: crm_partner_assign
 #: view:crm.lead.channel.interested:crm_partner_assign.crm_lead_channel_interested_form
@@ -855,4 +856,4 @@ msgstr "o"
 msgid ""
 "several partners: automatic assignation, using GPS coordinates and partner's"
 " grades"
-msgstr ""
+msgstr "vàries empreses: assignació automàtica, utilitzant coordenades GPS i grups d'empreses."

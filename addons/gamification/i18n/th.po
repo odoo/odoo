@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-04-11 12:19+0000\n"
+"POT-Creation-Date: 2016-05-25 12:58+0000\n"
+"PO-Revision-Date: 2016-07-29 05:41+0000\n"
 "Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-8/language/th/)\n"
 "MIME-Version: 1.0\n"
@@ -506,7 +506,7 @@ msgstr "สร้างเมื่อ"
 #. module: gamification
 #: field:gamification.badge.user,create_uid:0
 msgid "Creator"
-msgstr ""
+msgstr "ผู้สร้าง"
 
 #. module: gamification
 #: field:gamification.goal.wizard,current:0
@@ -588,6 +588,18 @@ msgstr "รายละเอียด"
 #: field:gamification.challenge,visibility_mode:0
 #: field:gamification.goal,definition_display:0
 msgid "Display Mode"
+msgstr ""
+
+#. module: gamification
+#: field:gamification.badge,display_name:0
+#: field:gamification.badge.user,display_name:0
+#: field:gamification.badge.user.wizard,display_name:0
+#: field:gamification.challenge,display_name:0
+#: field:gamification.challenge.line,display_name:0
+#: field:gamification.goal,display_name:0
+#: field:gamification.goal.definition,display_name:0
+#: field:gamification.goal.wizard,display_name:0
+msgid "Display Name"
 msgstr ""
 
 #. module: gamification
@@ -818,7 +830,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:gamification.goal_list_action
 #: model:ir.ui.menu,name:gamification.gamification_goal_menu
 msgid "Goals"
-msgstr ""
+msgstr "เป้าหมาย"
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_good_job
@@ -1004,6 +1016,18 @@ msgid "Last Message Date"
 msgstr "วันที่ของข้อความสุดท้าย"
 
 #. module: gamification
+#: field:gamification.badge,__last_update:0
+#: field:gamification.badge.user,__last_update:0
+#: field:gamification.badge.user.wizard,__last_update:0
+#: field:gamification.challenge,__last_update:0
+#: field:gamification.challenge.line,__last_update:0
+#: field:gamification.goal,__last_update:0
+#: field:gamification.goal.definition,__last_update:0
+#: field:gamification.goal.wizard,__last_update:0
+msgid "Last Modified on"
+msgstr ""
+
+#. module: gamification
 #: field:gamification.challenge,last_report_date:0
 msgid "Last Report Date"
 msgstr ""
@@ -1124,7 +1148,7 @@ msgstr ""
 #. module: gamification
 #: view:gamification.goal:gamification.goal_search_view
 msgid "My Goals"
-msgstr ""
+msgstr "เป้าหมายของฉัน"
 
 #. module: gamification
 #: field:gamification.badge,stat_my_monthly_sending:0
@@ -1507,7 +1531,7 @@ msgstr "สถิติ"
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid "Subscriptions"
-msgstr ""
+msgstr "การสมัครรับข้อมูลข่าวสาร"
 
 #. module: gamification
 #: field:gamification.challenge.line,definition_full_suffix:0
@@ -1633,6 +1657,24 @@ msgstr ""
 #: help:gamification.badge,rule_max_number:0
 msgid ""
 "The maximum number of time this badge can be sent per month per person."
+msgstr ""
+
+#. module: gamification
+#: code:addons/gamification/models/goal.py:160
+#, python-format
+msgid ""
+"The model configuration for the definition %s seems incorrect, please check it.\n"
+"\n"
+"%s not found"
+msgstr ""
+
+#. module: gamification
+#: code:addons/gamification/models/goal.py:158
+#, python-format
+msgid ""
+"The model configuration for the definition %s seems incorrect, please check it.\n"
+"\n"
+"%s not stored"
 msgstr ""
 
 #. module: gamification
@@ -1774,7 +1816,7 @@ msgstr "อัปเดต"
 #: code:addons/gamification/models/goal.py:491
 #, python-format
 msgid "Update %s"
-msgstr ""
+msgstr "อัพเดท %s"
 
 #. module: gamification
 #: field:gamification.badge.user,user_id:0
@@ -1924,7 +1966,7 @@ msgstr ""
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_wizard
 msgid "reply later"
-msgstr ""
+msgstr "ตอบทีหลัง"
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_form_view

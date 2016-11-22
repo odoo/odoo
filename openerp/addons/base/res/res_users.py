@@ -511,6 +511,7 @@ class res_users(osv.osv):
         if not passwd:
             # empty passwords disallowed for obvious security reasons
             raise openerp.exceptions.AccessDenied()
+        db = self.pool.db_name
         if self.__uid_cache.setdefault(db, {}).get(uid) == passwd:
             return
         cr = self.pool.cursor()

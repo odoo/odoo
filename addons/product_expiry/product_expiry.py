@@ -58,7 +58,7 @@ class stock_production_lot(osv.osv):
     # Assign dates according to products data
     def create(self, cr, uid, vals, context=None):
         context = dict(context or {})
-        context['product_id'] = vals.get('product_id', context.get('default_product_id'))
+        context['product_id'] = vals.get('product_id', context.get('default_product_id') or context.get('product_id'))
         return super(stock_production_lot, self).create(cr, uid, vals, context=context)
 
     _defaults = {

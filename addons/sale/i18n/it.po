@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-04-20 19:42+0000\n"
+"PO-Revision-Date: 2016-09-06 12:28+0000\n"
 "Last-Translator: Paolo Valier\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-8/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -96,7 +96,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Salve, ${object.partner_id.name},</p>\n    \n    <p>Oggetto: ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} per ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>RIFERIMENTI</strong><br />\n       &nbsp;&nbsp;Numero <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Totale: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Data: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Riferimento ordine: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;Il tuo responsabile: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;;Contatto diretto: <a href=\"mailto:${object.user_id.email or ''}?subject=Ordine%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n    <p>\n        Puoi anche visualizzare il tuo preventivo online:\n    </p>\n    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n        href=\"/quote/${object.id}/${object.access_token}\">Visualizza ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n\n    % if object.paypal_url:\n    <br/>\n    <p>E' anche possibile pagare attraverso paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>In caso di domande, non esitate a contattarci.</p>\n    <p>Grazie per aver scelto ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefono:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Salve, ${object.partner_id.name},</p>\n    \n    <p>Oggetto: ${object.state in ('draft', 'sent') and 'preventivo' or 'conferma d'ordine'} per ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>RIFERIMENTI</strong><br />\n       &nbsp;&nbsp;Numero <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Totale: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Data: ${object.date_order}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Riferimento ordine: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;Il tuo responsabile: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Contatto diretto: <a href=\"mailto:${object.user_id.email or ''}?subject=Ordine%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n    <p>\n        Puoi anche visualizzare il tuo preventivo online:\n    </p>\n    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n        href=\"/quote/${object.id}/${object.access_token}\">Visualizza ${object.state in ('draft', 'sent') and 'Preventivo' or 'Ordine'}</a>\n\n    % if object.paypal_url:\n    <br/>\n    <p>È anche possibile pagare attraverso paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>In caso di domande, non esitate a contattarci.</p>\n    <p>Grazie per aver scelto ${object.company_id.name or 'noi'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n        % if object.company_id.street:\n            ${object.company_id.street}<br/>\n        % endif\n        % if object.company_id.street2:\n            ${object.company_id.street2}<br/>\n        % endif\n        % if object.company_id.city or object.company_id.zip:\n            ${object.company_id.zip} ${object.company_id.city}<br/>\n        % endif\n        % if object.company_id.country_id:\n            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n        % endif\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Telefono:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: sale
 #: field:product.product,sales_count:0 field:product.template,sales_count:0
@@ -340,19 +340,19 @@ msgstr "Consente di gestione differenti prezzi basati su regole per categorie di
 msgid ""
 "Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.\n"
 "-This installs the module sale_stock."
-msgstr "Consente di completare preventivi e ordini di vendita con diversi sistemi di approvvigionamento, gestendo le relative quantità di magazzino.\n-Questa voce installa il modulo sale_stock"
+msgstr "Consente di completare preventivi e ordini di vendita con diversi sistemi di approvvigionamento, gestendo le relative quantità di magazzino.\n-Questa voce installa il modulo sale_stock."
 
 #. module: sale
 #: help:sale.config.settings,group_discount_per_so_line:0
 msgid "Allows you to apply some discount per sales order line."
-msgstr "Permette di applicare alcuni sconti per linea di ordine di vendita."
+msgstr "Permette di applicare alcuni sconti per riga di ordine di vendita."
 
 #. module: sale
 #: help:sale.config.settings,module_sale_journal:0
 msgid ""
 "Allows you to categorize your sales and deliveries (picking lists) between different journals, and perform batch operations on journals.\n"
 "-This installs the module sale_journal."
-msgstr "Consente di categorizzare le tue vendite e le tue consegne attraverso diversi giornali contabili, e eseguire operazioni batch su questi ultimi.\n-Questa voce installa il modulo sale_journal."
+msgstr "Consente di categorizzare le vendite e le consegne (liste di picking) attraverso diversi giornali contabili, e eseguire operazioni batch su questi ultimi.\n-Questa voce installa il modulo sale_journal."
 
 #. module: sale
 #: help:sale.config.settings,module_analytic_user_function:0
@@ -433,7 +433,7 @@ msgstr "Annulla"
 #. module: sale
 #: view:sale.order.line:sale.view_order_line_form2
 msgid "Cancel Line"
-msgstr "Annulla la linea"
+msgstr "Annulla la riga"
 
 #. module: sale
 #: view:sale.order:sale.view_order_form
@@ -774,7 +774,7 @@ msgstr "Procedura guidata composizione email"
 #. module: sale
 #: model:res.groups,name:sale.group_invoice_so_lines
 msgid "Enable Invoicing Sales order lines"
-msgstr "Abilita la fatturazione delle linee dell'ordine di vendita"
+msgstr "Abilita la fatturazione delle righe dell'ordine di vendita"
 
 #. module: sale
 #: code:addons/sale/sale.py:154 code:addons/sale/sale.py:390
@@ -825,7 +825,7 @@ msgstr "Followers"
 msgid ""
 "For modifying account analytic view to show important data to project manager of services companies.You can also view the report of account analytic summary user-wise as well as month wise.\n"
 "-This installs the module account_analytic_analysis."
-msgstr "Consente di modificare la visualizzazione dei conti analitici per mostrare dati specifici per i project manager di aziende di servizi.  Consente inoltre di visualizzare report riassuntivi relativi a \"conto-analitico-per-utente\" o \"conto-analitico-per-mese\".\n-Questo installa il modulo account_analytic_analysis"
+msgstr "Consente di modificare la visualizzazione dei conti analitici per mostrare dati specifici per i project manager di aziende di servizi.  Consente inoltre di visualizzare report riassuntivi relativi a \"conto-analitico-per-utente\" o \"conto-analitico-per-mese\".\n-Questa voce installa il modulo account_analytic_analysis."
 
 #. module: sale
 #: view:crm.case.section:sale.crm_case_section_salesteams_view_kanban
@@ -864,7 +864,7 @@ msgid ""
 "Gives the status of the quotation or sales order.              \n"
 "The exception status is automatically set when a cancel operation occurs               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\n"
 "The 'Waiting Schedule' status is set when the invoice is confirmed               but waiting for the scheduler to run on the order date."
-msgstr "Fornisce lo stato del preventivo o ordine di vendita.\nLo stato di eccezione viene impostato automaticamente quando si annulla un'operazione durante la validazione della fattura (Eccezione Fattura) o durante il prelievo da magazzino (Eccezione Consegna).\nLo stato 'Attesa Pianificazione' viene impostato quando la fattura è confermata ma in attesa che lo scheduler venga avviato."
+msgstr "Fornisce lo stato del preventivo o ordine di vendita.\nLo stato di eccezione viene impostato automaticamente quando si annulla un'operazione durante la validazione della fattura (Eccezione Fattura) o durante il prelievo da magazzino (Eccezione Consegna).\nLo stato 'Attesa Pianificazione' viene impostato quando la fattura è confermata ma in attesa che il pianificatore venga avviato."
 
 #. module: sale
 #: view:sale.order:sale.view_sales_order_filter
@@ -1011,7 +1011,7 @@ msgid ""
 "Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n"
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
-msgstr "La fattura non può essere creata per questa linea d'ordine di vendita per una delle seguenti ragioni:\n1. La linea dell'ordine si trova nello stato \"bozza\" o \"cancellato\"!\n2. La linea dell'ordine di vendita è stata fatturata!"
+msgstr "La fattura non può essere creata per questa riga d'ordine di vendita per una delle seguenti ragioni:\n1. La riga dell'ordine si trova nello stato \"bozza\" o \"cancellato\"!\n2. La riga dell'ordine di vendita è stata fatturata!"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:102
@@ -1107,7 +1107,7 @@ msgstr "Genera fatture"
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Manual In Progress"
-msgstr "Manuale in Progresso"
+msgstr "Manuale in corso"
 
 #. module: sale
 #: field:sale.order,message_ids:0
@@ -1591,7 +1591,7 @@ msgstr "Ordine di vendita Confermato"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Linea d'ordine di vendita"
+msgstr "Riga d'Ordine di Vendita"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
@@ -1708,7 +1708,7 @@ msgstr "Cerca ordine di vendita"
 #. module: sale
 #: view:sale.order.line:sale.view_sales_order_uninvoiced_line_filter
 msgid "Search Uninvoiced Lines"
-msgstr "Cerca linee non ancora fatturate"
+msgstr "Cerca righe non ancora fatturate"
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
@@ -1815,7 +1815,7 @@ msgstr "Il totale da fatturare in anticipo."
 #. module: sale
 #: help:sale.order,amount_untaxed:0
 msgid "The amount without tax."
-msgstr "Totale senza la tassazione"
+msgstr "Totale senza l'imposta."
 
 #. module: sale
 #: help:sale.order,project_id:0
@@ -1898,7 +1898,7 @@ msgid ""
 "This is the list of invoices that have been generated for this sales order. "
 "The same sales order may have been invoiced in several times (by line for "
 "example)."
-msgstr "Lista delle fatture generate per questo ordine di vendita. Lo stesso ordine di vendita infatti può essere scisso in diverse fatture (ad esempio per linea d'ordine)."
+msgstr "Lista delle fatture generate per questo ordine di vendita. Lo stesso ordine di vendita infatti può essere scisso in diverse fatture (ad esempio per riga d'ordine)."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all

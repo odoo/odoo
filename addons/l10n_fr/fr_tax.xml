@@ -26,7 +26,10 @@
       <field name="ref_base_sign" eval="-1"/>
       <field name="ref_tax_code_id" ref="tax_col_200"/>
       <field name="ref_tax_sign" eval="-1"/>
-      <field name="sequence" eval="10"/>
+      <!-- use sequence="9" instead of sequence="10" to make it
+      the default tax in the wizard
+      "Set Your Accounting Options" (wizard.multi.charts.accounts) -->
+      <field name="sequence" eval="9"/>
       <field name="type_tax_use">sale</field>
     </record>
 
@@ -138,7 +141,10 @@
       <field name="ref_base_sign" eval="1"/>
       <field name="ref_tax_code_id" ref="tax_acq_200"/>
       <field name="ref_tax_sign" eval="1"/>
-      <field name="sequence" eval="10"/>
+      <!-- use sequence="9" instead of sequence="10" to make it
+      the default tax in the wizard
+      "Set Your Accounting Options" (wizard.multi.charts.accounts) -->
+      <field name="sequence" eval="9"/>
       <field name="type_tax_use">purchase</field>
     </record>
 

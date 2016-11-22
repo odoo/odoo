@@ -45,6 +45,7 @@ class partner_vat(osv.osv_memory):
     _name = "partner.vat"
 
     def get_partner(self, cr, uid, ids, context=None):
+        context = dict(context or {})
         obj_period = self.pool.get('account.period')
         obj_partner = self.pool.get('res.partner')
         obj_vat_lclient = self.pool.get('vat.listing.clients')

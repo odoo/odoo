@@ -37,13 +37,16 @@ class payslip_details_report(report_sxw.rml_parse):
         payslip_line = self.pool.get('hr.payslip.line')
         rule_cate_obj = self.pool.get('hr.salary.rule.category')
 
-        def get_recursive_parent(rule_categories):
-            if not rule_categories:
-                return []
-            if rule_categories[0].parent_id:
-                rule_categories = rule_categories[0].parent_id | rule_categories
-                get_recursive_parent(rule_categories)
-            return rule_categories
+        def get_recursive_parent(current_rule_category, rule_categories = None):
+            if rule_categories:
+                rule_categories = current_rule_category | rule_categories
+            else:
+                rule_categories = current_rule_category
+
+            if current_rule_category.parent_id:
+                return get_recursive_parent(current_rule_category.parent_id, rule_categories)
+            else:
+                return rule_categories
 
         res = []
         result = {}

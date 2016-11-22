@@ -4,14 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# grazziano <g.negocios@outlook.com.br>, 2016
 # Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-07-17 07:36+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
+"PO-Revision-Date: 2016-07-11 23:37+0000\n"
+"Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +41,7 @@ msgid ""
 "            contact, if a lead is not closed yet, etc.\n"
 "          </p>\n"
 "        "
-msgstr "<p class=\"oe_view_nocontent_create\">\n            Clique para criar uma campanha de marketing.\n          </p><p>\n            Campanha de marketing da Odoo permite automatizar a comunicação\n            para os seus clientes potenciais. Você pode definir um segmento (conjunto de condições) sobre\n            suas ligações e parceiros a cumprir a campanha.\n          </p><p>\n            A campanha pode ter muitas atividades como o envio de um e-mail, impressão\n            uma carta, atribuindo a uma equipe, etc. Essas atividades são acionados\n            a partir de situações específicas; formulário de contato, 10 dias após a primeira\n            contato, se a liderança não está ainda fechada, etc.\n          </p>\n        "
+msgstr "<p class=\"oe_view_nocontent_create\">\nClique para criar uma campanha de marketing.\n</p><p>\nCampanha de marketing do Odoo permite automatizar a comunicação\npara os seus prospectos. Você pode definir um segmento (conjunto de condições) sobre\nseus prospectos e parceiros para cumprir a campanha.\n</p><p>\nA campanha pode ter muitas atividades como o envio de um e-mail, impressão\nde uma carta, atribuição a uma equipe, etc. Essas atividades são disparadas\na partir de situações específicas; formulário de contato, 10 dias após o primeiro\ncontato, se um prospecto não está fechado ainda, etc.\n</p>\n        "
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,server_action_id:0
@@ -341,23 +342,23 @@ msgstr "Provisório"
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:774
 #, python-format
 msgid "Email Preview"
-msgstr "Visualizar Email"
+msgstr "Visualizar E-mail"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,email_template_id:0
 msgid "Email Template"
-msgstr "Modelo de Email"
+msgstr "Modelo de E-mail"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template
 msgid "Email Templates"
-msgstr "Modelos de Email"
+msgstr "Modelos de E-mail"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_done:0
@@ -417,7 +418,7 @@ msgid ""
 "New filters can be created and saved using the advanced search on the list "
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
-msgstr "Filtro para selecionar os registros de recursos correspondentes que pertencem a este segmento. Novos filtros podem ser criados e salvos com a pesquisa avançada sobre a exibição de lista do recurso. Se nenhum filtro for definido, todos os registros são selecionados sem filtragem. O modo de sincronização pode também adicionar um critério para o filtro."
+msgstr "Filtro para selecionar os registros de recursos correspondentes que pertencem a este segmento. Novos filtros podem ser criados e salvos com a pesquisa avançada sobre a visão em lista do Recurso. Se nenhum filtro for definido, todos os registros são selecionados sem filtragem. O modo de sincronização pode também adicionar um critério para o filtro."
 
 #. module: marketing_campaign
 #: field:marketing.campaign,fixed_cost:0
@@ -498,7 +499,7 @@ msgid ""
 "segments will only avoid selecting the same record again if it entered the "
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
-msgstr "Se definido, este campo vai ajudar segmentos que atuam em \"sem duplicados\" de modo a evitar a seleção de registros semelhantes duas vezes. Registros semelhantes são registros que têm o mesmo valor para esse campo único. Por exemplo, escolhendo o \"email_from\" do campo de Prospectos do CRM que impediria o envio da mesma campanha para o endereço de e-mail mesmo. Se não for definido, o \"não\" segmentos duplicados só evitar selecionar o mesmo registro novamente se ele entrou na campanha anteriormente. Campos só facilmente comparáveis ​​como textfields, inteiros, seleções ou relacionamentos simples podem ser utilizadas."
+msgstr "Se definido, este campo vai ajudar segmentos que atuam em \"sem duplicados\" de modo a evitar a seleção de registros semelhantes duas vezes. Registros semelhantes são registros que têm o mesmo valor para esse campo único. Por exemplo, escolhendo o \"email_from\" do campo de Prospectos do CRM que impediria o envio da mesma campanha para o endereço de e-mail mesmo. Se não for definido, os segmentos \"não duplicados\" só evitarão selecionar o mesmo registro novamente se ele entrou na campanha anteriormente. Somente campos facilmente comparáveis ​​como textfields, inteiros, seleções ou relacionamentos simples podem ser utilizados."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:marketing_campaign.view_marketing_campaign_activity_form
@@ -783,7 +784,7 @@ msgid ""
 "   - resource: the resource object this campaign item represents\n"
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
-msgstr "Expressão Python para decidir se a atividade pode ser executada, caso contrário, ele será excluído ou cancelado. A expressão pode usar as seguintes variáveis:\n    - Atividade: a atividade de campanha\n    - Workitem: o item de trabalho da campanha\n    - Recurso: o objeto do recurso este item campanha representa\n    - Transições: lista de transições de campanha de saída a partir desta atividade\n... - Re: módulo de expressão regular Python"
+msgstr "Expressão Python para decidir se a atividade pode ser executada, caso contrário, ele será excluído ou cancelado. A expressão pode usar as seguintes variáveis:\n    - Atividade: a atividade de campanha\n    - Workitem: o item de trabalho da campanha\n    - Recurso: o objeto do recurso este item campanha representa\n    - Transições: lista de transições de campanha de saída a partir desta atividade\n... - Re: módulo de expressão regular Python"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,report_id:0
@@ -976,7 +977,7 @@ msgstr "A Ação a ser executada quando esta atividade for ativada"
 #: code:addons/marketing_campaign/marketing_campaign.py:133
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
-msgstr "A campanha não pode ser marcado como feito antes que todos os segmentos estejam fechados."
+msgstr "A campanha não pode ser marcado como concluída antes que todos os segmentos estejam fechados."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:123
@@ -996,12 +997,12 @@ msgstr "A campanha não pode ser iniciada. Não existe nenhuma atividade cadastr
 #: code:addons/marketing_campaign/marketing_campaign.py:800
 #, python-format
 msgid "The current step for this item has no email or report to preview."
-msgstr "O passo atual para este item não tem nenhum email ou relatório para visualização"
+msgstr "O passo atual para este item não tem nenhum e-mail ou relatório para visualizar."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0
 msgid "The email to send when this activity is activated"
-msgstr "O email a ser enviado quando esta atividade for ativada"
+msgstr "O e-mail a ser enviado quando esta atividade for ativada"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,partner_field_id:0
@@ -1010,7 +1011,7 @@ msgid ""
 " If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
-msgstr "Os itens de trabalho gerados serão ligados ao parceiro relacionado ao registro. Se o registro é o próprio parceiro parceiro deixar este campo em branco. Isso é útil para fins de relatório, através da Análise de Campanha ou Visualização de Follow Up de Campanhas."
+msgstr "Os itens de trabalho gerados serão vinculados ao parceiro relacionado ao registro. Se o registro é o próprio parceiro parceiro deixar este campo em branco. Isso é útil para fins de relatório, através da Análise de Campanha ou Visualização de Follow Up de Campanhas."
 
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
@@ -1030,7 +1031,7 @@ msgid ""
 "   - Report: print an existing Report defined on the resource item and save it into a specific directory\n"
 "   - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record\n"
 "  "
-msgstr "O tipo de ação a ser executada quando um item entra nesta atividade, tais como:\n    - E-mail: envie um e-mail usando um modelo de e-mail pré-definido\n    - Relatório: imprimir um relatório existente definido no item recursos e salvá-lo em um diretório específico\n    - Ação Custom: executar uma ação pré-definida, por exemplo, para modificar os campos do registro de recurso\n  "
+msgstr "O tipo de ação a ser executada quando um item entra nesta atividade, tais como:\n    - E-mail: envie um e-mail usando um modelo de e-mail pré-definido\n    - Relatório: imprimir um relatório existente definido no item recursos e salvá-lo em um diretório específico\n    - Ação Custom: executar uma ação pré-definida, por exemplo, para modificar os campos do registro de recurso\n  "
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,start:0
