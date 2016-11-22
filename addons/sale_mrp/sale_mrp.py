@@ -89,5 +89,5 @@ class AccountInvoiceLine(models.Model):
                         prod_quantity = factor * quantity
                         average_price_unit += self._compute_average_price(prod_qty_done, prod_quantity, prod_moves)
                     price_unit = average_price_unit or price_unit
-                    price_unit = self.uom_id._compute_quantity(price_unit, self.product_id.uom_id, round=False)
+                    price_unit = self.product_id.uom_id._compute_price(self.product_id.uom_id.id, price_unit, to_uom_id=self.uom_id.id)
         return price_unit

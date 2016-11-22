@@ -5,7 +5,7 @@ import logging
 from collections import defaultdict
 from difflib import get_close_matches
 
-from odoo import api, fields, models, tools, _, SUPERUSER_ID
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.modules import get_module_path, get_module_resource
 
