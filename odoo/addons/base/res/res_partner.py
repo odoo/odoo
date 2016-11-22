@@ -28,11 +28,6 @@ WARNING_MESSAGE = [
 WARNING_HELP = _('Selecting the "Warning" option will notify user with the message, Selecting "Blocking Message" will throw an exception with the message and block the flow. The Message has to be written in the next field.')
 
 
-ADDRESS_FORMAT_CLASSES = {
-    '%(city)s %(state_code)s\n%(zip)s': 'o_city_state',
-    '%(zip)s %(city)s': 'o_zip_city'
-}
-
 ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 @api.model
 def _lang_get(self):
@@ -45,25 +40,20 @@ def _tz_get(self):
 
 
 class FormatAddress(object):
+
     @api.model
     def fields_view_get_address(self, arch):
-        address_format = self.env.user.company_id.country_id.address_format or ''
-        for format_pattern, format_class in ADDRESS_FORMAT_CLASSES.iteritems():
-            if format_pattern in address_format:
-                doc = etree.fromstring(arch)
-                for address_node in doc.xpath("//div[@class='o_address_format']"):
-                    # add address format class to address block
-                    address_node.attrib['class'] += ' ' + format_class
-                    if format_class.startswith('o_zip'):
-                        zip_fields = address_node.xpath("//field[@name='zip']")
-                        city_fields = address_node.xpath("//field[@name='city']")
-                        if zip_fields and city_fields:
-                            # move zip field before city field
-                            city_fields[0].addprevious(zip_fields[0])
-                arch = etree.tostring(doc)
-                break
+        #consider the country of the user, not the country of the partner we want to display
+        address_view_id = self.env.user.company_id.country_id.address_view_id
+        if address_view_id and not self._context.get('no_address_format'):
+            #render the partner address accordingly to address_view_id
+            doc = etree.fromstring(arch)
+            for address_node in doc.xpath("//div[@class='o_address_format']"):
+                sub_view = self.env['res.partner'].with_context(no_address_format=True).fields_view_get(view_id=address_view_id.id, view_type='form', toolbar=False, submenu=False)
+                sub_view_node = etree.fromstring(sub_view['arch'])
+                address_node.getparent().replace(address_node, sub_view_node)
+            arch = etree.tostring(doc)
         return arch
-
 
 class PartnerCategory(models.Model):
     _description = 'Partner Tags'

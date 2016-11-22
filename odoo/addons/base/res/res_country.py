@@ -43,6 +43,8 @@ addresses belonging to this country.\n\nYou can use the python-style string pate
             \n%(country_name)s: the name of the country
             \n%(country_code)s: the code of the country""",
             default='%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s')
+    address_view_id = fields.Many2one('ir.ui.view', string="Address View", domain=[('model', '=', 'res.partner'), ('type', '=', 'form')], 
+         help="Use this field if you want to replace the usual way to display a complete address")
     currency_id = fields.Many2one('res.currency', string='Currency')
     image = fields.Binary(attachment=True)
     phone_code = fields.Integer(string='Country Calling Code')
