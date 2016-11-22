@@ -423,11 +423,8 @@ class website(osv.osv):
                 yield page
 
     def search_pages(self, cr, uid, ids, needle=None, limit=None, context=None):
-        name = ((needle or "")
-                .replace("/page/website.", "")
-                .replace("/page/", "")
-                .replace("-", "_")
-                .replace(" ", "_"))
+        name = (needle or "").replace("/page/website.", "").replace("/page/", "")
+        name = slugify(name, max_length=50)
         res = []
         for page in self.enumerate_pages(cr, uid, ids, query_string=name, context=context):
             res.append(page)
