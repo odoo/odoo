@@ -896,7 +896,7 @@ class IrActionsServer(models.Model):
             self._cr.execute("""
                 INSERT INTO ir_logging(create_date, create_uid, type, dbname, name, level, message, path, line, func)
                 VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """, ('server', self._cr.dbname, __name__, level, message, "action", action.id, action.name))
+            """, (self._uid, 'server', self._cr.dbname, __name__, level, message, "action", action.id, action.name))
 
         eval_context = super(IrActionsServer, self)._get_eval_context(action=action)
         model = self.env[action.model_id.model]
