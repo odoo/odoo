@@ -249,7 +249,7 @@ class MrpProduction(models.Model):
 
     @api.model
     def create(self, values):
-        if not values.get('name', False) or values['name'] == 'New':
+        if not values.get('name', False) or values['name'] == _('New'):
             values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
         if not values.get('procurement_group_id'):
             values['procurement_group_id'] = self.env["procurement.group"].create({'name': values['name']}).id

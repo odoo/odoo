@@ -869,7 +869,7 @@ class Picking(models.Model):
                 moves_reassign = any(x.origin_returned_move_id or x.move_orig_ids for x in picking.move_lines if x.state not in ['done', 'cancel'])
                 if moves_reassign and picking.location_id.usage not in ("supplier", "production", "inventory"):
                     # unnecessary to assign other quants than those involved with pack operations as they will be unreserved anyways.
-                    picking.with_context(reserve_only_ops=True, no_state_change=True).rereserve_quants(move_ids=todo_moves.ids)
+                    picking.with_context(reserve_only_ops=True, no_state_change=True).rereserve_quants(move_ids=picking.move_lines.ids)
                 picking.do_recompute_remaining_quantities()
 
             # split move lines if needed

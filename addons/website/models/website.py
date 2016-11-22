@@ -569,12 +569,12 @@ class Website(models.Model):
     @api.multi
     def search_pages(self, needle=None, limit=None):
         name = re.sub(r"^/p(a(g(e(/(w(e(b(s(i(t(e(\.)?)?)?)?)?)?)?)?)?)?)?)?", "", needle or "")
+        name = slugify(name, max_length=50)
         res = []
         for page in self.enumerate_pages(query_string=name):
-            if needle in page['loc']:
-                res.append(page)
-                if len(res) == limit:
-                    break
+            res.append(page)
+            if len(res) == limit:
+                break
         return res
 
     @api.model

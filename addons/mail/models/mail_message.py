@@ -334,7 +334,7 @@ class Message(models.Model):
                                 if partner.id in partner_tree]
 
             customer_email_data = []
-            for notification in message.notification_ids.filtered(lambda notif: notif.res_partner_id.partner_share):
+            for notification in message.notification_ids.filtered(lambda notif: notif.res_partner_id.partner_share and notif.res_partner_id.active):
                 customer_email_data.append((partner_tree[notification.res_partner_id.id][0], partner_tree[notification.res_partner_id.id][1], notification.email_status))
 
             attachment_ids = []

@@ -73,7 +73,11 @@ class AccountInvoiceLine(models.Model):
 
     def _get_anglo_saxon_price_unit(self):
         self.ensure_one()
-        return self.product_id.standard_price
+        price = self.product_id.standard_price
+        if not self.uom_id or self.product_id.uom_id == self.uom_id:
+            return price
+        else:
+            return self.product_id.uom_id._compute_price(self.product_id.uom_id.id, price, to_uom_id=self.uom_id.id)
 
     def _get_price(self, company_currency, price_unit):
         if self.invoice_id.currency_id.id != company_currency.id:
