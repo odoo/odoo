@@ -25,7 +25,6 @@ class Location(models.Model):
         return res
 
     name = fields.Char('Location Name', required=True, translate=True)
-    # TDE CLEAME: unnecessary field, use name_get instead
     complete_name = fields.Char("Full Location Name", compute='_compute_complete_name', store=True)
     active = fields.Boolean('Active', default=True, help="By unchecking the active field, you may hide a location without deleting it.")
     usage = fields.Selection([
@@ -75,14 +74,22 @@ class Location(models.Model):
         """ Forms complete name of location from parent location to child location. """
         name = self.name
         current = self
-        while current.location_id and current.usage != 'view':
+        while current.location_id:
             current = current.location_id
             name = '%s/%s' % (current.name, name)
         self.complete_name = name
 
     @api.multi
     def name_get(self):
-        return [(location.id, location.complete_name) for location in self]
+        ret_list = []
+        for location in self:
+            orig_location = location
+            name = location.name
+            while location.location_id and location.usage != 'view':
+                location = location.location_id
+                name = location.name + "/" + name
+            ret_list.append((orig_location.id, name))
+        return ret_list
 
     def get_putaway_strategy(self, product):
         ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''
