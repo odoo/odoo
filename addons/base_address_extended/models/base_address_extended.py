@@ -29,12 +29,17 @@ class Partner(models.Model):
     street_number = fields.Char('House Number', compute='_split_street', inverse='_set_street', store=True)
     street_number2 = fields.Char('Door Number', compute='_split_street', inverse='_set_street', store=True)
 
+
+    def get_street_fields(self):
+        """Returns the fields that can be used in a street format. Overwrite this function if you want to add your own fields."""
+        return STREET_FIELDS
+
     @api.multi
     def _set_street(self):
         """Write the street field on the partners when one of the fields in STREET_FIELDS has been touched"""
         for partner in self:
             street_format = partner.country_id.street_format or '%(street_number)s/%(street_number2)s %(street_name)s'
-            street_vals = {field: getattr(partner, field) for field in STREET_FIELDS}
+            street_vals = {field: getattr(partner, field) for field in self.get_street_fields()}
             partner.street = street_format % street_vals
 
     @api.multi
@@ -72,7 +77,7 @@ class Partner(models.Model):
                 if not skip_field:
                     #[2:-2] is used to remove the extra chars ['%', '(', ')', 's']
                     field_name = re_match.group()[2:-2]
-                if field_name not in STREET_FIELDS:
+                if field_name not in self.get_street_fields():
                     raise UserError(_("Unrecognized field %s in street format.") % (field_name))
                 previous_pos = re_match.end()
 
