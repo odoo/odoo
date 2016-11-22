@@ -152,16 +152,6 @@ Parameters can be provided using ``eval`` (should evaluate to a sequence of
 parameters to call the method with) or ``value`` elements (see ``list``
 values).
 
-``workflow``
-------------
-
-The ``workflow`` tag sends a signal to an existing workflow. The workflow
-can be specified via a ``ref`` attribute (the :term:`external id` of
-an existing workflow) or a ``value`` tag returning the id of a workflow.
-
-The tag also has two mandatory attributes ``model`` (the model linked to the
-workflow) and ``action`` (the name of the signal to send to the workflow).
-
 .. ignored assert
 
 Shortcuts

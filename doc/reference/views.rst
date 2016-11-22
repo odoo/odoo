@@ -201,10 +201,6 @@ Possible children elements of the list view are:
     ``type``
         type of button, indicates how it clicking it affects Odoo:
 
-        ``workflow`` (default)
-            sends a signal to a workflow. The button's ``name`` is the
-            workflow signal, the row's record is passed as argument to the
-            signal
         ``object``
             call a method on the list's model. The button's ``name`` is the
             method, which is called with the current row's record id and the
