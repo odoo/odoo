@@ -36,6 +36,23 @@ class TestQWebTField(TransactionCase):
             ),
         )
 
+    def test_namespace(self):
+        xml = """<root>
+<h:table xmlns:h="http://www.example.org/table">
+  <h:tr>
+    <h:td xmlns:h="http://www.w3.org/TD/html4/">Apples</h:td>
+    <h:td>Bananas</h:td>
+  </h:tr>
+</h:table>
+<f:table xmlns:f="http://www.example.org/furniture">
+  <f:width t-attf-test="1">80</f:width>
+</f:table>
+</root>"""
+
+        field = etree.fromstring(xml)
+        result = self.engine.render(field)
+        self.assertEqual(result, xml.replace('t-attf-test', 'test'))
+
     def test_i18n(self):
         field = etree.Element('span', {'t-field': u'company.name'})
         s = u"Testing «ταБЬℓσ»: 1<2 & 4+1>3, now 20% off!"

@@ -269,6 +269,7 @@ class QWeb(object):
         _options['ast_calls'] = []
         _options['root'] = element.getroottree()
         _options['last_path_node'] = None
+        _options['nsmap'] = {}
 
         # generate ast
 
@@ -700,14 +701,34 @@ class QWeb(object):
 
     def _compile_static_node(self, el, options):
         """ Compile a purely static element into a list of AST nodes. """
-        content = self._compile_directive_content(el, options)
+        if el.nsmap:
+            nsmap = options['nsmap']
+            nsmap_copy = nsmap.copy()
+            nsmap_str = u''
+            for name, value in el.nsmap.iteritems():
+                if name not in nsmap_copy or nsmap_copy[name] != value:
+                    nsmap_copy[name] = value
+                    nsmap_str += u' %s="%s"' % ('xmlns:%s' % name, escape(unicodifier(value)))
+            options['nsmap'] = nsmap_copy
+            content = self._compile_directive_content(el, options)
+            options['nsmap'] = nsmap
+        else:
+            content = self._compile_directive_content(el, options)
+
         if el.tag == 't':
             return content
-        tag = u'<%s%s' % (el.tag, u''.join([u' %s="%s"' % (name, escape(unicodifier(value))) for name, value in el.attrib.iteritems()]))
+
+        tag = el.tag
+        if el.prefix:
+            tag = (u'%s:%s' % (el.prefix, el.tag.split('}', 1).pop()))
+        node = u'<%s%s' % (tag, u''.join([u' %s="%s"' % (name, escape(unicodifier(value))) for name, value in el.attrib.iteritems()]))
+        if el.nsmap:
+            node += nsmap_str
+
         if el.tag in self._void_elements:
-            return [self._append(ast.Str(tag + '/>'))] + content
+            return [self._append(ast.Str(node + '/>'))] + content
         else:
-            return [self._append(ast.Str(tag + '>'))] + content + [self._append(ast.Str('</%s>' % el.tag))]
+            return [self._append(ast.Str(node + '>'))] + content + [self._append(ast.Str('</%s>' % tag))]
 
     def _compile_static_attributes(self, el, options):
         """ Compile the static attributes of the given element into a list of
@@ -849,7 +870,10 @@ class QWeb(object):
         """ Compile the tag of the given element into a list of AST nodes. """
         if el.tag == 't':
             return content
-        body = [self._append(ast.Str(u'<%s' % el.tag))]
+        tag = el.tag
+        if el.prefix:
+            tag = (u'%s:%s' % (el.prefix, el.tag.split('}', 1).pop()))
+        body = [self._append(ast.Str(u'<%s' % tag))]
         body.extend(self._compile_all_attributes(el, options, attr_already_created))
         if el.tag in self._void_elements:
             body.append(self._append(ast.Str(u'/>')))
@@ -857,7 +881,7 @@ class QWeb(object):
         else:
             body.append(self._append(ast.Str(u'>')))
             body.extend(content)
-            body.append(self._append(ast.Str(u'</%s>' % el.tag)))
+            body.append(self._append(ast.Str(u'</%s>' % tag)))
         return body
 
     # compile directives
