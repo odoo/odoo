@@ -12,7 +12,7 @@ class HrHolidaysController(http.Controller):
         comparison, record, redirect = MailController._check_token_and_record_or_redirect('hr.holidays', int(res_id), token)
         if comparison and record:
             try:
-                record.signal_workflow('validate')
+                record.action_validate()
             except Exception:
                 return MailController._redirect_to_messaging()
         return redirect
@@ -22,7 +22,7 @@ class HrHolidaysController(http.Controller):
         comparison, record, redirect = MailController._check_token_and_record_or_redirect('hr.holidays', int(res_id), token)
         if comparison and record:
             try:
-                record.signal_workflow('refuse')
+                record.action_refuse()
             except Exception:
                 return MailController._redirect_to_messaging()
         return redirect
