@@ -511,8 +511,6 @@ function prettify_html(html) {
     }
     return result;
 }
-
-// Change Warning: called with dummy arguments to quit code view before saving
 $.summernote.pluginEvents.codeview = function (event, editor, layoutInfo) {
     if (layoutInfo.toolbar) {
         return eventHandler.modules.codeview.toggle(layoutInfo);

@@ -161,11 +161,6 @@ var FieldTextHtmlSimple = widget.extend({
         return !this.get('value') || this.get('value') === "<p><br/></p>" || !this.get('value').match(/\S/);
     },
     commit_value: function () {
-        // leave code view before saving
-        if (this.$content.prev('textarea').length === 1) {
-            var layoutInfo = { 'editor': function() { return this.$content; }.bind(this) };
-            $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo);
-        }
         if (this.options['style-inline']) {
             transcoder.class_to_style(this.$content);
             transcoder.font_to_img(this.$content);
@@ -382,11 +377,6 @@ var FieldTextHtml = widget.extend({
             this._dirty_flag = false;
             return this.editor.save();
         } else if (this._dirty_flag && this.editor && this.editor.buildingBlock) {
-            // leave code view before saving
-            if (this.$content.prev('textarea').length === 1) {
-                var layoutInfo = { 'editor': function() { return this.$content; }.bind(this) };
-                $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo);
-            }
             this.editor.buildingBlock.clean_for_save();
             this.internal_set_value( this.$content.html() );
         }
