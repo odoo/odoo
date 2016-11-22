@@ -29,3 +29,4 @@ Katherine Zaoral kathy@vauxoo.com https://github.com/zaoral
 Hugo Adan hugo@vauxoo.com https://github.com/hugho-ad
 Alan Guzman aguzman@vauxoo.com https://github.com/alan-guzman
 Leonardo Astros leonardo@vauxoo.com https://github.com/Codemaker83
+Osval Reyes osval@vauxoo.com https://github.com/osvalr
