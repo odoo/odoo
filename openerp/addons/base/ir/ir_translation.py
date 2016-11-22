@@ -5,7 +5,7 @@ from collections import defaultdict
 from difflib import get_close_matches
 import logging
 
-from openerp import api, tools
+from openerp import api, tools, SUPERUSER_ID
 import openerp.modules
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -126,12 +126,21 @@ class ir_translation_import_cursor(object):
         # referencing non-existent data.
         cr.execute("DELETE FROM %s WHERE res_id IS NULL AND module IS NOT NULL" % self._table_name)
 
+        # detect the xml_translate fields, where the src must be the same
+        env = api.Environment(cr, SUPERUSER_ID, {})
+        src_relevant_fields = []
+        for model in env:
+            for field_name, field in env[model]._fields.items():
+                if hasattr(field, 'translate') and callable(field.translate):
+                    src_relevant_fields.append("%s,%s" % (model, field_name))
+
         find_expr = """
                 irt.lang = ti.lang
             AND irt.type = ti.type
             AND irt.name = ti.name
             AND (
-                    (ti.type = 'model' AND ti.res_id = irt.res_id AND irt.src = ti.src)
+                    (ti.type = 'model' AND ti.res_id = irt.res_id AND ti.name IN %s AND irt.src = ti.src)
+                 OR (ti.type = 'model' AND ti.res_id = irt.res_id AND ti.name NOT IN %s)
                  OR (ti.type = 'view' AND (irt.res_id IS NULL OR ti.res_id = irt.res_id) AND irt.src = ti.src)
                  OR (ti.type = 'field')
                  OR (ti.type = 'help')
@@ -147,20 +156,23 @@ class ir_translation_import_cursor(object):
                     state = 'translated'
                 FROM %s AS ti
                 WHERE %s AND ti.value IS NOT NULL AND ti.value != ''
-                """ % (self._parent_table, self._table_name, find_expr))
+                """ % (self._parent_table, self._table_name, find_expr),
+                       (tuple(src_relevant_fields), tuple(src_relevant_fields)))
 
         # Step 3: insert new translations
         cr.execute("""INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
             SELECT name, lang, res_id, src, type, value, module, state, comments
               FROM %s AS ti
               WHERE NOT EXISTS(SELECT 1 FROM ONLY %s AS irt WHERE %s);
-              """ % (self._parent_table, self._table_name, self._parent_table, find_expr))
+              """ % (self._parent_table, self._table_name, self._parent_table, find_expr),
+                   (tuple(src_relevant_fields), tuple(src_relevant_fields)))
 
         if self._debug:
             cr.execute('SELECT COUNT(*) FROM ONLY %s' % self._parent_table)
             c1 = cr.fetchone()[0]
             cr.execute('SELECT COUNT(*) FROM ONLY %s AS irt, %s AS ti WHERE %s' % \
-                (self._parent_table, self._table_name, find_expr))
+                (self._parent_table, self._table_name, find_expr),
+                       (tuple(src_relevant_fields), tuple(src_relevant_fields)))
             c = cr.fetchone()[0]
             _logger.debug("ir.translation.cursor:  %d entries now in ir.translation, %d common entries with tmp", c1, c)
 
