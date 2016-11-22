@@ -104,7 +104,8 @@ class Survey(models.Model):
 
     def _compute_survey_url(self):
         """ Computes a public URL for the survey """
-        base_url = '/' if self.env.context.get('relative_url') else self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = '/' if self.env.context.get('relative_url') else \
+                   self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for survey in self:
             survey.public_url = urljoin(base_url, "survey/start/%s" % (slug(survey)))
             survey.print_url = urljoin(base_url, "survey/print/%s" % (slug(survey)))

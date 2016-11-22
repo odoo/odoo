@@ -40,7 +40,7 @@ class GoogleDrive(models.Model):
             formula = '=oe_read_group("%s";"%s";"%s";"%s")' % (model, fields, groupbys, domain)
         else:
             formula = '=oe_browse("%s";"%s";"%s")' % (model, fields, domain)
-        url = self.env['ir.config_parameter'].get_param('web.base.url')
+        url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         dbname = self._cr.dbname
         user = self.env['res.users'].browse(self.env.user.id).read(['login', 'password'])[0]
         username = user['login']

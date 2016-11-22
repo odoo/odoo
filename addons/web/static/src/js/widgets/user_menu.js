@@ -58,21 +58,11 @@ var UserMenu = Widget.extend({
         });
     },
     on_menu_account: function() {
+        var self = this;
         this.trigger_up('clear_uncommitted_changes', {
             callback: function() {
-                var P = new Model('ir.config_parameter');
-                P.call('get_param', ['database.uuid']).then(function(dbuuid) {
-                    var state = {
-                        'd': session.db,
-                        'u': window.location.protocol + '//' + window.location.host,
-                    };
-                    var params = {
-                        response_type: 'token',
-                        client_id: dbuuid || '',
-                        state: JSON.stringify(state),
-                        scope: 'userinfo',
-                    };
-                    framework.redirect('https://accounts.odoo.com/oauth2/auth?'+$.param(params));
+                self.rpc('/web/session/account').then(function(url) {
+                    framework.redirect(url);
                 }).fail(function(result, ev){
                     ev.preventDefault();
                     framework.redirect('https://accounts.odoo.com/account');

@@ -49,8 +49,8 @@ class GoogleDrive(models.Model):
 
     @api.model
     def get_access_token(self, scope=None):
-        Config = self.env['ir.config_parameter']
-        google_drive_refresh_token = Config.sudo().get_param('google_drive_refresh_token')
+        Config = self.env['ir.config_parameter'].sudo()
+        google_drive_refresh_token = Config.get_param('google_drive_refresh_token')
         user_is_admin = self.env['res.users'].browse(self.env.user.id)._is_admin()
         if not google_drive_refresh_token:
             if user_is_admin:
@@ -59,8 +59,8 @@ class GoogleDrive(models.Model):
                 raise RedirectWarning(msg, action_id, _('Go to the configuration panel'))
             else:
                 raise UserError(_("Google Drive is not yet configured. Please contact your administrator."))
-        google_drive_client_id = Config.sudo().get_param('google_drive_client_id')
-        google_drive_client_secret = Config.sudo().get_param('google_drive_client_secret')
+        google_drive_client_id = Config.get_param('google_drive_client_id')
+        google_drive_client_secret = Config.get_param('google_drive_client_secret')
         #For Getting New Access Token With help of old Refresh Token
         data = werkzeug.url_encode({
             'client_id': google_drive_client_id,

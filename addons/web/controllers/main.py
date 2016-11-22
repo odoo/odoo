@@ -18,6 +18,7 @@ import os
 import re
 import sys
 import time
+import werkzeug
 import werkzeug.utils
 import werkzeug.wrappers
 import zlib
@@ -776,6 +777,17 @@ class Session(http.Controller):
     def check(self):
         request.session.check_security()
         return None
+
+    @http.route('/web/session/account', type='json', auth="user")
+    def account(self):
+        ICP = request.env['ir.config_parameter'].sudo()
+        params = {
+            'response_type': 'token',
+            'client_id': ICP.get_param('database.uuid') or '',
+            'state': json.dumps({'d': request.db, 'u': ICP.get_param('web.base.url')}),
+            'scope': 'userinfo',
+        }
+        return 'https://accounts.odoo.com/oauth2/auth?' + werkzeug.url_encode(params)
 
     @http.route('/web/session/destroy', type='json', auth="user")
     def destroy(self):

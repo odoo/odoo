@@ -29,5 +29,5 @@ class BaseConfigSettings(models.TransientModel):
         if authorization_code and authorization_code != ICP.get_param('google_drive_authorization_code'):
             refresh_token = self.env['google.service'].generate_refresh_token('drive', authorization_code)
 
-        ICP.set_param('google_drive_authorization_code', authorization_code, groups=['base.group_system'])
-        ICP.set_param('google_drive_refresh_token', refresh_token, groups=['base.group_system'])
+        ICP.set_param('google_drive_authorization_code', authorization_code)
+        ICP.set_param('google_drive_refresh_token', refresh_token)

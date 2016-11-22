@@ -28,7 +28,7 @@ class ServerAction(models.Model):
             action.xml_id = res.get(action.id)
 
     def _compute_website_url(self, website_path, xml_id):
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         link = website_path or xml_id or (self.id and '%d' % self.id) or ''
         if base_url and link:
             path = '%s/%s' % ('/website/action', link)

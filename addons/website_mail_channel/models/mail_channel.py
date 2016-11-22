@@ -17,7 +17,7 @@ class MailGroup(models.Model):
     def message_get_email_values(self, notif_mail=None):
         self.ensure_one()
         res = super(MailGroup, self).message_get_email_values(notif_mail=notif_mail)
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         headers = {}
         if res.get('headers'):
             try:
@@ -34,7 +34,7 @@ class MailGroup(models.Model):
 
     @api.multi
     def _send_confirmation_email(self, partner_ids, unsubscribe=False):
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         route = "/groups/%(action)s/%(channel)s/%(partner)s/%(token)s"
         if unsubscribe:
             template = self.env.ref('website_mail_channel.mail_template_list_unsubscribe')

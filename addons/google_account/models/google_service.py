@@ -57,11 +57,11 @@ class GoogleService(models.TransientModel):
 
     @api.model
     def _get_google_token_uri(self, service, scope):
-        Parameters = self.env['ir.config_parameter'].sudo()
+        get_param = self.env['ir.config_parameter'].sudo().get_param
         encoded_params = werkzeug.url_encode({
             'scope': scope,
-            'redirect_uri': Parameters.get_param('google_redirect_uri'),
-            'client_id': Parameters.get_param('google_%s_client_id' % service),
+            'redirect_uri': get_param('google_redirect_uri'),
+            'client_id': get_param('google_%s_client_id' % service),
             'response_type': 'code',
         })
         return '%s?%s' % (GOOGLE_AUTH_ENDPOINT, encoded_params)
@@ -77,9 +77,9 @@ class GoogleService(models.TransientModel):
             'f': from_url
         }
 
-        Parameters = self.env['ir.config_parameter']
-        base_url = Parameters.get_param('web.base.url', default='http://www.odoo.com?NoBaseUrl')
-        client_id = Parameters.sudo().get_param('google_%s_client_id' % (service,), default=False)
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        base_url = get_param('web.base.url', default='http://www.odoo.com?NoBaseUrl')
+        client_id = get_param('google_%s_client_id' % (service,), default=False)
 
         encoded_params = werkzeug.url_encode({
             'response_type': 'code',
@@ -97,10 +97,10 @@ class GoogleService(models.TransientModel):
         """ Call Google API to exchange authorization code against token, with POST request, to
             not be redirected.
         """
-        Parameters = self.env['ir.config_parameter']
-        base_url = Parameters.get_param('web.base.url', default='http://www.odoo.com?NoBaseUrl')
-        client_id = Parameters.sudo().get_param('google_%s_client_id' % (service,), default=False)
-        client_secret = Parameters.sudo().get_param('google_%s_client_secret' % (service,), default=False)
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        base_url = get_param('web.base.url', default='http://www.odoo.com?NoBaseUrl')
+        client_id = get_param('google_%s_client_id' % (service,), default=False)
+        client_secret = get_param('google_%s_client_secret' % (service,), default=False)
 
         headers = {"content-type": "application/x-www-form-urlencoded"}
         data = werkzeug.url_encode({
@@ -120,9 +120,9 @@ class GoogleService(models.TransientModel):
     # FIXME : this method update a field defined in google_calendar module. Since it is used only in that module, maybe it should be moved.
     @api.model
     def _refresh_google_token_json(self, refresh_token, service):  # exchange_AUTHORIZATION vs Token (service = calendar)
-        Parameters = self.env['ir.config_parameter'].sudo()
-        client_id = Parameters.get_param('google_%s_client_id' % (service,), default=False)
-        client_secret = Parameters.get_param('google_%s_client_secret' % (service,), default=False)
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        client_id = get_param('google_%s_client_id' % (service,), default=False)
+        client_secret = get_param('google_%s_client_secret' % (service,), default=False)
 
         headers = {"content-type": "application/x-www-form-urlencoded"}
         data = werkzeug.url_encode({

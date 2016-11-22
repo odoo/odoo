@@ -47,8 +47,8 @@ class BaseGengoTranslations(models.TransientModel):
     @api.model_cr
     def init(self):
         icp = self.env['ir.config_parameter'].sudo()
-        if not icp.get_param(self.GENGO_KEY, default=None):
-            icp.set_param(self.GENGO_KEY, str(uuid.uuid4()), groups=self.GROUPS)
+        if not icp.get_param(self.GENGO_KEY):
+            icp.set_param(self.GENGO_KEY, str(uuid.uuid4()))
 
     @api.model_cr
     def get_gengo_key(self):
@@ -206,7 +206,7 @@ class BaseGengoTranslations(models.TransientModel):
                 'term2.id': {...}
                 }
             }'''
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         IrTranslation = self.env['ir.translation']
         jobs = {}
         user = self.env.user
