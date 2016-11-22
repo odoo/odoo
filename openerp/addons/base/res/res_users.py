@@ -883,8 +883,6 @@ class UsersView(models.Model):
     def fields_get(self, allfields=None, attributes=None):
         res = super(UsersView, self).fields_get(allfields, attributes=attributes)
         # add reified groups fields
-        if not self.env.user._is_admin():
-            return res
         for app, kind, gs in self.env['res.groups'].sudo().get_groups_by_application():
             if kind == 'selection':
                 # selection group field
