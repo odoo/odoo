@@ -180,8 +180,7 @@ class Holidays(models.Model):
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, track_visibility='onchange')
-    manager_id = fields.Many2one('hr.employee', string='First Approval', readonly=True, copy=False,
-        help='This area is automatically filled by the user who validate the leave')
+    manager_id = fields.Many2one('hr.employee', related='employee_id.parent_id', string='Manager', readonly=True, store=True)
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     number_of_days_temp = fields.Float(
         'Allocation', copy=False, readonly=True,
@@ -207,7 +206,9 @@ class Holidays(models.Model):
     ], string='Allocation Mode', readonly=True, required=True, default='employee',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help='By Employee: Allocation/Request for individual Employee, By Employee Tag: Allocation/Request for group of employees in category')
-    manager_id2 = fields.Many2one('hr.employee', string='Second Approval', readonly=True, copy=False,
+    first_approver_id = fields.Many2one('hr.employee', string='First Approval', readonly=True, copy=False,
+        help='This area is automatically filled by the user who validate the leave', oldname='manager_id')
+    second_approver_id = fields.Many2one('hr.employee', string='Second Approval', readonly=True, copy=False, oldname='manager_id2',
         help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
     double_validation = fields.Boolean('Apply Double Validation', related='holiday_status_id.double_validation')
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
@@ -402,8 +403,8 @@ class Holidays(models.Model):
                 raise UserError(_('Leave request state must be "Refused" or "To Approve" in order to reset to Draft.'))
             holiday.write({
                 'state': 'draft',
-                'manager_id': False,
-                'manager_id2': False,
+                'first_approver_id': False,
+                'second_approver_id': False,
             })
             linked_requests = holiday.mapped('linked_request_ids')
             for linked_request in linked_requests:
@@ -424,13 +425,13 @@ class Holidays(models.Model):
         if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
 
-        manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state != 'confirm':
                 raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
 
             if holiday.double_validation:
-                return holiday.write({'state': 'validate1', 'manager_id': manager.id if manager else False})
+                return holiday.write({'state': 'validate1', 'first_approver_id': current_employee.id})
             else:
                 holiday.action_validate()
 
@@ -439,7 +440,7 @@ class Holidays(models.Model):
         if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
 
-        manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state not in ['confirm', 'validate1']:
                 raise UserError(_('Leave request must be confirmed in order to approve it.'))
@@ -448,9 +449,9 @@ class Holidays(models.Model):
 
             holiday.write({'state': 'validate'})
             if holiday.double_validation:
-                holiday.write({'manager_id2': manager.id})
+                holiday.write({'second_approver_id': current_employee.id})
             else:
-                holiday.write({'manager_id': manager.id})
+                holiday.write({'first_approver_id': current_employee.id})
             if holiday.holiday_type == 'employee' and holiday.type == 'remove':
                 meeting_values = {
                     'name': holiday.display_name,
@@ -498,15 +499,15 @@ class Holidays(models.Model):
         if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             raise UserError(_('Only an HR Officer or Manager can refuse leave requests.'))
 
-        manager = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         for holiday in self:
             if holiday.state not in ['confirm', 'validate', 'validate1']:
                 raise UserError(_('Leave request must be confirmed or validated in order to refuse it.'))
 
             if holiday.state == 'validate1':
-                holiday.write({'state': 'refuse', 'manager_id': manager.id})
+                holiday.write({'state': 'refuse', 'first_approver_id': current_employee.id})
             else:
-                holiday.write({'state': 'refuse', 'manager_id2': manager.id})
+                holiday.write({'state': 'refuse', 'second_approver_id': current_employee.id})
             # Delete the meeting
             if holiday.meeting_id:
                 holiday.meeting_id.unlink()
