@@ -9,10 +9,10 @@
 # Vida Potočnik <vida.potocnik@mentis.si>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-19 12:36+0000\n"
-"PO-Revision-Date: 2016-09-19 12:36+0000\n"
+"POT-Creation-Date: 2016-11-14 15:55+0000\n"
+"PO-Revision-Date: 2016-11-14 15:55+0000\n"
 "Last-Translator: Vida Potočnik <vida.potocnik@mentis.si>, 2016\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +25,6 @@ msgstr ""
 #: model:mail.template,body_html:website_crm_partner_assign.email_template_lead_forward_mail
 msgid ""
 "\n"
-"            \n"
 "<p>Hello,</p>\n"
 "\n"
 "\n"
@@ -57,38 +56,6 @@ msgid ""
 "% endif\n"
 "            "
 msgstr ""
-"\n"
-"            \n"
-"<p>Pozdravljeni,</p>\n"
-"\n"
-"\n"
-"<p>Z nami so v stiku potencialni partnerji iz vaše regije. Naslednji indici so bili dodeljeni ${ctx['partner_id'].name}:</p>\n"
-"\n"
-"<ol>\n"
-"% for lead in ctx['partner_leads']:\n"
-"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Predmet ni določen'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Naziv stika ni določen'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Država ni določena' }, ${lead.lead_id.email_from or 'E-pošta ni določena'}, ${lead.lead_id.phone or ''} </li></br>\n"
-"% endfor\n"
-"</ol>\n"
-"\n"
-"% if ctx.get('partner_in_portal'):\n"
-"<p>Prijavite se v vaš <a href=\"${object.get_portal_url()}\">partnerski portal</a> za več podrobnosti. Pri vsakem indicu sta zgoraj levo dva gumba, ki ju morate pritisniti po vzpostavitvi stika z indicem: \"Zanima me\" & \"Ne zanima me\".</p>\n"
-"% else:\n"
-"<p>\n"
-"    Do naše baze/portala nimate dostopa. Obvestite \n"
-"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'svojega skrbnika računa %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n"
-"</p>\n"
-"% endif\n"
-"<p>Če z indicem ne vzpostavite stika prej kot v 20 dneh, bo dodeljen drugemu partnerju.</p>\n"
-"\n"
-"<p>Hvala,</p>\n"
-"\n"
-"<pre>\n"
-"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
-"</pre>\n"
-"% if not ctx['partner_id'].user_id:\n"
-"PS: Izgleda, da nimate dodeljenega skrbnika računa.\n"
-"% endif\n"
-"            "
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_nbr_cases
@@ -121,19 +88,6 @@ msgstr ""
 #, python-format
 msgid "<p>I am interested by this lead.</p>"
 msgstr "<p>Zainteresiran sem za ta indic.</p>"
-
-#. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:203
-#, python-format
-msgid "<p>I am not interested by this lead. I contacted the lead.</p>"
-msgstr "<p>Ta indic me ne zanima. Stik sem vzpostavil.</p>"
-
-#. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:205
-#, python-format
-msgid ""
-"<p>I am not interested by this lead. I have not contacted the lead.</p>"
-msgstr "<p>Ta indic me ne zanima in stika nisem vzpostavil.</p>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
@@ -199,7 +153,7 @@ msgid "Active"
 msgstr "Aktivno"
 
 #. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:230
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:235
 #, python-format
 msgid "Activity Done"
 msgstr ""
@@ -395,6 +349,7 @@ msgstr "Naziv kupca"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Date"
 msgstr "Datum"
 
@@ -565,6 +520,18 @@ msgid "High"
 msgstr "Visok"
 
 #. module: website_crm_partner_assign
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:203
+#, python-format
+msgid "I am not interested by this lead. I contacted the lead."
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:205
+#, python-format
+msgid "I am not interested by this lead. I have not contacted the lead."
+msgstr ""
+
+#. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_id
@@ -588,11 +555,6 @@ msgstr "Izvedel"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date
 msgid "Invoice Account Date"
 msgstr "Datum konta računa"
-
-#. module: website_crm_partner_assign
-#: model:ir.model,name:website_crm_partner_assign.model_account_invoice_report
-msgid "Invoices Statistics"
-msgstr "Statistika računov"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation___last_update
@@ -679,7 +641,7 @@ msgid "Leads Analysis"
 msgstr "Analiza indicev"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_9936
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_9922
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "Level"
 msgstr "Nivo"
@@ -1094,6 +1056,11 @@ msgstr ""
 #: code:addons/website_crm_partner_assign/controllers/main.py:96
 #, python-format
 msgid "This Week Activities"
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
+msgid "This lead is a spam"
 msgstr ""
 
 #. module: website_crm_partner_assign

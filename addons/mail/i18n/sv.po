@@ -9,10 +9,10 @@
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2016
 # Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2016
 # Haojun Zou <apollo_zhj@msn.com>, 2016
+# Patrik Lermon <patrik.lermon@gmail.com>, 2016
 # lasch a <bmail440@gmail.com>, 2016
 # Daniel Forslund <daniel.forslund@gmail.com>, 2016
 # Robert Frykelius <robert.frykelius@linserv.se>, 2016
-# Patrik Lermon <patrik.lermon@gmail.com>, 2016
 # Jonathan S <jonathan.c.strom@gmail.com>, 2016
 msgid ""
 msgstr ""
@@ -270,6 +270,12 @@ msgid ""
 "                            </span>\n"
 "                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
 msgstr ""
+"<span attrs=\\\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\\\">\n"
+"<strong>Massutskick</strong> on\n"
+"<span attrs=\\\"{'invisible': [('use_active_domain', '=', True)]}\\\">valda poster</span>\n"
+"<span attrs=\\\"{'invisible': [('use_active_domain', '=', False)]}\\\">valt sökfilter</span>.\n"
+"</span>\n"
+"<span attrs=\\\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\\\">Följare av dokumentet och</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -566,7 +572,7 @@ msgstr "Ansök"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Attach a file"
-msgstr "Bilägg en fil"
+msgstr "Bifoga en fil"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_attachment_ids
@@ -2777,7 +2783,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/systray.xml:24
 #, python-format
 msgid "New message"
-msgstr ""
+msgstr "Nytt meddelande"
 
 #. module: mail
 #. openerp-web
@@ -2846,7 +2852,7 @@ msgstr "Anteckning"
 #: code:addons/mail/static/src/xml/thread.xml:72
 #, python-format
 msgid "Note by"
-msgstr ""
+msgstr "Skrivet av"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -3605,7 +3611,7 @@ msgstr "Spara som en ny mall"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Save as new template"
-msgstr ""
+msgstr "Spara som ny mall"
 
 #. module: mail
 #. openerp-web

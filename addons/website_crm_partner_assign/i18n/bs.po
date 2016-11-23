@@ -8,10 +8,10 @@
 # Bole <bole@dajmi5.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-19 12:36+0000\n"
-"PO-Revision-Date: 2016-09-19 12:36+0000\n"
+"POT-Creation-Date: 2016-11-14 15:55+0000\n"
+"PO-Revision-Date: 2016-11-14 15:55+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>, 2016\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,6 @@ msgstr ""
 #: model:mail.template,body_html:website_crm_partner_assign.email_template_lead_forward_mail
 msgid ""
 "\n"
-"            \n"
 "<p>Hello,</p>\n"
 "\n"
 "\n"
@@ -71,36 +70,23 @@ msgstr "# Prilika"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "<i class=\"fa fa-file-text-o\"/> I'm interested"
-msgstr ""
+msgstr "<i class=\"fa fa-file-text-o\"/> Zainteresovan sam"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "<i class=\"fa fa-fw fa-times\"/> I'm not interested"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-times\"/> Nisam zainteresovan"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:192
 #, python-format
 msgid "<p>I am interested by this lead.</p>"
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:203
-#, python-format
-msgid "<p>I am not interested by this lead. I contacted the lead.</p>"
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:205
-#, python-format
-msgid ""
-"<p>I am not interested by this lead. I have not contacted the lead.</p>"
-msgstr ""
+msgstr "<p>Zainteresovan sam ovim potencijalom.</p>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
@@ -109,6 +95,8 @@ msgid ""
 "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n"
 "                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
 msgstr ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">S </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">J </span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
@@ -118,6 +106,9 @@ msgid ""
 "                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
 "                                <span class=\"oe_grey\">) </span>"
 msgstr ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">I </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">Z </span>\n"
+"                                <span class=\"oe_grey\">) </span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -126,6 +117,9 @@ msgid ""
 "style=\"display:none;\">You need to fill up the next action and contact the "
 "customer before accepting the lead</span>"
 msgstr ""
+"<span class=\"text-danger error_partner_assign_desinterested\" "
+"style=\"display:none;\">Morate da popunite sljedeću akciju i kontaktirate "
+"kupca prije prihvatanja ovog potencijala</span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -134,17 +128,20 @@ msgid ""
 "style=\"display:none;\">You need to fill up the next action and contact the "
 "customer before accepting the lead</span>"
 msgstr ""
+"<span class=\"text-danger error_partner_assign_interested\" "
+"style=\"display:none;\">Morate da popunite sljedeću akciju i kontaktirate "
+"kupca prije prihvatanja ovog potencijala</span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<span>at </span>"
-msgstr ""
+msgstr "<span>na </span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<strong>Message and communication history</strong>"
-msgstr ""
+msgstr "<strong>Poruka i istorija komunikacije</strong>"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_activation
@@ -161,10 +158,10 @@ msgid "Active"
 msgstr "Aktivan"
 
 #. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:230
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:235
 #, python-format
 msgid "Activity Done"
-msgstr ""
+msgstr "Aktivnost završena"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -182,13 +179,13 @@ msgstr "Sve"
 #: code:addons/website_crm_partner_assign/controllers/main.py:206
 #, python-format
 msgid "All Categories"
-msgstr ""
+msgstr "Sve kategorije"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:223
 #, python-format
 msgid "All Countries"
-msgstr ""
+msgstr "Sve zemlje"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_date_assign
@@ -198,12 +195,12 @@ msgstr "Dodjeljeni datum"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Assign Month"
-msgstr ""
+msgstr "Mjesec dodjele"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.server,name:website_crm_partner_assign.action_assign_salesman_according_assigned_partner
 msgid "Assign salesman of assigned partner"
-msgstr ""
+msgstr "Dodjeljeni prodavač dodjeljenog partnera"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_date_assign
@@ -225,7 +222,7 @@ msgstr "Dodjeljeni partner"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Automatic Assignation"
-msgstr ""
+msgstr "Automatsko dodjeljivanje"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_forward_to_partner_body
@@ -298,7 +295,7 @@ msgstr "Ime kontakta"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Contact a reseller"
-msgstr ""
+msgstr "Kontaktiraj preprodavača"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_body
@@ -308,7 +305,7 @@ msgstr "Sadržaji"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Countries..."
-msgstr ""
+msgstr "Zemlje..."
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_country_id
@@ -341,7 +338,7 @@ msgstr "Kreirano"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Current stage of the opp"
-msgstr ""
+msgstr "Trenutni status prilike"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_partner_id
@@ -357,6 +354,7 @@ msgstr "Naziv kupca"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Date"
 msgstr "Datum"
 
@@ -373,12 +371,12 @@ msgstr "Datum provjere"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Deadline:"
-msgstr ""
+msgstr "Krajnji rok:"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_delay_open
 msgid "Delay to Assign"
-msgstr ""
+msgstr "Odgoda za dodjelu"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_delay_close
@@ -388,7 +386,7 @@ msgstr "Odgoda do zatvaranja"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Details Next Activity"
-msgstr ""
+msgstr "Detalji sljedeće aktivnosti"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_display_name
@@ -403,17 +401,17 @@ msgstr "Prikaži naziv"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Do you have contacted the customer?"
-msgstr ""
+msgstr "Dali ste kontaktirali kupca?"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Edit Contact"
-msgstr ""
+msgstr "Uredi kontakt"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Edit Opportunity"
-msgstr ""
+msgstr "Uredi priliku"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -433,7 +431,7 @@ msgstr "Očekivano zatvaranje"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Expected Closing:"
-msgstr ""
+msgstr "Očekivano zatvaranje:"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:107
@@ -450,22 +448,22 @@ msgstr "Napredni filteri..."
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Filter by Country"
-msgstr ""
+msgstr "Filtriraj po državi"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Filter by Level"
-msgstr ""
+msgstr "Filtriraj po nivou"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_partner_id
 msgid "Forward Leads To"
-msgstr ""
+msgstr "Prosljedi potencijale na"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_forward_type
 msgid "Forward selected leads to"
-msgstr ""
+msgstr "Prosljedi odabrane potencijale na"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_crm_send_mass_forward
@@ -476,7 +474,7 @@ msgstr "Proslijedi partneru"
 #. module: website_crm_partner_assign
 #: model:mail.template,subject:website_crm_partner_assign.email_template_lead_forward_mail
 msgid "Fwd: Lead: ${ctx['partner_id'].name}"
-msgstr ""
+msgstr "Fwd: Potencijal: ${ctx['partner_id'].name}"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_partner_latitude
@@ -492,7 +490,7 @@ msgstr "Geo dužina"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_opportunity_geo_assign_form
 msgid "Geolocation"
-msgstr ""
+msgstr "Geolokacija"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade_partner_weight
@@ -526,6 +524,18 @@ msgid "High"
 msgstr "Visoki"
 
 #. module: website_crm_partner_assign
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:203
+#, python-format
+msgid "I am not interested by this lead. I contacted the lead."
+msgstr "Nisam zainteresovan za ovaj potencijal. Kontaktirao sam potecijal."
+
+#. module: website_crm_partner_assign
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:205
+#, python-format
+msgid "I am not interested by this lead. I have not contacted the lead."
+msgstr ""
+
+#. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_id
@@ -538,22 +548,17 @@ msgstr "ID"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_implemented_partner_ids
 msgid "Implementation References"
-msgstr ""
+msgstr "Implementacijska referenca"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_assigned_partner_id
 msgid "Implemented by"
-msgstr ""
+msgstr "Implementirao"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date
 msgid "Invoice Account Date"
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: model:ir.model,name:website_crm_partner_assign.model_account_invoice_report
-msgid "Invoices Statistics"
-msgstr "Statistika faktura"
+msgstr "Računovodstveni datum fakture"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation___last_update
@@ -601,7 +606,7 @@ msgstr "Potencijal"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Lead -"
-msgstr ""
+msgstr "Potencijal -"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_graph
@@ -612,17 +617,17 @@ msgstr "Dodjeljivanje potencijala"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Lead Feedback"
-msgstr ""
+msgstr "Utisak potencijala"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_lead_location
 msgid "Lead Location"
-msgstr ""
+msgstr "Lokacija potencijala"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_lead_link
 msgid "Lead Single Links"
-msgstr ""
+msgstr "Jedinstveni link potencijala"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
@@ -640,7 +645,7 @@ msgid "Leads Analysis"
 msgstr "Analiza CRM potencijala"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_9936
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_9922
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "Level"
 msgstr "Nivo"
@@ -648,18 +653,18 @@ msgstr "Nivo"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_name
 msgid "Level Name"
-msgstr ""
+msgstr "Naziv nivoa"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_partner_weight
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_partner_weight
 msgid "Level Weight"
-msgstr ""
+msgstr "Težina nivoa"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Looking For a Local Store?"
-msgstr ""
+msgstr "Tražite lokalnu prodavnicu?"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:100
@@ -691,17 +696,17 @@ msgstr "Mobitel"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_partner_filter
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.crm_opportunity_partner_filter
 msgid "My Assigned Partners"
-msgstr ""
+msgstr "Moji dodjeljeni partneri"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "My Leads"
-msgstr ""
+msgstr "Moji potencijali"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "My Opportunities"
-msgstr ""
+msgstr "Moje prilike"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:49
@@ -718,17 +723,17 @@ msgstr "Naziv:"
 #: code:addons/website_crm_partner_assign/controllers/main.py:104
 #, python-format
 msgid "Newest"
-msgstr ""
+msgstr "Najnoviji"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Next Activity"
-msgstr ""
+msgstr "Sljedeća aktivnost"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Next Activity Date"
-msgstr ""
+msgstr "Datum sljedeće aktivnosti"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_review_next
@@ -738,7 +743,7 @@ msgstr "Sljedeća ocjena partnera"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "No result found"
-msgstr ""
+msgstr "Nisu pronađeni rezultati"
 
 #. module: website_crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
@@ -784,18 +789,18 @@ msgstr "Prilika"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Opportunity -"
-msgstr ""
+msgstr "Prilika -"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.partner
 msgid "Our Partners"
-msgstr ""
+msgstr "Naši partneri"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:98
 #, python-format
 msgid "Overdue Activities"
-msgstr ""
+msgstr "Zakašnjele aktivnosti"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_delay_expected
@@ -839,7 +844,7 @@ msgstr "Razina partnera"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_partner_location
 msgid "Partner Location"
-msgstr ""
+msgstr "Lokacija partnera"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_partner_assign_form
@@ -854,7 +859,7 @@ msgstr "Analiza dodjeljena partneru"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_partner_declined_ids
 msgid "Partner not interested"
-msgstr ""
+msgstr "Partner nije zainteresovan"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_partner_assigned_id
@@ -880,7 +885,7 @@ msgstr "Datum partnerstva"
 #. module: website_crm_partner_assign
 #: model:ir.ui.menu,name:website_crm_partner_assign.menu_report_crm_partner_assign_tree
 msgid "Partnerships"
-msgstr ""
+msgstr "Partnerstvo"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -896,7 +901,7 @@ msgstr "Planirani prihod"
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_platinium
 msgid "Platinum"
-msgstr ""
+msgstr "Platinum"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_priority
@@ -906,7 +911,7 @@ msgstr "Prioritet"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Priority:"
-msgstr ""
+msgstr "Prioritet:"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:108
@@ -924,7 +929,7 @@ msgstr "Očekivani Prihod"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Rating"
-msgstr ""
+msgstr "Ocijena"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.references_block
@@ -935,7 +940,7 @@ msgstr "Reference"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.footer_custom
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.layout
 msgid "Resellers"
-msgstr ""
+msgstr "Preprodavači"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_team_id
@@ -984,13 +989,13 @@ msgstr "Sekvenca"
 #: code:addons/website_crm_partner_assign/wizard/crm_forward_to_partner.py:72
 #, python-format
 msgid "Set an email address for the partner %s"
-msgstr ""
+msgstr "Postavi email adresu za partnera %s"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/wizard/crm_forward_to_partner.py:70
 #, python-format
 msgid "Set an email address for the partner(s): %s"
-msgstr ""
+msgstr "Postavi email adresu za partner(ae) %s"
 
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_silver
@@ -1007,7 +1012,7 @@ msgstr "Faza"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "States..."
-msgstr ""
+msgstr "Rep./Fed."
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1029,39 +1034,44 @@ msgstr "Oznake"
 #: code:addons/website_crm_partner_assign/wizard/crm_forward_to_partner.py:60
 #, python-format
 msgid "The Forward Email Template is not in the database"
-msgstr ""
+msgstr "Predložak prosljeđivanja emaila nije u bazi podataka"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 msgid "There are currently no leads for your account."
-msgstr ""
+msgstr "Trenutno nema potencijala za Vaš nalog."
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 msgid "There are currently no opportunities for your account."
-msgstr ""
+msgstr "Trenutno nema prilika za Vaš nalog."
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 msgid "There are no leads."
-msgstr ""
+msgstr "Nema potencijala."
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "There are no opportunities."
-msgstr ""
+msgstr "Nema prilika."
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:96
 #, python-format
 msgid "This Week Activities"
-msgstr ""
+msgstr "Aktivnosti ove sedmice"
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
+msgid "This lead is a spam"
+msgstr "Ovaj potencijal je spam"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:95
 #, python-format
 msgid "Today Activities"
-msgstr ""
+msgstr "Današnje aktivnosti"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_turnover
@@ -1087,7 +1097,7 @@ msgstr "Korisnik"
 #. module: website_crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
 msgid "Very High"
-msgstr ""
+msgstr "Veoma visoko"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_website_published
@@ -1097,12 +1107,12 @@ msgstr "Vidljivo na website-u"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "What is the next action? When? What is the expected revenue?"
-msgstr ""
+msgstr "Koja je sljedeća akcija?Kada?Koji je očekivani prihod?"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Why aren't you interested by this lead?"
-msgstr ""
+msgstr "Zašto niste zainteresovani za ovaj potencijal?"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:99
@@ -1113,24 +1123,24 @@ msgstr "Dobiveni"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.ref_country
 msgid "World Map"
-msgstr ""
+msgstr "Svjetska mapa"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "YYYY-MM-DD"
-msgstr ""
+msgstr "DD.MM.YYYY"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 msgid "Your Leads"
-msgstr ""
+msgstr "Vaši potencijali"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Your Opportunities"
-msgstr ""
+msgstr "Vaše prilike"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1140,7 +1150,7 @@ msgstr "Broj pošte"
 #. module: website_crm_partner_assign
 #: selection:crm.lead.forward.to.partner,forward_type:0
 msgid "a single partner: manual selection of partner"
-msgstr ""
+msgstr "jedini partner: ručni odabir partnera"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
@@ -1161,7 +1171,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "e.g. Gold Partner"
-msgstr ""
+msgstr "npr.: Zlatni partner"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1177,12 +1187,12 @@ msgstr "ili"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "pull-left"
-msgstr ""
+msgstr "povuci-lijevo"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "reference(s)"
-msgstr ""
+msgstr "referenc(ae)"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner_activation
@@ -1200,3 +1210,5 @@ msgid ""
 "several partners: automatic assignation, using GPS coordinates and partner's"
 " grades"
 msgstr ""
+"nekoliko parntnera: automatsko dodjeljivanje, koristeći GPS kordinate i "
+"partnerove ocjene"

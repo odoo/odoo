@@ -11,10 +11,10 @@
 # Eric Antones <eantones@users.noreply.github.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-19 12:36+0000\n"
-"PO-Revision-Date: 2016-09-19 12:36+0000\n"
+"POT-Creation-Date: 2016-11-14 15:55+0000\n"
+"PO-Revision-Date: 2016-11-14 15:55+0000\n"
 "Last-Translator: Eric Antones <eantones@users.noreply.github.com>, 2016\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,6 @@ msgstr ""
 #: model:mail.template,body_html:website_crm_partner_assign.email_template_lead_forward_mail
 msgid ""
 "\n"
-"            \n"
 "<p>Hello,</p>\n"
 "\n"
 "\n"
@@ -59,33 +58,6 @@ msgid ""
 "% endif\n"
 "            "
 msgstr ""
-"\n"
-"<p>Hola,</p>\n"
-"<p>${ctx['partner_id'].name}:</p>\n"
-"<ol> % for lead in ctx['partner_leads']:\n"
-"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Assumpte no definit'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Nom del contacte no definit'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'País no definit' }, ${lead.lead_id.email_from or 'E-mail no definit'}, ${lead.lead_id.phone or ''} </li></br>\n"
-"% endfor\n"
-"</ol>\n"
-"% if ctx.get('partner_in_portal'):\n"
-"<p>Si us plau, connecti's al <a href=\"${object.get_portal_url()}\">portal de l'associat</a> per obtenir més detalls. En cada iniciativa hi ha dos botons en la cantonada superior esquerra que ha de prémer després d'haver contactat amb la iniciativa: \"M'interessa\" i \"No m'interessa\".</p>\n"
-"% else:\n"
-"<p>\n"
-"    Vostè encara no té accés al portal de la nostra base de dades.\n"
-"Si us plau, contacti amb \n"
-"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'el seu administrador de comptes %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'nosaltres'}.\n"
-"</p>\n"
-"% endif\n"
-"<p>La iniciativa s'enviarà a un altre associat si no es comunica amb el contacte de la iniciativa abans de 20 dies.</p>\n"
-"\n"
-"<p>Gracies,</p>\n"
-"\n"
-"<pre>\n"
-"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
-"</pre>\n"
-"% if not ctx['partner_id'].user_id:\n"
-"PD: Sembla que vostè no té un administrador de comptes assignat a vostè, si us plau, posi's amb contacte amb nosaltres.\n"
-"% endif\n"
-"            "
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_nbr_cases
@@ -118,21 +90,6 @@ msgstr ""
 #, python-format
 msgid "<p>I am interested by this lead.</p>"
 msgstr "<p>Estic interessat amb aquesta iniciativa.</p>"
-
-#. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:203
-#, python-format
-msgid "<p>I am not interested by this lead. I contacted the lead.</p>"
-msgstr ""
-
-#. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:205
-#, python-format
-msgid ""
-"<p>I am not interested by this lead. I have not contacted the lead.</p>"
-msgstr ""
-"<p>No estic interessat amb aquesta iniciativa. No he contactat amb aquesta "
-"iniciativa.</p>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
@@ -193,10 +150,10 @@ msgid "Active"
 msgstr "Actiu"
 
 #. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:230
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:235
 #, python-format
 msgid "Activity Done"
-msgstr ""
+msgstr "Activitat feta"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -389,6 +346,7 @@ msgstr "Nom del client"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Date"
 msgstr "Data"
 
@@ -559,6 +517,18 @@ msgid "High"
 msgstr "Alta"
 
 #. module: website_crm_partner_assign
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:203
+#, python-format
+msgid "I am not interested by this lead. I contacted the lead."
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:205
+#, python-format
+msgid "I am not interested by this lead. I have not contacted the lead."
+msgstr ""
+
+#. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_id
@@ -582,11 +552,6 @@ msgstr "Implementat per"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date
 msgid "Invoice Account Date"
 msgstr ""
-
-#. module: website_crm_partner_assign
-#: model:ir.model,name:website_crm_partner_assign.model_account_invoice_report
-msgid "Invoices Statistics"
-msgstr "Estadístiques de factures"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation___last_update
@@ -674,7 +639,7 @@ msgid "Leads Analysis"
 msgstr "Anàlisi d'iniciatives"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_9936
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_9922
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "Level"
 msgstr "Nivell"
@@ -1090,6 +1055,11 @@ msgstr ""
 #, python-format
 msgid "This Week Activities"
 msgstr "Activitats d'aquesta setmana"
+
+#. module: website_crm_partner_assign
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
+msgid "This lead is a spam"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:95
