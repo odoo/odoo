@@ -1148,7 +1148,6 @@ editor.Class.include({
  */
 editor.Class.include({
     start: function () {
-        animation.stop();
         return this._super.apply(this, arguments).then(function () {
             animation.start(true);
         });
