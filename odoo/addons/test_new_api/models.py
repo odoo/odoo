@@ -296,15 +296,3 @@ class CompanyDependent(models.Model):
     _name = 'test_new_api.company'
 
     foo = fields.Char(company_dependent=True)
-
-
-class Sparse(models.Model):
-    _name = 'test_new_api.sparse'
-
-    data = fields.Serialized()
-    boolean = fields.Boolean(sparse='data')
-    integer = fields.Integer(sparse='data')
-    float = fields.Float(sparse='data')
-    char = fields.Char(sparse='data')
-    selection = fields.Selection([('one', 'One'), ('two', 'Two')], sparse='data')
-    partner = fields.Many2one('res.partner', sparse='data')
