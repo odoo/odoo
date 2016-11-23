@@ -35,7 +35,7 @@ class Country(models.Model):
     name = fields.Char(string='Country Name', required=True, translate=True, help='The full name of the country.')
     code = fields.Char(string='Country Code', size=2,
                 help='The ISO country code in two chars. \nYou can use this field for quick search.')
-    address_format = fields.Text(help="""You can state here the usual format to use for the \
+    address_format = fields.Text(help="""You can state here the usual display format to use for the \
 addresses belonging to this country.\n\nYou can use the python-style string patern with all the field of the address \
 (for example, use '%(street)s' to display the field 'street') plus
             \n%(state_name)s: the name of the state
@@ -44,13 +44,18 @@ addresses belonging to this country.\n\nYou can use the python-style string pate
             \n%(country_code)s: the code of the country""",
             default='%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s')
     address_view_id = fields.Many2one('ir.ui.view', string="Address View", domain=[('model', '=', 'res.partner'), ('type', '=', 'form')], 
-         help="Use this field if you want to replace the usual way to display a complete address")
+         help="Use this field if you want to replace the usual way to encode a complete address. Note that the \
+address_format field is used to modify the way to display addresses (in reports for example), while this field \
+is used to modify the encoding of addresses (res.partner form view).")
     currency_id = fields.Many2one('res.currency', string='Currency')
     image = fields.Binary(attachment=True)
     phone_code = fields.Integer(string='Country Calling Code')
     country_group_ids = fields.Many2many('res.country.group', 'res_country_res_country_group_rel',
                          'res_country_id', 'res_country_group_id', string='Country Groups')
     state_ids = fields.One2many('res.country.state', 'country_id', string='States')
+    enforce_cities = fields.Boolean(string='Enforce Cities', help="Check this box to ensure every address created \
+in that country has a value for the field 'City' chosen in the list of the country's cities. Note that users with \
+the 'Partner Manager' group are still able to create new cities for a country.")
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)',
