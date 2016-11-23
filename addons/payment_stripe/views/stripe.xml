@@ -4,11 +4,13 @@
         <template id="stripe_acquirer_button">
             <form t-if="acquirer" method="post" target="_self">
                 <script src="https://checkout.stripe.com/checkout.js"></script>
+                <input type='hidden' name='merchant' t-att-value="company"/>
                 <input type='hidden' name='amount' t-att-value="amount"/>
                 <input type="hidden" name='return_url' t-att-value='returndata'/>
                 <!--Order Information -->
                 <input type='hidden' name='invoice_num' t-att-value='reference'/>
                 <input type='hidden' name='currency' t-att-value='currency'/>
+                <input type='hidden' name='currency_id' t-att-value='currency_id'/>
                 <!-- Billing Information-->
                 <input type='hidden' name='name' t-att-value='name'/>
                 <input type='hidden' name='address_line1' t-att-value='address_line1'/>
