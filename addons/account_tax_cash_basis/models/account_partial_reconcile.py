@@ -68,14 +68,16 @@ class AccountPartialReconcileCashBasis(models.Model):
         # Create counterpart vals
         for key, v in total_by_cash_basis_account.items():
             k, tax_id = key
-            line_to_create.append((0, 0, {
-                'name': '/',
-                'debit': abs(v) if v < 0 else 0.0,
-                'credit': v if v > 0 else 0.0,
-                'account_id': k,
-                'tax_line_id': tax_id,
-                'tax_exigible': True,
-            }))
+            # Only entries with cash flow must be created
+            if not self.company_id.currency_id.is_zero(v):
+                line_to_create.append((0, 0, {
+                    'name': '/',
+                    'debit': abs(v) if v < 0 else 0.0,
+                    'credit': v if v > 0 else 0.0,
+                    'account_id': k,
+                    'tax_line_id': tax_id,
+                    'tax_exigible': True,
+                }))
         return line_to_create, move_date
 
     def create_tax_cash_basis_entry(self, value_before_reconciliation):
