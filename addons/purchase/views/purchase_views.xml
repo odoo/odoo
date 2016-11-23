@@ -609,6 +609,7 @@
                 </field>
                 <field name='supplier_taxes_id' position="replace" >
                      <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" attrs="{'readonly':[('purchase_ok','=',0)]}"/>
+                     <field name="property_account_creditor_price_difference" domain="[('deprecated','=',False)]" attrs="{'readonly':[('purchase_ok', '=', 0)]}" />
                 </field>
             </field>
         </record>
@@ -625,18 +626,6 @@
                        <field string="Purchases" name="purchase_count" widget="statinfo"/>
                    </button>
                 </button>
-            </field>
-        </record>
-
-        <record id="product_template_form_view" model="ir.ui.view">
-            <field name="name">product.normal.form.inherit.stock</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="account.product_template_form_view"/>
-            <field name="arch" type="xml">
-                <field name="supplier_taxes_id" position="after">
-                    <label string="" colspan="2"/>
-                    <field name="property_account_creditor_price_difference" domain="[('deprecated','=',False)]" attrs="{'readonly':[('purchase_ok', '=', 0)]}" />
-                </field>
             </field>
         </record>
 </odoo>
