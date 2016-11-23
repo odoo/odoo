@@ -67,17 +67,14 @@ class MailComposer(models.TransientModel):
         result['parent_id'] = result.get('parent_id', self._context.get('message_id'))
         if 'no_auto_thread' not in result and (result['model'] not in self.env or not hasattr(self.env[result['model']], 'message_post')):
             result['no_auto_thread'] = True
-
         # default values according to composition mode - NOTE: reply is deprecated, fall back on comment
         if result['composition_mode'] == 'reply':
             result['composition_mode'] = 'comment'
         vals = {}
         if 'active_domain' in self._context:  # not context.get() because we want to keep global [] domains
-            vals['use_active_domain'] = True
             vals['active_domain'] = '%s' % self._context.get('active_domain')
         if result['composition_mode'] == 'comment':
             vals.update(self.get_record_data(result))
-
         for field in vals:
             if field in fields:
                 result[field] = vals[field]
@@ -95,6 +92,7 @@ class MailComposer(models.TransientModel):
 
         if fields is not None:
             [result.pop(field, None) for field in result.keys() if field not in fields]
+        result['use_active_count'] = len(self._context.get('active_ids', []))
         return result
 
     @api.model
@@ -125,6 +123,7 @@ class MailComposer(models.TransientModel):
     # mail_message updated fields
     message_type = fields.Selection(default="comment")
     subtype_id = fields.Many2one(default=lambda self: self.sudo().env.ref('mail.mt_comment', raise_if_not_found=False).id)
+    use_active_count = fields.Integer('Use active count',readonly=True)
 
     @api.multi
     def check_access_rule(self, operation):
@@ -181,7 +180,6 @@ class MailComposer(models.TransientModel):
         if subject and not (subject.startswith('Re:') or subject.startswith(re_prefix)):
             subject = "%s %s" % (re_prefix, subject)
         result['subject'] = subject
-
         return result
 
     #------------------------------------------------------

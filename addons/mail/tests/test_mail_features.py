@@ -266,6 +266,7 @@ class TestMessagePost(TestMail):
         }).sudo(self.user_employee).create({
             'subject': 'From Composer Test',
             'body': '${object.description}',
+            'use_active_domain': True,
         }).send_mail()
 
         self.assertEqual(self.group_pigs.message_ids[0].subject, 'From Composer Test')
