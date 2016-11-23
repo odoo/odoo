@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class PurchaseConfigSettings(models.TransientModel):
@@ -10,52 +10,46 @@ class PurchaseConfigSettings(models.TransientModel):
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
-    po_lead = fields.Float(related='company_id.po_lead', string="Purchase Lead Time *")
+    po_lead = fields.Float(related='company_id.po_lead', string="Purchase Lead Time")
+    lock_confirmed_po = fields.Boolean("Lock Confirmed Orders", default=lambda self: self.env.user.company_id.po_lock == 'lock')
     po_lock = fields.Selection(related='company_id.po_lock', string="Purchase Order Modification *")
+    po_order_approval = fields.Boolean("Order Approval", default=lambda self: self.env.user.company_id.po_double_validation == 'two_step')
     po_double_validation = fields.Selection(related='company_id.po_double_validation', string="Levels of Approvals *")
-    po_double_validation_amount = fields.Monetary(related='company_id.po_double_validation_amount', string="Double validation amount *", currency_field='company_currency_id')
+    po_double_validation_amount = fields.Monetary(related='company_id.po_double_validation_amount', string="Minimum Amount", currency_field='company_currency_id')
     company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True,
         help='Utility field to express amount currency')
-    group_product_variant = fields.Selection([
-        (0, "No variants on products"),
-        (1, 'Products can have several attributes, defining variants (Example: size, color,...)')
-        ], "Product Variants",
-        help='Work with product variant allows you to define some variant of the same products, an ease the product management in the ecommerce for example',
+    default_purchase_method = fields.Selection([
+        ('purchase', 'Ordered quantities'),
+        ('receive', 'Delivered quantities'),
+        ], string="Bill Control", default_model="product.template",
+        help="This default value is applied to any new product created. "
+        "This can be changed in the product detail form.", default="receive")
+    group_product_variant = fields.Boolean("Attributes & Variants",
         implied_group='product.group_product_variant')
-    group_uom = fields.Selection([
-        (0, 'Products have only one unit of measure (easier)'),
-        (1, 'Some products may be sold/puchased in different units of measure (advanced)')
-        ], "Units of Measure",
-        implied_group='product.group_uom',
-        help="""Allows you to select and maintain different units of measure for products.""")
-    group_costing_method = fields.Selection([
-        (0, 'Set a standard cost price on each product'),
-        (1, "Use a 'Standard', 'Real' or 'Average' price costing method")
-        ], "Costing Methods",
-        implied_group='stock_account.group_inventory_valuation',
-        help="""Allows you to compute product cost price based on average cost.""")
-    module_purchase_requisition = fields.Selection([
-        (0, 'Purchase propositions trigger draft purchase orders to a single supplier'),
-        (1, 'Allow using call for tenders to get quotes from multiple suppliers (advanced)')
-        ], "Calls for Tenders",
-        help="Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products.\n"
-             "You can configure per product if you directly do a Request for Quotation "
-             "to one vendor or if you want a Call for Tenders to compare offers from several vendors.")
-    group_warning_purchase = fields.Selection([
-        (0, 'All the products and the customers can be used in purchase orders'),
-        (1, 'An informative or blocking warning can be set on a product or a customer')
-        ], "Warning", implied_group='purchase.group_warning_purchase')
-    module_stock_dropshipping = fields.Selection([
-        (0, 'Suppliers always deliver to your warehouse(s)'),
-        (1, "Allow suppliers to deliver directly to your customers")
-        ], "Dropshipping",
-        help='\nCreates the dropship Route and add more complex tests\n'
-             '-This installs the module stock_dropshipping.')
-    group_manage_vendor_price = fields.Selection([
-        (0, 'Manage vendor price on the product form'),
-        (1, 'Allow using and importing vendor pricelists')
-        ], "Vendor Price",
+    group_uom = fields.Boolean("Units of Measure",
+        implied_group='product.group_uom')
+    module_purchase_requisition = fields.Boolean("Calls for Tenders")
+    group_warning_purchase = fields.Boolean("Warnings", implied_group='purchase.group_warning_purchase')
+    module_stock_dropshipping = fields.Boolean("Dropshipping")
+    group_manage_vendor_price = fields.Boolean("Vendor Pricelists",
         implied_group="purchase.group_manage_vendor_price")
+    module_sale = fields.Boolean("Sales")
+    module_mrp = fields.Boolean("Manufacturing")
+    is_installed_sale = fields.Boolean()
+
+    @api.multi
+    def get_default_is_installed_sale(self, fields):
+        return {
+            'is_installed_sale': self.env['ir.module.module'].search([('name', '=', 'sale'), ('state', '=', 'installed')]).id
+        }
+
+    @api.multi
+    def set_lock_confirmed_po(self):
+        self.po_lock = 'lock' if self.lock_confirmed_po else 'edit'
+
+    @api.multi
+    def set_po_order_approval(self):
+        self.po_double_validation = 'two_step' if self.po_order_approval else 'one_step'
 
 
 class AccountConfigSettings(models.TransientModel):

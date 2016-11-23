@@ -19,6 +19,7 @@ keep track and order all your purchase orders.
         'security/ir.model.access.csv',
         'data/purchase_requisition_data.xml',
         'views/purchase_requisition_views.xml',
+        'views/purchase_config_settings_views.xml',
         'report/purchase_requisition_report.xml',
         'report/report_purchaserequisition.xml',
     ],
