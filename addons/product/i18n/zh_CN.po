@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Jeffery Chen Fan <jeffery9@gmail.com>, 2016
+# Ted Wang <feiyuwang2012@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-29 14:00+0000\n"
 "PO-Revision-Date: 2016-09-29 14:00+0000\n"
-"Last-Translator: Jeffery Chen Fan <jeffery9@gmail.com>, 2016\n"
+"Last-Translator: Ted Wang <feiyuwang2012@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -184,6 +185,9 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
+"<strong>警告</strong>：添加或删除属性将删除\n"
+"并重新创建现有变体，\n"
+"并导致其可能的自定义的丢失。"
 
 #. module: product
 #: code:addons/product/models/product.py:167 sql_constraint:product.product:0
@@ -412,6 +416,10 @@ msgid ""
 "Cost Price : The base price will be the cost price.\n"
 "Other Pricelist : Computation of the base price based on another Pricelist."
 msgstr ""
+"基本价格的计算。\n"
+"公共价格：基本价格将是销售/公共价格。\n"
+"成本价格：基本价格将是成本价格。\n"
+"其他价格表：基于另一个价格表计算基本价格。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_list_price
@@ -589,7 +597,7 @@ msgstr "充电座充电电池，并提供一个方便的方式，让你可以在
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_create_variant
 msgid "Check this if you want to create multiple variants for this attribute."
-msgstr ""
+msgstr "如果要为此属性创建多个变量，请选中此项。"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
@@ -977,7 +985,7 @@ msgstr "错误！你不能创建循环类别。"
 #: code:addons/product/models/product_attribute.py:97
 #, python-format
 msgid "Error ! You cannot use this attribute with the following value."
-msgstr ""
+msgstr "错误！您不能将此属性与以下值配合使用。"
 
 #. module: product
 #: code:addons/product/models/product.py:302
@@ -985,7 +993,7 @@ msgstr ""
 msgid ""
 "Error! It is not allowed to choose more than one value for a given "
 "attribute."
-msgstr ""
+msgstr "错误！不允许为给定属性选择多个值。"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:419
@@ -2523,7 +2531,7 @@ msgstr "从供应商采购的最小数量的计量单位在产品的供应商信
 msgid ""
 "The number of products under this category (Does not consider the children "
 "categories)"
-msgstr ""
+msgstr "此类别下的产品数量 (不考虑子类别)"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:74
@@ -2574,7 +2582,7 @@ msgstr "锂离子充电电池提供长达七小时的游戏时间。而在家里
 #: code:addons/product/models/product_uom.py:44 sql_constraint:product.uom:0
 #, python-format
 msgid "The rounding precision must be greater than 0!"
-msgstr ""
+msgstr "舍入精度必须大于0！"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_lst_price
@@ -2606,7 +2614,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
 msgid "The total number of products you can have per pallet or box."
-msgstr ""
+msgstr "每个托盘或箱子可以拥有的产品总数。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -2730,7 +2738,7 @@ msgstr "USB端口允许软件更新，以确保持续的蓝牙设备兼容"
 #. module: product
 #: model:product.pricelist,name:product.list0
 msgid "USD"
-msgstr ""
+msgstr "美元"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -2748,7 +2756,7 @@ msgstr "超薄设计"
 #: model:ir.model.fields,help:product.field_product_uom_active
 msgid ""
 "Uncheck the active field to disable a unit of measure without deleting it."
-msgstr ""
+msgstr "取消选中活动字段以禁用度量单位，而不删除它。"
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
@@ -2792,6 +2800,9 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
+"属于相同类别的测量单位可以在彼此之间转换。\n"
+"例如，在类别<i>'Time'</i>中，\n"
+"您将有以下计量单位：小时，天。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -3020,7 +3031,7 @@ msgstr "工作时间"
 msgid ""
 "You cannot define a rounding factor for the company's main currency that is "
 "smaller than the decimal precision of 'Account'."
-msgstr ""
+msgstr "您不能为公司的主要货币定义小于“帐户”的小数精度的舍入因子。"
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:16
@@ -3028,7 +3039,7 @@ msgstr ""
 msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
-msgstr ""
+msgstr "您不能将“帐户”的小数精度定义为大于公司主要货币的舍入因子"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
@@ -3036,6 +3047,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
+"您必须在几个单位之间定义转换率\n"
+"在同一类别内测量。"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -3052,7 +3065,7 @@ msgstr "所有你要卖的东西都要定义为产品，不管是实体，消耗
 msgid ""
 "You must define a product for everything you sell, whether it's a physical "
 "product, a consumable or a service you offer to customers."
-msgstr ""
+msgstr "您必须为销售的所有内容定义产品，无论是实体产品，消耗品还是为客户提供的服务。"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
