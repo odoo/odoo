@@ -148,30 +148,50 @@ function loadCSS(url) {
     }
 }
 
-function loadJS(url) {
-    var def = $.Deferred();
-    if ($('script[src="' + url + '"]').length) {
-        def.resolve();
-    } else {
-        var script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = url;
-        script.onload = script.onreadystatechange = function() {
-            if ((script.readyState && script.readyState != "loaded" && script.readyState != "complete") || script.onload_done) {
-                return;
-            }
-            script.onload_done = true;
-            def.resolve(url);
-        };
-        script.onerror = function () {
-            console.error("Error loading file", script.src);
-            def.reject(url);
-        };
-        var head = document.head || document.getElementsByTagName('head')[0];
-        head.appendChild(script);
-    }
-    return def;
-}
+var loadJS = (function () {
+    var urls = [];
+    var defs = [];
+
+    var load = function loadJS(url) {
+        // Check the DOM to see if a script with the specified url is already there
+        var alreadyRequired = ($('script[src="' + url + '"]').length > 0);
+
+        // If loadJS was already called with the same URL, it will have a registered deferred indicating if
+        // the script has been fully loaded. If not, the deferred has to be initialized. This is initialized
+        // as already resolved if the script was already there without the need of loadJS.
+        var index = _.indexOf(urls, url);
+        if (index < 0) {
+            urls.push(url);
+            index = defs.push(alreadyRequired ? $.when() : $.Deferred()) - 1;
+        }
+
+        // Get the script associated deferred and returns it after initializing the script if needed. The
+        // deferred is marked to be resolved on script load and rejected on script error.
+        var def = defs[index];
+        if (!alreadyRequired) {
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = url;
+            script.onload = script.onreadystatechange = function() {
+                if ((script.readyState && script.readyState !== "loaded" && script.readyState !== "complete") || script.onload_done) {
+                    return;
+                }
+                script.onload_done = true;
+                def.resolve(url);
+            };
+            script.onerror = function () {
+                console.error("Error loading file", script.src);
+                def.reject(url);
+            };
+            var head = document.head || document.getElementsByTagName('head')[0];
+            head.appendChild(script);
+        }
+        return def;
+    };
+
+    return load;
+})();
+
 
 /**
  * Cooperative file download implementation, for ajaxy APIs.
