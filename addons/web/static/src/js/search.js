@@ -701,14 +701,14 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             null, _(this.select_for_drawer()).invoke(
                 'appendTo', this.$('.oe_searchview_drawer')));
 
-        
+
         // load defaults
         var defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
                 'facet_for_defaults', this.defaults))
             .then(this.proxy('setup_default_query'));
 
         return $.when(drawer_started, defaults_fetched)
-            .then(function () { 
+            .then(function () {
                 self.trigger("search_view_loaded", data);
                 self.ready.resolve();
             });
@@ -788,7 +788,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             groupbys: groupbys,
             errors: errors
         };
-    }, 
+    },
     /**
      * Performs the search view collection of widget data.
      *
@@ -1340,6 +1340,10 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
  *
  * * Default operator is ``ilike`` rather than ``=``
  *
+ * * Character backslash (\) is replaced by underscore (_) since Python
+ *   will escape the backslash, leading to a SQL query containing a
+ *   double backslash (\\) --> no result found
+ *
  * * The Javascript and the HTML values are identical (strings)
  *
  * @class
@@ -1358,7 +1362,7 @@ instance.web.search.CharField = instance.web.search.Field.extend( /** @lends ins
             facet: {
                 category: this.attrs.string,
                 field: this,
-                values: [{label: value, value: value}]
+                values: [{label: value, value: value.replace(/\\/g,'_')}]
             }
         }]);
     }
