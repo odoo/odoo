@@ -53,7 +53,7 @@
     </record>
 
     <record id="action_abandonned_orders_ecommerce" model="ir.actions.act_window">
-        <field name="name">Abandonned eCommerce Orders</field>
+        <field name="name">Abandoned eCommerce Orders</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('state', '=', 'cancel')]</field>
@@ -91,7 +91,7 @@
     <!-- Orders sub-menus -->
     <menuitem id="menu_orders_orders" name="Orders" parent="menu_orders" action="action_orders_ecommerce" sequence="1"/>
     <menuitem id="menu_orders_unpaid_orders" name="Unpaid Orders" parent="menu_orders" action="action_unpaid_orders_ecommerce" sequence="2"/>
-    <menuitem id="menu_orders_abandonned_orders" name="Abandonned Orders" parent="menu_orders" action="action_abandonned_orders_ecommerce" sequence="3"/>
+    <menuitem id="menu_orders_abandonned_orders" name="Abandoned Orders" parent="menu_orders" action="action_abandonned_orders_ecommerce" sequence="3"/>
     <menuitem id="menu_orders_invoices" name="Invoices" parent="menu_orders" action="action_invoices_ecommerce" sequence="4"/>
 
     <!-- Catalog sub-menus -->
