@@ -304,6 +304,7 @@ class Picking(models.Model):
           - one of the move is assigned or partially available: partially available
           - otherwise in waiting or confirmed state
         '''
+        filtered_moves = self.move_lines.filtered(lambda move: move.state not in ['cancel', 'done'])
         if not self.move_lines and self.launch_pack_operations:
             self.state = 'assigned'
         elif not self.move_lines:
@@ -314,22 +315,15 @@ class Picking(models.Model):
             self.state = 'cancel'
         elif all(move.state in ['cancel', 'done'] for move in self.move_lines):
             self.state = 'done'
-        elif self.move_type == 'one':
-            ordered_moves = self.move_lines.filtered(
-                lambda move: move.state not in ['cancel', 'done']
-            ).sorted(
-                key=lambda move: (move.state == 'assigned' and 2) or (move.state == 'waiting' and 1) or 0, reverse=False
-            )
-            self.state = ordered_moves[0].state
         else:
-            filtered_moves = self.move_lines.filtered(lambda move: move.state not in ['cancel', 'done'])
-            if not all(move.state == 'assigned' for move in filtered_moves) and any(move.state == 'assigned' for move in filtered_moves):
-                self.state = 'partially_available'
-            elif any(move.partially_available for move in filtered_moves):
+            ordered_moves =  filtered_moves.sorted(
+                key=lambda move: (move.state == 'assigned' and 2) or (move.state == 'waiting' and 1) or 0)
+            if self.move_type == 'one':
+                self.state = ordered_moves[0].state
+            elif ordered_moves[0].state != 'assigned' and any(x.partially_available or x.state == 'assigned' for x in ordered_moves):
                 self.state = 'partially_available'
             else:
-                ordered_moves = filtered_moves.sorted(key=lambda move: (move.state == 'assigned' and 2) or (move.state == 'waiting' and 1) or 0, reverse=True)
-                self.state = ordered_moves[0].state
+                self.state = ordered_moves[-1].state
 
     @api.one
     @api.depends('move_lines.priority')
