@@ -47,8 +47,8 @@ class OgoneController(http.Controller):
     @http.route(['/payment/ogone/s2s/feedback'], auth='none', csrf=False)
     def feedback(self, **kwargs):
         try:
-            tx = request.env['payment.transaction']._ogone_form_get_tx_from_data(kwargs)
-            tx.sudo()._ogone_s2s_validate()
+            tx = request.env['payment.transaction'].sudo()._ogone_form_get_tx_from_data(kwargs)
+            tx._ogone_s2s_validate()
         except ValidationError:
             return 'ko'
         return 'ok'
