@@ -314,22 +314,18 @@ class Picking(models.Model):
             self.state = 'cancel'
         elif all(move.state in ['cancel', 'done'] for move in self.move_lines):
             self.state = 'done'
-        elif self.move_type == 'one':
-            ordered_moves = self.move_lines.filtered(
-                lambda move: move.state not in ['cancel', 'done']
-            ).sorted(
-                key=lambda move: (move.state == 'assigned' and 2) or (move.state == 'waiting' and 1) or 0, reverse=False
-            )
-            self.state = ordered_moves[0].state
         else:
-            filtered_moves = self.move_lines.filtered(lambda move: move.state not in ['cancel', 'done'])
-            if not all(move.state == 'assigned' for move in filtered_moves) and any(move.state == 'assigned' for move in filtered_moves):
-                self.state = 'partially_available'
-            elif any(move.partially_available for move in filtered_moves):
+            # We sort our moves by importance of state: "confirmed" should be first, then we'll have
+            # "waiting" and finally "assigned" at the end.
+            moves_todo = self.move_lines\
+                .filtered(lambda move: move.state not in ['cancel', 'done'])\
+                .sorted(key=lambda move: (move.state == 'assigned' and 2) or (move.state == 'waiting' and 1) or 0)
+            if self.move_type == 'one':
+                self.state = moves_todo[0].state
+            elif moves_todo[0].state != 'assigned' and any(x.partially_available or x.state == 'assigned' for x in moves_todo):
                 self.state = 'partially_available'
             else:
-                ordered_moves = filtered_moves.sorted(key=lambda move: (move.state == 'assigned' and 2) or (move.state == 'waiting' and 1) or 0, reverse=True)
-                self.state = ordered_moves[0].state
+                self.state = moves_todo[-1].state
 
     @api.one
     @api.depends('move_lines.priority')
