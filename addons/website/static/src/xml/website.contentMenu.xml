@@ -22,11 +22,13 @@
         </ul>
     </li>
 </t>
-<select t-name="website.contentMenu.dialog.select" class="form-control mb16" t-if="widget.roots">
-    <t t-foreach="widget.roots" t-as="root">
-        <option t-att-value="root.id"><t t-esc="root.name"/></option>
-    </t>
-</select>
+<div t-name="website.contentMenu.dialog.select">
+    <select class="form-control mb16" t-if="widget.roots">
+        <t t-foreach="widget.roots" t-as="root">
+            <option t-att-value="root.id"><t t-esc="root.name"/></option>
+        </t>
+    </select>
+</div>
 <div t-name="website.contentMenu.dialog.edit">
     <select class="form-control mb16" t-if="widget.roots">
         <t t-foreach="widget.roots" t-as="root">
