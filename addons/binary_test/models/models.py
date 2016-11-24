@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+import logging
 
-class binary_test(models.Model):
+from odoo import api, fields, models
+
+_logger = logging.getLogger(__name__)
+
+
+class BinaryTest(models.Model):
     _name = 'binary_test.binary_test'
 
     name = fields.Char()
     value = fields.Binary()
 
-    @api.onchange('value')
-    def onchange_value(self):
-        print (self.value or '')[:10]
-        import pdb;pdb.set_trace()
+    @api.onchange('name')
+    def onchange_name(self):
+        _logger.warning("The binary file is? ZZZ kB?: '%s'", self.value)
