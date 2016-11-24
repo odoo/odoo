@@ -682,7 +682,7 @@ class Message(models.Model):
         """ Return a specific reply_to: alias of the document through
         message_get_reply_to or take the email_from """
         model, res_id, email_from = values.get('model', self._context.get('default_model')), values.get('res_id', self._context.get('default_res_id')), values.get('email_from')  # ctx values / defualt_get res ?
-        if model:
+        if model and hasattr(self.env[model], 'message_get_reply_to'):
             # return self.env[model].browse(res_id).message_get_reply_to([res_id], default=email_from)[res_id]
             return self.env[model].message_get_reply_to([res_id], default=email_from)[res_id]
         else:
