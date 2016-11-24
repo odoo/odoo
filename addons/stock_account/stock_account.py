@@ -30,7 +30,11 @@ class account_invoice_line(osv.osv):
 
     def _get_anglo_saxon_price_unit(self):
         self.ensure_one()
-        return self.product_id.standard_price
+        price = self.product_id.standard_price
+        if not self.uom_id or self.product_id.uom_id == self.uom_id:
+            return price
+        else:
+            return self.product_id.uom_id._compute_price(self.product_id.uom_id.id, price, to_uom_id=self.uom_id.id)
 
     def _get_price(self, cr, uid, inv, company_currency, i_line, price_unit):
         cur_obj = self.pool.get('res.currency')
