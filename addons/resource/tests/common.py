@@ -100,3 +100,108 @@ class TestResourceCommon(TransactionCase):
                 'date_to': self.leave3_end,
             }
         ).id
+
+        # Second "normal-looking" calendar: 9-13 and 14-17 5 days a week
+        self.calendar2 = self.ResourceCalendar.with_context(context).create(
+            {
+                'name': 'NormalCalendar',
+            }
+        )
+        self.ResourceAttendance.with_context(context).create(
+            {
+                'name': 'Morning',
+                'dayofweek': '0',
+                'hour_from': 9,
+                'hour_to': 13,
+                'calendar_id': self.calendar2.id,
+            }
+        ).id
+        self.ResourceAttendance.with_context(context).create(
+            {
+                'name': 'Afternoon',
+                'dayofweek': '0',
+                'hour_from': 14,
+                'hour_to': 17,
+                'calendar_id': self.calendar2.id,
+            }
+        ).id
+        self.ResourceAttendance.with_context(context).create(
+            {
+                'name': 'Morning',
+                'dayofweek': '1',
+                'hour_from': 9,
+                'hour_to': 13,
+                'calendar_id': self.calendar2.id,
+            }
+        ).id
+        self.ResourceAttendance.with_context(context).create(
+            {
+                'name': 'Afternoon',
+                'dayofweek': '1',
+                'hour_from': 14,
+                'hour_to': 17,
+                'calendar_id': self.calendar2.id,
+            }
+        ).id
+        self.ResourceAttendance.with_context(context).create(
+            {
+                'name': 'Morning',
+                'dayofweek': '2',
+                'hour_from': 9,
+                'hour_to': 13,
+                'calendar_id': self.calendar2.id,
+            }
+        ).id
+        self.ResourceAttendance.with_context(context).create(
+            {
+                'name': 'Afternoon',
+                'dayofweek': '2',
+                'hour_from': 14,
+                'hour_to': 17,
+                'calendar_id': self.calendar2.id,
+            }
+        ).id
+        self.ResourceAttendance.with_context(context).create(
+            {
+                'name': 'Morning',
+                'dayofweek': '3',
+                'hour_from': 9,
+                'hour_to': 13,
+                'calendar_id': self.calendar2.id,
+            }
+        ).id
+        self.ResourceAttendance.with_context(context).create(
+            {
+                'name': 'Afternoon',
+                'dayofweek': '3',
+                'hour_from': 14,
+                'hour_to': 17,
+                'calendar_id': self.calendar2.id,
+            }
+        ).id
+        self.ResourceAttendance.with_context(context).create(
+            {
+                'name': 'Morning',
+                'dayofweek': '4',
+                'hour_from': 9,
+                'hour_to': 13,
+                'calendar_id': self.calendar2.id,
+            }
+        ).id
+        self.ResourceAttendance.with_context(context).create(
+            {
+                'name': 'Afternoon',
+                'dayofweek': '4',
+                'hour_from': 14,
+                'hour_to': 17,
+                'calendar_id': self.calendar2.id,
+            }
+        ).id
+        self.resource2_id = self.Resource.with_context(context).create(
+            {
+                'name': 'TestResource2',
+                'resource_type': 'user',
+                'time_efficiency': 150.0,
+                'calendar_id': self.calendar2.id,
+            }
+        ).id

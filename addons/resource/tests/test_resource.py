@@ -307,6 +307,15 @@ class TestResource(TestResourceCommon):
         self.assertEqual(res, 40.0, 'resource_calendar: wrong _interval_hours_get compatibility computation')
 
         # new API: resource without leaves
+        # res: Monday -> 7 hours (2016-11-21 was a Monday)
+        monday_start = datetime(2016, 11, 21)
+        monday_end = monday_start.replace(hour=23, minute=59)
+        res = self.calendar2.get_working_hours(
+            monday_start, monday_end,
+            compute_leaves=False, resource_id=self.resource2_id)
+        self.assertEqual(res, 7.0, 'resource_calendar: wrong get_working_hours computation')
+
+        # new API: resource without leaves
         # res: 2 weeks -> 40 hours
         res = self.calendar.get_working_hours(
             self.date1.replace(hour=6, minute=0),
