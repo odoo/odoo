@@ -160,8 +160,8 @@
         <field name="name">Jobs - Recruitment</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-              <pivot string="Cases By Stage and Estimates">
-                <field name="job_id" type="row"/>
+              <pivot string="Job Applications">
+                <field name="create_date" type="row"/>
                 <field name="stage_id" type="col"/>
             </pivot>
         </field>
