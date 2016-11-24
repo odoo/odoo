@@ -383,6 +383,14 @@ class product_pricelist(osv.osv):
 class product_pricelist_version(osv.osv):
     _name = "product.pricelist.version"
     _description = "Pricelist Version"
+
+    def _get_product_pricelist(self, cr, uid, ids, context=None):
+        result = set()
+        for pricelist in self.pool['product.pricelist'].browse(cr, uid, ids, context=context):
+            for version_id in pricelist.version_id:
+                result.add(version_id.id)
+        return list(result)
+
     _columns = {
         'pricelist_id': fields.many2one('product.pricelist', 'Price List',
             required=True, select=True, ondelete='cascade'),
@@ -396,7 +404,9 @@ class product_pricelist_version(osv.osv):
         'date_start': fields.date('Start Date', help="First valid date for the version."),
         'date_end': fields.date('End Date', help="Last valid date for the version."),
         'company_id': fields.related('pricelist_id','company_id',type='many2one',
-            readonly=True, relation='res.company', string='Company', store=True)
+            readonly=True, relation='res.company', string='Company', store={
+                'product.pricelist': (_get_product_pricelist, ['company_id'], 20),
+            })
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -489,6 +499,14 @@ class product_pricelist_item(osv.osv):
                 return False
         return True
 
+    def _get_product_pricelist(self, cr, uid, ids, context=None):
+        result = set()
+        for pricelist in self.pool['product.pricelist'].browse(cr, uid, ids, context=context):
+            for version_id in pricelist.version_id:
+                for item_id in version_id.items_id:
+                    result.add(item_id.id)
+        return list(result)
+
     _columns = {
         'name': fields.char('Rule Name', help="Explicit rule name for this pricelist line."),
         'price_version_id': fields.many2one('product.pricelist.version', 'Price List Version', required=True, select=True, ondelete='cascade'),
@@ -518,7 +536,9 @@ class product_pricelist_item(osv.osv):
         'price_max_margin': fields.float('Max. Price Margin',
             digits_compute= dp.get_precision('Product Price'), help='Specify the maximum amount of margin over the base price.'),
         'company_id': fields.related('price_version_id','company_id',type='many2one',
-            readonly=True, relation='res.company', string='Company', store=True)
+            readonly=True, relation='res.company', string='Company', store={
+                'product.pricelist': (_get_product_pricelist, ['company_id'], 30),
+            })
     }
 
     _constraints = [
