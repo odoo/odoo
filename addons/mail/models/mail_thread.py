@@ -1923,15 +1923,17 @@ class MailThread(models.AbstractModel):
             kwargs['composition_mode'] = 'comment' if len(self.ids) == 1 else 'mass_mail'
         if not kwargs.get('message_type'):
             kwargs['message_type'] = 'notification'
-        res_id = self.ids[0] or 0
+        res_id = kwargs.get('res_id', self.ids and self.ids[0] or 0)
+        res_ids = kwargs.get('res_id') and [kwargs['res_id']] or self.ids
 
         # Create the composer
         composer = self.env['mail.compose.message'].with_context(
-            active_ids=self.ids,
-            active_model=self._name,
+            active_id=res_id,
+            active_ids=res_ids,
+            active_model=kwargs.get('model', self._name),
             default_composition_mode=kwargs['composition_mode'],
-            default_model=self._name,
-            default_res_id=self.ids[0] or 0,
+            default_model=kwargs.get('model', self._name),
+            default_res_id=res_id,
             default_template_id=template_id,
         ).create(kwargs)
         # Simulate the onchange (like trigger in form the view) only
