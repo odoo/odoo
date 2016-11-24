@@ -739,7 +739,11 @@ var ActionManager = Widget.extend({
 
             var fragment = document.createDocumentFragment();
             return this.dialog_widget.appendTo(fragment).then(function() {
-                self.dialog.open().$el.append(fragment);
+                self.dialog.open();
+                framework.append(self.dialog.$el, fragment, {
+                    in_DOM: true,
+                    callbacks: [{widget: self.dialog_widget}],
+                });
                 if(options.state && self.dialog_widget.do_load_state) {
                     return self.dialog_widget.do_load_state(options.state);
                 }
