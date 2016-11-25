@@ -37,12 +37,17 @@ var DateWidget = Widget.extend({
             },
             locale : moment.locale(),
             allowInputToggle: true,
+            keyBinds: null,
         });
     },
     start: function() {
         this.$input = this.$('input.o_datepicker_input');
+        this.$input.focus(function(e) {
+            e.stopImmediatePropagation();
+        });
         this.$el.datetimepicker(this.options);
         this.picker = this.$el.data('DateTimePicker');
+        this.$input.click(this.picker.toggle.bind(this.picker));
         this.set_readonly(false);
         this.set_value(false);
     },
@@ -95,6 +100,11 @@ var DateWidget = Widget.extend({
         if(this.is_valid()) {
             this.set_value_from_ui();
             this.trigger("datetime_changed");
+        }
+        //Close the datetimepicker when a date is selected
+        //We check only if the date has changed.
+        if(!e.date.isSame(e.oldDate, 'day')){
+            this.picker.hide();
         }
     },
     commit_value: function() {
