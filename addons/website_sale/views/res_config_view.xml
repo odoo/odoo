@@ -8,66 +8,248 @@
             <div id="features_settings" position="after">
                 <h2>Pricing</h2>
                 <div class="row mt16 oe_flex_container" id="sale_pricing_settings">
-                    <div class="col-md-6" id="pricelists_setting">
+                    <div class="col-md-6" id="currency_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon oe_group_addon24"/>
+                            <div class="form-control" style="float: none;">
+                                <label string="[TODO]Currency"/>
+                                <div class="text-muted">
+                                    Main currency of your company.
+                                </div>
+                                <div class="content-group">
+                                    <hr class="mt8 mb8" />
+                                    <div class="row">
+                                        <label class="col-md-4 oe_light_label" string="Currency"/>
+                                        <input class="col-md-8 oe_inline o_form_input"/>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Activate Other Currencies" class="oe_link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="multicurrencies_setting">
+                        <div class="input-group" title="This adds the choice of a currency on pricelists.">
+                            <span class="input-group-addon oe_group_addon24">
+                                <input type="checkbox"/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label string="[TODO]Multi-Currencies"/>
+                                <div class="text-muted">
+                                    Sell in several currencies.
+                                </div>
+                                <div class="content-group">
+                                    <hr class="mt8 mb8" />
+                                    <div>
+                                        <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Currencies" class="oe_link"/>
+                                    </div>
+                                    <div>
+                                        <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Advanced Currencies Setup" class="oe_link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="discount_setting">
                         <div class="input-group">
                             <span class="input-group-addon oe_group_addon24">
                                 <input type="checkbox"/>
                             </span>
                             <div class="form-control" style="float: none;">
-                                <label string="Pricelists"/>
+                                <label string="[TODO]Discounted Prices"/>
+                                <div class="text-muted">
+                                    Display crossed-out public prices.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="pricelists_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon oe_group_addon24">
+                                <field name="sale_pricelist_setting_split_1"/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label for="sale_pricelist_setting_split_1"/>
                                 <div class="text-muted">
                                     Apply specific prices per country, discount, etc.
                                 </div>
-                                <div class="content-group">
+                                <div class="content-group" attrs="{'invisible': [('sale_pricelist_setting_split_1', '=', False)]}">
                                     <hr class="mt8 mb8" />
                                     <field name="group_sale_pricelist" class="oe_inline" invisible="1"/>
                                     <field name="group_pricelist_item" class="oe_inline" invisible="1"/>
                                     <field name="group_product_pricelist" class="oe_inline" invisible="1"/>
-                                    <field name="sale_pricelist_setting_split_1" class="oe_light_label" widget="radio"/>
-                                    <field name="sale_pricelist_setting_split_2" class="oe_light_label" widget="radio" attrs="{'invisible': [('sale_pricelist_setting_split_1', '=', False)]}"/>
+                                    <field name="sale_pricelist_setting_split_2" class="oe_light_label" widget="radio"/>
+                                </div>
+                                <div>
+                                    <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Pricelists" class="oe_link"/>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <h2>Product Catalog</h2>
+                <h2>Taxes</h2>
+                <div class="row mt16 oe_flex_container" id="taxes_settings">
+                    <div class="col-md-6" id="fiscal_localization_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon oe_group_addon24"/>
+                            <div class="form-control" style="float: none;">
+                                <label string="[TODO]Fiscal Localization"/>
+                                <i class="fa fa-building" title="Values set here are company-specific."/>
+                                <div class="text-muted">
+                                    Taxes, fiscal positions and chart of accounts for your country.
+                                </div>
+                                <div class="content-group">
+                                    <hr class="mt8 mb8" />
+                                    <div class="row">
+                                        <label class="col-md-4 oe_light_label" string="Package"/>
+                                        <input class="col-md-8 oe_inline o_form_input"/>
+                                    </div>
+                                    <div>
+                                        <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Install More Packages" class="oe_link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="default_tax_setting">
+                        <div class="input-group" title="This tax is set in any new product created.">
+                            <span class="input-group-addon oe_group_addon24"/>
+                            <div class="form-control" style="float: none;">
+                                <label string="[TODO]Tax"/>
+                                <i class="fa fa-building" title="Values set here are company-specific."/>
+                                <div class="text-muted">
+                                    Tax for local sales
+                                </div>
+                                <div class="content-group">
+                                    <hr class="mt8 mb8" />
+                                    <div class="row">
+                                        <label class="col-md-4 oe_light_label" string="Default tax"/>
+                                        <div class="col-md-8 oe_inline o_form_input">
+                                            <input type="float" title="This default tax is applied to any new product created."/>%
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Taxes" class="oe_link"/>
+                                    </div>
+                                    <div>
+                                        <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Advanced Tax Setup" class="oe_link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="tax_inclusion_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon oe_group_addon24"/>
+                            <div class="form-control" style="float: none;">
+                                <label string="[TODO]Product Prices"/>
+                                <div class="text-muted">
+                                    Product prices displaying in web catalog.
+                                </div>
+                                <div class="content-group">
+                                    <hr class="mt8 mb8" />
+                                    <div>
+                                        (o) Tax-Included Prices<br></br>
+                                        ( ) Tax-Excluded Prices
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2>Products Catalog</h2>
                 <div class="row mt16 oe_flex_container" id="sale_product_catalog_settings">
+                    <div class="col-md-6" id="product_attributes_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon oe_group_addon24">
+                                <input type="checkbox"/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label string="[TODO]Attributes and Variants"/>
+                                <div class="text-muted">
+                                    Set product attributes (e.g. color, size) to sell.
+                                </div>
+                                <div class="content-group">
+                                    <hr class="mt8 mb8" />
+                                    <div>
+                                        <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Attributes" class="oe_link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-md-6" id="product_image_setting">
                         <div class="input-group">
                             <span class="input-group-addon oe_group_addon24">
                                 <field name="group_website_multiimage" widget="checkbox"/>
                             </span>
                             <div class="form-control" style="float: none;">
-                                <label string="Multi-Images"/>
+                                <label for="group_website_multiimage"/>
                                 <div class="text-muted">
                                     Display an images carousel on product pages.
                                 </div>
+                                <div class="content-group"></div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6" id="sale_option_setting">
                         <div class="input-group">
                             <span class="input-group-addon oe_group_addon24">
-                                <field name="module_website_sale_options" widget="checkbox"/>
+                                <field name="module_website_sale_options"/>
                             </span>
                             <div class="form-control" style="float: none;">
-                                <label string="Optional Products"/>
+                                <label for="module_website_sale_options"/>
                                 <div class="text-muted">
                                     Suggest optional products when adding to cart.
                                 </div>
+                                <div class="content-group"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="digital_content_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon oe_group_addon24">
+                                <field name="module_website_sale_digital"
+                                       title="Provide customers with product-specific links or downloadable content in the confirmation page of the checkout process if the payment gets through.
+To do so, attach some files to a product using the new Files button and publish them."/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label for="module_website_sale_digital"/>
+                                <div class="text-muted">
+                                    Provide customers with links or content to download.
+                                </div>
+                                <div class="content-group"></div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <h2>Checkout Process</h2>
                 <div class="row mt16 oe_flex_container" id="sale_checkout_settings">
+                    <div class="col-md-6" id="payment_methods_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon oe_group_addon24"/>
+                            <div class="form-control" style="float: none;">
+                                <label string="Payment Methods"/>
+                                <div class="text-muted">
+                                    Acquires to process online payments.
+                                </div>
+                                <div class="content-group">
+                                    <hr class="mt8 mb8" />
+                                    <div>
+                                        <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Payment methods" class="oe_link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-md-6" id="checkout_mail_setting">
                         <div class="input-group">
                             <span class="input-group-addon oe_group_addon24"/>
                             <div class="form-control" style="float: none;">
                                 <label string="Confirmation Email"/>
                                 <div class="text-muted">
-                                    Choose or edit the mail sent at the end of the checkout.
+                                    Email sent to the customer.
                                 </div>
                                 <div class="content-group">
                                     <hr class="mt8 mb8" />
@@ -79,22 +261,35 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6" id="checkout_assignation_setting">
+                    <div class="col-md-6" id="shipping_address_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon oe_group_addon24">
+                                <input type="checkbox"/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label string="[TODO]Shipping Address"/>
+                                <div class="text-muted">
+                                    Let the customer enter a shipping address.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="checkout_assignation_setting" groups="base.group_no_one">
                         <div class="input-group">
                             <span class="input-group-addon oe_group_addon24"/>
                             <div class="form-control" style="float: none;">
                                 <label string="Assignation"/>
                                 <div class="text-muted">
-                                    Assign incoming orders to a specific sales channel and salesperson.
+                                    Assign of web orders.
                                 </div>
                                 <div class="content-group">
                                     <hr class="mt8 mb8" />
-                                    <div groups="base.group_no_one" class="row">
-                                        <label class="oe_light_label col-md-4" string="Default Sales Team" for="salesteam_id" groups="base.group_no_one"/>
+                                    <div class="row">
+                                        <label class="oe_light_label col-md-4" for="salesteam_id"/>
                                         <field name="salesteam_id" class='col-md-8 oe_inline'/>
                                     </div>
-                                    <div groups="base.group_no_one" class="row">
-                                        <label class="oe_light_label col-md-4" string="Default Salesperson" for="salesperson_id" groups="base.group_no_one"/>
+                                    <div class="row">
+                                        <label class="oe_light_label col-md-4" for="salesperson_id"/>
                                         <field name="salesperson_id" class='col-md-8 oe_inline'/>
                                     </div>
                                 </div>
@@ -104,45 +299,38 @@
                 </div>
                 <h2>Invoicing</h2>
                 <div class="row mt16 oe_flex_container" id="sale_invoicing_settings">
-                </div>
-                <h2>Shipping</h2>
-                <div class="row mt16 oe_flex_container" id="sale_shipping_settings">
-                    <div class="col-md-6" id="shipping_provider_setting">
+                    <div class="col-md-6" id="invoicing_policy_setting">
                         <div class="input-group">
-                            <span class="input-group-addon oe_group_addon24">
-                                <field name="module_delivery"/>
-                            </span>
+                            <span class="input-group-addon oe_group_addon24"/>
                             <div class="form-control" style="float: none;">
-                                <label string="Shipping Costs"/>
+                                <label string="[TODO]Invoicing Policy"/>
                                 <div class="text-muted">
-                                    Select delivery methods in sales orders and get shipping costs computed automatically (from rules or carrier connectors).
+                                    Quantities to invoice from sales orders.
                                 </div>
                                 <div class="content-group">
                                     <hr class="mt8 mb8" />
-                                    <div class="oe_flex_container">
-                                        <div>
-                                            <field name="module_delivery_ups" widget="upgrade_boolean"/>
-                                            <label for="module_delivery_ups" class="oe_light_label oe_inline"/>
-                                            <span class="label label-primary oe_inline">Enterprise</span>
-                                        </div><div>
-                                            <field name="module_delivery_fedex" widget="upgrade_boolean"/>
-                                            <label for="module_delivery_fedex" class="oe_light_label oe_inline"/>
-                                            <span class="label label-primary oe_inline">Enterprise</span>
-                                        </div><div>
-                                            <field name="module_delivery_temando" widget="upgrade_boolean"/>
-                                            <label for="module_delivery_temando" class="oe_light_label oe_inline"/>
-                                            <span class="label label-primary oe_inline">Enterprise</span>
-                                        </div><div>
-                                            <field name="module_delivery_usps" widget="upgrade_boolean"/>
-                                            <label for="module_delivery_usps" class="oe_light_label oe_inline"/>
-                                            <span class="label label-primary oe_inline">Enterprise</span>
-                                        </div><div>
-                                            <field name="module_delivery_dhl" widget="upgrade_boolean"/>
-                                            <label for="module_delivery_dhl" class="oe_light_label oe_inline"/>
-                                            <span class="label label-primary oe_inline">Enterprise</span>
-                                        </div>
+                                    <div>
+                                        (o) Ordered quantities<br/>
+                                        ( ) Delivered quantities or service hours
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2>Shipping</h2>
+                <div class="row mt16 oe_flex_container" id="sale_shipping_settings">
+                    <div class="col-md-6" id="delivery_order_setting">
+                        <div class="input-group">
+                            <span class="input-group-addon oe_group_addon24">
+                                <field name="module_sale_stock"/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label for="module_sale_stock"/>
+                                <div class="text-muted">
+                                    Manage picking and deliveries.
+                                </div>
+                                <div class="content-group"></div>
                             </div>
                         </div>
                     </div>
@@ -152,14 +340,95 @@
                                 <field name="module_website_sale_delivery"/>
                             </span>
                             <div class="form-control" style="float: none;">
-                                <label string="Delivery Method Selection"/>
+                                <label for="module_website_sale_delivery"/>
                                 <div class="text-muted">
-                                    Let your customers choose the delivery method when checking out on the website.
+                                    Apply shipping costs on orders.
                                 </div>
                                 <div class="content-group">
-                                    <hr class="mt8 mb8" />
-                                    <field name="sale_delivery_settings" class="oe_light_label" widget="radio"/>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2>Shipping Connectors</h2>
+                <div class="row mt16 oe_flex_container" id="shipping_connectors_settings">
+                    <div class="col-md-6" id="ups_provider_setting">
+                        <div class="input-group" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer.
+                            Apply shipping connector from delivery methods.">
+                            <span class="input-group-addon oe_group_addon24">
+                                <field name="module_delivery_ups" widget="upgrade_boolean"/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label for="module_delivery_ups"/>
+                                <span class="pull-right label label-primary">Enterprise</span>
+                                <div class="text-muted">
+                                    Ship with UPS.
+                                </div>
+                                <div class="content-group"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="shipping_provider_dhl_setting">
+                        <div class="input-group" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer.
+                            Apply shipping connector from delivery methods.">
+                            <span class="input-group-addon oe_group_addon24">
+                                <field name="module_delivery_dhl" widget="upgrade_boolean"/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label for="module_delivery_dhl"/>
+                                <span class="pull-right label label-primary">Enterprise</span>
+                                <div class="text-muted">
+                                    Ship with DHL.
+                                </div>
+                                <div class="content-group"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="shipping_provider_fedex_setting">
+                        <div class="input-group" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer.
+                            Apply shipping connector from delivery methods.">
+                            <span class="input-group-addon oe_group_addon24">
+                                <field name="module_delivery_fedex" widget="upgrade_boolean"/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label for="module_delivery_fedex"/>
+                                <span class="pull-right label label-primary">Enterprise</span>
+                                <div class="text-muted">
+                                    Ship with FedEx.
+                                </div>
+                                <div class="content-group"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="shipping_provider_usps_setting">
+                        <div class="input-group" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer.
+                            Apply shipping connector from delivery methods.">
+                            <span class="input-group-addon oe_group_addon24">
+                                <field name="module_delivery_usps" widget="upgrade_boolean"/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label for="module_delivery_usps"/>
+                                <span class="pull-right label label-primary">Enterprise</span>
+                                <div class="text-muted">
+                                    Ship with USPS.
+                                </div>
+                                <div class="content-group"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="shipping_provider_temando_setting">
+                        <div class="input-group" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer.
+                            Apply shipping connector from delivery methods.">
+                            <span class="input-group-addon oe_group_addon24">
+                                <field name="module_delivery_temando" widget="upgrade_boolean"/>
+                            </span>
+                            <div class="form-control" style="float: none;">
+                                <label for="module_delivery_temando"/>
+                                <span class="pull-right label label-primary">Enterprise</span>
+                                <div class="text-muted">
+                                    Use Temando to connect with your carrier.
+                                </div>
+                                <div class="content-group"></div>
                             </div>
                         </div>
                     </div>
@@ -172,15 +441,12 @@
                                 <field name="module_sale_ebay" widget="upgrade_boolean"/>
                             </span>
                             <div class="form-control" style="float: none;">
-                                <label string="eBay"/>
+                                <label for="module_sale_ebay"/>
                                 <span class="pull-right label label-primary">Enterprise</span>
                                 <div class="text-muted">
-                                    Sell on eBay to boost the visibilty of your products.
+                                    Sell your products on eBay.
                                 </div>
-                                <div class="content-group">
-                                    <hr class="mt8 mb8" />
-                                    <span class="text-warning"><strong>Save</strong> this page to activate the feature.</span>
-                                </div>
+                                <div class="content-group"></div>
                             </div>
                         </div>
                     </div>

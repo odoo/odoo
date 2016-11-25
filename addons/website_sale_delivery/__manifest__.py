@@ -12,6 +12,7 @@ Delivery Costs
     'data': [
         'views/website_sale_delivery_templates.xml',
         'views/website_sale_delivery_views.xml',
+        'views/res_config.xml',
         'data/website_sale_delivery_data.xml'
     ],
     'demo': [

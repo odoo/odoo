@@ -26,16 +26,16 @@ class WebsiteTwitterConfig(models.TransientModel):
 
     twitter_api_key = fields.Char(
         related='website_id.twitter_api_key',
-        string='Twitter API Key',
+        string='API Key',
         help='Twitter API key you can get it from https://apps.twitter.com/app/new')
     twitter_api_secret = fields.Char(
         related='website_id.twitter_api_secret',
-        string='Twitter API secret',
+        string='API secret',
         help='Twitter API secret you can get it from https://apps.twitter.com/app/new')
     twitter_tutorial = fields.Boolean(string='Show me how to obtain the Twitter API Key and Secret')
     twitter_screen_name = fields.Char(
         related='website_id.twitter_screen_name',
-        string='Get favorites from this screen name',
+        string='Favorites From',
         help='Screen Name of the Twitter Account from which you want to load favorites.'
              'It does not have to match the API Key/Secret.')
 
