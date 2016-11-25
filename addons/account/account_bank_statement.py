@@ -987,7 +987,8 @@ class account_bank_statement_line(osv.osv):
 
             # Reconcile
             for pair in move_line_pairs_to_reconcile:
-                aml_obj.reconcile_partial(cr, uid, pair, context=context)
+                # DO NOT FORWARD PORT
+                aml_obj.reconcile_partial(cr, uid, pair, context=dict(context, bs_move_id=move_id))
 
     # FIXME : if it wasn't for the multicompany security settings in account_security.xml, the method would just
     # return [('journal_entry_ids', '!=', True)]
