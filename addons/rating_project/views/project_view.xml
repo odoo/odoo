@@ -5,12 +5,24 @@
         <record id="rating_rating_action_task" model="ir.actions.act_window">
             <field name="name">Customer Ratings</field>
             <field name="res_model">rating.rating</field>
-            <field name="view_mode">kanban,pivot,graph</field>
+            <field name="view_mode">kanban,tree,pivot,graph,form</field>
             <field name="domain">[('res_model', '=', 'project.task'), ('res_id', '=', active_id), ('consumed', '=', True)]</field>
             <field name="help" type="html">
                 <p>
                     Customer ratings on tasks. If you have no rating, change your project Settings to activate it.
                 </p>
+            </field>
+        </record>
+
+        <record id="rating_rating_view_search" model="ir.ui.view">
+            <field name="name">rating.rating.search.inherit</field>
+            <field name="model">rating.rating</field>
+            <field name="inherit_id" ref="rating.rating_rating_view_search" />
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='rating_unhappy']" position="after">
+                    <separator />
+                    <filter string="Rating for tasks" name="rating_tasks" domain="[('res_model', '=', 'project.task')]" />
+                </xpath>
             </field>
         </record>
 
@@ -25,6 +37,18 @@
                             class="oe_stat_button" icon="fa-smile-o">
                         <field name="rating_count" string="Rating" widget="statinfo"/>
                     </button>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_task_view_search" model="ir.ui.view">
+            <field name="name">project.task.search.inherit</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_search_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//group" position="before">
+                    <separator/>
+                    <filter string="Rated tasks" domain="[('rating_last_value', '!=', 0.0)]" />
                 </xpath>
             </field>
         </record>
@@ -128,7 +152,7 @@
         <record id="rating_rating_action_project" model="ir.actions.act_window">
             <field name="name">Customer Ratings</field>
             <field name="res_model">rating.rating</field>
-            <field name="view_mode">kanban,pivot,graph</field>
+            <field name="view_mode">kanban,tree,pivot,graph,form</field>
             <field name="domain">[('res_model','in',['project.task', 'project.issue']), ('consumed', '=', True)]</field>
             <field name="help" type="html">
                 <p>
