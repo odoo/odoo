@@ -171,6 +171,10 @@ class AccountMove(models.Model):
             #check the lock date + check if some entries are reconciled
             move.line_ids._update_check()
             move.line_ids.unlink()
+        # The related payments keep track of the move name thanks to the field 'move_name'. Since we
+        # unlink the move, we should set the 'move_name' to False, otherwise the unlink of the
+        # payment is not possible.
+        self.env['account.payment'].search([('move_name', 'in', self.mapped('name'))]).write({'move_name': False})
         return super(AccountMove, self).unlink()
 
     @api.multi
