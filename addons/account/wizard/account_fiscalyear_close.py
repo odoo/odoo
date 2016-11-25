@@ -175,6 +175,7 @@ class account_fiscalyear_close(osv.osv_memory):
                      WHERE b.account_id IN %s
                        AND b.reconcile_id IS NOT NULL
                        AND b.period_id IN ('''+fy_period_set+''')
+                       AND b.state <> 'draft'
                        AND b.reconcile_id IN (SELECT DISTINCT(reconcile_id)
                                           FROM account_move_line a
                                           WHERE a.period_id IN ('''+fy2_period_set+''')))''', (new_journal.id, period.id, period.date_start, move_id, tuple(account_ids),))
