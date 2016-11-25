@@ -32,7 +32,7 @@ class TestMailTemplate(TestMail):
         self.email_2 = 'test2@example.com'
         self.email_3 = self.partner_1.email
         self.email_template = self.env['mail.template'].create({
-            'model_id': self.env['ir.model'].search([('model', '=', 'mail.channel')], limit=1).id,
+            'model_id': self.env['ir.model']._get('mail.channel').id,
             'name': 'Pigs Template',
             'subject': '${object.name}',
             'body_html': '${object.description}',

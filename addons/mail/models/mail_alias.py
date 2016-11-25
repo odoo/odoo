@@ -111,10 +111,10 @@ class Alias(models.Model):
         if vals.get('alias_name'):
             vals['alias_name'] = self._clean_and_make_unique(vals.get('alias_name'))
         if model_name:
-            model = self.env['ir.model'].search([('model', '=', model_name)])
+            model = self.env['ir.model']._get(model_name)
             vals['alias_model_id'] = model.id
         if parent_model_name:
-            model = self.env['ir.model'].search([('model', '=', parent_model_name)])
+            model = self.env['ir.model']._get(parent_model_name)
             vals['alias_parent_model_id'] = model.id
         return super(Alias, self).create(vals)
 

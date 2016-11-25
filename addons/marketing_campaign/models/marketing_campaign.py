@@ -291,7 +291,7 @@ class MarketingCampaignActivity(models.Model):
 
     name = fields.Char('Name', required=True)
     campaign_id = fields.Many2one('marketing.campaign', 'Campaign', required=True, ondelete='cascade', index=True)
-    object_id = fields.Many2one(related='campaign_id.object_id', relation='ir.model', string='Object', readonly=True)
+    object_id = fields.Many2one('ir.model', related='campaign_id.object_id', string='Object', readonly=True)
     start = fields.Boolean('Start', help="This activity is launched when the campaign starts.", index=True)
     condition = fields.Text('Condition', required=True, default="True",
         help="Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled."

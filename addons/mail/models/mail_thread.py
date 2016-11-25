@@ -229,7 +229,7 @@ class MailThread(models.AbstractModel):
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not self._context.get('mail_create_nolog'):
-            doc_name = self.env['ir.model'].search([('model', '=', self._name)]).read(['name'])[0]['name']
+            doc_name = self.env['ir.model']._get(self._name).name
             thread.message_post(body=_('%s created') % doc_name)
 
         # auto_subscribe: take values and defaults into account
@@ -663,7 +663,7 @@ class MailThread(models.AbstractModel):
             access_link = self._notification_link_helper('view', message_id=message.id)
 
         if message.model:
-            model_name = self.env['ir.model'].sudo().search([('model', '=', self.env[message.model]._name)]).name_get()[0][1]
+            model_name = self.env['ir.model']._get(message.model).display_name
             view_title = '%s %s' % (_('View'), model_name)
         else:
             view_title = _('View')
@@ -1133,7 +1133,7 @@ class MailThread(models.AbstractModel):
             dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)])
             if dest_aliases:
                 routes = []
-                for alias in dest_aliases:
+                for alias in dest_aliases.sudo():
                     user_id = alias.alias_user_id.id
                     if not user_id:
                         # TDE note: this could cause crashes, because no clue that the user
