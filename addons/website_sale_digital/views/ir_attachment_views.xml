@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="ir_attachment_view_kanban_inherit_digital" model="ir.ui.view">
+        <field name="name">ir.attachment.view.kanban.inherit.digital</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="mail.view_document_file_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//templates" position="before">
+                <field name="download_count"/>
+            </xpath>
+            <xpath expr="//div[@class='oe_attachment']" position="before">
+                <span class="badge pull-right" t-if="record.product_downloadable.value" title="Number of downloads">
+                    <b> <i class="fa fa-download" aria-hidden="true"></i> <field name="download_count"/></b>
+                </span>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

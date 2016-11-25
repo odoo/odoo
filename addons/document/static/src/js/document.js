@@ -90,6 +90,18 @@ Sidebar.include({
             .click(this._onDeleteAttachment.bind(this));
     },
     /**
+     * Get the attachment domain
+     *
+     * @private
+     */
+    _getAttachmentDomain: function () {
+        return [
+            ['res_model', '=', this.env.model],
+            ['res_id', '=', this.env.activeIds[0]],
+            ['type', 'in', ['binary', 'url']]
+        ]
+    },
+    /**
      * Update the attachments to be displayed in the attachment section
      * of the toolbar
      *
@@ -101,11 +113,7 @@ Sidebar.include({
             this.items.files = [];
             return $.when();
         } else {
-            var domain = [
-                ['res_model', '=', this.env.model],
-                ['res_id', '=', activeId],
-                ['type', 'in', ['binary', 'url']]
-            ];
+            var domain = this._getAttachmentDomain();
             var fields = ['name', 'url', 'type',
                 'create_uid', 'create_date', 'write_uid', 'write_date'];
             return this._rpc({

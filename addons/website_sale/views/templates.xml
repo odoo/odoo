@@ -1412,7 +1412,7 @@
                                                           <strong t-esc="line.product_id.with_context(display_default_code=False).display_name"/>
                                                       </a>
                                                   </div>
-                                                  <div class="text-muted hidden-xs small">
+                                                  <div id="product_description" class="text-muted hidden-xs small">
                                                       <t t-foreach="line.name.splitlines()[1:]" t-as="name_line">
                                                           <span><t t-esc="name_line"/></span><br/>
                                                       </t>

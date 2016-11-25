@@ -1,20 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <template id="assets_backend" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_sale_digital/static/src/js/sidebar.js"></script>
+        </xpath>
+    </template>
+
+    <template id="digital_content_btn">
+        <t t-if="attachments">
+            <div class="text-center">
+                <t t-foreach="attachments" t-as="attachment">
+                    <div>
+                        <a class="btn btn-primary btn-sm mt4" t-att-title="attachment['name']" t-attf-href="/my/download?attachment_id=#{attachment['id']}" t-att-target="attachment['type'] == 'url' and '_blank' or None">
+                            <t t-if="attachment['type'] == 'url'">
+                                <i class="fa fa-external-link"></i>
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-download"></i>
+                            </t>
+                            <t t-esc="attachment['name']"/>
+                        </a>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
     <template id="portal_order_page_downloads" name="Orders Downloads Followup" inherit_id="sale.portal_order_page">
         <xpath expr="//div[@id='product_name']" position="inside">
             <t t-set="attachments" t-value="digital_attachments.get(ol.product_id.id)"/>
-            <t t-if="attachments">
-                <span class="dropdown">
-                    <button class="btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                        Downloads <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                        <t t-foreach="attachments" t-as="a">
-                            <li role="presentation"><a role="menuitem" tabindex="-1" t-att-href="'/my/download?attachment_id=%i' % a['id']"><t t-esc="a['name']"/></a></li>
-                        </t>
-                    </ul>
-                </span>
-            </t>
+            <t t-call="website_sale_digital.digital_content_btn"/>
+        </xpath>
+    </template>
+
+    <template id="confirmation_downloads" name="Confirmation Downloads" inherit_id="website_sale.confirmation">
+        <xpath expr="//div[@id='product_description']" position="after">
+            <t t-set="attachments" t-value="digital_content.get(line.product_id.id)"/>
+            <t t-call="website_sale_digital.digital_content_btn"/>
         </xpath>
     </template>
 </odoo>

@@ -271,7 +271,7 @@ class Inventory(models.Model):
         :param quant_products: products available in stock_quants
         '''
         vals = []
-        exhausted_domain = [('type', 'not in', ('service', 'consu', 'digital'))]
+        exhausted_domain = [('type', 'not in', ('service', 'consu'))]
         if products:
             exhausted_products = products - quant_products
             exhausted_domain += [('id', 'in', exhausted_products.ids)]

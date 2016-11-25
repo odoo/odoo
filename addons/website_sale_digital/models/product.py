@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from collections import defaultdict
 
 
 class ProductTemplate(models.Model):
@@ -26,7 +27,7 @@ class ProductTemplate(models.Model):
             'type': 'ir.actions.act_window',
             'view_mode': 'kanban,form',
             'view_type': 'form',
-            'context': "{'default_res_model': '%s','default_res_id': %d, 'default_product_downloadable': True}" % (self._name, self.id),
+            'context': {'default_res_model': self._name, 'default_res_id': self.id, 'default_product_downloadable': True, 'default_name': self.name},
             'help': """
                 <p class="oe_view_nocontent_create">Click on create to add attachments for this digital product.</p>
                 <p>The attached files are the ones that will be purchased and sent to the customer.</p>
@@ -59,9 +60,27 @@ class Product(models.Model):
             'type': 'ir.actions.act_window',
             'view_mode': 'kanban,form',
             'view_type': 'form',
-            'context': "{'default_res_model': '%s','default_res_id': %d, 'default_product_downloadable': True}" % (self._name, self.id),
+            'context': {'default_res_model': self._name, 'default_res_id': self.id, 'default_product_downloadable': True, 'default_name': self.product_tmpl_id.name},
             'help': """
                 <p class="oe_view_nocontent_create">Click on create to add attachments for this digital product.</p>
                 <p>The attached files are the ones that will be purchased and sent to the customer.</p>
                 """,
         }
+
+    @api.multi
+    def get_digital_attachment(self):
+        template_ids = self.mapped('product_tmpl_id').ids
+        result = defaultdict(list)
+        product_product_atts = self.env['ir.attachment'].search_read(
+                domain=[('product_downloadable', '=', True), ('res_model', '=', 'product.product'), ('res_id', 'in', self.ids)],
+                fields=["name", "res_model", "res_id", "type", "url"])
+        for attachment in product_product_atts:
+            result[attachment['res_id']].append(attachment)
+        product_template_atts = self.env['ir.attachment'].search_read(
+                domain=[('product_downloadable', '=', True), ('res_model', '=', 'product.template'), ('res_id', 'in', template_ids)],
+                fields=["name", "res_model", "res_id", "type", "url"])
+        for attachment in product_template_atts:
+            related_products = self.filtered(lambda r: r.product_tmpl_id.id == attachment['res_id'])
+            for p in related_products:
+                result[p.id].append(attachment)
+        return result

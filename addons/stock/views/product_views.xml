@@ -86,7 +86,7 @@
                 <group name="packaging" position="before">
                     <group name="inventory">
                         <group string="Operations" name="operations">
-                            <field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
+                            <field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible':[('type', '=', ['service'])]}"/>
                             <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible':[('route_from_categ_ids', '=', [])]}"/>
                             <label for="sale_delay"/>
                             <div>
@@ -106,7 +106,7 @@
                             </div>
                         </group>
                         <group string="Traceability" name="traceability" groups="stock.group_production_lot">
-                            <field name="tracking" widget="radio" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
+                            <field name="tracking" widget="radio" attrs="{'invisible':[('type', '=', ['service'])]}"/>
                         </group>
                         <group string="Counterpart Locations" name="stock_property" groups="base.group_no_one">
                             <field name="property_stock_production" domain="[('usage','=','production')]"/>
