@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
 
         <!-- Bundle for Rating Widget (in assets common to be used in website modules) -->
         <template id="assets_common" inherit_id="web.assets_common" name="Rating common assets">
@@ -95,7 +94,7 @@
         </template>
 
         <!-- External page : thanks message -->
-        <template id="rating_external_page_view">
+        <template id="rating_external_page_view" name="Rating Page Done">
             <head>
                 <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
                 <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
@@ -112,7 +111,7 @@
         </template>
 
         <!-- External page: rate and submit feedback -->
-        <template id="rating_external_page_submit">
+        <template id="rating_external_page_submit" name="Rating Page Submit">
             <head>
                 <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
             </head>
@@ -141,5 +140,4 @@
             </div>
         </template>
 
-    </data>
 </odoo>

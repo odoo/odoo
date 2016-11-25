@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <record model="ir.ui.view" id="view_rating_rating_kanban">
+
+        <record id="rating_rating_view_kanban" model="ir.ui.view">
             <field name="name">rating.rating.kanban</field>
             <field name="model">rating.rating</field>
             <field name="arch" type="xml">
@@ -27,7 +27,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_rating_rating_pivot">
+        <record id="rating_rating_view_pivot" model="ir.ui.view">
             <field name="name">rating.rating.pivot</field>
             <field name="model">rating.rating</field>
             <field name="arch" type="xml">
@@ -39,7 +39,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_rating_rating_graph">
+        <record id="rating_rating_view_graph" model="ir.ui.view">
            <field name="name">rating.rating.graph</field>
            <field name="model">rating.rating</field>
            <field name="arch" type="xml">
@@ -50,7 +50,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_rating_rating_search">
+        <record id="rating_rating_view_search" model="ir.ui.view">
             <field name="name">rating.rating.search</field>
             <field name="model">rating.rating</field>
             <field name="arch" type="xml">
@@ -82,12 +82,12 @@
             <field name="name">Rating</field>
             <field name="res_model">rating.rating</field>
             <field name="view_mode">kanban,graph,pivot</field>
-            <field name="domain">[('consumed','=',True)]</field>    
+            <field name="domain">[('consumed','=',True)]</field>
             <field name="help" type="html">
                 <p>
                     There is no rating for this object at the moment.
                 </p>
             </field>
         </record>
-    </data>
+
 </odoo>

@@ -14,7 +14,6 @@ This module Allows a customer to give rating on Project.
     'data': [
         'data/project_data.xml',
         'views/project_view.xml',
-        'views/project_dashboard.xml',
     ],
     'demo': ['data/project_demo.xml'],
     'installable': True,
