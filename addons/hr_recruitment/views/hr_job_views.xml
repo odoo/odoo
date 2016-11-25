@@ -19,7 +19,6 @@
                 <field name="department_id"/>
                 <field name="no_of_recruitment"/>
                 <field name="color"/>
-                <field name="document_ids"/>
                 <field name="no_of_hired_employee"/>
                 <field name="manager_id"/>
                 <field name="state"/>
@@ -45,17 +44,9 @@
                                             <button class="btn btn-primary" name="%(action_hr_job_applications)d" type="action">Application(s)</button>
                                         </div>
                                         <div class="col-xs-6 o_kanban_primary_right">
-                                            <div t-if="record.document_ids.raw_value.length > 0" class="row">
-                                                <div class="col-xs-9">
-                                                    <a name="action_get_attachment_tree_view" type="object">
-                                                        Document(s)
-                                                    </a>
-                                                </div>
-                                                <div class="col-xs-3">
-                                                    <span><t t-esc="record.document_ids.raw_value.length"/></span>
-                                                </div>
-                                            </div>
-
+                                            <a name="action_get_attachment_tree_view" type="object">
+                                                Documents
+                                            </a>
                                             <div class="row" name="recruitment">
                                                 <div class="col-xs-12">
                                                     <a t-if="record.state.raw_value == 'recruit'" name="set_open" type="object">Recruitment Done</a>
