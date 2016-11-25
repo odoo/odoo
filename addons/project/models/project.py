@@ -257,9 +257,7 @@ class Project(models.Model):
     def write(self, vals):
         # if alias_model has been changed, update alias_model_id accordingly
         if vals.get('alias_model'):
-            vals['alias_model_id'] = self.env['ir.model'].search([
-                ('model', '=', vals.get('alias_model', 'project.task'))
-            ], limit=1).id
+            vals['alias_model_id'] = self.env['ir.model']._get(vals.get('alias_model', 'project.task')).id
         res = super(Project, self).write(vals)
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too

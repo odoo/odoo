@@ -59,11 +59,8 @@ class IrModelFieldsAnonymization(models.Model):
     @api.model
     def _get_model_and_field_ids(self, vals):
         if vals.get('field_name') and vals.get('model_name'):
-            model_id = self.env['ir.model'].search([('model', '=', vals['model_name'])], limit=1).id
-            if model_id:
-                field_id = self.env['ir.model.fields'].search([('name', '=', vals['field_name']), ('model_id', '=', model_id)], limit=1).id
-                if field_id:
-                    return (model_id, field_id)
+            field = self.env['ir.model.fields']._get(vals['model_name'], vals['field_name'])
+            return (field.model_id.id, field.id)
         return (False, False)
 
     @api.model
@@ -109,17 +106,12 @@ class IrModelFieldsAnonymization(models.Model):
     def _onchange_model_name(self):
         self.field_name = False
         self.field_id = False
-        if self.model_name:
-            self.model_id = self.env['ir.model'].search([('model', '=', self.model_name)], limit=1)
-        else:
-            self.model_id = False
+        self.model_id = self.env['ir.model']._get(self.model_name)
 
     @api.onchange('field_name')
     def _onchange_field_name(self):
         if self.field_name and self.model_name:
-            self.field_id = self.env['ir.model.fields'].search([
-                ('name', '=', self.field_name), ('model', '=', self.model_name)
-            ], limit=1)
+            self.field_id = self.env['ir.model.fields']._get(self.model_name, self.field_name)
         else:
             self.field_id = False
 

@@ -291,7 +291,7 @@ class TestMailgateway(TestMail):
     def setUp(self):
         super(TestMailgateway, self).setUp()
         # groups@.. will cause the creation of new mail.channels
-        self.mail_channel_model = self.env['ir.model'].search([('model', '=', 'mail.channel')], limit=1)
+        self.mail_channel_model = self.env['ir.model']._get('mail.channel')
         self.alias = self.env['mail.alias'].create({
             'alias_name': 'groups',
             'alias_user_id': False,
@@ -299,7 +299,7 @@ class TestMailgateway(TestMail):
             'alias_contact': 'everyone'})
 
         # test@.. will cause the creation of new mail.test
-        self.mail_test_model = self.env['ir.model'].search([('model', '=', 'mail.test')], limit=1)
+        self.mail_test_model = self.env['ir.model']._get('mail.test')
         self.alias_2 = self.env['mail.alias'].create({
             'alias_name': 'test',
             'alias_user_id': False,

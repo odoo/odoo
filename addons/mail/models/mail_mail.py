@@ -212,7 +212,7 @@ class MailMail(models.Model):
             try:
                 # TDE note: remove me when model_id field is present on mail.message - done here to avoid doing it multiple times in the sub method
                 if mail.model:
-                    model = self.env['ir.model'].sudo().search([('model', '=', mail.model)])[0]
+                    model = self.env['ir.model']._get(mail.model)[0]
                 else:
                     model = None
                 if model:

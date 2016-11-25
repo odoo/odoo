@@ -103,6 +103,12 @@ class IrModel(models.Model):
         ('obj_name_uniq', 'unique (model)', 'Each model must be unique!'),
     ]
 
+    def _get(self, name):
+        """ Return the (sudoed) `ir.model` record with the given name.
+        The result may be an empty recordset if the model is not found.
+        """
+        return self.sudo().search([('model', '=', name)])
+
     # overridden to allow searching both on model name (field 'model') and model
     # description (field 'name')
     @api.model
@@ -848,18 +854,13 @@ class IrModelAccess(models.Model):
             # User root have all accesses
             return True
 
+        assert isinstance(model, basestring), 'Not a model name: %s' % (model,)
         assert mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
 
-        if isinstance(model, models.BaseModel):
-            assert model._name == 'ir.model', 'Invalid model object'
-            model_name = model.model
-        else:
-            model_name = model
-
         # TransientModel records have no access rights, only an implicit access rule
-        if model_name not in self.env:
-            _logger.error('Missing model %s', model_name)
-        elif self.env[model_name].is_transient():
+        if model not in self.env:
+            _logger.error('Missing model %s', model)
+        elif self.env[model].is_transient():
             return True
 
         # We check if a specific rule exists
@@ -870,7 +871,7 @@ class IrModelAccess(models.Model):
                              WHERE m.model = %s
                                AND gu.uid = %s
                                AND a.active IS TRUE""".format(mode=mode),
-                         (model_name, self._uid,))
+                         (model, self._uid,))
         r = self._cr.fetchone()[0]
 
         if not r:
@@ -881,11 +882,11 @@ class IrModelAccess(models.Model):
                                  WHERE a.group_id IS NULL
                                    AND m.model = %s
                                    AND a.active IS TRUE""".format(mode=mode),
-                             (model_name,))
+                             (model,))
             r = self._cr.fetchone()[0]
 
         if not r and raise_exception:
-            groups = '\n\t'.join('- %s' % g for g in self.group_names_with_access(model_name, mode))
+            groups = '\n\t'.join('- %s' % g for g in self.group_names_with_access(model, mode))
             msg_heads = {
                 # Messages are declared in extenso so they are properly exported in translation terms
                 'read': _("Sorry, you are not allowed to access this document."),
@@ -895,11 +896,11 @@ class IrModelAccess(models.Model):
             }
             if groups:
                 msg_tail = _("Only users with the following access level are currently allowed to do that") + ":\n%s\n\n(" + _("Document model") + ": %s)"
-                msg_params = (groups, model_name)
+                msg_params = (groups, model)
             else:
                 msg_tail = _("Please contact your system administrator if you think this is an error.") + "\n\n(" + _("Document model") + ": %s)"
-                msg_params = (model_name,)
-            _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, self._uid, model_name)
+                msg_params = (model,)
+            _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, self._uid, model)
             msg = '%s %s' % (msg_heads[mode], msg_tail)
             raise AccessError(msg % msg_params)
 

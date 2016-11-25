@@ -41,13 +41,14 @@ class website_form_model(models.Model):
             ])
         }
         return {
-            k: v for k, v in self.get_authorized_fields().iteritems()
+            k: v for k, v in self.get_authorized_fields(self.model).iteritems()
             if k not in excluded
         }
 
-    @api.multi
-    def get_authorized_fields(self):
-        model = self.env[self.model]
+    @api.model
+    def get_authorized_fields(self, model_name):
+        """ Return the fields of the given model name as a mapping like method `fields_get`. """
+        model = self.env[model_name]
         fields_get = model.fields_get()
 
         for key, val in model._inherits.iteritems():
