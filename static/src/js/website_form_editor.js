@@ -64,36 +64,23 @@ odoo.define('website_form_editor', function (require) {
 
             this.fields_deferred = new $.Deferred();
             ir_model.call(
-                "search_read",
+                "get_authorized_fields",
                 [
-                    [['model', '=', this.$target.closest('form').attr('data-model_name')]],
-                    ['id']
+                    this.$target.closest('form').attr('data-model_name')
                 ],
                 {
                     context: base.get_context()
                 }
-            ).then(function(model) {
-                var model_id = model[0].id;
+            ).then(function(fields) {
+                // The get_fields function doesn't return the name
+                // in the field dict since it uses it has the key
+                _.map(fields, function(field, field_name){
+                    field.name = field_name;
+                    return field;
+                });
 
-                ir_model.call(
-                    "get_authorized_fields",
-                    [
-                        model_id
-                    ],
-                    {
-                        context: base.get_context()
-                    }
-                ).then(function(fields) {
-                    // The get_fields function doesn't return the name
-                    // in the field dict since it uses it has the key
-                    _.map(fields, function(field, field_name){
-                        field.name = field_name;
-                        return field;
-                    });
-
-                    self.fields_deferred.resolve(fields)
-                })
-            })
+                self.fields_deferred.resolve(fields)
+            });
 
             return this.fields_deferred;
         },
@@ -178,7 +165,6 @@ odoo.define('website_form_editor', function (require) {
             if (type !== 'click') return;
 
             var self = this;
-            var ir_model = new Model("ir.model");
 
             this.fields().then(function(fields) {
                 // Make a nice array to render the select input
