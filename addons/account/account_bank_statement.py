@@ -920,7 +920,8 @@ class account_bank_statement_line(osv.osv):
                 move_line_pairs_to_reconcile.append([new_aml_id, counterpart_move_line_id])
         # Reconcile
         for pair in move_line_pairs_to_reconcile:
-            aml_obj.reconcile_partial(cr, uid, pair, context=context)
+            # DO NOT FORWARD PORT
+            aml_obj.reconcile_partial(cr, uid, pair, context=dict(context, bs_move_id=move_id))
         # Mark the statement line as reconciled
         self.write(cr, uid, id, {'journal_entry_id': move_id}, context=context)
 
