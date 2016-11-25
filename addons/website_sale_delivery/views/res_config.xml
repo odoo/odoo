@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    <record id="view_website_config_settings" model="ir.ui.view">
+        <field name="name">Website sale delivery settings</field>
+        <field name="model">website.config.settings</field>
+        <field name="inherit_id" ref="website_sale.website_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='delivery_order_setting']/div/div/div[@class='content-group']" position="replace">
+                <div class="content-group">
+                    <hr class="mt8 mb8" />
+                    <div>
+                        <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Delivery Methods" class="oe_link"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    </data>
+</odoo>
+

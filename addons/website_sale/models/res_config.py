@@ -28,24 +28,19 @@ class WebsiteConfigSettings(models.TransientModel):
     module_delivery_temando = fields.Boolean("Temando integration")
     module_delivery_ups = fields.Boolean("UPS integration")
     module_delivery_usps = fields.Boolean("USPS integration")
-    module_sale_ebay = fields.Boolean("eBay connector")
-    group_website_multiimage = fields.Selection([
-        (0, 'One image per product'),
-        (1, 'Several images per product')
-        ], string='Multi Images', implied_group='website_sale.group_website_multi_image', group='base.group_portal,base.group_user,base.group_public')
-    module_website_sale_options = fields.Selection([
-        (0, 'One-step "add to cart"'),
-        (1, 'Suggest optional products when adding to cart (e.g. for a computer: warranty, software, etc.)')
-        ], "Optional Products", help='Installs *e-Commerce Optional Products*')
+    module_sale_ebay = fields.Boolean("eBay")
+    group_website_multiimage = fields.Boolean(string='Multi-Images', implied_group='website_sale.group_website_multi_image', group='base.group_portal,base.group_user,base.group_public')
+    module_website_sale_options = fields.Boolean("Optional Products", help='Installs *e-Commerce Optional Products*')
+    module_website_sale_digital = fields.Boolean("Digital Content", help='Sell digital files.')
+    module_sale_stock = fields.Boolean("Delivery Orders")
+    module_account_taxcloud = fields.Boolean("TaxCloud")
+    module_currency_rate_live = fields.Boolean("Currency Rate Live")
     module_portal = fields.Boolean("Activate the customer portal", help="""Give your customers access to their documents.""")
     # the next 2 fields represent sale_pricelist_setting from sale.config.settings, they are split here for the form view, to improve usability
-    sale_pricelist_setting_split_1 = fields.Selection([
-        (0, 'A single sales price per product'),
-        (1, 'Several prices selectable through a drop-down list or applied automatically via Geo-IP'),
-        ], default=0, string="Pricing Strategy")
+    sale_pricelist_setting_split_1 = fields.Boolean(default=0, string="Multiple Prices per Products")
     sale_pricelist_setting_split_2 = fields.Selection([
-        (0, 'Specific prices per customer segment, currency, etc.'),
-        (1, 'Advanced pricing based on formulas (discounts, margins, rounding)')
+        (0, 'Multiple prices per product (e.g. customer segments, currencies)'),
+        (1, 'Prices computed from formulas (discounts, margins, roundings)')
         ], default=0, string="Sales Price",
         help='Specific prices per customer segment, currency, etc.: new pricing table available in product detail form (Sales tab).\n'
              'Advanced pricing based on formulas (discounts, margins, rounding): apply price rules from a new *Pricelists* menu in Configuration.')
@@ -57,7 +52,7 @@ class WebsiteConfigSettings(models.TransientModel):
         implied_group='product.group_pricelist_item')
     group_product_pricelist = fields.Boolean("Show pricelists On Products",
         implied_group='product.group_product_pricelist')
-    order_mail_template = fields.Many2one('mail.template', string='Order Confirmation Email', readonly=True, default=_default_order_mail_template, help="Email sent to customer at the end of the checkout process")
+    order_mail_template = fields.Many2one('mail.template', string='Email Template', readonly=True, default=_default_order_mail_template, help="Email sent to customer at the end of the checkout process")
 
     @api.model
     def get_default_sale_delivery_settings(self, fields):
