@@ -134,7 +134,7 @@ class report_custom(report_int):
                 field_child = f['field_child'+str(i)]
                 if field_child:
                     row.append(
-                        env['ir.model.fields'].browse(field_child[0]).name
+                        env['ir.model.fields'].sudo().browse(field_child[0]).name
                     )
                     if f['fc'+str(i)+'_operande']:
                         fct_name = 'id'
@@ -342,7 +342,7 @@ class report_custom(report_int):
         for f in fields:
             field_id = (f['field_child3'] and f['field_child3'][0]) or (f['field_child2'] and f['field_child2'][0]) or (f['field_child1'] and f['field_child1'][0]) or (f['field_child0'] and f['field_child0'][0])
             if field_id:
-                ttype = env['ir.model.fields'].browse(field_id).ttype
+                ttype = env['ir.model.fields'].sudo().browse(field_id).ttype
                 if ttype == 'date':
                     date_idx = idx
                     fct[idx] = process_date[report['frequency']] 
@@ -435,7 +435,7 @@ class report_custom(report_int):
         for f in fields:
             field_id = (f['field_child3'] and f['field_child3'][0]) or (f['field_child2'] and f['field_child2'][0]) or (f['field_child1'] and f['field_child1'][0]) or (f['field_child0'] and f['field_child0'][0])
             if field_id:
-                ttype = env['ir.model.fields'].browse(field_id).ttype
+                ttype = env['ir.model.fields'].sudo().browse(field_id).ttype
                 if ttype == 'date':
                     date_idx = idx
                     fct[idx] = process_date[report['frequency']] 

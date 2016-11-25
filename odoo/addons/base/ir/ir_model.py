@@ -399,6 +399,12 @@ class IrModelFields(models.Model):
                     'message': _("The table %r if used for other, possibly incompatible fields.") % self.relation_table,
                 }}
 
+    def _get(self, model_name, name):
+        """ Return the (sudoed) `ir.model.fields` record with the given model and name.
+        The result may be an empty recordset if the model is not found.
+        """
+        return self.sudo().search([('model', '=', model_name), ('name', '=', name)])
+
     @api.multi
     def _drop_column(self):
         tables_to_drop = set()
