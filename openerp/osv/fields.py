@@ -1009,7 +1009,7 @@ class many2many(_column):
 
         def link(ids):
             # beware of duplicates when inserting
-            query = """ INSERT INTO {rel} ({id1}, {id2})
+            query = u""" INSERT INTO {rel} ({id1}, {id2})
                         (SELECT %s, unnest(%s)) EXCEPT (SELECT {id1}, {id2} FROM {rel} WHERE {id1}=%s)
                     """.format(rel=rel, id1=id1, id2=id2)
             for sub_ids in cr.split_for_in_conditions(ids):
@@ -1019,7 +1019,7 @@ class many2many(_column):
             # remove all records for which user has access rights
             clauses, params, tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
             cond = " AND ".join(clauses) if clauses else "1=1"
-            query = """ DELETE FROM {rel} USING {tables}
+            query = u""" DELETE FROM {rel} USING {tables}
                         WHERE {rel}.{id1}=%s AND {rel}.{id2}={table}.id AND {cond}
                     """.format(rel=rel, id1=id1, id2=id2,
                                table=obj._table, tables=','.join(tables), cond=cond)
