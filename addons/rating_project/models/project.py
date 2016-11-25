@@ -33,15 +33,14 @@ class Task(models.Model):
     def write(self, values):
         res = super(Task, self).write(values)
         if 'stage_id' in values and values.get('stage_id'):
-            self.filtered(lambda x: x.project_id.rating_status == 'stage')._send_task_rating_mail()
+            self.filtered(lambda x: x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
         return res
 
-    def _send_task_rating_mail(self):
+    def _send_task_rating_mail(self, force_send=False):
         for task in self:
             rating_template = task.stage_id.rating_template_id
             if rating_template:
-                force_send = self.env.context.get('force_send', True)
-                task.rating_send_request(rating_template, partner=task.partner_id, reuse_rating=False, force_send=force_send)
+                task.rating_send_request(rating_template, lang=task.partner_id.lang, force_send=force_send)
 
     def rating_get_partner_id(self):
         res = super(Task, self).rating_get_partner_id()
@@ -53,6 +52,7 @@ class Task(models.Model):
     def rating_apply(self, rate, token=None, feedback=None, subtype=None):
         return super(Task, self).rating_apply(rate, token=token, feedback=feedback, subtype="rating_project.mt_task_rating")
 
+
 class Project(models.Model):
 
     _inherit = "project.project"
@@ -61,7 +61,7 @@ class Project(models.Model):
     @api.model
     def _send_rating_all(self):
         projects = self.search([('rating_status', '=', 'periodic'), ('rating_request_deadline', '<=', fields.Datetime.now())])
-        projects.with_context(force_send=False)._send_rating_mail()
+        projects._send_rating_mail()
         projects._compute_rating_request_deadline()
 
     def _send_rating_mail(self):
