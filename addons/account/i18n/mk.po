@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2015-2016
+# Anica Milanova, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-11-18 11:16+0000\n"
-"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
+"PO-Revision-Date: 2016-11-25 09:56+0000\n"
+"Last-Translator: Anica Milanova\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -773,7 +774,7 @@ msgstr "Листа на познати даноци и нивните проце
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "A list of your customer and suppler payment terms."
-msgstr "Листа на клиентски и добавувачки услови на плаќање."
+msgstr "Листа на услови на плаќање за купувачи и добавувачи."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1651,7 +1652,7 @@ msgid ""
 "Asset management: This allows you to manage the assets owned by a company or a person. It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n"
 "\n"
 "-This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of Accounts, ...)"
-msgstr "Менаџирање на средства: Ова ви овозможува да ги управувате средствата кои се поседувани од компанија или лице.\n                Ја следи амортизацијата која се прави на овие средства, и креира движење на сметката за овие ставки на амортизацијата.\n                Ова го инсталира модулот account_asset. Доколку не го означите ова поле, ќе може да правите фактурирање и плаќања,\n                но не и сметководство (Ставки на налог, Контен план, ...)"
+msgstr "Менаџирање на основни средства: Се овозможува управување на основните средства поседувани од компанија или лице. Се следи амортизацијата и се креираат книжења на ставките за амортизацијата.\n\n-Ова го инсталира модулот account_asset. Доколку не го означите ова поле, ќе може да го евидентирате фактурирањето и плаќањата, но не и сметководството (ставки во налог, контен план...)."
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -2228,7 +2229,7 @@ msgstr "Категорија од сметка на трошоци"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_income_categ_id
 msgid "Category of Income Account"
-msgstr "Категорија од сметка побарува"
+msgstr "Категорија на конто за приход"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2579,7 +2580,7 @@ msgstr "Состави е-пошта"
 msgid ""
 "Compute the counter part accounts of this journal item for this journal "
 "entry. This can be needed in reports."
-msgstr "Компјутирај ги сметките на соработници од овие ставки на налог за овој внес во налог. Ова може да биде потребно во извештаи."
+msgstr "Пресметај ги против контата од оваа ставка на налогот. Ова може да биде потребно во извештаи."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_end
@@ -2677,7 +2678,7 @@ msgstr "Потврдено"
 msgid ""
 "Confirming this will create automatically a journal entry with the "
 "difference in the profit/loss account set on the cash journal."
-msgstr "Потврдувајќи го ова, автоматски ќе ви се креира внес во налог со разликата профит/загуба на сметка во дневникот на готовина."
+msgstr "Потврдувајќи го ова, автоматски ќе се креира книжење со разликата, на сметката за профит/загуба која е подесена на налогот за готовина."
 
 #. module: account
 #. openerp-web
@@ -3175,7 +3176,7 @@ msgstr "Стандардна сметка Побарува"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_default_debit_account_id
 msgid "Default Debit Account"
-msgstr "Стандарда сметка Должи"
+msgstr "Стандардна сметка Должи"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_default_purchase_tax_id
@@ -3670,12 +3671,12 @@ msgstr "Excel урнек"
 #: code:addons/account/models/chart_template.py:158
 #, python-format
 msgid "Exchange Difference"
-msgstr "Разлика на разменување на девици"
+msgstr "Разлика од размена на девизи"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_currency_exchange_journal_id
 msgid "Exchange Gain or Loss Journal"
-msgstr "Дневник за добивка и загуба во разменување на девизи"
+msgstr "Налог за добивка или загуба при размена на девизи"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_rate_diff_partial_rec_id
@@ -4258,7 +4259,7 @@ msgstr "Доколку означите, новиот контен план не
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal_journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
-msgstr "Ако е празно, го користи налогот од внесот на налогот за да биде повратен."
+msgstr "Ако е празно, се користи ист вид на налог како налогот во кој е искнижен внесот на кој ќе се прави контра-книжење."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_include_base_amount
@@ -4357,7 +4358,7 @@ msgid ""
 " generation of accounting entries. If you keep the payment term and the due "
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
-msgstr "Доколку користите рокови за плаќање, крајниот датум ќе биде пресметан автоматски при генерирањето на сметководствените записи. Доколку ги оставите рокот за плаќање и крајниот датум празни, тоа значи директно плаќање. Рокот за плаќање може да пресмета неколку крајни датуми, на пример 50% сега, 50% за еден месец."
+msgstr "Доколку користите услови за плаќање, крајниот датум ќе биде пресметан автоматски при генерирањето на сметководствените записи. Доколку ги оставите рокот за плаќање и крајниот датум празни, тоа значи директно плаќање. Рокот за плаќање може да пресмета неколку крајни датуми, на пример 50% сега, 50% за еден месец."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_date_due
@@ -4490,7 +4491,7 @@ msgstr "Приход"
 #: model:ir.model.fields,field_description:account.field_product_template_property_account_income_id
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
 msgid "Income Account"
-msgstr "Сметка Побарува"
+msgstr "Конто за приход"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_income_id
@@ -4519,7 +4520,7 @@ msgstr "Додаток за информации"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_account_input_categ_id
 #: model:ir.model.fields,field_description:account.field_res_company_property_stock_account_input_categ_id
 msgid "Input Account for Stock Valuation"
-msgstr "Конто влез за валуација на залиха"
+msgstr "Конто влез за вреднување на залиха"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4761,7 +4762,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_journal_default_credit_account_id
 #: model:ir.model.fields,help:account.field_res_company_income_currency_exchange_account_id
 msgid "It acts as a default account for credit amount"
-msgstr "Дејствува како стандардна сметка за износот Побарувања"
+msgstr "Дејствува како стандардна сметка за износот на побарувањата"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_default_debit_account_id
@@ -5270,7 +5271,7 @@ msgstr "Помалку трошоци"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Less Non-Current Liabilities"
-msgstr "Помалку не-тековни обврски"
+msgstr "Помалку нетековни обврски"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -5475,14 +5476,14 @@ msgstr "Начини на плаќање за собирање на паричн
 #: model:ir.model.fields,field_description:account.field_account_payment_communication
 #: model:ir.model.fields,field_description:account.field_account_register_payments_communication
 msgid "Memo"
-msgstr "Мемо"
+msgstr "Белешки"
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_payment.xml:64
 #, python-format
 msgid "Memo:"
-msgstr "Мемо:"
+msgstr "Белешки:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_message_ids
@@ -5704,12 +5705,12 @@ msgstr "Број на цифри што ќе се користат за кодо
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_assets
 msgid "Non-current Assets"
-msgstr "Не-тековни средства"
+msgstr "Нетековни средства"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_liabilities
 msgid "Non-current Liabilities"
-msgstr "Не-тековни обврски"
+msgstr "Нетековни обврски"
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -5952,7 +5953,7 @@ msgstr "Отвори"
 #: code:addons/account/static/src/xml/account_payment.xml:82
 #, python-format
 msgid "Open Payment"
-msgstr "Отворено плаќање"
+msgstr "Отвори плаќање"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_client_account_menu
@@ -5986,7 +5987,7 @@ msgid ""
 "Operation not allowed. You can only reconcile entries that share the same "
 "secondary currency or that don't have one. Edit your journal items or make "
 "another selection before proceeding any further."
-msgstr "Операцијата не е дозволена. Можете само да порамнувате внесови што ја делат истата секундарна валута или кои што ја немаат. Уредете ги Вашите ставки на налог или направете нова селекција пред да одите понатаму."
+msgstr "Операцијата не е дозволена. Можете да порамнувате само внесови што ја делат истата секундарна валута или кои што ја немаат. Уредете ги ставките на налогот или направете нова селекција пред да продолжите понатаму."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_nocreate
@@ -6004,7 +6005,7 @@ msgstr "Споредни информации"
 #: model:ir.model.fields,help:account.field_account_tax_tag_ids
 #: model:ir.model.fields,help:account.field_account_tax_template_tag_ids
 msgid "Optional tags you may want to assign for custom reporting"
-msgstr ""
+msgstr "Ознаки кои би можеле да ги користите во извештаи специфично креирани за Вас"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_option
@@ -6049,7 +6050,7 @@ msgstr "Излезни"
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_stock_account_output_categ_id
 #: model:ir.model.fields,field_description:account.field_res_company_property_stock_account_output_categ_id
 msgid "Output Account for Stock Valuation"
-msgstr "Конто излез за валуација на залиха"
+msgstr "Конто излез за вреднување на залиха"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6246,7 +6247,7 @@ msgstr "Платежен лимит"
 #: model:ir.model.fields,field_description:account.field_account_payment_amount
 #: model:ir.model.fields,field_description:account.field_account_register_payments_amount
 msgid "Payment Amount"
-msgstr "Плаќачки износ"
+msgstr "Износ за плаќање"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_payment_date
@@ -6309,7 +6310,7 @@ msgstr "Ставка рок на плаќање"
 #: model:ir.ui.menu,name:account.menu_action_payment_term_form
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Payment Terms"
-msgstr "Рокови за плаќање"
+msgstr "Услови за плаќање"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_payment_method_id
@@ -6542,7 +6543,7 @@ msgstr "Плус нето профит"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Non-Current Assets"
-msgstr "Плус не-тековни средства"
+msgstr "Плус нетековни средства"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -6619,7 +6620,7 @@ msgstr "Зачувај го знакот на салдото"
 #: model:ir.model,name:account.model_account_operation_template
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
-msgstr "Пресет за креирање на внесови на налог за време на поврзување фактури со плаќања"
+msgstr "Урнек за креирање на книжења за време на поврзување фактури со плаќања"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -6789,7 +6790,7 @@ msgstr "Количина"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_currency_exchange_journal_id
 msgid "Rate Difference Journal"
-msgstr "Налог на курсна разлика"
+msgstr "Налог за курсни разлики"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_description
@@ -6962,7 +6963,7 @@ msgstr "Референца на документот кој ја произве�
 msgid ""
 "Reference of the document used to issue this payment. Eg. check number, file"
 " name, etc."
-msgstr "Референца на документот користен за оваа наплата. Пр. проверка на број, име на датотека, итн."
+msgstr "Референца на документот користен за оваа наплата. На пр. број на сметка, име на датотека, итн."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_name
@@ -7057,12 +7058,12 @@ msgstr "Регуларно"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_company_signed
 msgid "Remaining amount due in the currency of the company."
-msgstr "Останата сума во валута на компанијата."
+msgstr "Останата доспеана сума во валута на компанијата."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_signed
 msgid "Remaining amount due in the currency of the invoice."
-msgstr "Останата сума во валута од фактурата."
+msgstr "Останата доспеана сума во валута од фактурата."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual
@@ -7142,12 +7143,12 @@ msgstr "Одговорен"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_date
 msgid "Reversal date"
-msgstr "Обратен датум"
+msgstr "Датум на контра-книжење"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
 msgid "Reverse Entry"
-msgstr "Обратен внес"
+msgstr "Внес на контра-книжење"
 
 #. module: account
 #: code:addons/account/wizard/account_move_reversal.py:20
@@ -7155,12 +7156,12 @@ msgstr "Обратен внес"
 #: model:ir.ui.view,arch_db:account.view_account_move_reversal
 #, python-format
 msgid "Reverse Moves"
-msgstr "Обратен трансфер"
+msgstr "Контра книжење"
 
 #. module: account
 #: selection:account.financial.report,sign:0
 msgid "Reverse balance sign"
-msgstr "Преобрати знак на салдо"
+msgstr "Промени знак на салдо"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7320,7 +7321,7 @@ msgstr "Одбери партнер или соработник"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line_value
 msgid "Select here the kind of valuation related to this payment term line."
-msgstr "Одбери го тука начинот на валуацијата поврзана со оваа ставка на плаќачки услов."
+msgstr "Одбери го начинот на вреднување поврзан со оваа ставка од условот за плаќање."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:42
@@ -7436,7 +7437,7 @@ msgstr "прикажи"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_display_on_footer
 msgid "Show in Invoices Footer"
-msgstr "Прикажи на дното\"Footer\" на фактурата"
+msgstr "Прикажи на подножјето на фактурата"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_show_on_dashboard
@@ -7581,7 +7582,7 @@ msgstr "ВКУПЕН КАПИТАЛ"
 #: model:ir.model.fields,field_description:account.field_account_account_tag_ids
 #: model:ir.model.fields,field_description:account.field_account_tax_tag_ids
 msgid "Tags"
-msgstr ""
+msgstr "Ознаки"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_cash_box_out
@@ -7780,7 +7781,7 @@ msgstr "Даноци користени во продажби"
 msgid ""
 "Technical field holding the debit - credit in order to open meaningful graph"
 " views from reports"
-msgstr "Техничко поле содржејќи ги задолжувањата-побарувањата со цел да се отворат значајни графички прикази од извештаи"
+msgstr "Техничко поле кое ги содржи задолжувањата-побарувањата со цел да се отворат значајни графички прикази од извештаи"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_balance_cash_basis
