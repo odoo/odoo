@@ -22,13 +22,14 @@
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Kiko Sánchez <kiko@comunitea.com>, 2016
+# Miguel Orueta <mo@landoo.es>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Kiko Sánchez <kiko@comunitea.com>, 2016\n"
+"Last-Translator: Miguel Orueta <mo@landoo.es>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -361,7 +362,7 @@ msgstr "Precio coste"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_cost_method
 msgid "Cost method"
-msgstr ""
+msgstr "Método de coste"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_standard_price
@@ -762,6 +763,13 @@ msgid ""
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
 msgstr ""
+"Si la valoración perpetua está activada para un producto, el sistema creará "
+"automáticamente entradas de diario correspondientes a los movimientos de "
+"stock, con el precio del producto especificado por el método de cálculo de "
+"costes. La cuenta de variación de inventario establecida en la categoría de "
+"producto representará el valor de inventario actual. La entrada de stock y "
+"la cuenta de salida de existencias tendrán los movimientos de contrapartida "
+"para los productos entrantes y salientes."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_free_if_more_than
@@ -1352,12 +1360,12 @@ msgstr "Reglas de reabastecimiento"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
 msgid "Reordering max qty"
-msgstr ""
+msgstr "Cantidad máxima de reaprovisionamiento"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_min_qty
 msgid "Reordering min qty"
-msgstr ""
+msgstr "Cant.mín. reaprovisionamiento"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
@@ -1501,6 +1509,9 @@ msgid ""
 "                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
+"Precio estándar: El precio de coste se actualiza manualmente al final de un período específico (generalmente una vez al año).\n"
+"                Precio medio: El precio de coste se recalcula con cada envío entrante y se utiliza para la valoración del producto.\n"
+"                Precio Real: El precio de coste es el precio del último producto saliente (se utilizará en caso de pérdida de inventario, por ejemplo)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_hs_code
@@ -1531,12 +1542,12 @@ msgstr "Cuenta de salida de existencias"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
 msgid "Stock move ids"
-msgstr ""
+msgstr " IDs movimientos de stock"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
 msgid "Stock quant ids"
-msgstr ""
+msgstr "IDs stock quant"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_normal_cost
@@ -1588,7 +1599,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_quant_ids
 msgid "Technical: used to compute quantities."
-msgstr ""
+msgstr "Técnico: se utiliza para calcular las cantidades."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
@@ -1812,7 +1823,7 @@ msgstr "Contador de mensajes sin leer"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "Valuation"
-msgstr ""
+msgstr "Valoración"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
