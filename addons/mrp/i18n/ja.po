@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-10-22 05:08+0000\n"
+"PO-Revision-Date: 2016-11-27 01:38+0000\n"
 "Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -206,7 +206,7 @@ msgstr ""
 msgid ""
 "All product quantities must be greater than 0.\n"
 "You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
-msgstr ""
+msgstr "すべての製品の量はゼロより大きくなければなりません。\nmrp_byproduct モジュールをインストールすれば部品表で副産品の管理ができます!"
 
 #. module: mrp
 #: field:mrp.config.settings,module_mrp_operations:0
@@ -281,7 +281,7 @@ msgstr "部品表名"
 #. module: mrp
 #: help:mrp.bom.line,attribute_value_ids:0
 msgid "BOM Product Variants needed form apply this line."
-msgstr ""
+msgstr "部品表製品バリアントは、このラインが適用されたフォームが必要です。"
 
 #. module: mrp
 #: view:website:mrp.report_mrpbomstructure
@@ -297,7 +297,7 @@ msgstr "部品表構造"
 #. module: mrp
 #: field:mrp.bom.line,child_line_ids:0
 msgid "BOM lines of the referred bom"
-msgstr ""
+msgstr "参照した部品表の部品表項目"
 
 #. module: mrp
 #: code:addons/mrp/stock.py:44
@@ -389,7 +389,7 @@ msgstr "部品表タイプ"
 #: code:addons/mrp/stock.py:259
 #, python-format
 msgid "Can't find any generic Manufacture route."
-msgstr ""
+msgstr "汎用的な製造ルートがありません。"
 
 #. module: mrp
 #: view:change.production.qty:mrp.view_change_production_qty_wizard
@@ -520,7 +520,7 @@ msgstr "設定"
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
 #: view:mrp.config.settings:mrp.view_mrp_config
 msgid "Configure Manufacturing"
-msgstr ""
+msgstr "製造を構成"
 
 #. module: mrp
 #: view:mrp.product.produce:mrp.view_mrp_product_produce_wizard
@@ -836,7 +836,7 @@ msgstr "ID"
 #: help:mrp.bom,product_id:0
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
-msgstr ""
+msgstr "製品バリアントが部品表(BOM)に定義されている場合にのみ、この製品で利用可能です。"
 
 #. module: mrp
 #: help:mrp.bom,message_unread:0 help:mrp.production,message_unread:0
@@ -1864,7 +1864,7 @@ msgstr ""
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr ""
+msgstr "選択された計量単位は、製品形態とは異なるカテゴリのものです。"
 
 #. module: mrp
 #: help:mrp.production,routing_id:0
