@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-11-11 12:05+0000\n"
+"PO-Revision-Date: 2016-11-21 15:54+0000\n"
 "Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -533,14 +533,14 @@ msgstr "Kanallar"
 msgid ""
 "Check if the category is limited to partners that match the segmentation criterions.                        \n"
 "If checked, remove the category from partners that doesn't match segmentation criterions"
-msgstr "Kategorinin, bölümlendirme kriterlerine uyan iş ortaklarıyla sınırlandırıldığını kontrol edin.                        \nEğer işaretliyse, bölümleme kriterlerine uymayan iş ortaklarından kategoriyi kaldırın"
+msgstr "Kategorinin, segmentasyon kriterlerine uyan iş ortaklarıyla sınırlandırıldığını kontrol edin.                        \nEğer işaretliyse, segmentasyon kriterlerine uymayan iş ortaklarından kategoriyi kaldırın"
 
 #. module: crm
 #: help:crm.segmentation,sales_purchase_active:0
 msgid ""
 "Check if you want to use this tab as part of the segmentation rule. If not "
 "checked, the criteria beneath will be ignored"
-msgstr "Bu sekmeyi, bölümleme kuralının bir parçası olarak kullanmak için burayı işaretleyin. Eğer işaretlenmezse, altındaki kriter yok sayılacaktır."
+msgstr "Bu sekmeyi, segmentasyon kuralının bir parçası olarak kullanmak için burayı işaretleyin. Eğer işaretlenmezse, altındaki kriter yok sayılacaktır."
 
 #. module: crm
 #: help:crm.case.section,use_opportunities:0
@@ -617,7 +617,7 @@ msgstr "Firma Adı"
 #. module: crm
 #: view:crm.segmentation:crm.crm_segmentation-view
 msgid "Compute Segmentation"
-msgstr "Bölümleme Hesapla"
+msgstr "Segmentasyonu Hesapla"
 
 #. module: crm
 #: selection:crm.phonecall,state:0
@@ -649,7 +649,7 @@ msgstr "Kişiler"
 #: model:ir.actions.act_window,name:crm.crm_segmentation_tree-act
 #: model:ir.ui.menu,name:crm.menu_crm_segmentation-act
 msgid "Contacts Segmentation"
-msgstr "Kişilerin Bölümlenmesi"
+msgstr "Kontak Segmentasyonu"
 
 #. module: crm
 #: view:crm.segmentation:crm.crm_segmentation-view
@@ -2092,18 +2092,18 @@ msgstr "İş Ortağı Kişi Adı"
 #: view:crm.segmentation:crm.crm_segmentation-view
 #: model:ir.model,name:crm.model_crm_segmentation
 msgid "Partner Segmentation"
-msgstr "İş Ortağı Bölümlendirme"
+msgstr "İş Ortağı Segmentasyonu"
 
 #. module: crm
 #: view:crm.segmentation.line:crm.crm_segmentation_line-view
 #: view:crm.segmentation.line:crm.crm_segmentation_line_tree-view
 msgid "Partner Segmentation Lines"
-msgstr "İş Ortağı Bölümlendirme Satırları"
+msgstr "İş Ortağı Segmentasyon Satırları"
 
 #. module: crm
 #: view:crm.segmentation:crm.crm_segmentation_tree-view
 msgid "Partner Segmentations"
-msgstr "İş Ortağı Bölümlendirmeleri"
+msgstr "İş Ortağı Segmentasyonu"
 
 #. module: crm
 #: code:addons/crm/crm_phonecall.py:301
@@ -2182,7 +2182,7 @@ msgstr "Görüşmeler"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall_report
 msgid "Phone calls by user and section"
-msgstr "Kullanıcıya ve bölüme göre görüşmeler"
+msgstr "Kullanıcıya ve segmente göre görüşmeler"
 
 #. module: crm
 #: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
@@ -2538,22 +2538,22 @@ msgstr "Bölümler"
 #: field:crm.segmentation.line,segmentation_id:0
 #: model:ir.actions.act_window,name:crm.crm_segmentation-act
 msgid "Segmentation"
-msgstr "Bölümleme"
+msgstr "Segmentasyon"
 
 #. module: crm
 #: view:crm.segmentation:crm.crm_segmentation-view
 msgid "Segmentation Description"
-msgstr "Bölümleme Açıklaması"
+msgstr "Segmentasyon Açıklaması"
 
 #. module: crm
 #: view:crm.segmentation:crm.crm_segmentation-view
 msgid "Segmentation Test"
-msgstr "Bölümleme Testi"
+msgstr "Segmentasyon Testi"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_segmentation_line
 msgid "Segmentation line"
-msgstr "Bölümleme satırı"
+msgstr "Segmentasyon satırı"
 
 #. module: crm
 #: view:crm.merge.opportunity:crm.merge_opportunity_form
@@ -2597,7 +2597,7 @@ msgstr "Hizmetler"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_set_team_sales_department
 msgid "Set team to Sales Department"
-msgstr "Ekibi Satış Bölümüne ayarla"
+msgstr "Ekibi Satış Departmanına ayarla"
 
 #. module: crm
 #: help:crm.case.stage,on_change:0
@@ -2783,14 +2783,14 @@ msgstr "Adayı fırsata dönüştürürken oluşturulacak gelecekteki iş ortağ
 #. module: crm
 #: help:crm.segmentation,name:0
 msgid "The name of the segmentation."
-msgstr "Bölümleme adı."
+msgstr "Segmentasyonun adı."
 
 #. module: crm
 #: help:crm.segmentation,categ_id:0
 msgid ""
 "The partner category that will be added to partners that match the "
 "segmentation criterions after computation."
-msgstr "Hesaplamadan sonraki bölümleme kriterlerine uyan iş ortaklarına eklenecek iş ortağı kategorisi."
+msgstr "Hesaplamadan sonraki segmentasyon kriterlerine uyan iş ortaklarına eklenecek iş ortağı kategorisi."
 
 #. module: crm
 #: sql_constraint:crm.lead:0
