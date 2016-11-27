@@ -9,13 +9,14 @@
 # Manami Hashi <manami@roomsfor.hk>, 2016
 # kent_ocean <ke.tanabe@gmail.com>, 2016
 # Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:55+0000\n"
 "PO-Revision-Date: 2016-11-14 15:55+0000\n"
-"Last-Translator: Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2016\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "(<i>Remove</i>)"
-msgstr ""
+msgstr "(<i>削除</i>)"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -43,46 +44,57 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* ユーザーが新しいと未確認修理オーダーをコードされたときに「ドラフト」ステータスになります。\n"
+"\n"
+"* ユーザが修理オーダーを承認すると「確認済」のステータスになります。\n"
+"\n"
+"* 「修復準備完了」ステータスで修理を開始できます。作業者は、修理注文が確認された後にのみ修理を開始することができます。\n"
+"\n"
+"* 「請求済」状態は修理前または修復後に、請求書を発行した状態を表します。\n"
+"\n"
+"* 修理が完了すると、「完了」ステータスが設定されます。\n"
+"\n"
+"* 「取消済」のステータスは、ユーザーが修理注文を取消した状態を表します。"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<i>(Add)</i>"
-msgstr ""
+msgstr "<i>(追加)</i>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Fees Line(s)</strong>"
-msgstr ""
+msgstr "<strong>費用ライン(s)</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Guarantee Limit:</strong>"
-msgstr ""
+msgstr "<strong>補償期限:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Lot Number</strong>"
-msgstr ""
+msgstr "<strong>ロット番号</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Operation Line(s)</strong>"
-msgstr ""
+msgstr "<strong>処理ライン(s)</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Printing Date:</strong>"
-msgstr ""
+msgstr "<strong>印刷日:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Product to Repair:</strong>"
-msgstr ""
+msgstr "<strong>修理対象製品:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Shipping address :</strong>"
-msgstr ""
+msgstr "<strong>出荷先:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -102,12 +114,12 @@ msgstr "追加"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Add internal notes..."
-msgstr ""
+msgstr "内部注記を追加..."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Add quotation notes..."
-msgstr ""
+msgstr "見積注記を追加..."
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -123,7 +135,7 @@ msgstr "修理前"
 #: code:addons/mrp_repair/models/mrp_repair.py:206
 #, python-format
 msgid "Can only confirm draft repairs."
-msgstr ""
+msgstr "ドラフト状態の修理のみ承認することができます。"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -152,7 +164,7 @@ msgstr "取消済"
 #: code:addons/mrp_repair/models/mrp_repair.py:221
 #, python-format
 msgid "Cannot cancel completed repairs."
-msgstr ""
+msgstr "終了した修理はキャンセルできません。"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
@@ -162,7 +174,7 @@ msgstr "請求先・配送先となる取引先を選んでください。"
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid "Click to create a reparation order."
-msgstr ""
+msgstr "クリックして 修理オーダを作成"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_company_id
@@ -189,6 +201,8 @@ msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
+"プライスリストにこの製品と数量に適合するものがありません。\n"
+"製品、数量、もしくは価格表を変更する必要があります。"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
@@ -228,7 +242,7 @@ msgstr "現在のロケーション"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
 msgid "Default address id"
-msgstr ""
+msgstr "デフォルトアドレスid"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -305,12 +319,12 @@ msgstr "取引先請求宛先によるグループ化"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Guarantee limit Month"
-msgstr ""
+msgstr "保証期限月"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Guarantee limit by Month"
-msgstr ""
+msgstr "月別保証の期限"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -333,6 +347,9 @@ msgid ""
 "                add or replace and record the time you spent on the different\n"
 "                operations."
 msgstr ""
+"修理オーダーでは、取り外したり交換した部品やそれぞれの作業で\n"
+"かかった時間の詳細を記録します\n"
+"  "
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_internal_notes
@@ -368,12 +385,12 @@ msgstr "請求の方法"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Invoice address:"
-msgstr ""
+msgstr "請求先住所:"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Invoice and shipping address:"
-msgstr ""
+msgstr "請求・出荷先住所:"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_invoiced
@@ -438,7 +455,7 @@ msgstr "移動"
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_move_id
 msgid "Move created by the repair order"
-msgstr ""
+msgstr "修理オーダによって作成された移動"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -450,7 +467,7 @@ msgstr "請求外"
 #: code:addons/mrp_repair/models/mrp_repair.py:561
 #, python-format
 msgid "No Pricelist!"
-msgstr ""
+msgstr "価格表がありません！"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:260
@@ -476,7 +493,7 @@ msgstr "料金が定義されていない製品です。"
 #: code:addons/mrp_repair/models/mrp_repair.py:568
 #, python-format
 msgid "No valid pricelist line found !"
-msgstr ""
+msgstr "有効な価格表の行がありません！"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -512,7 +529,7 @@ msgstr "価格リスト"
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_pricelist_id
 msgid "Pricelist of the selected partner."
-msgstr ""
+msgstr "選択した取引先向け価格表"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_id
@@ -546,7 +563,7 @@ msgstr "修理製品"
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_lot_id
 msgid "Products repaired are all belonging to this lot"
-msgstr ""
+msgstr "修理品は、すべてこのロットに属しています"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_uom_qty
@@ -611,7 +628,7 @@ msgstr "修理オーダ"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Repair Order #:"
-msgstr ""
+msgstr "修理オーダ番号:"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_repair_id
@@ -628,7 +645,7 @@ msgstr "修理オーダ"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Repair Quotation #:"
-msgstr ""
+msgstr "修理見積番号: "
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_name
@@ -639,25 +656,25 @@ msgstr "修理参照"
 #: code:addons/mrp_repair/models/mrp_repair.py:194
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
-msgstr ""
+msgstr "修理をドラフト状態に戻すにはキャンセルしなくてはなりません。"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:343
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
-msgstr ""
+msgstr "修理は修理作業を開始する前に承認が必要です。"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:371
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
-msgstr ""
+msgstr "製品移動をするためには修理は完了していなくてはなりません。"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:354
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
-msgstr ""
+msgstr "修理は修理完了まで修理中でなくてはなりません。"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:223
@@ -680,7 +697,7 @@ msgstr "修理済"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_lot_id
 msgid "Repaired Lot"
-msgstr ""
+msgstr "修理済ロット"
 
 #. module: mrp_repair
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_order
@@ -696,7 +713,7 @@ msgstr "修理オーダ"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "修理オーダの検索"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -705,12 +722,14 @@ msgid ""
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
 msgstr ""
+"「修理前」 もしくは「修理後」を選ぶことで請求書を生成するタイミングを設定します。 "
+"「請求書なし」は、この修理オーダで請求書を作成しないことを意味します。"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:213
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
-msgstr ""
+msgstr "製品の作業工程ではこの製品のシリアル番号が必要です'%s'"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -759,12 +778,12 @@ msgstr "税"
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr ""
+msgstr "選択された計量単位は、製品形態とは異なるカテゴリのものです。"
 
 #. module: mrp_repair
 #: sql_constraint:mrp.repair:0
 msgid "The name of the Repair Order must be unique!"
-msgstr ""
+msgstr "修理オーダの名前はユニークでなければいけません。"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
@@ -773,13 +792,16 @@ msgid ""
 "                order to know if whether the repair should be invoiced to the\n"
 "                customer or not."
 msgstr ""
+"修理オーダ処理では、修理代金の顧客請求可否判断にシリアル番号の\n"
+"保証期限日を使用しています。\n"
+" "
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
 msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
-msgstr ""
+msgstr "修理ラインの状態は、リンクされた修理オーダのいずれかに自動的に設定されます。"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -866,7 +888,7 @@ msgstr "はい"
 #: code:addons/mrp_repair/models/mrp_repair.py:248
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form!"
-msgstr ""
+msgstr "修理フォームではで取引先の請求先住所を選択する必要があります！"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:501
@@ -876,3 +898,5 @@ msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
+"修理フォームの中の価格表を選択する必要があります。\n"
+"製品を選択する前にそれを設定して下さい。"
