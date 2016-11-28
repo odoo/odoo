@@ -1,9 +1,11 @@
+// This file should be removed and code updated to use a regular kanban_state widget
+// the PresenceIndicator template and related CSS should be removed too
+
 odoo.define('hr_attendance.presence_widgets', function (require) {
 "use strict";
 
 var core = require('web.core');
 var form_common = require('web.form_common');
-var kanban_widgets = require('web_kanban.widgets');
 
 var QWeb = core.qweb;
 var _t = core._t;
