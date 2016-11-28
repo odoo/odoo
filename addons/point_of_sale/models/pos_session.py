@@ -249,7 +249,7 @@ class PosSession(models.Model):
             for st in session.statement_ids:
                 if abs(st.difference) > st.journal_id.amount_authorized_diff:
                     # The pos manager can close statements with maximums.
-                    if not self.env['ir.model.access'].check_groups("point_of_sale.group_pos_manager"):
+                    if not self.user_has_groups("point_of_sale.group_pos_manager"):
                         raise UserError(_("Your ending balance is too different from the theoretical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
                 if (st.journal_id.type not in ['bank', 'cash']):
                     raise UserError(_("The type of the journal for your payment method should be bank or cash "))
