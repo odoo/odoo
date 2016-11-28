@@ -86,14 +86,13 @@ class LivechatController(http.Controller):
             # limit the creation : only ONE rating per session
             values = {
                 'rating': rate,
-                'consumed': True
+                'consumed': True,
+                'feedback': reason,
             }
             if not channel.rating_ids:
                 values.update({
                     'res_id': channel.id,
                     'res_model': 'mail.channel',
-                    'rating': rate,
-                    'feedback': reason,
                 })
                 # find the partner (operator)
                 if channel.channel_partner_ids:
@@ -101,8 +100,6 @@ class LivechatController(http.Controller):
                 # create the rating
                 rating = Rating.sudo().create(values)
             else:
-                if reason:
-                    values['feedback'] = reason
                 rating = channel.rating_ids[0]
                 rating.write(values)
             return rating.id
