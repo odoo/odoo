@@ -1163,7 +1163,7 @@ class view(osv.osv):
         cr.execute("""SELECT max(v.id)
                         FROM ir_ui_view v
                    LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
-                       WHERE md.module IS NULL
+                       WHERE md.module NOT IN (SELECT name FROM ir_module_module)
                          AND v.model = %s
                          AND v.active = true
                     GROUP BY coalesce(v.inherit_id, v.id)
