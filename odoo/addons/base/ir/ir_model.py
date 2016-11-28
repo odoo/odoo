@@ -1030,7 +1030,7 @@ class IrModelData(models.Model):
         Return (id, res_model, res_id) or raise ValueError if not found
         """
         module, name = xmlid.split('.', 1)
-        xid = self.search([('module', '=', module), ('name', '=', name)])
+        xid = self.sudo().search([('module', '=', module), ('name', '=', name)])
         if not xid:
             raise ValueError('External ID not found in the system: %s' % xmlid)
         # the sql constraints ensure us we have only one result
@@ -1183,7 +1183,7 @@ class IrModelData(models.Model):
             existing_parents = set()            # {parent_model, ...}
             if xml_id:
                 for parent_model, parent_field in record._inherits.iteritems():
-                    xid = self.search([
+                    xid = self.sudo().search([
                         ('module', '=', module),
                         ('name', '=', xml_id + '_' + parent_model.replace('.', '_')),
                     ])

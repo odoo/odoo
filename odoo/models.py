@@ -4434,7 +4434,7 @@ class BaseModel(object):
         """
         result = {record.id: [] for record in self}
         domain = [('model', '=', self._name), ('res_id', 'in', self.ids)]
-        for data in self.env['ir.model.data'].search_read(domain, ['module', 'name', 'res_id']):
+        for data in self.env['ir.model.data'].sudo().search_read(domain, ['module', 'name', 'res_id']):
             result[data['res_id']].append('%(module)s.%(name)s' % data)
         return result
 
