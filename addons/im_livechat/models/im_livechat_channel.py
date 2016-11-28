@@ -41,8 +41,11 @@ class ImLivechatChannel(models.Model):
     script_external = fields.Text('Script (external)', compute='_compute_script_external', store=False, readonly=True)
     nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
     rating_percentage_satisfaction = fields.Integer(
-        '% Happy', compute='_compute_percentage_satisfaction', store=False, default=-1,
+        '% Rating', compute='_compute_percentage_satisfaction', store=False, default=-1,
         help="Percentage of happy ratings over the past 7 days")
+    rating_count_satisfaction = fields.Integer(
+        'Rating', compute='_compute_rating_count_satisfaction',
+        help="Count total ratings over the past 7 days")
 
     # images fields
     image = fields.Binary('Image', default=_default_image, attachment=True,
@@ -101,6 +104,13 @@ class ImLivechatChannel(models.Model):
                 record.rating_percentage_satisfaction = ((happy*100) / total) if happy > 0 else 0
             else:
                 record.rating_percentage_satisfaction = -1
+
+    @api.depends('channel_ids.rating_ids')
+    def _compute_rating_count_satisfaction(self):
+        for record in self:
+            dt = fields.Datetime.to_string(datetime.utcnow() - timedelta(days=7))
+            repartition = record.channel_ids.rating_get_grades([('create_date', '>=', dt)])
+            record.rating_count_satisfaction = sum(repartition.values())
 
     @api.model
     def create(self, vals):

@@ -98,6 +98,7 @@ class LivechatController(http.Controller):
                 # find the partner (operator)
                 if channel.channel_partner_ids:
                     values['rated_partner_id'] = channel.channel_partner_ids[0] and channel.channel_partner_ids[0].id or False
+                    values['partner_id'] = request.env.user.partner_id.id if request.session.uid else False
                 # create the rating
                 rating = Rating.sudo().create(values)
             else:
