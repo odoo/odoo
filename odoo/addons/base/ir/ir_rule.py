@@ -19,7 +19,6 @@ class IrRule(models.Model):
     model_id = fields.Many2one('ir.model', string='Object', index=True, required=True, ondelete="cascade")
     groups = fields.Many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id')
     domain_force = fields.Text(string='Domain')
-    domain = fields.Binary(compute='_force_domain', string='Domain')
     perm_read = fields.Boolean(string='Apply for Read', default=True)
     perm_write = fields.Boolean(string='Apply for Write', default=True)
     perm_create = fields.Boolean(string='Apply for Create', default=True)
@@ -44,15 +43,6 @@ class IrRule(models.Model):
         """Returns a dictionary to use as evaluation context for
            ir.rule domains."""
         return {'user': self.env.user, 'time': time}
-
-    @api.depends('domain_force')
-    def _force_domain(self):
-        eval_context = self._eval_context()
-        for rule in self:
-            if rule.domain_force:
-                rule.domain = expression.normalize_domain(safe_eval(rule.domain_force, eval_context))
-            else:
-                rule.domain = []
 
     @api.depends('groups')
     def _compute_global(self):
@@ -91,29 +81,22 @@ class IrRule(models.Model):
         if not rule_ids:
             return []
 
-        # read 'domain' as self._uid to have the correct eval context for the rules.
-        rules = self.browse(rule_ids)
-        rule_domain = {vals['id']: vals['domain'] for vals in rules.read(['domain'])}
-
         # browse user and rules as SUPERUSER_ID to avoid access errors!
-        user = self.env.user
+        eval_context = self._eval_context()
+        user_groups = self.env.user.groups_id
         global_domains = []                     # list of domains
-        group_domains = defaultdict(list)       # {group: list of domains}
-        for rule in rules.sudo():
-            dom = expression.normalize_domain(rule_domain[rule.id])
-            for group in rule.groups:
-                if group in user.groups_id:
-                    group_domains[group].append(dom)
+        group_domains = []                      # list of domains
+        for rule in self.browse(rule_ids).sudo():
+            # evaluate the domain for the current user
+            dom = safe_eval(rule.domain_force, eval_context) if rule.domain_force else []
+            dom = expression.normalize_domain(dom)
             if not rule.groups:
                 global_domains.append(dom)
+            elif rule.groups & user_groups:
+                group_domains.append(dom)
 
         # combine global domains and group domains
-        if group_domains:
-            group_domain = expression.OR(map(expression.OR, group_domains.values()))
-        else:
-            group_domain = []
-        domain = expression.AND(global_domains + [group_domain])
-        return domain
+        return expression.AND(global_domains + [expression.OR(group_domains)])
 
     @api.model
     def clear_cache(self):
