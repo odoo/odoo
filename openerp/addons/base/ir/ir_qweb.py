@@ -798,6 +798,8 @@ class ManyToOneConverter(osv.AbstractModel):
     _inherit = 'ir.qweb.field'
 
     def record_to_html(self, cr, uid, field_name, record, options=None, context=None):
+        if not record:
+            return ''
         [read] = record.read([field_name])
         if not read[field_name]: return ''
         _, value = read[field_name]
