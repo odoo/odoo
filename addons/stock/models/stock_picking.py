@@ -499,11 +499,6 @@ class Picking(models.Model):
         todo_moves.action_done()
         return True
 
-    @api.multi
-    def recheck_availability(self):
-        self.action_assign()
-        self.do_prepare_partial()
-
     def _prepare_pack_ops(self, quants, forced_qties):
         """ Prepare pack_operations, returns a list of dict to give at create """
         # TDE CLEANME: oh dear ...
