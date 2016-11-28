@@ -7,20 +7,20 @@
         <field name="arch" type="xml">
             <div id="features_settings" position="after">
                 <h2>Pricing</h2>
-                <div class="row mt16 oe_flex_container" id="sale_pricing_settings">
+                <div class="row mt16 oe_flex_container oe_setting_box" id="sale_pricing_settings">
                     <div class="col-md-6" id="currency_setting">
                         <div class="input-group">
                             <span class="input-group-addon oe_group_addon24"/>
                             <div class="form-control" style="float: none;">
-                                <label string="[TODO]Currency"/>
+                                <label string="Currency"/>
                                 <div class="text-muted">
                                     Main currency of your company.
                                 </div>
                                 <div class="content-group">
                                     <hr class="mt8 mb8" />
                                     <div class="row">
-                                        <label class="col-md-4 oe_light_label" string="Currency"/>
-                                        <input class="col-md-8 oe_inline o_form_input"/>
+                                        <label class="col-md-4 oe_light_label" for="currency_id"/>
+                                        <field name="currency_id" class="col-md-8 oe_inline"/>
                                     </div>
                                 </div>
                                 <div>
@@ -32,10 +32,10 @@
                     <div class="col-md-6" id="multicurrencies_setting">
                         <div class="input-group" title="This adds the choice of a currency on pricelists.">
                             <span class="input-group-addon oe_group_addon24">
-                                <input type="checkbox"/>
+                                <field name="group_multi_currency"/>
                             </span>
                             <div class="form-control" style="float: none;">
-                                <label string="[TODO]Multi-Currencies"/>
+                                <label for="group_multi_currency"/>
                                 <div class="text-muted">
                                     Sell in several currencies.
                                 </div>
@@ -82,19 +82,19 @@
                                     <field name="sale_pricelist_setting_split_2" class="oe_light_label" widget="radio"/>
                                 </div>
                                 <div>
-                                    <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Pricelists" class="oe_link"/>
+                                    <button type="action" name="%(product.product_pricelist_view)d" string="Pricelists" class="oe_link"/>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <h2>Taxes</h2>
-                <div class="row mt16 oe_flex_container" id="taxes_settings">
+                <div class="row mt16 oe_flex_container oe_setting_box" id="taxes_settings"> <!--attrs="{'invisible': [('has_chart_of_accounts', '=', True)]}"-->
                     <div class="col-md-6" id="fiscal_localization_setting">
                         <div class="input-group">
                             <span class="input-group-addon oe_group_addon24"/>
                             <div class="form-control" style="float: none;">
-                                <label string="[TODO]Fiscal Localization"/>
+                                <label string="Fiscal Localization"/>
                                 <i class="fa fa-building" title="Values set here are company-specific."/>
                                 <div class="text-muted">
                                     Taxes, fiscal positions and chart of accounts for your country.
@@ -102,8 +102,8 @@
                                 <div class="content-group">
                                     <hr class="mt8 mb8" />
                                     <div class="row">
-                                        <label class="col-md-4 oe_light_label" string="Package"/>
-                                        <input class="col-md-8 oe_inline o_form_input"/>
+                                        <label class="col-md-4 oe_light_label" for="chart_template_id"/>
+                                        <field name="chart_template_id" class="col-md-8 oe_inline"/>
                                     </div>
                                     <div>
                                         <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Install More Packages" class="oe_link"/>
@@ -116,7 +116,7 @@
                         <div class="input-group" title="This tax is set in any new product created.">
                             <span class="input-group-addon oe_group_addon24"/>
                             <div class="form-control" style="float: none;">
-                                <label string="[TODO]Tax"/>
+                                <label string="Tax"/>
                                 <i class="fa fa-building" title="Values set here are company-specific."/>
                                 <div class="text-muted">
                                     Tax for local sales
@@ -124,9 +124,9 @@
                                 <div class="content-group">
                                     <hr class="mt8 mb8" />
                                     <div class="row">
-                                        <label class="col-md-4 oe_light_label" string="Default tax"/>
-                                        <div class="col-md-8 oe_inline o_form_input">
-                                            <input type="float" title="This default tax is applied to any new product created."/>%
+                                        <label class="col-md-4 oe_light_label" for="sale_tax_rate"/>
+                                        <div class="col-md-8 oe_inline">
+                                            <field name="sale_tax_rate" title="This default tax is applied to any new product created." class="oe_inline"/>%
                                         </div>
                                     </div>
                                     <div>
@@ -143,15 +143,14 @@
                         <div class="input-group">
                             <span class="input-group-addon oe_group_addon24"/>
                             <div class="form-control" style="float: none;">
-                                <label string="[TODO]Product Prices"/>
+                                <label for="sale_show_tax"/>
                                 <div class="text-muted">
                                     Product prices displaying in web catalog.
                                 </div>
                                 <div class="content-group">
                                     <hr class="mt8 mb8" />
                                     <div>
-                                        (o) Tax-Included Prices<br></br>
-                                        ( ) Tax-Excluded Prices
+                                        <field name="sale_show_tax" class="oe_light_label" widget="radio"/>
                                     </div>
                                 </div>
                             </div>
@@ -159,14 +158,14 @@
                     </div>
                 </div>
                 <h2>Products Catalog</h2>
-                <div class="row mt16 oe_flex_container" id="sale_product_catalog_settings">
+                <div class="row mt16 oe_flex_container oe_setting_box" id="sale_product_catalog_settings">
                     <div class="col-md-6" id="product_attributes_setting">
                         <div class="input-group">
                             <span class="input-group-addon oe_group_addon24">
-                                <input type="checkbox"/>
+                                <field name="group_product_variant"/>
                             </span>
                             <div class="form-control" style="float: none;">
-                                <label string="[TODO]Attributes and Variants"/>
+                                <label for="group_product_variant"/>
                                 <div class="text-muted">
                                     Set product attributes (e.g. color, size) to sell.
                                 </div>
@@ -225,7 +224,7 @@ To do so, attach some files to a product using the new Files button and publish 
                     </div>
                 </div>
                 <h2>Checkout Process</h2>
-                <div class="row mt16 oe_flex_container" id="sale_checkout_settings">
+                <div class="row mt16 oe_flex_container oe_setting_box" id="sale_checkout_settings">
                     <div class="col-md-6" id="payment_methods_setting">
                         <div class="input-group">
                             <span class="input-group-addon oe_group_addon24"/>
@@ -298,20 +297,19 @@ To do so, attach some files to a product using the new Files button and publish 
                     </div>
                 </div>
                 <h2>Invoicing</h2>
-                <div class="row mt16 oe_flex_container" id="sale_invoicing_settings">
+                <div class="row mt16 oe_flex_container oe_setting_box" id="sale_invoicing_settings">
                     <div class="col-md-6" id="invoicing_policy_setting">
                         <div class="input-group">
                             <span class="input-group-addon oe_group_addon24"/>
                             <div class="form-control" style="float: none;">
-                                <label string="[TODO]Invoicing Policy"/>
+                                <label for="default_invoice_policy"/>
                                 <div class="text-muted">
                                     Quantities to invoice from sales orders.
                                 </div>
                                 <div class="content-group">
                                     <hr class="mt8 mb8" />
                                     <div>
-                                        (o) Ordered quantities<br/>
-                                        ( ) Delivered quantities or service hours
+                                        <field name="default_invoice_policy" class="oe_light_label" widget="radio"/>
                                     </div>
                                 </div>
                             </div>
@@ -319,7 +317,7 @@ To do so, attach some files to a product using the new Files button and publish 
                     </div>
                 </div>
                 <h2>Shipping</h2>
-                <div class="row mt16 oe_flex_container" id="sale_shipping_settings">
+                <div class="row mt16 oe_flex_container oe_setting_box" id="sale_shipping_settings">
                     <div class="col-md-6" id="delivery_order_setting">
                         <div class="input-group">
                             <span class="input-group-addon oe_group_addon24">
@@ -351,7 +349,7 @@ To do so, attach some files to a product using the new Files button and publish 
                     </div>
                 </div>
                 <h2>Shipping Connectors</h2>
-                <div class="row mt16 oe_flex_container" id="shipping_connectors_settings">
+                <div class="row mt16 oe_flex_container oe_setting_box" id="shipping_connectors_settings">
                     <div class="col-md-6" id="ups_provider_setting">
                         <div class="input-group" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer.
                             Apply shipping connector from delivery methods.">
@@ -360,7 +358,6 @@ To do so, attach some files to a product using the new Files button and publish 
                             </span>
                             <div class="form-control" style="float: none;">
                                 <label for="module_delivery_ups"/>
-                                <span class="pull-right label label-primary">Enterprise</span>
                                 <div class="text-muted">
                                     Ship with UPS.
                                 </div>
@@ -376,7 +373,6 @@ To do so, attach some files to a product using the new Files button and publish 
                             </span>
                             <div class="form-control" style="float: none;">
                                 <label for="module_delivery_dhl"/>
-                                <span class="pull-right label label-primary">Enterprise</span>
                                 <div class="text-muted">
                                     Ship with DHL.
                                 </div>
@@ -392,7 +388,6 @@ To do so, attach some files to a product using the new Files button and publish 
                             </span>
                             <div class="form-control" style="float: none;">
                                 <label for="module_delivery_fedex"/>
-                                <span class="pull-right label label-primary">Enterprise</span>
                                 <div class="text-muted">
                                     Ship with FedEx.
                                 </div>
@@ -408,7 +403,6 @@ To do so, attach some files to a product using the new Files button and publish 
                             </span>
                             <div class="form-control" style="float: none;">
                                 <label for="module_delivery_usps"/>
-                                <span class="pull-right label label-primary">Enterprise</span>
                                 <div class="text-muted">
                                     Ship with USPS.
                                 </div>
@@ -424,7 +418,6 @@ To do so, attach some files to a product using the new Files button and publish 
                             </span>
                             <div class="form-control" style="float: none;">
                                 <label for="module_delivery_temando"/>
-                                <span class="pull-right label label-primary">Enterprise</span>
                                 <div class="text-muted">
                                     Use Temando to connect with your carrier.
                                 </div>
@@ -434,7 +427,7 @@ To do so, attach some files to a product using the new Files button and publish 
                     </div>
                 </div>
                 <h2>eCommerce Integrations</h2>
-                <div class="row mt16 oe_flex_container" id="sale_integration_settings">
+                <div class="row mt16 oe_flex_container oe_setting_box" id="sale_integration_settings">
                     <div class="col-md-6" id="ebay_install_setting">
                         <div class="input-group">
                             <span class="input-group-addon oe_group_addon24">
@@ -442,7 +435,6 @@ To do so, attach some files to a product using the new Files button and publish 
                             </span>
                             <div class="form-control" style="float: none;">
                                 <label for="module_sale_ebay"/>
-                                <span class="pull-right label label-primary">Enterprise</span>
                                 <div class="text-muted">
                                     Sell your products on eBay.
                                 </div>

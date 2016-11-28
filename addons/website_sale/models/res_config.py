@@ -34,7 +34,6 @@ class WebsiteConfigSettings(models.TransientModel):
     module_website_sale_digital = fields.Boolean("Digital Content", help='Sell digital files.')
     module_sale_stock = fields.Boolean("Delivery Orders")
     module_account_taxcloud = fields.Boolean("TaxCloud")
-    module_currency_rate_live = fields.Boolean("Currency Rate Live")
     module_portal = fields.Boolean("Activate the customer portal", help="""Give your customers access to their documents.""")
     # the next 2 fields represent sale_pricelist_setting from sale.config.settings, they are split here for the form view, to improve usability
     sale_pricelist_setting_split_1 = fields.Boolean(default=0, string="Multiple Prices per Products")
@@ -48,11 +47,33 @@ class WebsiteConfigSettings(models.TransientModel):
         implied_group='product.group_sale_pricelist',
         help="""Allows to manage different prices based on rules per category of customers.
                 Example: 10% for retailers, promotion of 5 EUR on this product, etc.""")
+    group_product_variant = fields.Boolean("Attributes and Variants", implied_group='product.group_sale_pricelist')
     group_pricelist_item = fields.Boolean("Show pricelists to customers",
         implied_group='product.group_pricelist_item')
     group_product_pricelist = fields.Boolean("Show pricelists On Products",
         implied_group='product.group_product_pricelist')
     order_mail_template = fields.Many2one('mail.template', string='Email Template', readonly=True, default=_default_order_mail_template, help="Email sent to customer at the end of the checkout process")
+
+    default_invoice_policy = fields.Selection([
+        ('order', 'Ordered quantities'),
+        ('delivery', 'Delivered quantities or service hours')
+        ], 'Invoicing Policy',
+        default='order',
+        default_model='product.template')
+
+    has_chart_of_accounts = fields.Boolean(string='Company has a chart of accounts')
+    chart_template_id = fields.Many2one('account.chart.template', string='Package', domain="[('visible','=', True)]")
+    sale_tax_rate = fields.Float(string='Default tax')
+    currency_id = fields.Many2one('res.currency', related='website_id.currency_id', string='Currency')
+    group_multi_currency = fields.Boolean(string='Multi-Currencies',
+            implied_group='base.group_multi_currency',
+            help="Allows to work in a multi currency environment")
+
+    sale_show_tax = fields.Selection([
+        ('total', 'Tax-Included Prices'),
+        ('subtotal', 'Tax-Excluded Prices')], "Product Prices",
+        default='subtotal',
+        required=True)
 
     @api.model
     def get_default_sale_delivery_settings(self, fields):
@@ -117,3 +138,21 @@ class WebsiteConfigSettings(models.TransientModel):
                     'group_sale_pricelist': True,
                     'group_pricelist_item': True,
                 })
+
+    @api.multi
+    def set_sale_tax_defaults(self):
+        return self.env['ir.values'].sudo().set_default(
+            'sale.config.settings', 'sale_show_tax', self.sale_show_tax)
+
+    #@api.onchange('sale_show_tax')
+    #def _onchange_sale_tax(self):
+    #    if self.sale_show_tax == "subtotal":
+    #        self.update({
+    #            'group_show_price_total': False,
+    #            'group_show_price_subtotal': True,
+    #        })
+    #    else:
+    #        self.update({
+    #            'group_show_price_total': True,
+    #            'group_show_price_subtotal': False,
+    #        })

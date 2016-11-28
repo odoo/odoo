@@ -6,16 +6,16 @@
             <field name="name">Website settings</field>
             <field name="model">website.config.settings</field>
             <field name="arch" type="xml">
+                <header>
+                    <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                    <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                </header>
                 <form string="Configure Website" class="oe_form_configuration">
                     <sheet>
-                        <header>
-                            <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                            <button string="Cancel" type="object" name="cancel" class="oe_link"/>
-                        </header>
                         <div>
                             <field name="website_id" invisible="1"/>
                             <h2 class="mt32">Webmaster</h2>
-                            <div class="row mt16 oe_flex_container" id="webmaster_settings">
+                            <div class="row mt16 oe_flex_container oe_setting_box" id="webmaster_settings">
                                 <div class="col-md-6" id="domain_setting">
                                     <div class="input-group">
                                         <span class="input-group-addon oe_group_addon24" />
@@ -98,19 +98,19 @@
                                     <div class="input-group">
                                         <span class="input-group-addon oe_group_addon24" />
                                         <div class="form-control" style="float: none;">
-                                            <label string="[TODO]Google Analytics"/>
+                                            <label string="Google Analytics"/>
                                             <div class="text-muted">
                                                 See Google Analytics data on your Website Dashboard.
                                             </div>
                                             <div class="content-group">
                                                 <hr class="mt8 mb8" />
                                                 <div class="row">
-                                                    <label class="col-md-4 oe_light_label" string="Client ID"/>
-                                                    <input class="col-md-8 oe_inline o_form_input"/>
+                                                    <label class="col-md-4 oe_light_label" for="google_management_client_id"/>
+                                                    <field name="google_management_client_id" class="col-md-8 oe_inline"/>
                                                 </div>
                                                 <div class="row">
-                                                    <label class="col-md-4 oe_light_label" string="Client Secret"/>
-                                                    <input class="col-md-8 oe_inline o_form_input"/>
+                                                    <label class="col-md-4 oe_light_label" for="google_management_client_secret"/>
+                                                    <field name="google_management_client_secret" class="col-md-8 oe_inline"/>
                                                 </div>
                                             </div>
                                             <div>
@@ -142,7 +142,7 @@
                                 </div>
                             </div>
                             <h2 class="mt32">Social Media</h2>
-                            <div class="row mt16 oe_flex_container" id="social_media_settings">
+                            <div class="row mt16 oe_flex_container oe_setting_box" id="social_media_settings">
                                 <div class="col-md-6" id="social_media_links_setting">
                                     <div class="input-group">
                                         <span class="input-group-addon oe_group_addon24" />
@@ -197,7 +197,7 @@
                                 </div>
                             </div>
                             <h2 class="mt32">Features</h2>
-                            <div class="row mt16 oe_flex_container" id="features_settings">
+                            <div class="row mt16 oe_flex_container oe_setting_box" id="features_settings">
                                 <div class="col-md-6" id="ecommerce_install_setting">
                                     <div class="input-group">
                                         <span class="input-group-addon oe_group_addon24">
@@ -261,7 +261,6 @@
                                         </span>
                                         <div class="form-control" style="float: none;">
                                             <label for="module_website_contract"/>
-                                            <span class="pull-right label label-primary">Enterprise</span>
                                             <div class="text-muted">
                                                 Sell recurring services with automated billing and payments.
                                             </div>
@@ -285,7 +284,7 @@
                                 </div>
                             </div>
                             <h2 class="mt32">Communication</h2>
-                            <div class="row mt16 oe_flex_container" id="communication_settings">
+                            <div class="row mt16 oe_flex_container oe_setting_box" id="communication_settings">
                                 <div class="col-md-6" id="contact_form_install_setting">
                                     <div class="input-group" title="The contact form is added to the Contact Us page of your website.">
                                         <span class="input-group-addon oe_group_addon24">
@@ -308,7 +307,6 @@ You can also edit the fields of the Extra Step page in eCommerce checkout.">
                                         </span>
                                         <div class="form-control" style="float: none;">
                                             <label for="module_website_form_editor"/>
-                                            <span class="pull-right label label-primary">Enterprise</span>
                                             <div class="text-muted">
                                                 Build up customized forms on your website.
                                             </div>
@@ -346,7 +344,7 @@ You can also edit the fields of the Extra Step page in eCommerce checkout.">
                                 </div>
                             </div>
                             <h2 class="mt32" groups="base.group_no_one">Slides</h2>
-                            <div class="row mt16 oe_flex_container" id="slides_settings" groups="base.group_no_one">
+                            <div class="row mt16 oe_flex_container oe_setting_box" id="slides_settings" groups="base.group_no_one">
                                 <div class="col-md-6" id="slides_google_content_setting">
                                     <div class="input-group">
                                         <span class="input-group-addon oe_group_addon24">
@@ -364,7 +362,7 @@ You can also edit the fields of the Extra Step page in eCommerce checkout.">
                                 </div>
                             </div>
                             <h2 class="mt32" groups="base.group_no_one">Performance Optimization</h2>
-                            <div class="row mt16 oe_flex_container" id="performance_settings" groups="base.group_no_one">
+                            <div class="row mt16 oe_flex_container oe_setting_box" id="performance_settings" groups="base.group_no_one">
                                 <div class="col-md-6" id="cdn_setting">
                                     <div class="input-group" title="A CDN helps you serve your website’s content with high availability and high performance to any visitor.">
                                         <span class="input-group-addon oe_group_addon24">
