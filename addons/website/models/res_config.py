@@ -19,6 +19,8 @@ class WebsiteConfigSettings(models.TransientModel):
     default_lang_id = fields.Many2one(string='Language', related='website_id.default_lang_id', relation='res.lang')
     default_lang_code = fields.Char('Default language code', related='website_id.default_lang_code')
     google_analytics_key = fields.Char('Analytics Key', related='website_id.google_analytics_key')
+    google_management_client_id = fields.Char('Client ID', related='website_id.google_management_client_id')
+    google_management_client_secret = fields.Char('Client Secret', related='website_id.google_management_client_secret')
 
     social_twitter = fields.Char("Twitter", related='website_id.social_twitter')
     social_facebook = fields.Char("Facebook", related='website_id.social_facebook')
@@ -48,6 +50,22 @@ class WebsiteConfigSettings(models.TransientModel):
     # Set as global config parameter since methods using it are not website-aware. To be changed
     # when multi-website is implemented
     google_maps_api_key = fields.Char(string='API Key')
+
+    def set_google_management_client_secret(self):
+        self.env['ir.config_parameter'].set_param(
+            'google_management_client_secret', (self.google_management_client_secret or '').strip(), groups=['base.group_system'])
+
+    def get_default_google_management_client_secret(self, fields):
+        google_management_client_secret = self.env['ir.config_parameter'].get_param('google_management_client_secret', default='')
+        return dict(google_management_client_secret=google_management_client_secret)
+
+    def set_google_management_client_id(self):
+        self.env['ir.config_parameter'].set_param(
+            'google_management_client_id', (self.google_management_client_id or '').strip(), groups=['base.group_system'])
+
+    def get_default_google_management_client_id(self, fields):
+        google_management_client_id = self.env['ir.config_parameter'].get_param('google_management_client_id', default='')
+        return dict(google_management_client_id=google_management_client_id)
 
     def set_google_maps_api_key(self):
         self.env['ir.config_parameter'].set_param(
