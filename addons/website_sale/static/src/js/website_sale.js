@@ -73,13 +73,13 @@ $('.oe_website_sale').each(function () {
             'line_id': line_id})
         .then(function (res) {
             //basic case
-            $dom.find('span.oe_currency_value').last().text(res[product_id].toFixed(2));
+            $dom.find('span.oe_currency_value').last().text(price_to_str(res[product_id]));
             $dom.find('.text-danger').toggle(res[product_id]<default_price && (default_price-res[product_id] > default_price/100));
             //optional case
             $dom_optional.each(function(){
                 var id = $(this).find('span[data-product-id]').data('product-id');
                 var price = parseFloat($(this).find(".text-danger > span.oe_currency_value").text());
-                $(this).find("span.oe_currency_value").last().text(res[id].toFixed(2));
+                $(this).find("span.oe_currency_value").last().text(price_to_str(res[id]));
                 $(this).find('.text-danger').toggle(res[id]<price && (price-res[id]>price/100));
             });
             openerp.jsonRpc("/shop/cart/update_json", 'call', {
@@ -145,10 +145,47 @@ $('.oe_website_sale').each(function () {
         $('.css_attribute_color:has(input:checked)').addClass("active");
     });
 
+    // Copy from core.js that is not available in front end.
+    function intersperse(str, indices, separator) {
+        separator = separator || '';
+        var result = [], last = str.length;
+
+        for(var i=0; i<indices.length; ++i) {
+            var section = indices[i];
+            if (section === -1 || last <= 0) { break; }
+            else if(section === 0 && i === 0) { break; }
+            else if (section === 0) { section = indices[--i]; }
+            result.push(str.substring(last-section, last));
+            last -= section;
+        }
+        var s = str.substring(0, last);
+        if (s) { result.push(s); }
+        return result.reverse().join(separator);
+    }
+    function insert_thousand_seps(num) {
+        var l10n = openerp._t.database.parameters;
+        var negative = num[0] === '-';
+        num = (negative ? num.slice(1) : num);
+
+        return (negative ? '-' : '') + intersperse(
+            num, l10n.grouping, l10n.thousands_sep);
+    }
+
     function price_to_str(price) {
-        price = Math.round(price * 100) / 100;
-        var dec = Math.round((price % 1) * 100);
-        return price + (dec ? '' : '.0') + (dec%10 ? '' : '0');
+        var l10n = openerp._t.database.parameters;
+        var precision = 2;
+        if ($(".decimal_precision").length) {
+            var dec_precision = $(".decimal_precision").first().data('precision');
+            //MAth.log10 is not implemented in phantomJS
+            dec_precision = Math.round(Math.log(1/parseFloat(dec_precision))/Math.log(10));
+            if (!isNaN(dec_precision)) {
+                precision = dec_precision;
+            }
+        }
+        var formatted = _.str.sprintf('%.' + precision + 'f', price).split('.');
+        formatted[0] = insert_thousand_seps(formatted[0]);
+        var ret = formatted.join(l10n.decimal_point);
+        return ret;
     }
 
     $(oe_website_sale).on('change', 'input.js_product_change', function (ev) {
