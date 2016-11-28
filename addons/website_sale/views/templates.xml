@@ -97,7 +97,7 @@
                }'>
               </span>
               <span itemprop="price" style="display:none;" t-esc="product.price"/>
-              <span itemprop="priceCurrency" style="display:none;" t-esc="user_id.partner_id.property_product_pricelist.currency_id.name"/>
+              <span itemprop="priceCurrency" style="display:none;" t-esc="user_id.partner_id.property_product_pricelist.currency_id.name" class='decimal_precision' t-att-data-precision="website.pricelist_id.currency_id.rounding"/>
           </b>
       </div>
   </section>
@@ -443,7 +443,7 @@
                "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
            }'/>
           <span itemprop="price" style="display:none;" t-esc="product.price"/>
-          <span itemprop="priceCurrency" style="display:none;" t-esc="user_id.partner_id.property_product_pricelist.currency_id.name"/>
+          <span itemprop="priceCurrency" style="display:none;" t-esc="user_id.partner_id.property_product_pricelist.currency_id.name" class='decimal_precision' t-att-data-precision="website.pricelist_id.currency_id.rounding"/>
       </h4>
       <h4 class="css_editable_mode_display" style="display: none;">
         <span t-field="product.lst_price"
@@ -663,7 +663,7 @@
                       <thead>
                           <tr>
                               <th colspan="2" width="100">Product</th>
-                              <th width="100">Price</th>
+                              <th width="100" class='decimal_precision' t-att-data-precision="website_sale_order.pricelist_id.currency_id.rounding">Price</th>
                               <th width="120">Quantity</th>
                           </tr>
                       </thead>
