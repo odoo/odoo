@@ -157,6 +157,7 @@ class AccountInvoice(models.Model):
                                     valuation_price_unit_total += val_stock_move.price_unit * val_stock_move.product_qty
                                     valuation_total_qty += val_stock_move.product_qty
                                 valuation_price_unit = valuation_price_unit_total / valuation_total_qty
+                                valuation_price_unit = self.env['product.uom']._compute_price(i_line.product_id.uom_id.id, valuation_price_unit, i_line.uom_id.id)
                         if inv.currency_id.id != company_currency.id:
                             valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id, round=False)
                         if float_compare(valuation_price_unit, i_line.price_unit, precision_digits=product_prec) != 0\
