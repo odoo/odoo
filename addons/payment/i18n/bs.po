@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-04-04 22:46+0000\n"
+"PO-Revision-Date: 2016-11-21 22:25+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Bosnian (http://www.transifex.com/odoo/odoo-8/language/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -40,7 +40,7 @@ msgstr ""
 #. module: payment
 #: field:payment.transaction,acquirer_id:0
 msgid "Acquirer"
-msgstr ""
+msgstr "Sticalac"
 
 #. module: payment
 #: field:payment.transaction,acquirer_reference:0
@@ -136,7 +136,7 @@ msgstr "E-Mail"
 #. module: payment
 #: field:payment.acquirer,environment:0
 msgid "Environment"
-msgstr ""
+msgstr "Okruženje"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -151,7 +151,7 @@ msgstr "Nadoknada"
 #. module: payment
 #: help:payment.transaction,fees:0
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr ""
+msgstr "Iznos provizije; postavljen od strane sistema pošto zavisi od sticaoca"
 
 #. module: payment
 #: help:payment.transaction,state_message:0
@@ -161,12 +161,12 @@ msgstr ""
 #. module: payment
 #: field:payment.acquirer,fees_dom_fixed:0
 msgid "Fixed domestic fees"
-msgstr ""
+msgstr "Fiksne domaće provizije"
 
 #. module: payment
 #: field:payment.acquirer,fees_int_fixed:0
 msgid "Fixed international fees"
-msgstr ""
+msgstr "Fiksne internacionalne provizije"
 
 #. module: payment
 #: field:payment.transaction,message_follower_ids:0
@@ -181,7 +181,7 @@ msgstr "Obrazac"
 #. module: payment
 #: field:payment.acquirer,view_template_id:0
 msgid "Form Button Template"
-msgstr ""
+msgstr "Predložak dugmeta forme"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_search
@@ -233,7 +233,7 @@ msgstr "Zadnje ažurirano"
 #. module: payment
 #: help:payment.acquirer,website_published:0
 msgid "Make this payment acquirer available (Customer invoices, etc.)"
-msgstr ""
+msgstr "Učini ovog sticaoca plaćanja dostupnim (Fakture kupca, itd.)"
 
 #. module: payment
 #: field:account.config.settings,module_payment_adyen:0
@@ -320,19 +320,19 @@ msgstr ""
 #: model:ir.model,name:payment.model_payment_acquirer
 #: view:payment.acquirer:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Posrednik plaćanja"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: view:payment.acquirer:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr ""
+msgstr "Posrednici plaćanja"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Transakcija plaćanja"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
@@ -340,7 +340,7 @@ msgstr ""
 #: view:payment.transaction:payment.transaction_form
 #: view:payment.transaction:payment.transaction_list
 msgid "Payment Transactions"
-msgstr ""
+msgstr "Transakcije plaćanja"
 
 #. module: payment
 #: model:ir.ui.menu,name:payment.root_payment_menu
@@ -371,7 +371,7 @@ msgstr "Proizvodnja"
 #: view:payment.acquirer:payment.acquirer_search
 #: field:payment.acquirer,provider:0
 msgid "Provider"
-msgstr ""
+msgstr "Provajder"
 
 #. module: payment
 #: help:payment.transaction,acquirer_reference:0
@@ -386,7 +386,7 @@ msgstr ""
 #. module: payment
 #: constraint:payment.acquirer:0
 msgid "Required fields not filled"
-msgstr ""
+msgstr "Zahtjevano polje nije popunjeno"
 
 #. module: payment
 #: view:payment.transaction:payment.transaction_form
@@ -396,7 +396,7 @@ msgstr "Pošalji poruku grupi"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Server To Server"
-msgstr ""
+msgstr "Server na server"
 
 #. module: payment
 #: help:payment.acquirer,validation:0
@@ -416,17 +416,17 @@ msgstr "Sažetak"
 #. module: payment
 #: selection:payment.acquirer,environment:0
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #. module: payment
 #: field:payment.acquirer,post_msg:0
 msgid "Thanks Message"
-msgstr ""
+msgstr "Poruka zahvale"
 
 #. module: payment
 #: sql_constraint:payment.transaction:0
 msgid "The payment transaction reference must be unique!"
-msgstr ""
+msgstr "Referenca transakcije plaćanja mora bit jedinstvena!"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
@@ -448,22 +448,22 @@ msgstr "Nepročitane poruke"
 #. module: payment
 #: field:payment.transaction,date_validate:0
 msgid "Validation Date"
-msgstr ""
+msgstr "Datum validacije"
 
 #. module: payment
 #: field:payment.acquirer,fees_dom_var:0
 msgid "Variable domestic fees (in percents)"
-msgstr ""
+msgstr "Variabilne domaće provizije (u procentima)"
 
 #. module: payment
 #: field:payment.acquirer,fees_int_var:0
 msgid "Variable international fees (in percents)"
-msgstr ""
+msgstr "Varijabilne internacionalne provizije (u procentima)"
 
 #. module: payment
 #: field:payment.acquirer,website_published:0
 msgid "Visible in Portal / Website"
-msgstr ""
+msgstr "Vidljivo u Portalu/Websajtu"
 
 #. module: payment
 #: field:payment.transaction,website_message_ids:0
@@ -483,27 +483,27 @@ msgstr "Broj pošte"
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "acquirer: payment.acquirer browse record"
-msgstr ""
+msgstr "acquirer: payment.acquirer browse record"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "amount: the transaction amount, a float"
-msgstr ""
+msgstr "iznos: iznos transakcije, decimalni broj"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "context: the current context dictionary"
-msgstr ""
+msgstr "kontekst: trenutni kontekst, python dictionary"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr ""
+msgstr "currency: transakcijski zapis valute (currency browse record)"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
 msgid "partner: the buyer partner browse record, not necessarily set"
-msgstr ""
+msgstr "partner: partner kupac, nije neophodno postavljen"
 
 #. module: payment
 #: view:payment.acquirer:payment.acquirer_form
