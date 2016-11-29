@@ -82,8 +82,8 @@ var ViewEditor = Widget.extend({
         this._super.apply(this, arguments);
 
         this.viewKey = viewKey;
-        this.options = options || {};
 
+        this.options = _.defaults({}, options, {position: 'right'});
         this.views = {};
         this.buffers = {};
     },
@@ -117,6 +117,7 @@ var ViewEditor = Widget.extend({
         var refX = 0;
         var resizing = false;
         var minWidth = 400;
+        var debounceStoreEditorWidth = _.debounce(storeEditorWidth, 500);
 
         this._updateViewSelectDOM();
         this.displayView(
@@ -125,7 +126,13 @@ var ViewEditor = Widget.extend({
         );
 
         $(document).on("mouseup.ViewEditor", stopResizing.bind(this)).on("mousemove.ViewEditor", updateWidth.bind(this));
-        this.$el.on("mousedown.ViewEditor", ".ace_gutter", startResizing.bind(this));
+        if (this.options.position === 'left') {
+            this.$('.ace_scroller').after($('<div>').addClass('ace_resize_bar'));
+            this.$('.ace_gutter').css({'cursor': 'default'});
+            this.$el.on("mousedown.ViewEditor", ".ace_resize_bar", startResizing.bind(this));
+        } else {
+            this.$el.on("mousedown.ViewEditor", ".ace_gutter", startResizing.bind(this));
+        }
 
         resizeEditor.call(this, readEditorWidth.call(this));
 
@@ -155,10 +162,13 @@ var ViewEditor = Widget.extend({
             if (!resizing) return;
 
             var offset = e.pageX - refX;
+            if (this.options.position === 'left') {
+                offset = - offset;
+            }
             var width = this.$el.width() - offset;
             refX = e.pageX;
             resizeEditor.call(this, width);
-            storeEditorWidth.call(this);
+            debounceStoreEditorWidth.call(this);
         }
     },
     /**
