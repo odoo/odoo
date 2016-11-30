@@ -13,6 +13,8 @@ class WebsiteConfigSettings(models.TransientModel):
         else:
             return self.env.ref('sale.email_template_edi_sale').id
 
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id.id)
+
     salesperson_id = fields.Many2one('res.users', related='website_id.salesperson_id', string='Salesperson')
     salesteam_id = fields.Many2one('crm.team', related='website_id.salesteam_id', string='Sales Team')
     module_delivery = fields.Boolean("Manage shipping internally")
@@ -67,29 +69,31 @@ class WebsiteConfigSettings(models.TransientModel):
         default='order',
         default_model='product.template')
 
-    has_chart_of_accounts = fields.Boolean(string='Company has a chart of accounts')
-    chart_template_id = fields.Many2one('account.chart.template', string='Package', domain="[('visible','=', True)]")
+    has_chart_of_accounts = fields.Boolean(
+        string='Company has a chart of accounts',
+        default=lambda self: len(self.env.user.company_id.chart_template_id) > 0)
+
+    chart_template_id = fields.Many2one(
+        'account.chart.template', string='Package',
+        default=lambda self: self.env.user.company_id.chart_template_id.id if self.env.user.company_id.chart_template_id else None,
+        related='company_id.chart_template_id'
+    )
+
     sale_tax_id = fields.Many2one('account.tax.template', string='Default sale tax', oldname="sale_tax")
-    currency_id = fields.Many2one('res.currency', related='website_id.currency_id', string='Currency')
+    currency_id = fields.Many2one(
+        'res.currency', related='company_id.currency_id', string='Currency', required=True,
+        default=lambda self: self.env.user.company_id.currency_id.id
+    )
     group_multi_currency = fields.Boolean(string='Multi-Currencies',
             implied_group='base.group_multi_currency',
             help="Allows to work in a multi currency environment")
 
     sale_show_tax = fields.Selection([
-        ('total', 'Tax-Included Prices'),
-        ('subtotal', 'Tax-Excluded Prices')], "Product Prices",
-        default='subtotal',
+            ('total', 'Tax-Included Prices'),
+            ('subtotal', 'Tax-Excluded Prices')],
+        "Product Prices",
+        default=lambda self: 'total' if self.group_show_price_total else 'subtotal',
         required=True)
-
-    def set_currency_id(self):
-        self.company_id.currency_id = self.currency_id
-
-    def get_default_currency_id(self, fields):
-        default = dict(currency_id=None)
-        if self.company_id:
-            default['currency_id'] = self.company_id.currency_id
-
-        return default
 
     @api.model
     def get_default_sale_delivery_settings(self, fields):
@@ -154,11 +158,6 @@ class WebsiteConfigSettings(models.TransientModel):
                     'group_sale_pricelist': True,
                     'group_pricelist_item': True,
                 })
-
-    @api.multi
-    def set_sale_tax_defaults(self):
-        return self.env['ir.values'].sudo().set_default(
-            'sale.config.settings', 'sale_show_tax', self.sale_show_tax)
 
     @api.onchange('sale_show_tax')
     def _onchange_sale_tax(self):
