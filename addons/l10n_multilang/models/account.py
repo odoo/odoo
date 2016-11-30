@@ -6,6 +6,10 @@ from odoo import fields, models
 
 #in this file, we mostly add the tag translate=True on existing fields that we now want to be translated
 
+class AccountAccountTag(models.Model):
+    _inherit = 'account.account.tag'
+
+    name = fields.Char(translate=True)
 
 class AccountAccountTemplate(models.Model):
     _inherit = 'account.account.template'
