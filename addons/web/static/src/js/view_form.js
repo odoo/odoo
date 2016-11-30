@@ -3543,7 +3543,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         this.form_last_update = $.Deferred();
         this.init_form_last_update = this.form_last_update;
         this.is_started = false;
-        this.dataset = new instance.web.form.One2ManyDataSet(this, this.field.relation);
+        this.dataset = new instance.web.form.One2ManyDataSet(this, this.field.relation, this.build_context());
         this.dataset.o2m = this;
         this.dataset.parent_view = this.view;
         this.dataset.child_name = this.name;
@@ -4325,7 +4325,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend(instan
     init: function(field_manager, node) {
         this._super(field_manager, node);
         this.is_loaded = $.Deferred();
-        this.dataset = new instance.web.form.Many2ManyDataSet(this, this.field.relation);
+        this.dataset = new instance.web.form.Many2ManyDataSet(this, this.field.relation, this.build_context());
         this.dataset.m2m = this;
         var self = this;
         this.dataset.on('unlink', self, function(ids) {
