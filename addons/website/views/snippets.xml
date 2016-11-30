@@ -530,13 +530,13 @@
 <template id="s_parallax" name="Parallax">
     <section class="parallax s_parallax oe_custom_bg oe_img_bg"
         style="background-image: url(/web/image/website.s_background_image_04);"
-        data-scroll-background-ratio="0.3"><div class="oe_structure"/></section>
+        data-scroll-background-ratio="1.6"><div class="oe_structure"/></section>
 </template>
 
 <template id="s_parallax_slider" name="Parallax Slider">
     <section class="parallax s_parallax_slider oe_custom_bg oe_img_bg"
              style="background-image: url(/web/image/website.s_parallax_slider_default_image);"
-            data-scroll-background-ratio="0.3">
+            data-scroll-background-ratio="1.6">
         <div><div><div class="oe_structure">
                 <div id="myQuoteCarousel" class="carousel quotecarousel slide mb0" data-interval="10000">
                     <!-- Indicators -->
@@ -679,7 +679,7 @@
     </div>
 
     <div data-js='background_position'
-        data-selector="section:not(.parallax), :not(.o_gallery > .container) > .carousel, .s_banner .carousel-content">
+        data-selector="section, :not(.o_gallery > .container) > .carousel, .s_banner .carousel-content">
         <li class="background_position_li" data-background_position="background_position">
             <a tabindex="-1" href="#"><i class="fa fa-arrows"/>Background Image Sizing</a>
         </li>
@@ -847,12 +847,14 @@
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"><i class="fa fa-clock-o"/>Scroll Speed</a>
             <ul class="dropdown-menu" name="parallax-scroll">
-                <li data-scroll="0"><a href="#">Static</a></li>
-                <li data-scroll="0.3"><a href="#">Very Slow</a></li>
-                <li data-scroll="0.6"><a href="#">Slow</a></li>
+                <li data-scroll="0"><a href="#">No-scroll</a></li>
+                <li class="separator"/>
                 <li data-scroll="1"><a href="#">Fixed</a></li>
-                <li data-scroll="1.4"><a href="#">Fast</a></li>
-                <li data-scroll="1.7"><a href="#">Very Fast</a></li>
+                <li class="separator"/>
+                <li data-scroll="0.6"><a href="#">Very Slow</a></li>
+                <li data-scroll="1.2"><a href="#">Slow</a></li>
+                <li data-scroll="1.6"><a href="#">Fast</a></li>
+                <li data-scroll="2"><a href="#">Very Fast</a></li>
             </ul>
         </li>
     </div>

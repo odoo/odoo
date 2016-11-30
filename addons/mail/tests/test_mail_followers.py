@@ -25,11 +25,12 @@ class TestMailFollowers(TestMail):
             'mail.channel', groups.ids,
             {self.user_employee.partner_id.id: [self.mt_mg_nodef.id]},
             {test_channel.id: [self.mt_al_nodef.id]})
+        mail_channel_model_id = self.env['ir.model'].search([('model', '=', 'mail.channel')], limit=1).id
         self.assertFalse(specific)
         self.assertEqual(len(generic), 2)
 
-        self.assertEqual(set([generic[0][2]['res_model'], generic[1][2]['res_model']]),
-                         set(['mail.channel']))
+        self.assertEqual(set([generic[0][2]['res_model_id'], generic[1][2]['res_model_id']]),
+                         set([mail_channel_model_id]))
         self.assertEqual(set(filter(None, [generic[0][2].get('channel_id'), generic[1][2].get('channel_id')])),
                          set([test_channel.id]))
         self.assertEqual(set(filter(None, [generic[0][2].get('partner_id'), generic[1][2].get('partner_id')])),
@@ -39,8 +40,9 @@ class TestMailFollowers(TestMail):
 
     def test_m2o_command_update_selective(self):
         test_channel = self.env['mail.channel'].create({'name': 'Test'})
+        mail_channel_model_id = self.env['ir.model'].search([('model', '=', 'mail.channel')], limit=1).id
         groups = self.group_pigs | self.group_public
-        self.env['mail.followers'].create({'partner_id': self.user_employee.partner_id.id, 'res_model': 'mail.channel', 'res_id': self.group_pigs.id})
+        self.env['mail.followers'].create({'partner_id': self.user_employee.partner_id.id, 'res_model_id': mail_channel_model_id, 'res_id': self.group_pigs.id})
         generic, specific = self.env['mail.followers']._add_follower_command(
             'mail.channel', groups.ids,
             {self.user_employee.partner_id.id: [self.mt_mg_nodef.id]},
@@ -49,12 +51,12 @@ class TestMailFollowers(TestMail):
         self.assertEqual(len(generic), 1)
         self.assertEqual(len(specific), 1)
 
-        self.assertEqual(generic[0][2]['res_model'], 'mail.channel')
+        self.assertEqual(generic[0][2]['res_model_id'], mail_channel_model_id)
         self.assertEqual(generic[0][2]['channel_id'], test_channel.id)
         self.assertEqual(set(generic[0][2]['subtype_ids'][0][2]), set(self.default_group_subtypes.ids))
 
         self.assertEqual(specific.keys(), [self.group_public.id])
-        self.assertEqual(specific[self.group_public.id][0][2]['res_model'], 'mail.channel')
+        self.assertEqual(specific[self.group_public.id][0][2]['res_model_id'], mail_channel_model_id)
         self.assertEqual(specific[self.group_public.id][0][2]['partner_id'], self.user_employee.partner_id.id)
         self.assertEqual(set(specific[self.group_public.id][0][2]['subtype_ids'][0][2]), set([self.mt_mg_nodef.id]))
 
@@ -118,7 +120,7 @@ class TestMailFollowers(TestMail):
         })
         with self.assertRaises(IntegrityError):
             self.env['mail.followers'].create({
-                'res_model': 'mail.channel',
+                'res_model_id': self.env['ir.model'].search([('model', '=', 'mail.channel')], limit=1).id,
                 'res_id': test_channel.id,
                 'partner_id': self.user_employee.partner_id.id,
                 'channel_id': self.group_pigs.id,

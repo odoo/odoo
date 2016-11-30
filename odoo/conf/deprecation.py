@@ -20,7 +20,6 @@ code removed, and thus these variables made unnecessary.
 open_openerp_namespace = False
 
 # If True, openerp.netsvc.LocalService() can be used to lookup reports or to
-# access openerp.workflow.
 # Introduced around 2013.03.
 # Among the related code:
 # - The openerp.netsvc.LocalService() function.

@@ -266,17 +266,6 @@ class Quant(models.Model):
         # create the quant as superuser, because we want to restrict the creation of quant manually: we should always use this method to create quants
         return self.sudo().create(vals)
 
-    @api.model
-    def _quant_create(self, qty, move, lot_id=False, owner_id=False,
-                      src_package_id=False, dest_package_id=False,
-                      force_location_from=False, force_location_to=False):
-        # FIXME - remove me in master/saas-14
-        _logger.warning("'_quant_create' has been renamed into '_quant_create_from_move'... Overrides are ignored")
-        return self._quant_create_from_move(
-            qty, move, lot_id=lot_id, owner_id=owner_id,
-            src_package_id=src_package_id, dest_package_id=dest_package_id,
-            force_location_from=force_location_from, force_location_to=force_location_to)
-
     @api.multi
     def _quant_update_from_move(self, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False):
         vals = {
@@ -288,12 +277,6 @@ class Quant(models.Model):
         if not entire_pack:
             vals.update({'package_id': dest_package_id})
         self.write(vals)
-
-    @api.multi
-    def move_quants_write(self, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False):
-        # FIXME - remove me in master/saas-14
-        _logger.warning("'move_quants_write' has been renamed into '_quant_update_from_move'... Overrides are ignored")
-        return self._quant_update_from_move(move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack)
 
     @api.one
     def _quant_reconcile_negative(self, move):

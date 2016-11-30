@@ -499,11 +499,6 @@ class Picking(models.Model):
         todo_moves.action_done()
         return True
 
-    @api.multi
-    def recheck_availability(self):
-        self.action_assign()
-        self.do_prepare_partial()
-
     def _prepare_pack_ops(self, quants, forced_qties):
         """ Prepare pack_operations, returns a list of dict to give at create """
         # TDE CLEANME: oh dear ...
@@ -869,7 +864,7 @@ class Picking(models.Model):
                 moves_reassign = any(x.origin_returned_move_id or x.move_orig_ids for x in picking.move_lines if x.state not in ['done', 'cancel'])
                 if moves_reassign and picking.location_id.usage not in ("supplier", "production", "inventory"):
                     # unnecessary to assign other quants than those involved with pack operations as they will be unreserved anyways.
-                    picking.with_context(reserve_only_ops=True, no_state_change=True).rereserve_quants(move_ids=todo_moves.ids)
+                    picking.with_context(reserve_only_ops=True, no_state_change=True).rereserve_quants(move_ids=picking.move_lines.ids)
                 picking.do_recompute_remaining_quantities()
 
             # split move lines if needed

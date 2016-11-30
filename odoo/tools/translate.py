@@ -726,7 +726,6 @@ def in_modules(object_name, modules):
     module_dict = {
         'ir': 'base',
         'res': 'base',
-        'workflow': 'base',
     }
     module = object_name.split('.')[0]
     module = module_dict.get(module, module)

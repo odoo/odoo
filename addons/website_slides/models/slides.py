@@ -241,7 +241,7 @@ class SlideTag(models.Model):
     _name = 'slide.tag'
     _description = 'Slide Tag'
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, translate=True)
 
     _sql_constraints = [
         ('slide_tag_unique', 'UNIQUE(name)', 'A tag must be unique!'),

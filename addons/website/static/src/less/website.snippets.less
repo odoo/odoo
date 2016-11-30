@@ -402,6 +402,17 @@ div.carousel {
             margin-bottom: 32px;
         }
     }
+
+    > .s_parallax_bg {
+        .o-position-absolute(0, 0, 0, 0);
+        background-size: cover;
+        background-attachment: scroll;
+        pointer-events: none;
+        z-index: -1;
+    }
+    &.s_parallax_is_fixed > .s_parallax_bg {
+        background-attachment: fixed;
+    }
 }
 
 .s_parallax {

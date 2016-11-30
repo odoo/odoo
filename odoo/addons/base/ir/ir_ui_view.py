@@ -804,31 +804,6 @@ actual arch.
         return arch
 
     @api.model
-    def _disable_workflow_buttons(self, model, node):
-        """ Set the buttons in node to readonly if the user can't activate them. """
-        if model is None or self.env.user.id == SUPERUSER_ID:
-            # admin user can always activate workflow buttons
-            return node
-
-        # TODO handle the case of more than one workflow for a model or multiple
-        # transitions with different groups and same signal
-        user_group_ids = set(self.env.user.groups_id.ids)
-        buttons = (n for n in node.getiterator('button') if n.get('type') != 'object')
-        for button in buttons:
-            query = """SELECT DISTINCT t.group_id
-                         FROM wkf
-                   INNER JOIN wkf_activity a ON a.wkf_id = wkf.id
-                   INNER JOIN wkf_transition t ON (t.act_to = a.id)
-                        WHERE wkf.osv = %s
-                          AND t.signal = %s
-                          AND t.group_id is NOT NULL"""
-            self._cr.execute(query, (model, button.get('name')))
-            group_ids = set(row[0] for row in self._cr.fetchall() if row[0])
-            can_click = not group_ids or bool(user_group_ids & group_ids)
-            button.set('readonly', str(int(not can_click)))
-        return node
-
-    @api.model
     def postprocess_and_fields(self, model, node, view_id):
         """ Return an architecture and a description of all the fields.
 
@@ -864,7 +839,6 @@ actual arch.
 
         node = self.add_on_change(model, node)
         fields_def = self.postprocess(model, node, view_id, False, fields)
-        node = self._disable_workflow_buttons(model, node)
         if node.tag in ('kanban', 'tree', 'form', 'gantt'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
                 if (not node.get(action) and

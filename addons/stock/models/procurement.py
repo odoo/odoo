@@ -176,11 +176,6 @@ class ProcurementOrder(models.Model):
             'priority': self.priority,
         }
 
-    def _run_move_create(self):
-        # FIXME - remove me in master/saas-14
-        _logger.warning("'_run_move_create' has been renamed into '_get_stock_move_values'... Overrides are ignored")
-        return self._get_stock_move_values()
-
     @api.multi
     def _run(self):
         if self.rule_id.action == 'move':

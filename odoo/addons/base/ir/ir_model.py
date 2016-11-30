@@ -1227,31 +1227,13 @@ class IrModelData(models.Model):
         self = self.with_context(**{MODULE_UNINSTALL_FLAG: True})
 
         datas = self.search([('module', 'in', modules_to_remove)])
-        wkf_todo = []
         to_unlink = tools.OrderedSet()
         undeletable = self.browse([])
 
         for data in datas.sorted(key='id', reverse=True):
             model = data.model
             res_id = data.res_id
-
             to_unlink.add((model, res_id))
-
-            if model == 'workflow.activity':
-                # Special treatment for workflow activities: temporarily revert their
-                # incoming transition and trigger an update to force all workflow items
-                # to move out before deleting them
-                self._cr.execute('SELECT res_type, res_id FROM wkf_instance WHERE id IN (SELECT inst_id FROM wkf_workitem WHERE act_id=%s)', (res_id,))
-                wkf_todo.extend(self._cr.fetchall())
-                self._cr.execute("UPDATE wkf_transition SET condition='True', group_id=NULL, signal=NULL, act_to=act_from, act_from=%s WHERE act_to=%s", (res_id, res_id))
-                self.invalidate_cache()
-
-        for model, res_id in wkf_todo:
-            try:
-                record = self.env[model].browse(res_id)
-                record.step_workflow()
-            except Exception:
-                _logger.info('Unable to force processing of workflow for item %s@%s in order to leave activity to be deleted', res_id, model, exc_info=True)
 
         def unlink_if_refcount(to_unlink):
             undeletable = self.browse()

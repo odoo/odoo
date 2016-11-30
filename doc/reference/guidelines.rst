@@ -182,7 +182,6 @@ To declare a record in XML, the **record** notation (using *<record>*) is recomm
 Odoo supports custom tags acting as syntactic sugar:
 
 - menuitem: use it as a shortcut to declare a ``ir.ui.menu``
-- workflow: the <workflow> tag sends a signal to an existing workflow.
 - template: use it to declare a QWeb View requiring only the ``arch`` section of the view.
 - report: use to declare a :ref:`report action <reference/actions/report>`
 - act_window: use it if the record notation can't do what you want

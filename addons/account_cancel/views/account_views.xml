@@ -54,7 +54,7 @@
                 </field>
                 <xpath expr="//field[@name='bank_account_id']" position="after">
                     <field name="state" invisible="1"/>
-                    <button name="button_cancel_reconciliation" attrs="{'invisible': ['|',('journal_entry_ids', '=', []), ('state', '=', 'confirm')]}" string="Cancel" type="object" icon="fa fa-undo text-warning"/>
+                    <button name="button_cancel_reconciliation" attrs="{'invisible': ['|',('journal_entry_ids', '=', []), ('state', '=', 'confirm')]}" string="Revert reconciliation" type="object" icon="fa fa-undo text-warning"/>
                 </xpath>
             </field>
         </record>

@@ -276,17 +276,49 @@
             <h3 class="page-header">
                 Your Opportunities
                 <t t-call="website_portal.portal_searchbar"/>
+                <button name='new_opp' data-toggle="modal" data-target=".modal_new_opp" class="btn btn-default pull-right mr8"><i class="fa fa-plus fa-lg" /></button>
             </h3>
-            <div t-if="not opportunities" class="alert alert-warning mt8" role="alert">
-                There are no opportunities.
+            <div class="modal fade modal_new_opp" role="form" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form method="POST" class="modal-content js_website_submit_form new_opp_form">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                            <h4 class="modal-title">New Opportunity</h4>
+                        </div>
+                        <div class="modal-body" id="new-opp-dialog">
+                            <div class="form-group">
+                                <label class="control-label hdd4" for="contact_name">Contact name</label>
+                                <input type='text' name="contact_name" class="form-control contact_name"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label h4dd" for="title">Title</label>
+                                <input type='text' name="title" class="form-control title"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label hdd4" for="description">Description</label>
+                                <textarea row="3" name="description" class="form-control description"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button t-attf-class="btn btn-primary new_opp_confirm">Confirm</button> or
+                            <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div t-if="opportunities" class="panel panel-default">
-                <table class="table table-hover">
+            <div class="panel panel-default">
+                <t t-if="not opportunities">
+                    <div class="alert alert-warning mt8" role="alert">
+                        There are no opportunities.
+                    </div>
+                </t>
+                <table t-if="opportunities" class="table table-hover">
                     <thead>
                         <tr class="active">
                             <th class="col-xs-2">Date</th>
-                            <th class="col-md-5">Name</th>
-                            <th class="col-md-3">Expected Revenue</th>
+                            <th class="col-md-4">Name</th>
+                            <th class="col-md-2">Expected</th>
                             <th>Contact Name</th>
                             <th>Stage</th>
                         </tr>

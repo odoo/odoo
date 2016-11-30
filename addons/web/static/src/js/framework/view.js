@@ -127,8 +127,6 @@ var View = Widget.extend({
                 active_ids: dataset.ids,
                 active_id: record_id
             })).then(handler);
-        } else  {
-            return dataset.exec_workflow(record_id, action_data.name).then(handler);
         }
     },
     do_show: function () {
