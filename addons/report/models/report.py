@@ -43,7 +43,7 @@ except Exception:
 _logger = logging.getLogger(__name__)
 
 def _get_wkhtmltopdf_bin():
-    return find_in_path('wkhtmltopdf')
+    return find_in_path('wkhtmltopdf_')
 
 
 #--------------------------------------------------------------------------
