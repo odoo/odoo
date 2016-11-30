@@ -24,7 +24,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Activate Other Currencies" class="oe_link"/>
+                                    <button type="action" name="%(base.action_currency_form_company)d" string="Activate Other Currencies" class="oe_link"/>
                                 </div>
                             </div>
                         </div>
@@ -42,10 +42,10 @@
                                 <div class="content-group">
                                     <hr class="mt8 mb8" />
                                     <div>
-                                        <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Currencies" class="oe_link"/>
+                                        <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="oe_link"/>
                                     </div>
                                     <div>
-                                        <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Advanced Currencies Setup" class="oe_link"/>
+                                        <button type="action" name="%(account.action_account_config)d" string="Advanced Currencies Setup" class="oe_link"/>
                                     </div>
                                 </div>
                             </div>
@@ -54,10 +54,10 @@
                     <div class="col-md-6 oe_setting_box" id="discount_setting">
                         <div class="input-group">
                             <span class="input-group-addon oe_group_addon24">
-                                <input type="checkbox"/>
+                                <field name="group_discount_per_so_line"/>
                             </span>
                             <div class="form-control" style="float: none;">
-                                <label string="[TODO]Discounted Prices"/>
+                                <label for="group_discount_per_so_line"/>
                                 <div class="text-muted">
                                     Display crossed-out public prices.
                                 </div>
@@ -106,7 +106,7 @@
                                         <field name="chart_template_id" class="col-md-8 oe_inline"/>
                                     </div>
                                     <div>
-                                        <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Install More Packages" class="oe_link"/>
+                                        <button type="action" name="%(account.open_account_charts_modules)d" string="Install More Packages" class="oe_link"/>
                                     </div>
                                 </div>
                             </div>
@@ -124,16 +124,14 @@
                                 <div class="content-group">
                                     <hr class="mt8 mb8" />
                                     <div class="row">
-                                        <label class="col-md-4 oe_light_label" for="sale_tax_rate"/>
-                                        <div class="col-md-8 oe_inline">
-                                            <field name="sale_tax_rate" title="This default tax is applied to any new product created." class="oe_inline"/>%
-                                        </div>
+                                        <label class="col-md-4 oe_light_label" for="sale_tax_id"/>
+                                        <field name="sale_tax_id" title="This default tax is applied to any new product created." class="col-md-8 oe_inline"/>
                                     </div>
                                     <div>
-                                        <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Taxes" class="oe_link"/>
+                                        <button type="action" name="%(account.action_tax_form)d" string="Taxes" class="oe_link"/>
                                     </div>
                                     <div>
-                                        <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Advanced Tax Setup" class="oe_link"/>
+                                        <button type="action" name="%(account.action_account_config)d" string="Advanced Tax Setup" class="oe_link"/>
                                     </div>
                                 </div>
                             </div>
@@ -172,7 +170,7 @@
                                 <div class="content-group">
                                     <hr class="mt8 mb8" />
                                     <div>
-                                        <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Attributes" class="oe_link"/>
+                                        <button type="action" name="%(product.attribute_action)d" string="Attributes" class="oe_link"/>
                                     </div>
                                 </div>
                             </div>
@@ -236,7 +234,7 @@ To do so, attach some files to a product using the new Files button and publish 
                                 <div class="content-group">
                                     <hr class="mt8 mb8" />
                                     <div>
-                                        <button type="action" name="%(base.action_view_base_language_install)d" string="[TODO]Payment methods" class="oe_link"/>
+                                        <button type="action" name="%(account.action_account_journal_form)d" string="Payment methods" class="oe_link"/>
                                     </div>
                                 </div>
                             </div>
@@ -263,10 +261,10 @@ To do so, attach some files to a product using the new Files button and publish 
                     <div class="col-md-6 oe_setting_box" id="shipping_address_setting">
                         <div class="input-group">
                             <span class="input-group-addon oe_group_addon24">
-                                <input type="checkbox"/>
+                                <field name="group_delivery_invoice_address"/>
                             </span>
                             <div class="form-control" style="float: none;">
-                                <label string="[TODO]Shipping Address"/>
+                                <label for="group_delivery_invoice_address"/>
                                 <div class="text-muted">
                                     Let the customer enter a shipping address.
                                 </div>
