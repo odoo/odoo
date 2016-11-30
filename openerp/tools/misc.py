@@ -1173,6 +1173,8 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
         if dp:
             decimal_precision_obj = env['decimal.precision']
             digits = decimal_precision_obj.precision_get(dp)
+        elif currency_obj:
+            digits = currency_obj.decimal_places
         elif (hasattr(value, '_field') and isinstance(value._field, (float_field, function_field)) and value._field.digits):
                 digits = value._field.digits[1]
                 if not digits and digits is not 0:
