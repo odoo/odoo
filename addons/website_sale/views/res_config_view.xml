@@ -89,8 +89,9 @@
                     </div>
                 </div>
                 <h2>Taxes</h2>
-                <div class="row mt16 oe_flex_container" id="taxes_settings"> <!--attrs="{'invisible': [('has_chart_of_accounts', '=', True)]}"-->
-                    <div class="col-md-6 oe_setting_box" id="fiscal_localization_setting">
+                <div class="row mt16 oe_flex_container" id="taxes_settings">
+                    <div class="col-md-6 oe_setting_box" id="fiscal_localization_setting" attrs="{'invisible': [('has_chart_of_accounts', '=', True)]}">
+                        <field name="has_chart_of_accounts" invisible="1"/>
                         <div class="input-group">
                             <span class="input-group-addon oe_group_addon24"/>
                             <div class="form-control" style="float: none;">
