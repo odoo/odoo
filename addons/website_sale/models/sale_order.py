@@ -107,7 +107,6 @@ class SaleOrder(models.Model):
     def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, attributes=None, **kwargs):
         """ Add or set product quantity, add_qty can be negative """
         self.ensure_one()
-        SaleOrderLineSudo = self.env['sale.order.line'].sudo()
         quantity = 0
         order_line = False
         if self.state != 'draft':
@@ -121,7 +120,8 @@ class SaleOrder(models.Model):
         if not order_line:
             values = self._website_product_id_change(self.id, product_id, qty=1)
             values['name'] = self._get_line_description(self.id, product_id, attributes=attributes)
-            order_line = SaleOrderLineSudo.create(values)
+            # NB: Keep the line creation as a ORM command
+            self.sudo().write({'order_line': [(0, False, values)]})
 
             try:
                 order_line._compute_tax_id()
@@ -149,7 +149,8 @@ class SaleOrder(models.Model):
             if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
                 values['price_unit'] = order_line._get_display_price(order_line.product_id)
 
-            order_line.write(values)
+            # NB: Keep the line modification as an ORM command
+            self.write({'order_line': [(1, order_line.id, values)]})
 
         return {'line_id': order_line.id, 'quantity': quantity}
 
