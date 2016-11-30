@@ -15,6 +15,11 @@
     <link href="/report/static/src/less/report.less" rel="stylesheet" type="text/less"/>
 </template>
 
+<!-- Load different less according to template -->
+<!-- <template id="report.assets_layout_boxed">
+    <xpath expr="." position="before"></xpath>
+</template> -->
+
 <template id="report.assets_pdf">
     <link href="/report/static/src/css/reset.min.css" rel="stylesheet"/>
 </template>
@@ -74,6 +79,8 @@
     </t>
 </template>
 
+<!-- Here create 3 other layouts for different templates. -->
+
 <template id="external_layout">
     <!-- Multicompany -->
     <t t-if="not o and doc">
@@ -90,6 +97,9 @@
     <t t-raw="0" />
     <t t-call="report.external_layout_footer" />
 </template>
+
+<!-- Here create 3 other headers and footers for new layouts. -->
+<!-- Inject external less files [Check in odoo experts how it is done] -->
 
 <template id="external_layout_header">
     <div class="header">
