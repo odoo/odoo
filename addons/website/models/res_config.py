@@ -12,6 +12,8 @@ class WebsiteConfigSettings(models.TransientModel):
     def _default_website(self):
         return self.env['website'].search([], limit=1)
 
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
+
     website_id = fields.Many2one('website', string="website", default=_default_website, required=True)
     website_name = fields.Char('Website Name', related='website_id.name')
 

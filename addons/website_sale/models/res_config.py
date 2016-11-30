@@ -29,7 +29,11 @@ class WebsiteConfigSettings(models.TransientModel):
     module_delivery_ups = fields.Boolean("UPS integration")
     module_delivery_usps = fields.Boolean("USPS integration")
     module_sale_ebay = fields.Boolean("eBay")
+
     group_website_multiimage = fields.Boolean(string='Multi-Images', implied_group='website_sale.group_website_multi_image', group='base.group_portal,base.group_user,base.group_public')
+    group_discount_per_so_line = fields.Boolean(string="Discounted Prices", implied_group='sale.group_discount_per_so_line')
+    group_delivery_invoice_address = fields.Boolean(string="Shipping Address", implied_group='sale.group_delivery_invoice_address')
+
     module_website_sale_options = fields.Boolean("Optional Products", help='Installs *e-Commerce Optional Products*')
     module_website_sale_digital = fields.Boolean("Digital Content", help='Sell digital files.')
     module_sale_stock = fields.Boolean("Delivery Orders")
@@ -53,6 +57,8 @@ class WebsiteConfigSettings(models.TransientModel):
     group_product_pricelist = fields.Boolean("Show pricelists On Products",
         implied_group='product.group_product_pricelist')
     order_mail_template = fields.Many2one('mail.template', string='Email Template', readonly=True, default=_default_order_mail_template, help="Email sent to customer at the end of the checkout process")
+    group_show_price_total = fields.Boolean("Show taxes on total", implied_group='sale.group_show_price_total')
+    group_show_price_subtotal = fields.Boolean("Show taxes on subtotal", implied_group='sale.group_show_price_subtotal')
 
     default_invoice_policy = fields.Selection([
         ('order', 'Ordered quantities'),
@@ -63,7 +69,7 @@ class WebsiteConfigSettings(models.TransientModel):
 
     has_chart_of_accounts = fields.Boolean(string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Package', domain="[('visible','=', True)]")
-    sale_tax_rate = fields.Float(string='Default tax')
+    sale_tax_id = fields.Many2one('account.tax.template', string='Default sale tax', oldname="sale_tax")
     currency_id = fields.Many2one('res.currency', related='website_id.currency_id', string='Currency')
     group_multi_currency = fields.Boolean(string='Multi-Currencies',
             implied_group='base.group_multi_currency',
@@ -74,6 +80,16 @@ class WebsiteConfigSettings(models.TransientModel):
         ('subtotal', 'Tax-Excluded Prices')], "Product Prices",
         default='subtotal',
         required=True)
+
+    def set_currency_id(self):
+        self.company_id.currency_id = self.currency_id
+
+    def get_default_currency_id(self, fields):
+        default = dict(currency_id=None)
+        if self.company_id:
+            default['currency_id'] = self.company_id.currency_id
+
+        return default
 
     @api.model
     def get_default_sale_delivery_settings(self, fields):
@@ -144,15 +160,15 @@ class WebsiteConfigSettings(models.TransientModel):
         return self.env['ir.values'].sudo().set_default(
             'sale.config.settings', 'sale_show_tax', self.sale_show_tax)
 
-    #@api.onchange('sale_show_tax')
-    #def _onchange_sale_tax(self):
-    #    if self.sale_show_tax == "subtotal":
-    #        self.update({
-    #            'group_show_price_total': False,
-    #            'group_show_price_subtotal': True,
-    #        })
-    #    else:
-    #        self.update({
-    #            'group_show_price_total': True,
-    #            'group_show_price_subtotal': False,
-    #        })
+    @api.onchange('sale_show_tax')
+    def _onchange_sale_tax(self):
+        if self.sale_show_tax == "subtotal":
+            self.update({
+                'group_show_price_total': False,
+                'group_show_price_subtotal': True,
+            })
+        else:
+            self.update({
+                'group_show_price_total': True,
+                'group_show_price_subtotal': False,
+            })
