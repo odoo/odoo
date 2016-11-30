@@ -1643,18 +1643,27 @@
             <field name="model">account.payment.term</field>
             <field name="arch" type="xml">
                 <form string="Payment Terms">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="active"/>
-                        <field name="company_id" invisible="1"/>
-                    </group>
-                    <label for="note"/>
-                    <field name="note" placeholder="Payment terms explanation for the customer..."/>
-                    <separator string="Terms"/>
-                    <p class="text-muted">
-                        The last line's computation type should be "Balance" to ensure that the whole amount will be allocated.
-                    </p>
-                    <field name="line_ids"/>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="company_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <label for="note"/>
+                        <field name="note" placeholder="Payment term explanation for the customer..."/>
+                        <separator string="Terms"/>
+                        <p class="text-muted">
+                            The last line's computation type should be "Balance" to ensure that the whole amount will be allocated.
+                        </p>
+                        <field name="line_ids"/>
+                    </sheet>
                 </form>
             </field>
         </record>
