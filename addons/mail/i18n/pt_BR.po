@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-07-23 09:04+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-23 08:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-9/"
 "language/pt_BR/)\n"
@@ -708,13 +708,10 @@ msgstr "Anexos"
 #: model:ir.model.fields,help:mail.field_mail_compose_message_attachment_ids
 #: model:ir.model.fields,help:mail.field_mail_mail_attachment_ids
 #: model:ir.model.fields,help:mail.field_mail_message_attachment_ids
-#, fuzzy
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
-"Anexos estão ligados a um documento através de modelo / res_id e à mensagem "
-"através deste campo."
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -802,7 +799,7 @@ msgstr "Conteúdo"
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_bounce
 #: model:ir.model.fields,field_description:mail.field_res_users_message_bounce
 msgid "Bounce"
-msgstr ""
+msgstr "Rejeitado"
 
 #. module: mail
 #. openerp-web
@@ -1055,9 +1052,8 @@ msgstr "Estado de Conversação"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
-#, fuzzy
 msgid "Conversation is minimized"
-msgstr "Conversa foi minimizado"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -1070,7 +1066,7 @@ msgstr "Conversações"
 #: model:ir.model.fields,help:mail.field_res_partner_message_bounce
 #: model:ir.model.fields,help:mail.field_res_users_message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr ""
+msgstr "Contador do número de emails devolvidos para este contato"
 
 #. module: mail
 #. openerp-web
@@ -1081,9 +1077,8 @@ msgstr "Criar %s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
-#, fuzzy
 msgid "Create Date"
-msgstr "Criar %s"
+msgstr "Data de Criação"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_uid
@@ -1246,23 +1241,20 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete
-#, fuzzy
 msgid "Delete Emails"
-msgstr "Cancelar Email"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete_message
-#, fuzzy
 msgid "Delete Message Copy"
-msgstr "Mensagem Relacionada"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_auto_delete
-#, fuzzy
 msgid "Delete sent emails (mass mailing only)"
-msgstr "Assinatura do Autor (emails em massa apenas)"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -2104,7 +2096,7 @@ msgstr "Apelido Inativo"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:974
+#: code:addons/mail/static/src/js/chat_manager.js:958
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2146,7 +2138,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:593
+#: code:addons/mail/static/src/js/chat_manager.js:577
 #, python-format
 msgid "Invitation"
 msgstr "Convite"
@@ -2265,9 +2257,8 @@ msgstr "É Notificação"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
-#, fuzzy
 msgid "Is Subscribed"
-msgstr "Cancelar a inscrição"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
@@ -2282,7 +2273,7 @@ msgstr "É fixado na interface"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Join"
-msgstr ""
+msgstr "Entrar"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_action_view
@@ -2424,7 +2415,7 @@ msgstr "Última atualização em"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Leave"
-msgstr ""
+msgstr "Folga"
 
 #. module: mail
 #. openerp-web
@@ -2459,7 +2450,7 @@ msgstr "Ouvintes"
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Livechat Conversation"
-msgstr ""
+msgstr "Conversa Ao Vivo"
 
 #. module: mail
 #. openerp-web
@@ -3153,15 +3144,11 @@ msgstr "Quantidade de mensagens não lidas."
 
 #. module: mail
 #: model:ir.actions.act_window,help:mail.action_contacts
-#, fuzzy
 msgid ""
 "Odoo helps you easily track all activities related to\n"
 "            a customer: discussions, history of business opportunities,\n"
 "            documents, etc."
 msgstr ""
-"Odoo ajuda você a controlar facilmente todas as atividades relacionadas a\n"
-"um cliente; discussões, histórico de oportunidades de negócio,\n"
-"documentos, etc."
 
 #. module: mail
 #. openerp-web
@@ -3538,9 +3525,9 @@ msgstr "Canais Privados"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:138
-#, fuzzy, python-format
+#, python-format
 msgid "Public Channels"
-msgstr "Canais Privados"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180
@@ -3714,7 +3701,7 @@ msgstr "Dizer algo"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_scheduled_date
 #: model:ir.model.fields,field_description:mail.field_mail_template_scheduled_date
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Data Programada"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_scheduled_date
@@ -3903,7 +3890,7 @@ msgstr "Smiley"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:980
+#: code:addons/mail/static/src/js/chat_manager.js:964
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4019,9 +4006,8 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
-#, fuzzy
 msgid "The escaped html code replacing the shortcut"
-msgstr "O código html retornou substituindo o atalho"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_model_id
@@ -4089,9 +4075,8 @@ msgstr "O atalho que deve ser substituído nas mensagens de chat"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,help:mail.field_mail_template_model_id
-#, fuzzy
 msgid "The type of document this template can be used with"
-msgstr "O tipo de documento que este modelo pode ser usado"
+msgstr ""
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4185,13 +4170,10 @@ msgstr "Tópicos discutidos neste grupo..."
 #: model:ir.model.fields,help:mail.field_mail_mail_tracking_value_ids
 #: model:ir.model.fields,help:mail.field_mail_message_tracking_value_ids
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_tracking_value_ids
-#, fuzzy
 msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
-"Valores rastreados são armazenados em um modelo separado. Este campo permite "
-"reconstruir o rastreamento e gerar estatísticas sobre o modelo."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
@@ -4579,7 +4561,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:593
+#: code:addons/mail/static/src/js/chat_manager.js:577
 #, python-format
 msgid "You have been invited to: "
 msgstr "Você foi convidado para:"
@@ -4620,6 +4602,11 @@ msgstr "Seu modelo deve definir email_from"
 #: model:ir.model,name:mail.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "painel de reuniões"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -4704,18 +4691,23 @@ msgid "publisher_warranty.contract"
 msgstr "Contrato de Serviço"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "rd"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:16
-#, fuzzy, python-format
+#, python-format
 msgid "read less"
-msgstr "Mensagens não lidas"
+msgstr "ler mais"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:15
 #, python-format
 msgid "read more"
-msgstr ""
+msgstr "leia mais"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
@@ -4723,67 +4715,13 @@ msgid "record:"
 msgstr "registro:"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "vendas"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:35
 #, python-format
 msgid "this document"
 msgstr "este documento"
-
-#~ msgid ""
-#~ "Attachments are linked to a document through model / res_id and to the "
-#~ "messagethrough this field."
-#~ msgstr ""
-#~ "Anexos estão ligados a um documento através de modelo / res_id e à "
-#~ "mensagem através deste campo."
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "Conteúdos HTML limpos automaticamente"
-
-#~ msgid "Automatically set needaction as Read"
-#~ msgstr "Definir automaticamente necessita de ação como lido"
-
-#~ msgid "Conversation is minimied"
-#~ msgstr "Conversa foi minimizado"
-
-#~ msgid "Join Group"
-#~ msgstr "Participar do Grupo"
-
-#~ msgid ""
-#~ "Odoo helps you easily track all activities related to\n"
-#~ "            a customer; discussions, history of business opportunities,\n"
-#~ "            documents, etc."
-#~ msgstr ""
-#~ "Odoo ajuda você a controlar facilmente todas as atividades relacionadas "
-#~ "a\n"
-#~ "um cliente; discussões, histórico de oportunidades de negócio,\n"
-#~ "documentos, etc."
-
-#~ msgid ""
-#~ "Rich-text/HTML version of the message (placeholders may be used here)"
-#~ msgstr ""
-#~ "Versão Rich-text/HTML da mensagem (placeholders podem ser usados aqui)"
-
-#~ msgid "Send mail"
-#~ msgstr "Enviar mensagem"
-
-#~ msgid "The excaped html code replacing the shortcut"
-#~ msgstr "O código html retornou substituindo o atalho"
-
-#~ msgid "The kind of document with with this template can be used"
-#~ msgstr "O tipo de documento que este modelo pode ser usado"
-
-#~ msgid ""
-#~ "Tracked values are stored in a separate model. This field allow to "
-#~ "reconstructthe tracking and to generate statistics on the model."
-#~ msgstr ""
-#~ "Valores rastreados são armazenados em um modelo separado. Este campo "
-#~ "permite reconstruir o rastreamento e gerar estatísticas sobre o modelo."
-
-#~ msgid "board-meetings"
-#~ msgstr "painel de reuniões"
-
-#~ msgid "rd"
-#~ msgstr "rd"
-
-#~ msgid "sales"
-#~ msgstr "vendas"

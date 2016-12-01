@@ -3,13 +3,14 @@
 # * sale
 #
 # Translators:
+# CHAU LE <contact@w360s.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-07-20 03:11+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-26 04:06+0000\n"
+"Last-Translator: CHAU LE <contact@w360s.com>\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/"
 "vi/)\n"
 "Language: vi\n"
@@ -441,6 +442,12 @@ msgid "Delivery address for current sales order."
 msgstr "Địa chỉ giao hàng cho đơn hàng hiện tại."
 
 #. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
 msgstr ""
@@ -458,7 +465,6 @@ msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "Disc.(%)"
 msgstr "Chiết khấu (%)"
 
@@ -555,9 +561,8 @@ msgstr "Đồ thuật soạn thảo email"
 
 #. module: sale
 #: model:ir.model,name:sale.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "Đồ thuật soạn thảo email"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
@@ -605,7 +610,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Tổng khối lượng"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -888,7 +893,7 @@ msgstr ""
 #: code:addons/sale/sale.py:101
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "Mới"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
@@ -1280,7 +1285,7 @@ msgstr "Báo giá"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Quotations & Sales"
-msgstr ""
+msgstr "Bán hàng & báo giá"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -1289,9 +1294,8 @@ msgstr "Phân tích báo giá"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#, fuzzy
 msgid "Quotations Sent"
-msgstr "Báo giá đã gửi"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1305,9 +1309,8 @@ msgstr "Tham chiếu của tài liệu tạo ra đơn hàng này."
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
-#, fuzzy
 msgid "Reinvoice Costs"
-msgstr "Tình trạng hóa đơn"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1334,7 +1337,7 @@ msgstr "Chi tiết đơn hàng"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_auto_done_setting
 msgid "Sale Order Modification"
-msgstr ""
+msgstr "Chỉnh sửa đơn hàng."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -1375,7 +1378,7 @@ msgstr "Phân tích Bán hàng"
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Sales Done"
-msgstr ""
+msgstr "Đơn hàng đã hoàn thành"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
@@ -1524,7 +1527,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
-msgstr ""
+msgstr "Thiết lập báo giá"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1771,9 +1774,8 @@ msgstr "Đơn vị tính"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
-#, fuzzy
 msgid "Units of Measure"
-msgstr "Đơn vị tính"
+msgstr "Đơn vị đo lường"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1822,7 +1824,7 @@ msgstr "VAT:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Thể tích"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
@@ -1868,9 +1870,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
-#, fuzzy
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr "Hạng mục sẵn sàng xuất hóa đơn"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1891,9 +1892,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "Analytic Line"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1909,45 +1909,3 @@ msgstr "sale.config.settings"
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "chưa rõ"
-
-#~ msgid "Allows you to specify an analytic account on sales orders."
-#~ msgstr "Cho phép bạn chỉ ra một tài khoản quản trị trên đơn hàng."
-
-#~ msgid "Analytic Line"
-#~ msgstr "Analytic Line"
-
-#~ msgid "Analytic accounting for sales"
-#~ msgstr "Tài khoản quản trị cho bán hàng"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Ngày của thông điệp gần nhất được ghi nhận trên một bản ghi"
-
-#~ msgid "Followers"
-#~ msgstr "Người dõi theo"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Người theo dõi (Các kênh)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Người theo dõi (Các đối tác)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có mặt của bạn."
-
-#~ msgid "Is Follower"
-#~ msgstr "Trở thành người theo dõi"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Ngày thông điệp cuối cùng"
-
-#~ msgid "Messages"
-#~ msgstr "Thông điệp"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Lịch sử trao đổi"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "Mở trình đơn bán hàng"
-
-#~ msgid "Website Messages"
-#~ msgstr "Tin từ Website"

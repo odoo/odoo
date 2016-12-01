@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -18,6 +18,47 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_3
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to let you know that you have entered the select circle "
+"of our Gold Partners!</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"\n"
+"<p>Üdvözöljük,</p>\n"
+"<p>örömmel tudatjuk, hogy bekerül az Arany kiválasztott tagok körébe!</p>\n"
+"<p>Köszönjük,</p>\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_2
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to welcome you among our Silver Partners as of today!</"
+"p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"\n"
+"<p>Üdvözöljük,</p>\n"
+"<p>örömmel köszöntjük az Ezüst Partnereink között a mai naptól!</p>\n"
+"<p>Köszönjük,</p>\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_1
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>You will receive your welcome pack via email shortly.</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"\n"
+"<p>Üdvözöljük,</p>\n"
+"<p>nemsokára emailben megkapja az üdvözlő csomagot.</p>\n"
+"<p>Köszönjük,</p>\n"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -232,6 +273,16 @@ msgstr "Bezár"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_condition
 msgid "Condition"
 msgstr "Feltétel"
+
+#. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_2
+msgid "Congratulations! You are now a Silver Partner!"
+msgstr "Gratulálok! Ön mostmár Ezüst partner!"
+
+#. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_3
+msgid "Congratulations! You are now one of our Gold Partners!"
+msgstr "Gratulálunk! Most már Ön is egy Arany tagsággal rendelkező partnerünk!"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:480
@@ -794,6 +845,11 @@ msgid "Partner Field"
 msgstr "Partnermező"
 
 #. module: marketing_campaign
+#: model:ir.filters,name:marketing_campaign.filter0
+msgid "Partners"
+msgstr "Partnerek"
+
+#. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_tree
 msgid "Preview"
@@ -1169,6 +1225,11 @@ msgid "Variable Cost"
 msgstr "Változó költség"
 
 #. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_1
+msgid "Welcome to the Odoo Partner Channel!"
+msgstr "Üdvözöljük az Ügyfél csatornán!"
+
+#. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "With Manual Confirmation"
 msgstr "Kézi visszaigazolással"
@@ -1187,94 +1248,3 @@ msgstr "Év(ek)"
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
-
-#~ msgid "Congratulations! You are now a Silver Partner!"
-#~ msgstr "Gratulálok! Ön mostmár Ezüst partner!"
-
-#~ msgid "Congratulations! You are now one of our Gold Partners!"
-#~ msgstr ""
-#~ "Gratulálunk! Most már Ön is egy Arany tagsággal rendelkező partnerünk!"
-
-#~ msgid "Hello, you will receive your welcome pack via email shortly."
-#~ msgstr "Helló, nemsokára emailben megkapja az üdvözlő csomagot."
-
-#~ msgid ""
-#~ "Hi, we are delighted to let you know that you have entered the select "
-#~ "circle of our Gold Partners"
-#~ msgstr ""
-#~ "Helló, örömmel tudatjuk, hogy bekerül az Arany kiválasztott tagok körébe"
-
-#~ msgid ""
-#~ "Hi, we are delighted to welcome you among our Silver Partners as of today!"
-#~ msgstr "Helló, örömmel köszöntjük az Ezüst Partnereink között a mai naptól!"
-
-#~ msgid ""
-#~ "Odoo's marketing campaign allows you to automate communication\n"
-#~ "            to your prospects. You can define a segment (set of "
-#~ "conditions) on\n"
-#~ "            your leads and partners to fullfil the campaign."
-#~ msgstr ""
-#~ "Odoo's marketing kampánya lehetővé teszi az automatikus kommunikációt\n"
-#~ "            a halgatóival. Meghatározhat egy szegmenst (beéllíthat egy "
-#~ "feltételt) az\n"
-#~ "            érdeklődésein és partnerein a kampány végrehajtásához."
-
-#~ msgid "Open Marketing Menu"
-#~ msgstr "Merketing menü megnyitása"
-
-#~ msgid "Partners"
-#~ msgstr "Partnerek"
-
-#~ msgid "Welcome to the Odoo Partner Channel!"
-#~ msgstr "Üdvözöljük az Ügyfél csatornán!"
-
-#~ msgid "Model of filter must be same as resource model of Campaign"
-#~ msgstr ""
-#~ "A szűrő modelljének ugyanannak kell lennie mint a kampány erőforrás "
-#~ "modellje "
-
-#~ msgid ""
-#~ "Test - It creates and process all the activities directly (without "
-#~ "waiting for the delay on transitions) but does not send emails or produce "
-#~ "reports. \n"
-#~ "Test in Realtime - It creates and processes all the activities directly "
-#~ "but does not send emails or produce reports.\n"
-#~ "With Manual Confirmation - the campaigns runs normally, but the user has "
-#~ "to \n"
-#~ " validate all workitem manually.\n"
-#~ "Normal - the campaign runs normally and automatically sends all emails "
-#~ "and reports (be very careful with this mode, you're live!)"
-#~ msgstr ""
-#~ "Teszt - Ez közvetlenül, automatikusan létrehozza és futtatja az összes "
-#~ "tevékenységet  (anélkül, hogy az átmenetek késésére várakozna) de nem "
-#~ "küld e-maileket és nem készít jelentéseket.\n"
-#~ "Valós idejű teszt - Ez közvetlenül létrehozza és futtatja tevékenységeket "
-#~ "de nem küld e-maileket és nem készít jelentéseket.\n"
-#~ "Kézi visszaigazolással - a kampány normál futása, de a felhasználónak "
-#~ "kézzel kell érvényesítenie a feladatelemet.\n"
-#~ "Normál - a kampány normál futása és automatikus email küldések és "
-#~ "jelentés készítések (legyen nagyon óvatos ezzel a móddal, élőben tesz "
-#~ "mindent!)"
-
-#~ msgid "The To/From Activity of transition must be of the same Campaign"
-#~ msgstr ""
-#~ "A tól/hoz átvezetési tevékenységnek ugyanahhoz a kampányhoz kell "
-#~ "tartoznia. "
-
-#~ msgid ""
-#~ "The type of action to execute when an item enters this activity, such "
-#~ "as:\n"
-#~ "- Email: send an email using a predefined email template \n"
-#~ "- Report: print an existing Report defined on the resource item and save "
-#~ "it into a specific directory \n"
-#~ "- Custom Action: execute a predefined action, e.g. to modify the fields "
-#~ "of the resource record"
-#~ msgstr ""
-#~ "A művelet típusa melyet elvégez, amikor ehhez a tevékenységhez bevisz egy "
-#~ "tételt, úgy mint:\n"
-#~ "   - Email: email küldése az előre definiált sablonból\n"
-#~ "   - Jelentés: a erőforrás tételnél meghatározott jelentés nyomtatása és "
-#~ "elmentése egy konkrét könyvtárba\n"
-#~ "   - Egyedi művelet: előre meghatározott művelet végrehajtása, pl.: "
-#~ "erőforrás rekord mező módosítása\n"
-#~ "  "

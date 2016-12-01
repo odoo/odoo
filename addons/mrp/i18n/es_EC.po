@@ -9,7 +9,7 @@
 # Javier Ramirez <elbomba887@gmail.com>, 2015
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2015
 # Luis Pomar <luis.pomar@gmail.com>, 2015
-# Luis Triana <luistriana.28@gmail.com>, 2015
+# Luis Triana <luis.triana@jarsa.com.mx>, 2015
 # Oihane Crucelaegui <oihanecruce@gmail.com>, 2015
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2015
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2015-2016
@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-06 22:16+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-09-09 17:54+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/"
 "language/es_EC/)\n"
@@ -935,6 +935,12 @@ msgid "Internal Reference"
 msgstr "Referencia interna"
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr "¡Problemas con la cantidad del lote!"
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
@@ -1571,7 +1577,7 @@ msgstr "Propiedad"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9667
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -2322,6 +2328,16 @@ msgstr ""
 "órdenes de producción. Por favor, cierre o cancelela primero."
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+"Su plan para consumir más de 1.00 unidad del producto %s con el número único "
+"del lote %s"
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "días"
@@ -2367,63 +2383,3 @@ msgstr "report.mrp.report_mrpbomstructure"
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "desconocido"
-
-#~ msgid "Action Needed"
-#~ msgstr "Necesita una acción"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Cambiar cantidad"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Fecha del último mensaje publicado en el registro."
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canales)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Empresas)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención."
-
-#~ msgid "Is Follower"
-#~ msgstr "Es un seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Fecha del último mensaje"
-
-#~ msgid "Messages"
-#~ msgstr "Mensajes"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Mensajes e historial de comunicación"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de acciones"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensajes que requieren una acción"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensajes no leidos"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "Abrir menú MRP"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Mensajes sin leer"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de mensajes sin leer"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensajes del sitio web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historial de comunicaciones del sitio web"

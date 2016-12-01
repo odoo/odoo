@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-08-09 14:00+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-11-15 11:47+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
@@ -98,7 +98,7 @@ msgid ""
 msgstr ""
 "Een omschrijving van het product die u wilt delen met uw klanten. Deze "
 "omschrijving wordt gekopieerd naar elke verkooporder, leveringsbon en "
-"factuur/terugbetaling."
+"factuur/creditfactuur."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_purchase
@@ -109,7 +109,7 @@ msgid ""
 msgstr ""
 "Een omschrijving van het product die u wilt delen met uw leveranciers. Deze "
 "omschrijving wordt gekopieerd naar elke inkooporder, ontvanstbon en factuur/"
-"credit factuur."
+"creditfactuur."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description
@@ -244,6 +244,8 @@ msgstr "Kan verkocht worden"
 msgid ""
 "Can be changed during the 'put in pack' to adjust the weight of the shipping."
 msgstr ""
+"Kan worden gewijzigd bij het \"Doe in verpakking\" om het gewicht van de "
+"levering aan te passen."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_can_be_expensed
@@ -439,7 +441,7 @@ msgstr "Levering"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier Search"
-msgstr ""
+msgstr "Zoek vervoerder"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -511,7 +513,7 @@ msgstr "Bepaal de weergave volgorde"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Discard"
-msgstr "Negeren"
+msgstr "Annuleren"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
@@ -690,7 +692,7 @@ msgstr "Hoogte"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Height must be positive"
-msgstr ""
+msgstr "Hoogte moet positief zien"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
@@ -887,7 +889,7 @@ msgstr "Lengte"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Length must be positive"
-msgstr ""
+msgstr "Lengte moet positief zijn"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_location_id
@@ -902,7 +904,7 @@ msgstr "Logistieke eenheden"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Manage Package Type"
-msgstr ""
+msgstr "Beheer verpakkingen"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_track_service
@@ -914,6 +916,12 @@ msgid ""
 "Create a task and track hours: Create a task on the sale order validation "
 "and track the work hours."
 msgstr ""
+"Bepaal handmatig de hoeveelheden voor de order: Factuur op basis van de "
+"handmatig ingevoerde hoeveelheid, zonder het aanmaken van een kostenplaats.\n"
+"Urenstaten op projecten: Factuur op basis van de geschreven uren op "
+"gerelateerde urenstaten.\n"
+"Maak een taak aan en volg de uren ervan op: Een taak maken bij verkoop order "
+"validatie en volg werkuren via taken."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
@@ -938,17 +946,17 @@ msgstr "Marge datum t/m"
 #. module: delivery
 #: sql_constraint:delivery.carrier:0
 msgid "Margin cannot be lower than -100%"
-msgstr ""
+msgstr "Marge kan niet minder zijn dan -100%"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
 msgid "Max Weight"
-msgstr ""
+msgstr "Max. gewicht"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Max Weight must be positive"
-msgstr ""
+msgstr "Max. gewicht moet positief zien"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
@@ -958,7 +966,7 @@ msgstr "Maximumwaarde"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
 msgid "Maximum weight shippable in this packaging"
-msgstr ""
+msgstr "Maximum gewicht verzendbaar in deze verpakking"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_medium
@@ -1000,7 +1008,7 @@ msgstr "Naam"
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
 msgid "No carrier integration"
-msgstr ""
+msgstr "Geen vervoerder informatie"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:63
@@ -1023,6 +1031,12 @@ msgstr "Normale kosten"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_gap
 msgid "Normal Cost - Total Cost"
 msgstr "Normale kosten - Totale kosten"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.normal_delivery_carrier_product_product
+msgid "Normal Delivery Charges"
+msgstr "Normale vervoerskosten"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
@@ -1078,14 +1092,14 @@ msgstr "Verpakking"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
 msgid "Package Code"
-msgstr ""
+msgstr "Verpakkingcode"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
 #: code:addons/delivery/models/stock_picking.py:128
 #, python-format
 msgid "Package Details"
-msgstr ""
+msgstr "Verpakkingdetails"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1389,6 +1403,7 @@ msgstr "Bepaal prijs"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
+"Zet op Waar wanneer uw inloggegevens gecertificeerd zijn voor productie."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:147
@@ -1397,6 +1412,8 @@ msgid ""
 "Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost: "
 "%.2f %s"
 msgstr ""
+"Levering verzonden naar vervoerder %s voor expeditie met traceernummer %s<br/"
+">Kosten: %.2f %s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
@@ -1406,7 +1423,7 @@ msgstr "Verzendkosten"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
 msgid "Shipping Weight"
-msgstr ""
+msgstr "Aflevergewicht"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_shipping_enabled
@@ -1462,6 +1479,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_product_template_hs_code
 msgid "Standardized code for international shipping and goods declaration"
 msgstr ""
+"Gestandaardiseerde code voor internationaal vervoer en goederen aangifte"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -1529,6 +1547,12 @@ msgid "Template Name"
 msgstr "Sjabloonnaam"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.delivery_carrier_product_product
+msgid "The Poste"
+msgstr "De Post"
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
 msgid ""
 "The average delay in days between the confirmation of the customer order and "
@@ -1578,10 +1602,10 @@ msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
 msgstr ""
-"Het product dat gebruikt wordt om een vooruitbetaling te factureren, moet "
-"een factuurbeleid hebben dat gebaseerd is op \"Bestelde hoeveelheden\". "
-"Wijzig de eigenschappen van het product om een vooruitbetalingsfactuur te "
-"kunnen opmaken."
+"Het product dat gebruikt wordt om een aanbetaling te factureren, moet een "
+"factuurbeleid hebben dat gebaseerd is op \"Bestelde hoeveelheden\". Wijzig "
+"de eigenschappen van het product om een vooruitbetalingsfactuur te kunnen "
+"opmaken."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_income_id
@@ -1624,7 +1648,7 @@ msgstr "Dit is de som van de extra prijs van alle kenmerken"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
 msgid "This percentage will be added to the shipping price."
-msgstr ""
+msgstr "Dit percentage wordt toegevoegd aan de afleverprijs."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_production
@@ -1837,7 +1861,7 @@ msgstr "Gewicht * Volume"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
 msgid "Weight for Shipping"
-msgstr ""
+msgstr "Gewicht voor levering"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_alert_time
@@ -1933,6 +1957,8 @@ msgid ""
 "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
 msgstr ""
+"U verzend verschillende verpakking types in dezelfde verzending.\n"
+"Verpakking types: %s"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:163
@@ -1966,102 +1992,3 @@ msgstr "bijv. UPS Express"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "unknown"
 msgstr "onbekend"
-
-#~ msgid "Carrier Information"
-#~ msgstr "Vervoerder informatie"
-
-#~ msgid "Carrier Tracking Ref"
-#~ msgstr "Vervoerder tracking ref."
-
-#~ msgid "Gross Weight"
-#~ msgstr "Bruto gewicht"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Berichten en communicatie historie"
-
-#~ msgid "Normal Delivery Charges"
-#~ msgstr "Normale vervoerskosten"
-
-#~ msgid "Shipment sent to carrier %s for expedition with tracking number %s"
-#~ msgstr ""
-#~ "Levering verzonden naar vervoerder %s voor expeditie met traceernummer %s"
-
-#~ msgid "Status"
-#~ msgstr "Provincie/Staat"
-
-#~ msgid "The Poste"
-#~ msgstr "De Post"
-
-#~ msgid "Vendor"
-#~ msgstr "Leverancier"
-
-#~ msgid "# Product Variants"
-#~ msgstr "# Product varianten"
-
-#~ msgid "Available in the Point of Sale"
-#~ msgstr "Beschikbaar in de kassa"
-
-#~ msgid "Can be Expensed"
-#~ msgstr "Declaratie product"
-
-#~ msgid ""
-#~ "Check if the product should be weighted using the hardware scale "
-#~ "integration"
-#~ msgstr ""
-#~ "Controleer of het product moet worden gewogen d.m.v. de "
-#~ "weegschaalintegratie"
-
-#~ msgid "Check if you want this product to appear in the Point of Sale"
-#~ msgstr "Vink deze optie aan als u het product wilt gebruiken in de kassa."
-
-#~ msgid "Customer Ref"
-#~ msgstr "Ref. klant"
-
-#~ msgid "Delivery Carrier"
-#~ msgstr "Vervoerder"
-
-#~ msgid "Event Registration"
-#~ msgstr "Evenementregistratie"
-
-#~ msgid "Message for Purchase Order Line"
-#~ msgstr "Bericht voor inkooporderregel"
-
-#~ msgid "Message for Sales Order Line"
-#~ msgstr "Bericht bij een verkooporderregel"
-
-#~ msgid "Point of Sale Category"
-#~ msgstr "Kassa categorie"
-
-#~ msgid "Pricelist item ids"
-#~ msgstr "Prijslijst item ids"
-
-#~ msgid "Project"
-#~ msgstr "Project"
-
-#~ msgid "Provider"
-#~ msgstr "Provider"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Inkooporderregel"
-
-#~ msgid ""
-#~ "Selecting the \"Warning\" option will notify user with the message, "
-#~ "Selecting \"Blocking Message\" will throw an exception with the message "
-#~ "and block the flow. The Message has to be written in the next field."
-#~ msgstr ""
-#~ "Door de 'Waarschuwingsoptie' te selecteren wordt het bericht naar de "
-#~ "gebruiker gestuurd. Door het 'Blokkerend bericht' te kiezen wordt een "
-#~ "fout gegenereerd met de boodschap en het proces wordt geblokkeerd. Het "
-#~ "bericht moet in het volgende veld worden ingevoerd."
-
-#~ msgid ""
-#~ "Those categories are used to group similar products for point of sale."
-#~ msgstr ""
-#~ "De categorieën worden gebruikt om gelijkaardige producten te groeperen "
-#~ "bij de kassa."
-
-#~ msgid "To Weigh With Scale"
-#~ msgstr "Te wegen met weegschaal"
-
-#~ msgid "Weight Unit of Measure"
-#~ msgstr "Gewicht maateenheid"

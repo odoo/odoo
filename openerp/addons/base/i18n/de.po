@@ -11,7 +11,7 @@
 # m m <neniu@mailbox.org>, 2016
 # Philipp Hug <philipp@hug.cx>, 2015
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
-# darenkster <renkosp@gmail.com>, 2015-2016
+# darenkster <inactive+darenkster@transifex.com>, 2015-2016
 # Rudolf Schnapka <rs@techno-flex.de>, 2016
 # Thomas Lengyel <lexustec_fn@yahoo.de>, 2015
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
@@ -21,9 +21,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-08-09 16:37+0000\n"
-"Last-Translator: Wolfgang Taferner\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-10-16 20:59+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -96,7 +96,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu
-#, fuzzy
 msgid ""
 "\n"
 "\n"
@@ -110,17 +109,6 @@ msgid ""
 " - Hungarian Bank information\n"
 " "
 msgstr ""
-"\n"
-"\n"
-"Basismodul für ungarische Lokalisierung\n"
-"==========================================\n"
-"\n"
-"Dieses Modul beinhaltet:  \n"
-"- Allgemeine ungarische Buchhaltungskonten\n"
-"- Ungarische Steuern\n"
-"- Ungarischen Bank-Informationen\n"
-" \n"
-" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
@@ -270,14 +258,11 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_data_drinks
-#, fuzzy
 msgid ""
 "\n"
 "        Common drinks data for point of sales\n"
 "    "
 msgstr ""
-"\n"
-"Finanzberichte für Chile"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_cache
@@ -459,6 +444,15 @@ msgid ""
 msgstr ""
 "\n"
 "Informationen über Lieferaufträge (Picking) auf der Website anzeigen\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_tax_exigible
+msgid ""
+"\n"
+"    This is a bugfix-module backporting 39d68ac and adding the concept of "
+"tax exigibility on journal items.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_intrastat
@@ -1042,7 +1036,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
-#, fuzzy
 msgid ""
 "\n"
 "Base Module for Ethiopian Localization\n"
@@ -1055,20 +1048,9 @@ msgid ""
 "    - Regional State listings\n"
 "    "
 msgstr ""
-"\n"
-"Base Module for Ethiopian Localization\n"
-"======================================\n"
-"\n"
-"This is the latest Ethiopian OpenERP localization and consists of:\n"
-"    - Chart of Accounts\n"
-"    - VAT tax structure\n"
-"    - Withholding tax structure\n"
-"    - Regional State listings\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br
-#, fuzzy
 msgid ""
 "\n"
 "Base module for the Brazilian localization\n"
@@ -1112,48 +1094,6 @@ msgid ""
 "come with any additional paid permission for online use of 'private "
 "modules'.\n"
 msgstr ""
-"\n"
-"Base module for the Brazilian localization\n"
-"==========================================\n"
-"\n"
-"This module consists in:\n"
-"\n"
-" - Generic Brazilian chart of accounts\n"
-" - Brazilian taxes such as:\n"
-"\n"
-"        - IPI\n"
-"        - ICMS\n"
-"        - PIS\n"
-"        - COFINS\n"
-"        - ISS\n"
-"        - IR\n"
-"        - IRPJ\n"
-"        - CSLL\n"
-"\n"
-"The field tax_discount has also been added in the account.tax.template and \n"
-"account.tax objects to allow the proper computation of some Brazilian VATs \n"
-"such as ICMS. The chart of account creation wizard has been extended to \n"
-"propagate those new data properly.\n"
-"\n"
-"It's important to note however that this module lack many implementations "
-"to \n"
-"use OpenERP properly in Brazil. Those implementations (such as the "
-"electronic \n"
-"fiscal Invoicing which is already operational) are brought by more than 15 \n"
-"additional modules of the Brazilian Launchpad localization project \n"
-"https://launchpad.net/openerp.pt-br-localiz and their dependencies in the \n"
-"extra addons branch. Those modules aim at not breaking with the remarkable \n"
-"OpenERP modularity, this is why they are numerous but small. One of the \n"
-"reasons for maintaining those modules apart is that Brazilian Localization \n"
-"leaders need commit rights agility to complete the localization as "
-"companies \n"
-"fund the remaining legal requirements (such as soon fiscal ledgers, \n"
-"accounting SPED, fiscal SPED and PAF ECF that are still missing as "
-"September \n"
-"2011). Those modules are also strictly licensed under AGPL V3 and today "
-"don't \n"
-"come with any additional paid permission for online use of 'private "
-"modules'.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll
@@ -1405,7 +1345,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_subscription
-#, fuzzy
 msgid ""
 "\n"
 "Create recurring documents.\n"
@@ -1422,22 +1361,6 @@ msgid ""
 "      above. Specify the interval information and partner to be invoiced.\n"
 "    "
 msgstr ""
-"\n"
-"Erstellen wiederkehrender Belege.\n"
-"===============================\n"
-"\n"
-"Diese Anwendung ermöglicht Ihnen, neue Belege zu erstellen und durch "
-"Abonnements diese Belege regelmässig zu erstellen.\n"
-"\n"
-"Z. B. um automatisch monatliche Abrechnungen zu erzeugen:\n"
-"-------------------------------------------------------------\n"
-"    * Definieren Sie einen Dokumenttyp basierend auf dem Rechnungsobjekt\n"
-"    * Definieren Sie einen Abozeitraum, dessen Quelle das oben definierte "
-"Dokument \n"
-"      ist. Bestimmen Sie das Intervall zur Neuerstellung des Belegs sowie "
-"den Partner mit \n"
-"      dessen Abrechnungsbedingung.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_link_tracker
@@ -1526,7 +1449,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
-#, fuzzy
 msgid ""
 "\n"
 "Customize access to your Odoo database to external users by creating "
@@ -1545,21 +1467,6 @@ msgid ""
 "very handy when used in combination with the module 'share'.\n"
 "    "
 msgstr ""
-"\n"
-"Passen Sie den Zugriff auf Ihre Odoo-Datenbank durch externe Benutzer an, "
-"indem Sie Portale anlegen.\n"
-"================================================================================\n"
-"Ein Portal definiert ein spezifisches Nutzermenü für dessen Mitglieder mit "
-"entsprechenden Zugriffsberechtigungen. Dieses Menü kann durch Portalnutzer, "
-"Öffentliche Nutzer oder jeden Nutzer mit Berechtigung auf technische "
-"Einstellungen (z.B. Administrator) gesehen werden. Also auch jeder "
-"Portalnutzer, der mit einem bestimmten Partner verknüpft ist.\n"
-"\n"
-"Dieses Modul verknüpft auch Benutzergruppen mit Portalnutzern (Hinzufügen "
-"einer Gruppe im Portal fügt diese automatisch beim Portalnutzer hinzu, "
-"usw. ). Dieses Merkmal kann sehr nützlich sein in Verbindung mit dem Modul "
-"'Teilen'. \n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -1945,7 +1852,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
-#, fuzzy
 msgid ""
 "\n"
 "Gamification process\n"
@@ -1965,29 +1871,6 @@ msgid ""
 "modules and actions. When installed, this module creates easy goals to help "
 "new users to discover Odoo and configure their user profile.\n"
 msgstr ""
-"\n"
-"Gamification Prozess\n"
-"====================\n"
-"\n"
-"Das Gamification (Spielifizierung) - Modul bietet Möglichkeiten, dass sich "
-"Mitarbeiter innerhalb Odoo selbst einschätzen und motivieren können.\n"
-"\n"
-"Die Benutzer können sich selbst Ziele und zahlenmäßige Vorgaben setzten um "
-"diese zu erreichen.\n"
-"Die selbst gesetzten **Ziele** werden dabei mit den Zielen der anderen "
-"Mitarbeitern verglichen, um einen Wettberwerb innerhalb von Teams oder der "
-"Firma zu erreichen.\n"
-"\n"
-"Für besondere Leistungen die nicht in Zahlen ausgedrückt werden können, "
-"besteht die Möglichkeit **Auszeichnungen** zu vergeben. Egal ob es ein "
-"einfaches \"Danke\" ist, oder die Benennung einer aussergewöhnlichen "
-"Leistung.  Das Spilifizierungs-Modul ist eine einfach Möglichkeit um den "
-"Benutzern Dankbarkeit zu zeigen.\n"
-"\n"
-"Beide Varianten, Ziele und Auszeichnungen, sind flexibel einsetzbar und "
-"können für viele Module und Maßnahmen angepasst werden. Ist das Modul "
-"installiert, hilft es den Benutzern auf einfach Weise Ihr Benutzerprofil in "
-"OpenERP zu entdecken und zu konfigurieren.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy
@@ -2228,7 +2111,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_drive
-#, fuzzy
 msgid ""
 "\n"
 "Integrate google document to Odoo record.\n"
@@ -2240,16 +2122,6 @@ msgid ""
 "Configuration > General Settings by clicking on \"Generate Google "
 "Authorization Code\"\n"
 msgstr ""
-"\n"
-"Integriert Google-Document in Odoo\n"
-"==============================\n"
-"\n"
-"Dieses Modul erlaubt die einfache und schnelle Integration von Google-"
-"Documents in jeden Odoo-Datensatz durch die Verwendung von OAuth 2.0 für "
-"installierte Anwendungen.\n"
-"Sie können die Google-Authentifizierung unter Einstellungen -> Konfiguration "
-"-> Allgemeine Einstellungen durch klicken auf \"Google Authorisations-Code "
-"generieren\".\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -2561,7 +2433,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock
-#, fuzzy
 msgid ""
 "\n"
 "Manage multi-warehouses, multi- and structured stock locations\n"
@@ -2593,38 +2464,6 @@ msgid ""
 "* Moves Analysis\n"
 "    "
 msgstr ""
-"\n"
-"Verwalten Sie mehrere Lager, mehrere und strukturierte Lagerplätze\n"
-"================================================================\n"
-"\n"
-"Das Lager- und Bestandsmanagement basiert auf einer hierarchischen "
-"Lagerstruktur, von Lagern bis zu Lagerplätzen.  Die\n"
-"doppelten Buchungen ermöglicht es Ihnen, sowohl Kunden- und "
-"Lieferantenlager, als auch die Bestände der Fertigprodukte zu verwalten. \n"
-"\n"
-"Odoo bietet die Möglichkeit, Losgrößen- und Seriennummern zu verwalten, um "
-"die vollständige Rückverfolgung zu gewährleisten, die für Industriebetriebe "
-"und andere Branchen zwingend erforderlich ist. \n"
-"\n"
-"Wesentliche Funktionen\n"
-"---------------------------------------\n"
-"* Historie und Planung von Lieferungen\n"
-"* Bestandsbewertung (Standard oder durchschnittlicher Preis,...) \n"
-"* Nachvollziehbarkeit von Inventurdifferenzen\n"
-"* Automatische Wiederbeschaffung\n"
-"* Unterstützung für Barcodes\n"
-"* Schnelle Erkennung von Fehlern durch das System der doppelten Buchführung\n"
-"* Rückverfolgbarkeit (Upstream/ Downstream, Seriennummern, ...) \n"
-"\n"
-"Das Berichtswesen für die Lagerverwaltung beinhaltet:\n"
-"------------------------------------------------------------------------------------------\n"
-"* Eingehende Produkte (Grafik)\n"
-"* Ausgehende Produkte (Grafik)\n"
-"* Beschaffungsfehler\n"
-"* Bestandsauswertung\n"
-"* Letzte Inventuren\n"
-"* Anzeige der Lagerbuchungen\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale
@@ -2880,7 +2719,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic
-#, fuzzy
 msgid ""
 "\n"
 "Module for defining analytic accounting object.\n"
@@ -2892,17 +2730,6 @@ msgid ""
 "that have no counterpart in the general financial accounts.\n"
 "    "
 msgstr ""
-"\n"
-"Modul zur Bereitstellung der analytischen Konten.\n"
-" ===============================================\n"
-"\n"
-"In OpenERP werden analytische Konten mit Konten des Hauptbuches verknüpft\n"
-"jedoch komplett unabhängig verarbeitet. Daher können Sie diverse "
-"analytische\n"
-"Auswertungen und Prozesse anlegen ohne das diese Einfluss auf Ihre "
-"Finanzkonten\n"
-"haben.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_resource
@@ -2930,7 +2757,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_warning
-#, fuzzy
 msgid ""
 "\n"
 "Module to trigger warnings in Odoo objects.\n"
@@ -2941,14 +2767,6 @@ msgid ""
 "picking and invoice. The message is triggered by the form's onchange event.\n"
 "    "
 msgstr ""
-"\n"
-"Modul zum Auslösen von Warnungen in OpenERP-Objekten.\n"
-"==================================================\n"
-"\n"
-"Warn-Hinweise können für Objekte, wie Verkaufsaufträge, Bestellungen,\n"
-"Kommissionierungen und Rechnungen ausgelöst werden. Die Mitteilung \n"
-"wird ausgelöst durch das Onchange-Ereignis des jeweiligen Formulars.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_expense
@@ -2972,7 +2790,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nz
-#, fuzzy
 msgid ""
 "\n"
 "New Zealand Accounting Module\n"
@@ -2985,20 +2802,9 @@ msgid ""
 "    - sets up New Zealand taxes.\n"
 "    "
 msgstr ""
-"\n"
-"Buchhaltung für Australien\n"
-"============================\n"
-"\n"
-"Kontenplan und Lokalisierung für Australien\n"
-"\n"
-"Ebenso:\n"
-"    - Aktivierung regionaler Währungen\n"
-"    - Setup der Umsatzsteuern in Australien.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import
-#, fuzzy
 msgid ""
 "\n"
 "New extensible file import for Odoo\n"
@@ -3021,31 +2827,6 @@ msgid ""
 "* In a module, so that administrators and users of Odoo who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
 msgstr ""
-"\n"
-"Neuer erweiterter Dateiimport für OpenERP\n"
-"======================================\n"
-"\n"
-"Neuimplementierung der OpenERP Dateiimport-Systematik:\n"
-"\n"
-"*Serverseite, das vorherige System zwingt den Großteil der Logik in den\n"
-"  Client, welches den Aufwand (zwischen Clients) dupliziert, macht die\n"
-"  Benutzung des Import Systems viel schwieriger, ohne die Verwendung eines "
-"Client\n"
-"  (direkt RPC oder andere Formen der Automatisierung) und macht es viel "
-"schwerer,\n"
-"  das Wissen über die Import / Export Systeme zu erfassen, als wenn es über\n"
-"  3+ verschiedene Projekte verteilt wird.\n"
-"\n"
-"** In einer erweiterbaren Art und Weise, so dass Anwender und Partner ihre\n"
-"  eigenen Front-Ends erstellen können, um aus anderen Dateiformaten zu "
-"importieren\n"
-"  (z. B. OpenDocument Dateien), welche möglicherweise in ihrem eigenen "
-"Arbeitsablauf einfacher\n"
-"  zu handhaben sind oder aus ihren Daten Produktionsquellen.\n"
-"\n"
-"* In einer Anwendung, sodass Administratoren und Benutzer von OpenERP, die "
-"keinen Online \n"
-"Import brauchen oder vermeiden wollen, für Benutzer verfügbar zu sein.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa
@@ -3060,7 +2841,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_blog
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Blog\n"
@@ -3068,17 +2848,11 @@ msgid ""
 "\n"
 "        "
 msgstr ""
-"\n"
-"Odoo Blog\n"
-"============\n"
-"\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm
 #: model:ir.module.module,description:base.module_website_hr_recruitment
 #: model:ir.module.module,description:base.module_website_issue
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Contact Form\n"
@@ -3086,28 +2860,18 @@ msgid ""
 "\n"
 "        "
 msgstr ""
-"\n"
-"Odoo Kontakt-Formular\n"
-"===================\n"
-"\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_customer
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Customer References\n"
 "===========================\n"
 msgstr ""
-"\n"
-"Odoo Kunden-Referenzen\n"
-"===========================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale
 #: model:ir.module.module,description:base.module_website_sale_options
-#, fuzzy
 msgid ""
 "\n"
 "Odoo E-Commerce\n"
@@ -3115,11 +2879,6 @@ msgid ""
 "\n"
 "        "
 msgstr ""
-"\n"
-"Odoo E-Commerce\n"
-"==================\n"
-"\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_im_odoo_support
@@ -3145,7 +2904,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mail_channel
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Mail Group : Mailing List Archives\n"
@@ -3153,15 +2911,9 @@ msgid ""
 "\n"
 "        "
 msgstr ""
-"\n"
-"Odoo Mailing-Gruppen: Mailing-Listen Archive\n"
-"==========================================\n"
-"\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_quote
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Sale Quote Roller\n"
@@ -3169,24 +2921,15 @@ msgid ""
 "\n"
 "        "
 msgstr ""
-"\n"
-"Odoo Verkaufsangebots-Roller\n"
-"============================\n"
-"\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_calendar
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Web Calendar view.\n"
 "==========================\n"
 "\n"
 msgstr ""
-"\n"
-"OpenERP Webkalender-Ansicht\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_editor
@@ -3203,7 +2946,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_web
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Web core module.\n"
@@ -3212,43 +2954,27 @@ msgid ""
 "This module provides the core of the Odoo Web Client.\n"
 "        "
 msgstr ""
-"\n"
-"OpenERP Web-Anwendung\n"
-"======================\n"
-"\n"
-"Dieses Anwendung bietet den OpenERP Web Client.\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Web kanban view.\n"
 "========================\n"
 "\n"
 msgstr ""
-"\n"
-"OpenERP Web Kanban Ansicht\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_tip
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Web tips.\n"
 "========================\n"
 "\n"
 msgstr ""
-"\n"
-"Odoo Web-Tips.\n"
-"========================\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Website CMS\n"
@@ -3256,15 +2982,9 @@ msgid ""
 "\n"
 "        "
 msgstr ""
-"\n"
-"Odoo Webseiten-CMS\n"
-"======================\n"
-"\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_google_map
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Website Google Map\n"
@@ -3272,15 +2992,9 @@ msgid ""
 "\n"
 "        "
 msgstr ""
-"\n"
-"Odoo Google Map für die Webseite\n"
-"================================\n"
-"\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_livechat
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Website LiveChat\n"
@@ -3291,16 +3005,6 @@ msgid ""
 "display your channel and its ratings on the website.\n"
 "        "
 msgstr ""
-"\n"
-"Odoo LiveChat auf der Webseite\n"
-"========================\n"
-"Für eine mit dem Odoo CMS gestaltete Webseite kann ein Chat Button "
-"eingeblendet werden, um Ihren Besuchern eine direkte Kommunikation via Chat "
-"zu ermöglichen.\n"
-"Dies beinhaltet auch das im Chat enthaltene Feedback Tool und die "
-"Möglichkeit zur Anzeige Ihrer öffentlichen Kanäle mit Bewertungen auf der "
-"Webseite.\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_settings_dashboard
@@ -3327,17 +3031,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_tip
-#, fuzzy
 msgid ""
 "\n"
 "Odoo link module for web tips.\n"
 "=================================\n"
 "\n"
 msgstr ""
-"\n"
-"Verbindungsmodul für Odoo Web-Tips.\n"
-"=====================================\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track
@@ -3469,17 +3168,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_geolocalize
-#, fuzzy
 msgid ""
 "\n"
 "Partners Geolocation\n"
 "========================\n"
 "    "
 msgstr ""
-"\n"
-"Partner Geolokalisierung\n"
-"========================\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe
@@ -3719,7 +3413,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_fetchmail
-#, fuzzy
 msgid ""
 "\n"
 "Retrieve incoming email on POP/IMAP servers.\n"
@@ -3758,43 +3451,6 @@ msgid ""
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 "    "
 msgstr ""
-"\n"
-"Abrufen eingehender E-Mails auf POP / IMAP-Servern.\n"
-"============================================\n"
-"\n"
-"Geben Sie die Werte Ihres POP / IMAP-Kontos / Ihrer Konten ein und alle "
-"eingehenden E-Mails auf diesen Konten werden automatisch in Ihr OpenERP "
-"System heruntergeladen. Alle\n"
-"POP3/IMAP-Kompatible Servern werden unterstützt, auch diejenigen, die eine\n"
-"verschlüsseltes SSL / TLS-Verbindung erfordern.\n"
-"\n"
-"Dies kann verwendet werden, um auf einfache Weise E-Mail-basierende "
-"Arbeitsabläufe für viele E-Mail-fähigen OpenERP Dokumente zu erstellen, wie "
-"zum Beispiel:  \n"
-"----------------------------------------------------------------------------------------------------------\n"
-"    * CRM Interessenten / Chancen\n"
-"    * CRM Anfragen\n"
-"    * Projekt Themen\n"
-"    * Projektaufgaben\n"
-"    * Personalwesen Neueinstellungen (Bewerber)\n"
-"\n"
-"Installieren Sie einfach die jeweilige Anwendung und Sie können jede dieser "
-"Dokumenttypen\n"
-"(Interessenten, Projektprobleme) Ihren eingehenden E-Mail-Konten zuweisen. "
-"Neue E-Mails erzeugen\n"
-"automatisch neue Dokumente des gewählten Typs, sodass es ein Kinderspiel "
-"ist, eine Integration in\n"
-"einer Mailbox in OpenERP zu erstellen. Sogar besser: Noch besser: diese "
-"Dokumente handeln direkt als\n"
-"Mini-Konversationen synchornisiert durch E-Mails. Sie können innerhalb von "
-"OpenERP antworten und die\n"
-"Antwort wird automatisch gesammlt, wenn sie zurückkommt und an das gleiche "
-"*Gespräch* \n"
-"Dokument angehängt. \n"
-"\n"
-"Für weitere spezifische Bedürfnisse können Sie auch individuell definierte "
-"Maßnahmen zuweisen, die für jede eingehende Mail ausgelöst wird.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_digital
@@ -4061,7 +3717,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm
-#, fuzzy
 msgid ""
 "\n"
 "The generic Odoo Customer Relationship Management\n"
@@ -4092,46 +3747,14 @@ msgid ""
 "* Planned Revenue by Stage and User (graph)\n"
 "* Opportunities by Stage (graph)\n"
 msgstr ""
-"\n"
-"Die allgemeine Kundenbeziehungsverwaltung\n"
-"===============================================\n"
-"\n"
-"Diese Anwendung ermöglicht einer Personengruppe auf intelligente und "
-"effiziente Weise Leads, Chancen, Meetings und Aktivitäten zu verwalten.\n"
-"\n"
-"Sie verwaltet die Hauptaufgaben, wie Kommunikation, Erkennung, "
-"Priorisierung, Zuweisung, Auflösung und Mitteilung.\n"
-"\n"
-"Odoo stellt dabei sicher, dass alle Fälle durch Mitarbeiter, Kunden und "
-"Lieferanten erfolgreich nachvollzogen werden können. Es können automatisch "
-"Erinnerungen versandt werden, bestimmte Vorgänge und viele andere Handlungen "
-"im Sinne Ihrer Unternehmensprozesse ausgelöst werden.\n"
-"\n"
-"Das Beste an diesem System ist, dass Nutzer hierzu nicht besonderes tun "
-"müssen. Das CRM-Modul enthält eine Email-Schnittstelle für den Abgleich von "
-"Emails mit Odoo. So müssen Nutzer einfach eine Email an die erforderliche "
-"Stelle senden.\n"
-"\n"
-"Odoo übernimmt sogar die Danksagung für eingehende Nachrichten, leitet die "
-"Nachrichten an die zuständigen Mitarbeiter weiter und stellt bei "
-"nachfolgender Kommunikation die Zusammenhänge sicher.\n"
-"\n"
-"\n"
-"Die Dashboard des CRM enthält:\n"
-"-----------------------------------------\n"
-"* Planumsätze nach Stufe und Nutzer (grafisch)\n"
-"* Chancen nach Stufe (grafisch)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
-#, fuzzy
 msgid ""
 "\n"
 "The kernel of Odoo, needed for all installation.\n"
 "===================================================\n"
 msgstr ""
-"\n"
-"Der Kern von OpenERP, der für alle weiteren Installationen benötigt wird.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_account
@@ -4146,30 +3769,20 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_spreadsheet
-#, fuzzy
 msgid ""
 "\n"
 "The module adds the possibility to display data from Odoo in Google "
 "Spreadsheets in real time.\n"
 "=================================================================================================\n"
 msgstr ""
-"\n"
-"Dieses Modul fügt die Möglichkeit, Daten aus Odoo  in Google Spreadsheets in "
-"Echtzeit anzuzeigen, hinzu.\n"
-"=================================================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_calendar
-#, fuzzy
 msgid ""
 "\n"
 "The module adds the possibility to synchronize Google Calendar with Odoo\n"
 "===========================================================================\n"
 msgstr ""
-"\n"
-"Dieses Modul verfügt die Möglichkeit, Odoo mit dem Google-Kalender zu "
-"synchronisieren, hinzu.\n"
-"===============================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_cache
@@ -4216,7 +3829,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_product
-#, fuzzy
 msgid ""
 "\n"
 "This is the base module for managing products and pricelists in Odoo.\n"
@@ -4239,33 +3851,9 @@ msgid ""
 "Print product labels with barcode.\n"
 "    "
 msgstr ""
-"\n"
-"Dies ist das Grundmodul zur Verwaltung von Produkten und Preislisten in "
-"Odoo.\n"
-"==================================================================================\n"
-"\n"
-"Produkte können Varianten und unterschiedliche Preismodelle haben, "
-"Information zum Verkäufer tragen, Bestandsbezogen oder auf Auftrag beschafft "
-"werden, verschiedene Masseinheiten, Verpackungen und sonstige Eigenschaften "
-"haben.\n"
-"\n"
-"Preislistenunterstützung:\n"
-"--------------------------\n"
-"    * Mehrstufige Rabatte (je Produkt, Warengruppe, Menge)\n"
-"    * Preisermittelung auf Basis unterschiedlicher Kriterien:\n"
-"        * Andere Preisliste\n"
-"        * Einstandspreis\n"
-"        * Listen-Verkaufspreis\n"
-"        * Lieferantenpreis\n"
-"\n"
-"Preislistenvorwahl je Produkt und/oder Partner.\n"
-"\n"
-"Druck von Produktetiketten mit Barcode.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be
-#, fuzzy
 msgid ""
 "\n"
 "This is the base module to manage the accounting chart for Belgium in Odoo.\n"
@@ -4308,47 +3896,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"This is the base module to manage the accounting chart for Belgium in "
-"OpenERP.\n"
-"==============================================================================\n"
-"\n"
-"After installing this module, the Configuration wizard for accounting is "
-"launched.\n"
-"    * We have the account templates which can be helpful to generate Charts "
-"of Accounts.\n"
-"    * On that particular wizard, you will be asked to pass the name of the "
-"company,\n"
-"      the chart template to follow, the no. of digits to generate, the code "
-"for your\n"
-"      account and bank account, currency to create journals.\n"
-"\n"
-"Thus, the pure copy of Chart Template is generated.\n"
-"\n"
-"Wizards provided by this module:\n"
-"--------------------------------\n"
-"    * Partner VAT Intra: Enlist the partners with their related VAT and "
-"invoiced\n"
-"      amounts. Prepares an XML file format.\n"
-"      \n"
-"        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
-"Statements/Partner VAT Intra\n"
-"    * Periodical VAT Declaration: Prepares an XML file for Vat Declaration "
-"of\n"
-"      the Main company of the User currently Logged in.\n"
-"      \n"
-"        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
-"Statements/Periodical VAT Declaration\n"
-"    * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for "
-"Vat\n"
-"      Declaration of the Main company of the User currently Logged in Based "
-"on\n"
-"      Fiscal year.\n"
-"      \n"
-"        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
-"Statements/Annual Listing Of VAT-Subjected Customers\n"
-"\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -4366,7 +3913,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
-#, fuzzy
 msgid ""
 "\n"
 "This is the base module to manage the accounting chart for Ecuador in Odoo.\n"
@@ -4375,12 +3921,6 @@ msgid ""
 "Accounting chart and localization for Ecuador.\n"
 "    "
 msgstr ""
-"\n"
-"Dies ist das Haupt-Modul der Buchführung für Ecuador mit OpenERP.\n"
-"============================================================\n"
-"\n"
-"Kontenplan und Landesanpassungen für Ecuador.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -4512,7 +4052,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
-#, fuzzy
 msgid ""
 "\n"
 "This is the latest UK Odoo localisation necessary to run Odoo accounting for "
@@ -4523,14 +4062,6 @@ msgid ""
 "    - InfoLogic UK counties listing\n"
 "    - a few other adaptations"
 msgstr ""
-"\n"
-"This is the latest UK OpenERP localisation necessary to run OpenERP "
-"accounting for UK SME's with:\n"
-"=================================================================================================\n"
-"    - a CT600-ready chart of accounts\n"
-"    - VAT100-ready tax structure\n"
-"    - InfoLogic UK counties listing\n"
-"    - a few other adaptations"
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement
@@ -4597,7 +4128,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
-#, fuzzy
 msgid ""
 "\n"
 "This is the module to manage the Accounting Chart, VAT structure, Fiscal "
@@ -4608,13 +4138,6 @@ msgid ""
 "Romanian accounting chart and localization.\n"
 "    "
 msgstr ""
-"\n"
-"Dieses Modul enthält den rumänischen Kontenrahmen, Umsatzsteuer und "
-"Registrierungs-Nummer für Odoo\n"
-"====================================================================================\n"
-"\n"
-"Rumänischer Kontenrahmen und Loklaisierung.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca
@@ -4676,7 +4199,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
-#, fuzzy
 msgid ""
 "\n"
 "This is the module to manage the accounting chart for France in Odoo.\n"
@@ -4711,38 +4233,6 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
-"\n"
-"This is the module to manage the accounting chart for France in OpenERP.\n"
-"========================================================================\n"
-"\n"
-"This module applies to companies based in France mainland. It doesn't apply "
-"to\n"
-"companies based in the DOM-TOMs (Guadeloupe, Martinique, Guyane, Réunion, "
-"Mayotte).\n"
-"\n"
-"This localisation module creates the VAT taxes of type 'tax included' for "
-"purchases\n"
-"(it is notably required when you use the module 'hr_expense'). Beware that "
-"these\n"
-"'tax included' VAT taxes are not managed by the fiscal positions provided by "
-"this\n"
-"module (because it is complex to manage both 'tax excluded' and 'tax "
-"included'\n"
-"scenarios in fiscal positions).\n"
-"\n"
-"This localisation module doesn't properly handle the scenario when a France-"
-"mainland\n"
-"company sells services to a company based in the DOMs. We could manage it in "
-"the\n"
-"fiscal positions, but it would require to differentiate between 'product' "
-"VAT taxes\n"
-"and 'service' VAT taxes. We consider that it is too 'heavy' to have this by "
-"default\n"
-"in l10n_fr; companies that sell services to DOM-based companies should "
-"update the\n"
-"configuration of their taxes and fiscal positions manually.\n"
-"\n"
-"**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl
@@ -4768,7 +4258,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
-#, fuzzy
 msgid ""
 "\n"
 "This is the module to manage the accounting chart for Vietnam in Odoo.\n"
@@ -4779,16 +4268,9 @@ msgid ""
 "\n"
 "**Credits:** General Solutions.\n"
 msgstr ""
-"\n"
-"Dieses Modul enthält den griechischen Kontenrahmen für OpenERP.\n"
-"===========================================\n"
-"\n"
-"Greek accounting chart and localization.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_partner_assign
-#, fuzzy
 msgid ""
 "\n"
 "This is the module used by Odoo SA to redirect customers to its partners, "
@@ -4804,19 +4286,6 @@ msgid ""
 "was assigned to the partner.\n"
 "    "
 msgstr ""
-"\n"
-"Dies ist das Modul, welches von der Odoo S.A. verwendet wird, um Kunden "
-"basierend auf Ihrer Geolokalisierung zu den Partnern umzuleiten\n"
-"======================================================================================================\n"
-"\n"
-"Dieses Modul dient der Geolokalisierung von Interessenten, Chancen und "
-"Partnern auf Grundlage Ihrer Adresse.\n"
-"\n"
-"Wenn die Geo-Koordinaten des Interessenten oder der Chance bekannt sind, "
-"kann diese automatisch\n"
-"einem lokalen Partner, basierend auf Entfernung und einer definierten "
-"Gewichtung, zugewiesen werden.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating_project
@@ -4892,7 +4361,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_webkit
-#, fuzzy
 msgid ""
 "\n"
 "This module adds a new Report Engine based on WebKit library (wkhtmltopdf) "
@@ -4949,64 +4417,6 @@ msgid ""
 "    * Zip return for separated PDF\n"
 "    * Web client WYSIWYG\n"
 msgstr ""
-"\n"
-"Dieses Modul fügt einen neue Berichtsanwendung basierend auf WebKit-"
-"Bibliothek (wkhtmltopdf) um Berichte, die in HTML + CSS gestaltet sind zu "
-"unterstützen.\n"
-"=====================================================================================================================\n"
-"\n"
-"\n"
-"Die Anwendungsstruktur und ein Code werden von der report_openoffice "
-"Anwendung inspiriert.\n"
-"\n"
-"Die Anwendung ermöglicht:\n"
-"------------------\n"
-"- HTML Berichtsdefinition\n"
-"- Multi-Kopfzeile Unterstützung\n"
-"- Multi-Logo\n"
-"- Multi betriebliche Unterstützung\n"
-"- HTML-und CSS-3-Unterstützung (in der Grenze des tatsächlichen WebKit-"
-"Version)\n"
-"- JavaScript-Unterstützung\n"
-"- Raw HTML-Fehlerbeseitiger\n"
-"- Buch Druckfunktionen\n"
-"- Seitenränder festlegen\n"
-"- Papierformat festlegen\n"
-"\n"
-"Mehrere Kopfzeilen und Logos können pro Unternehmen festgelegt werden. CSS "
-"Stil, Kopf-und\n"
-"Fußzeile werden pro Unternehmen definiert.\n"
-"\n"
-"Ein Beispiel für eine Bericht finden Sie auch in der webkit_report_sample "
-"Anwendung und in diesem Video:\n"
-"http://files.me.com/nbessi/06n92k.mov\n"
-"\n"
-"Voraussetzungen und Installation:\n"
-"----------------------------------------------\n"
-"Dieses Modul erfordert die ``wkhtmltopdf`` Bibliothek, um HTML-Dokumente in\n"
-"PDF umzuwandeln. Version 0.9.9 oder höher ist erforderlich und können Sie "
-"für Linux,\n"
-" Mac OS X (i386) und Windows (32 Bit) unter http://code.google.com/p/"
-"wkhtmltopdf/ finden.\n"
-"\n"
-"Nach der Installation der Bibliothek auf dem OpenERP Server-Rechner, müssen "
-"Sie den \n"
-"Pfad zur ausführbaren Datei ``wkhtmltopdf`` für jedes Unternehmen "
-"herstellen.\n"
-"\n"
-"Wenn Sie ein Problem mit fehlender Kopf- und Fußzeile bei Linux haben, "
-"achten Sie darauf,\n"
-"dass Sie bei der Installation einer \"ruhende\" Version der Bibliothek "
-"installiert haben. Es ist bekannt, dass\n"
-"der Standardwert ``wkhtmltopdf`` auf Ubuntu dieses Problem habt.\n"
-"\n"
-"\n"
-"Was zu tun ist:\n"
-"-----\n"
-"* Unterstützung von JavaScript Aktivierung deaktivieren\n"
-"* Sortieren und buchen Sie Format-Unterstützung\n"
-"* Zip zurück zur getrennten PDF\n"
-"* Web-Client WYSIWYG\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_crm
@@ -5406,7 +4816,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_note
-#, fuzzy
 msgid ""
 "\n"
 "This module allows users to create their own notes inside Odoo\n"
@@ -5422,22 +4831,6 @@ msgid ""
 "\n"
 "Notes can be found in the 'Home' menu.\n"
 msgstr ""
-"\n"
-"Dieses Modul erlaubt es Benutzern, ihre eigenen Notizen innerhalb von "
-"OpenERP zu erstellen\n"
-"===========================================================================\n"
-"\n"
-"Verwenden Sie Notizen, um Sitzungsprotokolle zu schreiben, Ideen zu "
-"organisieren, persönliche Aufgabenlisten\n"
-"zu organisieren, etc. Jeder Benutzer verwaltet seine eigenen persönlichen "
-"Notizen. Notizen stehen nur\n"
-"dem Autor zur Verfügung, können jedoch auch an andere Benutzer freigegeben "
-"werden, sodass mehrere\n"
-"Personen an der gleichen Notiz in Echtzeit arbeiten können.  Es ist sehr "
-"effizient, um Sitzungsprotokolle\n"
-"zu teilen.\n"
-"\n"
-"Notizen finden Sie im  \"Home\"-Menü.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_anonymization
@@ -5611,7 +5004,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet
-#, fuzzy
 msgid ""
 "\n"
 "This module implements a timesheet system.\n"
@@ -5627,22 +5019,6 @@ msgid ""
 "up a management by affair.\n"
 "    "
 msgstr ""
-"\n"
-"Dieses Modul ermöglicht ein Stundenzettel System\n"
-"========================================\n"
-"\n"
-"Jeder Mitarbeiter kann seine aufgewendete Zeit für verschiedene Projekte "
-"kodieren und verfolgen.\n"
-"Ein Projekt wird automatisch zur  Kostenstelle. Die Zeit, die jemand an "
-"diesem Projekt verbracht hat,\n"
-"verursacht dementsprechend Kosten auf dieser Projektkostenstelle. \n"
-"\n"
-"Das Modul bietet außerdem Auswertungen zur Rückverfolgung der "
-"Mitarbeiterarbeitszeit in Projekten.\n"
-"Es ist dadurch vollständig in die OpenERP Kostenrechnung integriert und "
-"ermöglicht dem Management \n"
-"ein effizientes Projektcontrolling.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_syscohada
@@ -5894,7 +5270,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_note_pad
-#, fuzzy
 msgid ""
 "\n"
 "This module update memos inside Odoo for using an external pad\n"
@@ -5904,14 +5279,6 @@ msgid ""
 "invite.\n"
 "\n"
 msgstr ""
-"\n"
-"Dieses Modul aktualisiert Notizen in OpenERP für die Verwendung einer "
-"externen Notiz Anwendung (Pad)\n"
-"====================================================================================\n"
-"\n"
-"Aktualisieren Sie Ihre Textnotizen in Echtzeit mit den Benutzern, die Sie "
-"hierzu einladen.\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement_jit
@@ -5952,14 +5319,10 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban_gauge
-#, fuzzy
 msgid ""
 "\n"
 "This widget allows to display gauges using d3 library.\n"
 msgstr ""
-"\n"
-"Dieses Widget erlaubt die Anzeige von Grafiken mit der JugsGage-Bibliothek.\n"
-"http://justgage.com\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_issue
@@ -6058,7 +5421,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr
-#, fuzzy
 msgid ""
 "\n"
 "Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.\n"
@@ -6070,15 +5432,6 @@ msgid ""
 "      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
 "    "
 msgstr ""
-"\n"
-"Türkiye için Tek düzen hesap planı şablonu OpenERP Modülü.\n"
-"==========================================================\n"
-"\n"
-"Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
-"    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka "
-"hesap\n"
-"      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae
@@ -6390,39 +5743,33 @@ msgstr "%A - Wochentag (ausgeschrieben)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%B - Full month name.\""
-msgstr "%B - Kompletter Monatsname"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%H - Hour (24-hour clock) [00,23].\""
-msgstr "%H - Stunde (24-Stunden Format) [00,23]."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%I - Hour (12-hour clock) [01,12].\""
-msgstr "%I - Stunde (12-Stunden Format) [01,12]."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%M - Minute [00,59].\""
-msgstr "%M - Minute [00,59]."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%S - Seconds [00,61].\""
-msgstr "%S - Sekunden [00,61]."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%Y - Year with century.\""
-msgstr "%Y - Jahr (vierstellig)."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -6436,27 +5783,23 @@ msgstr "%b - Abkürzung Monatsname."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%d - Day of the month [01,31].\""
-msgstr "%d - Tag des Monats [01,31]."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%j - Day of the year [001,366].\""
-msgstr "%j - Tag des Jahres [001,366]."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%m - Month number [01,12].\""
-msgstr "%m - Monatsnummer [01,12]."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%p - Equivalent of either AM or PM.\""
-msgstr "%p - Equivalent zu AM oder PM."
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:18 code:addons/base/res/res_partner.py:287
@@ -6478,15 +5821,13 @@ msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%w - Weekday number [0(Sunday),6].\""
-msgstr "%w - Wochentagnummer [0(Sunday),6]."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%y - Year without century [00,99].\""
-msgstr "%y - Jahr (zweistellig) [00,99]."
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:1083
@@ -6536,7 +5877,6 @@ msgstr "(Schriftarten erneut laden)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_repair
-#, fuzzy
 msgid ""
 ",\n"
 "The aim is to have a complete module to manage all products repairs.\n"
@@ -6551,20 +5891,6 @@ msgid ""
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
 msgstr ""
-",\n"
-"    'Zusammenfassung': 'Reparatur defekter oder beschädigter Geräte',\n"
-"Ziel ist es ein Modul für die vollständige Verwaltung aller "
-"Produktreparaturen zu haben.\n"
-"==============================================================================================\n"
-"\n"
-"Die folgenden Aufgaben sollen durch das Modul abgedeckt werden:\n"
-"--------------------------------------------------------------------------\n"
-"    * Hinzufügen/Entfernen von in Reparatur befindlichen Produkten\n"
-"    * Einfluss auf den Lagerbestand\n"
-"    * Abrechnung (Produkte und/oder andere Leistungen)\n"
-"    * Gewährleistungen\n"
-"    * Reparaturangebotsbericht\n"
-"    * Hinweise für Techniker und den Endkunden\n"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -6647,9 +5973,8 @@ msgstr "- Dieses Modul hat keine Abhängigkeit zu anderen Modulen."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "1. %b, %B         ==&gt; Dec, December"
-msgstr "1. %b, %B ==> Dez, Dezember"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -6662,9 +5987,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "2. %a ,%A         ==&gt; Fri, Friday"
-msgstr "2.  %a ,%A         ==> Fr, Freitag"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -6675,9 +5999,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "3. %y, %Y         ==&gt; 08, 2008"
-msgstr "3. %y, %Y ==> 08, 2008"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -6690,39 +6013,33 @@ msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "4. %d, %m         ==&gt; 05, 12"
-msgstr "4. %d, %m ==> 05, 12"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "5. %H:%M:%S      ==&gt; 18:25:20"
-msgstr "5. %H:%M:%S ==> 18:25:20"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "6. %I:%M:%S %p  ==&gt; 06:25:20 PM"
-msgstr "6. %I:%M:%S %p ==> 06:25:20 PM"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "7. %j              ==&gt; 340"
-msgstr "7. %j ==> 340"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "8. %S              ==&gt; 20"
-msgstr "8. %S ==> 20"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "9. %w              ==&gt; 5 ( Friday is the 6th day)"
-msgstr "9. %w ==> 5 ( Freitag ist der 6. Tag)"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
@@ -6929,9 +6246,8 @@ msgstr "Ein Modul um die Deinatallationseigenschaften zu testen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_assetsbundle
-#, fuzzy
 msgid "A module to verify the Assets Bundle mechanism."
-msgstr "Ein Modul um die Abhängigkeiten zu verifizieren."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits
@@ -7089,13 +6405,8 @@ msgstr "Buchhaltung Konsistenzprüfungen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_adjustments
-#, fuzzy
 msgid "Accounting Tax Adjustments"
 msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Finanzberichte\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Bilanz & GuV"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_accountant
@@ -7312,7 +6623,6 @@ msgstr "Adressart"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_address_format
-#, fuzzy
 msgid "Address format"
 msgstr "Adressformat"
 
@@ -7844,9 +7154,9 @@ msgstr "Gemeinschaften: Mitglieder"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:52
-#, fuzzy, python-format
+#, python-format
 msgid "At least one language must be active."
-msgstr "Der Code  der Sprache muss eindeutig sein!"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_link_new_record
@@ -7855,9 +7165,8 @@ msgstr "Den neuen Beleg verknüpfen"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_search
-#, fuzzy
 msgid "Attached Document Name"
-msgstr "Dateianhangbezeichnung"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
@@ -8037,7 +7346,7 @@ msgstr "Bankkontoart, abgeleitet aus Kontonummer"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_bank_ids
 msgid "Bank accounts related to this company"
-msgstr ""
+msgstr "Bankkonten dieses Unternehmens"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_bank_form
@@ -8220,9 +7529,8 @@ msgstr "Geburtsdatum"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_blackbox_be
-#, fuzzy
 msgid "Blackbox Hardware Driver"
-msgstr "Hardware-Treiber"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
@@ -8288,6 +7596,11 @@ msgstr "Brückenmodul für Dienstleister und Webseite"
 #: model:res.country,name:base.io
 msgid "British Indian Ocean Territory"
 msgstr "Britisches Territorium im Indischen Ozean"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_6
+msgid "Bronze"
+msgstr "Bronze"
 
 #. module: base
 #: model:res.country,name:base.bn
@@ -8644,13 +7957,10 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_custom_footer
-#, fuzzy
 msgid ""
 "Check this to define the report footer manually. Otherwise it will be filled "
 "in automatically."
 msgstr ""
-"Aktivieren Sie diese Option, um die Fußzeile des Berichts manuell zu "
-"definieren. Sonst wird diese automatisch ausgefüllt."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -8693,9 +8003,8 @@ msgstr "Untergeordnete IDs"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category_child_ids
-#, fuzzy
 msgid "Child Tags"
-msgstr "Untergeordnete Kategorien"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_child_ids
@@ -8969,9 +8278,8 @@ msgstr "Unternehmen"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
-#, fuzzy
 msgid "Companies count"
-msgstr "Unternehmen"
+msgstr "Anzahl der Unternehmen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_company_id
@@ -8991,6 +8299,11 @@ msgstr "Unternehmen"
 #: selection:res.partner,company_type:0
 msgid "Company"
 msgstr "Unternehmen"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_17
+msgid "Company Contact"
+msgstr "Unternehmenskontakt"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_name
@@ -9016,9 +8329,8 @@ msgstr "Unternehmenstyp"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_company_registry
-#, fuzzy
 msgid "Company registry"
-msgstr "Handelsregister"
+msgstr "Unternehmensregister"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_contact_address
@@ -9035,6 +8347,11 @@ msgstr "Vollständige ID"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_complete_name
 msgid "Complete Name"
 msgstr "Vollständiger Name"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_9
+msgid "Components Buyer"
+msgstr "Komponenten-Käufer"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_compute
@@ -9187,6 +8504,11 @@ msgid "Constraints with the same name are unique per module."
 msgstr "Abhängigkeiten mit dem selben Namen sind einmalig je Modul."
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_8
+msgid "Consultancy Services"
+msgstr "Beratungsleistungen"
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_simple_form
 #: selection:res.partner,type:0
 msgid "Contact"
@@ -9214,17 +8536,15 @@ msgstr "Ansprechpartner"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_category_form
-#, fuzzy
 msgid "Contact Tag"
-msgstr "Ansprechpartner"
+msgstr "Kontakt Tag"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_category_form
 #: model:ir.ui.menu,name:base.menu_partner_category_form
 #: model:ir.ui.view,arch_db:base.view_partner_category_list
-#, fuzzy
 msgid "Contact Tags"
-msgstr "Kontakte"
+msgstr "Kontakt Tags"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
@@ -9770,7 +9090,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_custom_footer
-#, fuzzy
 msgid "Custom footer"
 msgstr "Benutzerdefinierte Fußzeile"
 
@@ -9981,9 +9300,8 @@ msgstr "Dezimalzeichen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_decimal_places
-#, fuzzy
 msgid "Decimal places"
-msgstr "Dezimalstellen"
+msgstr "Nachkommastellen"
 
 #. module: base
 #: selection:ir.values,key:0
@@ -10331,6 +9649,11 @@ msgstr ""
 "sicherzustellen, dass Ihre benötigten Länder dauerhaft gewartet werden."
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_13
+msgid "Distributor"
+msgstr "Distributor"
+
+#. module: base
 #: model:res.country,name:base.dj
 msgid "Djibouti"
 msgstr "Dschibuti"
@@ -10342,9 +9665,8 @@ msgstr "Doktor"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_document_management
-#, fuzzy
 msgid "Document Management"
-msgstr "Projektmanagement"
+msgstr "Dokumentenmanagement"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:849 code:addons/base/ir/ir_model.py:852
@@ -10486,7 +9808,7 @@ msgid "El Salvador"
 msgstr "El Salvador"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:590
+#: code:addons/base/ir/ir_ui_view.py:597
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr ""
@@ -10523,6 +9845,7 @@ msgstr "E-Mail Einstellungen"
 #: model:ir.model.fields,field_description:base.field_res_partner_employee
 #: model:ir.model.fields,field_description:base.field_res_users_employee
 #: model:res.groups,name:base.group_user
+#: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employee"
 msgstr "Mitarbeiter"
 
@@ -10594,12 +9917,12 @@ msgstr "Fehler! Sie können keine rekursiven Tags definieren."
 
 #. module: base
 #: code:addons/base/res/res_company.py:353
-#, fuzzy, python-format
+#, python-format
 msgid "Error ! You cannot create recursive companies."
-msgstr "Fehler! Sie können keine rekursiven Unternehmen erzeugen."
+msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:451
+#: code:addons/base/ir/ir_ui_view.py:458
 #, python-format
 msgid ""
 "Error context:\n"
@@ -10831,9 +10154,8 @@ msgstr "Extrarechte"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra_tools
-#, fuzzy
 msgid "Extra Tools"
-msgstr "Extras"
+msgstr "Extra Werkzeuge"
 
 #. module: base
 #: model:res.country,name:base.fk
@@ -10994,7 +10316,7 @@ msgid "Field Type"
 msgstr "Typfeld-Text"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:921
+#: code:addons/base/ir/ir_ui_view.py:928
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr "Das Feld `%(field_name)s` existiert nicht"
@@ -11302,9 +10624,8 @@ msgstr "Französische Buchführung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
-#, fuzzy
 msgid "France - FEC"
-msgstr "Frankreich"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -11490,6 +10811,11 @@ msgstr "Verbindungsmodul, das E-Mail-Verbesserungen für die Webseite hält."
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "Benutzen Sie das Hauptmenü"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_4
+msgid "Gold"
+msgstr "Gold"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_analytics
@@ -11696,9 +11022,8 @@ msgstr "Hardware-Treiber für Barcorde Scanner"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_blackbox_be
-#, fuzzy
 msgid "Hardware Driver for Belgian Fiscal Data Modules"
-msgstr "Hardware-Treiber für Waagen"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
@@ -12074,6 +11399,11 @@ msgid "ISO code"
 msgstr "ISO code"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_7
+msgid "IT Services"
+msgstr "IT-Services"
+
+#. module: base
 #: model:res.country,name:base.is
 msgid "Iceland"
 msgstr "Island"
@@ -12256,27 +11586,19 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_access_active
-#, fuzzy
 msgid ""
 "If you uncheck the active field, it will disable the ACL without deleting it "
 "(if you delete a native ACL, it will be re-created when you reload the "
 "module)."
 msgstr ""
-"Wenn Sie das aktive Feld deaktivieren, wird es die ACL deaktivieren ohne "
-"diese zu löschen (wenn Sie eine systemeigene ACL löschen, wir diese neu "
-"erstellt werden, sobald Sie die Anwendung neu laden)."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule_active
-#, fuzzy
 msgid ""
 "If you uncheck the active field, it will disable the record rule without "
 "deleting it (if you delete a native record rule, it may be re-created when "
 "you reload the module)."
 msgstr ""
-"Wenn Sie das Aktiv-Feld deaktivieren, wird dieser Eintrag deaktiviert ohne "
-"dabei gelöscht zu werden (wenn Sie eine systemeigene Datensatz Regel "
-"löschen, kann diese beim erneuten Laden des Moduls erneut erstellt werden)."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -12635,9 +11957,9 @@ msgstr ""
 
 #. module: base
 #: code:addons/base/res/res_users.py:318
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid groupby"
-msgstr "Ungültiger Typ"
+msgstr ""
 
 #. module: base
 #: sql_constraint:ir.ui.view:0
@@ -12655,7 +11977,7 @@ msgid "Invalid model name in the action definition."
 msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:582
+#: code:addons/base/ir/ir_ui_view.py:589
 #, python-format
 msgid "Invalid position attribute: '%s'"
 msgstr "Ungültiges Positionierungsattribut: '%s'"
@@ -12668,9 +11990,9 @@ msgstr "Ungültiges Prä- oder Suffix für die Folge '%s'"
 
 #. module: base
 #: code:addons/base/res/res_users.py:326
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid search criterion"
-msgstr "Ungültige Ansichtendefinition"
+msgstr ""
 
 #. module: base
 #: code:addons/base/res/ir_property.py:68
@@ -12951,9 +12273,9 @@ msgstr "Sprachpaket"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:223
-#, fuzzy, python-format
+#, python-format
 msgid "Language code cannot be modified."
-msgstr "Das Feld \"Model\" kann auf Modellen nicht bearbeitet werden."
+msgstr ""
 
 #. module: base
 #: sql_constraint:ir.translation:0
@@ -13444,9 +12766,8 @@ msgstr "Login"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_logo_web
-#, fuzzy
 msgid "Logo web"
-msgstr "Logo Web"
+msgstr "Weblogo"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_logging_search_view
@@ -13591,7 +12912,6 @@ msgstr "Bankverbindungen verwalten, die Sie in ihren System verwenden."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_category_form
-#, fuzzy
 msgid ""
 "Manage partner tags to better classify them for tracking and analysis "
 "purposes.\n"
@@ -13599,11 +12919,6 @@ msgid ""
 "have a hierarchical structure: a partner with a category has also the parent "
 "category."
 msgstr ""
-"Verwalten Sie Tags, um diese für Verfolgungs- und Analysezwecke "
-"einzusetzen .\n"
-"Ein Partner kann mehrere Tags haben. Bei Tags, die eine Hierarchie besitzen, "
-"wird automatisch die übergeordnete Ebene hinzugefügt.\n"
-"            "
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_title_contact
@@ -13641,6 +12956,11 @@ msgstr ""
 "Automatisch: Wird gestartet, wenn das System neu konfiguriert wird.\n"
 "Einmalig manuell starten: Nachdem einmalig manuell gestartet wurde, wird es "
 "automatisch auf 'Erledigt' gesetzt."
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_14
+msgid "Manufacturer"
+msgstr "Hersteller"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
@@ -14011,7 +13331,7 @@ msgstr ""
 "res.partner)."
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:695 code:addons/base/ir/ir_ui_view.py:873
+#: code:addons/base/ir/ir_ui_view.py:702 code:addons/base/ir/ir_ui_view.py:880
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr "Konnte Modell nicht finden: %(model)s"
@@ -14317,9 +13637,8 @@ msgstr "Neuseeland"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nz
-#, fuzzy
 msgid "New Zealand - Accounting"
-msgstr "Holländische Buchführung"
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:547
@@ -14421,9 +13740,9 @@ msgstr "Nicht updatefähig"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:361
-#, fuzzy, python-format
+#, python-format
 msgid "Non-relational field %r in dependency %r"
-msgstr "Nicht-relationaler Feldname '%s' im verwandten Feld '%s'"
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:318
@@ -14493,9 +13812,8 @@ msgstr "Anzahl der Anrufe"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_companies_count
-#, fuzzy
 msgid "Number of Companies"
-msgstr "Anzahl der Anrufe"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_update_added
@@ -14566,9 +13884,8 @@ msgstr "Odoo Einstellungsdashboard"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_diagram
-#, fuzzy
 msgid "Odoo Web Diagram"
-msgstr "OpenERP Web Diagramm"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_customer_form
@@ -14601,6 +13918,11 @@ msgid ""
 msgstr ""
 "Odoo fügt automatisch '0' vor 'Nächste Nummer' hinzu, um die erforderliche "
 "Länge zu haben."
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_12
+msgid "Office Supplies"
+msgstr "Bürobedarf"
 
 #. module: base
 #: model:res.groups,name:base.group_hr_user
@@ -14989,9 +14311,8 @@ msgstr "Übergeordnete Applikation"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category_parent_id
-#, fuzzy
 msgid "Parent Category"
-msgstr "Übergeordnete Kategorie"
+msgstr "Oberkategorie"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_parent_id
@@ -15029,6 +14350,7 @@ msgstr "Parserklasse"
 #: model:ir.model,name:base.model_res_partner
 #: model:ir.model.fields,field_description:base.field_res_company_partner_id
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
+#: model:res.partner.category,name:base.res_partner_category_0
 #: model:res.request.link,name:base.req_link_partner
 msgid "Partner"
 msgstr "Partner"
@@ -15072,9 +14394,8 @@ msgstr "Partner"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_geolocalize
-#, fuzzy
 msgid "Partners Geolocation"
-msgstr "Geo-Ortung für Partner"
+msgstr "Partner Geolokalisierung"
 
 #. module: base
 #: code:addons/base/res/res_partner.py:703
@@ -15293,9 +14614,8 @@ msgstr "Point of Sale"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_data_drinks
-#, fuzzy
 msgid "Point of Sale Common Data Drinks"
-msgstr "Point-of-Sale Rabatte"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -15455,9 +14775,8 @@ msgstr "Produkterweiterung zur Verfolgung von Verkäufen / Einkäufen."
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity
 #: model:ir.module.module,shortdesc:base.module_note
-#, fuzzy
 msgid "Productivity"
-msgstr "Aktivität"
+msgstr "Produktivität"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product
@@ -15519,6 +14838,11 @@ msgstr ""
 #: model:ir.module.module,description:base.module_website_theme_install
 msgid "Propose to install a theme on website installation"
 msgstr ""
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_2
+msgid "Prospect"
+msgstr "Interessent"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_write_expression
@@ -16065,6 +15389,11 @@ msgid "Restrict to lists"
 msgstr "Auf Listen beschränken"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_16
+msgid "Retailer"
+msgstr "Wiederverkäufer"
+
+#. module: base
 #: model:res.country,name:base.re
 msgid "Reunion (French)"
 msgstr "Reunion (franz.)"
@@ -16081,9 +15410,8 @@ msgstr "Rechts-nach-Links"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_rml_header
-#, fuzzy
 msgid "Rml header"
-msgstr "RML Header"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ro
@@ -16586,6 +15914,11 @@ msgid "Server Actions"
 msgstr "Server-Aktionen"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_11
+msgid "Services"
+msgstr "Dienstleistungen"
+
+#. module: base
 #: selection:ir.model.fields,on_delete:0
 msgid "Set NULL"
 msgstr "Set NULL"
@@ -16694,6 +16027,11 @@ msgstr "Signatur"
 #: model:ir.module.module,shortdesc:base.module_auth_signup
 msgid "Signup"
 msgstr "Registrieren"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_5
+msgid "Silver"
+msgstr "Silber"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_discount
@@ -17017,7 +16355,7 @@ msgstr "Haftnotizen, Zusammenarbeit, Memos"
 #. module: base
 #: model:ir.module.category,name:base.module_category_stock
 msgid "Stock"
-msgstr ""
+msgstr "Lager"
 
 #. module: base
 #: selection:workflow.activity,kind:0
@@ -17027,7 +16365,7 @@ msgstr "Alle stoppen"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_store
 msgid "Stored"
-msgstr ""
+msgstr "Gespeichert"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_store_fname
@@ -17326,6 +16664,11 @@ msgstr ""
 "unterliegt. Wird von diversen steuerrechtlich relevanten Berichten benötigt."
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_tax_exigible
+msgid "Tax exigible"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_hr
 msgid "Team Page"
 msgstr "Teamseite"
@@ -17359,9 +16702,9 @@ msgstr "Technische Einstellungen"
 
 #. module: base
 #: code:addons/base/ir/ir_translation.py:759
-#, fuzzy, python-format
+#, python-format
 msgid "Technical Translation"
-msgstr "Synchronisiere Übersetzung"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
@@ -17416,13 +16759,10 @@ msgstr "Thailändische Buchführung"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
-#, fuzzy
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"ISO Landescode in zwei Zeichen. \n"
-"Sie können dieses Feld auch für eine Schnellsuche einsetzen."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:117
@@ -17455,31 +16795,22 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang_grouping
-#, fuzzy
 msgid ""
 "The Separator Format should be like [,n] where 0 < n :starting from Unit "
 "digit. -1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
 "1,06,500; [1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
 "106,500. Provided ',' as the thousand separator in each case."
 msgstr ""
-"Das Trennzeichenformat sollte [,n] entsprechen mit 0 < n, beginnend bei "
-"Einer-Stelle. -1 beendet die Trennung. Z. B. [3,2,-1] bei 106500 entspricht "
-"1,06,500; [1,2,-1] würde dann 106,50,0 ergeben; [3] wird 106,500 daraus "
-"erstellen. Vorausgesetzt ',' sei jeweils der Tausender-Trenner."
 
 #. module: base
 #: code:addons/base/res/res_lang.py:66
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The Separator Format should be like [,n] where 0 < n :starting from Unit "
 "digit. -1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
 "1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
 "106,500. Provided as the thousand separator in each case."
 msgstr ""
-"Das Trennzeichenformat sollte [,n] entsprechen mit 0 < n, beginnend bei "
-"Einer-Stelle. -1 beendet die Trennung. Z. B. [3,2,-1] bei 106500 entspricht "
-"1,06,500; [1,2,-1] würde dann 106,50,0 ergeben; [3] wird 106,500 daraus "
-"erstellen. Vorausgesetzt ',' sei jeweils der Tausender-Trenner."
 
 #. module: base
 #: code:addons/base/module/module.py:708
@@ -18238,11 +17569,11 @@ msgstr "Übersetzung ist in Bearbeitung"
 
 #. module: base
 #: code:addons/base/ir/ir_translation.py:569
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Translation is not valid:\n"
 "%s"
-msgstr "Übersetzung ist in Bearbeitung"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation
@@ -18518,9 +17849,9 @@ msgstr "Unbekannter Fehler beim Import:"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:359
-#, fuzzy, python-format
+#, python-format
 msgid "Unknown field %r in dependency %r"
-msgstr "Unbekanntes Feld %s in Relation %s"
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:316
@@ -18571,9 +17902,8 @@ msgstr "Aktualisierungsdatum"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_tree
-#, fuzzy
 msgid "Update Language Terms"
-msgstr "Aktualisere Übersetzungen"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_update
@@ -18650,7 +17980,6 @@ msgstr "Teilmengen aus date_range verwenden"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_gamification
-#, fuzzy
 msgid ""
 "Use the HR resources for the gamification process.\n"
 "\n"
@@ -18658,13 +17987,6 @@ msgid ""
 "This allow the user to send badges to employees instead of simple users.\n"
 "Badge received are displayed on the user profile.\n"
 msgstr ""
-"Verwende Personalressourcen für die Motivationsförderung.\n"
-"\n"
-"Der Personalleiter kann nun Herausforderungen und Auszeichnungen verwalten.\n"
-"Dies erlaubt es dem Benutzer Auszeichnungen an Mitarbeiter anstatt nur an "
-"Nutzer zu senden. Erhaltene Auszeichnungen werden im Nutzerprofil sichtbar "
-"angezeigt.\n"
-"\n"
 
 #. module: base
 #: selection:ir.actions.server,use_relational_model:0
@@ -18839,6 +18161,11 @@ msgid "Vehicle, leasing, insurances, costs"
 msgstr "Fahrzeuge, Leasing, Versicherungen, Kosten"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_1
+msgid "Vendor"
+msgstr "Lieferant"
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
 #: model:ir.ui.menu,name:base.menu_procurement_management_supplier_name
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
@@ -18994,7 +18321,7 @@ msgstr "Wallis- und Futuna-Inseln"
 #. module: base
 #: model:ir.module.category,name:base.module_category_warehouse
 msgid "Warehouse"
-msgstr ""
+msgstr "Lager"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_picking_wave
@@ -19168,15 +18495,13 @@ msgstr "Webseiten Verkauf von digitalen Produkten"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock
-#, fuzzy
 msgid "Website Sale Stock - Website Delivery Information"
-msgstr "Webseiten Anzeige von Lieferinformationen"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_theme_install
-#, fuzzy
 msgid "Website Theme Install"
-msgstr "Webseite Portal"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_website
@@ -19289,9 +18614,8 @@ msgstr "Ob der Wert bei der Datensatzkopie kopiert wird."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_store
-#, fuzzy
 msgid "Whether the value is stored in the database."
-msgstr "Ob der Wert bei der Datensatzkopie kopiert wird."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_translate
@@ -19301,6 +18625,11 @@ msgid ""
 msgstr ""
 "Sollen die Inhalte des Feldes übersetzt werden können (ermöglicht die "
 "Übersetzung für das Feld)"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_15
+msgid "Wholesaler"
+msgstr "Großhändler"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_window
@@ -19557,16 +18886,15 @@ msgstr "Sie können keine rekursiven Partner Hierarchien erstellen."
 
 #. module: base
 #: code:addons/base/res/res_users.py:343
-#, fuzzy, python-format
+#, python-format
 msgid "You cannot deactivate the admin user."
-msgstr "Sie können den Administrator Benutzer nicht deaktivieren."
+msgstr ""
 
 #. module: base
 #: code:addons/base/res/res_users.py:345
-#, fuzzy, python-format
+#, python-format
 msgid "You cannot deactivate the user you're currently logged in as."
 msgstr ""
-"Sie können den Nutzer nicht deaktivieren, mit dem sie gerade angemeldet sind."
 
 #. module: base
 #: code:addons/base/res/res_lang.py:238
@@ -19592,9 +18920,8 @@ msgstr "Sie haben nicht die Berechtigung diese Operation auszuführen!!!"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
-#, fuzzy
 msgid "You should try other search criteria."
-msgstr "Sie sollten andere Suchkriterien versuchen."
+msgstr ""
 
 #. module: base
 #: code:addons/base/module/module.py:380
@@ -19706,9 +19033,8 @@ msgstr "bei"
 
 #. module: base
 #: model:ir.model,name:base.model_base
-#, fuzzy
 msgid "base"
-msgstr "Datenbank"
+msgstr "base"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -19860,7 +19186,7 @@ msgstr "get"
 #. module: base
 #: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
 msgid "here"
-msgstr ""
+msgstr "Hier"
 
 #. module: base
 #: selection:base.language.install,state:0 selection:base.module.update,state:0
@@ -20131,7 +19457,7 @@ msgstr ""
 "anzulegen"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:449
+#: code:addons/base/ir/ir_ui_view.py:456
 #, python-format
 msgid "n/a"
 msgstr "k. A."
@@ -20343,9 +19669,8 @@ msgstr "Titel"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
-#, fuzzy
 msgid "to activate a new currency."
-msgstr "Zeige aktive Währungen"
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:144
@@ -20415,3393 +19740,3 @@ msgstr "Ja"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "Falklandinseln"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "=======================\n"
-#~ "\n"
-#~ "This module allows you to define a loyalty program in\n"
-#~ "the point of sale, where the customers earn loyalty points\n"
-#~ "and get rewards.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "=======================\n"
-#~ "\n"
-#~ "Dieses Modul ermöglicht Ihnen die Erstellung von Kundenbindungsmaßnahmen "
-#~ "im Point-of-Sale. Dabei erhalten die Kunden Bonuspunkte und erhalten "
-#~ "Belohnungen.\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "Base module for Hungarian localization\n"
-#~ "==========================================\n"
-#~ "\n"
-#~ "This module consists :\n"
-#~ "\n"
-#~ " - Generic Hungarian chart of accounts\n"
-#~ " - Hungarian taxes\n"
-#~ " - Hungarian Bank information\n"
-#~ " \n"
-#~ " "
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Basismodul für ungarische Lokalisierung\n"
-#~ "==========================================\n"
-#~ "\n"
-#~ "Dieses Modul beinhaltet:  \n"
-#~ "- Allgemeine ungarische Buchhaltungskonten\n"
-#~ "- Ungarische Steuern\n"
-#~ "- Ungarischen Bank-Informationen\n"
-#~ " \n"
-#~ " "
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "Manage Customer Claims.\n"
-#~ "=======================\n"
-#~ "This application allows you to track your customers/vendors claims and "
-#~ "grievances.\n"
-#~ "\n"
-#~ "It is fully integrated with the email gateway so that you can create\n"
-#~ "automatically new claims based on incoming emails.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Verwaltung von Kundenreklamationen.\n"
-#~ "=======================\n"
-#~ "Diese Anwendung gibt Ihnen die Möglichkeit Reklamationen und "
-#~ "Unmutsbekundungen von Kunden/Lieferanten zu verfolgen.\n"
-#~ "\n"
-#~ "Diese ist vollständig mit dem EMail-Gateway integriert, so dass neue "
-#~ "Reklamationen automatisch aus eingehenden EMails erstellt werden können.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "Revenue recognitions\n"
-#~ "===================\n"
-#~ "Manage revenue recognitions on product sales.\n"
-#~ "Keeps track of the revenue recognition installments, and creates "
-#~ "corresponding journal entries.\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Umsatzrealisierungen\n"
-#~ "===================\n"
-#~ "Verwalten Sie Umsatzrealisierungen auf Produktverkäufe.\n"
-#~ "Erfassen und verfolgen Sie Umsatzabgrenzungen. Dies wird durch Erstellung "
-#~ "entsprechender Buchungssätze unterstützt.\n"
-#~ "\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "[object with reference: %s - %s]"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "[Objekt mit Referenz: %s - %s]"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Accounting reports for Belgium\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Belgien"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Accounting reports for Brazilian\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Brasilien"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Accounting reports for Chile\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Chile"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Accounting reports for Hungarian\n"
-#~ " "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Ungarn"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Accounting reports for Netherlands\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für die Niederlande"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Accounting reports for Romania\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Rumänien"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Accounting reports for Slovenian\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Slowenien"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Accounting reports for Spain\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Spanien"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Accounting reports for Switzerland\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für die Schweiz"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Accounting reports for UK\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für das Vereinigte Königreich"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Accounting reports for Uruguay\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Uruguay\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Adapt base accounting module for Enterprise Edition.\n"
-#~ "\n"
-#~ "        This module will be auto installed if account module and "
-#~ "enterprise edition are present\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "        Basis-Finanzmodul für Enterprise Edition anpassen.\n"
-#~ "\n"
-#~ "        Dieses Modul wird automatisch installiert, wenn sowohl das "
-#~ "Finanzen-Modul installiert ist, wie auch die \"Enterprise Edition\" "
-#~ "aktiviert sind.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "        Automate calls transfers, logs and emails"
-#~ msgstr ""
-#~ "\n"
-#~ "        Automatisierung von Anruf-Weiterschaltungen, Logs und Emails"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Generate payment orders as pain.001.001.03 messages. The "
-#~ "generated XML file can then be uploaded to your bank.\n"
-#~ "\n"
-#~ "        This module follow the implementation guidelines issued by the "
-#~ "European Payment Council.\n"
-#~ "        For more informations about the SEPA standards : http://www."
-#~ "iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "        Erzeuge Zahlungsanweisungen als pain.001.001.03 Nachrichten. Die "
-#~ "erzeugte XML-Datei kann an Ihre Bank übertragen werden.\n"
-#~ "\n"
-#~ "        Dieses Modul erfüllt die Umsetzungsrichtlinien des 'European "
-#~ "Payment Council' (EPC).\n"
-#~ "        Für weitere Information zu SEPA-Standards : http://www.iso20022."
-#~ "org/ und http://www.europeanpaymentscouncil.eu/\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "        Long description of module's purpose\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Umfangreiche Beschreibung des Moduls"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Technical core for all the modules using the VOIP system."
-#~ msgstr ""
-#~ "\n"
-#~ "        Technischer Kern für alle Module die das VOIP-System nutzen."
-
-#~ msgid ""
-#~ "\n"
-#~ "        Technical core for all the modules using the VOIP system. \n"
-#~ "        Contains the library needed in order to make the VOIP usable by "
-#~ "other modules.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "        Technischer Kern für alle Module die das VOIP-System nutzen.\n"
-#~ "        Enthält die Bibliotheken, die notwendig sind, um VOIP in anderen "
-#~ "Modulen verwenden zu können.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "        This module adds support for barcodes scanning to the warehouse "
-#~ "management system.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "        Dieses Modul ergänzt die Möglichkeit in der Lagerverwaltung mit "
-#~ "Barcode-Lesern zu arbeiten.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "        This module is used for Online bank synchronization."
-#~ msgstr ""
-#~ "\n"
-#~ "        Dieses Modul dient dem Online-Abgleich mit der Bank."
-
-#~ msgid ""
-#~ "\n"
-#~ "        This module is used for Online bank synchronization. It provides "
-#~ "basic methods to synchronize bank statement.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Dieses Modul synchronisiert Ihr Online Banking. Sie können die Verfahren "
-#~ "zur Synchronisation von Bankkontoauszügen nutzen."
-
-#~ msgid ""
-#~ "\n"
-#~ "        Use Plaid.com to retrieve bank statements"
-#~ msgstr ""
-#~ "\n"
-#~ "Benutze plaid.com zur Synchronisation Ihres Bankkontoauszugs"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Use Plaid.com to retrieve bank statements.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Benutze plaid.com zur Synchronisation Ihres Bankkontoauszugs."
-
-#~ msgid ""
-#~ "\n"
-#~ "    Gantt view for Leaves Dashboard\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Gantt Ansicht für Urlaubstage Cockpit"
-
-#~ msgid ""
-#~ "\n"
-#~ "    Ressource management for Project\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Ressourcenmanagement für Projekt"
-
-#~ msgid ""
-#~ "\n"
-#~ "  Publish your products on eBay"
-#~ msgstr ""
-#~ "\n"
-#~ "Veröffentlichen Sie Ihre Produkte auf eBay"
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting Contract Dashboard\n"
-#~ "========================\n"
-#~ "It adds dashboards to :\n"
-#~ "1) Analyse the recurrent revenue and other metrics for contracts\n"
-#~ "2) Analyse the contracts modifications by salesman and compute their "
-#~ "value.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Buchhaltung Verträge Cockpit\n"
-#~ "===========================\n"
-#~ "Dieses neue Cockpit ermöglicht:\n"
-#~ "1) Analyse der wiederkehrenden Umsätze und anderer Kennzahlen für "
-#~ "Verträge\n"
-#~ "2) Analyse der Vertragsänderungen nach Verkäufern und monetären "
-#~ "Auswirkungen."
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting Reports\n"
-#~ "====================\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte\n"
-#~ "====================\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for Argentina\n"
-#~ "================================\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Argentinien\n"
-#~ "==========================="
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for Bolivia\n"
-#~ "================================\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Bolivien\n"
-#~ "========================"
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for Colombia\n"
-#~ "================================\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Kolumbien\n"
-#~ "=========================="
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for Croatia\n"
-#~ "================================\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Kroatien\n"
-#~ "========================"
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for Deutschland\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Deutschland\n"
-#~ "============================"
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for Deutschland SKR04\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Deutschland SKR04"
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for Ethiopia\n"
-#~ "================================\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Äthopien\n"
-#~ "========================="
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for France\n"
-#~ "================================\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Frankreich\n"
-#~ "================================\n"
-#~ "\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for Greece\n"
-#~ "=============================\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Griechenland\n"
-#~ "=============================\n"
-#~ "\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for India\n"
-#~ "================================\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Indien\n"
-#~ "================================\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for Japan\n"
-#~ "================================\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Japan\n"
-#~ "========================"
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for Luxembourg\n"
-#~ "================================\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Luxemburg\n"
-#~ "================================\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for Maroc\n"
-#~ "================================\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Marocco\n"
-#~ "================================\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for Norway\n"
-#~ "================================\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Norwegen\n"
-#~ "================================\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for Poland\n"
-#~ "================================\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Polen\n"
-#~ "================================\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for Singapore\n"
-#~ "================================\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Singapur\n"
-#~ "================================\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for Thailand\n"
-#~ "================================\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Finanzberichte für Thailand\n"
-#~ "================================\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Base Module for Ethiopian Localization\n"
-#~ "======================================\n"
-#~ "\n"
-#~ "This is the latest Ethiopian OpenERP localization and consists of:\n"
-#~ "    - Chart of Accounts\n"
-#~ "    - VAT tax structure\n"
-#~ "    - Withholding tax structure\n"
-#~ "    - Regional State listings\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Base Module for Ethiopian Localization\n"
-#~ "======================================\n"
-#~ "\n"
-#~ "This is the latest Ethiopian OpenERP localization and consists of:\n"
-#~ "    - Chart of Accounts\n"
-#~ "    - VAT tax structure\n"
-#~ "    - Withholding tax structure\n"
-#~ "    - Regional State listings\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Base module for the Brazilian localization\n"
-#~ "==========================================\n"
-#~ "\n"
-#~ "This module consists in:\n"
-#~ "\n"
-#~ " - Generic Brazilian chart of accounts\n"
-#~ " - Brazilian taxes such as:\n"
-#~ "\n"
-#~ "        - IPI\n"
-#~ "        - ICMS\n"
-#~ "        - PIS\n"
-#~ "        - COFINS\n"
-#~ "        - ISS\n"
-#~ "        - IR\n"
-#~ "        - IRPJ\n"
-#~ "        - CSLL\n"
-#~ "\n"
-#~ "The field tax_discount has also been added in the account.tax.template "
-#~ "and \n"
-#~ "account.tax objects to allow the proper computation of some Brazilian "
-#~ "VATs \n"
-#~ "such as ICMS. The chart of account creation wizard has been extended to \n"
-#~ "propagate those new data properly.\n"
-#~ "\n"
-#~ "It's important to note however that this module lack many implementations "
-#~ "to \n"
-#~ "use OpenERP properly in Brazil. Those implementations (such as the "
-#~ "electronic \n"
-#~ "fiscal Invoicing which is already operational) are brought by more than "
-#~ "15 \n"
-#~ "additional modules of the Brazilian Launchpad localization project \n"
-#~ "https://launchpad.net/openerp.pt-br-localiz and their dependencies in "
-#~ "the \n"
-#~ "extra addons branch. Those modules aim at not breaking with the "
-#~ "remarkable \n"
-#~ "OpenERP modularity, this is why they are numerous but small. One of the \n"
-#~ "reasons for maintaining those modules apart is that Brazilian "
-#~ "Localization \n"
-#~ "leaders need commit rights agility to complete the localization as "
-#~ "companies \n"
-#~ "fund the remaining legal requirements (such as soon fiscal ledgers, \n"
-#~ "accounting SPED, fiscal SPED and PAF ECF that are still missing as "
-#~ "September \n"
-#~ "2011). Those modules are also strictly licensed under AGPL V3 and today "
-#~ "don't \n"
-#~ "come with any additional paid permission for online use of 'private "
-#~ "modules'.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Base module for the Brazilian localization\n"
-#~ "==========================================\n"
-#~ "\n"
-#~ "This module consists in:\n"
-#~ "\n"
-#~ " - Generic Brazilian chart of accounts\n"
-#~ " - Brazilian taxes such as:\n"
-#~ "\n"
-#~ "        - IPI\n"
-#~ "        - ICMS\n"
-#~ "        - PIS\n"
-#~ "        - COFINS\n"
-#~ "        - ISS\n"
-#~ "        - IR\n"
-#~ "        - IRPJ\n"
-#~ "        - CSLL\n"
-#~ "\n"
-#~ "The field tax_discount has also been added in the account.tax.template "
-#~ "and \n"
-#~ "account.tax objects to allow the proper computation of some Brazilian "
-#~ "VATs \n"
-#~ "such as ICMS. The chart of account creation wizard has been extended to \n"
-#~ "propagate those new data properly.\n"
-#~ "\n"
-#~ "It's important to note however that this module lack many implementations "
-#~ "to \n"
-#~ "use OpenERP properly in Brazil. Those implementations (such as the "
-#~ "electronic \n"
-#~ "fiscal Invoicing which is already operational) are brought by more than "
-#~ "15 \n"
-#~ "additional modules of the Brazilian Launchpad localization project \n"
-#~ "https://launchpad.net/openerp.pt-br-localiz and their dependencies in "
-#~ "the \n"
-#~ "extra addons branch. Those modules aim at not breaking with the "
-#~ "remarkable \n"
-#~ "OpenERP modularity, this is why they are numerous but small. One of the \n"
-#~ "reasons for maintaining those modules apart is that Brazilian "
-#~ "Localization \n"
-#~ "leaders need commit rights agility to complete the localization as "
-#~ "companies \n"
-#~ "fund the remaining legal requirements (such as soon fiscal ledgers, \n"
-#~ "accounting SPED, fiscal SPED and PAF ECF that are still missing as "
-#~ "September \n"
-#~ "2011). Those modules are also strictly licensed under AGPL V3 and today "
-#~ "don't \n"
-#~ "come with any additional paid permission for online use of 'private "
-#~ "modules'.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Batch Deposit\n"
-#~ "=============\n"
-#~ "Batch deposits allows you to group received checks before you deposit "
-#~ "them to the bank.\n"
-#~ "The amount deposited to your bank will then appear as a single "
-#~ "transaction on your bank statement.\n"
-#~ "When you proceed with the reconciliation, simply select the corresponding "
-#~ "batch deposit to reconcile the payments.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Stapelverarbeitung von Einzahlungen\n"
-#~ "=================================\n"
-#~ "\n"
-#~ "Durch die Stapelverarbeitung können Sie erhaltene Schecks sammeln und "
-#~ "zusammengefasst zur Einlösung an Ihre Hausbank übergeben.\n"
-#~ "Der Gesamtbetrag aller Scheckzahlungen erscheint dann als eine einzige "
-#~ "Buchungsposition auf dem Bankkontoauszug.\n"
-#~ "Wenn Sie beim Bearbeiten Ihres Bankkontoauszugs fortfahren, wählen Sie "
-#~ "einfach den korrespondierenden Scheck-Stapel aus, um einen Ausgleich "
-#~ "offener Posten vorzunehmen.\n"
-#~ "\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Create a claim from a delivery order.\n"
-#~ "=====================================\n"
-#~ "\n"
-#~ "Adds a Claim link to the delivery order.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Erstellen Sie eine Forderung aus einem Auslieferungsauftrag.\n"
-#~ "=================================================\n"
-#~ "\n"
-#~ "Fügt eine Verknüpfung für eine Forderung zu einem Auslieferungsauftrag "
-#~ "hinzu.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Create recurring documents.\n"
-#~ "===========================\n"
-#~ "\n"
-#~ "This module allows to create new documents and add subscriptions on that "
-#~ "document.\n"
-#~ "\n"
-#~ "e.g. To have an invoice generated automatically periodically:\n"
-#~ "-------------------------------------------------------------\n"
-#~ "    * Define a document type based on Invoice object\n"
-#~ "    * Define a subscription whose source document is the document defined "
-#~ "as\n"
-#~ "      above. Specify the interval information and partner to be invoice.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Erstellen wiederkehrender Belege.\n"
-#~ "===============================\n"
-#~ "\n"
-#~ "Diese Anwendung ermöglicht Ihnen, neue Belege zu erstellen und durch "
-#~ "Abonnements diese Belege regelmässig zu erstellen.\n"
-#~ "\n"
-#~ "Z. B. um automatisch monatliche Abrechnungen zu erzeugen:\n"
-#~ "-------------------------------------------------------------\n"
-#~ "    * Definieren Sie einen Dokumenttyp basierend auf dem Rechnungsobjekt\n"
-#~ "    * Definieren Sie einen Abozeitraum, dessen Quelle das oben definierte "
-#~ "Dokument \n"
-#~ "      ist. Bestimmen Sie das Intervall zur Neuerstellung des Belegs sowie "
-#~ "den Partner mit \n"
-#~ "      dessen Abrechnungsbedingung.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Customize access to your OpenERP database to external users by creating "
-#~ "portals.\n"
-#~ "================================================================================\n"
-#~ "A portal defines a specific user menu and access rights for its members.  "
-#~ "This\n"
-#~ "menu can be seen by portal members, public users and any other user that\n"
-#~ "have the access to technical features (e.g. the administrator).\n"
-#~ "Also, each portal member is linked to a specific partner.\n"
-#~ "\n"
-#~ "The module also associates user groups to the portal users (adding a "
-#~ "group in\n"
-#~ "the portal automatically adds it to the portal users, etc).  That feature "
-#~ "is\n"
-#~ "very handy when used in combination with the module 'share'.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Passen Sie den Zugriff auf Ihre Odoo-Datenbank durch externe Benutzer an, "
-#~ "indem Sie Portale anlegen.\n"
-#~ "================================================================================\n"
-#~ "Ein Portal definiert ein spezifisches Nutzermenü für dessen Mitglieder "
-#~ "mit entsprechenden Zugriffsberechtigungen. Dieses Menü kann durch "
-#~ "Portalnutzer, Öffentliche Nutzer oder jeden Nutzer mit Berechtigung auf "
-#~ "technische Einstellungen (z.B. Administrator) gesehen werden. Also auch "
-#~ "jeder Portalnutzer, der mit einem bestimmten Partner verknüpft ist.\n"
-#~ "\n"
-#~ "Dieses Modul verknüpft auch Benutzergruppen mit Portalnutzern (Hinzufügen "
-#~ "einer Gruppe im Portal fügt diese automatisch beim Portalnutzer hinzu, "
-#~ "usw. ). Dieses Merkmal kann sehr nützlich sein in Verbindung mit dem "
-#~ "Modul 'Teilen'. \n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Design gorgeous mails with 8 high quality themes\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Entwerfen Sie herausragende Mails mit 8 hochwertigen Templates\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Gamification process\n"
-#~ "====================\n"
-#~ "The Gamification module provides ways to evaluate and motivate the users "
-#~ "of OpenERP.\n"
-#~ "\n"
-#~ "The users can be evaluated using goals and numerical objectives to "
-#~ "reach.\n"
-#~ "**Goals** are assigned through **challenges** to evaluate and compare "
-#~ "members of a team with each others and through time.\n"
-#~ "\n"
-#~ "For non-numerical achievements, **badges** can be granted to users. From "
-#~ "a simple \"thank you\" to an exceptional achievement, a badge is an easy "
-#~ "way to exprimate gratitude to a user for their good work.\n"
-#~ "\n"
-#~ "Both goals and badges are flexibles and can be adapted to a large range "
-#~ "of modules and actions. When installed, this module creates easy goals to "
-#~ "help new users to discover OpenERP and configure their user profile.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Gamification Prozess\n"
-#~ "====================\n"
-#~ "\n"
-#~ "Das Gamification (Spielifizierung) - Modul bietet Möglichkeiten, dass "
-#~ "sich Mitarbeiter innerhalb Odoo selbst einschätzen und motivieren "
-#~ "können.\n"
-#~ "\n"
-#~ "Die Benutzer können sich selbst Ziele und zahlenmäßige Vorgaben setzten "
-#~ "um diese zu erreichen.\n"
-#~ "Die selbst gesetzten **Ziele** werden dabei mit den Zielen der anderen "
-#~ "Mitarbeitern verglichen, um einen Wettberwerb innerhalb von Teams oder "
-#~ "der Firma zu erreichen.\n"
-#~ "\n"
-#~ "Für besondere Leistungen die nicht in Zahlen ausgedrückt werden können, "
-#~ "besteht die Möglichkeit **Auszeichnungen** zu vergeben. Egal ob es ein "
-#~ "einfaches \"Danke\" ist, oder die Benennung einer aussergewöhnlichen "
-#~ "Leistung.  Das Spilifizierungs-Modul ist eine einfach Möglichkeit um den "
-#~ "Benutzern Dankbarkeit zu zeigen.\n"
-#~ "\n"
-#~ "Beide Varianten, Ziele und Auszeichnungen, sind flexibel einsetzbar und "
-#~ "können für viele Module und Maßnahmen angepasst werden. Ist das Modul "
-#~ "installiert, hilft es den Benutzern auf einfach Weise Ihr Benutzerprofil "
-#~ "in OpenERP zu entdecken und zu konfigurieren.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Integrate google document to OpenERP record.\n"
-#~ "============================================\n"
-#~ "\n"
-#~ "This module allows you to integrate google documents to any of your "
-#~ "OpenERP record quickly and easily using OAuth 2.0 for Installed "
-#~ "Applications,\n"
-#~ "You can configure your google Authorization Code from Settings > "
-#~ "Configuration > General Settings by clicking on \"Generate Google "
-#~ "Authorization Code\"\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Integriert Google-Document in Odoo\n"
-#~ "==============================\n"
-#~ "\n"
-#~ "Dieses Modul erlaubt die einfache und schnelle Integration von Google-"
-#~ "Documents in jeden Odoo-Datensatz durch die Verwendung von OAuth 2.0 für "
-#~ "installierte Anwendungen.\n"
-#~ "Sie können die Google-Authentifizierung unter Einstellungen -> "
-#~ "Konfiguration -> Allgemeine Einstellungen durch klicken auf \"Google "
-#~ "Authorisations-Code generieren\".\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Manage multi-warehouses, multi- and structured stock locations\n"
-#~ "==============================================================\n"
-#~ "\n"
-#~ "The warehouse and inventory management is based on a hierarchical "
-#~ "location structure, from warehouses to storage bins.\n"
-#~ "The double entry inventory system allows you to manage customers, vendors "
-#~ "as well as manufacturing inventories.\n"
-#~ "\n"
-#~ "OpenERP has the capacity to manage lots and serial numbers ensuring "
-#~ "compliance with the traceability requirements imposed by the majority of "
-#~ "industries.\n"
-#~ "\n"
-#~ "Key Features\n"
-#~ "------------\n"
-#~ "* Moves history and planning,\n"
-#~ "* Minimum stock rules\n"
-#~ "* Support for barcodes\n"
-#~ "* Rapid detection of mistakes through double entry system\n"
-#~ "* Traceability (Serial Numbers, Packages, ...)\n"
-#~ "\n"
-#~ "Dashboard / Reports for Inventory Management will include:\n"
-#~ "----------------------------------------------------------\n"
-#~ "* Incoming Products (Graph)\n"
-#~ "* Outgoing Products (Graph)\n"
-#~ "* Procurement in Exception\n"
-#~ "* Inventory Analysis\n"
-#~ "* Last Product Inventories\n"
-#~ "* Moves Analysis\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Verwalten Sie mehrere Lager, mehrere und strukturierte Lagerplätze\n"
-#~ "================================================================\n"
-#~ "\n"
-#~ "Das Lager- und Bestandsmanagement basiert auf einer hierarchischen "
-#~ "Lagerstruktur, von Lagern bis zu Lagerplätzen.  Die\n"
-#~ "doppelten Buchungen ermöglicht es Ihnen, sowohl Kunden- und "
-#~ "Lieferantenlager, als auch die Bestände der Fertigprodukte zu "
-#~ "verwalten. \n"
-#~ "\n"
-#~ "Odoo bietet die Möglichkeit, Losgrößen- und Seriennummern zu verwalten, "
-#~ "um die vollständige Rückverfolgung zu gewährleisten, die für "
-#~ "Industriebetriebe und andere Branchen zwingend erforderlich ist. \n"
-#~ "\n"
-#~ "Wesentliche Funktionen\n"
-#~ "---------------------------------------\n"
-#~ "* Historie und Planung von Lieferungen\n"
-#~ "* Bestandsbewertung (Standard oder durchschnittlicher Preis,...) \n"
-#~ "* Nachvollziehbarkeit von Inventurdifferenzen\n"
-#~ "* Automatische Wiederbeschaffung\n"
-#~ "* Unterstützung für Barcodes\n"
-#~ "* Schnelle Erkennung von Fehlern durch das System der doppelten "
-#~ "Buchführung\n"
-#~ "* Rückverfolgbarkeit (Upstream/ Downstream, Seriennummern, ...) \n"
-#~ "\n"
-#~ "Das Berichtswesen für die Lagerverwaltung beinhaltet:\n"
-#~ "------------------------------------------------------------------------------------------\n"
-#~ "* Eingehende Produkte (Grafik)\n"
-#~ "* Ausgehende Produkte (Grafik)\n"
-#~ "* Beschaffungsfehler\n"
-#~ "* Bestandsauswertung\n"
-#~ "* Letzte Inventuren\n"
-#~ "* Anzeige der Lagerbuchungen\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Menu for Marketing.\n"
-#~ "===================\n"
-#~ "\n"
-#~ "Contains the installer for marketing-related modules.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Menü für Marketing.\n"
-#~ "====================\n"
-#~ "\n"
-#~ "Enthält einen Installations-Assistenten für auf Marketing relevante "
-#~ "Module.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Module for defining analytic accounting object.\n"
-#~ "===============================================\n"
-#~ "\n"
-#~ "In OpenERP, analytic accounts are linked to general accounts but are "
-#~ "treated\n"
-#~ "totally independently. So, you can enter various different analytic "
-#~ "operations\n"
-#~ "that have no counterpart in the general financial accounts.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Modul zur Bereitstellung der analytischen Konten.\n"
-#~ " ===============================================\n"
-#~ "\n"
-#~ "In OpenERP werden analytische Konten mit Konten des Hauptbuches "
-#~ "verknüpft\n"
-#~ "jedoch komplett unabhängig verarbeitet. Daher können Sie diverse "
-#~ "analytische\n"
-#~ "Auswertungen und Prozesse anlegen ohne das diese Einfluss auf Ihre "
-#~ "Finanzkonten\n"
-#~ "haben.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Module to automate letters for unpaid invoices, with multi-level "
-#~ "recalls.\n"
-#~ "=========================================================================\n"
-#~ "\n"
-#~ "You can define your multiple levels of recall through the menu:\n"
-#~ "---------------------------------------------------------------\n"
-#~ "    Configuration / Follow-up / Follow-up Levels\n"
-#~ "    \n"
-#~ "Once it is defined, you can automatically print recalls every day through "
-#~ "simply clicking on the menu:\n"
-#~ "------------------------------------------------------------------------------------------------------\n"
-#~ "    Payment Follow-Up / Send Email and letters\n"
-#~ "\n"
-#~ "It will generate a PDF / send emails / set manual actions according to "
-#~ "the the different levels \n"
-#~ "of recall defined. You can define different policies for different "
-#~ "companies. \n"
-#~ "\n"
-#~ "Note that if you want to check the follow-up level for a given partner/"
-#~ "account entry, you can do from in the menu:\n"
-#~ "------------------------------------------------------------------------------------------------------------------\n"
-#~ "    Reporting / Accounting / **Follow-ups Analysis\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Anwendung um Briefe für unbezahlte Rechnungen mit mehreren Mahnstufen zu "
-#~ "automatisieren. \n"
-#~ "===============================================================================\n"
-#~ "\n"
-#~ "Sie können Ihre verschiedenen Mahnstufen mithilfe des Menüs definieren:\n"
-#~ "-------------------------------------------------------------------------------------------------------------------------\n"
-#~ "    Konfiguration / Stufen der Verfolgung\n"
-#~ "    \n"
-#~ "Sobald diese definiert sind, können Sie automatisch jeden Tag Mahnungen "
-#~ "drucken, durch einen einfach Klick auf das Menü:\n"
-#~ "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
-#~ "    Zahlungsverfolgung / E-Mail und Briefe senden\n"
-#~ "\n"
-#~ "Es wird eine PDF-Datei generiert / eine E-Mail gesendet / verschiedene "
-#~ "Aktionen festgesetzt entsprechend den verschiedenen\n"
-#~ "Mahnstufen, die definiert sind. Sie können verschiedene Methoden für "
-#~ "verschiedene Unternehmen festlegen. \n"
-#~ "\n"
-#~ "Beachten Sie: wenn Sie die Mahnstufe eines Partners kontrollieren wollen, "
-#~ "können Sie dieses mit Hilfe des Menüs tun:\n"
-#~ "-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
-#~ "    Berichtswesen / Fakturierung / **Mahnstufenanalyse\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Module to trigger warnings in OpenERP objects.\n"
-#~ "==============================================\n"
-#~ "\n"
-#~ "Warning messages can be displayed for objects like sale order, purchase "
-#~ "order,\n"
-#~ "picking and invoice. The message is triggered by the form's onchange "
-#~ "event.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Modul zum Auslösen von Warnungen in OpenERP-Objekten.\n"
-#~ "==================================================\n"
-#~ "\n"
-#~ "Warn-Hinweise können für Objekte, wie Verkaufsaufträge, Bestellungen,\n"
-#~ "Kommissionierungen und Rechnungen ausgelöst werden. Die Mitteilung \n"
-#~ "wird ausgelöst durch das Onchange-Ereignis des jeweiligen Formulars.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "New extensible file import for OpenERP\n"
-#~ "======================================\n"
-#~ "\n"
-#~ "Re-implement openerp's file import system:\n"
-#~ "\n"
-#~ "* Server side, the previous system forces most of the logic into the\n"
-#~ "  client which duplicates the effort (between clients), makes the\n"
-#~ "  import system much harder to use without a client (direct RPC or\n"
-#~ "  other forms of automation) and makes knowledge about the\n"
-#~ "  import/export system much harder to gather as it is spread over\n"
-#~ "  3+ different projects.\n"
-#~ "\n"
-#~ "* In a more extensible manner, so users and partners can build their\n"
-#~ "  own front-end to import from other file formats (e.g. OpenDocument\n"
-#~ "  files) which may be simpler to handle in their work flow or from\n"
-#~ "  their data production sources.\n"
-#~ "\n"
-#~ "* In a module, so that administrators and users of OpenERP who do not\n"
-#~ "  need or want an online import can avoid it being available to users.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Neuer erweiterter Dateiimport für OpenERP\n"
-#~ "======================================\n"
-#~ "\n"
-#~ "Neuimplementierung der OpenERP Dateiimport-Systematik:\n"
-#~ "\n"
-#~ "*Serverseite, das vorherige System zwingt den Großteil der Logik in den\n"
-#~ "  Client, welches den Aufwand (zwischen Clients) dupliziert, macht die\n"
-#~ "  Benutzung des Import Systems viel schwieriger, ohne die Verwendung "
-#~ "eines Client\n"
-#~ "  (direkt RPC oder andere Formen der Automatisierung) und macht es viel "
-#~ "schwerer,\n"
-#~ "  das Wissen über die Import / Export Systeme zu erfassen, als wenn es "
-#~ "über\n"
-#~ "  3+ verschiedene Projekte verteilt wird.\n"
-#~ "\n"
-#~ "** In einer erweiterbaren Art und Weise, so dass Anwender und Partner "
-#~ "ihre\n"
-#~ "  eigenen Front-Ends erstellen können, um aus anderen Dateiformaten zu "
-#~ "importieren\n"
-#~ "  (z. B. OpenDocument Dateien), welche möglicherweise in ihrem eigenen "
-#~ "Arbeitsablauf einfacher\n"
-#~ "  zu handhaben sind oder aus ihren Daten Produktionsquellen.\n"
-#~ "\n"
-#~ "* In einer Anwendung, sodass Administratoren und Benutzer von OpenERP, "
-#~ "die keinen Online \n"
-#~ "Import brauchen oder vermeiden wollen, für Benutzer verfügbar zu sein.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Odoo Form Editor\n"
-#~ "====================\n"
-#~ "\n"
-#~ "Allows you to build web forms on the website using the website builder.\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "Odoo Formular Editor\n"
-#~ "====================\n"
-#~ "\n"
-#~ "Platzieren und gestalten Sie Online Formulare mit Hilfe des Webseiten "
-#~ "Baukasten."
-
-#~ msgid ""
-#~ "\n"
-#~ "Odoo Website LiveChat\n"
-#~ "========================\n"
-#~ "For website built with Odoo CMS, this module include a chat button on "
-#~ "your Website, and allow your visitors to chat with your collabarators.\n"
-#~ "It also will include the feedback tool for the livechat, and web pages to "
-#~ "display your channel and its ratings on the website.\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "Odoo LiveChat auf der Webseite\n"
-#~ "========================\n"
-#~ "Für eine mit dem Odoo CMS gestaltete Webseite kann ein Chat Button "
-#~ "eingeblendet werden, um Ihren Besuchern eine direkte Kommunikation via "
-#~ "Chat zu ermöglichen.\n"
-#~ "Dies beinhaltet auch das im Chat enthaltene Feedback Tool und die "
-#~ "Möglichkeit zur Anzeige Ihrer öffentlichen Kanäle mit Bewertungen auf der "
-#~ "Webseite.\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Blog\n"
-#~ "============\n"
-#~ "\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "Odoo Blog\n"
-#~ "============\n"
-#~ "\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Contact Form\n"
-#~ "====================\n"
-#~ "\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "Odoo Kontakt-Formular\n"
-#~ "===================\n"
-#~ "\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Customer References\n"
-#~ "===========================\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Odoo Kunden-Referenzen\n"
-#~ "===========================\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP E-Commerce\n"
-#~ "==================\n"
-#~ "\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "Odoo E-Commerce\n"
-#~ "==================\n"
-#~ "\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Mail Group : Mailing List Archives\n"
-#~ "==========================================\n"
-#~ "\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "Odoo Mailing-Gruppen: Mailing-Listen Archive\n"
-#~ "==========================================\n"
-#~ "\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Sale Quote Roller\n"
-#~ "=========================\n"
-#~ "\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "Odoo Verkaufsangebots-Roller\n"
-#~ "============================\n"
-#~ "\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Web Calendar view.\n"
-#~ "==========================\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "OpenERP Webkalender-Ansicht\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Web Gantt chart view.\n"
-#~ "=============================\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "OpenERP Web Gantt Diagrammansicht.\n"
-#~ "==================================\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Web core module.\n"
-#~ "========================\n"
-#~ "\n"
-#~ "This module provides the core of the OpenERP Web Client.\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "OpenERP Web-Anwendung\n"
-#~ "======================\n"
-#~ "\n"
-#~ "Dieses Anwendung bietet den OpenERP Web Client.\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Web kanban view.\n"
-#~ "========================\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "OpenERP Web Kanban Ansicht\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Web tips.\n"
-#~ "========================\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Odoo Web-Tips.\n"
-#~ "========================\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Web to edit views.\n"
-#~ "==========================\n"
-#~ "\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "OpenERP Web zur Bearbeitung von Ansichten\n"
-#~ "=======================================\n"
-#~ "\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Website CMS\n"
-#~ "===================\n"
-#~ "\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "Odoo Webseiten-CMS\n"
-#~ "======================\n"
-#~ "\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Website Google Map\n"
-#~ "==========================\n"
-#~ "\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "Odoo Google Map für die Webseite\n"
-#~ "================================\n"
-#~ "\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP link module for web tips.\n"
-#~ "=================================\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Verbindungsmodul für Odoo Web-Tips.\n"
-#~ "=====================================\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Override community website features\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Überschreibe die Funktionen der Community Webseite"
-
-#~ msgid ""
-#~ "\n"
-#~ "Partners geolocalization\n"
-#~ "========================\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Partner Geolokalisierung\n"
-#~ "========================\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Periodical Employees appraisal\n"
-#~ "==============================================\n"
-#~ "\n"
-#~ "By using this application you can maintain the motivational process by "
-#~ "doing periodical appraisals of your employees performance. The regular "
-#~ "assessment of human resources can benefit your people as well your "
-#~ "organization.\n"
-#~ "\n"
-#~ "An appraisal plan can be assigned to each employee. These plans define "
-#~ "the frequency and the way you manage your periodic personal appraisal.\n"
-#~ "\n"
-#~ "Key Features\n"
-#~ "------------\n"
-#~ "* Ability to create employee's appraisal(s).\n"
-#~ "* An appraisal can be created by an employee's manager or automatically "
-#~ "based on schedule which is defined in the employee form.\n"
-#~ "* The appraisal is done according to a plan in which various surveys can "
-#~ "be created. Each survey can be answered by a particular level in the "
-#~ "employees hierarchy. The final review and appraisal is done by the "
-#~ "manager.\n"
-#~ "* Manager, colleague, collaborator, and employee himself/herself receives "
-#~ "email to perform a periodical appraisal.\n"
-#~ "* Every Appraisal Form filled by employees, colleague, collaborator, can "
-#~ "be viewed in a PDF form.\n"
-#~ "* Meeting Requests are created manually according to employees "
-#~ "appraisals.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Periodische Mitarbeiter-Bewertung\n"
-#~ "==============================================\n"
-#~ "\n"
-#~ "Durch Verwendung dieses Moduls können Sie die Mitarbeitermotivation "
-#~ "erhalten, indem Sie periodisch die Leistung der Mitarbeiter hervorheben. "
-#~ "Die regelmäßige Beurteilung des Personals kann den Menschen, als auch der "
-#~ "Organiszation gut tun.\n"
-#~ "\n"
-#~ "Jedem Mitarbeiter kann ein Bewertungplan zugeordnet werden. Diese Pläne "
-#~ "legen die Frequenz und die Art fest, mit der Sie Ihre periodischen "
-#~ "Personalbewertungen durchführen möchten.\n"
-#~ "\n"
-#~ "Schlüsselmerkmale\n"
-#~ "-------------------\n"
-#~ "* Möglichkeit Mitarbeiterbewertung(en) anzulegen.\n"
-#~ "* Eine Bewertung kann durch den Vorgesetzten oder automatisch gemäß "
-#~ "Mitarbeiterspezifischem Terminplan erstellt werden.\n"
-#~ "* Die Bewertung wird nach Plan durchgeführt, in dem verschiedene "
-#~ "Befragungen erstellt werden können. Jede Befragung kann durch eine "
-#~ "bestimmte Ebene der Mitabeiterhierarchie beantwortet werden. Das "
-#~ "abschließende Review und die Beurteilung erfolgt durch den vorgesetzten "
-#~ "Manager.\n"
-#~ "* Manager, Kollegen, Kollaborateur und Mitarbeiter selbst erhalten eine "
-#~ "Email zur Durchführung der periodischen Beurteilung.\n"
-#~ "* Jedes von Mitarbeitern, Kollegen und Kollaborateuren ausgefüllte "
-#~ "Beurteilungsformblatt kann in PDF-Form eingesehen werden.\n"
-#~ "* Terminanfragen werden manuell, entsprechend der "
-#~ "Mitarbeiterbeurteilungen erstellt.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Publish your products on eBay\n"
-#~ "==============================================================\n"
-#~ "\n"
-#~ "The eBay integrator gives you the opportunity to manage your Odoo's "
-#~ "products on eBay.\n"
-#~ "\n"
-#~ "Key Features\n"
-#~ "------------\n"
-#~ "* Publish products on eBay\n"
-#~ "* Revise, relist, end items on eBay\n"
-#~ "* Integration with the stock moves\n"
-#~ "* Automatic creation of sales order and invoices\n"
-#~ "\n"
-#~ "  "
-#~ msgstr ""
-#~ "\n"
-#~ "Vertreiben Sie Ihre Produkte auf eBay\n"
-#~ "==============================================================\n"
-#~ "\n"
-#~ "Der eBay-Integrator bietet Ihnen Gelegenheit Ihre Produkte auf eBay zu "
-#~ "verwalten.\n"
-#~ "\n"
-#~ "Hauptmerkmale\n"
-#~ "----------------\n"
-#~ "* Produkte auf eBay veröffentlichen\n"
-#~ "* Produkte auf eBay prüfen, relisten, beenden\n"
-#~ "* Integration der Lagerbuchungen\n"
-#~ "* Automatische Anlage der Verkaufsaufträge und Rechnungen\n"
-#~ "\n"
-#~ "  "
-
-#~ msgid ""
-#~ "\n"
-#~ "Retrieve incoming email on POP/IMAP servers.\n"
-#~ "============================================\n"
-#~ "\n"
-#~ "Enter the parameters of your POP/IMAP account(s), and any incoming emails "
-#~ "on\n"
-#~ "these accounts will be automatically downloaded into your OpenERP system. "
-#~ "All\n"
-#~ "POP3/IMAP-compatible servers are supported, included those that require "
-#~ "an\n"
-#~ "encrypted SSL/TLS connection.\n"
-#~ "\n"
-#~ "This can be used to easily create email-based workflows for many email-"
-#~ "enabled OpenERP documents, such as:\n"
-#~ "----------------------------------------------------------------------------------------------------------\n"
-#~ "    * CRM Leads/Opportunities\n"
-#~ "    * CRM Claims\n"
-#~ "    * Project Issues\n"
-#~ "    * Project Tasks\n"
-#~ "    * Human Resource Recruitments (Applicants)\n"
-#~ "\n"
-#~ "Just install the relevant application, and you can assign any of these "
-#~ "document\n"
-#~ "types (Leads, Project Issues) to your incoming email accounts. New emails "
-#~ "will\n"
-#~ "automatically spawn new documents of the chosen type, so it's a snap to "
-#~ "create a\n"
-#~ "mailbox-to-OpenERP integration. Even better: these documents directly act "
-#~ "as mini\n"
-#~ "conversations synchronized by email. You can reply from within OpenERP, "
-#~ "and the\n"
-#~ "answers will automatically be collected when they come back, and attached "
-#~ "to the\n"
-#~ "same *conversation* document.\n"
-#~ "\n"
-#~ "For more specific needs, you may also assign custom-defined actions\n"
-#~ "(technically: Server Actions) to be triggered for each incoming mail.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Abrufen eingehender E-Mails auf POP / IMAP-Servern.\n"
-#~ "============================================\n"
-#~ "\n"
-#~ "Geben Sie die Werte Ihres POP / IMAP-Kontos / Ihrer Konten ein und alle "
-#~ "eingehenden E-Mails auf diesen Konten werden automatisch in Ihr OpenERP "
-#~ "System heruntergeladen. Alle\n"
-#~ "POP3/IMAP-Kompatible Servern werden unterstützt, auch diejenigen, die "
-#~ "eine\n"
-#~ "verschlüsseltes SSL / TLS-Verbindung erfordern.\n"
-#~ "\n"
-#~ "Dies kann verwendet werden, um auf einfache Weise E-Mail-basierende "
-#~ "Arbeitsabläufe für viele E-Mail-fähigen OpenERP Dokumente zu erstellen, "
-#~ "wie zum Beispiel:  \n"
-#~ "----------------------------------------------------------------------------------------------------------\n"
-#~ "    * CRM Interessenten / Chancen\n"
-#~ "    * CRM Anfragen\n"
-#~ "    * Projekt Themen\n"
-#~ "    * Projektaufgaben\n"
-#~ "    * Personalwesen Neueinstellungen (Bewerber)\n"
-#~ "\n"
-#~ "Installieren Sie einfach die jeweilige Anwendung und Sie können jede "
-#~ "dieser Dokumenttypen\n"
-#~ "(Interessenten, Projektprobleme) Ihren eingehenden E-Mail-Konten "
-#~ "zuweisen. Neue E-Mails erzeugen\n"
-#~ "automatisch neue Dokumente des gewählten Typs, sodass es ein Kinderspiel "
-#~ "ist, eine Integration in\n"
-#~ "einer Mailbox in OpenERP zu erstellen. Sogar besser: Noch besser: diese "
-#~ "Dokumente handeln direkt als\n"
-#~ "Mini-Konversationen synchornisiert durch E-Mails. Sie können innerhalb "
-#~ "von OpenERP antworten und die\n"
-#~ "Antwort wird automatisch gesammlt, wenn sie zurückkommt und an das "
-#~ "gleiche *Gespräch* \n"
-#~ "Dokument angehängt. \n"
-#~ "\n"
-#~ "Für weitere spezifische Bedürfnisse können Sie auch individuell "
-#~ "definierte Maßnahmen zuweisen, die für jede eingehende Mail ausgelöst "
-#~ "wird.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Sign and complete your documents easily. Customize your documents with "
-#~ "text and signature fields and send them to your recipients.\n"
-#~ "\n"
-#~ "Let your customers follow the signature process easily.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Füllen Sie Dokumente aus und unterschreiben diese ganz einfach. Passen "
-#~ "Sie Dokumente mit Text- und Unterschriftsfeldern an und schicken diese an "
-#~ "Empfänger.\n"
-#~ "\n"
-#~ "Ermöglichen Sie Ihren Kunden, den Unterzeichnungsvorgang zu verfolgen.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Sync your bank feeds with Yodlee\n"
-#~ "================================\n"
-#~ "\n"
-#~ "Yodlee interface.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Synchronisieren Sie Ihre Bankvorgänge mit Yodlee\n"
-#~ "================================================\n"
-#~ "\n"
-#~ "Yodlee-Schnittstelle.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Synchronization of project task work entries with timesheet entries.\n"
-#~ "====================================================================\n"
-#~ "\n"
-#~ "This module lets you transfer the entries under tasks defined for "
-#~ "Project\n"
-#~ "Management to the Timesheet line entries for particular date and "
-#~ "particular user\n"
-#~ "with the effect of creating, editing and deleting either ways.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Synchronisation der erledigten Projektaufgaben mit der persönlichen "
-#~ "Zeiterfassung.\n"
-#~ "====================================================================\n"
-#~ "\n"
-#~ "Diese Anwendung ermöglicht den Transfer der dokumentierten Zeiten von "
-#~ "erledigten Aufgaben zu den\n"
-#~ "Zeiterfassungspositionen der Mitarbeiter unter Berücksichtigung des "
-#~ "Datums der Durchführung, als alternative Möglichkeit zur Aufgaben- und "
-#~ "Zeiterfassung.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Synchronization of timesheet entries with the external timesheet "
-#~ "application.\n"
-#~ "====================================================================\n"
-#~ "\n"
-#~ "If you use the external timesheet application, this module alows you to "
-#~ "synchronize timesheet entries between Odoo and the application.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Synchronisation der Zeiterfassung mit der externen "
-#~ "Zeiterfassungsanwendung .\n"
-#~ "====================================================================\n"
-#~ "\n"
-#~ "Bei Nutzung der externen Zeiterfassungsanwendung, kann diese eine "
-#~ "Synchronisation mit den Einträgen in der Zeiterfassung in Odoo "
-#~ "vornehmen.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "The generic OpenERP Customer Relationship Management\n"
-#~ "====================================================\n"
-#~ "\n"
-#~ "This application enables a group of people to intelligently and "
-#~ "efficiently manage leads, opportunities, meetings and activities.\n"
-#~ "\n"
-#~ "It manages key tasks such as communication, identification, "
-#~ "prioritization, assignment, resolution and notification.\n"
-#~ "\n"
-#~ "OpenERP ensures that all cases are successfully tracked by users, "
-#~ "customers and vendors. It can automatically send reminders, trigger "
-#~ "specific methods and many other actions based on your own enterprise "
-#~ "rules.\n"
-#~ "\n"
-#~ "The greatest thing about this system is that users don't need to do "
-#~ "anything special. The CRM module has an email gateway for the "
-#~ "synchronization interface between mails and OpenERP. That way, users can "
-#~ "just send emails to the request tracker.\n"
-#~ "\n"
-#~ "OpenERP will take care of thanking them for their message, automatically "
-#~ "routing it to the appropriate staff and make sure all future "
-#~ "correspondence gets to the right place.\n"
-#~ "\n"
-#~ "\n"
-#~ "Dashboard for CRM will include:\n"
-#~ "-------------------------------\n"
-#~ "* Planned Revenue by Stage and User (graph)\n"
-#~ "* Opportunities by Stage (graph)\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Die allgemeine Kundenbeziehungsverwaltung\n"
-#~ "===============================================\n"
-#~ "\n"
-#~ "Diese Anwendung ermöglicht einer Personengruppe auf intelligente und "
-#~ "effiziente Weise Leads, Chancen, Meetings und Aktivitäten zu verwalten.\n"
-#~ "\n"
-#~ "Sie verwaltet die Hauptaufgaben, wie Kommunikation, Erkennung, "
-#~ "Priorisierung, Zuweisung, Auflösung und Mitteilung.\n"
-#~ "\n"
-#~ "Odoo stellt dabei sicher, dass alle Fälle durch Mitarbeiter, Kunden und "
-#~ "Lieferanten erfolgreich nachvollzogen werden können. Es können "
-#~ "automatisch Erinnerungen versandt werden, bestimmte Vorgänge und viele "
-#~ "andere Handlungen im Sinne Ihrer Unternehmensprozesse ausgelöst werden.\n"
-#~ "\n"
-#~ "Das Beste an diesem System ist, dass Nutzer hierzu nicht besonderes tun "
-#~ "müssen. Das CRM-Modul enthält eine Email-Schnittstelle für den Abgleich "
-#~ "von Emails mit Odoo. So müssen Nutzer einfach eine Email an die "
-#~ "erforderliche Stelle senden.\n"
-#~ "\n"
-#~ "Odoo übernimmt sogar die Danksagung für eingehende Nachrichten, leitet "
-#~ "die Nachrichten an die zuständigen Mitarbeiter weiter und stellt bei "
-#~ "nachfolgender Kommunikation die Zusammenhänge sicher.\n"
-#~ "\n"
-#~ "\n"
-#~ "Die Dashboard des CRM enthält:\n"
-#~ "-----------------------------------------\n"
-#~ "* Planumsätze nach Stufe und Nutzer (grafisch)\n"
-#~ "* Chancen nach Stufe (grafisch)\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "The kernel of OpenERP, needed for all installation.\n"
-#~ "===================================================\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Der Kern von OpenERP, der für alle weiteren Installationen benötigt "
-#~ "wird.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "The module adds the possibility to display data from OpenERP in Google "
-#~ "Spreadsheets in real time.\n"
-#~ "=================================================================================================\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Dieses Modul fügt die Möglichkeit, Daten aus Odoo  in Google Spreadsheets "
-#~ "in Echtzeit anzuzeigen, hinzu.\n"
-#~ "=================================================================================================\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "The module adds the possibility to synchronize Google Calendar with "
-#~ "OpenERP\n"
-#~ "===========================================================================\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Dieses Modul verfügt die Möglichkeit, Odoo mit dem Google-Kalender zu "
-#~ "synchronisieren, hinzu.\n"
-#~ "===============================================================================\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "This is the base module for managing products and pricelists in OpenERP.\n"
-#~ "========================================================================\n"
-#~ "\n"
-#~ "Products support variants, different pricing methods, vendors "
-#~ "information,\n"
-#~ "make to stock/order, different unit of measures, packaging and "
-#~ "properties.\n"
-#~ "\n"
-#~ "Pricelists support:\n"
-#~ "-------------------\n"
-#~ "    * Multiple-level of discount (by product, category, quantities)\n"
-#~ "    * Compute price based on different criteria:\n"
-#~ "        * Other pricelist\n"
-#~ "        * Cost price\n"
-#~ "        * List price\n"
-#~ "        * Vendor price\n"
-#~ "\n"
-#~ "Pricelists preferences by product and/or partners.\n"
-#~ "\n"
-#~ "Print product labels with barcode.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Dies ist das Grundmodul zur Verwaltung von Produkten und Preislisten in "
-#~ "Odoo.\n"
-#~ "==================================================================================\n"
-#~ "\n"
-#~ "Produkte können Varianten und unterschiedliche Preismodelle haben, "
-#~ "Information zum Verkäufer tragen, Bestandsbezogen oder auf Auftrag "
-#~ "beschafft werden, verschiedene Masseinheiten, Verpackungen und sonstige "
-#~ "Eigenschaften haben.\n"
-#~ "\n"
-#~ "Preislistenunterstützung:\n"
-#~ "--------------------------\n"
-#~ "    * Mehrstufige Rabatte (je Produkt, Warengruppe, Menge)\n"
-#~ "    * Preisermittelung auf Basis unterschiedlicher Kriterien:\n"
-#~ "        * Andere Preisliste\n"
-#~ "        * Einstandspreis\n"
-#~ "        * Listen-Verkaufspreis\n"
-#~ "        * Lieferantenpreis\n"
-#~ "\n"
-#~ "Preislistenvorwahl je Produkt und/oder Partner.\n"
-#~ "\n"
-#~ "Druck von Produktetiketten mit Barcode.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "This is the base module to manage the accounting chart for Belgium in "
-#~ "OpenERP.\n"
-#~ "==============================================================================\n"
-#~ "\n"
-#~ "After installing this module, the Configuration wizard for accounting is "
-#~ "launched.\n"
-#~ "    * We have the account templates which can be helpful to generate "
-#~ "Charts of Accounts.\n"
-#~ "    * On that particular wizard, you will be asked to pass the name of "
-#~ "the company,\n"
-#~ "      the chart template to follow, the no. of digits to generate, the "
-#~ "code for your\n"
-#~ "      account and bank account, currency to create journals.\n"
-#~ "\n"
-#~ "Thus, the pure copy of Chart Template is generated.\n"
-#~ "\n"
-#~ "Wizards provided by this module:\n"
-#~ "--------------------------------\n"
-#~ "    * Partner VAT Intra: Enlist the partners with their related VAT and "
-#~ "invoiced\n"
-#~ "      amounts. Prepares an XML file format.\n"
-#~ "      \n"
-#~ "        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
-#~ "Statements/Partner VAT Intra\n"
-#~ "    * Periodical VAT Declaration: Prepares an XML file for Vat "
-#~ "Declaration of\n"
-#~ "      the Main company of the User currently Logged in.\n"
-#~ "      \n"
-#~ "        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
-#~ "Statements/Periodical VAT Declaration\n"
-#~ "    * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for "
-#~ "Vat\n"
-#~ "      Declaration of the Main company of the User currently Logged in "
-#~ "Based on\n"
-#~ "      Fiscal year.\n"
-#~ "      \n"
-#~ "        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
-#~ "Statements/Annual Listing Of VAT-Subjected Customers\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "This is the base module to manage the accounting chart for Belgium in "
-#~ "OpenERP.\n"
-#~ "==============================================================================\n"
-#~ "\n"
-#~ "After installing this module, the Configuration wizard for accounting is "
-#~ "launched.\n"
-#~ "    * We have the account templates which can be helpful to generate "
-#~ "Charts of Accounts.\n"
-#~ "    * On that particular wizard, you will be asked to pass the name of "
-#~ "the company,\n"
-#~ "      the chart template to follow, the no. of digits to generate, the "
-#~ "code for your\n"
-#~ "      account and bank account, currency to create journals.\n"
-#~ "\n"
-#~ "Thus, the pure copy of Chart Template is generated.\n"
-#~ "\n"
-#~ "Wizards provided by this module:\n"
-#~ "--------------------------------\n"
-#~ "    * Partner VAT Intra: Enlist the partners with their related VAT and "
-#~ "invoiced\n"
-#~ "      amounts. Prepares an XML file format.\n"
-#~ "      \n"
-#~ "        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
-#~ "Statements/Partner VAT Intra\n"
-#~ "    * Periodical VAT Declaration: Prepares an XML file for Vat "
-#~ "Declaration of\n"
-#~ "      the Main company of the User currently Logged in.\n"
-#~ "      \n"
-#~ "        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
-#~ "Statements/Periodical VAT Declaration\n"
-#~ "    * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for "
-#~ "Vat\n"
-#~ "      Declaration of the Main company of the User currently Logged in "
-#~ "Based on\n"
-#~ "      Fiscal year.\n"
-#~ "      \n"
-#~ "        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
-#~ "Statements/Annual Listing Of VAT-Subjected Customers\n"
-#~ "\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "This is the base module to manage the accounting chart for Ecuador in "
-#~ "OpenERP.\n"
-#~ "==============================================================================\n"
-#~ "\n"
-#~ "Accounting chart and localization for Ecuador.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Dies ist das Haupt-Modul der Buchführung für Ecuador mit OpenERP.\n"
-#~ "============================================================\n"
-#~ "\n"
-#~ "Kontenplan und Landesanpassungen für Ecuador.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "This is the latest UK OpenERP localisation necessary to run OpenERP "
-#~ "accounting for UK SME's with:\n"
-#~ "=================================================================================================\n"
-#~ "    - a CT600-ready chart of accounts\n"
-#~ "    - VAT100-ready tax structure\n"
-#~ "    - InfoLogic UK counties listing\n"
-#~ "    - a few other adaptations"
-#~ msgstr ""
-#~ "\n"
-#~ "This is the latest UK OpenERP localisation necessary to run OpenERP "
-#~ "accounting for UK SME's with:\n"
-#~ "=================================================================================================\n"
-#~ "    - a CT600-ready chart of accounts\n"
-#~ "    - VAT100-ready tax structure\n"
-#~ "    - InfoLogic UK counties listing\n"
-#~ "    - a few other adaptations"
-
-#~ msgid ""
-#~ "\n"
-#~ "This is the module to manage the Accounting Chart, VAT structure, Fiscal "
-#~ "Position and Tax Mapping.\n"
-#~ "It also adds the Registration Number for Romania in OpenERP.\n"
-#~ "================================================================================================================\n"
-#~ "\n"
-#~ "Romanian accounting chart and localization.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Dieses Modul enthält den rumänischen Kontenrahmen, Umsatzsteuer und "
-#~ "Registrierungs-Nummer für Odoo\n"
-#~ "====================================================================================\n"
-#~ "\n"
-#~ "Rumänischer Kontenrahmen und Loklaisierung.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "This is the module to manage the accounting chart for France in OpenERP.\n"
-#~ "========================================================================\n"
-#~ "\n"
-#~ "This module applies to companies based in France mainland. It doesn't "
-#~ "apply to\n"
-#~ "companies based in the DOM-TOMs (Guadeloupe, Martinique, Guyane, Réunion, "
-#~ "Mayotte).\n"
-#~ "\n"
-#~ "This localisation module creates the VAT taxes of type 'tax included' for "
-#~ "purchases\n"
-#~ "(it is notably required when you use the module 'hr_expense'). Beware "
-#~ "that these\n"
-#~ "'tax included' VAT taxes are not managed by the fiscal positions provided "
-#~ "by this\n"
-#~ "module (because it is complex to manage both 'tax excluded' and 'tax "
-#~ "included'\n"
-#~ "scenarios in fiscal positions).\n"
-#~ "\n"
-#~ "This localisation module doesn't properly handle the scenario when a "
-#~ "France-mainland\n"
-#~ "company sells services to a company based in the DOMs. We could manage it "
-#~ "in the\n"
-#~ "fiscal positions, but it would require to differentiate between 'product' "
-#~ "VAT taxes\n"
-#~ "and 'service' VAT taxes. We consider that it is too 'heavy' to have this "
-#~ "by default\n"
-#~ "in l10n_fr; companies that sell services to DOM-based companies should "
-#~ "update the\n"
-#~ "configuration of their taxes and fiscal positions manually.\n"
-#~ "\n"
-#~ "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "This is the module to manage the accounting chart for France in OpenERP.\n"
-#~ "========================================================================\n"
-#~ "\n"
-#~ "This module applies to companies based in France mainland. It doesn't "
-#~ "apply to\n"
-#~ "companies based in the DOM-TOMs (Guadeloupe, Martinique, Guyane, Réunion, "
-#~ "Mayotte).\n"
-#~ "\n"
-#~ "This localisation module creates the VAT taxes of type 'tax included' for "
-#~ "purchases\n"
-#~ "(it is notably required when you use the module 'hr_expense'). Beware "
-#~ "that these\n"
-#~ "'tax included' VAT taxes are not managed by the fiscal positions provided "
-#~ "by this\n"
-#~ "module (because it is complex to manage both 'tax excluded' and 'tax "
-#~ "included'\n"
-#~ "scenarios in fiscal positions).\n"
-#~ "\n"
-#~ "This localisation module doesn't properly handle the scenario when a "
-#~ "France-mainland\n"
-#~ "company sells services to a company based in the DOMs. We could manage it "
-#~ "in the\n"
-#~ "fiscal positions, but it would require to differentiate between 'product' "
-#~ "VAT taxes\n"
-#~ "and 'service' VAT taxes. We consider that it is too 'heavy' to have this "
-#~ "by default\n"
-#~ "in l10n_fr; companies that sell services to DOM-based companies should "
-#~ "update the\n"
-#~ "configuration of their taxes and fiscal positions manually.\n"
-#~ "\n"
-#~ "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "This is the module to manage the accounting chart for Netherlands in "
-#~ "OpenERP.\n"
-#~ "=============================================================================\n"
-#~ "\n"
-#~ "Read changelog in file __openerp__.py for version information.\n"
-#~ "Dit is een basismodule om een uitgebreid grootboek- en BTW schema voor\n"
-#~ "Nederlandse bedrijven te installeren in OpenERP versie 7.0.\n"
-#~ "\n"
-#~ "De BTW rekeningen zijn waar nodig gekoppeld om de juiste rapportage te "
-#~ "genereren,\n"
-#~ "denk b.v. aan intracommunautaire verwervingen waarbij u 21% BTW moet "
-#~ "opvoeren,\n"
-#~ "maar tegelijkertijd ook 21% als voorheffing weer mag aftrekken.\n"
-#~ "\n"
-#~ "Na installatie van deze module word de configuratie wizard voor "
-#~ "'Accounting' aangeroepen.\n"
-#~ "    * U krijgt een lijst met grootboektemplates aangeboden waarin zich "
-#~ "ook het\n"
-#~ "      Nederlandse grootboekschema bevind.\n"
-#~ "\n"
-#~ "    * Als de configuratie wizard start, wordt u gevraagd om de naam van "
-#~ "uw bedrijf\n"
-#~ "      in te voeren, welke grootboekschema te installeren, uit hoeveel "
-#~ "cijfers een\n"
-#~ "      grootboekrekening mag bestaan, het rekeningnummer van uw bank en de "
-#~ "currency\n"
-#~ "      om Journalen te creeren.\n"
-#~ "\n"
-#~ "Let op!! -> De template van het Nederlandse rekeningschema is opgebouwd "
-#~ "uit 4\n"
-#~ "cijfers. Dit is het minimale aantal welk u moet invullen, u mag het "
-#~ "aantal verhogen.\n"
-#~ "De extra cijfers worden dan achter het rekeningnummer aangevult met "
-#~ "'nullen'.\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "This is the module to manage the accounting chart for Netherlands in "
-#~ "OpenERP.\n"
-#~ "=============================================================================\n"
-#~ "\n"
-#~ "Read changelog in file __openerp__.py for version information.\n"
-#~ "Dit is een basismodule om een uitgebreid grootboek- en BTW schema voor\n"
-#~ "Nederlandse bedrijven te installeren in OpenERP versie 7.0.\n"
-#~ "\n"
-#~ "De BTW rekeningen zijn waar nodig gekoppeld om de juiste rapportage te "
-#~ "genereren,\n"
-#~ "denk b.v. aan intracommunautaire verwervingen waarbij u 21% BTW moet "
-#~ "opvoeren,\n"
-#~ "maar tegelijkertijd ook 21% als voorheffing weer mag aftrekken.\n"
-#~ "\n"
-#~ "Na installatie van deze module word de configuratie wizard voor "
-#~ "'Accounting' aangeroepen.\n"
-#~ "    * U krijgt een lijst met grootboektemplates aangeboden waarin zich "
-#~ "ook het\n"
-#~ "      Nederlandse grootboekschema bevind.\n"
-#~ "\n"
-#~ "    * Als de configuratie wizard start, wordt u gevraagd om de naam van "
-#~ "uw bedrijf\n"
-#~ "      in te voeren, welke grootboekschema te installeren, uit hoeveel "
-#~ "cijfers een\n"
-#~ "      grootboekrekening mag bestaan, het rekeningnummer van uw bank en de "
-#~ "currency\n"
-#~ "      om Journalen te creeren.\n"
-#~ "\n"
-#~ "Let op!! -> De template van het Nederlandse rekeningschema is opgebouwd "
-#~ "uit 4\n"
-#~ "cijfers. Dit is het minimale aantal welk u moet invullen, u mag het "
-#~ "aantal verhogen.\n"
-#~ "De extra cijfers worden dan achter het rekeningnummer aangevult met "
-#~ "'nullen'.\n"
-#~ "\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "This is the module used by OpenERP SA to redirect customers to its "
-#~ "partners, based on geolocation.\n"
-#~ "======================================================================================================\n"
-#~ "\n"
-#~ "This modules lets you geolocate Leads, Opportunities and Partners based "
-#~ "on their address.\n"
-#~ "\n"
-#~ "Once the coordinates of the Lead/Opportunity is known, they can be "
-#~ "automatically assigned\n"
-#~ "to an appropriate local partner, based on the distance and the weight "
-#~ "that was assigned to the partner.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Dies ist das Modul, welches von der Odoo S.A. verwendet wird, um Kunden "
-#~ "basierend auf Ihrer Geolokalisierung zu den Partnern umzuleiten\n"
-#~ "======================================================================================================\n"
-#~ "\n"
-#~ "Dieses Modul dient der Geolokalisierung von Interessenten, Chancen und "
-#~ "Partnern auf Grundlage Ihrer Adresse.\n"
-#~ "\n"
-#~ "Wenn die Geo-Koordinaten des Interessenten oder der Chance bekannt sind, "
-#~ "kann diese automatisch\n"
-#~ "einem lokalen Partner, basierend auf Entfernung und einer definierten "
-#~ "Gewichtung, zugewiesen werden.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "This module adds a followup menu and features to your portal if followup "
-#~ "and portal are installed.\n"
-#~ "==================================================================================================\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Dieses Modul fügt den Menüpunkt Mahnungen hinzu, wenn Mahnwesen und "
-#~ "Portal installiert sind.\n"
-#~ "========================================================================================================\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "This module adds a new Report Engine based on WebKit library "
-#~ "(wkhtmltopdf) to support reports designed in HTML + CSS.\n"
-#~ "=====================================================================================================================\n"
-#~ "\n"
-#~ "The module structure and some code is inspired by the report_openoffice "
-#~ "module.\n"
-#~ "\n"
-#~ "The module allows:\n"
-#~ "------------------\n"
-#~ "    - HTML report definition\n"
-#~ "    - Multi header support\n"
-#~ "    - Multi logo\n"
-#~ "    - Multi company support\n"
-#~ "    - HTML and CSS-3 support (In the limit of the actual WebKIT version)\n"
-#~ "    - JavaScript support\n"
-#~ "    - Raw HTML debugger\n"
-#~ "    - Book printing capabilities\n"
-#~ "    - Margins definition\n"
-#~ "    - Paper size definition\n"
-#~ "\n"
-#~ "Multiple headers and logos can be defined per company. CSS style, header "
-#~ "and\n"
-#~ "footer body are defined per company.\n"
-#~ "\n"
-#~ "For a sample report see also the webkit_report_sample module, and this "
-#~ "video:\n"
-#~ "    http://files.me.com/nbessi/06n92k.mov\n"
-#~ "\n"
-#~ "Requirements and Installation:\n"
-#~ "------------------------------\n"
-#~ "This module requires the ``wkhtmltopdf`` library to render HTML documents "
-#~ "as\n"
-#~ "PDF. Version 0.9.9 or later is necessary, and can be found at\n"
-#~ "http://code.google.com/p/wkhtmltopdf/ for Linux, Mac OS X (i386) and "
-#~ "Windows (32bits).\n"
-#~ "\n"
-#~ "After installing the library on the OpenERP Server machine, you may need "
-#~ "to set\n"
-#~ "the path to the ``wkhtmltopdf`` executable file in a system parameter "
-#~ "named\n"
-#~ "``webkit_path`` in Settings -> Customization -> Parameters -> System "
-#~ "Parameters\n"
-#~ "\n"
-#~ "If you are experiencing missing header/footer problems on Linux, be sure "
-#~ "to\n"
-#~ "install a 'static' version of the library. The default ``wkhtmltopdf`` "
-#~ "on\n"
-#~ "Ubuntu is known to have this issue.\n"
-#~ "\n"
-#~ "\n"
-#~ "TODO:\n"
-#~ "-----\n"
-#~ "    * JavaScript support activation deactivation\n"
-#~ "    * Collated and book format support\n"
-#~ "    * Zip return for separated PDF\n"
-#~ "    * Web client WYSIWYG\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Dieses Modul fügt einen neue Berichtsanwendung basierend auf WebKit-"
-#~ "Bibliothek (wkhtmltopdf) um Berichte, die in HTML + CSS gestaltet sind zu "
-#~ "unterstützen.\n"
-#~ "=====================================================================================================================\n"
-#~ "\n"
-#~ "\n"
-#~ "Die Anwendungsstruktur und ein Code werden von der report_openoffice "
-#~ "Anwendung inspiriert.\n"
-#~ "\n"
-#~ "Die Anwendung ermöglicht:\n"
-#~ "------------------\n"
-#~ "- HTML Berichtsdefinition\n"
-#~ "- Multi-Kopfzeile Unterstützung\n"
-#~ "- Multi-Logo\n"
-#~ "- Multi betriebliche Unterstützung\n"
-#~ "- HTML-und CSS-3-Unterstützung (in der Grenze des tatsächlichen WebKit-"
-#~ "Version)\n"
-#~ "- JavaScript-Unterstützung\n"
-#~ "- Raw HTML-Fehlerbeseitiger\n"
-#~ "- Buch Druckfunktionen\n"
-#~ "- Seitenränder festlegen\n"
-#~ "- Papierformat festlegen\n"
-#~ "\n"
-#~ "Mehrere Kopfzeilen und Logos können pro Unternehmen festgelegt werden. "
-#~ "CSS Stil, Kopf-und\n"
-#~ "Fußzeile werden pro Unternehmen definiert.\n"
-#~ "\n"
-#~ "Ein Beispiel für eine Bericht finden Sie auch in der webkit_report_sample "
-#~ "Anwendung und in diesem Video:\n"
-#~ "http://files.me.com/nbessi/06n92k.mov\n"
-#~ "\n"
-#~ "Voraussetzungen und Installation:\n"
-#~ "----------------------------------------------\n"
-#~ "Dieses Modul erfordert die ``wkhtmltopdf`` Bibliothek, um HTML-Dokumente "
-#~ "in\n"
-#~ "PDF umzuwandeln. Version 0.9.9 oder höher ist erforderlich und können Sie "
-#~ "für Linux,\n"
-#~ " Mac OS X (i386) und Windows (32 Bit) unter http://code.google.com/p/"
-#~ "wkhtmltopdf/ finden.\n"
-#~ "\n"
-#~ "Nach der Installation der Bibliothek auf dem OpenERP Server-Rechner, "
-#~ "müssen Sie den \n"
-#~ "Pfad zur ausführbaren Datei ``wkhtmltopdf`` für jedes Unternehmen "
-#~ "herstellen.\n"
-#~ "\n"
-#~ "Wenn Sie ein Problem mit fehlender Kopf- und Fußzeile bei Linux haben, "
-#~ "achten Sie darauf,\n"
-#~ "dass Sie bei der Installation einer \"ruhende\" Version der Bibliothek "
-#~ "installiert haben. Es ist bekannt, dass\n"
-#~ "der Standardwert ``wkhtmltopdf`` auf Ubuntu dieses Problem habt.\n"
-#~ "\n"
-#~ "\n"
-#~ "Was zu tun ist:\n"
-#~ "-----\n"
-#~ "* Unterstützung von JavaScript Aktivierung deaktivieren\n"
-#~ "* Sortieren und buchen Sie Format-Unterstützung\n"
-#~ "* Zip zurück zur getrennten PDF\n"
-#~ "* Web-Client WYSIWYG\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module adds claim menu and features to your portal if claim and "
-#~ "portal are installed.\n"
-#~ "==========================================================================================\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Das Portal wird um ein Menü für Reklamationen erweitert, wenn die "
-#~ "Anwendungen Reklamationen und Portal installiert sind.\n"
-#~ "==============================================================================================\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "This module allows to print your payments on pre-printed check paper.\n"
-#~ "You can configure the output (layout, stubs informations, etc.) in "
-#~ "company settings, and manage the\n"
-#~ "checks numbering (if you use pre-printed checks without numbers) in "
-#~ "journal settings.\n"
-#~ "\n"
-#~ "Supported formats\n"
-#~ "-----------------\n"
-#~ "- Check on top : Quicken / QuickBooks standard\n"
-#~ "- Check on middle: Peachtree standard\n"
-#~ "- Check on bottom: ADP standard\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Dieses Modul erlaubt das Drucken von Zahlungen auf vorgedruckten "
-#~ "Scheckbelegen.\n"
-#~ "Sie können in den Unternehmenseinstellungen die Ausgabe einstellen "
-#~ "(Layout, Informationsbestandteile, usw.) und verwalten die Nummerierung, "
-#~ "(wenn Sie Vordrucke ohne Nummern verwenden) in den Journaleinstellungen.\n"
-#~ "\n"
-#~ "Unterstützte Formate\n"
-#~ "-----------------\n"
-#~ "- Scheck oben : Quicken / QuickBooks Standard\n"
-#~ "- Scheck in der Mitte: Peachtree Standard\n"
-#~ "- Scheck unten: ADP Standard\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "This module allows users to create their own notes inside OpenERP\n"
-#~ "=================================================================\n"
-#~ "\n"
-#~ "Use notes to write meeting minutes, organize ideas, organize personal "
-#~ "todo\n"
-#~ "lists, etc. Each user manages his own personal Notes. Notes are available "
-#~ "to\n"
-#~ "their authors only, but they can share notes to others users so that "
-#~ "several\n"
-#~ "people can work on the same note in real time. It's very efficient to "
-#~ "share\n"
-#~ "meeting minutes.\n"
-#~ "\n"
-#~ "Notes can be found in the 'Home' menu.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Dieses Modul erlaubt es Benutzern, ihre eigenen Notizen innerhalb von "
-#~ "OpenERP zu erstellen\n"
-#~ "===========================================================================\n"
-#~ "\n"
-#~ "Verwenden Sie Notizen, um Sitzungsprotokolle zu schreiben, Ideen zu "
-#~ "organisieren, persönliche Aufgabenlisten\n"
-#~ "zu organisieren, etc. Jeder Benutzer verwaltet seine eigenen persönlichen "
-#~ "Notizen. Notizen stehen nur\n"
-#~ "dem Autor zur Verfügung, können jedoch auch an andere Benutzer "
-#~ "freigegeben werden, sodass mehrere\n"
-#~ "Personen an der gleichen Notiz in Echtzeit arbeiten können.  Es ist sehr "
-#~ "effizient, um Sitzungsprotokolle\n"
-#~ "zu teilen.\n"
-#~ "\n"
-#~ "Notizen finden Sie im  \"Home\"-Menü.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module allows you to manage susbcriptions.\n"
-#~ "Features:\n"
-#~ "    - Create & edit susbcriptions\n"
-#~ "    - Modify subscriptions with sales orders\n"
-#~ "    - Generate invoice automatically at fixed intervals\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Dieses Modul ermöglicht die Verwaltung von Abonnements.\n"
-#~ "Merkmale:\n"
-#~ "    - Abonnements anlegen und beenden\n"
-#~ "    - Abonnements mit Verkaufsaufträgen beeinflussen\n"
-#~ "    - Automatische Rechnungslegung in festen Intervallen\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module allows you to send your documents through postal mail, thanks "
-#~ "to Docsaway.\n"
-#~ "======================================================================================\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Dieses Modul erlaubt den Dokumentenversand auf dem Postweg, dank "
-#~ "Docsaway.\n"
-#~ "===================================================================================\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "This module allows you to set a deferred revenue on your subscription "
-#~ "contracts.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Dieses Modul ermöglicht Ihnen die Erstellung von später realisierten "
-#~ "Umsätzen zu Ihren Abonnement-Verträgen.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module implements a timesheet system.\n"
-#~ "==========================================\n"
-#~ "\n"
-#~ "Each employee can encode and track their time spent on the different "
-#~ "projects.\n"
-#~ "A project is an analytic account and the time spent on a project "
-#~ "generates costs on\n"
-#~ "the analytic account.\n"
-#~ "\n"
-#~ "Lots of reporting on time and employee tracking are provided.\n"
-#~ "\n"
-#~ "It is completely integrated with the cost accounting module. It allows "
-#~ "you to set\n"
-#~ "up a management by affair.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Dieses Modul ermöglicht ein Stundenzettel System\n"
-#~ "========================================\n"
-#~ "\n"
-#~ "Jeder Mitarbeiter kann seine aufgewendete Zeit für verschiedene Projekte "
-#~ "kodieren und verfolgen.\n"
-#~ "Ein Projekt wird automatisch zur  Kostenstelle. Die Zeit, die jemand an "
-#~ "diesem Projekt verbracht hat,\n"
-#~ "verursacht dementsprechend Kosten auf dieser Projektkostenstelle. \n"
-#~ "\n"
-#~ "Das Modul bietet außerdem Auswertungen zur Rückverfolgung der "
-#~ "Mitarbeiterarbeitszeit in Projekten.\n"
-#~ "Es ist dadurch vollständig in die OpenERP Kostenrechnung integriert und "
-#~ "ermöglicht dem Management \n"
-#~ "ein effizientes Projektcontrolling.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "This module update memos inside OpenERP for using an external pad\n"
-#~ "=================================================================\n"
-#~ "\n"
-#~ "Use for update your text memo in real time with the following user that "
-#~ "you invite.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Dieses Modul aktualisiert Notizen in OpenERP für die Verwendung einer "
-#~ "externen Notiz Anwendung (Pad)\n"
-#~ "====================================================================================\n"
-#~ "\n"
-#~ "Aktualisieren Sie Ihre Textnotizen in Echtzeit mit den Benutzern, die Sie "
-#~ "hierzu einladen.\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "This widget allows to display gauges using justgage library.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Dieses Widget erlaubt die Anzeige von Grafiken mit der JugsGage-"
-#~ "Bibliothek.\n"
-#~ "http://justgage.com\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Türkiye için Tek düzen hesap planı şablonu OpenERP Modülü.\n"
-#~ "==========================================================\n"
-#~ "\n"
-#~ "Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
-#~ "    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, "
-#~ "banka hesap\n"
-#~ "      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Türkiye için Tek düzen hesap planı şablonu OpenERP Modülü.\n"
-#~ "==========================================================\n"
-#~ "\n"
-#~ "Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
-#~ "    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, "
-#~ "banka hesap\n"
-#~ "      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Use this app to manage Subscriptions:\n"
-#~ "Features:\n"
-#~ "    - Create & edit susbcriptions with sales orders (automatic creation "
-#~ "on confirmation)\n"
-#~ "    - Generate invoice and credit card payments automatically at fixed "
-#~ "intervals\n"
-#~ "    - Let your customer edit their subscriptions themselves (options, "
-#~ "close their contract) with granular control\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "Verwenden Sie diese Anwendung, um Abonnements zu verwalten:\n"
-#~ "Merkmale:\n"
-#~ "    - Anlage & Bearbeitung von Abonnements mit Verkaufsaufträgen "
-#~ "(automatische Anlage bei Freigabe)\n"
-#~ "    - Erstelle Rechnung und Kreditkartenzahlungen automatisch in festen "
-#~ "Zeitabständen\n"
-#~ "    - Lassen Sie den Kunden das Abonnements selbst bearbeiten (Optionen, "
-#~ "Vertragsbeendigung) mit fein abstimmbarer Kontrolle.\n"
-#~ "        "
-
-#~ msgid ""
-#~ "    Lead Scoring\n"
-#~ "===================\n"
-#~ "\n"
-#~ "This module allows you to...\n"
-#~ "    - Track specific page view on your website.\n"
-#~ "    - Assign score on lead: sort your lead automatically and consider the "
-#~ "more important at first.\n"
-#~ "    - Assign lead to salesteams: define your own filters and sort "
-#~ "automatically your leads by saleteam.\n"
-#~ "    - Assign lead to salesmen: define filter by saleman and dispatch "
-#~ "automatically your leads to the right saleman.\n"
-#~ msgstr ""
-#~ "Bewertung Ihrer Leads:\n"
-#~ "\n"
-#~ "Diese Anwendung hilft bei folgendem:\n"
-#~ "- Statistik über Zugriffe auf spezifische Webseiten.\n"
-#~ "- Bewertung von Leads: Automatische Bewertung und Priorisierung von "
-#~ "Leads.\n"
-#~ "- Zuweisen von Leads zu Verkaufsteam: Definieren Sie eigene Filter und "
-#~ "sortieren Sie automatisch die Leads eines Teams.\n"
-#~ "- Zuweisen von Leads zu Verkäufern: Definieren Sie eigene Filter je "
-#~ "Verkäufer und übergeben Sie automatisch Ihre Leads an den richtigen "
-#~ "Verkäufer.\n"
-
-#~ msgid ""
-#~ " Module for synchronization of Documents between several companies. For "
-#~ "example, this allow you to have a Sale Order created automatically when a "
-#~ "Purchase Order is validated with another company of the system as vendor, "
-#~ "and inversely.\n"
-#~ "\n"
-#~ "    Supported documents are SO, PO and invoices/refunds.\n"
-#~ msgstr ""
-#~ " Modul zur Synchronisierung von Dokumenten zwischen mehreren Unternehmen. "
-#~ "Zum Beispiel ermöglicht dies die automatischen Anlage eines "
-#~ "Verkaufsauftrags, wenn im anderen beteiligten Unternehmen eine Bestellung "
-#~ "ausgelöst wird, und umgekehrt.\n"
-#~ "\n"
-#~ "    Unterstützte Dokumente sind Verkaufsauftrag, Bestellung und "
-#~ "Rechnungen/Gutschriften.\n"
-
-#~ msgid "%B - Full month name."
-#~ msgstr "%B - Kompletter Monatsname"
-
-#~ msgid "%H - Hour (24-hour clock) [00,23]."
-#~ msgstr "%H - Stunde (24-Stunden Format) [00,23]."
-
-#~ msgid "%I - Hour (12-hour clock) [01,12]."
-#~ msgstr "%I - Stunde (12-Stunden Format) [01,12]."
-
-#~ msgid "%M - Minute [00,59]."
-#~ msgstr "%M - Minute [00,59]."
-
-#~ msgid "%S - Seconds [00,61]."
-#~ msgstr "%S - Sekunden [00,61]."
-
-#~ msgid "%Y - Year with century."
-#~ msgstr "%Y - Jahr (vierstellig)."
-
-#~ msgid "%d - Day of the month [01,31]."
-#~ msgstr "%d - Tag des Monats [01,31]."
-
-#~ msgid "%j - Day of the year [001,366]."
-#~ msgstr "%j - Tag des Jahres [001,366]."
-
-#~ msgid "%m - Month number [01,12]."
-#~ msgstr "%m - Monatsnummer [01,12]."
-
-#~ msgid "%p - Equivalent of either AM or PM."
-#~ msgstr "%p - Equivalent zu AM oder PM."
-
-#~ msgid "%w - Weekday number [0(Sunday),6]."
-#~ msgstr "%w - Wochentagnummer [0(Sunday),6]."
-
-#~ msgid "%y - Year without century [00,99]."
-#~ msgstr "%y - Jahr (zweistellig) [00,99]."
-
-#~ msgid ""
-#~ ",\n"
-#~ "    'summary': 'Repair broken or damaged products',\n"
-#~ "The aim is to have a complete module to manage all products repairs.\n"
-#~ "====================================================================\n"
-#~ "\n"
-#~ "The following topics should be covered by this module:\n"
-#~ "------------------------------------------------------\n"
-#~ "    * Add/remove products in the reparation\n"
-#~ "    * Impact for stocks\n"
-#~ "    * Invoicing (products and/or services)\n"
-#~ "    * Warranty concept\n"
-#~ "    * Repair quotation report\n"
-#~ "    * Notes for the technician and for the final customer\n"
-#~ msgstr ""
-#~ ",\n"
-#~ "    'Zusammenfassung': 'Reparatur defekter oder beschädigter Geräte',\n"
-#~ "Ziel ist es ein Modul für die vollständige Verwaltung aller "
-#~ "Produktreparaturen zu haben.\n"
-#~ "==============================================================================================\n"
-#~ "\n"
-#~ "Die folgenden Aufgaben sollen durch das Modul abgedeckt werden:\n"
-#~ "--------------------------------------------------------------------------\n"
-#~ "    * Hinzufügen/Entfernen von in Reparatur befindlichen Produkten\n"
-#~ "    * Einfluss auf den Lagerbestand\n"
-#~ "    * Abrechnung (Produkte und/oder andere Leistungen)\n"
-#~ "    * Gewährleistungen\n"
-#~ "    * Reparaturangebotsbericht\n"
-#~ "    * Hinweise für Techniker und den Endkunden\n"
-
-#~ msgid "1.  %b, %B         ==> Dec, December"
-#~ msgstr "1. %b, %B ==> Dez, Dezember"
-
-#~ msgid "2.  %a ,%A         ==> Fri, Friday"
-#~ msgstr "2.  %a ,%A         ==> Fr, Freitag"
-
-#~ msgid "3.  %y, %Y         ==> 08, 2008"
-#~ msgstr "3. %y, %Y ==> 08, 2008"
-
-#~ msgid "4.  %d, %m         ==> 05, 12"
-#~ msgstr "4. %d, %m ==> 05, 12"
-
-#~ msgid "5.  %H:%M:%S      ==> 18:25:20"
-#~ msgstr "5. %H:%M:%S ==> 18:25:20"
-
-#~ msgid "6.  %I:%M:%S %p  ==> 06:25:20 PM"
-#~ msgstr "6. %I:%M:%S %p ==> 06:25:20 PM"
-
-#~ msgid "7.  %j              ==> 340"
-#~ msgstr "7. %j ==> 340"
-
-#~ msgid "8. %S              ==> 20"
-#~ msgstr "8. %S ==> 20"
-
-#~ msgid "9. %w              ==> 5 ( Friday is the 6th day)"
-#~ msgstr "9. %w ==> 5 ( Freitag ist der 6. Tag)"
-
-#~ msgid "Account Contract Dashboard"
-#~ msgstr "Konto Vertragsübersicht"
-
-#~ msgid "Account Extension"
-#~ msgstr "Konto Erweiterung"
-
-#~ msgid "Account Report"
-#~ msgstr "Kontenbericht"
-
-#~ msgid "Account Reports"
-#~ msgstr "Statistik Buchhaltung"
-
-#~ msgid "Accounting &amp; Finance"
-#~ msgstr "Buchhaltung &amp; Finanzen"
-
-#~ msgid "Accounting Reports"
-#~ msgstr "Finanzberichte"
-
-#~ msgid "Add barcode scanning facilities to Warehouse Management."
-#~ msgstr "Ergänzt Barcode-Lesen zur Lagerverwaltung"
-
-#~ msgid "Address Format"
-#~ msgstr "Adressformat"
-
-#~ msgid "Albanian / Shqip"
-#~ msgstr "Albanisch / Shqip"
-
-#~ msgid ""
-#~ "Allow to save all the versions of your website and allow to perform AB "
-#~ "testing."
-#~ msgstr ""
-#~ "Erlauben des Abspeicherns aller Versionen der Website und erlauben des "
-#~ "Ausführens des AB Tests."
-
-#~ msgid "Amharic / አምሃርኛ"
-#~ msgstr "amharisch / አምሃርኛ"
-
-#~ msgid "Arabic / الْعَرَبيّة"
-#~ msgstr "Arabisch / الْعَرَبيّة"
-
-#~ msgid "Argentina - Accounting Reports"
-#~ msgstr "Argentinien - Buchhaltungsauswertungen"
-
-#~ msgid "Association"
-#~ msgstr "Verein/Verband"
-
-#~ msgid "Authentication"
-#~ msgstr "Authentifizierung"
-
-#~ msgid "Bad file format: %s"
-#~ msgstr "Falsches Dateiformat: %s"
-
-#~ msgid "Base Language 'en_US' can not be deactivated!"
-#~ msgstr "Standardsprache \"en_US\" kann nicht deaktiviert werden!"
-
-#~ msgid "Basque / Euskara"
-#~ msgstr "Baskische / Euskara"
-
-#~ msgid "Batch Deposit"
-#~ msgstr "Stapelbuchung"
-
-#~ msgid "Belgium - Accounting Reports"
-#~ msgstr "Belgische Buchhaltungsauswertungen"
-
-#~ msgid "Belgium - Import Bank CODA Statements"
-#~ msgstr "Belgium - Import Bank CODA Statements"
-
-#~ msgid "Bill Time on Tasks"
-#~ msgstr "Berechne geleistete Arbeitszeit"
-
-#~ msgid "Bolivia - Accounting Reports"
-#~ msgstr "Bolivien - Buchhaltungsauswertungen"
-
-#~ msgid "Bosnian / bosanski jezik"
-#~ msgstr "Bosnisch"
-
-#~ msgid "Brazilian - Accounting Reports"
-#~ msgstr "Brasilianische Buchhaltungsauswertungen"
-
-#~ msgid "Bridge"
-#~ msgstr "Brücke"
-
-#~ msgid "Bronze"
-#~ msgstr "Bronze"
-
-#~ msgid "Build custom web forms using the website builder"
-#~ msgstr "Bau von individuellen Web-Formularen mittels Website-Baukasten"
-
-#~ msgid "Bulgarian / български език"
-#~ msgstr "Bulgarisch / български език"
-
-#~ msgid "Catalan / Català"
-#~ msgstr "Catalan / Català"
-
-#~ msgid ""
-#~ "Check this to define the report footer manually.  Otherwise it will be "
-#~ "filled in automatically."
-#~ msgstr ""
-#~ "Aktivieren Sie diese Option, um die Fußzeile des Berichts manuell zu "
-#~ "definieren. Sonst wird diese automatisch ausgefüllt."
-
-#~ msgid "Checks Printing"
-#~ msgstr "Scheckdruck"
-
-#~ msgid "Child Tag"
-#~ msgstr "Untergeordnete Kategorien"
-
-#~ msgid "Chile - Accounting Reports"
-#~ msgstr "Chile - Buchhaltungsauswertungen"
-
-#~ msgid "Chinese (CN) / 简体中文"
-#~ msgstr "Chinesisch (CN) / 简体中文"
-
-#~ msgid "Chinese (HK)"
-#~ msgstr "Chinesisch (HK)"
-
-#~ msgid "Chinese (TW) / 正體字"
-#~ msgstr "Chinesisch (TW) / 正體字"
-
-#~ msgid "Claim on Deliveries"
-#~ msgstr "Forderungen aus Lieferung"
-
-#~ msgid "Claims Management"
-#~ msgstr "Forderungsmanagement"
-
-#~ msgid "Colombian - Accounting Reports"
-#~ msgstr "Kolumbien - Buchhaltungsauswertungen"
-
-#~ msgid "Company Contact"
-#~ msgstr "Unternehmenskontakt"
-
-#~ msgid "Company Registry"
-#~ msgstr "Handelsregister"
-
-#~ msgid "Components Buyer"
-#~ msgstr "Komponenten-Käufer"
-
-#~ msgid "Consultancy Services"
-#~ msgstr "Beratungsleistungen"
-
-#~ msgid "Croatia - RRIF 2012 COA - Accounting Reports"
-#~ msgstr "Kroatien - RRIF 2012 COA"
-
-#~ msgid "Croatian / hrvatski jezik"
-#~ msgstr "Kroatisch / hrvatski jezik"
-
-#~ msgid "Custom Footer"
-#~ msgstr "Benutzerdefinierte Fußzeile"
-
-#~ msgid "Customer Relationship Management"
-#~ msgstr "Customer Relationship Management"
-
-#~ msgid "Czech / Čeština"
-#~ msgstr "Tschechisch / Čeština"
-
-#~ msgid "DHL Shipping"
-#~ msgstr "DHL Versand"
-
-#~ msgid "Danish / Dansk"
-#~ msgstr "Dänisch / Dansk"
-
-#~ msgid "Decimal Places"
-#~ msgstr "Dezimalstellen"
-
-#~ msgid "Deferred revenue management for contracts"
-#~ msgstr "Rechnungsabgrenzungsmanagement für Verträge"
-
-#~ msgid "Design gorgeous mails with 8 high quality themes"
-#~ msgstr ""
-#~ "Designen Sie professionell und optisch ansprechende Emails mit 8 "
-#~ "hochqualitativen Vorlagen"
-
-#~ msgid "Deutschland SKR03 - Accounting Reports"
-#~ msgstr "Deutschland SKR03 - Buchführung"
-
-#~ msgid "Deutschland SKR04 - Accounting Reports"
-#~ msgstr "Deutschland SKR04 - Buchführung"
-
-#~ msgid "Digital Signatures"
-#~ msgstr "Digitale Unterschrift"
-
-#~ msgid "Distributor"
-#~ msgstr "Distributor"
-
-#~ msgid "Dutch (BE) / Nederlands (BE)"
-#~ msgstr "Niederländisch (BE) / Niederlande (BE)"
-
-#~ msgid "Dutch / Nederlands"
-#~ msgstr "Niederländisch / Nederlands"
-
-#~ msgid "Employee Appraisals"
-#~ msgstr "Personalbeurteilung"
-
-#~ msgid "Enable Light Multi Company"
-#~ msgstr "Multi-Company"
-
-#~ msgid "English (AU)"
-#~ msgstr "Englisch (AU)"
-
-#~ msgid "English (UK)"
-#~ msgstr "Englisch (UK)"
-
-#~ msgid "English (US)"
-#~ msgstr "Englisch (USA)"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Fehler! Sie können keine rekursiven Unternehmen erzeugen."
-
-#~ msgid "Estonian / Eesti keel"
-#~ msgstr "Estnisch / Eesti keel"
-
-#~ msgid "Ethiopia - Accounting Reports"
-#~ msgstr "Äthiopien - Buchhaltungsauswertungen"
-
-#~ msgid "Export payments as SEPA Credit Transfer files"
-#~ msgstr "Exportiere Zahlungen als SEPA Kreditübertragungsdateien"
-
-#~ msgid "Fedex Shipping"
-#~ msgstr "Fedex Versand"
-
-#~ msgid "Financial Management"
-#~ msgstr "Finanzbuchhaltung"
-
-#~ msgid "Finnish / Suomi"
-#~ msgstr "Finnish / Suomi"
-
-#~ msgid "France - Accounting Reports"
-#~ msgstr "Französische Buchhaltungsauswertungen"
-
-#~ msgid "French (BE) / Français (BE)"
-#~ msgstr "Französisch (BE) / Français (BE)"
-
-#~ msgid "French (CA) / Français (CA)"
-#~ msgstr "Französisch (CA) / Français (CA)"
-
-#~ msgid "French (CH) / Français (CH)"
-#~ msgstr "Französisch (CH) / Français (CH)"
-
-#~ msgid "French / Français"
-#~ msgstr "Französisch / Français"
-
-#~ msgid "Full Name"
-#~ msgstr "Voller Name"
-
-#~ msgid "Galician / Galego"
-#~ msgstr "Galizisch / Galizien"
-
-#~ msgid "Gantt view for Leaves Dashboard"
-#~ msgstr "Gantt-Ansicht für Urlaubs-Dashboard"
-
-#~ msgid "Generic Modules"
-#~ msgstr "Allgemeine Module"
-
-#~ msgid "Georgian / ქართული ენა"
-#~ msgstr "Georgisch / ქართული ენა"
-
-#~ msgid "German / Deutsch"
-#~ msgstr "German / Deutsch"
-
-#~ msgid "Gold"
-#~ msgstr "Gold"
-
-#~ msgid "Greece - Accounting Reports"
-#~ msgstr "Griechische Buchhaltungsauswertungen"
-
-#~ msgid "Greek / Ελληνικά"
-#~ msgstr "Griechisch / Ελληνικά"
-
-#~ msgid "Gujarati / ગુજરાતી"
-#~ msgstr "Gujarati / ગુજરાતી"
-
-#~ msgid "Hardware Drivers"
-#~ msgstr "Hardware-Treiber"
-
-#~ msgid "Hebrew / עִבְרִי"
-#~ msgstr "Hebräisch / עִבְרִי"
-
-#~ msgid "Hindi / हिंदी"
-#~ msgstr "Hindi / हिंदी"
-
-#~ msgid "Hungarian - Accounting Reports"
-#~ msgstr "Ungarn - Buchhaltungsauswertungen"
-
-#~ msgid "Hungarian / Magyar"
-#~ msgstr "Ungarisch / Magyar"
-
-#~ msgid "IT Services"
-#~ msgstr "IT-Services"
-
-#~ msgid ""
-#~ "If you uncheck the active field, it will disable the ACL without deleting "
-#~ "it (if you delete a native ACL, it will be re-created when you reload the "
-#~ "module."
-#~ msgstr ""
-#~ "Wenn Sie das aktive Feld deaktivieren, wird es die ACL deaktivieren ohne "
-#~ "diese zu löschen (wenn Sie eine systemeigene ACL löschen, wir diese neu "
-#~ "erstellt werden, sobald Sie die Anwendung neu laden)."
-
-#~ msgid ""
-#~ "If you uncheck the active field, it will disable the record rule without "
-#~ "deleting it (if you delete a native record rule, it may be re-created "
-#~ "when you reload the module."
-#~ msgstr ""
-#~ "Wenn Sie das Aktiv-Feld deaktivieren, wird dieser Eintrag deaktiviert "
-#~ "ohne dabei gelöscht zu werden (wenn Sie eine systemeigene Datensatz Regel "
-#~ "löschen, kann diese beim erneuten Laden des Moduls erneut erstellt "
-#~ "werden)."
-
-#~ msgid "Import OFX Bank Statement"
-#~ msgstr "Importiere OFX Bankauszug"
-
-#~ msgid "Import QIF Bank Statement"
-#~ msgstr "Importiere QIF Bankauszug"
-
-#~ msgid "Import exchange rates from the Internet.\n"
-#~ msgstr "Importiere Wechselkurse aus dem Internet.\n"
-
-#~ msgid "Indian - Accounting Reports"
-#~ msgstr "Indien - Buchhaltungsauswertungen"
-
-#~ msgid "Indonesian / Bahasa Indonesia"
-#~ msgstr "Indonesien / Bahasa Indonesia"
-
-#~ msgid "Inter Company Module for Sale/Purchase Orders and Invoices"
-#~ msgstr "Intra-Company-Modul für Verkauf/Bestellung und Abrechnungen"
-
-#~ msgid "Intercompany SO/PO/INV rules"
-#~ msgstr "Intra-Company Regeln zu SO/PO/INV Regeln"
-
-#~ msgid "Invalid context default_groups_ref value (model.name_id) : \"%s\""
-#~ msgstr "Ungültiger Kontext default_groups_ref Wert (model.name_id) : \"%s\""
-
-#~ msgid "Inventory Control"
-#~ msgstr "Bestandsverwaltung"
-
-#~ msgid "Italian / Italiano"
-#~ msgstr "Italienisch / Italiano"
-
-#~ msgid "Japan - Accounting Reports"
-#~ msgstr "Japan - Buchhaltungsauswertungen"
-
-#~ msgid "Japanese / 日本語"
-#~ msgstr "Japanisch / 日本語"
-
-#~ msgid "Knowledge Management"
-#~ msgstr "Knowledge Management"
-
-#~ msgid "Korean (KP) / 한국어 (KP)"
-#~ msgstr "Koreanisch (KP) / 한국어 (KP)"
-
-#~ msgid "Korean (KR) / 한국어 (KR)"
-#~ msgstr "Koreanisch (KR) / 한국어 (KR)"
-
-#~ msgid "Lao / ພາສາລາວ"
-#~ msgstr "Lao / ພາສາລາວ"
-
-#~ msgid "Latvian / latviešu valoda"
-#~ msgstr "Lettisch / latviešu valoda"
-
-#~ msgid "Lead Scoring"
-#~ msgstr "Leadbewertung"
-
-#~ msgid "Leaves Gantt"
-#~ msgstr "Urlaubs-Gantt"
-
-#~ msgid "Lithuanian / Lietuvių kalba"
-#~ msgstr "Littauisch / Lietuvių kalba"
-
-#~ msgid "Live Currency Exchange Rate"
-#~ msgstr "Aktueller Währungswechselkurs"
-
-#~ msgid "Logo"
-#~ msgstr "Logo"
-
-#~ msgid "Logo Web"
-#~ msgstr "Logo Web"
-
-#~ msgid "Loyalty Program"
-#~ msgstr "Treueprogramm"
-
-#~ msgid "Loyalty Program for the Point of Sale "
-#~ msgstr "Point of Sale Treueprogramm"
-
-#~ msgid "Luxembourg - Accounting Reports"
-#~ msgstr "Luxemburg - Buchhaltungsauswertungen"
-
-#~ msgid "Macedonian / македонски јазик"
-#~ msgstr "Mazedonisch / македонски јазик"
-
-#~ msgid ""
-#~ "Manage partner tags to better classify them for tracking and analysis "
-#~ "purposes.\n"
-#~ "                    A partner may have several categories and categories "
-#~ "have a hierarchical structure: a partner with a categorie has also the "
-#~ "parent categorie."
-#~ msgstr ""
-#~ "Verwalten Sie Tags, um diese für Verfolgungs- und Analysezwecke "
-#~ "einzusetzen .\n"
-#~ "Ein Partner kann mehrere Tags haben. Bei Tags, die eine Hierarchie "
-#~ "besitzen, wird automatisch die übergeordnete Ebene hinzugefügt.\n"
-#~ "            "
-
-#~ msgid "Managing vehicles and contracts"
-#~ msgstr "Verwaltet Fahrzeuge und Verträge"
-
-#~ msgid "Manufacturer"
-#~ msgstr "Hersteller"
-
-#~ msgid "Maroc - Accounting Reports"
-#~ msgstr "Marokko Buchhaltungsauswertungen"
-
-#~ msgid "Mass Mailing Themes"
-#~ msgstr "Massenmailing Vorlagen"
-
-#~ msgid ""
-#~ "Module loading %s failed: file %s could not be processed:\n"
-#~ " %s"
-#~ msgstr ""
-#~ "Laden des Moduls %s fehlgeschlagen: Datei %s konnte nicht verarbeitet "
-#~ "werden:\n"
-#~ "%s"
-
-#~ msgid "Mongolian / монгол"
-#~ msgstr "Mongolisch / монгол"
-
-#~ msgid "Netherlands - Accounting Reports"
-#~ msgstr "Holländische Buchhaltungsauswertungen"
-
-#~ msgid "Norway - Accounting Reports"
-#~ msgstr "Norwegische Buchhaltungsauswertungen"
-
-#~ msgid "Object %s doesn't exist"
-#~ msgstr "Objekt %s existiert nicht!"
-
-#~ msgid "Odoo VOIP"
-#~ msgstr "Odoo VoIP"
-
-#~ msgid ""
-#~ "Odoo helps you easily track all activities related to\n"
-#~ "                a customer; discussions, history of business "
-#~ "opportunities,\n"
-#~ "                documents, etc."
-#~ msgstr ""
-#~ "Odoo hilft Ihnen alle Aktivitäten zu einem Kunden\n"
-#~ "leicht zu überblicken: Diskussionen, Verlauf der \n"
-#~ "Geschäftschancen, Dokumente, usw."
-
-#~ msgid "Office Supplies"
-#~ msgstr "Bürobedarf"
-
-#~ msgid "OpenERP Web Diagram"
-#~ msgstr "OpenERP Web Diagramm"
-
-#~ msgid "Parent Tag"
-#~ msgstr "Übergeordnete Kategorie"
-
-#~ msgid "Partner Tag"
-#~ msgstr "Partner Tag"
-
-#~ msgid "Partners Geo-Localization"
-#~ msgstr "Geo-Ortung für Partner"
-
-#~ msgid "Payment Follow-up Management"
-#~ msgstr "Management der Zahlungserinnerungen"
-
-#~ msgid "Periodical Appraisal"
-#~ msgstr "Periodische Beurteilung"
-
-#~ msgid "Persian / فارس"
-#~ msgstr "Persisch / Persien"
-
-#~ msgid "Poland - Accounting Reports"
-#~ msgstr "Polen - Buchhaltungsauswertungen"
-
-#~ msgid "Polish / Język polski"
-#~ msgstr "Polnisch / Język polski"
-
-#~ msgid "Portuguese (BR) / Português (BR)"
-#~ msgstr "Portugiesisch (BR) / Português (BR)"
-
-#~ msgid "Portuguese / Português"
-#~ msgstr "Portugiesisch / Português"
-
-#~ msgid "Print Invoice"
-#~ msgstr "Rechnung drucken"
-
-#~ msgid "Print Provider : DocsAway"
-#~ msgstr "Druck Anbieter: DocsAway"
-
-#~ msgid "Print Sale"
-#~ msgstr "Verkauf drucken"
-
-#~ msgid "Print US Checks"
-#~ msgstr "Druckausgabe US Scheck"
-
-#~ msgid "Print and Send Invoices with DocsAway.com"
-#~ msgstr "Drucke und versende Rechnungen mit DocsAway.com"
-
-#~ msgid "Print and Send Provider Base Module"
-#~ msgstr "Grundmodul für Druck- und Versanddienstleister"
-
-#~ msgid ""
-#~ "Print and Send Provider Base Module. Print and send your invoice with a "
-#~ "Postal Provider. This required to install a module implementing a "
-#~ "provider."
-#~ msgstr ""
-#~ "Druck- und Versanddienstleister Grundmodul. Drucken und versenden Sie "
-#~ "Ihre Rechnung über Postdienstleister. Dies erfordert die Installation "
-#~ "eines Moduls zur spezifischen Umsetzung für einen Dienstleister."
-
-#~ msgid "Print and Send Sale Orders"
-#~ msgstr "Drucken und versenden Sie ihren Verkaufsauftrag"
-
-#~ msgid "Print and Send your Sale Order by Post"
-#~ msgstr "Drucken und versenden Sie ihren Verkaufsauftrag per Post."
-
-#~ msgid "Private methods (such as %s) cannot be called remotely."
-#~ msgstr "Private Methoden (wie %s) können nicht entfernt aufgerufen werden."
-
-#~ msgid "Project & Timesheet Management"
-#~ msgstr "Projekt- & Stundenzettelmanagement"
-
-#~ msgid "Project Forecast"
-#~ msgstr "Projektprognosen"
-
-#~ msgid "Project Management"
-#~ msgstr "Projektmanagement"
-
-#~ msgid "Prospect"
-#~ msgstr "Interessent"
-
-#~ msgid "RML Header"
-#~ msgstr "RML Header"
-
-#~ msgid "Reporting"
-#~ msgstr "Berichtswesen"
-
-#~ msgid "Resource management for Project"
-#~ msgstr "Ressourcenmanagement für Projekt"
-
-#~ msgid "Retailer"
-#~ msgstr "Wiederverkäufer"
-
-#~ msgid "Revenue Recognitions Management"
-#~ msgstr "Modul zur Verwaltung von Umsatzrealisierungen"
-
-#~ msgid "Romania - Accounting Reports"
-#~ msgstr "Rumänien - Buchhaltungsauswertungen"
-
-#~ msgid "Romanian / română"
-#~ msgstr "Rumänisch / română"
-
-#~ msgid "Russian / русский язык"
-#~ msgstr "Russisch / русский язык"
-
-#~ msgid "SEPA Credit Transfer"
-#~ msgstr "SEPA Kreditübertragung"
-
-#~ msgid "Sale Ebay"
-#~ msgstr "Verkauf eBay"
-
-#~ msgid "See http://openerp.com"
-#~ msgstr "Siehe http://openerp.com"
-
-#~ msgid ""
-#~ "Select this if you want to set company's address information  for this "
-#~ "contact"
-#~ msgstr ""
-#~ "Wählen Sie dies aus, wenn Sie die Unternehmensadresse für diesen Kontakt "
-#~ "erfassen wollen."
-
-#~ msgid "Send Professional Quotations"
-#~ msgstr "Versenden Sie professionelle Angebote"
-
-#~ msgid ""
-#~ "Send documents to sign online, receive and archive filled copies (esign)"
-#~ msgstr ""
-#~ "Verschicken von zu unterzeichnenden Dokumenten. Erhalt und Archivierung "
-#~ "ausgefüllter Dokumente (eSignatur)"
-
-#~ msgid "Send your shippings through DHL and track them online"
-#~ msgstr ""
-#~ "Versenden Sie ihr Lieferungen über DHL und verfolgen Sie sie online."
-
-#~ msgid "Send your shippings through Fedex and track them online"
-#~ msgstr ""
-#~ "Versenden Sie ihr Lieferungen über Fedex und verfolgen Sie sie online."
-
-#~ msgid "Send your shippings through Temando and track them online"
-#~ msgstr ""
-#~ "Versenden Sie ihr Lieferungen über Temando und verfolgen Sie sie online."
-
-#~ msgid "Send your shippings through UPS and track them online"
-#~ msgstr ""
-#~ "Versenden Sie ihr Lieferungen über UPS und verfolgen Sie sie online."
-
-#~ msgid "Send your shippings through USPS and track them online"
-#~ msgstr ""
-#~ "Versenden Sie ihr Lieferungen über USPS und verfolgen Sie sie online."
-
-#~ msgid "Serbian (Cyrillic) / српски"
-#~ msgstr "Serbisch (Kyrillisch) / српски"
-
-#~ msgid "Serbian (Latin) / srpski"
-#~ msgstr "Serbisch (Latin) / srpski"
-
-#~ msgid "Services"
-#~ msgstr "Dienstleistungen"
-
-#~ msgid "Silver"
-#~ msgstr "Silber"
-
-#~ msgid "Singapore - Accounting Reports"
-#~ msgstr "Singapur - Buchhaltungsauswertungen"
-
-#~ msgid "Slovak / Slovenský jazyk"
-#~ msgstr "Slovakisch / Slowakei"
-
-#~ msgid "Slovenian - Accounting Reports"
-#~ msgstr "Slowenien - Buchhaltungsauswertungen"
-
-#~ msgid "Slovenian / slovenščina"
-#~ msgstr "Slovenisch / slovenščina"
-
-#~ msgid "Spain - Accounting (PGCE 2008) Reports"
-#~ msgstr "Spanien - Buchführungsauswertung (PGCE 2008)"
-
-#~ msgid "Spanish (AR) / Español (AR)"
-#~ msgstr "Spanisch (AR) / Español (AR)"
-
-#~ msgid "Spanish (BO) / Español (BO)"
-#~ msgstr "Spanisch (BO) / Español (BO)"
-
-#~ msgid "Spanish (CL) / Español (CL)"
-#~ msgstr "Spanisch (CL) / Español (CL)"
-
-#~ msgid "Spanish (CO) / Español (CO)"
-#~ msgstr "Spanisch (CO) / Español (CO)"
-
-#~ msgid "Spanish (CR) / Español (CR)"
-#~ msgstr "Spanisch (CR) / Español (CR)"
-
-#~ msgid "Spanish (DO) / Español (DO)"
-#~ msgstr "Spanisch (DO) / Español (DO)"
-
-#~ msgid "Spanish (EC) / Español (EC)"
-#~ msgstr "Spanisch (EC) / Español (EC)"
-
-#~ msgid "Spanish (GT) / Español (GT)"
-#~ msgstr "Spanisch (GT) / Español (GT)"
-
-#~ msgid "Spanish (MX) / Español (MX)"
-#~ msgstr "Spanisch (MX) / Español (MX)"
-
-#~ msgid "Spanish (PA) / Español (PA)"
-#~ msgstr "Spanisch (PA) / Español (PA)"
-
-#~ msgid "Spanish (PE) / Español (PE)"
-#~ msgstr "Spanisch (PE) / Español (PE)"
-
-#~ msgid "Spanish (PY) / Español (PY)"
-#~ msgstr "Spanisch (PY) / Español (PY)"
-
-#~ msgid "Spanish (UY) / Español (UY)"
-#~ msgstr "Spanisch (UY) / Español (UY)"
-
-#~ msgid "Spanish (VE) / Español (VE)"
-#~ msgstr "Spanisch (VE) / Español (VE)"
-
-#~ msgid "Spanish / Español"
-#~ msgstr "Spanisch / Español"
-
-#~ msgid "Stock Management"
-#~ msgstr "Lagerverwaltung"
-
-#~ msgid "Subscription Management"
-#~ msgstr "Aboauftragsmanagement"
-
-#~ msgid "Subscription Management (without frontend)"
-#~ msgstr "Aboauftragsmanagement (ohne Frontend)"
-
-#~ msgid "Subscriptions Management Frontend for your customers"
-#~ msgstr "Aboauftragsmanagement (mit Frontend) für ihre Kunden"
-
-#~ msgid "Swedish / svenska"
-#~ msgstr "Schwedisch / svenska"
-
-#~ msgid "Switzerland - Accounting Reports"
-#~ msgstr "Schweizer Buchhaltungsauswertungen"
-
-#~ msgid "Synchronization with the external timesheet application"
-#~ msgstr "Synchronisation mit externer Zeiterfassungsanwendung"
-
-#~ msgid ""
-#~ "Technical field, used only to display a boolean using a radio button. As "
-#~ "for Odoo v9 RadioButton cannot be used on boolean fields, this one serves "
-#~ "as interface. Due to the old API limitations with interface function "
-#~ "field, we implement it by hand instead of a true function field. When "
-#~ "migrating to the new API the code should be simplified."
-#~ msgstr ""
-#~ "Technisches Hilfsfeld, nur verwendet zur Anzeige eines Bool-Wertes "
-#~ "mittels RadioButton. Seit Odoo V9 sind RadioButtons nicht mehr zur "
-#~ "Anzeige von Bool'schen Werten nutzbar, dies dient als Übergangslösung. "
-#~ "Auf Grund von Beschränkungen der alten API bei der Schnittstelle zu "
-#~ "Funktionsfeldern, setzen wir dies händisch um anstelle eines echten "
-#~ "Funktionsfeldes. Bei Migration zur neuen API sollte der Code vereinfacht "
-#~ "werden."
-
-#~ msgid "Telugu / తెలుగు"
-#~ msgstr "Telugu / తెలుగు"
-
-#~ msgid "Temando Shipping"
-#~ msgstr "Temando Versand"
-
-#~ msgid "Thai / ภาษาไทย"
-#~ msgstr "Thailändisch / ภาษาไทย"
-
-#~ msgid "Thailand - Accounting Reports"
-#~ msgstr "Thailändische Buchhaltungsauswertungen"
-
-#~ msgid ""
-#~ "The ISO country code in two chars.\n"
-#~ "You can use this field for quick search."
-#~ msgstr ""
-#~ "ISO Landescode in zwei Zeichen. \n"
-#~ "Sie können dieses Feld auch für eine Schnellsuche einsetzen."
-
-#~ msgid ""
-#~ "The Separator Format should be like [,n] where 0 < n :starting from Unit "
-#~ "digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to "
-#~ "be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent "
-#~ "it as 106,500. Provided ',' as the thousand separator in each case."
-#~ msgstr ""
-#~ "Das Trennzeichenformat sollte [,n] entsprechen mit 0 < n, beginnend bei "
-#~ "Einer-Stelle. -1 beendet die Trennung. Z. B. [3,2,-1] bei 106500 "
-#~ "entspricht 1,06,500; [1,2,-1] würde dann 106,50,0 ergeben; [3] wird "
-#~ "106,500 daraus erstellen. Vorausgesetzt ',' sei jeweils der Tausender-"
-#~ "Trenner."
-
-#~ msgid ""
-#~ "The operation cannot be completed, probably due to the following:\n"
-#~ "- deletion: you may be trying to delete a record while other records "
-#~ "still reference it\n"
-#~ "- creation/update: a mandatory field is not correctly set"
-#~ msgstr ""
-#~ "Die Aktion kann nicht fertiggestellt werden, wahrscheinlich aufgrund "
-#~ "einer der folgenden Fehler:\n"
-#~ "- Löschen: Sie versuchen einen Datensatz zu löschen, auf den noch andere "
-#~ "Datensätze referenzieren\n"
-#~ "- Neu/Aktualisierung: Ein Pflicht-Feld wurde nicht oder nicht richtig "
-#~ "ausgefüllt"
-
-#~ msgid ""
-#~ "The second argument of the many2many field %s must be a SQL table !You "
-#~ "used %s, which is not a valid SQL table name."
-#~ msgstr ""
-#~ "Das zweite Argument des m:n Feldes %s muss eine SQL Tabelle sein! Das von "
-#~ "Ihnen benutzte %s ist kein gültiger Tabellenname."
-
-#~ msgid ""
-#~ "The sum of the data (2nd field) is null.\n"
-#~ "We can't draw a pie chart !"
-#~ msgstr ""
-#~ "Die Summe der Daten (2. Feld) ist 0.\n"
-#~ "Ein Tortendiagramm kann damit nicht gezeichnet werden."
-
-#~ msgid "Turkish / Türkçe"
-#~ msgstr "Türkisch / Türkçe"
-
-#~ msgid "UK - Accounting Reports"
-#~ msgstr "Vereinigtes Königreich Buchhaltungsauswertungen"
-
-#~ msgid "UPS Shipping"
-#~ msgstr "UPS Versand"
-
-#~ msgid "US Check Printing"
-#~ msgstr "US-Scheckdruck"
-
-#~ msgid "Ukrainian / українська"
-#~ msgstr "Ukrainisch / українська"
-
-#~ msgid "United States Postal Service (USPS) Shipping"
-#~ msgstr "United States Postal Service (USPS) Versand"
-
-#~ msgid "Unknown report type: %s"
-#~ msgstr "Unbekannte Berichtsart: %s"
-
-#~ msgid ""
-#~ "Unrecognized extension: must be one of .csv, .po, or .tgz (received .%s)."
-#~ msgstr ""
-#~ "Erweiterung nicht erkannt: Muss eine von .csv, .po, or .tgz sein "
-#~ "(erhalten .%s)."
-
-#~ msgid "Update Languague Terms"
-#~ msgstr "Aktualisere Übersetzungen"
-
-#~ msgid "Uruguay - Accounts Reports"
-#~ msgstr "Urugay - Buchführungsberichte"
-
-#~ msgid "Use Company Address"
-#~ msgstr "Unternehmensanschrift verwenden"
-
-#~ msgid ""
-#~ "Use the HR ressources for the gamification process.\n"
-#~ "\n"
-#~ "The HR officer can now manage challenges and badges.\n"
-#~ "This allow the user to send badges to employees instead of simple users.\n"
-#~ "Badge received are displayed on the user profile.\n"
-#~ msgstr ""
-#~ "Verwende Personalressourcen für die Motivationsförderung.\n"
-#~ "\n"
-#~ "Der Personalleiter kann nun Herausforderungen und Auszeichnungen "
-#~ "verwalten.\n"
-#~ "Dies erlaubt es dem Benutzer Auszeichnungen an Mitarbeiter anstatt nur an "
-#~ "Nutzer zu senden. Erhaltene Auszeichnungen werden im Nutzerprofil "
-#~ "sichtbar angezeigt.\n"
-#~ "\n"
-
-#~ msgid "VOIP Core"
-#~ msgstr "VOIP Core"
-
-#~ msgid "Vendor"
-#~ msgstr "Lieferant"
-
-#~ msgid "Vietnam - Accounting Reports"
-#~ msgstr "Vietnam - Buchhaltungsauswertungen"
-
-#~ msgid "Vietnamese / Tiếng Việt"
-#~ msgstr "Vietnamesisch / Tiếng Việt"
-
-#~ msgid "View Editor"
-#~ msgstr "Ansichten-Editor"
-
-#~ msgid "View and create reports"
-#~ msgstr "Zeige und erstelle Berichte"
-
-#~ msgid "Warehouse Management Barcode Scanning"
-#~ msgstr "Lager & Logistik: Barcode Erfassung"
-
-#~ msgid "Web Gantt"
-#~ msgstr "Web Gantt"
-
-#~ msgid "Website CRM Claim"
-#~ msgstr "Webseiten Anzeige der Reklamationen"
-
-#~ msgid "Website Enterprise"
-#~ msgstr "Webseite Enterprise"
-
-#~ msgid "Website Followup"
-#~ msgstr "Webseite Zahlungserinnerungen"
-
-#~ msgid "Website Form Builder"
-#~ msgstr "Webseiten Formularbaukasten"
-
-#~ msgid "Website Sale Stock - Website Delivery Informations"
-#~ msgstr "Webseiten Anzeige von Lieferinformationen"
-
-#~ msgid "Website Versioning"
-#~ msgstr "Webseiten-Versionierung"
-
-#~ msgid "Wholesaler"
-#~ msgstr "Großhändler"
-
-#~ msgid "Yodlee"
-#~ msgstr "Yodlee"
-
-#~ msgid "Yodlee Finance"
-#~ msgstr "Yodlee Finanzen"
-
-#~ msgid "You cannot unactivate the admin user."
-#~ msgstr "Sie können den Administrator Benutzer nicht deaktivieren."
-
-#~ msgid "You cannot unactivate the user you're currently logged in as."
-#~ msgstr ""
-#~ "Sie können den Nutzer nicht deaktivieren, mit dem sie gerade angemeldet "
-#~ "sind."
-
-#~ msgid "You should try others search criteria."
-#~ msgstr "Sie sollten andere Suchkriterien versuchen."
-
-#~ msgid "account_online_sync"
-#~ msgstr "Konto Onlineabgleich"
-
-#~ msgid "account_plaid"
-#~ msgstr "account_plaid"
-
-#~ msgid "created."
-#~ msgstr "erstellt."
-
-#~ msgid "ir.actions.wizard"
-#~ msgstr "ir.actions.wizard"
-
-#~ msgid "no translation function found for lang: '%s'"
-#~ msgstr "Keine Übersetzungsfunktions für die Sprache '%s' gefunden."
-
-#~ msgid "read more"
-#~ msgstr "weiterlesen"
-
-#~ msgid "undefined get method !"
-#~ msgstr "nicht definierte 'get' Funktion"

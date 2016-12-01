@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-02-23 06:34+0000\n"
 "Last-Translator: Hoang Loc Le Huu <loclhh@gmail.com>\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -19,6 +19,35 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_3
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to let you know that you have entered the select circle "
+"of our Gold Partners!</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_2
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to welcome you among our Silver Partners as of today!</"
+"p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_1
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>You will receive your welcome pack via email shortly.</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -232,6 +261,16 @@ msgid "Condition"
 msgstr "Điều kiện"
 
 #. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_2
+msgid "Congratulations! You are now a Silver Partner!"
+msgstr "Chúc mừng! Bạn hiện là Thành viên Bạc!"
+
+#. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_3
+msgid "Congratulations! You are now one of our Gold Partners!"
+msgstr "Chúc mừng! Bạn hiện là Thành viên Vàng!"
+
+#. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:480
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
@@ -365,9 +404,8 @@ msgstr "Mẫu Email"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template_preview
-#, fuzzy
 msgid "Email Template Preview"
-msgstr "Mẫu Email"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_mail_template
@@ -613,7 +651,7 @@ msgstr "Tự động hóa Lead"
 #. module: marketing_campaign
 #: model:res.groups,name:marketing_campaign.group_lead_automation_manager
 msgid "Manager"
-msgstr ""
+msgstr "Quản trị dự án"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
@@ -749,16 +787,12 @@ msgstr "Tháng Mười"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
-#, fuzzy
 msgid ""
 "Odoo's marketing campaign allows you to automate communication\n"
 "            to your prospects. You can define a segment (set of conditions) "
 "on\n"
 "            your leads and partners to fulfill the campaign."
 msgstr ""
-"Chiến dịch quảng cáo của Odoo cho phép bạn tự động giao tiếp đến những khách "
-"hàng tiềm năng của bạn. Bạn có thể định nghĩa một phân vùng (thiết lập các "
-"điều kiện) cho những manh mối và những đối tác để hoàn thành chiến dịch này."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -785,6 +819,11 @@ msgstr "Đối tác"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid "Partner Field"
 msgstr "Trường Đối tác"
+
+#. module: marketing_campaign
+#: model:ir.filters,name:marketing_campaign.filter0
+msgid "Partners"
+msgstr "Đối tác"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
@@ -1160,12 +1199,17 @@ msgstr "Trường giá trị duy nhất"
 #. module: marketing_campaign
 #: model:res.groups,name:marketing_campaign.group_lead_automation_user
 msgid "User"
-msgstr ""
+msgstr "Người dùng"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_variable_cost
 msgid "Variable Cost"
 msgstr "Biến phí"
+
+#. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_1
+msgid "Welcome to the Odoo Partner Channel!"
+msgstr "Chào mừng tới Kênh Đối tác Odoo!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1186,75 +1230,3 @@ msgstr "Năm"
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
-
-#~ msgid "Congratulations! You are now a Silver Partner!"
-#~ msgstr "Chúc mừng! Bạn hiện là Thành viên Bạc!"
-
-#~ msgid "Congratulations! You are now one of our Gold Partners!"
-#~ msgstr "Chúc mừng! Bạn hiện là Thành viên Vàng!"
-
-#~ msgid "Hello, you will receive your welcome pack via email shortly."
-#~ msgstr "Xin chào, bạn sẽ nhận gói chào mừng thông qua email sớm thôi."
-
-#~ msgid ""
-#~ "Hi, we are delighted to let you know that you have entered the select "
-#~ "circle of our Gold Partners"
-#~ msgstr ""
-#~ "Chào bạn, chúng tôi hạnh phúc báo bạn biết rằng bạn đã gia nhập vào nhóm "
-#~ "đối tác vàng của chúng tôi."
-
-#~ msgid ""
-#~ "Hi, we are delighted to welcome you among our Silver Partners as of today!"
-#~ msgstr ""
-#~ "Xin chào, chúng tôi vui mừng chào đón bạn như là đối tác bạc của chúng "
-#~ "tôi ngày hôm nay!"
-
-#~ msgid ""
-#~ "Odoo's marketing campaign allows you to automate communication\n"
-#~ "            to your prospects. You can define a segment (set of "
-#~ "conditions) on\n"
-#~ "            your leads and partners to fullfil the campaign."
-#~ msgstr ""
-#~ "Chiến dịch quảng cáo của Odoo cho phép bạn tự động giao tiếp đến những "
-#~ "khách hàng tiềm năng của bạn. Bạn có thể định nghĩa một phân vùng (thiết "
-#~ "lập các điều kiện) cho những manh mối và những đối tác để hoàn thành "
-#~ "chiến dịch này."
-
-#~ msgid "Open Marketing Menu"
-#~ msgstr "Mở Menu Marketing"
-
-#~ msgid "Partners"
-#~ msgstr "Đối tác"
-
-#~ msgid "Welcome to the Odoo Partner Channel!"
-#~ msgstr "Chào mừng tới Kênh Đối tác Odoo!"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "<p>Hello,</p>\n"
-#~ "<p>We are delighted to let you know that you have entered the select "
-#~ "circle of our Gold Partners!</p>\n"
-#~ "<p>Thank you,</p>\n"
-#~ msgstr ""
-#~ "Chào bạn, chúng tôi hạnh phúc báo bạn biết rằng bạn đã gia nhập vào nhóm "
-#~ "đối tác vàng của chúng tôi."
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "<p>Hello,</p>\n"
-#~ "<p>We are delighted to welcome you among our Silver Partners as of today!"
-#~ "</p>\n"
-#~ "<p>Thank you,</p>\n"
-#~ msgstr ""
-#~ "Xin chào, chúng tôi vui mừng chào đón bạn như là đối tác bạc của chúng "
-#~ "tôi ngày hôm nay!"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "<p>Hello,</p>\n"
-#~ "<p>You will receive your welcome pack via email shortly.</p>\n"
-#~ "<p>Thank you,</p>\n"
-#~ msgstr "Xin chào, bạn sẽ nhận gói chào mừng thông qua email sớm thôi."

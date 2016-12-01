@@ -13,9 +13,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-24 07:11+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-11-17 22:22+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -236,7 +236,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chat_manager.js:61
 #, python-format
 msgid "%d Messages"
-msgstr ""
+msgstr "%d Viestiä"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:231
@@ -300,6 +300,8 @@ msgid ""
 "<div class=\"o_mail_notification\">joined <a href=\"#\" class="
 "\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
+"<div class=\"o_mail_notification\">liittyi <a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:162
@@ -769,7 +771,7 @@ msgstr "Runko"
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_bounce
 #: model:ir.model.fields,field_description:mail.field_res_users_message_bounce
 msgid "Bounce"
-msgstr ""
+msgstr "Viestin palautus"
 
 #. module: mail
 #. openerp-web
@@ -990,7 +992,7 @@ msgstr "Kirjoitustila"
 #: code:addons/mail/static/src/xml/thread.xml:24
 #, python-format
 msgid "Congratulations, your inbox is empty"
-msgstr ""
+msgstr "Hienoa! Inboxisi on tyhjä"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_contacts
@@ -1019,9 +1021,8 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
-#, fuzzy
 msgid "Conversation is minimized"
-msgstr "Viestintä"
+msgstr ""
 
 #. module: mail
 #. openerp-web
@@ -1045,9 +1046,8 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
-#, fuzzy
 msgid "Create Date"
-msgstr "Luonut"
+msgstr "Luontipäivä"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_uid
@@ -1209,16 +1209,14 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete
-#, fuzzy
 msgid "Delete Emails"
-msgstr "Peruuta sähköposti"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete_message
-#, fuzzy
 msgid "Delete Message Copy"
-msgstr "Yksityisviestit"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
@@ -1270,7 +1268,7 @@ msgstr "Viestintä"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel
 msgid "Discussion channel"
-msgstr ""
+msgstr "Keskustelukanava"
 
 #. module: mail
 #: model:mail.message.subtype,name:mail.mt_comment
@@ -2051,7 +2049,7 @@ msgstr "Passiivinen alias"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:974
+#: code:addons/mail/static/src/js/chat_manager.js:958
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2091,7 +2089,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:593
+#: code:addons/mail/static/src/js/chat_manager.js:577
 #, python-format
 msgid "Invitation"
 msgstr "Kutsu"
@@ -2130,7 +2128,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/client_action.js:638
 #, python-format
 msgid "Invite people to #%s"
-msgstr ""
+msgstr "Kutsu ihmisiä kanavalle #%s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -2140,7 +2138,7 @@ msgstr "Kutsuavustaja"
 #. module: mail
 #: selection:mail.channel,public:0
 msgid "Invited people only"
-msgstr ""
+msgstr "Vain kutsutut henkilöt"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_is_follower
@@ -2210,9 +2208,8 @@ msgstr "On ilmoitus"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
-#, fuzzy
 msgid "Is Subscribed"
-msgstr "Erottu"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
@@ -2227,7 +2224,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Join"
-msgstr ""
+msgstr "Liity"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_action_view
@@ -2369,7 +2366,7 @@ msgstr "Viimeksi päivitetty"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Leave"
-msgstr ""
+msgstr "Poissaolo"
 
 #. module: mail
 #. openerp-web
@@ -2499,7 +2496,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:100
 #, python-format
 msgid "Mark as Todo"
-msgstr ""
+msgstr "Merkitse tehtäväksi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image_medium
@@ -2759,7 +2756,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_needaction
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Need Action"
-msgstr ""
+msgstr "Vaatii toimenpiteitä"
 
 #. module: mail
 #: selection:res.partner,notify_email:0
@@ -2853,7 +2850,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:28
 #, python-format
 msgid "No starred message"
-msgstr ""
+msgstr "Ei tähdellisiä viestejä"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_no_auto_thread
@@ -3088,7 +3085,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:11
 #, python-format
 msgid "Odoo needs your permission to"
-msgstr ""
+msgstr "Odoo tarvitsee lupasi"
 
 #. module: mail
 #. openerp-web
@@ -3326,7 +3323,7 @@ msgstr "Kumppanit jotka saa ottaa mukaan joukkokirjekampanjoihin."
 #: model:ir.model.fields,field_description:mail.field_mail_message_needaction_partner_ids
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_needaction_partner_ids
 msgid "Partners with Need Action"
-msgstr ""
+msgstr "Toimenpiteitä vaativat kumppanit"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_auto_delete
@@ -3438,9 +3435,9 @@ msgstr "Yksityiset kanavat"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:138
-#, fuzzy, python-format
+#, python-format
 msgid "Public Channels"
-msgstr "Yksityiset kanavat"
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180
@@ -3611,7 +3608,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_scheduled_date
 #: model:ir.model.fields,field_description:mail.field_mail_template_scheduled_date
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Suunniteltu päivämäärä"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_scheduled_date
@@ -3641,7 +3638,7 @@ msgstr ""
 #. module: mail
 #: selection:mail.channel,public:0
 msgid "Selected group of users"
-msgstr ""
+msgstr "Valitun ryhmän käyttäjät"
 
 #. module: mail
 #. openerp-web
@@ -3678,7 +3675,7 @@ msgstr "Lähetä viesti"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_email_send
 msgid "Send messages by email"
-msgstr ""
+msgstr "Lähetä viestitä sähköpostilla"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_email_from
@@ -3694,7 +3691,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:95
 #, python-format
 msgid "Sends messages by email"
-msgstr ""
+msgstr "Lähettää viestit sähköpostilla"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
@@ -3791,7 +3788,7 @@ msgstr "Hymiö"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:980
+#: code:addons/mail/static/src/js/chat_manager.js:964
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4060,7 +4057,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
 msgid "Tracking"
-msgstr ""
+msgstr "Seuranta"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -4093,7 +4090,7 @@ msgstr "Tyyppi"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_uuid
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:43
@@ -4370,7 +4367,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Who can follow the group's activities?"
-msgstr ""
+msgstr "Ketkä saavat seurata kanavan viestejä?"
 
 #. module: mail
 #. openerp-web
@@ -4398,7 +4395,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:29
 #, python-format
 msgid "You can mark any message as 'starred', and it shows up in this channel."
-msgstr ""
+msgstr "Voit merkata viestin 'tähdelliseksi', ja se ilmestyy tälle kanavalle."
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:49
@@ -4426,7 +4423,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:593
+#: code:addons/mail/static/src/js/chat_manager.js:577
 #, python-format
 msgid "You have been invited to: "
 msgstr "Sinut on kutsuttu:"
@@ -4467,9 +4464,14 @@ msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr ""
+
+#. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "by"
-msgstr ""
+msgstr "kirjoittanut"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:320
@@ -4482,7 +4484,7 @@ msgstr "dokumentti"
 #: code:addons/mail/static/src/xml/client_action.xml:11
 #, python-format
 msgid "enable desktop notifications"
-msgstr ""
+msgstr "käyttää työpöytäilmoituksia"
 
 #. module: mail
 #. openerp-web
@@ -4549,18 +4551,23 @@ msgid "publisher_warranty.contract"
 msgstr "publisher_warranty.contract"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:16
-#, fuzzy, python-format
+#, python-format
 msgid "read less"
-msgstr "Lukemattomia viestejä"
+msgstr "lue vähemmän"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:15
 #, python-format
 msgid "read more"
-msgstr ""
+msgstr "lue lisää"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
@@ -4568,21 +4575,13 @@ msgid "record:"
 msgstr "tietue:"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:35
 #, python-format
 msgid "this document"
 msgstr "tämä dokumentti"
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "Automaattisesti puhdistetut HTML-sisällöt"
-
-#~ msgid "Join Group"
-#~ msgstr "Liity ryhmään"
-
-#~ msgid ""
-#~ "Rich-text/HTML version of the message (placeholders may be used here)"
-#~ msgstr "Rich-text/HTML versio viestistä (voit käyttä täytettä)"
-
-#~ msgid "Send mail"
-#~ msgstr "Lähetä sähköpostia"

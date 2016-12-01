@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 12:00+0000\n"
-"PO-Revision-Date: 2016-04-06 20:36+0000\n"
-"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-10-09 08:24+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -49,6 +49,12 @@ msgid ""
 msgstr ""
 "Словарь Python, который будет вычислен для получения значений по умолчанию "
 "при создании записей для этого псевдонима."
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer3
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer5
+msgid "Acer Laptop"
+msgstr "Acer Laptop"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
@@ -403,6 +409,17 @@ msgid "Group by..."
 msgstr "Объединять по..."
 
 #. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_printer1
+msgid "HP Inkjet printer"
+msgstr "Принтер HP Inkjet"
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer11
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer9
+msgid "HP Laptop"
+msgstr "HP Laptop"
+
+#. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
 msgid "High"
 msgstr "Высокий"
@@ -542,6 +559,11 @@ msgid "Model"
 msgstr "Модель"
 
 #. module: hr_equipment
+#: model:hr.equipment.category,name:hr_equipment.hr_equipment_monitor
+msgid "Monitors"
+msgstr "Мониторы"
+
+#. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "My Equipments"
 msgstr "Мое оборудование"
@@ -611,6 +633,11 @@ msgstr ""
 "задача (model))"
 
 #. module: hr_equipment
+#: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
+msgid "Phones"
+msgstr "Телефоны"
+
+#. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
@@ -619,6 +646,10 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
+"Политики для сообщений в документе с использованием почтового шлюза:\n"
+"- все: каждый может писать\n"
+"- партнёры: только аутентифицированные партнёры;\n"
+"- подписчики: только подписчики соответствующего документа\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -690,6 +721,13 @@ msgstr "Отменить запрос"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
 msgid "Responsible"
 msgstr "Ответственный"
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor1
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor4
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor6
+msgid "Samsung Monitor 15\""
+msgstr "Монитор Samsung 15\""
 
 #. module: hr_equipment
 #: model:hr.equipment.stage,name:hr_equipment.stage_4
@@ -913,86 +951,3 @@ msgstr "Запрос обслуживания"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 msgid "maintenance Request Search"
 msgstr "Поиск запросов обслуживания"
-
-#~ msgid "Acer Laptop"
-#~ msgstr "Acer Laptop"
-
-#~ msgid "Action Needed"
-#~ msgstr "Требуется реакция"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата последнего сообщения"
-
-#~ msgid "Followers"
-#~ msgstr "Подписчики"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Подписчики (Каналы)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Подписчики (Партнеры)"
-
-#~ msgid "HP Inkjet printer"
-#~ msgstr "Принтер HP Inkjet"
-
-#~ msgid "HP Laptop"
-#~ msgstr "HP Laptop"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
-
-#~ msgid "Is Follower"
-#~ msgstr "Подписчик"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Последнее сообщение по дате"
-
-#~ msgid "Messages"
-#~ msgstr "Сообщения"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Сообщения и история общения"
-
-#~ msgid "Monitors"
-#~ msgstr "Мониторы"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Количество действий"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Количество сообщений, требующих реакции"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Количество непрочтённых сообщений"
-
-#~ msgid "Open Equipments Menu"
-#~ msgstr "Открыть меню оборудования"
-
-#~ msgid "Phones"
-#~ msgstr "Телефоны"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Политики для сообщений в документе с использованием почтового шлюза:\n"
-#~ "- все: каждый может писать\n"
-#~ "- партнёры: только аутентифицированные партнёры;\n"
-#~ "- подписчики: только подписчики соответствующего документа\n"
-
-#~ msgid "Samsung Monitor 15\""
-#~ msgstr "Монитор Samsung 15\""
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Счетчик непрочтённых сообщений"
-
-#~ msgid "Website Messages"
-#~ msgstr "Сообщения с сайта"
-
-#~ msgid "Website communication history"
-#~ msgstr "История общения с сайта"

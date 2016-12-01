@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-03-10 13:15+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-09-08 06:55+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
 "sl/)\n"
@@ -427,7 +427,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
 msgid "Click to add a new employee."
-msgstr ""
+msgstr "Kliknite za dodajanje novega zaposlenega."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -487,6 +487,16 @@ msgstr "E-pošta stika"
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Contract"
 msgstr "Contract"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
+msgid "Contract Proposal"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
+msgid "Contract Signed"
+msgstr "Podpisana pogodba"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
@@ -788,6 +798,11 @@ msgid "Filter and view on next actions and date"
 msgstr "Filter in pogled naslednjih dejanj in datumov"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Prvi intervju"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr ""
@@ -851,7 +866,7 @@ msgstr "Združeno po"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
-msgstr ""
+msgstr "Najeti kadri"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
@@ -882,9 +897,8 @@ msgstr ""
 #: model:survey.question,comments_message:hr_recruitment.recruitment_2_3
 #: model:survey.question,comments_message:hr_recruitment.recruitment_2_4
 #: model:survey.question,comments_message:hr_recruitment.recruitment_3_1
-#, fuzzy
 msgid "If other, please specify:"
-msgstr "Če drugo, pojasnite:"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_template_id
@@ -912,6 +926,11 @@ msgstr "Pomembnost"
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
 msgstr "Pomembno"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Initial Qualification"
+msgstr "Začetna kvalifikacija"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
@@ -1265,7 +1284,6 @@ msgstr "Telefon"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1273,10 +1291,6 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Pravila vpisa sporočil na dokument preko mailgateway.\n"
-"- vsi: vsi lahko vpisujejo\n"
-"- partnerji: le overjeni partnerji\n"
-"- sledilci: le sledilci povezanega dokumenta\n"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -1372,9 +1386,8 @@ msgstr "Redni sestanki"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
-#, fuzzy
 msgid "Reopen Application"
-msgstr "Aplikacija"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1459,6 +1472,11 @@ msgstr "Iskanje kandidatov"
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid "Search through resumes and motivation letters."
 msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "Drugi intervju"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
@@ -1786,6 +1804,9 @@ msgid ""
 "person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
+"Z vpogledom v ERP kadrovski sistem\n"
+"lahko enostavno in hitro najdete vse informacije za vsako osebo;\n"
+"kontaktni podatki, oddelek, odsotnost, itd."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:442
@@ -1815,143 +1836,3 @@ msgstr "kandidati za zaposlitev"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>Congrats! Your resume's got our interest!\n"
-#~ "        I will call you as soon as possible to make a 10 minutes phone "
-#~ "interview and  plan a first meeting.</p>\n"
-#~ "        <p>If we can’t reach you or if you miss our call, feel free to "
-#~ "reach me back on the number 001 312 349 3030\n"
-#~ "        If I do not answer, please let me a message with some schedules "
-#~ "to call you back.</p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id.signature | safe}"
-#~ msgstr ""
-#~ "<p>Spoštovani ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>Čestitamo! Vaš življenjepis je zbudil naše zanimanje!\n"
-#~ "        Čim prej vas bomo poklicali, da opravimo 10 minutni telefonski "
-#~ "intervju in se dogovorimo za prvi sestanek.</p>\n"
-#~ "        <p>V kolikor ne bi bili dosegljivi ali pa bi zgrešili naš klic, "
-#~ "nas lahko pokličete na številko +386 11 111 111\n"
-#~ "        Če ne bi bilo odgovora, nam postite sporočilo z nekaj predlogi "
-#~ "terminov in poklicali vas bomo nazaj.</p>\n"
-#~ "        <p>Lep pozdrav,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id.signature | safe}"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>We thank you for your interest in our company and for your "
-#~ "application.\n"
-#~ "        Unfortunately, your profile does not match with our needs or our "
-#~ "recruitment\n"
-#~ "        campaign has reached its term.</p>\n"
-#~ "        <p>If you want more details, feel free to contact us by phone.</"
-#~ "p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id and object.user_id.signature | safe or ''}"
-#~ msgstr ""
-#~ "<p>Spoštovani ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>Zahvaljujemo se vam za izkazano zanimanje za našo družbo in "
-#~ "vaš\n"
-#~ "        življenjepis. Vaš profil žal ne ustreza našim potrebam ali pa se "
-#~ "je\n"
-#~ "        razpisano zaposlovanje izteklo.</p>\n"
-#~ "        <p>Če želite več podrobnosti, smo vam na voljo preko telefona.</"
-#~ "p>\n"
-#~ "        <p>S spoštovanjem,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id and object.user_id.signature | safe or ''}"
-
-#~ msgid "Action Needed"
-#~ msgstr "Potreben je ukrep"
-
-#~ msgid "Campaign"
-#~ msgstr "Kampanija"
-
-#~ msgid "Contract Signed"
-#~ msgstr "Podpisana pogodba"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum zadnjega sporočila vpisanega pod to vknjižbo."
-
-#~ msgid "First Interview"
-#~ msgstr "Prvi intervju"
-
-#~ msgid "Followers"
-#~ msgstr "Sledilci"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Sledilci (kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Sledilci (partnerji)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#~ msgid "If other, precise:"
-#~ msgstr "Če drugo, pojasnite:"
-
-#~ msgid "Initial Qualification"
-#~ msgstr "Začetna kvalifikacija"
-
-#~ msgid "Is Follower"
-#~ msgstr "Je sledilec"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnjega sporočila"
-
-#~ msgid "Messages"
-#~ msgstr "Sporočila"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Komunikacije in kronologija"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Število aktivnosti"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Število sporočil, ki zahtevajo dejavnost"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Število neprebranih sporočil"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Odpri meni Kadri"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Pravila vpisa sporočil na dokument preko mailgateway.\n"
-#~ "- vsi: vsi lahko vpisujejo\n"
-#~ "- partnerji: le overjeni partnerji\n"
-#~ "- sledilci: le sledilci povezanega dokumenta\n"
-
-#~ msgid "Second Interview"
-#~ msgstr "Drugi intervju"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Naziv, ki pomaga slediti kampanjskim naporom Primer: Posebna_ponudba, "
-#~ "Božična_akcija"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Števec neprebranih sporočil"
-
-#~ msgid "Website Messages"
-#~ msgstr "Sporočila iz spletne strani"
-
-#~ msgid "Website communication history"
-#~ msgstr "Kronologija komunikacij spletne strani"

@@ -5,14 +5,14 @@
 # Translators:
 # Ana Juaristi <ajuaristio@gmail.com>, 2015
 # Daniel Santibáñez Polanco <dansanti@gmail.com>, 2015
-# Jesus Alan Ramos Rodriguez <alan.ramos@jarsa.com.mx>, 2015
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2015
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 12:00+0000\n"
-"PO-Revision-Date: 2016-02-01 04:16+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-10-03 05:48+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/"
 "language/es_EC/)\n"
@@ -50,6 +50,12 @@ msgid ""
 msgstr ""
 "Diccionario Python a evaluar para proporcionar valores predeterminado cuando "
 "un nuevo registro se cree para este seudónimo."
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer3
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer5
+msgid "Acer Laptop"
+msgstr "Portátil Acer"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
@@ -409,6 +415,17 @@ msgid "Group by..."
 msgstr "Agrupar por..."
 
 #. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_printer1
+msgid "HP Inkjet printer"
+msgstr "Impresora de inyección de tinta HP"
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer11
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer9
+msgid "HP Laptop"
+msgstr "Portátil HP"
+
+#. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
 msgid "High"
 msgstr "Alta"
@@ -548,6 +565,11 @@ msgid "Model"
 msgstr "Modelo"
 
 #. module: hr_equipment
+#: model:hr.equipment.category,name:hr_equipment.hr_equipment_monitor
+msgid "Monitors"
+msgstr "Monitores"
+
+#. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "My Equipments"
 msgstr "Mis equipos"
@@ -617,6 +639,11 @@ msgstr ""
 "alias (ejemplo: proyectos (modelo padre) y tareas (modelo))"
 
 #. module: hr_equipment
+#: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
+msgid "Phones"
+msgstr "Teléfonos"
+
+#. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
@@ -625,6 +652,12 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
+"Política para postear un mensaje en el documento usando el servidor de "
+"correo:\n"
+"- Todos: Todos pueden postear\n"
+"- Empresas: solo contactos registrados\n"
+"- Seguidores: solo los seguidores del documento relacionado o miembros de "
+"los canales seguidos\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -696,6 +729,13 @@ msgstr "Reiniciar el requerimiento"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
 msgid "Responsible"
 msgstr "Responsable"
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor1
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor4
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor6
+msgid "Samsung Monitor 15\""
+msgstr "Monitor Samsung de 15\" "
 
 #. module: hr_equipment
 #: model:hr.equipment.stage,name:hr_equipment.stage_4
@@ -931,101 +971,3 @@ msgstr "petición de mantenimiento"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 msgid "maintenance Request Search"
 msgstr "Búsqueda de Requerimiento de Mantenimiento"
-
-#~ msgid "Acer Laptop"
-#~ msgstr "Portátil Acer"
-
-#~ msgid "Action Needed"
-#~ msgstr "Necesaria acción"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Fecha del último mensaje publicado en el registro."
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canales)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Empresas)"
-
-#~ msgid "HP Inkjet printer"
-#~ msgstr "Impresora de inyección de tinta HP"
-
-#~ msgid "HP Laptop"
-#~ msgstr "Portátil HP"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención."
-
-#~ msgid "Is Follower"
-#~ msgstr "Es un seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Fecha del último mensaje"
-
-#~ msgid "Messages"
-#~ msgstr "Mensajes"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Mensajes e historial de comunicación"
-
-#~ msgid "Monitors"
-#~ msgstr "Monitores"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de acciones"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensajes que requieren una acción"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensajes no leidos"
-
-#~ msgid "Open Equipments Menu"
-#~ msgstr "Abrir menú de equipamientos"
-
-#~ msgid "Phones"
-#~ msgstr "Teléfonos"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Política para enviar un mensaje en el documento usando la pasarela de "
-#~ "correo.\n"
-#~ "- Todos: Todos pueden enviar.\n"
-#~ "- Empresas: Sólo las empresas autenticadas.\n"
-#~ "- Seguidores: Sólo los seguidores del documento relacionado.\n"
-
-#~ msgid "Samsung Monitor 15\""
-#~ msgstr "Monitor Samsung de 15\" "
-
-#~ msgid ""
-#~ "This application helps you to track equipments used by employees.\n"
-#~ "                Create some laptop, printer or phone and link each "
-#~ "equipment to an employee or departement.\n"
-#~ "                You will manage allocations, issues and mainteannce of "
-#~ "equipment."
-#~ msgstr ""
-#~ "Esta aplicación ayuda a realizar un seguimiento de los equipos utilizados "
-#~ "por los empleados.\n"
-#~ "                Crea alguna laptop, impresora o teléfono y vincula cada "
-#~ "equipo a un empleado o departamento.\n"
-#~ "                Usted se encargará de las asignaciones, los problemas y "
-#~ "el mantenimiento del equipo."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de mensajes no leidos"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensajes del sitio web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historial de comunicaciones del sitio web"

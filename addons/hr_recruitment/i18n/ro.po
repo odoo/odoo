@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-03-10 13:15+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-11-03 18:04+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
 "Language: ro\n"
@@ -331,7 +331,7 @@ msgstr "Apreciere"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Archived"
-msgstr ""
+msgstr "Arhivat"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_open
@@ -487,6 +487,16 @@ msgstr "Email Contact"
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Contract"
 msgstr "Contract"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
+msgid "Contract Proposal"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
+msgid "Contract Signed"
+msgstr "Contract semnat"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
@@ -786,6 +796,11 @@ msgid "Filter and view on next actions and date"
 msgstr "Filtrati si vizualizati actiunile si datele urmatoare"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Primul interviu"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr ""
@@ -878,9 +893,8 @@ msgstr ""
 #: model:survey.question,comments_message:hr_recruitment.recruitment_2_3
 #: model:survey.question,comments_message:hr_recruitment.recruitment_2_4
 #: model:survey.question,comments_message:hr_recruitment.recruitment_3_1
-#, fuzzy
 msgid "If other, please specify:"
-msgstr "Dacă e altul, precizați:"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_template_id
@@ -907,6 +921,11 @@ msgstr ""
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
 msgstr "Important"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Initial Qualification"
+msgstr "Calificare Initiala"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
@@ -1061,7 +1080,7 @@ msgstr "Mobil:"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr ""
+msgstr "Mai mult <i class=\"fa fa-caret-down\"/>"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rcol_3_1_5
@@ -1359,9 +1378,8 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
-#, fuzzy
 msgid "Reopen Application"
-msgstr "Aplicație"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1446,6 +1464,11 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid "Search through resumes and motivation letters."
 msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "Al doilea interviu"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
@@ -1573,7 +1596,7 @@ msgstr "Sondaj"
 #. module: hr_recruitment
 #: sql_constraint:hr.applicant.category:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Numele ales exista deja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_categ_ids
@@ -1695,6 +1718,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
+"Stadiul este pliat in vizualizarea kanban când nu sunt înregistrări de "
+"afișat în acest stadiu"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -1747,7 +1772,7 @@ msgstr "Email-uri supraveghetori"
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_employee
 msgid "Welcome ${object.name} "
-msgstr ""
+msgstr "Bun venit ${object.name} "
 
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_1_3
@@ -1794,48 +1819,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
-
-#~ msgid "Campaign"
-#~ msgstr "Campanie"
-
-#~ msgid "Contract Signed"
-#~ msgstr "Contract semnat"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data ultimului mesaj postat pe înregistrare."
-
-#~ msgid "First Interview"
-#~ msgstr "Primul interviu"
-
-#~ msgid "Followers"
-#~ msgstr "Urmări"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
-
-#~ msgid "If other, precise:"
-#~ msgstr "Dacă e altul, precizați:"
-
-#~ msgid "Initial Qualification"
-#~ msgstr "Calificare Initiala"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data ultimului mesaj"
-
-#~ msgid "Messages"
-#~ msgstr "Mesaje"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Istoric mesaje și conversații"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Deschide Meniul HR"
-
-#~ msgid "Second Interview"
-#~ msgstr "Al doilea interviu"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mesaje Website"
-
-#~ msgid "Website communication history"
-#~ msgstr "Istoric comunicare website"

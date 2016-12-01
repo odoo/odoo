@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-24 03:15+0000\n"
-"Last-Translator: van quy bui <aladeck@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-23 09:39+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/"
 "vi/)\n"
 "Language: vi\n"
@@ -230,6 +230,19 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
 msgstr "<i class=\"fa fa-question-circle\">xem ví dụ</i>"
+
+#. module: crm
+#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
+msgid ""
+"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
+"since at least 5 days.</p>\n"
+"%if object.description:\n"
+"<p>Here is the description about the opportunity : </p><p><i>${object."
+"description}</i>\n"
+"%endif\n"
+"</p><p>Thank you!</p>\n"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -855,15 +868,14 @@ msgstr "Hoạt động"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_activity_log.py:75
-#, fuzzy, python-format
+#, python-format
 msgid "Activity Done"
-msgstr "Hoạt động"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_kanban_state
-#, fuzzy
 msgid "Activity State"
-msgstr "Hoạt động"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -986,9 +998,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
-#, fuzzy
 msgid "Assign this opportunity to"
-msgstr "Giao cơ hội cho"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_opening_date
@@ -1094,6 +1105,18 @@ msgstr ""
 #: model:mail.message.subtype,name:crm.crm_activity_data_call_mail_message_subtype
 msgid "Call"
 msgstr "Gọi"
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for Demo"
+msgstr "Yêu cầu Demo"
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for a demo"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
@@ -1273,7 +1296,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Contact Information"
-msgstr ""
+msgstr "Thông tin liên hệ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_contact_name
@@ -1503,9 +1526,8 @@ msgstr "Khách hàng"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Customizations"
-msgstr "Khách hàng"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_date
@@ -1524,7 +1546,6 @@ msgstr "Ngày để đóng"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_deduplicate
-#, fuzzy
 msgid "Deduplicate Contacts"
 msgstr "Chống trùng lặp liên hệ"
 
@@ -1654,6 +1675,11 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Download the"
+msgstr ""
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_draft_lead
+msgid "Draft Leads"
 msgstr ""
 
 #. module: crm
@@ -1842,6 +1868,18 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up Quote"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up quote"
 msgstr ""
 
 #. module: crm
@@ -2114,9 +2152,8 @@ msgstr "Là công ty"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_function
-#, fuzzy
 msgid "Job Position"
-msgstr "Đề xuất"
+msgstr "Chức vụ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_exclude_journal_item
@@ -2308,6 +2345,11 @@ msgid "Leads by Source"
 msgstr ""
 
 #. module: crm
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr "Đầu mối được giao cho bạn"
@@ -2371,9 +2413,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-#, fuzzy
 msgid "Log Activity"
-msgstr "Hoạt động"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
@@ -2389,9 +2430,8 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm.crm_activity_log_action
 #: model:ir.model,name:crm.model_crm_activity_log
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
-#, fuzzy
 msgid "Log an Activity"
-msgstr "Hoạt động"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2423,6 +2463,12 @@ msgid "Low"
 msgstr "Thấp"
 
 #. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Make Quote"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Lost"
 msgstr "Đánh dấu thất bại"
@@ -2434,9 +2480,8 @@ msgstr "Đánh dấu thắng"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
-#, fuzzy
 msgid "Mark as lost"
-msgstr "Đánh dấu là thất bại"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2645,9 +2690,8 @@ msgstr "Cơ hội của bạn"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_your_pipeline
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
-#, fuzzy
 msgid "My Pipeline"
-msgstr "Đường dẫn Pipeline"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_name
@@ -2696,9 +2740,9 @@ msgstr ""
 
 #. module: crm
 #: code:addons/crm/wizard/crm_activity_log.py:56
-#, fuzzy, python-format
+#, python-format
 msgid "Next activity"
-msgstr "Hoạt động tiếp theo"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:966
@@ -2708,9 +2752,8 @@ msgstr "Không chủ đề"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "No activity"
-msgstr "Hoạt động tiếp theo"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2731,7 +2774,6 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_note
-#, fuzzy
 msgid "Note"
 msgstr "Ghi chú"
 
@@ -3143,21 +3185,18 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_preceding_activity_ids
-#, fuzzy
 msgid "Preceding Activities"
-msgstr "Các Hoạt động tiếp theo"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_last_activity_id
-#, fuzzy
 msgid "Previous Activity"
-msgstr "Hoạt động tiếp theo"
+msgstr "Hoạt động trước"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Prices"
-msgstr "Giá"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3190,7 +3229,6 @@ msgstr "Xác suất (%)"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Products"
 msgstr "Sản phẩm"
 
@@ -3231,15 +3269,13 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_recommended_activity_id
-#, fuzzy
 msgid "Recommended Activities"
-msgstr "Các Hoạt động tiếp theo"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_recommended_activity_ids
-#, fuzzy
 msgid "Recommended Next Activities"
-msgstr "Các Hoạt động tiếp theo"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_force_thread_id
@@ -3265,19 +3301,22 @@ msgid "Relation field"
 msgstr ""
 
 #. module: crm
+#: model:ir.actions.server,name:crm.action_email_reminder_lead
+msgid "Reminder to User"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
-#, fuzzy
 msgid ""
 "Reminder: Lead ${object.name} from ${object.partner_id != False and object."
 "partner_id.name or object.contact_name}"
 msgstr ""
-"Nhắc nhở trên Nguồn dẫn: ${object.id} từ ${object.partner_id != False and "
-"object.partner_id.name or object.contact_name}"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Reporting"
-msgstr ""
+msgstr "Báo cáo"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_requirements
@@ -3368,15 +3407,13 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "Schedule Activity"
-msgstr "Hoạt động tiếp theo"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "Schedule Next Activity"
-msgstr "Hoạt động tiếp theo"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3434,6 +3471,12 @@ msgid "Selection"
 msgstr "Lựa chọn"
 
 #. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Send a quotation"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -3445,6 +3488,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "Trình tự"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_set_team_sales_department
+msgid "Set team to Sales Department"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3633,7 +3681,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_title_action
 msgid "Summary"
-msgstr ""
+msgstr "Tóm tắt"
 
 #. module: crm
 #: model:web.tip,description:crm.crm_tip_5
@@ -3676,7 +3724,7 @@ msgstr "Nhiệm vụ"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_team_id
 msgid "Team"
-msgstr ""
+msgstr "Thành viên"
 
 #. module: crm
 #: model:ir.filters,name:crm.ir_filters_crm_opportunity_report_next_action
@@ -3847,13 +3895,10 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_fold
-#, fuzzy
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Giai đoạn này được sắp xếp trong khung nhìn Kanban khi mà không có bản ghi "
-"này thuộc giai đoạn này."
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:1164
@@ -4445,102 +4490,3 @@ msgstr "chưa rõ"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "with your work above"
 msgstr ""
-
-#~ msgid "Both"
-#~ msgstr "Cả hai"
-
-#~ msgid "Call for Demo"
-#~ msgstr "Yêu cầu Demo"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Ngày của thông điệp gần nhất được ghi nhận trên một bản ghi"
-
-#~ msgid "Done"
-#~ msgstr "Hoàn thành"
-
-#~ msgid "Follow-up"
-#~ msgstr "Theo sát"
-
-#~ msgid "Followers"
-#~ msgstr "Người dõi theo"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Người theo dõi (Các kênh)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Người theo dõi (Các đối tác)"
-
-#~ msgid "Function"
-#~ msgstr "Chức năng"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có mặt của bạn."
-
-#~ msgid "Incoming"
-#~ msgstr "Doanh thu"
-
-#~ msgid "Is Follower"
-#~ msgstr "Trở thành người theo dõi"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Ngày thông điệp cuối cùng"
-
-#~ msgid "Mark As Lost"
-#~ msgstr "Đánh dấu là thất bại"
-
-#~ msgid "Messages"
-#~ msgstr "Thông điệp"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Lịch sử trao đổi"
-
-#~ msgid "Negotiation"
-#~ msgstr "Đàm phán"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "Mở trình đơn bán hàng"
-
-#~ msgid "Qualification"
-#~ msgstr "Thẩm định"
-
-#~ msgid ""
-#~ "Reminder on Lead: ${object.id} from ${object.partner_id != False and "
-#~ "object.partner_id.name or object.contact_name}"
-#~ msgstr ""
-#~ "Nhắc nhở trên Nguồn dẫn: ${object.id} từ ${object.partner_id != False and "
-#~ "object.partner_id.name or object.contact_name}"
-
-#~ msgid "Select Stages for this Sales Team"
-#~ msgstr "Chọn giai đoạn cho Đội ngũ bán hàng này"
-
-#~ msgid ""
-#~ "This field is used to distinguish stages related to Leads from stages "
-#~ "related to Opportunities, or to specify stages available for both types."
-#~ msgstr ""
-#~ "Trường này được sử dụng để phân biệt giai đoạn liên quan tới Nguồn dẫn từ "
-#~ "các giai đoạn liên quan tới Cơ hội, hoặc để cả hai."
-
-#~ msgid ""
-#~ "This stage is folded in the kanban view whenthere are no records in that "
-#~ "stage to display."
-#~ msgstr ""
-#~ "Giai đoạn này được sắp xếp trong khung nhìn Kanban khi mà không có bản "
-#~ "ghi này thuộc giai đoạn này."
-
-#~ msgid "Website Messages"
-#~ msgstr "Tin từ Website"
-
-#~ msgid "Website communication history"
-#~ msgstr "Lịch sử thông tin liên lạc website"
-
-#~ msgid "Your Customers"
-#~ msgstr "Khách hàng "
-
-#~ msgid "Your Prices"
-#~ msgstr "Giá"
-
-#~ msgid "Your Products"
-#~ msgstr "Sản phẩm"
-
-#~ msgid "Your Proposal"
-#~ msgstr "Đề xuất báo giá"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-10 13:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -490,6 +490,16 @@ msgid "Contract"
 msgstr "Kontrak"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
+msgid "Contract Proposal"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
+msgid "Contract Signed"
+msgstr "Kontrak Ditandatangani"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
 msgid "Create Date"
 msgstr "Tanggal dibuat"
@@ -790,6 +800,11 @@ msgid "Filter and view on next actions and date"
 msgstr "Filter dan melihat pada tindakan dan tanggal berikutnya"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Wawancara kedua"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr ""
@@ -853,7 +868,7 @@ msgstr "Dikelompokan berdasarkan .."
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
-msgstr ""
+msgstr "Karyawan yang disarankan"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
@@ -884,9 +899,8 @@ msgstr ""
 #: model:survey.question,comments_message:hr_recruitment.recruitment_2_3
 #: model:survey.question,comments_message:hr_recruitment.recruitment_2_4
 #: model:survey.question,comments_message:hr_recruitment.recruitment_3_1
-#, fuzzy
 msgid "If other, please specify:"
-msgstr "Jika lainnya, tepat:"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_template_id
@@ -915,6 +929,11 @@ msgstr "Pentingnya"
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
 msgstr "Penting"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Initial Qualification"
+msgstr "Kualifikasi awal"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
@@ -1272,7 +1291,6 @@ msgstr "Telepon"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1280,11 +1298,6 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Kebijakan untuk mengirimkan sebuah pesan di dokumen menggunakan "
-"mailgateway.\n"
-"-Semua orang: setiap orang dapat memposting\n"
-" - mitra: hanya dikonfirmasi mitra  \n"
-" - pengikut: hanya pengikut dokumen terkait\n"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -1380,9 +1393,8 @@ msgstr "Pertemuan rutin"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
-#, fuzzy
 msgid "Reopen Application"
-msgstr "aplikasi"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1467,6 +1479,11 @@ msgstr "Cari Pelamar"
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid "Search through resumes and motivation letters."
 msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "Wawancara kedua"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
@@ -1831,146 +1848,3 @@ msgstr "pelamar kerja"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>Congrats! Your resume's got our interest!\n"
-#~ "        I will call you as soon as possible to make a 10 minutes phone "
-#~ "interview and  plan a first meeting.</p>\n"
-#~ "        <p>If we can’t reach you or if you miss our call, feel free to "
-#~ "reach me back on the number 001 312 349 3030\n"
-#~ "        If I do not answer, please let me a message with some schedules "
-#~ "to call you back.</p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id.signature | safe}"
-#~ msgstr ""
-#~ "<p> terhormat $ {object.partner_name atau 'pemohon'}, </p>\n"
-#~ "        <p> Congrats! Resume Anda punya kepentingan kita!\n"
-#~ "        Saya akan menghubungi Anda sesegera mungkin untuk membuat sebuah "
-#~ "wawancara 10 menit telepon dan merencanakan pertemuan pertama. </p>\n"
-#~ "        <p> Jika kita tidak bisa menghubungi Anda atau jika Anda "
-#~ "melewatkan panggilan kami, jangan ragu untuk menghubungi saya kembali "
-#~ "pada jumlah 001 312 349 3030\n"
-#~ "        Jika saya tidak menjawab, tolong beritahu saya pesan dengan "
-#~ "beberapa jadwal untuk menelepon Anda kembali. </p>\n"
-#~ "        <p> Kind regards, </p>\n"
-#~ "        <br/>\n"
-#~ "         $ {object.user_id.signature | safe}"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>We thank you for your interest in our company and for your "
-#~ "application.\n"
-#~ "        Unfortunately, your profile does not match with our needs or our "
-#~ "recruitment\n"
-#~ "        campaign has reached its term.</p>\n"
-#~ "        <p>If you want more details, feel free to contact us by phone.</"
-#~ "p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id and object.user_id.signature | safe or ''}"
-#~ msgstr ""
-#~ "<p> Sayang $ {object.partner_name or 'pemohon'}, </p>\n"
-#~ "<p> Kami berterima kasih atas minat Anda pada perusahaan kami dan untuk "
-#~ "aplikasi Anda. Sayangnya, profil Anda tidak cocok dengan kebutuhan kita "
-#~ "atau kampanye rekrutmen kami telah mencapai masa tugasnya. </p><p> Jika "
-#~ "Anda ingin lebih detail, jangan ragu untuk menghubungi kami melalui "
-#~ "telepon. </p>\n"
-#~ "<p> Salam, </p>\n"
-#~ "<br/>\n"
-#~ "${object.user_id and object.user_id.signature | safe or ''}"
-
-#~ msgid "Action Needed"
-#~ msgstr "Tindakan diperlukan"
-
-#~ msgid "Campaign"
-#~ msgstr "Campaign"
-
-#~ msgid "Contract Signed"
-#~ msgstr "Kontrak Ditandatangani"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Tanggal pesan terakhir diposting pada catatan."
-
-#~ msgid "First Interview"
-#~ msgstr "Wawancara kedua"
-
-#~ msgid "Followers"
-#~ msgstr "Pengikut"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pengikut (saluran)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pengikut (mitra)"
-
-#~ msgid "HR Department"
-#~ msgstr "Departemen HR"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
-
-#~ msgid "If other, precise:"
-#~ msgstr "Jika lainnya, tepat:"
-
-#~ msgid "Initial Qualification"
-#~ msgstr "Kualifikasi awal"
-
-#~ msgid "Is Follower"
-#~ msgstr "Adalah pengikut"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Tanggal pesan terakhir"
-
-#~ msgid "Messages"
-#~ msgstr "Pesan"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Pesan dan riwayat komunikasi"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Jumlah tindakan"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Jumlah pesan yang memerlukan tindakan"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Jumlah pesan yang belum dibaca"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "JAM buka Menu"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Kebijakan untuk mengirimkan sebuah pesan di dokumen menggunakan "
-#~ "mailgateway.\n"
-#~ "-Semua orang: setiap orang dapat memposting\n"
-#~ " - mitra: hanya dikonfirmasi mitra  \n"
-#~ " - pengikut: hanya pengikut dokumen terkait\n"
-
-#~ msgid "Second Interview"
-#~ msgstr "Wawancara kedua"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Ini adalah nama yang membantu Anda melacak upaya kampanye yang berbeda "
-#~ "Anda Ex: Fall_Drive, Christmas_Special"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Pesan yang belum dibaca Counter"
-
-#~ msgid "Website Messages"
-#~ msgstr "Pesan situs"
-
-#~ msgid "Website communication history"
-#~ msgstr "Sejarah komunikasi situs"

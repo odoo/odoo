@@ -3,15 +3,18 @@
 # * website
 #
 # Translators:
+# Melina Mantyla <melina.mantyla@web-veistamo.fi>, 2016
+# Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2016
+# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2016
 # salmemik <salmemik@gmail.com>, 2016
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-07-15 13:51+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-10-28 17:41+0000\n"
+"Last-Translator: Melina Mantyla <melina.mantyla@web-veistamo.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -159,7 +162,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "<b>Choose an image...</b>"
-msgstr ""
+msgstr "<b>Valitse kuva...</b>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_text_block
@@ -236,6 +239,8 @@ msgid ""
 "<i class=\"fa fa-plus-circle\"/>\n"
 "                Add a language..."
 msgstr ""
+"<i class=\"fa fa-plus-circle\"/>\n"
+"Lisää kieli..."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippets
@@ -344,9 +349,8 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-#, fuzzy
 msgid "<span class=\"fa fa-pencil\"/> EDIT PAGE"
-msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Asenna nyt"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -573,7 +577,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "<strong>Contact us now:</strong><br/>"
-msgstr ""
+msgstr "<strong>Ota yhteyttä:</strong><br/>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -826,17 +830,12 @@ msgstr "Kappaleen alaotsikko"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_act_server_website_published
-#, fuzzy
 msgid ""
 "A code server action can be executed from the website, using a dedicated "
 "controller. The address is <base>/website/action/<website_path>. Set this "
 "field as True to allow users to run this action. If it is set to False the "
 "action cannot be run through the website."
 msgstr ""
-"Palvelintoiminto voidaan ajaa suoraan verkkosivulta, käyttäen dedikoitua "
-"ohjainta. Osoite on <base>/website/action/<website_path>. Käytä tätä "
-"valintaa jos haluat että käyttäjät voivat ajaa toiminnon. Jos valinta on "
-"pois käytöstä, toimintoja ei voida ajaa suoraan verkkosivun kautta."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -978,9 +977,9 @@ msgstr "Lisää avainsana:"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:111
-#, fuzzy, python-format
+#, python-format
 msgid "Add new pages"
-msgstr "Lisää uusia sivuja ja valikoita"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -1118,15 +1117,13 @@ msgstr "Takaisin"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
-#, fuzzy
 msgid "Background Color"
-msgstr "Tausta"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
-#, fuzzy
 msgid "Background Image"
-msgstr "Tausta"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1327,6 +1324,7 @@ msgstr "Klikkaa ikonia mukauttaaksesi sen toiminnallisuuteesi"
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:49
 #: model:ir.ui.view,arch_db:website.s_banner
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #, python-format
 msgid "Click to customize this text"
 msgstr "Klikkaa muokataksesi tätä tekstiä"
@@ -1450,8 +1448,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.s_banner
 #: model:ir.ui.view,arch_db:website.s_big_message
 #: model:ir.ui.view,arch_db:website.s_comparisons
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #: model:ir.ui.view,arch_db:website.website_planner
 #: model:website.menu,name:website.menu_contactus
+#: model:website.menu,name:website.website2_menu_contactus
 msgid "Contact us"
 msgstr "Ota yhteyttä"
 
@@ -1469,9 +1469,8 @@ msgstr "Ota yhteyttä »"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-#, fuzzy
 msgid "Content"
-msgstr "Jatka"
+msgstr "Sisältö"
 
 #. module: website
 #. openerp-web
@@ -1547,9 +1546,8 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-#, fuzzy
 msgid "Customize"
-msgstr "Muokkaa banneria"
+msgstr "Mukauta"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -1642,7 +1640,7 @@ msgstr "Kuvaus..."
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Design"
-msgstr ""
+msgstr "Suunnittelu"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1655,6 +1653,11 @@ msgstr ""
 #, python-format
 msgid "Discard"
 msgstr "Hylkää"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Discuss and Comments"
+msgstr "Keskustelu ja kommentit"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1763,9 +1766,8 @@ msgstr "Muokkaa valikkoa"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-#, fuzzy
 msgid "Edit Top Menu"
-msgstr "Muokkaa valikkoa"
+msgstr "Muokkaa päävalikkoa"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.publish_management
@@ -1867,7 +1869,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_config_settings
 msgid "Extra Features"
-msgstr ""
+msgstr "Lisäominaisuudet"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2157,6 +2159,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.footer_default
 #: model:website.menu,name:website.menu_homepage
+#: model:website.menu,name:website.website2_menu_homepage
 msgid "Home"
 msgstr "Etusivu"
 
@@ -2165,6 +2168,11 @@ msgstr "Etusivu"
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Homepage"
 msgstr "Kotisivu"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website2_homepage
+msgid "Homepage 0.0.0.0"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2331,11 +2339,9 @@ msgstr ""
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.xml:19
-#, fuzzy, python-format
+#, python-format
 msgid "It might be possible to edit the relevant items or fix the issue in"
 msgstr ""
-"Asiaan liittyvien kohteiden muokkaus voi olla mahdollista,\n"
-"tai ongelman korjaus"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2527,6 +2533,11 @@ msgstr "Valikko"
 #, python-format
 msgid "Menu <b>%s</b> seems to have a link to this page !"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Message"
+msgstr "Viesti"
 
 #. module: website
 #. openerp-web
@@ -2888,9 +2899,9 @@ msgstr "Sivun otsikko"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:103
-#, fuzzy, python-format
+#, python-format
 msgid "Pages and menus"
-msgstr "Lisää uusia sivuja ja valikoita"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_panel
@@ -2922,9 +2933,19 @@ msgid "Partner"
 msgstr "Kumppani"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Partner Detail"
+msgstr "Kumppanin tiedot"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Partners"
+msgstr "Kumppanit"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Plan"
-msgstr ""
+msgstr "Suunnitelma"
 
 #. module: website
 #: model:web.planner,tooltip_planner:website.planner_website
@@ -3076,6 +3097,11 @@ msgid "Real professional translators will translate all your contents"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Recipient"
+msgstr "Vastaanottaja"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Reduce the time and resources spent on support."
 msgstr ""
@@ -3225,6 +3251,16 @@ msgstr "Myy verkossa. Helposti."
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Sell more online"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send <span class=\"fa fa-long-arrow-right\"/>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send a Message to our Partners"
+msgstr "Lähetä viesti meidän partnereillemme"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3444,13 +3480,18 @@ msgid "Test Your Mobile Version"
 msgstr "Kokeile mobiiliversiota"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Thank you for posting a message !"
+msgstr "Kiitos kun jätit viestin!"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:104
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The 'Content' menu allows you to rename and delete pages or add them to the "
 "top menu."
-msgstr "\"Sisältö\"-valikosta voi lisätä sivuja tai päävalikon."
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3526,7 +3567,7 @@ msgstr "Verkkosivun ohjain antoi seuraavan virheen"
 #: model:ir.model.fields,help:website.field_slide_slide_website_url
 #: model:ir.model.fields,help:website.field_website_published_mixin_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "Dokumentin URL verkkosivulla."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_act_server_website_url
@@ -3688,6 +3729,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/js/website.contentMenu.js:175
 #: model:website.menu,name:website.main_menu
+#: model:website.menu,name:website.website2_main_menu
 #, python-format
 msgid "Top Menu"
 msgstr "Päävalikko"
@@ -3699,7 +3741,7 @@ msgstr "Jäljitys"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.snippets.editor.js:771
+#: code:addons/website/static/src/js/website.snippets.editor.js:772
 #, python-format
 msgid "Transform the picture (click twice to reset transformation)"
 msgstr ""
@@ -3887,7 +3929,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_slide_slide_website_published
 #: model:ir.model.fields,field_description:website.field_website_published_mixin_website_published
 msgid "Visible in Website"
-msgstr ""
+msgstr "Näkyvillä verkkosivustolla"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3986,6 +4028,16 @@ msgstr "Verkkosivuston valikko"
 #: model:ir.model.fields,field_description:website.field_website_name
 msgid "Website Name"
 msgstr "Verkkosivun nimi"
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_post
+msgid "Website Partner Post and Thanks Demo"
+msgstr "Verkkosivun kumppaniviesti ja kiitokset demo"
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_comment
+msgid "Website Partners Comment Form"
+msgstr "Verkkosivukumppanien kommenttilomake"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
@@ -4643,7 +4695,7 @@ msgstr "verkkosivu"
 #. module: website
 #: model:ir.model,name:website.model_website_config_settings
 msgid "website.config.settings"
-msgstr ""
+msgstr "website.config.settings"
 
 #. module: website
 #: model:ir.model,name:website.model_website_published_mixin
@@ -4659,96 +4711,3 @@ msgstr "kyllä"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "your Company details form"
 msgstr ""
-
-#~ msgid "&lt;!DOCTYPE html&gt;"
-#~ msgstr "&lt;!DOCTYPE html&gt;"
-
-#~ msgid ".xml"
-#~ msgstr ".xml"
-
-#~ msgid ""
-#~ "A code server action can be executed from the website, using a "
-#~ "dedicatedcontroller. The address is <base>/website/action/<website_path>."
-#~ "Set this field as True to allow users to run this action. If itset to is "
-#~ "False the action cannot be run through the website."
-#~ msgstr ""
-#~ "Palvelintoiminto voidaan ajaa suoraan verkkosivulta, käyttäen dedikoitua "
-#~ "ohjainta. Osoite on <base>/website/action/<website_path>. Käytä tätä "
-#~ "valintaa jos haluat että käyttäjät voivat ajaa toiminnon. Jos valinta on "
-#~ "pois käytöstä, toimintoja ei voida ajaa suoraan verkkosivun kautta."
-
-#~ msgid "Add new pages and menus"
-#~ msgstr "Lisää uusia sivuja ja valikoita"
-
-#~ msgid "Background"
-#~ msgstr "Tausta"
-
-#~ msgid "Check now and discover more today!"
-#~ msgstr "Katso lisää ja löydä uusia mahdollisuuksia!"
-
-#~ msgid "Color"
-#~ msgstr "Väri"
-
-#~ msgid "Discover more about Odoo"
-#~ msgstr "Lue lisää Odoosta"
-
-#~ msgid "Discuss and Comments"
-#~ msgstr "Keskustelu ja kommentit"
-
-#~ msgid "Edit Menu Entry"
-#~ msgstr "Muokkaa valikkotapausta"
-
-#~ msgid "Hide link"
-#~ msgstr "Piilota linkki"
-
-#~ msgid ""
-#~ "It might be possible to edit the relevant items\n"
-#~ "                                or fix the issue in"
-#~ msgstr ""
-#~ "Asiaan liittyvien kohteiden muokkaus voi olla mahdollista,\n"
-#~ "tai ongelman korjaus"
-
-#~ msgid "Menu Label"
-#~ msgstr "Valikon otsikko"
-
-#~ msgid "Message"
-#~ msgstr "Viesti"
-
-#~ msgid "Partner Detail"
-#~ msgstr "Kumppanin tiedot"
-
-#~ msgid "Partners"
-#~ msgstr "Kumppanit"
-
-#~ msgid "Recipient"
-#~ msgstr "Vastaanottaja"
-
-#~ msgid "Reset Transformation"
-#~ msgstr "Nollaa muutos"
-
-#~ msgid "Send a Message to our Partners"
-#~ msgstr "Lähetä viesti meidän partnereillemme"
-
-#~ msgid "Thank you for posting a message !"
-#~ msgstr "Kiitos kun jätit viestin!"
-
-#~ msgid "The 'Content' menu allows you to add pages or add the top menu."
-#~ msgstr "\"Sisältö\"-valikosta voi lisätä sivuja tai päävalikon."
-
-#~ msgid "Transform"
-#~ msgstr "Muunna"
-
-#~ msgid "Website Partner Post and Thanks Demo"
-#~ msgstr "Verkkosivun kumppaniviesti ja kiitokset demo"
-
-#~ msgid "Website Partners Comment Form"
-#~ msgstr "Verkkosivukumppanien kommenttilomake"
-
-#~ msgid "Yes."
-#~ msgstr "Kyllä."
-
-#~ msgid "or"
-#~ msgstr "tai"
-
-#~ msgid "sitemap-"
-#~ msgstr "sivukartta-"

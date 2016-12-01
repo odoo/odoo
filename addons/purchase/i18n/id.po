@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-26 03:24+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-09-01 12:16+0000\n"
 "Last-Translator: firman firman <firman.olxbpn@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
 "id/)\n"
@@ -273,7 +273,7 @@ msgid "Billed Qty"
 msgstr "Kuantitas Tertagih"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:719 code:addons/purchase/stock.py:75
+#: code:addons/purchase/purchase.py:717 code:addons/purchase/stock.py:75
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -312,7 +312,7 @@ msgid "Can be Purchased"
 msgstr "Dapat dibeli"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:735
+#: code:addons/purchase/purchase.py:733
 #, python-format
 msgid ""
 "Can not cancel a procurement related to a purchase order. Please cancel the "
@@ -337,7 +337,7 @@ msgid "Cancelled"
 msgstr "Dibatalkan"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:614
+#: code:addons/purchase/purchase.py:612
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "Tidak dapat menghapus batas order penjualan yang dalam keadaan '% s'."
@@ -426,7 +426,7 @@ msgstr "Konfirmasi Permintaan Pembelian dalam satu langkah"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_control
 msgid "Control"
-msgstr ""
+msgstr "Pengaturan"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_method
@@ -552,9 +552,8 @@ msgstr "Petunjuk komposisi email"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "Petunjuk komposisi email"
+msgstr "Pemandu penyusun email untuk Survey"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
@@ -588,7 +587,7 @@ msgstr "Semua pengiriman dari pesanan ini"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Berat kotor"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -730,9 +729,8 @@ msgstr "Lokasi & gudang"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-#, fuzzy
 msgid "Lock Bills"
-msgstr "Penjual tagihan"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -795,7 +793,7 @@ msgid "No variants on products"
 msgstr "Tidak ada varian produk"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:895
+#: code:addons/purchase/purchase.py:893
 #, python-format
 msgid ""
 "No vendor associated to product %s. Please set one to fix this procurement."
@@ -1096,7 +1094,7 @@ msgid "Purchase Orders Statistics"
 msgstr "Statistik order pembelian"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:616
+#: code:addons/purchase/purchase.py:614
 #, python-format
 msgid "Purchase order line deleted."
 msgstr ""
@@ -1321,10 +1319,9 @@ msgstr ""
 
 #. module: purchase
 #: selection:purchase.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/puchased in different units of measure (advanced)"
-msgstr "Produk memiliki hanya satu satuan ukuran (lebih mudah)"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_origin
@@ -1494,20 +1491,19 @@ msgid "Transfer"
 msgstr "red cross permindahan darah"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:302
+#: code:addons/purchase/purchase.py:300
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been done."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:305
-#, fuzzy, python-format
+#: code:addons/purchase/purchase.py:303
+#, python-format
 msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
 "bills."
 msgstr ""
-"Untuk menghapus order pembelian, anda harus membatalkan terlebih dahulu"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -1617,7 +1613,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Volume"
 
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
@@ -1660,7 +1656,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:337
+#: code:addons/purchase/purchase.py:335
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr ""
@@ -1669,81 +1665,3 @@ msgstr ""
 #: model:ir.model,name:purchase.model_purchase_config_settings
 msgid "purchase.config.settings"
 msgstr ""
-
-#~ msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
-#~ msgstr "${object.company_id.name|safe} Pesan (Ref ${object.name or 'n/a' })"
-
-#~ msgid "Action Needed"
-#~ msgstr "Tindakan diperlukan"
-
-#~ msgid "Analytic accounting for purchases"
-#~ msgstr "Analitis akuntansi untuk pembelian"
-
-#~ msgid "Click to mark products as received."
-#~ msgstr "Klik untuk menandai produk sudah diterima"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Tanggal pesan terakhir diposting pada catatan."
-
-#~ msgid "Expected Date"
-#~ msgstr "Tanggal yang di harapkan"
-
-#~ msgid "Followers"
-#~ msgstr "Pengikut"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pengikut (saluran)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pengikut (mitra)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
-
-#~ msgid "Incoming Shipments to Invoice"
-#~ msgstr "Pengiriman masuk untuk faktur"
-
-#~ msgid "Is Follower"
-#~ msgstr "Adalah pengikut"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Tanggal pesan terakhir"
-
-#~ msgid "Messages"
-#~ msgstr "Pesan"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Pesan dan riwayat komunikasi"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Jumlah tindakan"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Jumlah pesan yang memerlukan tindakan"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Jumlah pesan yang belum dibaca"
-
-#~ msgid "Open Purchase Menu"
-#~ msgstr "Menu pembelian terbuka"
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Unit tindakan"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Pesan Belum Dibaca"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Pesan yang belum dibaca Counter"
-
-#~ msgid "Website Messages"
-#~ msgstr "Pesan situs"
-
-#~ msgid "Website communication history"
-#~ msgstr "Sejarah komunikasi situs"
-
-#~ msgid "account.config.settings"
-#~ msgstr "akun.config.Settings"

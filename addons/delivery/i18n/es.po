@@ -8,13 +8,14 @@
 # Ana Juaristi <ajuaristio@gmail.com>, 2015
 # Antonio Trueba, 2016
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-06-27 11:56+0000\n"
-"Last-Translator: Amaia Bastida <amaiatrainer@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-11-24 08:43+0000\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -712,6 +713,13 @@ msgid ""
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
 msgstr ""
+"Si la valoración perpetua está activada para un producto, el sistema creará "
+"automáticamente entradas de diario correspondientes a los movimientos de "
+"stock, con el precio del producto especificado por el método de cálculo de "
+"costes. La cuenta de variación de inventario establecida en la categoría de "
+"producto representará el valor de inventario actual. La entrada de stock y "
+"la cuenta de salida de existencias tendrán los movimientos de contrapartida "
+"para los productos entrantes y salientes."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_free_if_more_than
@@ -1008,6 +1016,12 @@ msgstr "Coste normal"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_gap
 msgid "Normal Cost - Total Cost"
 msgstr "Coste normal - Coste total"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.normal_delivery_carrier_product_product
+msgid "Normal Delivery Charges"
+msgstr "Gastos de entrega normales."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
@@ -1316,7 +1330,7 @@ msgstr "Diferencia ventas"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr "Aviso para pedido de venta"
+msgstr "Pedido de venta"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
@@ -1505,6 +1519,12 @@ msgstr "Suma de Cantidad de facturas de proveedores"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name_template
 msgid "Template Name"
 msgstr "Nombre de la plantilla"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.delivery_carrier_product_product
+msgid "The Poste"
+msgstr "The Poste"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
@@ -1935,87 +1955,3 @@ msgstr "p.e., UPS Express"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "unknown"
 msgstr "desconocido"
-
-#~ msgid "Carrier Information"
-#~ msgstr "Información del transportista"
-
-#~ msgid "Carrier Tracking Ref"
-#~ msgstr "Ref. seguimiento transportista"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Peso bruto"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Mensajes e historial de comunicación"
-
-#~ msgid "Normal Delivery Charges"
-#~ msgstr "Gastos de entrega normales."
-
-#~ msgid "Shipment sent to carrier %s for expedition with tracking number %s"
-#~ msgstr ""
-#~ "Porte enviado al tranposrte %s para expedición con número de seguimiento "
-#~ "%s"
-
-#~ msgid "Status"
-#~ msgstr "Estado"
-
-#~ msgid "The Poste"
-#~ msgstr "The Poste"
-
-#~ msgid "Vendor"
-#~ msgstr "Proveedor"
-
-#~ msgid "Available in the Point of Sale"
-#~ msgstr "Disponible en el TPV"
-
-#~ msgid "Can be Expensed"
-#~ msgstr "Puede ser un gasto"
-
-#~ msgid ""
-#~ "Check if the product should be weighted using the hardware scale "
-#~ "integration"
-#~ msgstr ""
-#~ "Marque si el producto debe ser pesado usando la integración hardware de "
-#~ "la balanza"
-
-#~ msgid "Check if you want this product to appear in the Point of Sale"
-#~ msgstr "Marque esta casilla si quiere que este producto aparezca en el TPV"
-
-#~ msgid "Event Registration"
-#~ msgstr "Registro de eventos"
-
-#~ msgid "Message for Purchase Order Line"
-#~ msgstr "Mensaje para la línea del pedido de compra"
-
-#~ msgid "Message for Sales Order Line"
-#~ msgstr "Mensaje para la línea de pedido de venta"
-
-#~ msgid "Point of Sale Category"
-#~ msgstr "Categoría del TPV"
-
-#~ msgid "Project"
-#~ msgstr "Proyecto"
-
-#~ msgid "Provider"
-#~ msgstr "Proveedor"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Línea pedido de compra"
-
-#~ msgid ""
-#~ "Selecting the \"Warning\" option will notify user with the message, "
-#~ "Selecting \"Blocking Message\" will throw an exception with the message "
-#~ "and block the flow. The Message has to be written in the next field."
-#~ msgstr ""
-#~ "Si selecciona la opción \"Aviso\" se notificará a los usuarios con el "
-#~ "mensaje, si selecciona \"Mensaje de bloqueo\" se lanzará una excepción "
-#~ "con el mensaje y se bloqueará el flujo. El mensaje debe escribirse en el "
-#~ "siguiente campo."
-
-#~ msgid ""
-#~ "Those categories are used to group similar products for point of sale."
-#~ msgstr ""
-#~ "Estas categorías se usan para agrupar productos similares para el TPV."
-
-#~ msgid "To Weigh With Scale"
-#~ msgstr "Para pesar con balanza"

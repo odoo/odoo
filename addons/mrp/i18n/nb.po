@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-06 08:35+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-09-06 09:12+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/"
 "language/nb/)\n"
@@ -563,7 +563,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Cost Structure"
-msgstr ""
+msgstr "Kostnadsstruktur"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
@@ -874,6 +874,12 @@ msgstr "Inaktiv"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
 msgid "Internal Reference"
 msgstr "Intern Referanse"
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
@@ -1505,7 +1511,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9667
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1534,7 +1540,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Raw Materials"
-msgstr ""
+msgstr "Råmateriale"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
@@ -1632,7 +1638,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Routing"
-msgstr ""
+msgstr "Ruting"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -2195,6 +2201,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "dager"
@@ -2239,45 +2253,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "ukjent"
-
-#~ msgid "Action Needed"
-#~ msgstr "Handling"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Endre antall"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Dato for siste melding på denne posten."
-
-#~ msgid "Followers"
-#~ msgstr "Følgere."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Hvis det er merket nye meldinger så krever dette din oppmerksomhet."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Siste meldingsdato"
-
-#~ msgid "Messages"
-#~ msgstr "Meldinger."
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Meldinger og kommunikasjon historie."
-
-#~ msgid "Number of Actions"
-#~ msgstr "Antall handlinger"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Antall meldinger som krever handling"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Antall uleste meldinger"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Uleste meldinger."
-
-#~ msgid "Website Messages"
-#~ msgstr "Meldinger fra Nettsted"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historikk for kommuniksjon på nettsted"

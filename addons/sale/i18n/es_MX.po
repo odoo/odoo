@@ -6,13 +6,14 @@
 # David Hernandez <davidhernandez.ctam@gmail.com>, 2016
 # Eric Hernández <cuijartija@gmail.com>, 2015
 # Jorge Cardenas <jorge@compusimple.com>, 2015
+# Raul Perez Ramirez <raul@carbotecnia.com.mx>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-07-11 17:19+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-10-01 06:58+0000\n"
+"Last-Translator: Raul Perez Ramirez <raul@carbotecnia.com.mx>\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/"
 "language/es_MX/)\n"
 "Language: es_MX\n"
@@ -137,12 +138,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong>"
-msgstr ""
+msgstr "<strong>Vendedor:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping address:</strong>"
-msgstr ""
+msgstr "<strong>Dirección de envío:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -172,7 +173,7 @@ msgstr "Cuenta usada para depósitos"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_delivery_address
 msgid "Addresses"
-msgstr ""
+msgstr "Direcciones"
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
@@ -446,6 +447,12 @@ msgid "Delivery address for current sales order."
 msgstr "Dirección de entrega para este pedido"
 
 #. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
 msgstr ""
@@ -463,9 +470,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "Disc.(%)"
-msgstr "Descuento (%)"
+msgstr "Desc.(%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
@@ -906,7 +912,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
-msgstr "Nuevo Presupuesto"
+msgstr "Nueva Cotización"
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
@@ -965,7 +971,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
 msgid "Online Quotations"
-msgstr ""
+msgstr "Cotizaciones en línea"
 
 #. module: sale
 #. openerp-web
@@ -1291,12 +1297,12 @@ msgstr "Presupuestos"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Quotations & Sales"
-msgstr ""
+msgstr "Cotizaciones y Ventas"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr ""
+msgstr "Analisis de Cotizaciones"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -1329,7 +1335,7 @@ msgstr "Reportes"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Sale Order"
-msgstr "Orden de Venta"
+msgstr "Pediodo de Venta"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line_so_line
@@ -1341,7 +1347,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_product_sale_list
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_sale_line_ids
 msgid "Sale Order Lines"
-msgstr "Líneas de Orden de Venta"
+msgstr "Líneas de Pedido de Venta"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_auto_done_setting
@@ -1911,72 +1917,3 @@ msgstr "Configuración de venta"
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "Desconocido"
-
-#~ msgid "Action Needed"
-#~ msgstr "Acción Requerida"
-
-#~ msgid "Allows you to specify an analytic account on sales orders."
-#~ msgstr "Permitirle especificar una cuenta analítica en ordenes de venta."
-
-#~ msgid "Analytic Line"
-#~ msgstr "Línea analítica"
-
-#~ msgid "Analytic accounting for sales"
-#~ msgstr "Cuentas Analíticas para ventas"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Fecha de último trabajo realizado en esta cuenta"
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Socios)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si se marca, los nuevos mensajes requieren su atención"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
-
-#~ msgid "Is Follower"
-#~ msgstr "Es un Seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Fecha de último mensaje"
-
-#~ msgid "Messages"
-#~ msgstr "Mensajes"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Mensajes e historial de comunicación"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de acciones"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensajes que requieren una acción"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensajes sin leer"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "Menu ventas abiertas"
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Unidades de medida"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de mensajes sin leer"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensajes del Website"
-
-#~ msgid "Website communication history"
-#~ msgstr "Sitio Web historial de comunicación"
-
-#~ msgid "account.config.settings"
-#~ msgstr "cuenta.configurar.ajustes"

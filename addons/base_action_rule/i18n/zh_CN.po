@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-06-22 13:04+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-09-23 09:57+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
 "language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -291,7 +291,7 @@ msgstr "最后更新时间"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
 msgid "Lead id"
-msgstr ""
+msgstr "线索 ID"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -311,7 +311,7 @@ msgstr "月"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_name
 msgid "Name"
-msgstr "名称"
+msgstr "名字"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -412,6 +412,21 @@ msgid "Subject"
 msgstr "主题"
 
 #. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_done
+msgid "Test lead in state 'done'"
+msgstr "测试完成状态的线索"
+
+#. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_draft
+msgid "Test lead in state 'draft'"
+msgstr "测试草稿状态的线索"
+
+#. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_open
+msgid "Test lead in state 'open'"
+msgstr "测试打开状态的线索"
+
+#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_id
 msgid "Trigger Date"
 msgstr "触发日期"
@@ -439,7 +454,7 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_user_id
 msgid "User id"
-msgstr ""
+msgstr "用户 ID"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_calendar_id
@@ -477,12 +492,3 @@ msgstr "你可能也用过滤器选择记录。可以创建一个新的过滤：
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
 msgid "unknown"
 msgstr ""
-
-#~ msgid "Test lead in state 'done'"
-#~ msgstr "测试完成状态的线索"
-
-#~ msgid "Test lead in state 'draft'"
-#~ msgstr "测试草稿状态的线索"
-
-#~ msgid "Test lead in state 'open'"
-#~ msgstr "测试打开状态的线索"

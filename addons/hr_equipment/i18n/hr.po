@@ -3,16 +3,16 @@
 # * hr_equipment
 #
 # Translators:
-# Davor Bojkić <bole@dajmi5.com>, 2015
+# Bole <bole@dajmi5.com>, 2015
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
 # KRISTINA PALAŠ <kristina.palas@storm.hr>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 12:00+0000\n"
-"PO-Revision-Date: 2015-11-05 14:00+0000\n"
-"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-09-23 09:55+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
@@ -49,6 +49,12 @@ msgid ""
 msgstr ""
 "Python rječnik koji će se provjeravati za zadane postave kada se kreira novi "
 "zapis za ovaj alias."
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer3
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer5
+msgid "Acer Laptop"
+msgstr "Acer Laptop"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
@@ -405,6 +411,17 @@ msgid "Group by..."
 msgstr "Grupiraj po..."
 
 #. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_printer1
+msgid "HP Inkjet printer"
+msgstr "HP Inkjet printer"
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer11
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer9
+msgid "HP Laptop"
+msgstr "HP Laptop"
+
+#. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
 msgid "High"
 msgstr "Visoka"
@@ -544,6 +561,11 @@ msgid "Model"
 msgstr "Model"
 
 #. module: hr_equipment
+#: model:hr.equipment.category,name:hr_equipment.hr_equipment_monitor
+msgid "Monitors"
+msgstr "Monitori"
+
+#. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "My Equipments"
 msgstr "Moja oprema"
@@ -611,6 +633,11 @@ msgstr ""
 "Matični model sadrži pseudonim. Model sadrži alias referenca ali nije nužno "
 "da model daje alias_model_id (na primjer: projekt ( parent_model ) kraj "
 "zadatka (model))"
+
+#. module: hr_equipment
+#: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
+msgid "Phones"
+msgstr "Telefoni"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
@@ -692,6 +719,13 @@ msgstr "Poništi zahtjev"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
 msgid "Responsible"
 msgstr "Odgovoran"
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor1
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor4
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor6
+msgid "Samsung Monitor 15\""
+msgstr "Samsung monitor 15\""
 
 #. module: hr_equipment
 #: model:hr.equipment.stage,name:hr_equipment.stage_4
@@ -920,101 +954,3 @@ msgstr "Zahtjev za održavanjem"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 msgid "maintenance Request Search"
 msgstr "Pretraživanje zahtjeva za održavanjem"
-
-#~ msgid "Acer Laptop"
-#~ msgstr "Acer Laptop"
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebna dodatna radnja"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum zadnjeg zapisa"
-
-#~ msgid "Followers"
-#~ msgstr "Pratitelji"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pratitelji (Kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pratitelji (Partneri)"
-
-#~ msgid "HP Inkjet printer"
-#~ msgstr "HP Inkjet printer"
-
-#~ msgid "HP Laptop"
-#~ msgstr "HP Laptop"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ako je označeno, nove poruke zahtijevaju vašu pažnju."
-
-#~ msgid "Important Messages"
-#~ msgstr "Važne poruke"
-
-#~ msgid "Is Follower"
-#~ msgstr "Je pratitelj"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnje poruke"
-
-#~ msgid "Messages"
-#~ msgstr "Poruke"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Poruke i povijest"
-
-#~ msgid "Monitors"
-#~ msgstr "Monitori"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Broj akcija"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Broj poruka koje zahtijevaju aktivnost"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Broj nepročitanih poruka"
-
-#~ msgid "Open Equipments Menu"
-#~ msgstr "Otvori izbornik opreme"
-
-#~ msgid "Phones"
-#~ msgstr "Telefoni"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Politika ostavljanja poruka na dokumentu koristeći mailgateway.\n"
-#~ "-svatko:svatko može objaviti poruku\n"
-#~ "-partneri: samo autentificirani partner\n"
-#~ "-pratitelji: samo pratitelji srodne dokumentacije\n"
-
-#~ msgid "Samsung Monitor 15\""
-#~ msgstr "Samsung monitor 15\""
-
-#~ msgid ""
-#~ "This application helps you to track equipments used by employees.\n"
-#~ "                Create some laptop, printer or phone and link each "
-#~ "equipment to an employee or departement.\n"
-#~ "                You will manage allocations, issues and mainteannce of "
-#~ "equipment."
-#~ msgstr ""
-#~ "Ova aplikacija pomaže vam pratiti opremu koju koriste djelatnici.  "
-#~ "Kreirajte neki laptop, pisač ili telefon i povežite svu opremu sa\n"
-#~ "djelatnikom ili odjelom. Vi će upravljati raspodjelom, izdavanjem\n"
-#~ "i održavanjem opreme."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Brojač nepročitanih poruka"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website poruke"
-
-#~ msgid "Website communication history"
-#~ msgstr "Povijest komunikacije Web stranice"

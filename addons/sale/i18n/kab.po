@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-03-10 09:16+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-22 13:46+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-9/language/kab/)\n"
 "Language: kab\n"
@@ -103,13 +103,10 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
-#, fuzzy
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-"'Asuter n ssuma' or 'Taladna'} (Tamsisɣelt ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -446,6 +443,12 @@ msgid "Delivery address for current sales order."
 msgstr "Tansa n usiweḍ i tladna n uznuzu tamirant."
 
 #. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
 msgstr ""
@@ -463,7 +466,6 @@ msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "Disc.(%)"
 msgstr "Tuǧǧit(%)"
 
@@ -560,9 +562,8 @@ msgstr "Amarag n usuddes n Imayl"
 
 #. module: sale
 #: model:ir.model,name:sale.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "Amarag n usuddes n Imayl"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
@@ -610,7 +611,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Taẓayt tarewwayt"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -893,7 +894,7 @@ msgstr ""
 #: code:addons/sale/sale.py:101
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "Amaynut"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
@@ -1292,9 +1293,8 @@ msgstr "Tasleṭ n isutar n ssuma"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#, fuzzy
 msgid "Quotations Sent"
-msgstr "Asuter iţwaceggaɛ"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1308,9 +1308,8 @@ msgstr "Tamsiɣelt n usemli d isirewen asuter agi  n tladna n uznuzu."
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
-#, fuzzy
 msgid "Reinvoice Costs"
-msgstr "Addad n ufeter"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1570,7 +1569,7 @@ msgstr "Addad"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Subscriptions"
-msgstr ""
+msgstr "Tiggeztin"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_subtotal
@@ -1774,9 +1773,8 @@ msgstr "Aferdis"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
-#, fuzzy
 msgid "Units of Measure"
-msgstr "Aferdis"
+msgstr "Iferdisen n usɣel"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1825,7 +1823,7 @@ msgstr "TVA:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Ableɣ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
@@ -1871,9 +1869,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
-#, fuzzy
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr "Izirigen n tladna i  w-ufeter"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1894,9 +1891,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "Izirig usliḍ"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1906,46 +1902,9 @@ msgstr "Ussan"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "arussin"
-
-#~ msgid ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-#~ msgstr ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Asuter n ssuma' or 'Taladna'} (Tamsisɣelt ${object.name or 'n/a' })"
-
-#~ msgid "Allows you to specify an analytic account on sales orders."
-#~ msgstr "Ak isireg tiririt n umsiḍ n tusliṭ ɣef tludna uznuzu."
-
-#~ msgid "Analytic Line"
-#~ msgstr "Izirig usliḍ"
-
-#~ msgid "Analytic accounting for sales"
-#~ msgstr "Tasiḍent tusliṭ n uznuzu"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Azemz n yizen anegaru iţunefken ɣef ukalas agi"
-
-#~ msgid "Followers"
-#~ msgstr "Imeltaɣen"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ma yeṛcem, iznan imaynuten suturen tamuɣli leqqayen."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Azemz n yizen aneggaru"
-
-#~ msgid "Messages"
-#~ msgstr "Iznan"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Amazray n iznan  d  teywalin"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "Llid Umuɣ \"Aznuzu\""

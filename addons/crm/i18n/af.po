@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-02-20 10:37+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-11-14 10:24+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Afrikaans (http://www.transifex.com/odoo/odoo-9/language/"
 "af/)\n"
@@ -229,6 +229,19 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
 msgstr "<i class=\"fa fa-question-circle\"> sien voorbeelde</i>"
+
+#. module: crm
+#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
+msgid ""
+"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
+"since at least 5 days.</p>\n"
+"%if object.description:\n"
+"<p>Here is the description about the opportunity : </p><p><i>${object."
+"description}</i>\n"
+"%endif\n"
+"</p><p>Thank you!</p>\n"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1133,6 +1146,18 @@ msgid "Call"
 msgstr ""
 
 #. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for Demo"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for a demo"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1561,9 +1586,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_deduplicate
-#, fuzzy
 msgid "Deduplicate Contacts"
-msgstr "Smelt Kontakte Saam"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1691,6 +1715,11 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Download the"
+msgstr ""
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_draft_lead
+msgid "Draft Leads"
 msgstr ""
 
 #. module: crm
@@ -1879,6 +1908,18 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up Quote"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up quote"
 msgstr ""
 
 #. module: crm
@@ -2336,6 +2377,11 @@ msgid "Leads by Source"
 msgstr ""
 
 #. module: crm
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr ""
@@ -2446,6 +2492,12 @@ msgstr "Verloor Redes"
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Low"
 msgstr "Laag"
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Make Quote"
+msgstr "Maak Kwotasie"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -3278,6 +3330,12 @@ msgid "Relation field"
 msgstr ""
 
 #. module: crm
+#: model:ir.actions.server,name:crm.action_email_reminder_lead
+msgid "Reminder to User"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
 msgid ""
 "Reminder: Lead ${object.name} from ${object.partner_id != False and object."
@@ -3438,6 +3496,12 @@ msgid "Selection"
 msgstr ""
 
 #. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Send a quotation"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -3449,6 +3513,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "Volgorde"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_set_team_sales_department
+msgid "Set team to Sales Department"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3808,6 +3877,9 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
+"Hierdie e-pos adresse sal in die Afskrif(CC) veld van alle inkomende en "
+"uitgaande e-posse vir hierdie rekord bygevoeg word, voordat dit gestuur. "
+"Onderskei tussen verskeie e-pos adresse met 'n komma"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -4009,7 +4081,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_sequence
 msgid "Used to order stages. Lower is better."
-msgstr ""
+msgstr "Gebruik om stadiums te sorteer. Laer is beter."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_user_id
@@ -4439,111 +4511,3 @@ msgstr "onbekend"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "with your work above"
 msgstr "met jou werk hierbo"
-
-#~ msgid ""
-#~ "<p>This opportunity did not have any activity since at least 5 days. Here "
-#~ "are some details:</p>\n"
-#~ "<ul>\n"
-#~ "<li>Name: ${object.name}</li>\n"
-#~ "<li>ID: ${object.id}</li>\n"
-#~ "<li>Description: ${object.description}</li>\n"
-#~ "</ul>"
-#~ msgstr ""
-#~ "<p>Die geleentheid het vir 5 dae geen aktiwiteit beleef nie. Hier is nog "
-#~ "inligting:</p>\n"
-#~ "<ul>\n"
-#~ "<li>Naam: ${object.name}</li>\n"
-#~ "<li>ID: ${object.id}</li>\n"
-#~ "<li>Beskrywing: ${object.description}</li>\n"
-#~ "</ul>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Aksie word benodig"
-
-#~ msgid "Both"
-#~ msgstr "Albei"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum van die laaste boodskap wat op die rekord gepos is."
-
-#~ msgid "Done"
-#~ msgstr "Klaar"
-
-#~ msgid "Followers"
-#~ msgstr "Volgelinge"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Volgelinge (Kanale)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Volgelinge (Venote)"
-
-#~ msgid "Function"
-#~ msgstr "Funksie"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "As dit gekies is vereis nuwe boodskappe jou aandag."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "As dit gekies is, vereis nuwe boodskappe jou aandag."
-
-#~ msgid "Is Follower"
-#~ msgstr "Is Volgeling"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Laaste Boodskap Datum"
-
-#~ msgid ""
-#~ "Link between stages and sales teams. When set, this limitate the current "
-#~ "stage to the selected sales teams."
-#~ msgstr ""
-#~ "Verband tussen stadiums en verkoopsspanne. Wanneer dit opgetsel is, sal "
-#~ "dit die huidige stadium beperk tot die verkose verkoopspanne."
-
-#~ msgid "Make Quote"
-#~ msgstr "Maak Kwotasie"
-
-#~ msgid "Mark As Lost"
-#~ msgstr "Merk As Verlore"
-
-#~ msgid "Messages"
-#~ msgstr "Boodskappe"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Boodskap-en kommunikasiegeskiedenis"
-
-#~ msgid "Negotiation"
-#~ msgstr "Onderhandeling"
-
-#~ msgid "Next Action Date"
-#~ msgstr "Volgende Aksie Datum"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Hoeveelheid Aksies"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Hoeveelheid boodskappe wat aksie vereis"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Hoeveelheid ongeleesde boodskappe"
-
-#~ msgid "Teams"
-#~ msgstr "Spanne"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Ongeleesde Boodskappe Teller"
-
-#~ msgid "Website Messages"
-#~ msgstr "Webtuiste Boodskappe"
-
-#~ msgid "Website communication history"
-#~ msgstr "Webtuiste kommunikasie geskiedenis"
-
-#~ msgid "Your Customers"
-#~ msgstr "Jou Kliente"
-
-#~ msgid "Your Products"
-#~ msgstr "Jou Produkte"
-
-#~ msgid "oe_kanban_text_red"
-#~ msgstr "oe_kanban_text_red"

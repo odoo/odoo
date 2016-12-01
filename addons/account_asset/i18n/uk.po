@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-05-12 09:34+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-11-01 11:04+0000\n"
+"Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
 "uk/)\n"
 "Language: uk\n"
@@ -22,7 +22,7 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:348
+#: code:addons/account_asset/account_asset.py:347
 #, python-format
 msgid " (copy)"
 msgstr " (копія)"
@@ -59,7 +59,7 @@ msgid "Active"
 msgstr "Активний"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #, python-format
 msgid "Amount"
 msgstr "Сума"
@@ -72,7 +72,7 @@ msgstr "Сума рядків амортизації"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_value
 msgid "Amount of Installment Lines"
-msgstr ""
+msgstr "Кількість рядків доходу"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_analytic_id
@@ -104,7 +104,7 @@ msgstr "Категорія активу"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
 msgid "Asset Durations to Modify"
-msgstr ""
+msgstr "Редагування амортизації активу"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
@@ -114,7 +114,7 @@ msgstr "Кінцева дата активу"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_asset_method_time
 msgid "Asset Method Time"
-msgstr ""
+msgstr "Вибір терміну амортизації"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_name
@@ -148,7 +148,7 @@ msgid "Asset category"
 msgstr "Категорія активу"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:236
+#: code:addons/account_asset/account_asset.py:235
 #, python-format
 msgid "Asset created"
 msgstr "Актив створено"
@@ -159,7 +159,7 @@ msgid "Asset depreciation line"
 msgstr "Рядок амортизації активу"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:269
+#: code:addons/account_asset/account_asset.py:268
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr ""
@@ -238,6 +238,9 @@ msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
 msgstr ""
+"Зробіть позначку, якщо хочете щоб активи цієї категорії автоматично "
+"вводилися в експлуатацію, якщо вони автоматично створені на основі рахунку "
+"від постачальника. "
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
@@ -270,7 +273,7 @@ msgstr ""
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
 msgid "Close"
-msgstr "Припинити"
+msgstr "Зупинено"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -342,7 +345,7 @@ msgid "Cumulative Depreciation"
 msgstr "Сумарна амортизація"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -357,6 +360,11 @@ msgstr "Поточний"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_amount
 msgid "Current Depreciation"
 msgstr "Поточна амортизація"
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
+msgid "Customer"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_date
@@ -420,7 +428,7 @@ msgstr "Рахунок амортизації"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Asset Account"
-msgstr ""
+msgstr "Рахунок амортизації активу"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -441,7 +449,7 @@ msgstr "Запис амортизації"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Expense Account"
-msgstr ""
+msgstr "Рахунок витрат активу"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -470,13 +478,13 @@ msgid "Depreciation Name"
 msgstr "Назва амортизації"
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/account_asset_change_duration.py:83
+#: code:addons/account_asset/wizard/account_asset_change_duration.py:82
 #, python-format
 msgid "Depreciation board modified"
 msgstr "Таблицю амортизації змінено"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:489
+#: code:addons/account_asset/account_asset.py:487
 #, python-format
 msgid "Depreciation line posted."
 msgstr "Рядок амортизації проведено."
@@ -492,19 +500,19 @@ msgid "Display Name"
 msgstr "Назва для відображення"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:272
+#: code:addons/account_asset/account_asset.py:271
 #, python-format
 msgid "Disposal Move"
 msgstr "Проведення ліквідації"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:275
+#: code:addons/account_asset/account_asset.py:274
 #, python-format
 msgid "Disposal Moves"
 msgstr "Проведення ліквідації"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:468
+#: code:addons/account_asset/account_asset.py:466
 #, python-format
 msgid "Document closed."
 msgstr "Документ закрито"
@@ -540,9 +548,8 @@ msgstr "Кожні"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_asset_id
-#, fuzzy
 msgid "Expense Account"
-msgstr "Рахунок активу"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -651,7 +658,7 @@ msgid "Journal"
 msgstr "Журнал"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:375
+#: code:addons/account_asset/account_asset.py:374
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
@@ -748,9 +755,10 @@ msgid "Number of Months in a Period"
 msgstr "Кількість місяців у періоді"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:488
+#: code:addons/account_asset/account_asset.py:486
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #, python-format
 msgid "Partner"
 msgstr "Партнер"
@@ -805,10 +813,10 @@ msgstr "Шаблон товару"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_prorata
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_prorata
 msgid "Prorata Temporis"
-msgstr ""
+msgstr "З дати експлуатації"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:314
+#: code:addons/account_asset/account_asset.py:313
 #, python-format
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
@@ -957,12 +965,12 @@ msgstr "Тип"
 #: code:addons/account_asset/static/src/js/account_asset.js:24
 #, python-format
 msgid "Unposted"
-msgstr "Неопубліковано"
+msgstr "Залишок"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_unposted_value
 msgid "Unposted Amount"
-msgstr "Неопублікована сума"
+msgstr "Залишкова вартість"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -987,95 +995,46 @@ msgid "Year"
 msgstr "Рік"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:97
+#: code:addons/account_asset/account_asset.py:96
 #, python-format
 msgid "You cannot delete a document is in %s state."
-msgstr ""
+msgstr "Ви не можете вилучити документ у стані %s."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:99
+#: code:addons/account_asset/account_asset.py:98
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
-msgstr ""
+msgstr "Ви не можете вилучити документ, що містить опубліковані записи."
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:495
+#, python-format
+msgid "You cannot delete posted depreciation lines."
+msgstr "Ви не можете вилучити опубліковані рядки амортизації."
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:497
 #, python-format
-msgid "You cannot delete posted depreciation lines."
-msgstr ""
-
-#. module: account_asset
-#: code:addons/account_asset/account_asset.py:499
-#, python-format
 msgid "You cannot delete posted installment lines."
-msgstr ""
+msgstr "Ви не можете вилучити опубліковані рядки доходу."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
 msgid "asset.depreciation.confirmation.wizard"
-msgstr ""
+msgstr "asset.depreciation.confirmation.wizard"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "e.g. Computers"
-msgstr ""
+msgstr "напр. Комп’ютери"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "e.g. Laptop iBook"
-msgstr ""
+msgstr "напр. Лептоп iBook"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "months"
 msgstr "місяців"
-
-#~ msgid "Action Needed"
-#~ msgstr "Необхідна дія"
-
-#~ msgid "Customer"
-#~ msgstr "Клієнт"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата останнього повідомлення по запису."
-
-#~ msgid "Followers"
-#~ msgstr "Підписники"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Підписники (Канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Підписники (Партнери)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
-
-#~ msgid "Is Follower"
-#~ msgstr "Стежить"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Дата останнього повідомлення"
-
-#~ msgid "Messages"
-#~ msgstr "Повідомлення"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Кількість дій"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Кількість повідомлень, які потебують дії"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Кількість непрочитаних повідомлень"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитані повідомлення"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Кількість непрочитаних повідомлень"

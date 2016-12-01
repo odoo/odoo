@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-06 12:20+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-10-31 00:46+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "Language: ja\n"
@@ -27,7 +27,7 @@ msgstr "活動"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_delay
 msgid "Avg. Plan.-Eff."
-msgstr ""
+msgstr "平均計画実行"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project_subtask_project_id
@@ -59,16 +59,18 @@ msgid ""
 "Computed as difference between planned hours by the project manager and the "
 "total hours of the task."
 msgstr ""
+"プロジェクトマネジャによる計画時間数とタスクの合計時間数の間の差を計算しま"
+"す。"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_total_hours
 msgid "Computed as: Time Spent + Remaining Time."
-msgstr ""
+msgstr "計算式：消費時間 + 残り時間"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_effective_hours
 msgid "Computed using the sum of the task work done."
-msgstr ""
+msgstr "タスク作業完了の合計を使用して計算されます。"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_cost
@@ -88,13 +90,12 @@ msgstr "分析方法を指定"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_delay_hours
 msgid "Delay Hours"
-msgstr ""
+msgstr "遅延時間数"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
-#, fuzzy
 msgid "Detailed Activities"
-msgstr "活動"
+msgstr "活動詳細"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_display_name
@@ -110,7 +111,7 @@ msgstr "時間"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_effective
 msgid "Effective Hours"
-msgstr ""
+msgstr "有効時間数"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
@@ -131,7 +132,7 @@ msgstr "日付の月でグループ化"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_effective_hours
 msgid "Hours Spent"
-msgstr ""
+msgstr "消費時間"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_id
@@ -157,9 +158,8 @@ msgstr "月"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
-#, fuzzy
 msgid "My Timesheet"
-msgstr "勤務表"
+msgstr "自分のタイムシート"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_parent_id
@@ -169,7 +169,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_planned
 msgid "Planned Hours"
-msgstr ""
+msgstr "計画時間数"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_product_id
@@ -180,7 +180,7 @@ msgstr "製品"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_progress
 msgid "Progress"
-msgstr ""
+msgstr "進捗"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_project
@@ -188,13 +188,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_project_id
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Project"
-msgstr ""
+msgstr "プロジェクト"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_remaining_hours
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Remaining Hours"
-msgstr ""
+msgstr "残時間"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_kanban_inherited_progress
@@ -209,7 +209,7 @@ msgstr "レポート"
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Spent Hours"
-msgstr ""
+msgstr "消費時間"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project_subtask_project_id
@@ -245,12 +245,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_task_id
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Task"
-msgstr ""
+msgstr "タスク"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_report_project_task_user
 msgid "Tasks by user and project"
-msgstr ""
+msgstr "ユーザとプロジェクト別のタスク"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
@@ -260,7 +260,7 @@ msgstr "今月"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_quantity
 msgid "Time"
-msgstr "時刻"
+msgstr "時間"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_timesheet_report
@@ -306,14 +306,13 @@ msgstr "タイムシート"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_total_hours
-#, fuzzy
 msgid "Total"
-msgstr "合計時間"
+msgstr "合計"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_total_hours
 msgid "Total Hours"
-msgstr ""
+msgstr "合計時間"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
@@ -356,43 +355,10 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "分析行"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
 msgid "month"
 msgstr "月"
-
-#~ msgid "Accounting"
-#~ msgstr "会計"
-
-#~ msgid "Analytic Account"
-#~ msgstr "分析勘定"
-
-#~ msgid "Analytic Line"
-#~ msgstr "分析行"
-
-#~ msgid "Analytic account"
-#~ msgstr "分析勘定"
-
-#~ msgid "Check this field if this project manages timesheets"
-#~ msgstr ""
-#~ "このプロジェクトでタイムシートを使用する場合は、この項目を選択してくださ"
-#~ "い。"
-
-#~ msgid "Companies"
-#~ msgstr "会社"
-
-#~ msgid "Configuration"
-#~ msgstr "設定"
-
-#~ msgid "Information"
-#~ msgstr "情報"
-
-#~ msgid "Is a Timesheet"
-#~ msgstr "タイムシート"
-
-#~ msgid "Timesheet Accounts"
-#~ msgstr "タイムシートアカウント"

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-05-10 07:47+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-08-31 00:51+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
 "mn/)\n"
@@ -331,7 +331,7 @@ msgstr "Үнэлгээ"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Archived"
-msgstr ""
+msgstr "Архивласан"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_open
@@ -486,6 +486,16 @@ msgstr "Холбогдох эмэйл"
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Contract"
 msgstr "Гэрээ"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
+msgid "Contract Proposal"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
+msgid "Contract Signed"
+msgstr "Батлагдсан хөдөлмөрийн гэрээ"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
@@ -785,6 +795,11 @@ msgid "Filter and view on next actions and date"
 msgstr "Дараах үйлдэл болон огноогоор шүүж харах"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Эхний ярилцлага"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr ""
@@ -908,6 +923,11 @@ msgstr ""
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
 msgstr "Чухал"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Initial Qualification"
+msgstr "Анхны Магадлагаа"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
@@ -1457,6 +1477,11 @@ msgid "Search through resumes and motivation letters."
 msgstr ""
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "2 дахь ярилцлага"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_sequence
 msgid "Sequence"
@@ -1807,95 +1832,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
-
-#~ msgid "Action Needed"
-#~ msgstr "Үйлдэл Шаардлагатай"
-
-#~ msgid "Campaign"
-#~ msgstr "Аян"
-
-#~ msgid "Contract Signed"
-#~ msgstr "Батлагдсан хөдөлмөрийн гэрээ"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
-
-#~ msgid "First Interview"
-#~ msgstr "Эхний ярилцлага"
-
-#~ msgid "Followers"
-#~ msgstr "Дагагчид"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Дагагчид (Сувагууд)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Дагагчид (Харилцагчид)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr ""
-#~ "Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг "
-#~ "шаардана."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
-
-#~ msgid "If other, precise:"
-#~ msgstr "Хэрэв бусад бол тодорхой:"
-
-#~ msgid "Initial Qualification"
-#~ msgstr "Анхны Магадлагаа"
-
-#~ msgid "Is Follower"
-#~ msgstr "Дагагч эсэх"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Сүүлийн зурвасын огноо"
-
-#~ msgid "Messages"
-#~ msgstr "Зурвасууд"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Зурвас болон харилцсан түүх"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Үйлдлийн тоо"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Үйлдэл шаардлагатай зурвасын тоо"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Уншаагүй зурвасын тоо"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Хүний Нөөц Менюг Нээх"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "mailgateway ашиглан баримтанд зурвас илгээх бодлого.\n"
-#~ "- бүгд: бигд илгээж болно\n"
-#~ "- харилцагчид: зөвхөн баталгаажсан харилцагчид\n"
-#~ "- дагагчид: баримтын зөвхөн дагагчид\n"
-
-#~ msgid "Second Interview"
-#~ msgstr "2 дахь ярилцлага"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Энэ нь нэр нь ялгаатай аянуудын хүч хөдөлмөрийг хөтлөхөд туслана. Ж: "
-#~ "Намрын, Шинэ жилийн"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Уншаагүй зурвасын тоолуур"
-
-#~ msgid "Website Messages"
-#~ msgstr "Вебсайтын зурвасууд"
-
-#~ msgid "Website communication history"
-#~ msgstr "Вебсайтын харилцааны түүх"

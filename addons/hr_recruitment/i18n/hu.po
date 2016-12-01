@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -30,6 +30,12 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Tisztelt ${object.partner_name or 'applicant'},</p>\n"
+"<p>Köszönjük érdeklődését.<br />\n"
+"Sajnos, az életrajza nem egyezik az igényeinkkel</p>\n"
+"<p>További felmerülő kérdésekkel, keressen fel bennünket.</p>\n"
+"<p>Legjobbakat,</p>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -43,6 +49,14 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Tisztelt ${object.partner_name or 'applicant'},</p>\n"
+"<p>Köszönjük érdeklődését.<br />\n"
+"Önéletrajza felkeltette érdeklődésünket. Amint lehet felkeressük Önt a "
+"toborzási folyamat\n"
+" következő lépéseinek megtervezéséhezs.</p>\n"
+"<p>További felmerülő kérdésekkel, keressen fel bennünket.</p>\n"
+"<p>Legjobbakat,</p>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_employee
@@ -58,6 +72,16 @@ msgid ""
 ".</p>\n"
 "<p>Please welcome him/her and help him/her finding his/her marks.</p>"
 msgstr ""
+"\n"
+"<p>Tisztelt mindenki,</p>\n"
+"<p> Nagyon örömömre szolgál, hogy bejelenthetem <strong> ${object.name} </"
+"strong> aki \n"
+"catlakozik hozzánk mint ${object.job_id.name}\n"
+"%if object.department_id:\n"
+"    in ${object.department_id.name}.\n"
+"%endif\n"
+".</p>\n"
+"<p>Kérem fogadjátok Őt és segítsétek megtalálni a céljait.</p>"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_1
@@ -507,6 +531,16 @@ msgid "Contract"
 msgstr "Szerződés"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
+msgid "Contract Proposal"
+msgstr "Szerződés javaslat"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
+msgid "Contract Signed"
+msgstr "Aláírt szerződés"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
 msgid "Create Date"
 msgstr "Létrehozás dátuma"
@@ -526,6 +560,8 @@ msgstr "Álnév létrehozás"
 msgid ""
 "Create some aliases that will allow you to track where applicants come from."
 msgstr ""
+"Hozzon létre egy pár álnevet, mely lehetővé teszi annak nyomon követését, "
+"hogy honnan jöttek a jelentkezői."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
@@ -814,6 +850,11 @@ msgid "Filter and view on next actions and date"
 msgstr "Szűrés és nézet a következő műveletnél és dátumnál"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Első interjú"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr "Megjavítási  folyamatban lapozott"
@@ -940,6 +981,11 @@ msgid "Important"
 msgstr "Fontos"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Initial Qualification"
+msgstr "Elsődleges végzettség"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Interview Form"
@@ -990,7 +1036,7 @@ msgstr "Álláspozíciók"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Job Specific"
-msgstr ""
+msgstr "Munkahely részletezés"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -1410,7 +1456,7 @@ msgstr "Általános telálkozók"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Reopen Application"
-msgstr ""
+msgstr "Ismét nyitott jelentkezés"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1497,6 +1543,11 @@ msgid "Search through resumes and motivation letters."
 msgstr "Keressen az Önéletrajzok és a motivációs levelek közt."
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "Második interjú"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_sequence
 msgid "Sequence"
@@ -1545,6 +1596,8 @@ msgstr "Egyéni email címek"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Specific job that uses this stage. Other jobs will not use this stage."
 msgstr ""
+"Ezt a szakaszt használó munka részletezése. Többi munkák nem lesz lehetősége "
+"megnézni vagy használni ezt a szakaszt."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
@@ -1693,6 +1746,9 @@ msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
 msgstr ""
+"Ezek az álnevek lehetnek emailek vagy url elérési utak az összes forráshoz. "
+"Ha megérkezik a jelentkező ezek közül az egyiken keresztül, tudni fogja "
+"honnan jött."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1809,7 +1865,7 @@ msgstr "Email örző"
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_employee
 msgid "Welcome ${object.name} "
-msgstr ""
+msgstr "Üdvözlöm ${object.name} "
 
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_1_3
@@ -1861,236 +1917,3 @@ msgstr "állásra jelentkezők"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
-
-#~ msgid ""
-#~ "\n"
-#~ "            <p>\n"
-#~ "                %if object.department_id:\n"
-#~ "                    I’m very pleased to announce that <strong> ${object."
-#~ "name} </strong> will be joining us as a ${object.job_id.name}\n"
-#~ "                    in ${object.department_id.name}.\n"
-#~ "                %else:\n"
-#~ "                    I’m very pleased to announce that <strong> ${object."
-#~ "name} </strong> will be joining us as a ${object.job_id.name}.\n"
-#~ "                %endif\n"
-#~ "            </p>\n"
-#~ "            <p>Please welcome him/her and help him/her finding his/her "
-#~ "marks.</p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "            <p>\n"
-#~ "                %if object.department_id:\n"
-#~ "                    Nagyon örömömre szolgál, hogy bemutathatom <strong> "
-#~ "${object.name} </strong> aki csatlakozik hozzánk mint ${object.job_id."
-#~ "name}\n"
-#~ "                    in ${object.department_id.name}.\n"
-#~ "                %else:\n"
-#~ "                    Nagyon örömömre szolgál, hogy bemutathatom <strong> "
-#~ "${object.name} </strong> aki csatlakozik hozzánk mint ${object.job_id."
-#~ "name}.\n"
-#~ "                %endif\n"
-#~ "            </p>\n"
-#~ "            <p>Kérem fogadjátok Őt és segítsétek megtalálni a céljait.</"
-#~ "p>\n"
-#~ "            "
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>Congrats! Your resume's got our interest!\n"
-#~ "        I will call you as soon as possible to make a 10 minutes phone "
-#~ "interview and  plan a first meeting.</p>\n"
-#~ "        <p>If we can’t reach you or if you miss our call, feel free to "
-#~ "reach me back on the number 001 312 349 3030\n"
-#~ "        If I do not answer, please let me a message with some schedules "
-#~ "to call you back.</p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id.signature | safe}"
-#~ msgstr ""
-#~ "<p>Tisztelt${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>Gratulálunk! Az ön jelentkezése felkeltette érdeklődésünket!\n"
-#~ "        Amint lehetséges felkeressük Önt egy egy 10 perces telefonos "
-#~ "interjú erejéig és közössen megtervezzük az   \n"
-#~ "        első találkozót.</p>\n"
-#~ "        <p>Ha nem tudjuk elérni vagy pont elfoglalt abban az időbenl, "
-#~ "kérem vegye fel velem a kapcsolatot a \n"
-#~ "        következő telefonszámon 001 312 349 3030\n"
-#~ "        Ha nem válaszolok, kérem hagyjon üzenetet egy pár lehetésges "
-#~ "időponttal, amikor visszahívhatnám.</p>\n"
-#~ "        <p>Üdvözlettel,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id.signature | safe}"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>We thank you for your interest in our company and for your "
-#~ "application.\n"
-#~ "        Unfortunately, your profile does not match with our needs or our "
-#~ "recruitment\n"
-#~ "        campaign has reached its term.</p>\n"
-#~ "        <p>If you want more details, feel free to contact us by phone.</"
-#~ "p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id and object.user_id.signature | safe or ''}"
-#~ msgstr ""
-#~ "<p>Tisztelt${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>Köszönjük a vállalatunk iránti érdeklődését és a "
-#~ "jelentkezését.\n"
-#~ "        Sajnos, az önéletrajza nem egyezik az elvárásainkkal vagy a "
-#~ "toborzási kapányunk elérte a célját.</p>\n"
-#~ "        <p>Ha további részletekről tájékozódna, állunk rendelkezésére "
-#~ "telefonos elérhetőségeinken.</p>\n"
-#~ "        <p>Üdvözlettel,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id and object.user_id.signature | safe or ''}"
-
-#~ msgid "Action Needed"
-#~ msgstr "Művelet szükséges"
-
-#~ msgid "Campaign"
-#~ msgstr "Kampány"
-
-#~ msgid "Contract Proposal"
-#~ msgstr "Szerződés javaslat"
-
-#~ msgid "Contract Signed"
-#~ msgstr "Aláírt szerződés"
-
-#~ msgid ""
-#~ "Create email and url for each distinct source. <br>\n"
-#~ "                When the applicant will arrive, you will know from wich "
-#~ "source the Job position is coming."
-#~ msgstr ""
-#~ "Mindegyik eltérő forráshoz hozzon létre email-t és URL elérési utat. "
-#~ "<br>\n"
-#~ "                Ha a jelentkezés beérkezik, akkor tudni fogja melyik "
-#~ "forrásból származik a foglalkozásra jelentkezés."
-
-#~ msgid ""
-#~ "Create here some alias...\n"
-#~ "                That will allow you to track from where the applicant is "
-#~ "coming from..."
-#~ msgstr ""
-#~ "Hozzon létre egy pár álnevet...\n"
-#~ "                Ez lehetővé teszi annak követését, hogy honnan jönnek a "
-#~ "jelentkezők..."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#~ msgid "First Interview"
-#~ msgstr "Első interjú"
-
-#~ msgid "Followers"
-#~ msgstr "Követők"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Követők (Csatornák)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Követők (Partnerek)"
-
-#~ msgid "HR Department"
-#~ msgstr "Emberi erőforrás Osztály, részleg"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "If other, precise:"
-#~ msgstr "Ha másik, pontosítsa:"
-
-#~ msgid "Initial Qualification"
-#~ msgstr "Elsődleges végzettség"
-
-#~ msgid "Is Follower"
-#~ msgstr "Ő egy követő"
-
-#~ msgid "Job Stages"
-#~ msgstr "Állás szakaszok"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Utolsó üzenet dátuma"
-
-#~ msgid "Messages"
-#~ msgstr "Üzenetek"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Üzenetek és kommunikáció történet"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Műveletek száma"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Olvasatlan üzenetek száma"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Munkaügy HR menü megnyitása"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Az üzenetátjáró használatának alapvető irányvonalai a dokumentumra "
-#~ "vonatkozó üzenetek kiküldéséhez.\n"
-#~ "- mindenki: mindenki tud üzenni\n"
-#~ "- ügyfelek: csak a hitelesített partnerek\n"
-#~ "- követők: csak az idevonatkozó dokumentum követői\n"
-
-#~ msgid "Reset Application"
-#~ msgstr "Jelentkezés visszahelyezés"
-
-#~ msgid "Second Interview"
-#~ msgstr "Második interjú"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Ez a név ami segít követni a különböző kampány törekvéseit. Pl: "
-#~ "Őszi_árhullás, Karácsonyi_speciál"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Olvasatlan üzenetek számlálója"
-
-#~ msgid "Website Messages"
-#~ msgstr "Weboldal üzenetek"
-
-#~ msgid "Website communication history"
-#~ msgstr "Weboldal  kommunikáció történet"
-
-#~ msgid "Welcoming ${object.name} "
-#~ msgstr "Fogadjuk ${object.name}"
-
-#~ msgid "Click to add a new tag."
-#~ msgstr "Kattintson egy új címke hozzáadásához."
-
-#~ msgid "Content"
-#~ msgstr "Tartalom"
-
-#~ msgid "Create"
-#~ msgstr "Létrehozás"
-
-#~ msgid "Departments"
-#~ msgstr "Osztályok/Részlegek"
-
-#~ msgid "Discard"
-#~ msgstr "Elvetés"
-
-#~ msgid "Hr Department"
-#~ msgstr "Emberi erőforrás Osztály, részleg"
-
-#~ msgid "Refused"
-#~ msgstr "Elutasított"
-
-#~ msgid "e.g. Sales Manager"
-#~ msgstr "pl. Értékesítési menedzsment"

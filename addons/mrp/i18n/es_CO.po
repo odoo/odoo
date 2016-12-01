@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-12 01:57+0000\n"
-"Last-Translator: David Arnold <blaggacao@users.noreply.github.com>\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-09-14 20:31+0000\n"
+"Last-Translator: Esteban Echeverry <tebanep@nubark.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/"
 "language/es_CO/)\n"
 "Language: es_CO\n"
@@ -929,6 +929,12 @@ msgid "Internal Reference"
 msgstr "Referencia Interna"
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr "¡Problema con la cantidad de lote!"
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
@@ -1568,7 +1574,7 @@ msgstr "Propiedad"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9667
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -2320,6 +2326,16 @@ msgstr ""
 "órdenes de producción. Por favor, ciérrela o cancelela primero."
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+"Planea consumir más the 1.00 unidad de producto %s con número de lote único "
+"%s"
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "días"
@@ -2365,63 +2381,3 @@ msgstr "report.mrp.report_mrpbomstructure"
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "desconocido(a)"
-
-#~ msgid "Action Needed"
-#~ msgstr "Acción Requerida"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Cambiar Cantidad"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Fecha del último mensaje publicado en el registro."
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canales)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Asociados)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si está marcado, los nuevos mensajes requerirán su atención."
-
-#~ msgid "Is Follower"
-#~ msgstr "Es Seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Fecha del Último Mensaje"
-
-#~ msgid "Messages"
-#~ msgstr "Mensajes"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historial de mensajes y de comunicación"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de Acciones"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensajes que requieren una acción"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensajes no leidos"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "Abrir Menú del MRP"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Mensajes sin Leer"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de Mensajes no Leídos"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensajes del Sitio Web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historial de comunicación del sitio web"

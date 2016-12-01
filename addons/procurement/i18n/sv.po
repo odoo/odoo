@@ -3,13 +3,15 @@
 # * procurement
 #
 # Translators:
+# larmar <martin.wilderoth@linserv.se>, 2016
+# Robert Frykelius <robert.frykelius@linserv.se>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-08-19 14:15+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-10-11 04:20+0000\n"
+"Last-Translator: larmar <martin.wilderoth@linserv.se>\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
@@ -25,6 +27,10 @@ msgid ""
 "automatically, but others require manual intervention (those are identified "
 "by a specific error message in the chatter)."
 msgstr ""
+"Ett <b>Beställnings undantag</b> inträffar när systemet inte kan hitta ett "
+"sätt för att fullfölja en beställning. Några undantag löser sig automatiskt, "
+"medans andra kräver manuell hantering (dessa identifieras genom ett "
+"specifikt fel-meddelande)."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -62,7 +68,7 @@ msgstr "Avbryt"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Cancel Procurement"
-msgstr ""
+msgstr "Ta bort beställning"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -73,12 +79,12 @@ msgstr "Avbruten"
 #: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr ""
+msgstr "Kan inte radera inköps order(ar) som är i %s status."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Check Procurement"
-msgstr ""
+msgstr "Kontrollera inköp"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
@@ -86,13 +92,15 @@ msgid ""
 "Chosen rule for the procurement resolution. Usually chosen by the system but "
 "can be manually set by the procurement manager to force an unusual behavior."
 msgstr ""
+"Regler för beställningen väljs vanligen av systemet, men kan manuellt ändras "
+"av behörig person för att ställa in annorlunda regler."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid "Click to create a procurement order."
-msgstr ""
+msgstr "Klicka för att skapa en inköpsorder"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_company_id
@@ -103,7 +111,7 @@ msgstr "Företag"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr ""
+msgstr "Beräkna alla inköp i bakgrunden."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -133,9 +141,8 @@ msgstr "Skapad den"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Leveransmetod"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -168,7 +175,7 @@ msgstr "Undantag"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "External note..."
-msgstr ""
+msgstr "Extern anteckning..."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -183,7 +190,7 @@ msgstr "Fast"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_id
 msgid "Fixed Procurement Group"
-msgstr ""
+msgstr "låst inköpsgrupp."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
@@ -199,7 +206,7 @@ msgstr "Gruppera efter"
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Group's Procurements"
-msgstr ""
+msgstr "Gruppens beställningar"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_id
@@ -212,12 +219,12 @@ msgstr "ID"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "If the route is global"
-msgstr ""
+msgstr "Om det är en global rutt."
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_rule_active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
-msgstr ""
+msgstr "Om den ej är ikryssad, kan du dölja regeln utan att ta bort den."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
@@ -251,12 +258,12 @@ msgstr "Sent"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Leave Empty"
-msgstr ""
+msgstr "Lämnas tom"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.mrp_company
 msgid "Logistics"
-msgstr ""
+msgstr "Logistik."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
@@ -275,7 +282,7 @@ msgstr "Namn"
 #: code:addons/procurement/procurement.py:200
 #, python-format
 msgid "No rule matching this procurement"
-msgstr ""
+msgstr "Ingen regel som matchar detta inköp."
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -336,7 +343,7 @@ msgstr "Anskaffningsorders"
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "Inköpsrekvisition"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_rule
@@ -347,12 +354,12 @@ msgstr "Anskaffningsregel"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_tree
 msgid "Procurement Rules"
-msgstr ""
+msgstr "Anskaffningsregler"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
 msgid "Procurement group"
-msgstr ""
+msgstr "Anskaffningsgrupp"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
@@ -381,17 +388,17 @@ msgstr "Produktens måttenhet"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Propagate"
-msgstr ""
+msgstr "Sprida."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "Propagation Options"
-msgstr ""
+msgstr "Spridningsalternativ."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_propagation_option
 msgid "Propagation of Procurement Group"
-msgstr ""
+msgstr "Ordergruppens spridning."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_product_qty
@@ -401,7 +408,7 @@ msgstr "Antal"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Reconfirm Procurement"
-msgstr ""
+msgstr "Återbekräfta inköp."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_name
@@ -414,6 +421,8 @@ msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
 msgstr ""
+"En hänvisning till det dokument som skapade denna upphandling.\n"
+"Detta avslutas automatiskt av Odoo. "
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -428,7 +437,7 @@ msgstr "Kör upphandling"
 #. module: procurement
 #: model:ir.actions.server,name:procurement.procurement_order_server_action
 msgid "Run Procurements"
-msgstr ""
+msgstr "Kör upphandling"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
@@ -449,7 +458,7 @@ msgstr "Planerat datum"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Planerad månad"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
@@ -487,6 +496,7 @@ msgstr "Status"
 #: model:ir.model.fields,help:procurement.field_procurement_rule_name
 msgid "This field will fill the packing origin and the name of its moves"
 msgstr ""
+"Detta fält kommer att visa förpackningens ursprung och dess förflyttning."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
@@ -517,60 +527,9 @@ msgstr ""
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "e.g. Buy"
-msgstr ""
+msgstr "t.ex. Köp"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
-msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Åtgärd krävs"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum för senast publicerade meddelandet i loggen."
-
-#~ msgid "Delivery Method"
-#~ msgstr "Leveransmetod"
-
-#~ msgid "Followers"
-#~ msgstr "Följare"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Följare (Kanaler)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Följare (Partners)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Om ikryssad nya meddelanden som kräver din uppmärksamhet"
-
-#~ msgid "Is Follower"
-#~ msgstr "Är följare"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Senast meddelandedatum"
-
-#~ msgid "Messages"
-#~ msgstr "Meddelanden"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Meddelande- och kommunikationshistorik"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Antalet åtgärder"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Antal meddelanden som kräver en åtgärd"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Antalet olästa meddelanden"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Olästa meddelanden"
-
-#~ msgid "Website Messages"
-#~ msgstr "Webbplatsmeddelanden"
-
-#~ msgid "Website communication history"
-#~ msgstr "Webbplatsens kommunikationshistorik"
+msgstr "t.ex. SO005"

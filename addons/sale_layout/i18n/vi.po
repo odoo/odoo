@@ -3,14 +3,15 @@
 # * sale_layout
 #
 # Translators:
+# Duong Nguyen <supermanikin@yahoo.com>, 2016
 # Hoang Loc Le Huu <loclhh@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-02-23 04:22+0000\n"
-"Last-Translator: Hoang Loc Le Huu <loclhh@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-13 09:02+0000\n"
+"Last-Translator: Duong Nguyen <supermanikin@yahoo.com>\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/"
 "vi/)\n"
 "Language: vi\n"
@@ -33,6 +34,11 @@ msgid ""
 "&lt;/p&gt;\n"
 "                            &lt;table class=\"table table-condensed\"&gt;"
 msgstr ""
+"&lt;/tbody&gt;\n"
+"                            &lt;/table&gt;\n"
+"                            &lt;p style=\"page-break-before:always;\"&gt; "
+"&lt;/p&gt;\n"
+"                            &lt;table class=\"table table-condensed\"&gt;"
 
 #. module: sale_layout
 #: model:ir.ui.view,arch_db:sale_layout.report_invoice_layouted
@@ -43,22 +49,27 @@ msgid ""
 "p&gt;\n"
 "                    &lt;table class=\"table table-condensed\"&gt;"
 msgstr ""
+"&lt;/tbody&gt;\n"
+"                    &lt;/table&gt;\n"
+"                    &lt;p style=\"page-break-before:always;\"&gt; &lt;/"
+"p&gt;\n"
+"                    &lt;table class=\"table table-condensed\"&gt;"
 
 #. module: sale_layout
 #: model:ir.ui.view,arch_db:sale_layout.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale_layout.report_sale_layouted
 msgid "&lt;tbody&gt;"
-msgstr ""
+msgstr "&lt;tbody&gt;"
 
 #. module: sale_layout
 #: model:ir.ui.view,arch_db:sale_layout.report_sale_layouted
 msgid "<span>Disc.(%)</span>"
-msgstr ""
+msgstr "<span>Đĩa.(%)</span>"
 
 #. module: sale_layout
 #: model:ir.ui.view,arch_db:sale_layout.subtotal_template
 msgid "<strong>Subtotal: </strong>"
-msgstr ""
+msgstr "<strong>Tổng: </strong>"
 
 #. module: sale_layout
 #: model:ir.model.fields,field_description:sale_layout.field_sale_layout_category_pagebreak
@@ -148,6 +159,11 @@ msgid "Layout Sequence"
 msgstr "Thứ tự trình bày"
 
 #. module: sale_layout
+#: model:sale_layout.category,name:sale_layout.sale_layout_cat_2
+msgid "Material"
+msgstr "Nguyên liệu"
+
+#. module: sale_layout
 #: model:ir.model.fields,field_description:sale_layout.field_sale_layout_category_name
 #: model:ir.ui.view,arch_db:sale_layout.report_configuration_search_view
 msgid "Name"
@@ -209,6 +225,11 @@ msgid "Sequence"
 msgstr "Trình tự"
 
 #. module: sale_layout
+#: model:sale_layout.category,name:sale_layout.sale_layout_cat_1
+msgid "Services"
+msgstr "Các dịch vụ"
+
+#. module: sale_layout
 #: model:ir.ui.view,arch_db:sale_layout.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale_layout.report_sale_layouted
 msgid "Taxes"
@@ -233,10 +254,4 @@ msgstr "Đơn giá"
 #. module: sale_layout
 #: model:ir.model,name:sale_layout.model_sale_layout_category
 msgid "sale_layout.category"
-msgstr ""
-
-#~ msgid "Material"
-#~ msgstr "Nguyên liệu"
-
-#~ msgid "Services"
-#~ msgstr "Các dịch vụ"
+msgstr "sale_layout.category"

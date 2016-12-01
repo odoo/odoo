@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-04-26 05:53+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-11-11 09:47+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
 "Language: ko\n"
@@ -181,6 +181,16 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
 msgid "# Tasks"
 msgstr "업무"
@@ -252,7 +262,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install now"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> 지금설치"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -262,7 +272,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat on"
-msgstr ""
+msgstr "<span class=\"fa fa-comment-o\"/> 웹사이트 라이브채팅"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1053,7 +1063,7 @@ msgstr "적용"
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
-msgstr ""
+msgstr "보관"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
@@ -1187,6 +1197,11 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr ""
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "담당자별"
@@ -1202,6 +1217,7 @@ msgstr "취소"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "취소됨"
@@ -1691,6 +1707,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "완료"
@@ -2134,6 +2151,7 @@ msgstr ""
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
+#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "진행 중"
@@ -2462,6 +2480,11 @@ msgid "Name"
 msgstr "이름"
 
 #. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:64
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2503,6 +2526,11 @@ msgstr ""
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
 msgstr "보통"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -2891,11 +2919,21 @@ msgid "Ready to be displayed, published or sent"
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
+msgstr ""
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
 msgstr ""
 
 #. module: project
@@ -3586,6 +3624,7 @@ msgstr "간트 다이어그램 보고서를 조정하기 위한 작업 시간표
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
+#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "할 일"
@@ -3652,6 +3691,11 @@ msgstr ""
 msgid ""
 "Use separate meetings to solve big issues or issues that aren’t important "
 "for the entire team."
+msgstr ""
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the priority for tasks related to gold customers"
 msgstr ""
 
 #. module: project
@@ -3970,68 +4014,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr ""
-
-#~ msgid "&times;"
-#~ msgstr "&번;"
-
-#~ msgid "Close"
-#~ msgstr "마감"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "레코드에 게시된 최근 메시지의 날짜."
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "위임된 업무"
-
-#~ msgid "Followers"
-#~ msgstr "팔로워"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
-
-#~ msgid "Last Message Date"
-#~ msgstr "최근 메시지 날짜"
-
-#~ msgid "Messages"
-#~ msgstr "메시지"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "메시지 및 대화 기록"
-
-#~ msgid "Open Project Menu"
-#~ msgstr "프로젝트 메뉴 열기"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "메일 게이트웨이를 이용해서 문서에 메시지를 게시하는 보안정책.\n"
-#~ "- 모두 : 모두다 메시지 게시 가능\n"
-#~ "- 파트너 : 인증된 파트너만 가능\n"
-#~ "- 팔로워 : 관련 문서의 팔로워만 가능\n"
-
-#~ msgid "Record timesheet lines per tasks"
-#~ msgstr "업무별 작업표 내용 기록"
-
-#~ msgid "Task's Work on Tasks"
-#~ msgstr "업무에 대한 업무의 작업"
-
-#~ msgid ""
-#~ "This will set the unit of measure used in projects and tasks.\n"
-#~ "If you use the timesheet linked to projects (project_timesheet module), "
-#~ "don't forget to setup the right unit of measure in your employees."
-#~ msgstr ""
-#~ "프로젝트와 과제에서 사용되는 측정 단위를 설정합니다. \n"
-#~ "프로젝트에 연결된 작업표를 이용한다면 (project_timesheet module), 직원들"
-#~ "을 위한 적절한 측정 단위 설정을 잊지 마십시오."
-
-#~ msgid "Type of Account"
-#~ msgstr "계정 유형"
-
-#~ msgid "Website Messages"
-#~ msgstr "웹사이트 메시지"
-
-#~ msgid "Website communication history"
-#~ msgstr "웹사이트 대화 이력"

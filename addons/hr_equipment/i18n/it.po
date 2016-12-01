@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 12:00+0000\n"
-"PO-Revision-Date: 2016-04-08 10:17+0000\n"
-"Last-Translator: Simone Bernini <simone@aperturelabs.it>\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-09-23 09:55+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -46,6 +46,12 @@ msgid ""
 msgstr ""
 "Un dizionario Python che verrà usato per fornire valori di default durante "
 "la creazione di nuovi record per questi alias."
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer3
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer5
+msgid "Acer Laptop"
+msgstr "Portatile Acer"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
@@ -400,6 +406,17 @@ msgid "Group by..."
 msgstr "Raggruppato per..."
 
 #. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_printer1
+msgid "HP Inkjet printer"
+msgstr "Stampante HP inkjet"
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer11
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer9
+msgid "HP Laptop"
+msgstr "Portatile HP"
+
+#. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
 msgid "High"
 msgstr "Alta"
@@ -539,6 +556,11 @@ msgid "Model"
 msgstr "Modello"
 
 #. module: hr_equipment
+#: model:hr.equipment.category,name:hr_equipment.hr_equipment_monitor
+msgid "Monitors"
+msgstr "Monitor"
+
+#. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "My Equipments"
 msgstr "Le mie attrezzature"
@@ -606,6 +628,11 @@ msgstr ""
 "Modello che detiene l'alias . Il modello di azienda di riferimento alias non "
 "è necessariamente il modello riportato dal alias_model_id ( esempio : "
 "progetto ( parent_model ) e il compito ( modello) )"
+
+#. module: hr_equipment
+#: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
+msgid "Phones"
+msgstr "Telefoni"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
@@ -687,6 +714,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
 msgid "Responsible"
 msgstr "Responsabile"
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor1
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor4
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor6
+msgid "Samsung Monitor 15\""
+msgstr "Monitor Samsung 15\""
 
 #. module: hr_equipment
 #: model:hr.equipment.stage,name:hr_equipment.stage_4
@@ -908,84 +942,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 msgid "maintenance Request Search"
 msgstr ""
-
-#~ msgid "Acer Laptop"
-#~ msgstr "Portatile Acer"
-
-#~ msgid "Action Needed"
-#~ msgstr "Azione Necessaria"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data dell'ultimo messaggio postato per questo record"
-
-#~ msgid "Followers"
-#~ msgstr "Followers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Followers (Canali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Followers (Partner)"
-
-#~ msgid "HP Inkjet printer"
-#~ msgstr "Stampante HP inkjet"
-
-#~ msgid "HP Laptop"
-#~ msgstr "Portatile HP"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Se selezionato, nuovi messaggi richiedono la tua attenzione"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Se selezionato, i nuovi messaggi richiedono la tua attenzione"
-
-#~ msgid "Is Follower"
-#~ msgstr "E' Follower"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data Ultimo Messaggio"
-
-#~ msgid "Messages"
-#~ msgstr "Messaggi"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Storico messaggi e comunicazioni"
-
-#~ msgid "Monitors"
-#~ msgstr "Monitor"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Numero di Azioni"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Numero di messaggi che richiedono un'azione"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Numero di messaggi non letti"
-
-#~ msgid "Phones"
-#~ msgstr "Telefoni"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Politica per pubblicare un messaggio sul documento utilizzando il "
-#~ "mailGateway .\n"
-#~ "- Tutti: chiunque può postare\n"
-#~ "- Partner: solo autenticati\n"
-#~ "- Follower : solo i follower del relativo documento\n"
-
-#~ msgid "Samsung Monitor 15\""
-#~ msgstr "Monitor Samsung 15\""
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contatore di messsaggi non letti"
-
-#~ msgid "Website Messages"
-#~ msgstr "Messaggi sito web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Storico comunicazione sito"

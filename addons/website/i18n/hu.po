@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
 "PO-Revision-Date: 2016-08-24 12:56+0000\n"
 "Last-Translator: Krisztián Juhász <juhasz.krisztian@josafar.hu>\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -1399,6 +1399,7 @@ msgstr "Kattintson az ikonra, hogy annak tulajdonságait magára szabja"
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:49
 #: model:ir.ui.view,arch_db:website.s_banner
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #, python-format
 msgid "Click to customize this text"
 msgstr "Kattintson ennek a szövegnek az egyedivé tételéhez"
@@ -1522,8 +1523,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.s_banner
 #: model:ir.ui.view,arch_db:website.s_big_message
 #: model:ir.ui.view,arch_db:website.s_comparisons
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #: model:ir.ui.view,arch_db:website.website_planner
 #: model:website.menu,name:website.menu_contactus
+#: model:website.menu,name:website.website2_menu_contactus
 msgid "Contact us"
 msgstr "Lépjen velünk kapcsolatba"
 
@@ -1725,6 +1728,11 @@ msgstr ""
 #, python-format
 msgid "Discard"
 msgstr "Elvetés"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Discuss and Comments"
+msgstr "Beszélgetések és hozzászólások"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2211,7 +2219,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Help"
-msgstr "Súgó"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2229,6 +2237,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.footer_default
 #: model:website.menu,name:website.menu_homepage
+#: model:website.menu,name:website.website2_menu_homepage
 msgid "Home"
 msgstr "Kezdőlap"
 
@@ -2237,6 +2246,11 @@ msgstr "Kezdőlap"
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Homepage"
 msgstr "Honlap"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website2_homepage
+msgid "Homepage 0.0.0.0"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2601,6 +2615,11 @@ msgstr "Menü"
 #, python-format
 msgid "Menu <b>%s</b> seems to have a link to this page !"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Message"
+msgstr "Üzenet"
 
 #. module: website
 #. openerp-web
@@ -3002,6 +3021,16 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Partner Detail"
+msgstr "Partner adatok"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Partners"
+msgstr "Partnerek"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Plan"
 msgstr "Terv"
@@ -3158,6 +3187,11 @@ msgid "Real professional translators will translate all your contents"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Recipient"
+msgstr "Címzett"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Reduce the time and resources spent on support."
 msgstr ""
@@ -3310,6 +3344,16 @@ msgstr "Értékesítsen online. Könnyen."
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Sell more online"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send <span class=\"fa fa-long-arrow-right\"/>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send a Message to our Partners"
+msgstr "Egy üzenet küldése a partnereinek"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3527,6 +3571,11 @@ msgstr "Sablon visszakapcsolása"
 #, python-format
 msgid "Test Your Mobile Version"
 msgstr "A mobil verziójának tesztje"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Thank you for posting a message !"
+msgstr "Köszönjük, hogy küldött egy üzenetet!"
 
 #. module: website
 #. openerp-web
@@ -3775,6 +3824,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/js/website.contentMenu.js:175
 #: model:website.menu,name:website.main_menu
+#: model:website.menu,name:website.website2_main_menu
 #, python-format
 msgid "Top Menu"
 msgstr "Főmenü"
@@ -3786,7 +3836,7 @@ msgstr "Visszakövet:"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.snippets.editor.js:771
+#: code:addons/website/static/src/js/website.snippets.editor.js:772
 #, python-format
 msgid "Transform the picture (click twice to reset transformation)"
 msgstr ""
@@ -4077,6 +4127,16 @@ msgstr "Honlap menü"
 #: model:ir.model.fields,field_description:website.field_website_name
 msgid "Website Name"
 msgstr "A honlap neve"
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_post
+msgid "Website Partner Post and Thanks Demo"
+msgstr "Weboldal partner bejegyzés és köszönet demó"
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_comment
+msgid "Website Partners Comment Form"
+msgstr "Honlap partnerek hozzászólás űrlap"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
@@ -4398,7 +4458,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:website.action_module_theme
 #: model:ir.actions.act_window,help:website.action_module_website
 msgid "You should try other search criteria."
-msgstr ""
+msgstr "Más keresési kritériumokkal próbálja."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4750,241 +4810,3 @@ msgstr "igen"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "your Company details form"
 msgstr ""
-
-#~ msgid "&lt;!DOCTYPE html&gt;"
-#~ msgstr "&lt;!DOCTYPE html&gt;"
-
-#~ msgid ".xml"
-#~ msgstr ".xml"
-
-#~ msgid ""
-#~ "<b>Great stories have personality.</b> Consider telling\n"
-#~ "                        a great story that provides personality. Writing "
-#~ "a story\n"
-#~ "                        with personality for potential clients will asist "
-#~ "with\n"
-#~ "                        making a relationship connection. This shows up "
-#~ "in small\n"
-#~ "                        quirks like word choices or phrases. Write from "
-#~ "your point\n"
-#~ "                        of view, not from someone else's experience."
-#~ msgstr ""
-#~ "<b>Jó sztorinak személyisége van.</b> Mondjon el egy\n"
-#~ "                        jó történetet, amely bemutatja a személyiségét. "
-#~ "Egy \n"
-#~ "                        olyan személyes történetet írjon a potenciális \n"
-#~ "                        ügyfeleknek, ami segíteni fogja abban, hogy "
-#~ "kapcsolatot\n"
-#~ "                        teremtsen velük. Ebben a kis bejegyzésben "
-#~ "határozza meg kisebb \n"
-#~ "                        szöveggel és kifejezésekkel. Írjon a saját "
-#~ "szemszögéből, ne valaki más tapasztalatáról."
-
-#~ msgid "<i class=\"fa fa-th-large\"/> Website<b class=\"caret\"/>"
-#~ msgstr "<i class=\"fa fa-th-large\"/> Weboldal<b class=\"caret\"/>"
-
-#~ msgid "<span class=\"fa fa-envelope-o\"/> Email Our Website Expert"
-#~ msgstr ""
-#~ "<span class=\"fa fa-envelope-o\"/> Weboldalunk szakemberének email címe"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-align-justify fa-stack-1x\"/>\n"
-#~ "        </span> Content"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-align-justify fa-stack-1x\"/>\n"
-#~ "        </span> Tartalom"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-paper-plane fa-stack-1x\"/>\n"
-#~ "        </span> Effect"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-paper-plane fa-stack-1x\"/>\n"
-#~ "        </span> Hatás"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-pie-chart fa-stack-1x\"/>\n"
-#~ "        </span> Feature"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-pie-chart fa-stack-1x\"/>\n"
-#~ "        </span> Tulajdonság"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-th-large fa-stack-1x\"/>\n"
-#~ "        </span> Structure"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-th-large fa-stack-1x\"/>\n"
-#~ "        </span> Felépítés"
-
-#~ msgid "<span title=\"Edit Top Menu\">Edit Menu</span>"
-#~ msgstr "<span title=\"Edit Top Menu\">Szerkesztés Menü</span>"
-
-#~ msgid ""
-#~ "<span title=\"Optimize your AdWords account\">Optimize AdWords Campaign</"
-#~ "span>"
-#~ msgstr ""
-#~ "<span title=\"Optimize your AdWords account\">Optimalizálja AdWords "
-#~ "Hirdetési Kampányait</span>"
-
-#~ msgid "<span title=\"Promote page on the web\">Optimize SEO</span>"
-#~ msgstr ""
-#~ "<span title=\"Promote page on the web\">Keresőmotor optimalizálás</span>"
-
-#~ msgid "<strong>Click Here</strong>"
-#~ msgstr "<strong>Kattints ide</strong>"
-
-#~ msgid ""
-#~ "A code server action can be executed from the website, using a "
-#~ "dedicatedcontroller. The address is <base>/website/action/<website_path>."
-#~ "Set this field as True to allow users to run this action. If itset to is "
-#~ "False the action cannot be run through the website."
-#~ msgstr ""
-#~ "Egy kód szerver műveletet végrehajthat a weboldalról, a dedikált irányító "
-#~ "használatával. A cím az <base>/website/action/<website_path>. Állítsa be "
-#~ "ezt a mezőt igazra, hogy a felhasználók futtathassák ezt a műveletet. Ha "
-#~ "hamis-ra állított a művelet, akkor nem futtatható a honlapon keresztül."
-
-#~ msgid "Add new pages and menus"
-#~ msgstr "Új oldalak és menük hozzáadása"
-
-#~ msgid "Background"
-#~ msgstr "Háttér"
-
-#~ msgid "Check now and discover more today!"
-#~ msgstr "Ellenőrizze most és fedezze fel a többit még ma!"
-
-#~ msgid "Color"
-#~ msgstr "Szín"
-
-#~ msgid "Discover more about Odoo"
-#~ msgstr "Ha többet szeretne megtudni az Odoo-ról"
-
-#~ msgid "Discuss and Comments"
-#~ msgstr "Beszélgetések és hozzászólások"
-
-#~ msgid "Edit Menu Entry"
-#~ msgstr "Menüpont szerkesztése"
-
-#~ msgid "Hide link"
-#~ msgstr "Hivatkozás elrejtése"
-
-#~ msgid ""
-#~ "It might be possible to edit the relevant items\n"
-#~ "                                or fix the issue in"
-#~ msgstr ""
-#~ "Lehetséges, hogy a releváns elemek módosítása\n"
-#~ "                                 javítja a hibákat benne"
-
-#~ msgid "Menu Label"
-#~ msgstr "Menüelem címkéje"
-
-#~ msgid "Message"
-#~ msgstr "Üzenet"
-
-#~ msgid "Partner Detail"
-#~ msgstr "Partner adatok"
-
-#~ msgid "Partners"
-#~ msgstr "Partnerek"
-
-#~ msgid "Recipient"
-#~ msgstr "Címzett"
-
-#~ msgid "Reset Transformation"
-#~ msgstr "Átalakítás visszaállítása"
-
-#~ msgid "Send a Message to our Partners"
-#~ msgstr "Egy üzenet küldése a partnereinek"
-
-#~ msgid "Thank you for posting a message !"
-#~ msgstr "Köszönjük, hogy küldött egy üzenetet!"
-
-#~ msgid "The 'Content' menu allows you to add pages or add the top menu."
-#~ msgstr ""
-#~ "A 'Tartalom' menü segítségével hozzáadhat oldalakat vagy felső menüt."
-
-#~ msgid "Transform"
-#~ msgstr "Átalakítás"
-
-#~ msgid "Use Google Adword"
-#~ msgstr "Google Adword használata"
-
-#~ msgid "Website Partner Post and Thanks Demo"
-#~ msgstr "Weboldal partner bejegyzés és köszönet demó"
-
-#~ msgid "Website Partners Comment Form"
-#~ msgstr "Honlap partnerek hozzászólás űrlap"
-
-#~ msgid "Yes."
-#~ msgstr "Igen."
-
-#~ msgid "You should try others search criteria."
-#~ msgstr "Más keresési kritériumokkal próbálja."
-
-#~ msgid "or"
-#~ msgstr "vagy"
-
-#~ msgid "sitemap-"
-#~ msgstr "oldaltérkép-"
-
-#~ msgid "API Key"
-#~ msgstr "API kulcs"
-
-#~ msgid "Confirmation"
-#~ msgstr "Megerősítés"
-
-#~ msgid "Dashboard"
-#~ msgstr "Műszerfal"
-
-#~ msgid "Favicon"
-#~ msgstr "Favicon - Kedvenc ikon"
-
-#~ msgid "Follow"
-#~ msgstr "Követ"
-
-#~ msgid "Google Analytics"
-#~ msgstr "Google Analytics - elemzések"
-
-#~ msgid "Month"
-#~ msgstr "Hónap"
-
-#~ msgid "More Info"
-#~ msgstr "További információ"
-
-#~ msgid "Partner-related data of the user"
-#~ msgstr "A felhasználó partner-kapcsolati adatai"
-
-#~ msgid "Settings"
-#~ msgstr "Beállítások"
-
-#~ msgid "This field holds the image used to display a favicon on the website."
-#~ msgstr ""
-#~ "Ez a mező hordozza a weboldal favikon, kedvenc ikon megjelenítéséhez "
-#~ "használt képet."
-
-#~ msgid "This field is used to set/get locales for user"
-#~ msgstr ""
-#~ "Ez a mező használatos a helyszínek felhasználóhoz való beállításához/"
-#~ "csatolásához"
-
-#~ msgid "Warning!"
-#~ msgstr "Figyelem!"
-
-#~ msgid "Website Favicon"
-#~ msgstr "Weboldal Favicon - Kedvenc ikon"
-
-#~ msgid "Week"
-#~ msgstr "Hét"
-
-#~ msgid "Year"
-#~ msgstr "Év"
-
-#~ msgid "base.config.settings"
-#~ msgstr "base.config.settings"

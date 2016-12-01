@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-06-17 17:46+0000\n"
 "Last-Translator: Miku Laitinen <miku.laitinen@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
@@ -28,7 +28,7 @@ msgstr "Toiminnot"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_delay
 msgid "Avg. Plan.-Eff."
-msgstr ""
+msgstr "Keskimääräinen suunniteltu tehokkuus"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project_subtask_project_id
@@ -60,16 +60,18 @@ msgid ""
 "Computed as difference between planned hours by the project manager and the "
 "total hours of the task."
 msgstr ""
+"Laskettu erotuksena projektipäällikön suunniteltujen tuntien ja tehtäviin "
+"kuluneiden todellisten tuntien mukaan."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_total_hours
 msgid "Computed as: Time Spent + Remaining Time."
-msgstr ""
+msgstr "Laskettu: käytetty aika + jäljelläoleva aika"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_effective_hours
 msgid "Computed using the sum of the task work done."
-msgstr ""
+msgstr "Laskettu tehdyn työn yhteismäärästä"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_cost
@@ -89,13 +91,12 @@ msgstr "Määrittele analyyttinen rakenne"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_delay_hours
 msgid "Delay Hours"
-msgstr ""
+msgstr "Viivästyneet tunnit"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
-#, fuzzy
 msgid "Detailed Activities"
-msgstr "Toiminnot"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_display_name
@@ -111,7 +112,7 @@ msgstr "Kesto"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_effective
 msgid "Effective Hours"
-msgstr ""
+msgstr "Todelliset tunnit"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
@@ -132,7 +133,7 @@ msgstr "Ryhmittele kuukauden mukaan"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_effective_hours
 msgid "Hours Spent"
-msgstr ""
+msgstr "Käytetyt tunnit"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_id
@@ -158,9 +159,8 @@ msgstr "Kuukausi"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
-#, fuzzy
 msgid "My Timesheet"
-msgstr "Tuntikortti"
+msgstr "Minun tuntikorttini"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_parent_id
@@ -170,7 +170,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_planned
 msgid "Planned Hours"
-msgstr ""
+msgstr "Suunnitellut tunnit"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_product_id
@@ -181,7 +181,7 @@ msgstr "Tuote"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_progress
 msgid "Progress"
-msgstr ""
+msgstr "Edistyminen"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_project
@@ -189,13 +189,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_project_id
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Project"
-msgstr ""
+msgstr "Projektit"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_remaining_hours
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Remaining Hours"
-msgstr ""
+msgstr "Jäljelläolevat tunnit"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_kanban_inherited_progress
@@ -210,7 +210,7 @@ msgstr "Raportit"
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Spent Hours"
-msgstr ""
+msgstr "Käytetyt tunnit"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project_subtask_project_id
@@ -246,12 +246,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_task_id
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Task"
-msgstr ""
+msgstr "Tehtävä"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_report_project_task_user
 msgid "Tasks by user and project"
-msgstr ""
+msgstr "Tehtävät käyttäjittäin ja projekteittain"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
@@ -307,14 +307,13 @@ msgstr "Tuntikortit"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_total_hours
-#, fuzzy
 msgid "Total"
-msgstr "Kokonaisaika"
+msgstr "Yhteensä"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_total_hours
 msgid "Total Hours"
-msgstr ""
+msgstr "Tunnit yhteensä"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
@@ -340,16 +339,12 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
-#, fuzzy
 msgid ""
 "You can register and track your workings hours by project every\n"
 "                day. Every time spent on a project will become a cost and "
 "can be re-invoiced to\n"
 "                customers if required."
 msgstr ""
-"Voit kirjata työtunteja projekteille. Jokainen tuntikirjaus projektilla on "
-"myös kulu analyyttisellä tilillä / sopimuksella, joka voidaan tarvittaessa "
-"laskuttaa edelleen asiakkaalta."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_define_analytic_structure
@@ -364,54 +359,10 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "Analyyttinen rivi"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
 msgid "month"
 msgstr "kuukausi"
-
-#~ msgid "Accounting"
-#~ msgstr "Kirjanpito"
-
-#~ msgid "Analytic Account"
-#~ msgstr "Kustannuspaikka"
-
-#~ msgid "Analytic Line"
-#~ msgstr "Analyyttinen rivi"
-
-#~ msgid "Analytic account"
-#~ msgstr "Analyyttinen tili"
-
-#~ msgid "Check this field if this project manages timesheets"
-#~ msgstr ""
-#~ "Valitse tämä valintalaatikko, jos tällä projektilla hallitaan "
-#~ "tuntikortteja"
-
-#~ msgid "Companies"
-#~ msgstr "Compañías"
-
-#~ msgid "Configuration"
-#~ msgstr "Asetukset"
-
-#~ msgid "Information"
-#~ msgstr "Tiedot"
-
-#~ msgid "Is a Timesheet"
-#~ msgstr "On tuntikirjaus"
-
-#~ msgid "Timesheet Accounts"
-#~ msgstr "Tuntikorttitilit"
-
-#~ msgid ""
-#~ "You can register and track your workings hours by project every\n"
-#~ "                day. Every time spent on a project will become a cost in "
-#~ "the\n"
-#~ "                analytic accounting/contract and can be re-invoiced to\n"
-#~ "                customers if required."
-#~ msgstr ""
-#~ "Voit kirjata työtunteja projekteille. Jokainen tuntikirjaus projektilla "
-#~ "on myös kulu analyyttisellä tilillä / sopimuksella, joka voidaan "
-#~ "tarvittaessa laskuttaa edelleen asiakkaalta."

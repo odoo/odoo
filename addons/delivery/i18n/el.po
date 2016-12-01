@@ -3,14 +3,14 @@
 # * delivery
 #
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
+# Kostas Goutoudis <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-03-16 22:33+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-10-29 11:23+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
@@ -138,7 +138,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr ""
+msgstr "Αρχειοθετημένα"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
@@ -435,9 +435,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
-#, fuzzy
 msgid "Delivery Information"
-msgstr "Πληροφορίες Μεταφορέα"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -502,7 +501,7 @@ msgstr "Καθορισμός σειράς εμφάνισης"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Discard"
-msgstr ""
+msgstr "Απόρριψη"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
@@ -522,7 +521,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
 msgid "Environment"
-msgstr ""
+msgstr "Περιβάλλον"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
@@ -660,7 +659,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
-msgstr ""
+msgstr "Ομαδοποίηση Κατά"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_hs_code
@@ -670,9 +669,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_height
-#, fuzzy
 msgid "Height"
-msgstr "Βάρος"
+msgstr "Ύψος"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -862,7 +860,7 @@ msgstr "Τελευταία Ενημέρωση στις"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_length
 msgid "Length"
-msgstr ""
+msgstr "Μήκος"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -902,9 +900,8 @@ msgstr "Προηγμένος χρόνος παραγωγής"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
-#, fuzzy
 msgid "Margin"
-msgstr "Σύνολο Περιθωρίων"
+msgstr "Περιθώριο"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
@@ -923,9 +920,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
-#, fuzzy
 msgid "Max Weight"
-msgstr "Βάρος"
+msgstr ""
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -981,9 +977,8 @@ msgstr "Όνομα"
 
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
-#, fuzzy
 msgid "No carrier integration"
-msgstr "Πληροφορίες Μεταφορέα"
+msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:63
@@ -1006,6 +1001,12 @@ msgstr "Κανονικό Κόστος"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_gap
 msgid "Normal Cost - Total Cost"
 msgstr "(Κανονικό Κόστος) - (Συνολικό Κόστος)"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.normal_delivery_carrier_product_product
+msgid "Normal Delivery Charges"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
@@ -1055,22 +1056,20 @@ msgstr "Εξερχόμενο"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
-#, fuzzy
 msgid "Package"
-msgstr "Συσκευασίες"
+msgstr "Συσκευασία"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
-#, fuzzy
 msgid "Package Code"
-msgstr "Συσκευασίες"
+msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
 #: code:addons/delivery/models/stock_picking.py:128
-#, fuzzy, python-format
+#, python-format
 msgid "Package Details"
-msgstr "Συσκευασίες"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1079,14 +1078,13 @@ msgstr "Συσκευασίες"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
-#, fuzzy
 msgid "Packaging"
 msgstr "Συσκευασίες"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_pack_operation
 msgid "Packing Operation"
-msgstr ""
+msgstr "Λειτουργία Συσκευασίας"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -1281,7 +1279,7 @@ msgstr "Κανόνες Επαναλαμβανόμενης Παραγγελίας
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "Επιστροφή Παραλαβής"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
@@ -1325,7 +1323,7 @@ msgstr "Γραμμή Παραγγελίας"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Save"
-msgstr ""
+msgstr "Αποθήκευση"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_categ_id
@@ -1492,6 +1490,12 @@ msgid "Template Name"
 msgstr "Περιγραφή Προτύπου"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.delivery_carrier_product_product
+msgid "The Poste"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
 msgid ""
 "The average delay in days between the confirmation of the customer order and "
@@ -1647,9 +1651,8 @@ msgstr "Ανίχνευση"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
-#, fuzzy
 msgid "Tracking Reference"
-msgstr "Εσωτερική Αναφορά"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1747,9 +1750,8 @@ msgstr "Φόροι Προμηθευτή"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
-#, fuzzy
 msgid "Vendors"
-msgstr "Φόροι Προμηθευτή"
+msgstr "Προμηθευτές"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1771,15 +1773,13 @@ msgstr "Εγγύηση"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_website_message_ids
-#, fuzzy
 msgid "Website Messages"
-msgstr "Μηνύματα"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_website_message_ids
-#, fuzzy
 msgid "Website communication history"
-msgstr "Μηνύματα και ιστορικό επικοινωνίας"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1872,7 +1872,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_width
 msgid "Width"
-msgstr ""
+msgstr "Πλάτος"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -1917,18 +1917,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "unknown"
 msgstr "άγνωστο"
-
-#~ msgid "Carrier Information"
-#~ msgstr "Πληροφορίες Μεταφορέα"
-
-#~ msgid "Carrier Tracking Ref"
-#~ msgstr "Παραπομπή Ιχνηλάτησης Μεταφορέα"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Μικτό βάρος"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Μηνύματα και ιστορικό επικοινωνίας"
-
-#~ msgid "Status"
-#~ msgstr "Κατάσταση"

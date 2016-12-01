@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-06-09 07:09+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -181,6 +181,16 @@ msgid ""
 "\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
+msgstr ""
+
+#. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
 msgstr ""
 
 #. module: project
@@ -1269,7 +1279,7 @@ msgstr "Balance"
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_1
 msgid "Basic"
-msgstr ""
+msgstr "Osnovno"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1309,6 +1319,11 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr ""
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "Po odgovornih"
@@ -1324,6 +1339,7 @@ msgstr "Preklic"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "Preklicano"
@@ -1721,7 +1737,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project.js:50
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "Opusti"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
@@ -1811,6 +1827,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Opravljeno"
@@ -1841,9 +1858,8 @@ msgstr "Email Alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
-#, fuzzy
 msgid "Email Template"
-msgstr "Email Alias"
+msgstr "Predloga e-pošte"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2249,6 +2265,7 @@ msgstr "Izboljšaj sodelovanje s kupci"
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
+#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "V postopku"
@@ -2545,7 +2562,7 @@ msgstr "Marketinški oddelek"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "Člani"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2578,6 +2595,11 @@ msgstr "Moje naloge"
 #: model:ir.model.fields,field_description:project.field_project_tags_name
 msgid "Name"
 msgstr "Naziv"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "Potrebuje funkcionalno ali tehnično pomoč"
 
 #. module: project
 #. openerp-web
@@ -2621,6 +2643,11 @@ msgstr "Brez ocenjevanja kupcev"
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
 msgstr "Običajno"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr "Nepotrjeno"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -2822,7 +2849,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -2830,10 +2856,6 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Pravila vpisa sporočil na dokument preko mailgateway.\n"
-"- vsi: vsi lahko vpisujejo\n"
-"- partnerji: le overjeni partnerji\n"
-"- sledilci: le sledilci povezanega dokumenta\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3012,11 +3034,21 @@ msgid "Ready to be displayed, published or sent"
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
+msgstr ""
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
 msgstr ""
 
 #. module: project
@@ -3081,7 +3113,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Reporting"
-msgstr ""
+msgstr "Poročanje"
 
 #. module: project
 #. openerp-web
@@ -3093,7 +3125,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Responsibilities"
-msgstr ""
+msgstr "Odgovorni"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3136,7 +3168,7 @@ msgstr "Iskanje"
 #: code:addons/project/static/src/js/project.js:46
 #, python-format
 msgid "Select"
-msgstr ""
+msgstr "Izberi"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3300,9 +3332,8 @@ msgstr "Status"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_child_ids
-#, fuzzy
 msgid "Sub-tasks"
-msgstr "opravila"
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3637,12 +3668,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
-#, fuzzy
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
-msgstr "Nastavitev enote mere za projekte in naloge."
+msgstr ""
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -3708,6 +3738,7 @@ msgstr "Delovne ure po urniku za prilagoditev poročila gantovega diagrama"
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
+#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "Za narediti"
@@ -3774,6 +3805,11 @@ msgstr ""
 msgid ""
 "Use separate meetings to solve big issues or issues that aren’t important "
 "for the entire team."
+msgstr ""
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the priority for tasks related to gold customers"
 msgstr ""
 
 #. module: project
@@ -3867,7 +3903,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Welcome"
-msgstr ""
+msgstr "Dobrodošli"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4090,112 +4126,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr ""
-
-#~ msgid "&times;"
-#~ msgstr "&times;"
-
-#~ msgid "Action Needed"
-#~ msgstr "Potreben je ukrep"
-
-#~ msgid "Close"
-#~ msgstr "Zaključi"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum zadnjega sporočila vpisanega pod to vknjižbo."
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "Delegirane naloge"
-
-#~ msgid "Followers"
-#~ msgstr "Sledilci"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Sledilci (kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Sledilci (partnerji)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#~ msgid "Is Follower"
-#~ msgstr "Je sledilec"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnjega sporočila"
-
-#~ msgid "Messages"
-#~ msgstr "Sporočila"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Komunikacije in kronologija"
-
-#~ msgid "Need functional or technical help"
-#~ msgstr "Potrebuje funkcionalno ali tehnično pomoč"
-
-#~ msgid "Not validated"
-#~ msgstr "Nepotrjeno"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Število aktivnosti"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Število sporočil, ki zahtevajo dejavnost"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Število neprebranih sporočil"
-
-#~ msgid "Open Project Menu"
-#~ msgstr "Odprite meni projekta"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Pravila vpisa sporočil na dokument preko mailgateway.\n"
-#~ "- vsi: vsi lahko vpisujejo\n"
-#~ "- partnerji: le overjeni partnerji\n"
-#~ "- sledilci: le sledilci povezanega dokumenta\n"
-
-#~ msgid "Project Time Unit"
-#~ msgstr "Projektna enota časa"
-
-#~ msgid "Record timesheet lines per tasks"
-#~ msgstr "Beleženje nalog na časovnicah"
-
-#~ msgid "Task's Work on Tasks"
-#~ msgstr "Opravljeno delo na nalogah"
-
-#~ msgid ""
-#~ "This allows you to transfer the entries under tasks defined for Project "
-#~ "Management to the timesheet line entries for particular date and user, "
-#~ "with the effect of creating, editing and deleting either ways.\n"
-#~ "-This installs the module project_timesheet."
-#~ msgstr ""
-#~ "Omogoča prenos vnosov na opravilih določenih za upravljanje projektov na "
-#~ "postavke časovnic za določen datum in uporabnika ter dvosmerno "
-#~ "ustvarjanje, spreminjanje in brisanje.\n"
-#~ "-Namesti modul project_timesheet."
-
-#~ msgid ""
-#~ "This will set the unit of measure used in projects and tasks.\n"
-#~ "If you use the timesheet linked to projects (project_timesheet module), "
-#~ "don't forget to setup the right unit of measure in your employees."
-#~ msgstr "Nastavitev enote mere za projekte in naloge."
-
-#~ msgid "Type of Account"
-#~ msgstr "Vrsta konta"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Števec neprebranih sporočil"
-
-#~ msgid "Website Messages"
-#~ msgstr "Sporočila iz spletne strani"
-
-#~ msgid "Website communication history"
-#~ msgstr "Kronologija komunikacij spletne strani"

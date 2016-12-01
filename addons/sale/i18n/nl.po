@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-23 18:00+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-11-05 08:43+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
@@ -129,6 +129,8 @@ msgid ""
 "support\n"
 "                hours.</i>"
 msgstr ""
+"<i>Voorbeeld: Pre-paid diensten waarvoor de klant een extra support pakket "
+"dient te kopen, omdat hij al zijn support uren heft verbruikt.</i>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -189,7 +191,7 @@ msgstr "Adressen in verkooporders"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:139
 #, python-format
 msgid "Advance: %s"
-msgstr "Vooruitbetaling: %s"
+msgstr "Aanbetaling: %s"
 
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
@@ -420,7 +422,7 @@ msgstr "Standaard Algemene Voorwaarden"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Default product used for payment advances"
-msgstr "Standaardproduct dat gebruikt wordt bij vooruitbetalingen"
+msgstr "Standaardproduct dat gebruikt wordt bij aanbetalingen"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_company_inherit_form2
@@ -456,6 +458,12 @@ msgstr "Leveringstermijn"
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
 msgid "Delivery address for current sales order."
 msgstr "Afleveradres voor de huidige verkooporder"
+
+#. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr "Aanbetaling"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
@@ -891,6 +899,12 @@ msgid ""
 "Create a task and track hours: Create a task on the sale order validation "
 "and track the work hours."
 msgstr ""
+"Bepaal handmatig de hoeveelheden voor de order: Factuur op basis van de "
+"handmatig ingevoerde hoeveelheid, zonder het aanmaken van een kostenplaats.\n"
+"Urenstaten op projecten: Factuur op basis van de geschreven uren op "
+"gerelateerde urenstaten.\n"
+"Maak een taak aan en volg de uren ervan op: Een taak maken bij verkoop order "
+"validatie en volg werkuren via taken."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_validity_date
@@ -899,6 +913,9 @@ msgid ""
 "the date automatically based on the template if online quotation is "
 "installed."
 msgstr ""
+"Stel handmatig de vervaldatum in van uw offerte (aanbod), of de datum zal "
+"automatisch ingesteld worden gebaseerd om het sjabloon wanneer online "
+"offerte is geïnstalleerd. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_margin
@@ -991,6 +1008,9 @@ msgid ""
 "delivery\n"
 "                    orders or services."
 msgstr ""
+"Wanneer de offerte is bevestigd wordt het een verkooporder.\n"
+"Vanaf dat moment kunt factureren en betalingen ontvangen.\n"
+"Vanaf het <i>Verkooporders</i> menu, kunt u de leveringen of diensten volgen."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
@@ -1091,6 +1111,9 @@ msgid ""
 "have\n"
 "                delivered more than what have been ordered."
 msgstr ""
+"Orders voor upsell zijn orders voor producten met een facturatie\n"
+"beleid ingesteld op <i>geleverde hoeveelheden</i> waarvoor u\n"
+"meer geleverd hebt dan besteld."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1335,7 +1358,7 @@ msgstr "Offerte analyse"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Quotations Sent"
-msgstr ""
+msgstr "Offertes verzonden"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1597,6 +1620,8 @@ msgstr "Toon prijslijsten aan klanten"
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
+"Sommige producten kunnen verkocht/ingekocht worden in verschillende "
+"maateenheden (geavanceerd)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -1734,7 +1759,7 @@ msgid ""
 "                Use buttons on the left to move forward to the next stages."
 msgstr ""
 "Deze voortgangsbalk toont de fases waar uw offerte doorheen zal gaan.\n"
-"Gebruik de linkse knoppen om naar de volgende fases te gaan."
+"Gebruik de linker knoppen om naar de volgende fases te gaan."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -1784,7 +1809,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Timesheets on project"
-msgstr ""
+msgstr "Urenstaten op projecten"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -1918,6 +1943,8 @@ msgid ""
 "You can not delete a sent quotation or a sales order! Try to cancel it "
 "before."
 msgstr ""
+"Het is niet mogelijk een offerte of een verkooporder te verwijderen! Probeer "
+"deze eerst te annuleren."
 
 #. module: sale
 #: code:addons/sale/sale.py:797
@@ -1926,7 +1953,7 @@ msgid ""
 "You can not remove a sale order line.\n"
 "Discard changes and try setting the quantity to 0."
 msgstr ""
-"U kan een verkooplijn niet verwijderen.\n"
+"U kan een verkooporderregel niet verwijderen.\n"
 "Negeer de wijzigingen en probeer de hoeveelheid op 0 te zetten."
 
 #. module: sale
@@ -1935,11 +1962,13 @@ msgid ""
 "You can select all orders and invoice them in batch, or check\n"
 "                every order and invoice them one by one."
 msgstr ""
+"U kunt alle orders selecteren en ze facturen in een batch of vink\n"
+"elke order en factuur ze één voor één."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr ""
+msgstr "U vind hier alle orders die gefactureerd kunnen worden"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1981,417 +2010,3 @@ msgstr "sale.config.settings"
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "onbekend"
-
-#~ msgid ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
-#~ "\">\n"
-#~ "\n"
-#~ "    <p>Hello ${object.partner_id.name},</p>\n"
-#~ "    \n"
-#~ "    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' "
-#~ "or 'order confirmation'} from ${object.company_id.name}: </p>\n"
-#~ "\n"
-#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-#~ "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object."
-#~ "pricelist_id.currency_id.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
-#~ "       % if object.origin:\n"
-#~ "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.client_order_ref:\n"
-#~ "       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.user_id:\n"
-#~ "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email "
-#~ "or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
-#~ "       % endif\n"
-#~ "    </p>\n"
-#~ "    <p>\n"
-#~ "        You can view your quotation online:\n"
-#~ "    </p>\n"
-#~ "    <a style=\"display:block; width: 150px; height:20px; margin-left: "
-#~ "120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-"
-#~ "serif; font-size: 13px; font-weight: bold; text-align: center; text-"
-#~ "decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; "
-#~ "background-color: #8E0000; border-radius: 5px 5px; background-repeat: "
-#~ "repeat no-repeat;\"\n"
-#~ "        href=\"/quote/${object.id}/${object.access_token}\">View ${object."
-#~ "state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
-#~ "\n"
-#~ "    % if object.paypal_url:\n"
-#~ "    <br/>\n"
-#~ "    <p>It is also possible to directly pay with Paypal:</p>\n"
-#~ "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-#~ "            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/"
-#~ "btn_paynowcc_lg.gif\"/>\n"
-#~ "        </a>\n"
-#~ "    % endif\n"
-#~ "\n"
-#~ "    <br/>\n"
-#~ "    <p>If you have any question, do not hesitate to contact us.</p>\n"
-#~ "    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-#~ "    <br/>\n"
-#~ "    <br/>\n"
-#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
-#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
-#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
-#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
-#~ "color: #DDD;\">\n"
-#~ "            <strong style=\"text-transform:uppercase;\">${object."
-#~ "company_id.name}</strong></h3>\n"
-#~ "    </div>\n"
-#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
-#~ "height: 16px; background-color: #F2F2F2;\">\n"
-#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
-#~ "\">\n"
-#~ "            ${object.company_id.partner_id.sudo()."
-#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
-#~ "safe}\n"
-#~ "        </span>\n"
-#~ "        % if object.company_id.phone:\n"
-#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
-#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
-#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
-#~ "                Phone:&nbsp; ${object.company_id.phone}\n"
-#~ "            </div>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.website:\n"
-#~ "            <div>\n"
-#~ "                Web :&nbsp;<a href=\"${object.company_id.website}\">"
-#~ "${object.company_id.website}</a>\n"
-#~ "            </div>\n"
-#~ "        %endif\n"
-#~ "        <p></p>\n"
-#~ "    </div>\n"
-#~ "</div>\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
-#~ "\">\n"
-#~ "\n"
-#~ "    <p>Hallo ${object.partner_id.name},</p>\n"
-#~ "    \n"
-#~ "    <p>In bijlage vindt u de ${object.state in ('draft', 'sent') and "
-#~ "'offerte' or 'orderbevestiging'} van ${object.company_id.name}: </p>\n"
-#~ "\n"
-#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "       &nbsp;&nbsp;<strong>REFERENTIES</strong><br />\n"
-#~ "       &nbsp;&nbsp;Ordernummer: <strong>${object.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Ordertotaal: <strong>${object.amount_total} ${object."
-#~ "pricelist_id.currency_id.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Besteldatum: ${object.date_order}<br />\n"
-#~ "       % if object.origin:\n"
-#~ "       &nbsp;&nbsp;Referentie: ${object.origin}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.client_order_ref:\n"
-#~ "       &nbsp;&nbsp;Uw referentie: ${object.client_order_ref}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.user_id:\n"
-#~ "       &nbsp;&nbsp;Uw contactpersoon: <a href=\"mailto:${object.user_id."
-#~ "email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
-#~ "       % endif\n"
-#~ "    </p>\n"
-#~ "    <p>\n"
-#~ "        U kan uw offerte online raadplegen:\n"
-#~ "    </p>\n"
-#~ "    <a style=\"display:block; width: 150px; height:20px; margin-left: "
-#~ "120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-"
-#~ "serif; font-size: 13px; font-weight: bold; text-align: center; text-"
-#~ "decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; "
-#~ "background-color: #8E0000; border-radius: 5px 5px; background-repeat: "
-#~ "repeat no-repeat;\"\n"
-#~ "        href=\"/quote/${object.id}/${object.access_token}\">Bekijk "
-#~ "${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
-#~ "\n"
-#~ "    % if object.paypal_url:\n"
-#~ "    <br/>\n"
-#~ "    <p>U kunt ook meteen betalen via Paypal:</p>\n"
-#~ "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-#~ "            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/"
-#~ "btn_paynowcc_lg.gif\"/>\n"
-#~ "        </a>\n"
-#~ "    % endif\n"
-#~ "\n"
-#~ "    <br/>\n"
-#~ "    <p>Mocht u nog vragen hebben, aarzel dan niet om ons te contacteren.</"
-#~ "p>\n"
-#~ "    <p>Wij danken u voor het vertrouwen in ${object.company_id.name or "
-#~ "'ons'}!</p>\n"
-#~ "    <br/>\n"
-#~ "    <br/>\n"
-#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
-#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
-#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
-#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
-#~ "color: #DDD;\">\n"
-#~ "            <strong style=\"text-transform:uppercase;\">${object."
-#~ "company_id.name}</strong></h3>\n"
-#~ "    </div>\n"
-#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
-#~ "height: 16px; background-color: #F2F2F2;\">\n"
-#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
-#~ "\">\n"
-#~ "            ${object.company_id.partner_id.sudo()."
-#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
-#~ "safe}\n"
-#~ "        </span>\n"
-#~ "        % if object.company_id.phone:\n"
-#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
-#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
-#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
-#~ "                Telefoon:&nbsp; ${object.company_id.phone}\n"
-#~ "            </div>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.website:\n"
-#~ "            <div>\n"
-#~ "                Website :&nbsp;<a href=\"${object.company_id.website}\">"
-#~ "${object.company_id.website}</a>\n"
-#~ "            </div>\n"
-#~ "        %endif\n"
-#~ "        <p></p>\n"
-#~ "    </div>\n"
-#~ "</div>\n"
-#~ "            "
-
-#~ msgid ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-#~ msgstr ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Offerte' or 'Verkooporder'} (Referentie ${object.name or 'n/a' })"
-
-#~ msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
-#~ msgstr "<span groups=\"sale.group_discount_per_so_line\">Kort.(%)</span>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Vereist actie"
-
-#~ msgid "Allows you to specify an analytic account on sales orders."
-#~ msgstr ""
-#~ "Geeft u de mogelijkheid om kostenplaatsen te koppelen aan verkooporders"
-
-#~ msgid "Analytic Line"
-#~ msgstr "Kostenplaatsboeking"
-
-#~ msgid "Analytic accounting for sales"
-#~ msgstr "Kostenplaatsen voor verkopen"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
-
-#~ msgid "Deposit"
-#~ msgstr "Aanbetaling"
-
-#~ msgid "Expense Account"
-#~ msgstr "Kostenrekening"
-
-#~ msgid "Followers"
-#~ msgstr "Volgers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Volgers (Kanalen)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Volgers (Partners)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
-
-#~ msgid "Invoice based on time and material"
-#~ msgstr "Factuur gebaseerd op tijd en materiaal"
-
-#~ msgid "Is Follower"
-#~ msgstr "Is een volger"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Laatste bericht datum"
-
-#~ msgid "Messages"
-#~ msgstr "Berichten"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Berichten en communicatie historie"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Aantal acties"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Aantal berichten die actie vereisen"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Aantal ongelezen berichten"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "Open verkoop menu"
-
-#~ msgid ""
-#~ "Some products may be sold/purchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr ""
-#~ "Sommige producten kunnen verkocht/ingekocht worden met verschillende "
-#~ "maateenheden (geavanceerd)"
-
-#~ msgid ""
-#~ "This account will be used for invoices instead of the default one to "
-#~ "value expenses for the current product."
-#~ msgstr ""
-#~ "Deze rekening wordt gebruikt voor facturen in plaats van de standaard "
-#~ "rekening voor uitgaven van het huidige product."
-
-#~ msgid ""
-#~ "This account will be used for invoices instead of the default one to "
-#~ "value sales for the current product."
-#~ msgstr ""
-#~ "Deze rekening zal gebruikt worden voor de facturen in plaats van de "
-#~ "standaardrekening om de opbrengst van dit product te waarderen."
-
-#~ msgid "Timesheets on contract"
-#~ msgstr "Urenstaten op contract"
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Maateenheden"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Teller ongelezen berichten"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website berichten"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website communicatie geschiedenis"
-
-#~ msgid "You can only delete draft quotations!"
-#~ msgstr "U kan enkel concept offertes verwijderen! "
-
-#~ msgid "account.config.settings"
-#~ msgstr "account.config.settings"
-
-#~ msgid "${object.subject}"
-#~ msgstr "${object.subject}"
-
-#~ msgid "&amp;bull;"
-#~ msgstr "&amp;bull;"
-
-#~ msgid "<strong>Subtotal: </strong>"
-#~ msgstr "<strong>Subtotaal: </strong>"
-
-#~ msgid "Add pagebreak"
-#~ msgstr "Pagina einde toevoegen"
-
-#~ msgid "Add subtotal"
-#~ msgstr "Subtotaal toevoegen"
-
-#~ msgid "Analytic Tags"
-#~ msgstr "Labels kostenplaats"
-
-#~ msgid "At cost"
-#~ msgstr "Aan kosten"
-
-#~ msgid "Attribute Values"
-#~ msgstr "Kenmerk waardes"
-
-#~ msgid "Attributes"
-#~ msgstr "Kenmerken"
-
-#~ msgid "Blocking Message"
-#~ msgstr "Blokkerend bericht"
-
-#~ msgid "Click the <i>Home icon</i> to navigate across apps."
-#~ msgstr "Klik op het <i>Thuis icoon</i> om doorheen apps te navigeren."
-
-#~ msgid "Configuration options are available in the Settings app."
-#~ msgstr "Configuratie mogelijkheden zijn beschikbaar in de Instellingen app."
-
-#~ msgid "Confirmation Date"
-#~ msgstr "Datum bevestigd"
-
-#~ msgid "Date"
-#~ msgstr "Datum"
-
-#~ msgid "Discount Policy"
-#~ msgstr "Kortingsbeleid"
-
-#~ msgid "Group By Name"
-#~ msgstr "Groepeer op naam"
-
-#~ msgid "Layout Sequence"
-#~ msgstr "Layout volgorde"
-
-#~ msgid "Material"
-#~ msgstr "Materiaal"
-
-#~ msgid "Message for Sales Order"
-#~ msgstr "Bericht voor verkooporder"
-
-#~ msgid "Message for Sales Order Line"
-#~ msgstr "Bericht bij een verkooporderregel"
-
-#~ msgid "More Info"
-#~ msgstr "Meer info"
-
-#~ msgid "Name"
-#~ msgstr "Naam"
-
-#~ msgid "No"
-#~ msgstr "Nee"
-
-#~ msgid "No Message"
-#~ msgstr "Geen bericht"
-
-#~ msgid "Pricelists"
-#~ msgstr "Prijslijsten"
-
-#~ msgid "Product Categories"
-#~ msgstr "Productcategorieën"
-
-#~ msgid "Report Configuration"
-#~ msgstr "Rapport instellingen"
-
-#~ msgid "Report Layout Categories"
-#~ msgstr "Rapport opmaak categoriën"
-
-#~ msgid "Search Name"
-#~ msgstr "Zoek Naam"
-
-#~ msgid "Section"
-#~ msgstr "Sectie"
-
-#~ msgid ""
-#~ "Selecting the \"Warning\" option will notify user with the message, "
-#~ "Selecting \"Blocking Message\" will throw an exception with the message "
-#~ "and block the flow. The Message has to be written in the next field."
-#~ msgstr ""
-#~ "Door de 'Waarschuwingsoptie' te selecteren wordt het bericht naar de "
-#~ "gebruiker gestuurd. Door het 'Blokkerend bericht' te kiezen wordt een "
-#~ "fout gegenereerd met de boodschap en het proces wordt geblokkeerd. Het "
-#~ "bericht moet in het volgende veld worden ingevoerd."
-
-#~ msgid "Services"
-#~ msgstr "Diensten"
-
-#~ msgid "TIN:"
-#~ msgstr "BTW:"
-
-#~ msgid "Unit of Measure Categories"
-#~ msgstr "Maateenheid categorieën"
-
-#~ msgid "Warning"
-#~ msgstr "Waarschuwing"
-
-#~ msgid "Warning for %s"
-#~ msgstr "Waarschuwing voor %s"
-
-#~ msgid "Warning on the Sales Order"
-#~ msgstr "Waarschuwing bij een verkooporder"
-
-#~ msgid "Warning when Selling this Product"
-#~ msgstr "Waarschuw bij verkopen van dit product"

@@ -3,15 +3,16 @@
 # * sale
 #
 # Translators:
+# Ahmed AL-Haddad <ahmed@utech-sa.com>, 2016
 # Mohammed Albasha <m.albasha.ma@gmail.com>, 2016
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-09 14:02+0000\n"
-"Last-Translator: Mohammed Albasha <m.albasha.ma@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-11-01 16:12+0000\n"
+"Last-Translator: Ahmed AL-Haddad <ahmed@utech-sa.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -106,13 +107,10 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
-#, fuzzy
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and 'عرض "
-"سعر' or 'أمر بيع'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -136,22 +134,22 @@ msgstr "<strong>ملاحظة الوضع المالي:</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Payment Term:</strong>"
-msgstr ""
+msgstr "<strong>شروط الدفع:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong>"
-msgstr ""
+msgstr "<strong>مندوب المبيعات:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping address:</strong>"
-msgstr ""
+msgstr "<strong>عنوان الشحن:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Total Without Taxes</strong>"
-msgstr ""
+msgstr "<strong>المجموع بدون الضريبة</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -187,7 +185,7 @@ msgstr "عناوين فى أوامر البيع"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:139
 #, python-format
 msgid "Advance: %s"
-msgstr ""
+msgstr "المقدم: %s"
 
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
@@ -197,7 +195,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow discounts on sales order lines"
-msgstr ""
+msgstr "السماح بالخصم على مستوى تفصيل المبيعات"
 
 #. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
@@ -223,7 +221,7 @@ msgstr "يسمح لك باختيار والحفاظ على وحدات قياس �
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_amount
 msgid "Amount of sales to invoice"
-msgstr ""
+msgstr "مبلغ المبيعات للفوترة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_project_id
@@ -254,7 +252,7 @@ msgstr "حسب فريق المبيعات"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered_updateable
 msgid "Can Edit Delivered"
-msgstr ""
+msgstr "السماح بتعديل الموصل"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -322,17 +320,17 @@ msgstr "إنشاء الفواتير"
 #: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid "Create a Quotation, the first step of a new sale."
-msgstr ""
+msgstr "الخطوه الاولى للمبيعات الجديدة ، إنشاء التسعيرة"
 
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Create a task and track hours"
-msgstr ""
+msgstr "إنشاء المهمه ومتابعة الساعات"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoices"
-msgstr ""
+msgstr "إنشاء وعرض الفواتير"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_create_uid
@@ -380,7 +378,7 @@ msgstr "ضرائب العميل"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Customer portal"
-msgstr ""
+msgstr "بوابة العملاء"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_date
@@ -400,7 +398,7 @@ msgstr "تاريخ إنشاء أمر المبيعات"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_default_invoice_policy
 msgid "Default Invoicing"
-msgstr ""
+msgstr "الفتوترة الافتراضية"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company_sale_note
@@ -425,12 +423,12 @@ msgstr "تم التسليم"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivered Quantity"
-msgstr ""
+msgstr "الكمية المسلمه"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Delivered quantities"
-msgstr ""
+msgstr "الكميات المسلمه"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_shipping_id
@@ -446,6 +444,12 @@ msgstr "الوقت اللازم للتسليم"
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
 msgid "Delivery address for current sales order."
 msgstr "عنوان التسليم لأوامر البيع الحالية."
+
+#. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr "الوديعة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
@@ -465,9 +469,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "Disc.(%)"
-msgstr "الخصم (%)"
+msgstr "نسبة الخصم (%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
@@ -522,33 +525,33 @@ msgstr "منتهي"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:83
 #, python-format
 msgid "Down Payment"
-msgstr ""
+msgstr "المقدم"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_amount
 msgid "Down Payment Amount"
-msgstr ""
+msgstr "المبلغ المقدم"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_product_id
 msgid "Down Payment Product"
-msgstr ""
+msgstr "المقدم للمنتج"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (fixed amount)"
-msgstr ""
+msgstr "المقدم (مبلغ ثابت)"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (percentage)"
-msgstr ""
+msgstr "المقدم (نسبة)"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:80
 #, python-format
 msgid "Down payment of %s%%"
-msgstr ""
+msgstr "المقدم من %s%%"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -562,9 +565,8 @@ msgstr "معالج تكوين رسالة بريد الالكتروني"
 
 #. module: sale
 #: model:ir.model,name:sale.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "معالج تكوين رسالة بريد الالكتروني"
+msgstr "معالج إنشاء بريد للاستطلاع"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
@@ -607,7 +609,7 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Fully Invoiced"
-msgstr ""
+msgstr "مفوترة بالكامل"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
@@ -656,7 +658,7 @@ msgstr "الفاتورة"
 #: code:addons/sale/sale.py:840
 #, python-format
 msgid "Invoice %s paid"
-msgstr ""
+msgstr "الفاتورة %s مدفوعة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_invoice_id
@@ -666,7 +668,7 @@ msgstr "عنوان الفاتورة"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
 msgid "Invoice Confirmed"
-msgstr ""
+msgstr "الفاتورة مؤكده"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
@@ -717,12 +719,12 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.settings,default_invoice_policy:0
 msgid "Invoice delivered quantities"
-msgstr ""
+msgstr "فوترة الكميات المسلمة"
 
 #. module: sale
 #: selection:sale.config.settings,default_invoice_policy:0
 msgid "Invoice ordered quantities"
-msgstr ""
+msgstr "فوترة الكميات المطلوبة"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_invoiced
@@ -750,12 +752,12 @@ msgstr "مفوتر"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoiced Quantity"
-msgstr ""
+msgstr "الكميات المفوترة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced
 msgid "Invoiced This Month"
-msgstr ""
+msgstr "المفوتر هذا الشهر"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
@@ -800,12 +802,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing address:"
-msgstr ""
+msgstr "عنوان الفاتورة"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing and shipping address:"
-msgstr ""
+msgstr "عنوان الفاتورة والشحن"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_delivery_address:0
@@ -937,7 +939,7 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Nothing to Invoice"
-msgstr ""
+msgstr "لا يوجد شي للفوترة"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_customer_lead
@@ -959,7 +961,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
 msgid "Online Quotations"
-msgstr ""
+msgstr "التسعيرات اون لاين"
 
 #. module: sale
 #. openerp-web
@@ -1014,12 +1016,12 @@ msgstr "حالة الطلب"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Qty"
-msgstr ""
+msgstr "الكميات المطلوبة"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Quantity"
-msgstr ""
+msgstr "الكميات المطلوبة"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_invoice_policy
@@ -1039,7 +1041,7 @@ msgstr "تاريخ أمر من أوامر المبيعات"
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Ordered quantities"
-msgstr ""
+msgstr "الكميات المطلوبة"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
@@ -1070,12 +1072,12 @@ msgstr "الشريك"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_country_id
 msgid "Partner Country"
-msgstr ""
+msgstr "دولة الشريك"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Partner's Country"
-msgstr ""
+msgstr "دولة الشريك"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
@@ -1132,7 +1134,7 @@ msgstr "طباعة"
 #. module: sale
 #: selection:sale.config.settings,module_website_quote:0
 msgid "Print quotes or send by email"
-msgstr ""
+msgstr "طباعة التسعيرة او الارسال بالبريد الالكتروني"
 
 #. module: sale
 #: model:ir.model,name:sale.model_procurement_order
@@ -1205,17 +1207,17 @@ msgstr "الكمية"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_delivered
 msgid "Qty Delivered"
-msgstr ""
+msgstr "الكميات المسلمه"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_invoiced
 msgid "Qty Invoiced"
-msgstr ""
+msgstr "الكميات المفوترة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_to_invoice
 msgid "Qty To Invoice"
-msgstr ""
+msgstr "الكميات للفوترة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_uom_qty
@@ -1233,7 +1235,7 @@ msgstr "التسعيرة"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation #"
-msgstr ""
+msgstr "التسعيرة #"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
@@ -1285,7 +1287,7 @@ msgstr "عروض السعر"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Quotations & Sales"
-msgstr ""
+msgstr "التسعيرات و المبيعات"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -1294,9 +1296,8 @@ msgstr "تحليل عروض الأسعار"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#, fuzzy
 msgid "Quotations Sent"
-msgstr "تم إرسال عرض الأسعار"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1310,9 +1311,8 @@ msgstr "مرجع المستند الذي أصدر طلب أمر المبيعات
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
-#, fuzzy
 msgid "Reinvoice Costs"
-msgstr "حالات الفاتورة"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1339,7 +1339,7 @@ msgstr "بنود أمر البيع"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_auto_done_setting
 msgid "Sale Order Modification"
-msgstr ""
+msgstr "تعديل طلب المبيعات"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -1524,12 +1524,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Done"
-msgstr ""
+msgstr "تغير الى كامل"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
-msgstr ""
+msgstr "تغير الى تسعيرة"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1776,7 +1776,6 @@ msgstr "وحدة القياس"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
-#, fuzzy
 msgid "Units of Measure"
 msgstr "وحدة القياس"
 
@@ -1827,7 +1826,7 @@ msgstr "ضريبة القيمة المضافة:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "الحجم"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
@@ -1873,9 +1872,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
-#, fuzzy
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr "خطوط أوامر البيع جاهزة للفوترة"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1896,9 +1894,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "البند التحليلي"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1914,99 +1911,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "غير معروف"
-
-#~ msgid ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-#~ msgstr ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'عرض سعر' or 'أمر بيع'} (Ref ${object.name or 'n/a' })"
-
-#~ msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
-#~ msgstr "<span groups=\"sale.group_discount_per_so_line\">تخفيض.(%)</span>"
-
-#~ msgid "Action Needed"
-#~ msgstr "الاجراء المطلوب"
-
-#~ msgid "Allows you to specify an analytic account on sales orders."
-#~ msgstr "يسمح لك بتحديد الحساب التحليلي على أوامر البيع."
-
-#~ msgid "Analytic Line"
-#~ msgstr "البند التحليلي"
-
-#~ msgid "Analytic accounting for sales"
-#~ msgstr "الحسابات التحليلية للمبيعات"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "تاريخ آخر رسالة في هذا السجل."
-
-#~ msgid "Deposit"
-#~ msgstr "الوديعة"
-
-#~ msgid "Expense Account"
-#~ msgstr "حساب المصروف"
-
-#~ msgid "Followers"
-#~ msgstr "المتابعون"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "المتابعون (القنوات)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "المتابعون (الشرماء)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "عند التفعيل، توجد رسالة جديدة"
-
-#~ msgid "Is Follower"
-#~ msgstr "متابع"
-
-#~ msgid "Last Message Date"
-#~ msgstr "تاريخ آخر رسالة"
-
-#~ msgid "Messages"
-#~ msgstr "الرسائل"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "الرسائل و سجل التواصل"
-
-#~ msgid "Number of Actions"
-#~ msgstr "عدد الاجراءات"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "عدد الرسائل الواجب اجراءها"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "عدد الرسائل غير المقروءة"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "فتح قائمة المبيعات"
-
-#~ msgid ""
-#~ "This account will be used for invoices instead of the default one to "
-#~ "value expenses for the current product."
-#~ msgstr ""
-#~ "This account will be used for invoices instead of the default one to "
-#~ "value expenses for the current product."
-
-#~ msgid ""
-#~ "This account will be used for invoices instead of the default one to "
-#~ "value sales for the current product."
-#~ msgstr ""
-#~ "سيتم استخدام شرط السداد بدلا من الشرط الافتراضى لأوامر البيع و فواتير "
-#~ "العملاء"
-
-#~ msgid "Unit of Measures"
-#~ msgstr "وحدة القياس"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "عداد الرسائل الغير مقروءة"
-
-#~ msgid "Website Messages"
-#~ msgstr "رسائل الموقع"
-
-#~ msgid "Website communication history"
-#~ msgstr "سجل تواصل الموقع"

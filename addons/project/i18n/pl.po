@@ -3,15 +3,16 @@
 # * project
 #
 # Translators:
+# zbik2607 <darek@krokus.com.pl>, 2016
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2015
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-12 10:16+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-10-17 20:41+0000\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -184,6 +185,16 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
 msgid "# Tasks"
 msgstr "# Zadań"
@@ -234,7 +245,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<i class=\"fa fa-user\"/> Person Responsible"
-msgstr ""
+msgstr "<i class=\"fa fa-user\"/> Osoba odpowiedzialna"
 
 #. module: project
 #: code:addons/project/project.py:151
@@ -306,6 +317,10 @@ msgid ""
 "strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"<span class=\"fa fa-laptop\"/>\n"
+"<strong> Dopasowywanie ekranu</strong>\n"
+"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -578,7 +593,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>About Employees:</strong>"
-msgstr "<strong>o pracownikach:</strong>"
+msgstr "<strong>O pracownikach:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -604,7 +619,7 @@ msgstr "<strong>analiza raportów</strong> (każdy rok)"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Approve your Timesheets</strong> (every week)"
-msgstr ""
+msgstr "<strong>Aprobuj swoje karty pracy</strong> (co tydzień)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -626,7 +641,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Billing</strong>"
-msgstr ""
+msgstr "<strong>Fakturowanie</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -672,7 +687,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Enter your activities</strong> (every day)"
-msgstr ""
+msgstr "<strong>Wprowadź swoje aktywności</strong> (every day)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -715,12 +730,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>For issues:</strong>"
-msgstr ""
+msgstr "<strong>Dla problemów:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>For tasks:</strong>"
-msgstr ""
+msgstr "<strong>Dla zadań:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -766,7 +781,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Invoice your customers</strong> (every month)"
-msgstr ""
+msgstr "<strong>Fakturuj klientów</strong> (co miesiąc)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1024,7 +1039,7 @@ msgstr "Alias"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Zabezpieczenie aliasu"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_model
@@ -1112,7 +1127,7 @@ msgstr "Zastosuj"
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
-msgstr "Zarchiwizowane"
+msgstr "Archiwalne"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
@@ -1145,7 +1160,7 @@ msgstr "Przypisane do"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_assign
 msgid "Assigning Date"
-msgstr ""
+msgstr "Data przypisania"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -1206,7 +1221,7 @@ msgstr "Saldo"
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_1
 msgid "Basic"
-msgstr "Podstawy"
+msgstr "Podstawa"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1246,6 +1261,11 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr ""
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "Według osoby odpowiedzialnej"
@@ -1261,6 +1281,7 @@ msgstr "Anuluj"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "Anulowano"
@@ -1421,7 +1442,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:project.open_view_project_all
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project."
-msgstr ""
+msgstr "Utwórz nowy projekt."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1750,6 +1771,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Wykonano"
@@ -1780,9 +1802,8 @@ msgstr "Alias adresu e-mail"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
-#, fuzzy
 msgid "Email Template"
-msgstr "Alias adresu e-mail"
+msgstr "Szablon wiadomości"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1955,7 +1976,7 @@ msgid ""
 "For the Odoo Team,<br/>\n"
 "                            Fabien Pinckaers, Founder"
 msgstr ""
-"Dla zespołu Odoo,<br/>\n"
+"W imieniu zespołu Odoo,<br/>\n"
 "                            Fabien Pinckaers, Założyciel"
 
 #. module: project
@@ -1968,7 +1989,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Forecasts"
-msgstr "Prognoza"
+msgstr "Prognozy"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
@@ -2087,7 +2108,7 @@ msgstr ""
 #: code:addons/project/project.py:799
 #, python-format
 msgid "I take it"
-msgstr "wezmę to"
+msgstr "Wezmę to"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_id
@@ -2196,6 +2217,7 @@ msgstr ""
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
+#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "W toku"
@@ -2489,7 +2511,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "Członkowie"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2522,6 +2544,11 @@ msgstr "Moje zadania"
 #: model:ir.model.fields,field_description:project.field_project_tags_name
 msgid "Name"
 msgstr "Nazwa"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "Potrzebna pomoc funkcjonalna lub techniczna"
 
 #. module: project
 #. openerp-web
@@ -2565,6 +2592,11 @@ msgstr ""
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
 msgstr "Zwykły"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr "Nie zatwierdzone"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -2824,7 +2856,7 @@ msgstr "Projekty"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_generate_project_alias
 msgid "Project Alias"
-msgstr ""
+msgstr "Alias projektu"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -2909,7 +2941,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
 msgid "Rating"
-msgstr "ocena"
+msgstr "Ocena"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2953,11 +2985,21 @@ msgid "Ready to be displayed, published or sent"
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr "Gotowe do ponownego otwarcia"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
+msgstr ""
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
 msgstr ""
 
 #. module: project
@@ -3077,7 +3119,7 @@ msgstr "Szukaj projektu"
 #: code:addons/project/static/src/js/project.js:46
 #, python-format
 msgid "Select"
-msgstr ""
+msgstr "Wybierz"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3230,7 +3272,7 @@ msgstr "Data rozpoczęcia"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_account_type
 msgid "State"
-msgstr ""
+msgstr "Stan"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_state
@@ -3241,9 +3283,8 @@ msgstr "Stan"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_child_ids
-#, fuzzy
 msgid "Sub-tasks"
-msgstr "zadania"
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3575,16 +3616,14 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
-#, fuzzy
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
-"To ustala jednostkę czasu stosowaną w projekcie i zadaniach.\n"
-"Jeśli stosujesz karty czasu pracy dołączone do projektu (z modułu "
-"project_timesheet), to nie zapomnij ustawić odpowiedniej jednostki w "
-"ustawieniach pracowników."
+"To ustawi jednostkę miary dla projektów i zadań.\n"
+"Jeśli stosujesz karty pracy doprojektów, to nie zapomnij ustawić odpowiednią "
+"jednostkę w pracownikach."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -3650,6 +3689,7 @@ msgstr "Rozkład godzin roboczych do uwzględnienia w raporcie z wykresem Gantta
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
+#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "Do zrobienia"
@@ -3718,6 +3758,11 @@ msgstr "Stosuj karty pracy"
 msgid ""
 "Use separate meetings to solve big issues or issues that aren’t important "
 "for the entire team."
+msgstr ""
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the priority for tasks related to gold customers"
 msgstr ""
 
 #. module: project
@@ -4036,111 +4081,3 @@ msgstr "z kartą pracy"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr ""
-
-#~ msgid "&times;"
-#~ msgstr "&times;"
-
-#~ msgid "Action Needed"
-#~ msgstr "Wymagana akcja"
-
-#~ msgid "Close"
-#~ msgstr "Zamknij"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data ostatniej wiadomości w rekordzie."
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "Przydzielone zadania"
-
-#~ msgid "Do not record timesheets on tasks"
-#~ msgstr "Nie rejestruj kart pracy w zadaniach"
-
-#~ msgid "Followers"
-#~ msgstr "Obserwatorzy"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Obserwatorzy (kanały)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Obserwatorzy (partnerzy)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jeśli zaznaczone, to nowa wiadomość wymaga twojej uwagi."
-
-#~ msgid "Is Follower"
-#~ msgstr "Jest obserwatorem"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data ostatniej wiadomości"
-
-#~ msgid "Messages"
-#~ msgstr "Wiadomosći"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Wiadomości i historia komunikacji"
-
-#~ msgid "Need functional or technical help"
-#~ msgstr "Potrzebna pomoc funkcjonalna lub techniczna"
-
-#~ msgid "Not validated"
-#~ msgstr "Nie zatwierdzone"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Liczba akcji"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Liczba wiadomości wymagających akcji"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Liczba nieprzeczytanych wiadomości"
-
-#~ msgid "Open Project Menu"
-#~ msgstr "Otwórz menu projekt"
-
-#~ msgid "Ready to reopen"
-#~ msgstr "Gotowe do ponownego otwarcia"
-
-#~ msgid "Record timesheet lines per tasks"
-#~ msgstr "Rejestruj pozycje kart czasu pracy wg zadań"
-
-#~ msgid "Task's Work on Tasks"
-#~ msgstr "Praca w zadaniu"
-
-#~ msgid ""
-#~ "This allows you to transfer the entries under tasks defined for Project "
-#~ "Management to the timesheet line entries for particular date and user, "
-#~ "with the effect of creating, editing and deleting either ways.\n"
-#~ "-This installs the module project_timesheet."
-#~ msgstr ""
-#~ "Pozwala na transfer wpisów z zadań zdefiniowanych w Zarządzaniu "
-#~ "projektami do wpisów jako linii w karcie czasu pracy dla danej daty i "
-#~ "użytkownika, z możliwością tworzenia, edycji i usuwania na oba sposoby.\n"
-#~ "-Instaluje moduł project_timesheet."
-
-#~ msgid ""
-#~ "This will set the unit of measure used in projects and tasks.\n"
-#~ "If you use the timesheet linked to projects (project_timesheet module), "
-#~ "don't forget to setup the right unit of measure in your employees."
-#~ msgstr ""
-#~ "To ustala jednostkę czasu stosowaną w projekcie i zadaniach.\n"
-#~ "Jeśli stosujesz karty czasu pracy dołączone do projektu (z modułu "
-#~ "project_timesheet), to nie zapomnij ustawić odpowiedniej jednostki w "
-#~ "ustawieniach pracowników."
-
-#~ msgid "Timesheets on Project"
-#~ msgstr "Karty pracy w projekcie"
-
-#~ msgid "Type of Account"
-#~ msgstr "Rodzaj konta"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Licznik nieprzeczytanych wiadomości"
-
-#~ msgid "Website Messages"
-#~ msgstr "Wiadomości"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historia rozmowy"

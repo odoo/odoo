@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-06 08:35+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-11-07 17:40+0000\n"
+"Last-Translator: Gonzalo Ruzafa <gr@ingadhoc.com>\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/odoo/odoo-9/"
 "language/es_AR/)\n"
 "Language: es_AR\n"
@@ -875,6 +875,12 @@ msgid "Internal Reference"
 msgstr "Referencia interna"
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
@@ -1502,7 +1508,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9667
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -2186,6 +2192,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "días"
@@ -2230,51 +2244,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "desconocido"
-
-#~ msgid "Action Needed"
-#~ msgstr "Acción necesaria"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Fecha del último mensaje publicado en el registro."
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canales)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Proveedores)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si esta marcado, los nuevos mensajes requieren su atención."
-
-#~ msgid "Is Follower"
-#~ msgstr "Es un Seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Fecha de último mensaje"
-
-#~ msgid "Messages"
-#~ msgstr "Mensajes"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historial de mensajes y comunicación"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de Acciones"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensajes no leídos"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Mensajes No Leídos"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de Mensajes No Leídos"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensajes del sitio web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historial de comunicaciones del sitio web"

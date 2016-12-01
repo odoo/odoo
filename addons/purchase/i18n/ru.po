@@ -4,13 +4,14 @@
 #
 # Translators:
 # Sergey Vilizhanin <sv@grimmette.ru>, 2015
+# Vladimir Lukianov <lvm.mobile@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-06-22 09:11+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-10-04 21:35+0000\n"
+"Last-Translator: Vladimir Lukianov <lvm.mobile@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -198,6 +199,8 @@ msgstr "Разрешить использование и импорт прайс
 msgid ""
 "Allow using call for tenders to get quotes from multiple suppliers (advanced)"
 msgstr ""
+"Разрешить использование запроса квот от нескольких поставщиков для "
+"тендеров(расширенные)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_costing_method
@@ -216,6 +219,8 @@ msgid ""
 "An administrator can set up default Terms and conditions in your Company "
 "settings."
 msgstr ""
+"Администратор может установить сроки и условия по умолчанию в настройках "
+"вашего предприятия."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_account_analytic_id
@@ -273,7 +278,7 @@ msgid "Billed Qty"
 msgstr "Объявленное Кол-во"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:719 code:addons/purchase/stock.py:75
+#: code:addons/purchase/purchase.py:717 code:addons/purchase/stock.py:75
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -312,7 +317,7 @@ msgid "Can be Purchased"
 msgstr "Можно закупать"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:735
+#: code:addons/purchase/purchase.py:733
 #, python-format
 msgid ""
 "Can not cancel a procurement related to a purchase order. Please cancel the "
@@ -325,7 +330,7 @@ msgstr ""
 #: code:addons/purchase/stock.py:78
 #, python-format
 msgid "Can't find any generic Buy route."
-msgstr ""
+msgstr "Не могу найти общий Маршут покупки."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -339,10 +344,10 @@ msgid "Cancelled"
 msgstr "Отменен"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:614
+#: code:addons/purchase/purchase.py:612
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr ""
+msgstr "Нельзя удалить строку заказа на закупку, которая в состоянии '%s'."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -379,9 +384,8 @@ msgstr "Нажмите, чтобы записать счет поставщик�
 
 #. module: purchase
 #: model:web.tip,description:purchase.purchase_tip_1
-#, fuzzy
 msgid "Click to scrap products."
-msgstr "Нажмите, чтобы определить новый продукт."
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_commercial_partner_id
@@ -512,7 +516,7 @@ msgstr "Описание"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_default_location_dest_id_usage
 msgid "Destination Location Type"
-msgstr ""
+msgstr "Тип места хранения назначения"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_display_name
@@ -559,9 +563,8 @@ msgstr "Мастер составления эл. почты"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "Мастер составления эл. почты"
+msgstr "E-mail состав мастер настройки для опроса"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
@@ -590,12 +593,12 @@ msgstr "Получите 2 уровня разрешений, чтобы под�
 #. module: purchase
 #: model:web.tip,description:purchase.purchase_tip_3
 msgid "Get all the shipments related to this order."
-msgstr ""
+msgstr "Все поступающие грузы, связанные с этим заказом."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Вес брутто"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -736,9 +739,8 @@ msgstr "Расположение и склад"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-#, fuzzy
 msgid "Lock Bills"
-msgstr "Счета Поставщиков"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -801,7 +803,7 @@ msgid "No variants on products"
 msgstr "Нет вариантов на продукты"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:895
+#: code:addons/purchase/purchase.py:893
 #, python-format
 msgid ""
 "No vendor associated to product %s. Please set one to fix this procurement."
@@ -890,7 +892,7 @@ msgstr "Исходящие письма"
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
 msgid "PO_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "PO_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1104,7 +1106,7 @@ msgid "Purchase Orders Statistics"
 msgstr "Статистика заказов закупки"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:616
+#: code:addons/purchase/purchase.py:614
 #, python-format
 msgid "Purchase order line deleted."
 msgstr "Строка заказа закупки удалена."
@@ -1119,6 +1121,8 @@ msgstr "Заказы закупок, которые имеют позиции н
 msgid ""
 "Purchase propositions trigger draft purchase orders to a single supplier"
 msgstr ""
+"Предложения на закупку активируют черновики заказов на закупку от одного "
+"поставщика"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_to_resupply
@@ -1325,16 +1329,13 @@ msgstr "Доставка"
 #. module: purchase
 #: selection:purchase.config.settings,group_advance_purchase_requisition:0
 msgid "Simple call for tender (only choose from one RFQ)"
-msgstr ""
+msgstr "Простое объявление торгов (выбор только из одного ЗЦ)"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/puchased in different units of measure (advanced)"
 msgstr ""
-"Некоторые продукты могут быть проданы/куплены в других единицах "
-"измерения(расширенные)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_origin
@@ -1394,7 +1395,7 @@ msgstr "Налоги"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr ""
+msgstr "Техническое поле используется для показа Адрес Дроп-Шиппинг доставки"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
@@ -1417,6 +1418,8 @@ msgid ""
 "                you had with your vendor. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order."
 msgstr ""
+"Запрос содержит историю обсуждения/переговоров с поставщиком.\n"
+"Будучи подтверждённым становится заказом на поставку."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1426,6 +1429,9 @@ msgid ""
 "control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
+"Запрос цен поставщика является первым этапом процесса закупок.\n"
+"Сделав его заказом на поставку, вы сможете контролировать приход\n"
+"продукта и счёт-фактуру поставщика."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category_property_account_creditor_price_difference_categ
@@ -1500,7 +1506,7 @@ msgid "Transfer"
 msgstr "Перевод"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:302
+#: code:addons/purchase/purchase.py:300
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been done."
@@ -1508,14 +1514,12 @@ msgstr ""
 "Невозможно отменить заказ на покупку %s т.к. некоторые приемки уже выполнены."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:305
-#, fuzzy, python-format
+#: code:addons/purchase/purchase.py:303
+#, python-format
 msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
 "bills."
 msgstr ""
-"Невозможно отменить этот заказ на покупку. Вы должны сначала отменить счет "
-"поставщика."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -1627,7 +1631,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Объем"
 
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
@@ -1670,101 +1674,12 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:337
+#: code:addons/purchase/purchase.py:335
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
-msgstr ""
+msgstr "Вы должны указать местоположение Поставщика для партнера  %s"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_config_settings
 msgid "purchase.config.settings"
 msgstr "purchase.config.settings"
-
-#~ msgid "Action Needed"
-#~ msgstr "Требуется реакция"
-
-#~ msgid "Analytic accounting for purchases"
-#~ msgstr "Аналитический учет закупок"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата последнего сообщения"
-
-#~ msgid "Expected Date"
-#~ msgstr "Ожидаемая дата"
-
-#~ msgid "Followers"
-#~ msgstr "Подписчики"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Подписчики (Каналы)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Подписчики (Партнеры)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
-
-#~ msgid "Incoming Shipments to Invoice"
-#~ msgstr "Поступающие товары в Счет-фактуру"
-
-#~ msgid "Is Follower"
-#~ msgstr "Подписчик"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Последнее сообщение по дате"
-
-#~ msgid "Messages"
-#~ msgstr "Сообщения"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Сообщения и история общения"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Количество действий"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Количество сообщений, требующих реакции"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Количество непрочтённых сообщений"
-
-#~ msgid "Open Purchase Menu"
-#~ msgstr "Открыть меню закупок"
-
-#~ msgid "Set to Done"
-#~ msgstr "Установите Готово"
-
-#~ msgid ""
-#~ "Some products may be sold/puchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr ""
-#~ "Некоторые продукты могут быть проданы/куплены в других единицах "
-#~ "измерения(расширенные)"
-
-#~ msgid ""
-#~ "Unable to cancel this purchase order.i You must first cancel related "
-#~ "vendor bills."
-#~ msgstr ""
-#~ "Невозможно отменить этот заказ на покупку. Вы должны сначала отменить "
-#~ "счет поставщика."
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Единица измерения"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитанные"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Счетчик непрочтённых сообщений"
-
-#~ msgid "Website Messages"
-#~ msgstr "Сообщения с сайта"
-
-#~ msgid "Website communication history"
-#~ msgstr "История общения с сайта"
-
-#~ msgid "account.config.settings"
-#~ msgstr "account.config.settings"

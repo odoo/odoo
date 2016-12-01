@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-06 08:35+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-09-06 09:12+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
 "mn/)\n"
@@ -887,6 +887,12 @@ msgid "Internal Reference"
 msgstr "Дотоод Сурвалж"
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
@@ -1515,7 +1521,7 @@ msgstr "Шинж чанар"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9667
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -2209,6 +2215,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "өдөр"
@@ -2253,65 +2267,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "тодорхой бус"
-
-#~ msgid "Action Needed"
-#~ msgstr "Үйлдэл Шаардлагатай"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Тоо хэмжээг өөрчлөх"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
-
-#~ msgid "Followers"
-#~ msgstr "Дагагчид"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Дагагчид (Сувагууд)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Дагагчид (Харилцагчид)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr ""
-#~ "Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг "
-#~ "шаардана."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
-
-#~ msgid "Is Follower"
-#~ msgstr "Дагагч эсэх"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Сүүлийн зурвасын огноо"
-
-#~ msgid "Messages"
-#~ msgstr "Зурвасууд"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Зурвас болон харилцсан түүх"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Үйлдлийн тоо"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Үйлдэл шаардлагатай зурвасын тоо"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Уншаагүй зурвасын тоо"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "Нээлттэй MRP цэс"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Уншаагүй Зурвасууд"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Уншаагүй зурвасын тоолуур"
-
-#~ msgid "Website Messages"
-#~ msgstr "Вебсайтын зурвасууд"
-
-#~ msgid "Website communication history"
-#~ msgstr "Вебсайтын харилцааны түүх"

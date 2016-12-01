@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-17 06:30+0000\n"
-"Last-Translator: AMAAL RU <Fabu1410@yahoo.com>\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-11-02 13:41+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -230,6 +230,19 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
+msgid ""
+"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
+"since at least 5 days.</p>\n"
+"%if object.description:\n"
+"<p>Here is the description about the opportunity : </p><p><i>${object."
+"description}</i>\n"
+"%endif\n"
+"</p><p>Thank you!</p>\n"
 msgstr ""
 
 #. module: crm
@@ -846,15 +859,14 @@ msgstr "النشاط"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_activity_log.py:75
-#, fuzzy, python-format
+#, python-format
 msgid "Activity Done"
-msgstr "النشاط"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_kanban_state
-#, fuzzy
 msgid "Activity State"
-msgstr "النشاط"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -975,9 +987,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
-#, fuzzy
 msgid "Assign this opportunity to"
-msgstr "عين الفرصة لـ"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_opening_date
@@ -1083,6 +1094,18 @@ msgstr "تحليل الفرص"
 #: model:mail.message.subtype,name:crm.crm_activity_data_call_mail_message_subtype
 msgid "Call"
 msgstr "مكالمة"
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for Demo"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for a demo"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
@@ -1262,7 +1285,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Contact Information"
-msgstr ""
+msgstr "معلومات التواصل"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_contact_name
@@ -1492,9 +1515,8 @@ msgstr "العملاء"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Customizations"
-msgstr "العملاء"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_date
@@ -1513,9 +1535,8 @@ msgstr "أيام حتى الإقفال"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_deduplicate
-#, fuzzy
 msgid "Deduplicate Contacts"
-msgstr "استنساخ جهات الاتصال الأخرى"
+msgstr "استنساخ العملاء"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1644,6 +1665,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Download the"
 msgstr "تحميل ال"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_draft_lead
+msgid "Draft Leads"
+msgstr "مسودات الترشيحات"
 
 #. module: crm
 #: selection:sale.config.settings,group_use_lead:0
@@ -1834,6 +1860,18 @@ msgstr "مُنتهي"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up Quote"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up quote"
 msgstr ""
 
 #. module: crm
@@ -2106,9 +2144,8 @@ msgstr "أهي مؤسسة"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_function
-#, fuzzy
 msgid "Job Position"
-msgstr "إقتراح"
+msgstr "المناصب الوظيفية"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_exclude_journal_item
@@ -2301,6 +2338,11 @@ msgid "Leads by Source"
 msgstr ""
 
 #. module: crm
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr "الترشيحات من الولايات المتحدة"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr "الترشيدات المسندة إلي"
@@ -2365,9 +2407,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-#, fuzzy
 msgid "Log Activity"
-msgstr "النشاط"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
@@ -2376,17 +2417,15 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
-#, fuzzy
 msgid "Log a note..."
-msgstr "اختر تاريخ..."
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_log_action
 #: model:ir.model,name:crm.model_crm_activity_log
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
-#, fuzzy
 msgid "Log an Activity"
-msgstr "النشاط"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2418,6 +2457,12 @@ msgid "Low"
 msgstr "منخفض"
 
 #. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Make Quote"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Lost"
 msgstr "تعليم كـ خسارة"
@@ -2429,9 +2474,8 @@ msgstr "تعليم كـ فوز"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
-#, fuzzy
 msgid "Mark as lost"
-msgstr "تحديد كخسارة"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2628,7 +2672,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "My Leads"
-msgstr ""
+msgstr "ترشيحاتي"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -2689,9 +2733,9 @@ msgstr ""
 
 #. module: crm
 #: code:addons/crm/wizard/crm_activity_log.py:56
-#, fuzzy, python-format
+#, python-format
 msgid "Next activity"
-msgstr "النشاط التالي"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:966
@@ -2701,9 +2745,8 @@ msgstr "بلا موضوع"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "No activity"
-msgstr "النشاط التالي"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2724,9 +2767,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_note
-#, fuzzy
 msgid "Note"
-msgstr "الملاحظات"
+msgstr "الملاحظة"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3135,15 +3177,13 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_preceding_activity_ids
-#, fuzzy
 msgid "Preceding Activities"
-msgstr "الأنشطة التالية"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_last_activity_id
-#, fuzzy
 msgid "Previous Activity"
-msgstr "النشاط التالي"
+msgstr "النشاط السابق"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3181,9 +3221,8 @@ msgstr "الاحتمالية (%)"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Products"
-msgstr "منتجاتك"
+msgstr "المنتجات"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3222,15 +3261,13 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_recommended_activity_id
-#, fuzzy
 msgid "Recommended Activities"
-msgstr "الأنشطة"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_recommended_activity_ids
-#, fuzzy
 msgid "Recommended Next Activities"
-msgstr "الأنشطة التالية"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_force_thread_id
@@ -3256,6 +3293,12 @@ msgid "Relation field"
 msgstr ""
 
 #. module: crm
+#: model:ir.actions.server,name:crm.action_email_reminder_lead
+msgid "Reminder to User"
+msgstr "تذكير للمستخدم"
+
+#. module: crm
+#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
 msgid ""
 "Reminder: Lead ${object.name} from ${object.partner_id != False and object."
@@ -3265,7 +3308,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Reporting"
-msgstr ""
+msgstr "التقارير"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_requirements
@@ -3356,15 +3399,13 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "Schedule Activity"
-msgstr "النشاط التالي"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "Schedule Next Activity"
-msgstr "النشاط التالي"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3421,6 +3462,12 @@ msgid "Selection"
 msgstr "الاختيار"
 
 #. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Send a quotation"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -3432,6 +3479,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "المسلسل"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_set_team_sales_department
+msgid "Set team to Sales Department"
+msgstr "تعيين فريق لإدارة المبيعات"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3620,7 +3672,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_title_action
 msgid "Summary"
-msgstr ""
+msgstr "الملخص"
 
 #. module: crm
 #: model:web.tip,description:crm.crm_tip_5
@@ -3663,7 +3715,7 @@ msgstr "المهمة"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_team_id
 msgid "Team"
-msgstr ""
+msgstr "فريق"
 
 #. module: crm
 #: model:ir.filters,name:crm.ir_filters_crm_opportunity_report_next_action
@@ -3833,13 +3885,10 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_fold
-#, fuzzy
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"يتم طي هذه المرحلة من وجهة كانبان عندما تكون هناك أى سجلات في هذه المرحلة "
-"لعرضه . "
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:1164
@@ -4205,7 +4254,7 @@ msgstr ""
 #: code:addons/crm/base_partner_merge.py:309
 #, python-format
 msgid "You cannot merge a contact with one of his parent."
-msgstr ""
+msgstr "لا يمكنك دمج اتصال مع أحد والديه. "
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4282,7 +4331,7 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_opportunities_tree_view
 msgid "Your Pipeline"
-msgstr ""
+msgstr "خطتك"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4433,146 +4482,3 @@ msgstr "غير معروف"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "with your work above"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "الاجراء المطلوب"
-
-#~ msgid "Both"
-#~ msgstr "كلاهما"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "تاريخ آخر رسالة في هذا السجل."
-
-#~ msgid "Done"
-#~ msgstr "منتهي"
-
-#~ msgid "Draft Leads"
-#~ msgstr "مسودات الترشيحات"
-
-#~ msgid "Follow-up"
-#~ msgstr "متابعة"
-
-#~ msgid "Followers"
-#~ msgstr "المتابعون"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "المتابعون (القنوات)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "المتابعون (الشرماء)"
-
-#~ msgid "Function"
-#~ msgstr "وظيفة"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "عند التفعيل، توجد رسالة جديدة"
-
-#~ msgid "Incoming"
-#~ msgstr "الوارد"
-
-#~ msgid "Is Follower"
-#~ msgstr "متابع"
-
-#~ msgid "Last Message Date"
-#~ msgstr "تاريخ آخر رسالة"
-
-#~ msgid "Leads from USA"
-#~ msgstr "الترشيحات من الولايات المتحدة"
-
-#~ msgid ""
-#~ "Link between stages and sales teams. When set, this limitate the current "
-#~ "stage to the selected sales teams."
-#~ msgstr ""
-#~ "الربط بين المراحل وفرق المبيعات. عندما تضبطها، فستقتصر المرحلة الحالية "
-#~ "على فرق المبيعات المحددة فقط."
-
-#~ msgid "Mark As Lost"
-#~ msgstr "تحديد كخسارة"
-
-#~ msgid "Messages"
-#~ msgstr "الرسائل"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "الرسائل و سجل التواصل"
-
-#~ msgid "Negotiation"
-#~ msgstr "تفاوض"
-
-#~ msgid "Number of Actions"
-#~ msgstr "عدد الاجراءات"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "عدد الرسائل الواجب اجراءها"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "عدد الرسائل غير المقروءة"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "فتح قائمة المبيعات"
-
-#~ msgid "Qualification"
-#~ msgstr "المؤهل"
-
-#~ msgid "Reminder to User"
-#~ msgstr "تذكير للمستخدم"
-
-#~ msgid "Sales Tags"
-#~ msgstr "وسوم المبيعات"
-
-#~ msgid "Select Stages for this Sales Team"
-#~ msgstr "اختر مراحل لفريق المبيعات"
-
-#~ msgid "Set team to Sales Department"
-#~ msgstr "تعيين فريق لإدارة المبيعات"
-
-#~ msgid ""
-#~ "This field is used to distinguish stages related to Leads from stages "
-#~ "related to Opportunities, or to specify stages available for both types."
-#~ msgstr ""
-#~ "يستخدم هذا الحقل لتمييز المراحل المتعلقة بالفرص، أو لتحديد المراحل "
-#~ "المتاحة لكلا النوعين. "
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "هذا الاسم يساعدك على متابعة عدة حملات، مثل: حملة الأوكازيون، حملة رأس "
-#~ "السنة"
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr ""
-#~ "هذه هي طريقة التوصيل، مثل: بطاقة بريدية، البريد الإلكتروني، أو شريط "
-#~ "إعلاني."
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr "هذا هو مصدر الرابط، مثل: محرك بحث، موقع آخر، اسم قائمة مراسلات."
-
-#~ msgid ""
-#~ "This stage is folded in the kanban view whenthere are no records in that "
-#~ "stage to display."
-#~ msgstr ""
-#~ "يتم طي هذه المرحلة من وجهة كانبان عندما تكون هناك أى سجلات في هذه المرحلة "
-#~ "لعرضه . "
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "عداد الرسائل الغير مقروءة"
-
-#~ msgid "Website Messages"
-#~ msgstr "رسائل الموقع"
-
-#~ msgid "Website communication history"
-#~ msgstr "سجل تواصل الموقع"
-
-#~ msgid "Your Customers"
-#~ msgstr "عملائك"
-
-#~ msgid "Your Products"
-#~ msgstr "منتجاتك"
-
-#~ msgid "oe_kanban_text_red"
-#~ msgstr "oe_kanban_text_red"

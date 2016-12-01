@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 12:00+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -114,6 +114,26 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock_picking_wave
+#: model:product.product,name:stock_picking_wave.product_product_ice_cream_choco
+#: model:product.template,name:stock_picking_wave.product_product_ice_cream_choco_product_template
+msgid "Ice Cream Chocolate"
+msgstr "Krém csokis fagylalt"
+
+#. module: stock_picking_wave
+#: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_choco
+#: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_choco_product_template
+msgid "Ice Cream Chocolate with sticks"
+msgstr "Krémcsokis fagylalt ostyarudakkal"
+
+#. module: stock_picking_wave
+#: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_vani
+#: model:product.product,name:stock_picking_wave.product_product_ice_cream_vani
+#: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_vani_product_template
+#: model:product.template,name:stock_picking_wave.product_product_ice_cream_vani_product_template
+msgid "Ice Cream Vanilla"
+msgstr "Vanília fagylalt"
+
+#. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 msgid "In Progress"
 msgstr "Folyamatban"
@@ -161,7 +181,7 @@ msgstr "Ennek a hullámnak a felelőse"
 #: code:addons/stock_picking_wave/stock_picking_wave.py:60
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9536
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9535
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -184,7 +204,7 @@ msgid "Picking Waves not finished"
 msgstr "Befejezetlen kiválogatási hullámok"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9536
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9535
 msgid "Picking wave associated to this picking"
 msgstr "Ezzel a kiválogatással összefüggő kiválogatási hullám"
 
@@ -228,6 +248,18 @@ msgid ""
 msgstr ""
 "Egyes kiválogatások még várnak a termékekre. Kérem ellenőrizze vagy "
 "erőltesse az elérhetőségüket mielőtt befejezettnek állítaná ezt a hullámoit."
+
+#. module: stock_picking_wave
+#: model:product.product,name:stock_picking_wave.product_product_dry_specu
+#: model:product.template,name:stock_picking_wave.product_product_dry_specu_product_template
+msgid "Speculoos"
+msgstr "Speculoos"
+
+#. module: stock_picking_wave
+#: model:product.product,description_sale:stock_picking_wave.product_product_dry_specu
+#: model:product.template,description_sale:stock_picking_wave.product_product_dry_specu_product_template
+msgid "Speculoos - A belgian speciality"
+msgstr "Speculoos - egy belga specialítás"
 
 #. module: stock_picking_wave
 #: model:mail.message.subtype,description:stock_picking_wave.mt_wave_state
@@ -287,93 +319,3 @@ msgstr "Felhasználó"
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_stock_picking_wave_search_inherit
 msgid "Wave"
 msgstr "Hullám"
-
-#~ msgid "Action Needed"
-#~ msgstr "Művelet szükséges"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#~ msgid "Followers"
-#~ msgstr "Követők"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Követők (Csatornák)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Követők (Partnerek)"
-
-#~ msgid "Ice Cream Chocolate"
-#~ msgstr "Krém csokis fagylalt"
-
-#~ msgid "Ice Cream Chocolate with stucks"
-#~ msgstr "Krém csokis fagylalt ostyarúddal"
-
-#~ msgid "Ice Cream Vanilla"
-#~ msgstr "Vanília fagylalt"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "Is Follower"
-#~ msgstr "Ő követő"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Utolsó üzenet dátuma"
-
-#~ msgid "Messages"
-#~ msgstr "Üzenetek"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Üzenetek és kommunikáció történet"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Műveletek száma"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Olvasatlan üzenetek száma"
-
-#~ msgid "Speculoos"
-#~ msgstr "Speculoos"
-
-#~ msgid "Speculoos - A belgian speciality"
-#~ msgstr "Speculoos - egy belga specialítás"
-
-#~ msgid ""
-#~ "The Goal of the picking waves is to group operations that may \n"
-#~ "                (needs to) be done together in order to increase their "
-#~ "efficiency.\n"
-#~ "                It may also be useful to assign jobs (one person = one "
-#~ "wave) or\n"
-#~ "                help the timing management of operations (tasks to be "
-#~ "done at 1pm)."
-#~ msgstr ""
-#~ "A kiválogatási hullámok célja olyan műveletek lehetséges (szükséges) "
-#~ "csoportba \n"
-#~ "                szedése, melyeket együtt elvégezni ahhoz, hogy növeljük a "
-#~ "hatékonyságot.\n"
-#~ "                Hasznosa lehet munkák iktatásához (egy személy =egy "
-#~ "hullám) vagy\n"
-#~ "                a műveletek, idő kiosztás kezelés segítségének "
-#~ "(feladatnak du. 1 órára kész kell lennie)."
-
-#~ msgid "Unread Messages"
-#~ msgstr "Olvasatlan üzenetek"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Olvasatlan üzenetek számlálója"
-
-#~ msgid "Website Messages"
-#~ msgstr "Weboldal üzenetek"
-
-#~ msgid "Website communication history"
-#~ msgstr "Weboldal  kommunikáció történet"
-
-#~ msgid "Print"
-#~ msgstr "Nyomtatás"

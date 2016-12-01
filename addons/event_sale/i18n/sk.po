@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-01-08 16:49+0000\n"
-"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-09-23 08:55+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
@@ -31,9 +31,8 @@ msgstr "Použiť"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
-#, fuzzy
 msgid "Asset Type"
-msgstr "Typ udalosti"
+msgstr ""
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -70,6 +69,12 @@ msgid ""
 msgstr ""
 "Vyberte si vstupenku na udalosť, a to automaticky vytvorí registráciu pre "
 "túto vstupenku na udalosť."
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_2_product
+#: model:product.template,name:event_sale.event_2_product_product_template
+msgid "Conference on Business Applications"
+msgstr "Konferencia o obchodných aplikáciach"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_uid
@@ -169,6 +174,12 @@ msgid "Event Type"
 msgstr "Typ udalosti"
 
 #. module: event_sale
+#: model:product.product,name:event_sale.event_1_product
+#: model:product.template,name:event_sale.event_1_product_product_template
+msgid "Functional Webinar"
+msgstr "Funkčný webinár"
+
+#. module: event_sale
 #: model:event.type,name:event_sale.event_type
 msgid "Generic Events"
 msgstr "Všeobecné udalosti"
@@ -233,6 +244,12 @@ msgstr "Žiadne ďalšie voľné miesta pre vstupenku"
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "Žiadne ďalšie voľné miesta pre túto vstupenku"
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_0_product
+#: model:product.template,name:event_sale.event_0_product_product_template
+msgid "Open Days in Los Angeles"
+msgstr "Dni otvorených dverí v Los Angeles"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
@@ -342,10 +359,24 @@ msgid "Source Sale Order"
 msgstr "Zdrojová objednávka predaja"
 
 #. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_1
+#: model:event.event.ticket,name:event_sale.event_1_ticket_1
+#: model:event.event.ticket,name:event_sale.event_2_ticket_1
+#: model:event.event.ticket,name:event_sale.event_3_ticket_1
+msgid "Standard"
+msgstr "Štandard"
+
+#. module: event_sale
 #: code:addons/event_sale/models/event.py:21
 #, python-format
 msgid "Subscription"
 msgstr "Predplatné"
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_3_product
+#: model:product.template,name:event_sale.event_3_product_product_template
+msgid "Technical Training"
+msgstr "Technický tréning"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:168
@@ -385,6 +416,13 @@ msgid "Unlimited"
 msgstr "Neobmedzené"
 
 #. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_2
+#: model:event.event.ticket,name:event_sale.event_2_ticket_2
+#: model:event.event.ticket,name:event_sale.event_3_ticket_2
+msgid "VIP"
+msgstr "VIP"
+
+#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
 msgid "event_ok"
 msgstr "event_ok"
@@ -403,21 +441,3 @@ msgstr "registration.editor"
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "registration.editor.line"
 msgstr "registration.editor.line"
-
-#~ msgid "Conference on Business Applications"
-#~ msgstr "Konferencia o obchodných aplikáciach"
-
-#~ msgid "Functional Webinar"
-#~ msgstr "Funkčný webinár"
-
-#~ msgid "Open Days in Los Angeles"
-#~ msgstr "Dni otvorených dverí v Los Angeles"
-
-#~ msgid "Standard"
-#~ msgstr "Štandard"
-
-#~ msgid "Technical Training"
-#~ msgstr "Technický tréning"
-
-#~ msgid "VIP"
-#~ msgstr "VIP"

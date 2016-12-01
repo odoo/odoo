@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-02-12 12:48+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-09-23 09:08+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/"
 "lt/)\n"
@@ -1315,6 +1315,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:49
 #: model:ir.ui.view,arch_db:website.s_banner
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #, python-format
 msgid "Click to customize this text"
 msgstr ""
@@ -1425,7 +1426,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.403 model:ir.ui.view,arch_db:website.404
 msgid "Contact Us"
-msgstr ""
+msgstr "Susisiekite su mumis"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1438,8 +1439,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.s_banner
 #: model:ir.ui.view,arch_db:website.s_big_message
 #: model:ir.ui.view,arch_db:website.s_comparisons
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #: model:ir.ui.view,arch_db:website.website_planner
 #: model:website.menu,name:website.menu_contactus
+#: model:website.menu,name:website.website2_menu_contactus
 msgid "Contact us"
 msgstr "Susisiekite su mumis"
 
@@ -1455,9 +1458,8 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-#, fuzzy
 msgid "Content"
-msgstr "Tęsti"
+msgstr "Turinys"
 
 #. module: website
 #. openerp-web
@@ -1625,7 +1627,7 @@ msgstr "Aprašymas..."
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Design"
-msgstr ""
+msgstr "Projektavimas"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1638,6 +1640,11 @@ msgstr ""
 #, python-format
 msgid "Discard"
 msgstr "Atmesti"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Discuss and Comments"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1814,7 +1821,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Examples"
-msgstr ""
+msgstr "Pavyzdžiai"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -2132,6 +2139,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.footer_default
 #: model:website.menu,name:website.menu_homepage
+#: model:website.menu,name:website.website2_menu_homepage
 msgid "Home"
 msgstr "Pradžia"
 
@@ -2139,6 +2147,11 @@ msgstr "Pradžia"
 #: model:ir.ui.view,arch_db:website.403 model:ir.ui.view,arch_db:website.404
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Homepage"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website2_homepage
+msgid "Homepage 0.0.0.0"
 msgstr ""
 
 #. module: website
@@ -2496,6 +2509,11 @@ msgstr "Meniu"
 #, python-format
 msgid "Menu <b>%s</b> seems to have a link to this page !"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Message"
+msgstr "Pranešimas"
 
 #. module: website
 #. openerp-web
@@ -2883,6 +2901,16 @@ msgid "Partner"
 msgstr "Partneris"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Partner Detail"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Partners"
+msgstr "Partneriai"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Plan"
 msgstr "Planas"
@@ -3037,6 +3065,11 @@ msgid "Real professional translators will translate all your contents"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Recipient"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Reduce the time and resources spent on support."
 msgstr ""
@@ -3185,6 +3218,16 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Sell more online"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send <span class=\"fa fa-long-arrow-right\"/>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send a Message to our Partners"
 msgstr ""
 
 #. module: website
@@ -3400,6 +3443,11 @@ msgstr ""
 #: code:addons/website/static/src/js/website.tour.banner.js:89
 #, python-format
 msgid "Test Your Mobile Version"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Thank you for posting a message !"
 msgstr ""
 
 #. module: website
@@ -3640,6 +3688,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/js/website.contentMenu.js:175
 #: model:website.menu,name:website.main_menu
+#: model:website.menu,name:website.website2_main_menu
 #, python-format
 msgid "Top Menu"
 msgstr ""
@@ -3651,7 +3700,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.snippets.editor.js:771
+#: code:addons/website/static/src/js/website.snippets.editor.js:772
 #, python-format
 msgid "Transform the picture (click twice to reset transformation)"
 msgstr ""
@@ -3931,6 +3980,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_config_settings_website_name
 #: model:ir.model.fields,field_description:website.field_website_name
 msgid "Website Name"
+msgstr ""
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_post
+msgid "Website Partner Post and Thanks Demo"
+msgstr ""
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_comment
+msgid "Website Partners Comment Form"
 msgstr ""
 
 #. module: website
@@ -4605,21 +4664,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "your Company details form"
 msgstr ""
-
-#~ msgid "&lt;!DOCTYPE html&gt;"
-#~ msgstr "&lt;!DOCTYPE html&gt;"
-
-#~ msgid ".xml"
-#~ msgstr ".xml"
-
-#~ msgid "Color"
-#~ msgstr "Spalva"
-
-#~ msgid "Message"
-#~ msgstr "Pranešimas"
-
-#~ msgid "Partners"
-#~ msgstr "Partneriai"
-
-#~ msgid "or"
-#~ msgstr "arba"

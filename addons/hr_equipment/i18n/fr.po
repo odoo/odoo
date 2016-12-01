@@ -5,16 +5,16 @@
 # Translators:
 # Fabien Pinckaers <fp@openerp.com>, 2015
 # Martin Trigaux, 2015
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2015
 # Miguel Vidali <mvidali129@gmail.com>, 2015
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 12:00+0000\n"
-"PO-Revision-Date: 2015-11-24 23:03+0000\n"
-"Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-09-23 09:55+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -50,6 +50,12 @@ msgid ""
 msgstr ""
 "Un dictionnaire Python qui sera interprété pour fournir les valeurs par "
 "défaut lors de la création des nouveaux enregistrements pour cet alias."
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer3
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer5
+msgid "Acer Laptop"
+msgstr "Ordinateur Acer"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
@@ -408,6 +414,17 @@ msgid "Group by..."
 msgstr "Regrouper par..."
 
 #. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_printer1
+msgid "HP Inkjet printer"
+msgstr "Imprimante HP Inkjet"
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer11
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer9
+msgid "HP Laptop"
+msgstr "Ordinateur HP"
+
+#. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
 msgid "High"
 msgstr "Élevé"
@@ -547,6 +564,11 @@ msgid "Model"
 msgstr "Modèle"
 
 #. module: hr_equipment
+#: model:hr.equipment.category,name:hr_equipment.hr_equipment_monitor
+msgid "Monitors"
+msgstr "Moniteurs"
+
+#. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "My Equipments"
 msgstr "Mes Equipements"
@@ -614,6 +636,11 @@ msgstr ""
 "Modèle parent de l'alias. Le modèle possédant la référence de l'alias n'est "
 "pas nécessairement le modèle donné par alias_model_id (Ex. : project "
 "(parent_model) et task (modèle))"
+
+#. module: hr_equipment
+#: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
+msgid "Phones"
+msgstr "Téléphones"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
@@ -695,6 +722,13 @@ msgstr "Demande de réinitialisation"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
 msgid "Responsible"
 msgstr "Responsable"
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor1
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor4
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor6
+msgid "Samsung Monitor 15\""
+msgstr "Écran Samsung 15\""
 
 #. module: hr_equipment
 #: model:hr.equipment.stage,name:hr_equipment.stage_4
@@ -926,103 +960,3 @@ msgstr "Demande de maintenance"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 msgid "maintenance Request Search"
 msgstr "Recherche de demande d'entretien "
-
-#~ msgid "Acer Laptop"
-#~ msgstr "Ordinateur Acer"
-
-#~ msgid "Action Needed"
-#~ msgstr "A besoin d'une action"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Date du dernier message posté sur cet enregistrement"
-
-#~ msgid "Followers"
-#~ msgstr "Abonnés"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Abonnés (Canaux)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Abonnés (Partenaires)"
-
-#~ msgid "HP Inkjet printer"
-#~ msgstr "Imprimante HP Inkjet"
-
-#~ msgid "HP Laptop"
-#~ msgstr "Ordinateur HP"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si coché, de nouveaux messages demandent votre attention."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si coché, de nouveaux messages requièrent votre attention."
-
-#~ msgid "Important Messages"
-#~ msgstr "Messages importants"
-
-#~ msgid "Is Follower"
-#~ msgstr "Est un abonné"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Date du dernier message"
-
-#~ msgid "Messages"
-#~ msgstr "Messages"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historique des messages et communications"
-
-#~ msgid "Monitors"
-#~ msgstr "Moniteurs"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Nombre d'Actions"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Nombre de messages demandant une action"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Nombre de messages non lus"
-
-#~ msgid "Open Equipments Menu"
-#~ msgstr "Ouvrir le menu Équipements"
-
-#~ msgid "Phones"
-#~ msgstr "Téléphones"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Politique pour publier un message sur le document via la passerelle de "
-#~ "courriel.\n"
-#~ "- tout le monde : tout le monde peut publier\n"
-#~ "- partenaires : seulement les partenaires authentifiés\n"
-#~ "- abonnés : seulement les abonnés au document associé\n"
-
-#~ msgid "Samsung Monitor 15\""
-#~ msgstr "Écran Samsung 15\""
-
-#~ msgid ""
-#~ "This application helps you to track equipments used by employees.\n"
-#~ "                Create some laptop, printer or phone and link each "
-#~ "equipment to an employee or departement.\n"
-#~ "                You will manage allocations, issues and mainteannce of "
-#~ "equipment."
-#~ msgstr ""
-#~ "Cette application aide à suivre les équipements utilisés par les "
-#~ "employés. Créer des ordinateurs portables, une imprimante ou un téléphone "
-#~ "et relier chaque équipement à un employé ou à un département. Ceci "
-#~ "permettra de gérer les affectations, les incidents et la maintenance des "
-#~ "équipements."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Compteur de messages non lus"
-
-#~ msgid "Website Messages"
-#~ msgstr "Messages du site web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historique de communication du site web"

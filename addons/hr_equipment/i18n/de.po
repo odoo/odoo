@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 12:00+0000\n"
-"PO-Revision-Date: 2016-06-01 14:48+0000\n"
-"Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-09-23 09:55+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -49,6 +49,12 @@ msgid ""
 msgstr ""
 "Ein Python Dictionary, das ausgewertet wird, wenn neue Datensätze für diesen "
 "Alias angelegt werden."
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer3
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer5
+msgid "Acer Laptop"
+msgstr "Acer Laptop"
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
@@ -406,6 +412,17 @@ msgid "Group by..."
 msgstr "Gruppierung ..."
 
 #. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_printer1
+msgid "HP Inkjet printer"
+msgstr "HP Inkjet Drucker"
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer11
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer9
+msgid "HP Laptop"
+msgstr "HP Laptop"
+
+#. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
 msgid "High"
 msgstr "Hoch"
@@ -545,6 +562,11 @@ msgid "Model"
 msgstr "Modell"
 
 #. module: hr_equipment
+#: model:hr.equipment.category,name:hr_equipment.hr_equipment_monitor
+msgid "Monitors"
+msgstr "Bildschirme"
+
+#. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "My Equipments"
 msgstr "Mein Inventar"
@@ -612,6 +634,11 @@ msgstr ""
 "Das übergeordnete Datenmodell für den Alias. Dieses Modell, welches die "
 "EMail Alias Referenz enthält ist nicht zwangsläufig das Modell von "
 "alias_model_id (Beispiel: project (parent_model) und task (model))"
+
+#. module: hr_equipment
+#: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
+msgid "Phones"
+msgstr "Telefone"
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
@@ -693,6 +720,13 @@ msgstr "Anfrage zurücksetzen"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
 msgid "Responsible"
 msgstr "Verantwortlicher"
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor1
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor4
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor6
+msgid "Samsung Monitor 15\""
+msgstr "Samsung Bildschirm 15\""
 
 #. module: hr_equipment
 #: model:hr.equipment.stage,name:hr_equipment.stage_4
@@ -922,100 +956,3 @@ msgstr "Wartungsanfrage"
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 msgid "maintenance Request Search"
 msgstr "Suche Wartungsanfragen"
-
-#~ msgid "Acer Laptop"
-#~ msgstr "Acer Laptop"
-
-#~ msgid "Action Needed"
-#~ msgstr "Aktion notwendig"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum der letzten Nachricht."
-
-#~ msgid "Followers"
-#~ msgstr "Beobachter"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Beobachter (Kanäle)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Beobachter (Partner)"
-
-#~ msgid "HP Inkjet printer"
-#~ msgstr "HP Inkjet Drucker"
-
-#~ msgid "HP Laptop"
-#~ msgstr "HP Laptop"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#~ msgid "Is Follower"
-#~ msgstr "Ist Beobachter"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Letzte Benachrichtigung"
-
-#~ msgid "Messages"
-#~ msgstr "Mitteilungen"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Nachrichten und Kommunikations-Historie"
-
-#~ msgid "Monitors"
-#~ msgstr "Bildschirme"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Anzahl der Aktionen"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Anzahl ungelesene Nachrichten"
-
-#~ msgid "Open Equipments Menu"
-#~ msgstr "Ausstattungsmenü öffnen"
-
-#~ msgid "Phones"
-#~ msgstr "Telefone"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Regel für den Versand von Mitteilungen über das E-Mail-Gateways.\n"
-#~ "- Alle Benutzer: Jeder kann  uneingeschränkt Mails senden\n"
-#~ "- Authentifizierte Partner: Nur angemeldete Partner\n"
-#~ "- Nur Verfolger: Nur Verfolger dieses Dokuments\n"
-
-#~ msgid "Samsung Monitor 15\""
-#~ msgstr "Samsung Bildschirm 15\""
-
-#~ msgid ""
-#~ "This application helps you to track equipments used by employees.\n"
-#~ "                Create some laptop, printer or phone and link each "
-#~ "equipment to an employee or departement.\n"
-#~ "                You will manage allocations, issues and mainteannce of "
-#~ "equipment."
-#~ msgstr ""
-#~ "Diese Anwendung hilft Ihnen bei der Rückverfolgung der von Mitarbeitern "
-#~ "genutzten Ausstattungsgegenstände. Erstellen Sie Notebook, Drucker, "
-#~ "Smartphone und \n"
-#~ "ordnen Mitarbeiter oder Abteilung zu. Sie können die Verteilung, Probleme "
-#~ "und die \n"
-#~ "Wartung der Ausstattungsgegenstände verfolgen."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Zähler der ungelelesen Nachrichten"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website Nachrichten"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website Kommunikationshistorie"

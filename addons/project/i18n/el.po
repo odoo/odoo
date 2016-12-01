@@ -3,14 +3,14 @@
 # * project
 #
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
+# Kostas Goutoudis <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-02-20 10:42+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-11-15 14:54+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
@@ -182,6 +182,16 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
 msgid "# Tasks"
 msgstr ""
@@ -253,7 +263,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install now"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Εγκατάσταση τώρα"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -951,7 +961,7 @@ msgstr "Ενεργό"
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
-msgstr ""
+msgstr "Προσθέστε μια περιγραφή..."
 
 #. module: project
 #. openerp-web
@@ -1195,6 +1205,11 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr ""
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr ""
@@ -1210,6 +1225,7 @@ msgstr "Ακύρωση"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "Ακυρωμένο"
@@ -1243,7 +1259,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,help:project.project_tags_action
 msgid "Click to add a new tag."
-msgstr ""
+msgstr "Κάντε κλικ για να προσθέσετε μια νέα ετικέτα."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -1607,7 +1623,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project.js:50
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "Απόρριψη"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
@@ -1697,6 +1713,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Ολοκληρωμένο"
@@ -1727,9 +1744,8 @@ msgstr "Ψευδώνυμο μηνυμάτων"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
-#, fuzzy
 msgid "Email Template"
-msgstr "Ψευδώνυμο μηνυμάτων"
+msgstr "Πρότυπο email"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2140,6 +2156,7 @@ msgstr ""
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
+#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "Σε Εξέλιξη"
@@ -2433,7 +2450,7 @@ msgstr "Τμήμα Marketing"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "Μέλη"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2443,7 +2460,7 @@ msgstr "Μήνας"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr ""
+msgstr "Περισσότερα <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2466,6 +2483,11 @@ msgstr "Εργασίες μου"
 #: model:ir.model.fields,field_description:project.field_project_tags_name
 msgid "Name"
 msgstr "Όνομα"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -2509,6 +2531,11 @@ msgstr ""
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
 msgstr "Κανονικό"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -2711,7 +2738,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -2719,11 +2745,6 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Πολιτική για να δημοσιεύσετε ένα μήνυμα σχετικά με το έγγραφο "
-"χρησιμοποιώντας το mailgateway.\n"
-"- Ο καθένας: ο καθένας μπορεί να δημοσιεύσει\n"
-"- Συνεργάτες: Μόνο πιστοποιημένοι συνεργάτες\n"
-"- Ακόλουθοι: μόνο οι ακόλουθοι του σχετικού εγγράφου\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2900,11 +2921,21 @@ msgid "Ready to be displayed, published or sent"
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
+msgstr ""
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
 msgstr ""
 
 #. module: project
@@ -2981,7 +3012,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Responsibilities"
-msgstr ""
+msgstr "Αρμοδιότητες"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3024,7 +3055,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project.js:46
 #, python-format
 msgid "Select"
-msgstr ""
+msgstr "Επιλογή"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3265,12 +3296,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_name
 msgid "Task Title"
-msgstr ""
+msgstr "Τίτλος Εργασίας"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task Title..."
-msgstr ""
+msgstr "Τίτλος Εργασίας..."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
@@ -3525,15 +3556,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
-#, fuzzy
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
-"Ορισμός της μονάδας μέτρησης για Έργα και Εργασίες.\n"
-"Αν συνδέετε τα έργα με φύλλα χρόνου εργασίας (άρθρωμα project_timesheet), "
-"μην ξεχάσετε να ρυθμίσετε τη σωστή μονάδα μέτρησης στους υπαλλήλους."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -3599,6 +3626,7 @@ msgstr "Πίνακας χρόνου εργασίας για προσαρμογή
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
+#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "Προς υλοποίηση"
@@ -3667,6 +3695,11 @@ msgstr ""
 msgid ""
 "Use separate meetings to solve big issues or issues that aren’t important "
 "for the entire team."
+msgstr ""
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the priority for tasks related to gold customers"
 msgstr ""
 
 #. module: project
@@ -3877,7 +3910,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Objectives"
-msgstr ""
+msgstr "Οι Στόχοι σας"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_module_install_project
@@ -3983,87 +4016,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr ""
-
-#~ msgid "&times;"
-#~ msgstr "&times;"
-
-#~ msgid "Action Needed"
-#~ msgstr "Απαιτείται ενέργεια"
-
-#~ msgid "Close"
-#~ msgstr "Κλείσιμο"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Ημερομηνία του τελευταίου μηνύματος "
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "Ανατεθειμένες Εργασίες"
-
-#~ msgid "Followers"
-#~ msgstr "Ακόλουθοι"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Ακόλουθοι (Κανάλια)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Ακόλουθοι (Συνεργάτες)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
-
-#~ msgid "Is Follower"
-#~ msgstr "Είναι Ακόλουθος"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Τελευταία ημερομηνία μηνύματος"
-
-#~ msgid "Messages"
-#~ msgstr "Μηνύματα"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Μηνύματα και ιστορικό επικοινωνίας"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Αριθμός ενεργειών"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Πολιτική για να δημοσιεύσετε ένα μήνυμα σχετικά με το έγγραφο "
-#~ "χρησιμοποιώντας το mailgateway.\n"
-#~ "- Ο καθένας: ο καθένας μπορεί να δημοσιεύσει\n"
-#~ "- Συνεργάτες: Μόνο πιστοποιημένοι συνεργάτες\n"
-#~ "- Ακόλουθοι: μόνο οι ακόλουθοι του σχετικού εγγράφου\n"
-
-#~ msgid ""
-#~ "This will set the unit of measure used in projects and tasks.\n"
-#~ "If you use the timesheet linked to projects (project_timesheet module), "
-#~ "don't forget to setup the right unit of measure in your employees."
-#~ msgstr ""
-#~ "Ορισμός της μονάδας μέτρησης για Έργα και Εργασίες.\n"
-#~ "Αν συνδέετε τα έργα με φύλλα χρόνου εργασίας (άρθρωμα project_timesheet), "
-#~ "μην ξεχάσετε να ρυθμίσετε τη σωστή μονάδα μέτρησης στους υπαλλήλους."
-
-#~ msgid "Type of Account"
-#~ msgstr "Είδος Λογαριασμού"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
-
-#~ msgid "Website Messages"
-#~ msgstr "Μηνύματα Ιστότοπου"
-
-#~ msgid "Website communication history"
-#~ msgstr "Ιστορικό επικοινωνίας ιστότοπου"

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-24 11:13+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-09-06 09:12+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Albanian (http://www.transifex.com/odoo/odoo-9/language/sq/)\n"
 "Language: sq\n"
@@ -868,6 +868,12 @@ msgid "Internal Reference"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
@@ -1489,7 +1495,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9666
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9667
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -2171,6 +2177,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr ""
@@ -2215,59 +2229,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Veprimet e nevojshme"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data e mesazhit të fundit të postuar në regjistër"
-
-#~ msgid "Followers"
-#~ msgstr "Ndjekesit"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Ndjekesit (Kanalet)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Ndjekesit (Partnerët)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Nëqoftëse është e çekuar mesazhet e reja kërkojnë vëmëndjen tuaj."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "Nëqoftëse është e çekuar,\n"
-#~ " mesazhet e reja kërkojnë vëmëndjen tuaj."
-
-#~ msgid "Is Follower"
-#~ msgstr "Eshte Ndjekës"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data e Mesazhit të Fundit"
-
-#~ msgid "Messages"
-#~ msgstr "Mesazhet"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historiku i mesazheve dhe komunikimeve"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Numri i Veprimeve"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Numri i mesazheve që kërkojnë një veprim"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Numri i mesazheve të palexuara"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Mesazhe të Palexuara"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Numëruesi i Mesazheve të Palexuara"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mesazhe të Website-it"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historiku i Komunikimeve të Website-it"

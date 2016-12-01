@@ -3,15 +3,16 @@
 # * marketing_campaign
 #
 # Translators:
+# zbik2607 <darek@krokus.com.pl>, 2016
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2015-2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-06-29 12:04+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-10-16 22:01+0000\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -19,6 +20,35 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_3
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to let you know that you have entered the select circle "
+"of our Gold Partners!</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_2
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to welcome you among our Silver Partners as of today!</"
+"p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_1
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>You will receive your welcome pack via email shortly.</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -224,11 +254,21 @@ msgid "Condition"
 msgstr "Warunek"
 
 #. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_2
+msgid "Congratulations! You are now a Silver Partner!"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_3
+msgid "Congratulations! You are now one of our Gold Partners!"
+msgstr "Gratulacje! Teraz jesteś jednym z naszych złotych partnerów!"
+
+#. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:480
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
-msgstr "kosmetyk"
+msgstr "Kosmetyk"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_total_cost
@@ -352,9 +392,8 @@ msgstr "Szablon wiadomości"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template_preview
-#, fuzzy
 msgid "Email Template Preview"
-msgstr "Szablon wiadomości"
+msgstr "Podgląd szablonu"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_mail_template
@@ -588,7 +627,7 @@ msgstr "Automatyzacja CRM"
 #. module: marketing_campaign
 #: model:res.groups,name:marketing_campaign.group_lead_automation_manager
 msgid "Manager"
-msgstr ""
+msgstr "Manager"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
@@ -755,6 +794,11 @@ msgstr "Partner"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid "Partner Field"
 msgstr "Pole partnera"
+
+#. module: marketing_campaign
+#: model:ir.filters,name:marketing_campaign.filter0
+msgid "Partners"
+msgstr "Partnerzy"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
@@ -1085,12 +1129,17 @@ msgstr "Unikalne pole"
 #. module: marketing_campaign
 #: model:res.groups,name:marketing_campaign.group_lead_automation_user
 msgid "User"
-msgstr ""
+msgstr "Użytkownik"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_variable_cost
 msgid "Variable Cost"
 msgstr "Koszt zmienny"
+
+#. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_1
+msgid "Welcome to the Odoo Partner Channel!"
+msgstr "Witamy w Kanale Partnerskim Odoo!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1111,15 +1160,3 @@ msgstr "Lat"
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
-
-#~ msgid "Congratulations! You are now one of our Gold Partners!"
-#~ msgstr "Gratulacje! Teraz jesteś jednym z naszych złotych partnerów!"
-
-#~ msgid "Open Marketing Menu"
-#~ msgstr "Otwórz menu Marketing"
-
-#~ msgid "Partners"
-#~ msgstr "Partnerzy"
-
-#~ msgid "Welcome to the Odoo Partner Channel!"
-#~ msgstr "Witamy w Kanale Partnerskim Odoo!"

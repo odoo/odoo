@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-04-22 12:37+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-11-15 14:50+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
@@ -231,6 +231,19 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
 msgstr "<i class=\"fa fa-question-circle\"> προβολή παραδειγμάτων</i>"
+
+#. module: crm
+#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
+msgid ""
+"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
+"since at least 5 days.</p>\n"
+"%if object.description:\n"
+"<p>Here is the description about the opportunity : </p><p><i>${object."
+"description}</i>\n"
+"%endif\n"
+"</p><p>Thank you!</p>\n"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -608,7 +621,7 @@ msgid ""
 "the opportunity is created, you will be able to drag and drop it in your "
 "sales pipeline.</span>"
 msgstr ""
-"<span><strong>Κάντε Κλικ για εγγραφή μιας νέας επιχειρηματικής ευκαιρίας</"
+"<span><strong>Κάντε κλικ για εγγραφή μιας νέας επιχειρηματικής ευκαιρίας</"
 "strong>. Μόλις η ευκαιρία δημιουργηθεί, θα είστε σε θέση να τη μεταφέρετε "
 "στη Ροή Πληροφοριών.</span>"
 
@@ -774,9 +787,8 @@ msgstr "<strong>Προτεινόμενες δράσεις:</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "<strong>Recommended activities:</strong>"
-msgstr "<strong>Προτεινόμενες δράσεις:</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -854,7 +866,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>The prospect</strong> started to discuss your offer"
-msgstr "<strong>Η προοπτική</strong>άρχισε να συζητά την προσφορά σας"
+msgstr "<strong>Η προοπτική</strong> άρχισε να συζητά την προσφορά σας"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -862,8 +874,8 @@ msgid ""
 "<strong>To boost your leads acquisition,</strong> you should have a look at "
 "our marketing apps:"
 msgstr ""
-"<strong> Για να ενισχύσετε την εξαγορά τψν συστάσεων, </strong> θα πρέπει να "
-"έχετε μια ματιά στις εφαρμογές μάρκετινγκ της εταιρείας μας:"
+"<strong>Για να ενισχύσετε την απόκτηση των συστάσεων,</strong> θα πρέπει να "
+"ρίξετε και μια ματιά στις εφαρμογές marketing της εταιρείας μας:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -873,10 +885,10 @@ msgid ""
 "you can use the following\n"
 "                                apps of Odoo:"
 msgstr ""
-"<strong>Προπονήσεις</strong> <br/>\n"
-"Για να οικοδομήσουμε ένα ισχυρό πρόγραμμα κατάρτισης πωλήσεων, μπορείτε να "
+"<strong>Εκπαιδεύσεις</strong> <br/>\n"
+"Για να οικοδομήσετε ένα ισχυρό πρόγραμμα εκπαίδευσης πωλήσεων, μπορείτε να "
 "χρησιμοποιήσετε τις ακόλουθες\n"
-"εφαρμογές της odoo:"
+"εφαρμογές της Odoo:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1011,15 +1023,14 @@ msgstr "Δραστηριότητα"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_activity_log.py:75
-#, fuzzy, python-format
+#, python-format
 msgid "Activity Done"
-msgstr "Δραστηριότητα"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_kanban_state
-#, fuzzy
 msgid "Activity State"
-msgstr "Ημερομηνία Επόμενης Δραστηριότητας"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1155,9 +1166,8 @@ msgstr "Ανάθεση αυτών των ευκαιριών σε"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
-#, fuzzy
 msgid "Assign this opportunity to"
-msgstr "Ανάθεση αυτών των ευκαιριών σε"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_opening_date
@@ -1191,7 +1201,7 @@ msgstr "Επισυνάψετε μια φόρμα προσόντων σε κάθ�
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_author_id
 msgid "Author"
-msgstr "Δημιουργός"
+msgstr "Συντάκτης"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1269,6 +1279,18 @@ msgstr "Ανάλυση Ευκαιριών CRM"
 #: model:mail.message.subtype,name:crm.crm_activity_data_call_mail_message_subtype
 msgid "Call"
 msgstr "Τηλεφώνημα"
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for Demo"
+msgstr "Τηλεφώνημα για Επίδειξη"
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for a demo"
+msgstr "Τηλεφώνημα για μια επίδειξη"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
@@ -1376,11 +1398,8 @@ msgstr "Κάντε κλικ για να ορίσετε μια νέα ετικέ�
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_stage_action
-#, fuzzy
 msgid "Click to set a new stage in your opportunity pipeline."
 msgstr ""
-"Κάντε κλικ για να ρυθμίσετε ένα νέο στάδιο στον αγωγό διοχέτευσης σύστασης/"
-"ευκαιρίας."
 
 #. module: crm
 #: model:web.tip,description:crm.crm_tip_2
@@ -1696,9 +1715,8 @@ msgstr "Πελάτες"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Customizations"
-msgstr "Οι Προσαρμογές σας"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_date
@@ -1717,9 +1735,8 @@ msgstr "Μέρες για να Κλείσει"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_deduplicate
-#, fuzzy
 msgid "Deduplicate Contacts"
-msgstr "Διατήρηση ενός αντιγράφου της επαφής"
+msgstr "Διαγραφή Διπλών Επαφών"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1855,6 +1872,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Download the"
 msgstr "Λήψη το"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_draft_lead
+msgid "Draft Leads"
+msgstr "Πρόχειρες Συστάσεις"
 
 #. module: crm
 #: selection:sale.config.settings,group_use_lead:0
@@ -2067,7 +2089,19 @@ msgstr "Ολοκληρώθηκε"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
-msgstr "Καταχωρήθηκε στη Ροή Πληροφοριών"
+msgstr "Αναδίπλωση στη Ροή Πληροφοριών"
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up Quote"
+msgstr "Παρακολούθηση Προσφοράς"
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up quote"
+msgstr "Παρακολούθηση προσφοράς"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2277,15 +2311,11 @@ msgstr "Αν δεν είναι επιλεγμένο, θα παραμείνουν
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid ""
 "If you followed the preceding steps, you already setup\n"
 "                        the foundations to a strong process leading to\n"
 "                        continuous improvements of your sales teams."
 msgstr ""
-"Αν έχετε ακολουθήσει τα προηγούμενα βήματα, έχετε ήδη ρυθμίσει\n"
-"τις βάσεις για μια ισχυρή διαδικασία που οδηγεί στην\n"
-"συνεχή βελτιώση των ομάδων πωλήσεων σας."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2367,9 +2397,8 @@ msgstr "Είναι Εταιρεία"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_function
-#, fuzzy
 msgid "Job Position"
-msgstr "Πρόταση"
+msgstr "Θέση Εργασίας"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_exclude_journal_item
@@ -2563,6 +2592,11 @@ msgid "Leads by Source"
 msgstr "Συστάσεις ανά Πηγή"
 
 #. module: crm
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr "Συστάσεις από ΗΠΑ"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr "Συστάσεις που είναι ανατεθειμένες σε εμένα"
@@ -2629,9 +2663,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-#, fuzzy
 msgid "Log Activity"
-msgstr "Τελευταία Δραστηριότητα"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
@@ -2640,17 +2673,15 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
-#, fuzzy
 msgid "Log a note..."
-msgstr "Επιλέξτε μια ημερομηνία..."
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_log_action
 #: model:ir.model,name:crm.model_crm_activity_log
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
-#, fuzzy
 msgid "Log an Activity"
-msgstr "Τελευταία Δραστηριότητα"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2682,6 +2713,12 @@ msgid "Low"
 msgstr "Χαμηλή"
 
 #. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Make Quote"
+msgstr "Δημιουργία Σημειώματος"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Lost"
 msgstr "Ορισμός ως Χαμένη"
@@ -2693,9 +2730,8 @@ msgstr "Μάρκαρε ως Κερδισμένη"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
-#, fuzzy
 msgid "Mark as lost"
-msgstr "Ορισμός ως Χαμένη"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2717,7 +2753,7 @@ msgstr "Ανώτατο όριο Ομάδας Επαφών"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
-msgstr "Μέτρια"
+msgstr "Μέσο"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:1010
@@ -2914,9 +2950,8 @@ msgstr "Οι Ευκαιρίες μου"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_your_pipeline
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
-#, fuzzy
 msgid "My Pipeline"
-msgstr "Ροή Πληροφοριών"
+msgstr "Οι Ροές μου"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_name
@@ -2965,9 +3000,9 @@ msgstr "Σύνοψη Επόμενης Δραστηριότητας"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_activity_log.py:56
-#, fuzzy, python-format
+#, python-format
 msgid "Next activity"
-msgstr "Επόμενη Δραστηριότητα"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:966
@@ -2977,9 +3012,8 @@ msgstr "Χωρίς Θέμα"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "No activity"
-msgstr "Επόμενη Δραστηριότητα"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3000,9 +3034,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_note
-#, fuzzy
 msgid "Note"
-msgstr "Σημειώσεις"
+msgstr "Σημείωση"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3441,7 +3474,6 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -3449,29 +3481,21 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Πολιτική για να δημοσιεύσετε ένα μήνυμα σχετικά με το έγγραφο "
-"χρησιμοποιώντας το mailgateway.\n"
-"- Ο καθένας: ο καθένας μπορεί να δημοσιεύσει\n"
-"- Συνεργάτες: Μόνο πιστοποιημένοι συνεργάτες\n"
-"- Ακόλουθοι: μόνο οι ακόλουθοι του σχετικού εγγράφου\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_preceding_activity_ids
-#, fuzzy
 msgid "Preceding Activities"
-msgstr "Επόμενες Δραστηριότητες"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_last_activity_id
-#, fuzzy
 msgid "Previous Activity"
-msgstr "Τελευταία Δραστηριότητα"
+msgstr "Προηγούμενη δραστηριότητα"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Prices"
-msgstr "Οι Τιμές σας"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3506,9 +3530,8 @@ msgstr "Πιθανότητα (%)"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Products"
-msgstr "Τα Προϊόντα σας"
+msgstr "Είδη"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3549,15 +3572,13 @@ msgstr "Λόγος για την απώλεια σύστασης"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_recommended_activity_id
-#, fuzzy
 msgid "Recommended Activities"
-msgstr "Δραστηριότητες Ομάδας"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_recommended_activity_ids
-#, fuzzy
 msgid "Recommended Next Activities"
-msgstr "Επόμενες Δραστηριότητες"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_force_thread_id
@@ -3583,14 +3604,17 @@ msgid "Relation field"
 msgstr "Συσχετιζόμενο πεδίο"
 
 #. module: crm
+#: model:ir.actions.server,name:crm.action_email_reminder_lead
+msgid "Reminder to User"
+msgstr "Υπενθύμιση στον Χρήστη"
+
+#. module: crm
+#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
-#, fuzzy
 msgid ""
 "Reminder: Lead ${object.name} from ${object.partner_id != False and object."
 "partner_id.name or object.contact_name}"
 msgstr ""
-"Υπενθύμιση για τη Σύσταση: ${object.id} από ${object.partner_id != False and "
-"object.partner_id.name or object.contact_name}"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3620,9 +3644,8 @@ msgstr "Έσοδα από Πωλητή"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Sale Flow"
-msgstr "Εργαλεία Πωλήσεων"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3689,15 +3712,13 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "Schedule Activity"
-msgstr "Εκπρόθεσμες Δραστηριότητες"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "Schedule Next Activity"
-msgstr "Επόμενη Δραστηριότητα"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3759,6 +3780,12 @@ msgid "Selection"
 msgstr "Επιλογή"
 
 #. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Send a quotation"
+msgstr "Αποστολή μιας προσφοράς"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -3772,6 +3799,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "Ιεράρχηση"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_set_team_sales_department
+msgid "Set team to Sales Department"
+msgstr "Ορίστε ομάδα στο Τμήμα Πωλήσεων"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3824,11 +3856,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-#, fuzzy
 msgid "Show all opportunities for which the next action date is before today"
 msgstr ""
-"Εμφάνιση όλων των ευκαιριών για τις οποίες η ημερομηνία της επόμενης "
-"ενέργειας είναι σήμερα ή πριν από την"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -3927,14 +3956,10 @@ msgstr "Στάδια"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_stage_action
-#, fuzzy
 msgid ""
 "Stages allow salespersons to easily track how a specific opportunity\n"
 "            is positioned in the sales cycle."
 msgstr ""
-"Τα στάδια θα επιτρέπουν στους πωλητές να ανιχνεύουν εύκολα πως μία "
-"συγκεκριμένη\n"
-"σύσταση ή ευκαιρία είναι τοποθετημένη στο κύκλο των πωλήσεων."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_state
@@ -3979,7 +4004,7 @@ msgstr "Διαχείριση Συνδρομών"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_title_action
 msgid "Summary"
-msgstr ""
+msgstr "Περίληψη"
 
 #. module: crm
 #: model:web.tip,description:crm.crm_tip_5
@@ -4021,9 +4046,8 @@ msgstr "Εργασία"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_team_id
-#, fuzzy
 msgid "Team"
-msgstr "Ομάδες"
+msgstr "Ομάδα"
 
 #. module: crm
 #: model:ir.filters,name:crm.ir_filters_crm_opportunity_report_next_action
@@ -4222,13 +4246,10 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_fold
-#, fuzzy
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Αυτό το στάδιο αναδιπλώνεται σε προβολή kanban όταν δεν υπάρχουν αρχεία σε "
-"αυτό το στάδιο για να παρουσιαστούν."
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:1164
@@ -4847,285 +4868,3 @@ msgstr "άγνωστο"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "with your work above"
 msgstr "με την εργασία σας παραπάνω"
-
-#~ msgid ""
-#~ "<p>This opportunity did not have any activity since at least 5 days. Here "
-#~ "are some details:</p>\n"
-#~ "<ul>\n"
-#~ "<li>Name: ${object.name}</li>\n"
-#~ "<li>ID: ${object.id}</li>\n"
-#~ "<li>Description: ${object.description}</li>\n"
-#~ "</ul>"
-#~ msgstr ""
-#~ "<p>Αυτή η ευκαιρία δεν έχει καμία δραστηριότητα τις τελευταίες "
-#~ "τουλάχιστον 5 μέρες. Ορίστε μερικά στοιχεία:</p>\n"
-#~ "<ul>\n"
-#~ "<li>Όνομα: ${object.name}</li>\n"
-#~ "<li>Κωδικός: ${object.id}</li>\n"
-#~ "<li>Περιγραφή ${object.description}</li>\n"
-#~ "</ul>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Απαιτείται ενέργεια"
-
-#~ msgid "Both"
-#~ msgstr "Και τα δύο"
-
-#~ msgid "Call for Demo"
-#~ msgstr "Τηλεφώνημα για Επίδειξη"
-
-#~ msgid "Call for a demo"
-#~ msgstr "Τηλεφώνημα για μια επίδειξη"
-
-#~ msgid "Click to set a new stage in your lead/opportunity pipeline."
-#~ msgstr ""
-#~ "Κάντε κλικ για να ρυθμίσετε ένα νέο στάδιο στον αγωγό διοχέτευσης "
-#~ "σύστασης/ευκαιρίας."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Ημερομηνία του τελευταίου μηνύματος "
-
-#~ msgid "Deduplicate Contact"
-#~ msgstr "Διατήρηση ενός αντιγράφου της επαφής"
-
-#~ msgid "Done"
-#~ msgstr "Ολοκληρωμένο"
-
-#~ msgid "Draft Leads"
-#~ msgstr "Πρόχειρες Συστάσεις"
-
-#~ msgid "Follow-up"
-#~ msgstr "Follow-up"
-
-#~ msgid "Follow-up Quote"
-#~ msgstr "Παρακολούθηση Προσφοράς"
-
-#~ msgid "Follow-up call"
-#~ msgstr "Παρακολούθηση κλήσης"
-
-#~ msgid "Follow-up quote"
-#~ msgstr "Παρακολούθηση προσφοράς"
-
-#~ msgid "Followers"
-#~ msgstr "Ακόλουθοι"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Ακόλουθοι (Κανάλια)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Ακόλουθοι (Συνεργάτες)"
-
-#~ msgid "Followup"
-#~ msgstr "Υπενθύμιση"
-
-#~ msgid "Function"
-#~ msgstr "Λειτουργία"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
-
-#~ msgid ""
-#~ "If you followed the preceeding steps, you already setup\n"
-#~ "                        the foundations to a strong process leading to\n"
-#~ "                        continuous improvements of your sales teams."
-#~ msgstr ""
-#~ "Αν έχετε ακολουθήσει τα προηγούμενα βήματα, έχετε ήδη ρυθμίσει\n"
-#~ "τις βάσεις για μια ισχυρή διαδικασία που οδηγεί στην\n"
-#~ "συνεχή βελτιώση των ομάδων πωλήσεων σας."
-
-#~ msgid "Incoming"
-#~ msgstr "Εισερχόμενα"
-
-#~ msgid ""
-#~ "Incoming email create leads automatically when a new prospect contacts "
-#~ "you.\n"
-#~ "                        That's the easiest way to integrate Odoo with "
-#~ "third party apps."
-#~ msgstr ""
-#~ "Τα εισερχόμενα email δημιουργούν αυτόματα συστάσεις όταν ένας νέος "
-#~ "ενδιαφερόμενος έρχεται σε επαφή μαζί σας.\n"
-#~ "Αυτός είναι ο πιο εύκολος τρόπος για να ενσωματωθεί το Odoo με εφαρμογές "
-#~ "τρίτων."
-
-#~ msgid "Is Follower"
-#~ msgstr "Είναι Ακόλουθος"
-
-#~ msgid "Last Activity"
-#~ msgstr "Τελευταία Δραστηριότητα"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Τελευταία ημερομηνία μηνύματος"
-
-#~ msgid "Leads from USA"
-#~ msgstr "Συστάσεις από ΗΠΑ"
-
-#~ msgid ""
-#~ "Link between stages and sales teams. When set, this limitate the current "
-#~ "stage to the selected sales teams."
-#~ msgstr ""
-#~ "Σύνδεση μεταξύ σταδίων και ομάδων πώλησης. Όταν ρυθμιστεί, αυτή "
-#~ "περιορίζει το τωρινό  στάδιο στις επιλεγμένες ομάδες πωλήσεων."
-
-#~ msgid "Make Quote"
-#~ msgstr "Δημιουργία Σημειώματος"
-
-#~ msgid "Mark As Lost"
-#~ msgstr "Ορισμός ως Χαμένη"
-
-#~ msgid "Messages"
-#~ msgstr "Μηνύματα"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Μηνύματα και ιστορικό επικοινωνιών"
-
-#~ msgid "Negotiation"
-#~ msgstr "Διαπραγμάτευση"
-
-#~ msgid "Next Action Date"
-#~ msgstr "Επόμενη Ημερομηνία Ενέργειας"
-
-#~ msgid "Next Activity 1"
-#~ msgstr "Επόμενη Δραστηριότητα 1"
-
-#~ msgid "Next Activity 2"
-#~ msgstr "Επόμενη Δραστηριότητα 2"
-
-#~ msgid "Next Activity 3"
-#~ msgstr "Επόμενη Δραστηριότητα 3"
-
-#~ msgid "Note regarding the next action."
-#~ msgstr "Σημείωση σχετικά με την επόμενη ενέργεια."
-
-#~ msgid "Number of Actions"
-#~ msgstr "Αριθμός ενεργειών"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "Άνοιξε Μενού Πωλήσεων"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Πολιτική για να δημοσιεύσετε ένα μήνυμα σχετικά με το έγγραφο "
-#~ "χρησιμοποιώντας το mailgateway.\n"
-#~ "- Ο καθένας: ο καθένας μπορεί να δημοσιεύσει\n"
-#~ "- Συνεργάτες: Μόνο πιστοποιημένοι συνεργάτες\n"
-#~ "- Ακόλουθοι: μόνο οι ακόλουθοι του σχετικού εγγράφου\n"
-
-#~ msgid "Qualification"
-#~ msgstr "Αξιολόγηση"
-
-#~ msgid ""
-#~ "Reminder on Lead: ${object.id} from ${object.partner_id != False and "
-#~ "object.partner_id.name or object.contact_name}"
-#~ msgstr ""
-#~ "Υπενθύμιση για τη Σύσταση: ${object.id} από ${object.partner_id != False "
-#~ "and object.partner_id.name or object.contact_name}"
-
-#~ msgid "Reminder to User"
-#~ msgstr "Υπενθύμιση στον Χρήστη"
-
-#~ msgid "Sales Tags"
-#~ msgstr "Ετικέτες Πωλήσεων"
-
-#~ msgid "Select Stages for this Sales Team"
-#~ msgstr "Επιλέξτε Στάδια για αυτήν την Ομάδα Πωλήσεων"
-
-#~ msgid "Send a quotation"
-#~ msgstr "Αποστολή μιας προσφοράς"
-
-#~ msgid "Set team to Sales Department"
-#~ msgstr "Ορίστε ομάδα στο Τμήμα Πωλήσεων"
-
-#~ msgid ""
-#~ "Show all opportunities for which the next action date is today or before"
-#~ msgstr ""
-#~ "Εμφάνιση όλων των ευκαιριών για τις οποίες η ημερομηνία της επόμενης "
-#~ "ενέργειας είναι σήμερα ή πριν από την"
-
-#~ msgid ""
-#~ "Stages will allow salespersons to easily track how a specific\n"
-#~ "                lead or opportunity is positioned in the sales cycle."
-#~ msgstr ""
-#~ "Τα στάδια θα επιτρέπουν στους πωλητές να ανιχνεύουν εύκολα πως μία "
-#~ "συγκεκριμένη\n"
-#~ "σύσταση ή ευκαιρία είναι τοποθετημένη στο κύκλο των πωλήσεων."
-
-#~ msgid "Teams"
-#~ msgstr "Ομάδες"
-
-#~ msgid "The date before which no action should be taken."
-#~ msgstr ""
-#~ "Η ημερομηνία πριν από την οποία δεν πρέπει να γίνει κάποια ενέργεια."
-
-#~ msgid ""
-#~ "This field is used to distinguish stages related to Leads from stages "
-#~ "related to Opportunities, or to specify stages available for both types."
-#~ msgstr ""
-#~ "Αυτό το πεδίο χρησιμοποιείται για να διαχωρίσει τα στάδια που σχετίζονται "
-#~ "με τις Συστάσεις από τα στάδια που σχετίζονται με τις Ευκαιρίες, ή να "
-#~ "καθορίσει στάδια διαθέσιμα και για τους δύο τύπους."
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Αυτό είναι το όνομα που θα σας βοηθήσει να ανιχνεύετε τις προσπάθειες των "
-#~ "διαφορετικών εκστρατειών σας π.χ.: Φθινόπωρο_Κίνητρο, Χριστούγεννα_Ειδικό"
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr ""
-#~ "Αυτή είναι μια μέθοδος παράδοσης. Π.χ.:Κάρτ ποστάλ, Email, ή Διαφημιστικό "
-#~ "Πλαίσιο"
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr ""
-#~ "Αυτή είναι μια πηγή του συνδέσμου Π.χ. Μηχανή Αναζήτησης, άλλος τομέας ή "
-#~ "όνομα λίστας με email"
-
-#~ msgid ""
-#~ "This stage is folded in the kanban view whenthere are no records in that "
-#~ "stage to display."
-#~ msgstr ""
-#~ "Αυτό το στάδιο αναδιπλώνεται σε προβολή kanban όταν δεν υπάρχουν αρχεία "
-#~ "σε αυτό το στάδιο για να παρουσιαστούν."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
-
-#~ msgid "Website Messages"
-#~ msgstr "Μηνύματα Ιστότοπου"
-
-#~ msgid "Website communication history"
-#~ msgstr "Ιστορικό επικοινωνίας ιστότοπου"
-
-#~ msgid "Your Customers"
-#~ msgstr "Οι Πελάτες σας"
-
-#~ msgid "Your Customizations"
-#~ msgstr "Οι Προσαρμογές σας"
-
-#~ msgid "Your Prices"
-#~ msgstr "Οι Τιμές σας"
-
-#~ msgid "Your Products"
-#~ msgstr "Τα Προϊόντα σας"
-
-#~ msgid "Your Proposal"
-#~ msgstr "Η Πρότασή σας"
-
-#~ msgid "oe_kanban_text_red"
-#~ msgstr "oe_kanban_text_red"

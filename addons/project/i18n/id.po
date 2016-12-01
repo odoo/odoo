@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-06-24 04:54+0000\n"
 "Last-Translator: Deddy ddr <deddy.ddr@gmail.com>\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -182,6 +182,16 @@ msgid ""
 "\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
+msgstr ""
+
+#. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
 msgstr ""
 
 #. module: project
@@ -810,17 +820,12 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-#, fuzzy
 msgid ""
 "<strong>Follow only what you need</strong><br/>\n"
 "                                    The simplest way to use notifications is "
 "to follow a whole project: you will receive notifications for all the new "
 "and existing tasks or issues of a project."
 msgstr ""
-"<strong>Ikuti hanya apa yang Anda butuhkan</strong><br/>Cara termudah untuk "
-"menggunakan pemberitahuan adalah mengikuti seluruh proyek: Anda akan "
-"menerima semua pemberitahuan yang dipilih untuk semua proyek baru dan tugas-"
-"tugas yang ada dan baru atau masalah."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1464,6 +1469,11 @@ msgstr ""
 "berkolaborasi, atau mengapa mengatur proyek Anda dengan peran salah."
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr "Buzz atau set seperti yang dilakukan"
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "Tanggung-jawab"
@@ -1479,6 +1489,7 @@ msgstr "Batalkan"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "Dibatalkan"
@@ -1989,6 +2000,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "selesai"
@@ -2023,9 +2035,8 @@ msgstr "Email Alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
-#, fuzzy
 msgid "Email Template"
-msgstr "Email Alias"
+msgstr "Template Email"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2470,6 +2481,7 @@ msgstr "Meningkatkan kerjasama dengan pelanggan"
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
+#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "Dalam Proses"
@@ -2808,7 +2820,7 @@ msgstr "Departemen Pemasaran"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "Anggota"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2841,6 +2853,11 @@ msgstr " Kegiatanku"
 #: model:ir.model.fields,field_description:project.field_project_tags_name
 msgid "Name"
 msgstr "Nama"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "Butuh bantuan fungsional atau teknis"
 
 #. module: project
 #. openerp-web
@@ -2884,6 +2901,11 @@ msgstr "Tidak ada nilai pelanggan"
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
 msgstr "Normal"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr "Tidak divalidasi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -3109,7 +3131,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -3117,11 +3138,6 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Kebijakan untuk mengirimkan sebuah pesan di dokumen menggunakan "
-"mailgateway.\n"
-"-Semua orang: setiap orang dapat memposting\n"
-" - mitra: hanya dikonfirmasi mitra  \n"
-" - pengikut: hanya pengikut dokumen terkait\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3300,12 +3316,22 @@ msgid "Ready to be displayed, published or sent"
 msgstr "Siap untuk ditampilkan, diterbitkan atau dikirim"
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr "Siap untuk membuka kembali"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
 msgstr "Alasan untuk pembatalan telah didokumentasikan"
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
@@ -3594,9 +3620,8 @@ msgstr "Status"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_child_ids
-#, fuzzy
 msgid "Sub-tasks"
-msgstr "Kegiatan"
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3961,17 +3986,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
-#, fuzzy
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
-"Ini akan menetapkan satuan ukuran yang digunakan dalam proyek-proyek dan "
-"kegiatan.\n"
-"Jika Anda menggunakan absen yang terkait dengan proyek-proyek "
-"(project_timesheet modul), jangan lupa untuk men-setup tepat satuan ukuran "
-"Anda karyawan."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -4041,6 +4060,7 @@ msgstr "Jadwal kerja untuk menyesuaikan laporan diagram gantt"
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
+#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "Yang harus dilakukan .."
@@ -4113,6 +4133,12 @@ msgid ""
 msgstr ""
 "Menggunakan pertemuan terpisah untuk memecahkan masalah-masalah besar atau "
 "isu-isu yang tidak penting bagi seluruh tim."
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the priority for tasks related to gold customers"
+msgstr ""
+"Menggunakan prioritas untuk tugas-tugas yang terkait dengan pelanggan emas"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -4342,9 +4368,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-#, fuzzy
 msgid "You can save your reports to easily reuse it later"
-msgstr "Anda dapat menyimpan laporan untuk mudah digunakan kembali kemudian"
+msgstr ""
 
 #. module: project
 #: code:addons/project/project.py:94
@@ -4473,156 +4498,3 @@ msgstr "dengan absen"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr "Anda terdaftar di langkah sebelumnya"
-
-#~ msgid "&times;"
-#~ msgstr "&times;"
-
-#~ msgid ""
-#~ "<strong>Follow only what you need</strong><br/>\n"
-#~ "                                    The simplest way to use notifications "
-#~ "is to follow a whole Project: you will then receive all the selected "
-#~ "notifications for all the Project's new and existing and new Tasks or "
-#~ "Issues."
-#~ msgstr ""
-#~ "<strong>Ikuti hanya apa yang Anda butuhkan</strong><br/>Cara termudah "
-#~ "untuk menggunakan pemberitahuan adalah mengikuti seluruh proyek: Anda "
-#~ "akan menerima semua pemberitahuan yang dipilih untuk semua proyek baru "
-#~ "dan tugas-tugas yang ada dan baru atau masalah."
-
-#~ msgid "Action Needed"
-#~ msgstr "Tindakan diperlukan"
-
-#~ msgid "Buzz or set as done"
-#~ msgstr "Buzz atau set seperti yang dilakukan"
-
-#~ msgid "Check this field if this project manages timesheets"
-#~ msgstr "Periksa bidang ini jika proyek ini mengelola timesheets"
-
-#~ msgid "Close"
-#~ msgstr "Tutup"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Tanggal pesan terakhir diposting pada catatan."
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "Kegiatan-kegiatan yang didelegasikan"
-
-#~ msgid "Do not record timesheets on tasks"
-#~ msgstr "Tidak merekam timesheets pada tugas-tugas"
-
-#~ msgid "Followers"
-#~ msgstr "Pengikut"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pengikut (saluran)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pengikut (mitra)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
-
-#~ msgid "Is Follower"
-#~ msgstr "Adalah pengikut"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Tanggal pesan terakhir"
-
-#~ msgid "Messages"
-#~ msgstr "Pesan"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Pesan dan riwayat komunikasi"
-
-#~ msgid "Need functional or technical help"
-#~ msgstr "Butuh bantuan fungsional atau teknis"
-
-#~ msgid "Not validated"
-#~ msgstr "Tidak divalidasi"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Jumlah tindakan"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Jumlah pesan yang memerlukan tindakan"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Jumlah pesan yang belum dibaca"
-
-#~ msgid "Open Project Menu"
-#~ msgstr "Proyek terbuka Menu"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Kebijakan untuk mengirimkan sebuah pesan di dokumen menggunakan "
-#~ "mailgateway.\n"
-#~ "-Semua orang: setiap orang dapat memposting\n"
-#~ " - mitra: hanya dikonfirmasi mitra  \n"
-#~ " - pengikut: hanya pengikut dokumen terkait\n"
-
-#~ msgid "Project Time Unit"
-#~ msgstr "Satuan Waktu Proyek"
-
-#~ msgid "Ready to reopen"
-#~ msgstr "Siap untuk membuka kembali"
-
-#~ msgid "Record timesheet lines per tasks"
-#~ msgstr "Catatan absen baris per kegiatan"
-
-#~ msgid "Subscriptions"
-#~ msgstr "Langganan"
-
-#~ msgid "Task's Work on Tasks"
-#~ msgstr "Kegiatan mengerjakan kegiatan"
-
-#~ msgid ""
-#~ "This allows you to transfer the entries under tasks defined for Project "
-#~ "Management to the timesheet line entries for particular date and user, "
-#~ "with the effect of creating, editing and deleting either ways.\n"
-#~ "-This installs the module project_timesheet."
-#~ msgstr ""
-#~ "Hal ini memungkinkan Anda untuk memindahkan entri di bawah kegiatan-"
-#~ "kegiatan yang ditetapkan untuk manajemen proyek absen baris masukan untuk "
-#~ "tanggal tertentu dan pengguna, dengan efek membuat, mengedit dan "
-#~ "menghapus cara baik.\n"
-#~ "-Ini akan menginstal modul project_timesheet."
-
-#~ msgid ""
-#~ "This will set the unit of measure used in projects and tasks.\n"
-#~ "If you use the timesheet linked to projects (project_timesheet module), "
-#~ "don't forget to setup the right unit of measure in your employees."
-#~ msgstr ""
-#~ "Ini akan menetapkan satuan ukuran yang digunakan dalam proyek-proyek dan "
-#~ "kegiatan.\n"
-#~ "Jika Anda menggunakan absen yang terkait dengan proyek-proyek "
-#~ "(project_timesheet modul), jangan lupa untuk men-setup tepat satuan "
-#~ "ukuran Anda karyawan."
-
-#~ msgid "Timesheets on Project"
-#~ msgstr "Timesheets pada proyek"
-
-#~ msgid "Type of Account"
-#~ msgstr "Jenis Akun"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Pesan yang belum dibaca Counter"
-
-#~ msgid "Use the priority for tasks related to gold customers"
-#~ msgstr ""
-#~ "Menggunakan prioritas untuk tugas-tugas yang terkait dengan pelanggan emas"
-
-#~ msgid "Website Messages"
-#~ msgstr "Pesan situs"
-
-#~ msgid "Website communication history"
-#~ msgstr "Sejarah komunikasi situs"
-
-#~ msgid "You can save your reports to for easy reuse later"
-#~ msgstr "Anda dapat menyimpan laporan untuk mudah digunakan kembali kemudian"

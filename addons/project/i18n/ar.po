@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-17 06:33+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-11-02 13:37+0000\n"
 "Last-Translator: AMAAL RU <Fabu1410@yahoo.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "Language: ar\n"
@@ -182,6 +182,16 @@ msgid ""
 "\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
+msgstr ""
+
+#. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
 msgstr ""
 
 #. module: project
@@ -1144,7 +1154,7 @@ msgstr "الرصيد"
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_1
 msgid "Basic"
-msgstr ""
+msgstr "أساسي"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1184,6 +1194,11 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr ""
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "حسب المسئول"
@@ -1199,6 +1214,7 @@ msgstr "إلغاء"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "ملغي"
@@ -1234,7 +1250,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,help:project.project_tags_action
 msgid "Click to add a new tag."
-msgstr ""
+msgstr "انقر لاضافة وسم جديد."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -1598,7 +1614,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project.js:50
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "تجاهل"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
@@ -1688,6 +1704,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "منتهي"
@@ -1718,9 +1735,8 @@ msgstr "لقب البريد الإلكتروني"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
-#, fuzzy
 msgid "Email Template"
-msgstr "لقب البريد الإلكتروني"
+msgstr "قالب البريد الإلكتروني"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2127,6 +2143,7 @@ msgstr ""
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
+#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "قيد التقدم"
@@ -2420,7 +2437,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "الأعضاء"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2430,7 +2447,7 @@ msgstr "الشهر"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-caret-down\"/> أخرى"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2453,6 +2470,11 @@ msgstr "مهامي"
 #: model:ir.model.fields,field_description:project.field_project_tags_name
 msgid "Name"
 msgstr "الاسم"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "تحتاج مساعدة تقنية و عملية "
 
 #. module: project
 #. openerp-web
@@ -2498,6 +2520,11 @@ msgid "Normal"
 msgstr "طبيعي"
 
 #. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
 msgid "Notes"
 msgstr "الملاحظات"
@@ -2505,7 +2532,7 @@ msgstr "الملاحظات"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Notifications"
-msgstr ""
+msgstr "إشعارات"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_opening_days
@@ -2875,11 +2902,21 @@ msgid "Ready to be displayed, published or sent"
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
+msgstr ""
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
 msgstr ""
 
 #. module: project
@@ -2944,7 +2981,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Reporting"
-msgstr ""
+msgstr "التقارير"
 
 #. module: project
 #. openerp-web
@@ -3163,9 +3200,8 @@ msgstr "الحالة"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_child_ids
-#, fuzzy
 msgid "Sub-tasks"
-msgstr "المهام"
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3492,15 +3528,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
-#, fuzzy
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
-"ستعين هذه وحدة القياس المستخدمة في المشروعات والمهام.\n"
-"اذا استخدمت سجل الدوام المتصل بالمشاريع(وحدة سجل الدوام_للمشروع), لا تنسى "
-"بضبط الوحدة الصحيحة للقياس في الموظفين الخاصين بك."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -3566,6 +3598,7 @@ msgstr ""
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
+#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "في انتظار التنفيذ"
@@ -3633,6 +3666,11 @@ msgstr ""
 msgid ""
 "Use separate meetings to solve big issues or issues that aren’t important "
 "for the entire team."
+msgstr ""
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the priority for tasks related to gold customers"
 msgstr ""
 
 #. module: project
@@ -3949,90 +3987,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr ""
-
-#~ msgid "&times;"
-#~ msgstr "&times;"
-
-#~ msgid "Action Needed"
-#~ msgstr "الاجراء المطلوب"
-
-#~ msgid "Check this field if this project manages timesheets"
-#~ msgstr "حدد هذا الحقل إذا كان هذا مديري مشاريع الجداول الزمنية"
-
-#~ msgid "Close"
-#~ msgstr "إغلاق"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "تاريخ آخر رسالة في هذا السجل."
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "المهام المفوضة"
-
-#~ msgid "Followers"
-#~ msgstr "المتابعون"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "المتابعون (القنوات)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "المتابعون (الشرماء)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "عند التفعيل، توجد رسالة جديدة"
-
-#~ msgid "Is Follower"
-#~ msgstr "متابع"
-
-#~ msgid "Last Message Date"
-#~ msgstr "تاريخ آخر رسالة"
-
-#~ msgid "Messages"
-#~ msgstr "الرسائل"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "الرسائل و سجل التواصل"
-
-#~ msgid "Need functional or technical help"
-#~ msgstr "تحتاج مساعدة تقنية و عملية "
-
-#~ msgid "Number of Actions"
-#~ msgstr "عدد الاجراءات"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "عدد الرسائل الواجب اجراءها"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "عدد الرسائل غير المقروءة"
-
-#~ msgid "Open Project Menu"
-#~ msgstr "فتح قائمة المشروعات"
-
-#~ msgid "Subscriptions"
-#~ msgstr "الاشتراكات"
-
-#~ msgid "Task's Work on Tasks"
-#~ msgstr "الأعمال المنجزة في المهام"
-
-#~ msgid ""
-#~ "This will set the unit of measure used in projects and tasks.\n"
-#~ "If you use the timesheet linked to projects (project_timesheet module), "
-#~ "don't forget to setup the right unit of measure in your employees."
-#~ msgstr ""
-#~ "ستعين هذه وحدة القياس المستخدمة في المشروعات والمهام.\n"
-#~ "اذا استخدمت سجل الدوام المتصل بالمشاريع(وحدة سجل الدوام_للمشروع), لا تنسى "
-#~ "بضبط الوحدة الصحيحة للقياس في الموظفين الخاصين بك."
-
-#~ msgid "Type of Account"
-#~ msgstr "نوع الحساب"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "عداد الرسائل الغير مقروءة"
-
-#~ msgid "Website Messages"
-#~ msgstr "رسائل الموقع"
-
-#~ msgid "Website communication history"
-#~ msgstr "سجل تواصل الموقع"

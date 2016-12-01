@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
 "PO-Revision-Date: 2016-03-08 06:31+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:642
+#: code:addons/point_of_sale/models/pos_order.py:643
 #, python-format
 msgid " REFUND"
 msgstr ""
@@ -41,15 +41,15 @@ msgstr "# Objednávok"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1283
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1399
 #, python-format
 msgid "% discount"
 msgstr "% zľava"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1410
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1450
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1526
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1566
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
@@ -66,7 +66,7 @@ msgstr "+ Transakcie"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:279
+#: code:addons/point_of_sale/static/src/xml/pos.xml:287
 #, python-format
 msgid "123.14 €"
 msgstr "123.14 €"
@@ -263,7 +263,7 @@ msgstr "Krátky text ktorý bude vložený ako záhlavie vytlačenej potvrdenky"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1449
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1565
 #, python-format
 msgid "ABC"
 msgstr "ABC"
@@ -278,6 +278,12 @@ msgstr "Účtovná informácia"
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_sale_journal
 msgid "Accounting journal used to post sales entries."
 msgstr "Účtovný denník používaný na pridanie predajných položiek."
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.partner_product_5
+#: model:product.template,name:point_of_sale.partner_product_5_product_template
+msgid "Acsone.eu"
+msgstr "Acsone.eu"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
@@ -304,8 +310,8 @@ msgstr "Pridať globálnu zľavu"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:374
-#: code:addons/point_of_sale/static/src/xml/pos.xml:452
+#: code:addons/point_of_sale/static/src/xml/pos.xml:382
+#: code:addons/point_of_sale/static/src/xml/pos.xml:460
 #, python-format
 msgid "Address"
 msgstr "Adresa"
@@ -428,8 +434,8 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:267
-#: code:addons/point_of_sale/static/src/xml/pos.xml:587
+#: code:addons/point_of_sale/static/src/xml/pos.xml:275
+#: code:addons/point_of_sale/static/src/xml/pos.xml:595
 #, python-format
 msgid "Back"
 msgstr "Späť"
@@ -453,8 +459,8 @@ msgstr "Riadok bankového výpisu"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:351
-#: code:addons/point_of_sale/static/src/xml/pos.xml:393
+#: code:addons/point_of_sale/static/src/xml/pos.xml:359
+#: code:addons/point_of_sale/static/src/xml/pos.xml:401
 #, python-format
 msgid "Barcode"
 msgstr "Čiarový kód"
@@ -466,7 +472,7 @@ msgstr "Názvoslovia Čiarového kódu"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1157
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1273
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 #, python-format
 msgid "Barcode Scanner"
@@ -489,10 +495,22 @@ msgid "Beverages"
 msgstr "Nápoje"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.raisins_noir
+#: model:product.template,name:point_of_sale.raisins_noir_product_template
+msgid "Black Grapes"
+msgstr "Čierne hrozno"
+
+#. module: point_of_sale
 #: model:product.product,name:point_of_sale.bloody_mary
 #: model:product.template,name:point_of_sale.bloody_mary_product_template
 msgid "Bloody Mary"
 msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.boni_orange
+#: model:product.template,name:point_of_sale.boni_orange_product_template
+msgid "Boni Oranges"
+msgstr "Boni pomaranče"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.budweiser
@@ -514,7 +532,7 @@ msgstr "Obísť tlač prehliadača a tlačiť cez proxy hardvéru"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:781
+#: code:addons/point_of_sale/static/src/xml/pos.xml:789
 #, python-format
 msgid "CHANGE"
 msgstr "ZMENA"
@@ -527,12 +545,12 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:420
-#: code:addons/point_of_sale/static/src/xml/pos.xml:909
-#: code:addons/point_of_sale/static/src/xml/pos.xml:926
-#: code:addons/point_of_sale/static/src/xml/pos.xml:943
-#: code:addons/point_of_sale/static/src/xml/pos.xml:963
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1015
+#: code:addons/point_of_sale/static/src/xml/pos.xml:428
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1025
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1042
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1059
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1079
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1131
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_discount
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_payment
@@ -570,6 +588,12 @@ msgstr ""
 #: model:product.template,name:point_of_sale.carlsberg_product_template
 msgid "Carlsberg"
 msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.carotte
+#: model:product.template,name:point_of_sale.carotte_product_template
+msgid "Carrots"
+msgstr "Mrkva"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_cash_control
@@ -614,7 +638,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:493
+#: code:addons/point_of_sale/static/src/xml/pos.xml:501
 #, python-format
 msgid "Change"
 msgstr "Zmeniť"
@@ -642,8 +666,8 @@ msgstr "Zmeniť tip"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:649
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1339
+#: code:addons/point_of_sale/static/src/xml/pos.xml:657
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1455
 #, python-format
 msgid "Change:"
 msgstr "Zmena:"
@@ -698,8 +722,8 @@ msgstr "Podradené kategórie"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:322
-#: code:addons/point_of_sale/static/src/xml/pos.xml:323
+#: code:addons/point_of_sale/static/src/xml/pos.xml:330
+#: code:addons/point_of_sale/static/src/xml/pos.xml:331
 #, python-format
 msgid "City"
 msgstr "Mesto"
@@ -742,8 +766,8 @@ msgstr "ID klienta"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:679
-#: code:addons/point_of_sale/static/src/js/chrome.js:687
+#: code:addons/point_of_sale/static/src/js/chrome.js:701
+#: code:addons/point_of_sale/static/src/js/chrome.js:709
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #, python-format
 msgid "Close"
@@ -798,6 +822,12 @@ msgid "Company"
 msgstr "Spoločnost"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.poire_conference
+#: model:product.template,name:point_of_sale.poire_conference_product_template
+msgid "Conference pears"
+msgstr "Hrušky"
+
+#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
 msgid "Configuration"
 msgstr "Nastavenie"
@@ -818,8 +848,8 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:684
-#: code:addons/point_of_sale/static/src/xml/pos.xml:906
+#: code:addons/point_of_sale/static/src/js/chrome.js:706
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1022
 #, python-format
 msgid "Confirm"
 msgstr "Potvrdiť"
@@ -857,7 +887,7 @@ msgstr "Nemožno čítať obrázok"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:330
+#: code:addons/point_of_sale/static/src/xml/pos.xml:338
 #, python-format
 msgid "Country"
 msgstr "Krajina"
@@ -923,8 +953,8 @@ msgstr "Súčasná relácia"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:1740
-#: code:addons/point_of_sale/static/src/xml/pos.xml:116
-#: code:addons/point_of_sale/static/src/xml/pos.xml:617
+#: code:addons/point_of_sale/static/src/xml/pos.xml:124
+#: code:addons/point_of_sale/static/src/xml/pos.xml:625
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_partner_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #, python-format
@@ -932,7 +962,7 @@ msgid "Customer"
 msgstr "Zákazník"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:459
+#: code:addons/point_of_sale/models/pos_order.py:460
 #, python-format
 msgid "Customer Invoice"
 msgstr "Faktúra zákazníka"
@@ -949,13 +979,19 @@ msgid "Dashboard"
 msgstr "Nástenka"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.partner_product_7
+#: model:product.template,name:point_of_sale.partner_product_7_product_template
+msgid "Datalp.com"
+msgstr "Datalp.com"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_date
 msgid "Date Order"
 msgstr "Dátum objednávky"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1147
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1263
 #, python-format
 msgid "Debug Window"
 msgstr "Odstrániť chyby okna"
@@ -988,7 +1024,7 @@ msgstr "Oneskorenie overenia"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1167
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1283
 #, python-format
 msgid "Delete Paid Orders"
 msgstr "Zmazať zaplatené objednávky"
@@ -1002,7 +1038,7 @@ msgstr "Zmazať zaplatené objednávky ?"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1168
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1284
 #, python-format
 msgid "Delete Unpaid Orders"
 msgstr "Zmazať nezaplatené objednávky"
@@ -1059,10 +1095,15 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:139
+#: code:addons/point_of_sale/static/src/xml/pos.xml:147
 #, python-format
 msgid "Disc"
 msgstr "Zľava"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
+msgid "Disc:"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_pos_discount
@@ -1082,8 +1123,9 @@ msgstr "Zľava upozornenie"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:724
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1312
+#: code:addons/point_of_sale/static/src/xml/pos.xml:732
+#: code:addons/point_of_sale/static/src/xml/pos.xml:871
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1428
 #, python-format
 msgid "Discount:"
 msgstr "Zľava:"
@@ -1096,7 +1138,7 @@ msgstr "Zľavnený produkt"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:790
+#: code:addons/point_of_sale/static/src/xml/pos.xml:798
 #, python-format
 msgid "Discounts"
 msgstr "Zľavy"
@@ -1117,6 +1159,7 @@ msgstr "Zobraziť obrázky kategórie"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_invoice_display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_statement_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_usersproduct_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_display_name
@@ -1150,10 +1193,22 @@ msgstr "Dokončené"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:491
+#: code:addons/point_of_sale/static/src/xml/pos.xml:499
 #, python-format
 msgid "Due"
 msgstr "Očakávané"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.partner_product_9
+#: model:product.template,name:point_of_sale.partner_product_9_product_template
+msgid "EGGS-solutions.fr"
+msgstr "EGGS-solutions.fr"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.partner_product_3
+#: model:product.template,name:point_of_sale.partner_product_3_product_template
+msgid "Eezee-It"
+msgstr "Eezee-It"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.efes
@@ -1162,8 +1217,14 @@ msgid "Efes"
 msgstr ""
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.partner_product_4
+#: model:product.template,name:point_of_sale.partner_product_4_product_template
+msgid "Ekomurz.nl"
+msgstr "Ekomurz.nl"
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1150
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1266
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_electronic_scale
 #, python-format
 msgid "Electronic Scale"
@@ -1171,8 +1232,8 @@ msgstr "Elektronická váha"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:343
-#: code:addons/point_of_sale/static/src/xml/pos.xml:378
+#: code:addons/point_of_sale/static/src/xml/pos.xml:351
+#: code:addons/point_of_sale/static/src/xml/pos.xml:386
 #, python-format
 msgid "Email"
 msgstr "Email"
@@ -1257,17 +1318,23 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1169
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1285
 #, python-format
 msgid "Export Paid Orders"
 msgstr "Exportovať zaplatené objednávky"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1170
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1286
 #, python-format
 msgid "Export Unpaid Orders"
 msgstr "Exportovať nezaplatené objednávky"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.chicon_flandria_extra
+#: model:product.template,name:point_of_sale.chicon_flandria_extra_product_template
+msgid "Extra Flandria chicory"
+msgstr "Extra flámska čakanka"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -1287,7 +1354,7 @@ msgstr "Vlastnosti"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1029
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1145
 #, python-format
 msgid "Finished Importing Orders"
 msgstr "Importovanie objednávok dokončené"
@@ -1319,9 +1386,21 @@ msgid "Foster's"
 msgstr ""
 
 #. module: point_of_sale
+#: model:pos.category,name:point_of_sale.fruits_vegetables
+msgid "Fruits and Vegetables"
+msgstr "Ovocie a zelenina"
+
+#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "General Information"
 msgstr "Všeobecné informácie"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:939
+#, python-format
+msgid "Generate report"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_sequence
@@ -1329,10 +1408,28 @@ msgid "Gives the sequence order when displaying a list of product categories."
 msgstr "Dáva sekvenčné poradie pri zobrazovaní zoznamu produktových kategórií."
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.pomme_golden_perlim
+#: model:product.template,name:point_of_sale.pomme_golden_perlim_product_template
+msgid "Golden Apples Perlim"
+msgstr "Zlatá jablká Perlite"
+
+#. module: point_of_sale
 #: model:product.product,name:point_of_sale.gordon
 #: model:product.template,name:point_of_sale.gordon_product_template
 msgid "Gordon"
 msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.pomme_granny_smith
+#: model:product.template,name:point_of_sale.pomme_granny_smith_product_template
+msgid "Granny Smith apples"
+msgstr "Granny Smith jablká"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.poivron_verts
+#: model:product.template,name:point_of_sale.poivron_verts_product_template
+msgid "Green Peppers"
+msgstr "Zelené papriky"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.green_tea
@@ -1361,7 +1458,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1181
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1297
 #, python-format
 msgid "Hardware Events"
 msgstr "Hardvérové udalosti"
@@ -1373,7 +1470,7 @@ msgstr "Hardvérové proxy / PosBox"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1177
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1293
 #, python-format
 msgid "Hardware Status"
 msgstr "Hardvérový stav"
@@ -1404,6 +1501,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_invoice_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_statement_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_usersproduct_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_id
@@ -1453,7 +1551,7 @@ msgstr "Importovať objednávky"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1171
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1287
 #, python-format
 msgid "Import Orders"
 msgstr "Importovať objednávky"
@@ -1470,12 +1568,18 @@ msgid "Importable Point of Sales Data"
 msgstr "Miesto predaja začiatku"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.tomate_en_grappe
+#: model:product.template,name:point_of_sale.tomate_en_grappe_product_template
+msgid "In Cluster Tomatoes"
+msgstr "Paradajky v strapci"
+
+#. module: point_of_sale
 #: selection:pos.session,state:0
 msgid "In Progress"
 msgstr "spracováva sa"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:406
+#: code:addons/point_of_sale/models/pos_order.py:407
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
 msgstr "Ak chcete vymazať predaj, musí byť nový alebo zrušený."
@@ -1505,7 +1609,7 @@ msgstr "Interné poznámky"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:625
+#: code:addons/point_of_sale/static/src/xml/pos.xml:633
 #: model:ir.actions.report.xml,name:point_of_sale.pos_invoice_report
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_invoice_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -1550,6 +1654,12 @@ msgid "Jim Beam"
 msgstr ""
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.pomme_jonagold
+#: model:product.template,name:point_of_sale.pomme_jonagold_product_template
+msgid "Jonagold apples"
+msgstr "Jonagold jablká"
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_journal
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_journal_id
 msgid "Journal"
@@ -1581,6 +1691,7 @@ msgstr "Veľké posuvníky"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_invoice___last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_statement___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_usersproduct___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order___last_update
@@ -1622,6 +1733,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_date
 msgid "Last session closing date"
 msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.poireaux_poireaux
+#: model:product.template,name:point_of_sale.poireaux_poireaux_product_template
+msgid "Leeks"
+msgstr "Pór"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.citron
+#: model:product.template,name:point_of_sale.citron_product_template
+msgid "Lemon"
+msgstr "Citrón"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_name
@@ -1729,7 +1852,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:494
+#: code:addons/point_of_sale/static/src/xml/pos.xml:502
 #, python-format
 msgid "Method"
 msgstr "Metóda"
@@ -1810,18 +1933,19 @@ msgstr "Môj predaj"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:387
-#: code:addons/point_of_sale/static/src/xml/pos.xml:398
-#: code:addons/point_of_sale/static/src/xml/pos.xml:407
+#: code:addons/point_of_sale/static/src/xml/pos.xml:395
+#: code:addons/point_of_sale/static/src/xml/pos.xml:406
+#: code:addons/point_of_sale/static/src/xml/pos.xml:415
 #, python-format
 msgid "N/A"
 msgstr "Nedostupné"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:310
-#: code:addons/point_of_sale/static/src/xml/pos.xml:451
+#: code:addons/point_of_sale/static/src/xml/pos.xml:318
+#: code:addons/point_of_sale/static/src/xml/pos.xml:459
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_name
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 #, python-format
 msgid "Name"
@@ -1853,13 +1977,13 @@ msgstr "Nová relácia"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:650
+#: code:addons/point_of_sale/static/src/xml/pos.xml:658
 #, python-format
 msgid "Next Order"
 msgstr "Nasledujúca objednávka"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:134
+#: code:addons/point_of_sale/models/pos_order.py:135
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
@@ -1892,7 +2016,7 @@ msgstr "Žiadna sekvencia nie je definovaná na účtovnej knihe"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:1962
-#: code:addons/point_of_sale/static/src/xml/pos.xml:332
+#: code:addons/point_of_sale/static/src/xml/pos.xml:340
 #, python-format
 msgid "None"
 msgstr "Žiadne"
@@ -1942,17 +2066,23 @@ msgstr "Offline objednávky"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:838
-#: code:addons/point_of_sale/static/src/xml/pos.xml:852
-#: code:addons/point_of_sale/static/src/xml/pos.xml:866
-#: code:addons/point_of_sale/static/src/xml/pos.xml:892
-#: code:addons/point_of_sale/static/src/xml/pos.xml:923
-#: code:addons/point_of_sale/static/src/xml/pos.xml:940
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1018
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1054
+#: code:addons/point_of_sale/static/src/xml/pos.xml:954
+#: code:addons/point_of_sale/static/src/xml/pos.xml:968
+#: code:addons/point_of_sale/static/src/xml/pos.xml:982
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1008
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1039
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1056
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1134
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1170
 #, python-format
 msgid "Ok"
 msgstr "Ok"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.Onions
+#: model:product.template,name:point_of_sale.Onions_product_template
+msgid "Onions"
+msgstr "Cibule"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1975,8 +2105,8 @@ msgstr "Otvoriť registračnú pokladňu"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:636
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1183
+#: code:addons/point_of_sale/static/src/xml/pos.xml:644
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1299
 #, python-format
 msgid "Open Cashbox"
 msgstr "Otvoriť pokladňu"
@@ -2020,16 +2150,22 @@ msgid "Opening Date"
 msgstr "Dátum otvorenia"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.papillon_orange
+#: model:product.template,name:point_of_sale.papillon_orange_product_template
+msgid "Orange Butterfly"
+msgstr "Orange Butterfly"
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:282
+#: code:addons/point_of_sale/static/src/xml/pos.xml:290
 #, python-format
 msgid "Order"
 msgstr "Objednávka"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:1515
-#: code:addons/point_of_sale/static/src/js/models.js:1546
+#: code:addons/point_of_sale/static/src/js/models.js:1520
+#: code:addons/point_of_sale/static/src/js/models.js:1551
 #, python-format
 msgid "Order "
 msgstr "Objednávka"
@@ -2073,7 +2209,7 @@ msgstr "Riadky objednávky"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1164
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1280
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_session_orders
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_filtered
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_pos_form
@@ -2153,6 +2289,11 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: point_of_sale
+#: model:pos.category,name:point_of_sale.partner_services
+msgid "Partner Services"
+msgstr "Partnerské služby"
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/gui.js:263
 #, python-format
@@ -2166,8 +2307,8 @@ msgstr "Zaplatiť objednávku"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:121
-#: code:addons/point_of_sale/static/src/xml/pos.xml:590
+#: code:addons/point_of_sale/static/src/xml/pos.xml:129
+#: code:addons/point_of_sale/static/src/xml/pos.xml:598
 #: code:addons/point_of_sale/wizard/pos_payment.py:51
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -2218,9 +2359,23 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_statement_ids
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Payments"
 msgstr "Platby"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:881
+#, python-format
+msgid "Payments:"
+msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.peche
+#: model:product.template,name:point_of_sale.peche_product_template
+msgid "Peaches"
+msgstr " Broskyne"
 
 #. module: point_of_sale
 #: model:ir.filters,name:point_of_sale.filter_orders_per_session
@@ -2239,16 +2394,16 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:347
-#: code:addons/point_of_sale/static/src/xml/pos.xml:382
-#: code:addons/point_of_sale/static/src/xml/pos.xml:453
+#: code:addons/point_of_sale/static/src/xml/pos.xml:355
+#: code:addons/point_of_sale/static/src/xml/pos.xml:390
+#: code:addons/point_of_sale/static/src/xml/pos.xml:461
 #, python-format
 msgid "Phone"
 msgstr "Telefón"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1261
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1377
 #, python-format
 msgid "Phone:"
 msgstr "Telefón:"
@@ -2278,20 +2433,20 @@ msgid "Please Confirm Large Amount"
 msgstr "Prosím potvrďte veľkú sumu"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:272
+#: code:addons/point_of_sale/models/pos_order.py:273
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Prosím, definujte príjmový účet pre tento produkt: \"%s\" (id:%d)."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:437
+#: code:addons/point_of_sale/models/pos_order.py:438
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "Prosím, uveďte partnera pre tento predaj."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:474
+#: code:addons/point_of_sale/static/src/xml/pos.xml:482
 #, python-format
 msgid "Please select a payment method."
 msgstr "Prosím, vyberte platobnú metódu."
@@ -2410,7 +2565,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:326
+#: code:addons/point_of_sale/static/src/xml/pos.xml:334
 #, python-format
 msgid "Postcode"
 msgstr "PSČ"
@@ -2422,16 +2577,27 @@ msgid "Posted"
 msgstr "Zverejnené"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.pomme_de_terre
+#: model:product.template,name:point_of_sale.pomme_de_terre_product_template
+msgid "Potatoes"
+msgstr "Zemiaky"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_precompute_cash
 msgid "Prefill Cash Payment"
 msgstr "Predvyplniť hotovostnú platbu"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:144
+#: code:addons/point_of_sale/static/src/xml/pos.xml:152
 #, python-format
 msgid "Price"
 msgstr "Cena"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
+msgid "Price Unit"
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:16
@@ -2448,8 +2614,8 @@ msgstr "Cenník"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:657
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1184
+#: code:addons/point_of_sale/static/src/xml/pos.xml:665
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1300
 #, python-format
 msgid "Print Receipt"
 msgstr "Vytlačiť potvrdenku"
@@ -2468,7 +2634,7 @@ msgstr "Tlačiareň"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/devices.js:425
+#: code:addons/point_of_sale/static/src/js/devices.js:427
 #, python-format
 msgid "Printing Error: "
 msgstr "Chyba tlače:"
@@ -2476,6 +2642,7 @@ msgstr "Chyba tlače:"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_product_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_product_id
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.report_usersproduct
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Product"
@@ -2506,6 +2673,7 @@ msgstr "šablona produktu"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_template_action
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_products
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Products"
 msgstr "Produkty"
@@ -2523,7 +2691,7 @@ msgstr "Vložiť peniaze do"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:134
+#: code:addons/point_of_sale/static/src/xml/pos.xml:142
 #: model:ir.ui.view,arch_db:point_of_sale.report_usersproduct
 #, python-format
 msgid "Qty"
@@ -2531,6 +2699,7 @@ msgstr "Množ."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_qty
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Quantity"
 msgstr "Množstvo"
 
@@ -2541,7 +2710,7 @@ msgstr "Dotlačiť"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1185
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1301
 #, python-format
 msgid "Read Weighting Scale"
 msgstr "Čítanie mierky váhy"
@@ -2584,10 +2753,22 @@ msgid "Red Label"
 msgstr "Popisky používateľa"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.poivron_rouges
+#: model:product.template,name:point_of_sale.poivron_rouges_product_template
+msgid "Red Pepper"
+msgstr "Červené korenie"
+
+#. module: point_of_sale
 #: model:product.product,name:point_of_sale.red_wine
 #: model:product.template,name:point_of_sale.red_wine_product_template
 msgid "Red Wine"
 msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.pamplemousse_rouge_pamplemousse
+#: model:product.template,name:point_of_sale.pamplemousse_rouge_pamplemousse_product_template
+msgid "Red grapefruit"
+msgstr "Červený grapefruit"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.redbull
@@ -2607,7 +2788,7 @@ msgstr "Dotlače"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1154
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1270
 #, python-format
 msgid "Reset"
 msgstr "Reset"
@@ -2633,7 +2814,7 @@ msgid "Resume"
 msgstr "Obnoviť"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:652
+#: code:addons/point_of_sale/models/pos_order.py:653
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Return Products"
@@ -2655,6 +2836,14 @@ msgstr ""
 #: model:product.template,name:point_of_sale.safari_product_template
 msgid "Safari"
 msgstr ""
+
+#. module: point_of_sale
+#: model:ir.actions.client,name:point_of_sale.action_report_pos_details
+#: model:ir.actions.report.xml,name:point_of_sale.sale_details_report
+#: model:ir.ui.menu,name:point_of_sale.menu_report_order_details
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
+msgid "Sale Details"
+msgstr "Detaily predaja"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_journal_id
@@ -2695,14 +2884,14 @@ msgstr "Váha"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1160
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1276
 #, python-format
 msgid "Scan"
 msgstr "Skenovanie"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1161
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1277
 #, python-format
 msgid "Scan EAN-13"
 msgstr "Skenovanie EAN-13"
@@ -2727,14 +2916,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:424
+#: code:addons/point_of_sale/static/src/xml/pos.xml:432
 #, python-format
 msgid "Search Customers"
 msgstr "Vyhľadávanie zákazníkov"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:191
+#: code:addons/point_of_sale/static/src/xml/pos.xml:199
 #, python-format
 msgid "Search Products"
 msgstr "Vyhľadávanie produktov"
@@ -2757,10 +2946,17 @@ msgstr "Bezpečnostný PIN môže obsahovať iba číslice"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:432
+#: code:addons/point_of_sale/static/src/xml/pos.xml:440
 #, python-format
 msgid "Select Customer"
 msgstr "Vybrať zákazníka"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:927
+#, python-format
+msgid "Select Dates for the report"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -2777,7 +2973,7 @@ msgid "Select tax"
 msgstr "Vybrať daň"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:202
+#: code:addons/point_of_sale/models/pos_order.py:203
 #, python-format
 msgid "Selected orders do not have the same session!"
 msgstr "Zvolené objednávky nemajú rovnakú reláciu!"
@@ -2794,7 +2990,7 @@ msgstr "Číslo sekvencie"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:704
+#: code:addons/point_of_sale/static/src/xml/pos.xml:712
 #, python-format
 msgid "Served by"
 msgstr "Obslúžený"
@@ -2823,7 +3019,7 @@ msgstr "ID relácie"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1043
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1159
 #, python-format
 msgid "Session ids:"
 msgstr "IDs relácie:"
@@ -2852,7 +3048,7 @@ msgstr "Nastaviť zákazníka"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1153
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1269
 #, python-format
 msgid "Set Weight"
 msgstr "Nastaviť váhu"
@@ -2880,7 +3076,7 @@ msgstr "Konfigurácia"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1263
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1379
 #, python-format
 msgid "Shop:"
 msgstr "Obchod:"
@@ -2943,6 +3139,13 @@ msgid "Start Category"
 msgstr "Kategória začiatku"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:930
+#, python-format
+msgid "Start date"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_start
 msgid "Starting Balance"
 msgstr "Počiatočný zostatok"
@@ -2986,15 +3189,28 @@ msgstr "Skladová lokácia"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:318
-#: code:addons/point_of_sale/static/src/xml/pos.xml:319
+#: code:addons/point_of_sale/static/src/xml/pos.xml:934
+#, python-format
+msgid "Stop date"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:326
+#: code:addons/point_of_sale/static/src/xml/pos.xml:327
 #, python-format
 msgid "Street"
 msgstr "Ulica"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.limon
+#: model:product.template,name:point_of_sale.limon_product_template
+msgid "Stringers"
+msgstr "Pásy"
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:752
+#: code:addons/point_of_sale/static/src/xml/pos.xml:760
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_subtotal_incl
 #, python-format
 msgid "Subtotal"
@@ -3012,21 +3228,21 @@ msgstr "Medzisúčet bez zľavy"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1298
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1414
 #, python-format
 msgid "Subtotal:"
 msgstr "Medzisúčet:"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1035
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1151
 #, python-format
 msgid "Successfully  imported"
 msgstr "Úspešne importované"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1034
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1150
 #, python-format
 msgid "Successfully imported"
 msgstr "Úspešne importované"
@@ -3053,7 +3269,7 @@ msgstr "Mena dodávateľa"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:765
+#: code:addons/point_of_sale/static/src/xml/pos.xml:773
 #, python-format
 msgid "TOTAL"
 msgstr "SÚČET"
@@ -3065,7 +3281,7 @@ msgstr "Vybrať peniaze"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/models/pos_order.py:300
+#: code:addons/point_of_sale/models/pos_order.py:301
 #: code:addons/point_of_sale/static/src/js/screens.js:1983
 #, python-format
 msgid "Tax"
@@ -3073,8 +3289,8 @@ msgstr "Daň"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:355
-#: code:addons/point_of_sale/static/src/xml/pos.xml:402
+#: code:addons/point_of_sale/static/src/xml/pos.xml:363
+#: code:addons/point_of_sale/static/src/xml/pos.xml:410
 #, python-format
 msgid "Tax ID"
 msgstr "Daňové ID"
@@ -3083,26 +3299,28 @@ msgstr "Daňové ID"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_tax
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_tax_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_tax_ids_after_fiscal_position
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Taxes"
 msgstr "Dane"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1133
+#: code:addons/point_of_sale/static/src/xml/pos.xml:895
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1249
 #, python-format
 msgid "Taxes:"
 msgstr "Dane :"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:684
+#: code:addons/point_of_sale/static/src/xml/pos.xml:692
 #, python-format
 msgid "Tel:"
 msgstr "Tel:"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:492
+#: code:addons/point_of_sale/static/src/xml/pos.xml:500
 #, python-format
 msgid "Tendered"
 msgstr "Ponúknuté"
@@ -3114,14 +3332,14 @@ msgid "Tequila"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:260
+#: code:addons/point_of_sale/models/pos_order.py:261
 #, python-format
 msgid "The POS order must have lines when calling this method"
 msgstr "POS objednávka musí mať riadky pri volaní tejto metódy"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:887
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1003
 #, python-format
 msgid ""
 "The Point of Sale could not find any product, client, employee\n"
@@ -3254,8 +3472,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_print_auto
-#, fuzzy
-msgid "The receipt will automatically be p-rinted at the end of each order"
+msgid "The receipt will automatically be printed at the end of each order"
 msgstr "Potvrdenka bude vytlačená automaticky na konci každej objednávky "
 
 #. module: point_of_sale
@@ -3295,7 +3512,7 @@ msgstr "Teoretický konečný zostatok"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:94
+#: code:addons/point_of_sale/static/src/xml/pos.xml:102
 #, python-format
 msgid ""
 "There are pending operations that could not be saved into the database, are "
@@ -3328,7 +3545,7 @@ msgid "There is no cash register for this PoS Session"
 msgstr "Neexistuje žiadna registračná pokladňa pre túto PoS reláciu"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:607
+#: code:addons/point_of_sale/models/pos_order.py:608
 #, python-format
 msgid ""
 "There is no receivable account defined to make payment for the partner: \"%s"
@@ -3338,7 +3555,7 @@ msgstr ""
 "partnera: \"%s\" (id:%d)."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:605
+#: code:addons/point_of_sale/models/pos_order.py:606
 #, python-format
 msgid "There is no receivable account defined to make payment."
 msgstr "Neexistuje žiadny definovaný príjmový účet  pre vykonanie platby."
@@ -3469,7 +3686,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:631
+#: code:addons/point_of_sale/static/src/xml/pos.xml:639
 #, python-format
 msgid "Tip"
 msgstr "Tip"
@@ -3485,7 +3702,7 @@ msgid "To Weigh With Scale"
 msgstr "Pre váženie s mierkou"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:638
+#: code:addons/point_of_sale/models/pos_order.py:639
 #, python-format
 msgid ""
 "To return product(s), you need to open a session that will be used to "
@@ -3501,6 +3718,7 @@ msgstr "Dnes"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_total
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Total"
 msgstr "Celkom"
 
@@ -3521,7 +3739,7 @@ msgstr "Celková cena"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:802
+#: code:addons/point_of_sale/static/src/xml/pos.xml:810
 #, python-format
 msgid "Total Taxes"
 msgstr "Dane celkom"
@@ -3548,14 +3766,16 @@ msgstr "Množ. celkom"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1132
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1318
+#: code:addons/point_of_sale/static/src/xml/pos.xml:909
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1248
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1434
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #, python-format
 msgid "Total:"
 msgstr "Celkom:"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:312
+#: code:addons/point_of_sale/models/pos_order.py:313
 #, python-format
 msgid "Trade Receivables"
 msgstr "Pohľadávky z obchodného styku"
@@ -3583,7 +3803,7 @@ msgstr "Jednotková cena"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:883
+#: code:addons/point_of_sale/static/src/xml/pos.xml:999
 #, python-format
 msgid "Unknown Barcode"
 msgstr "Neznámy čiarový kód"
@@ -3632,7 +3852,7 @@ msgstr "Používateľove produkty"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1262
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1378
 #, python-format
 msgid "User:"
 msgstr "Používateľ:"
@@ -3649,14 +3869,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:687
+#: code:addons/point_of_sale/static/src/xml/pos.xml:695
 #, python-format
 msgid "VAT:"
 msgstr "DPH:"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:591
+#: code:addons/point_of_sale/static/src/xml/pos.xml:599
 #, python-format
 msgid "Validate"
 msgstr "Overenie"
@@ -3665,6 +3885,12 @@ msgstr "Overenie"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Validate Closing & Post Entries"
 msgstr "Potvrdiť zavretie & zverejniť vstupy"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.partner_product_6
+#: model:product.template,name:point_of_sale.partner_product_6_product_template
+msgid "Vauxoo.com"
+msgstr "Vauxoo.com"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_vkeyboard
@@ -3690,7 +3916,7 @@ msgstr "Vážený produkt"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1179
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1295
 #, python-format
 msgid "Weighting"
 msgstr "Váženie"
@@ -3714,8 +3940,8 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1105
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1282
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1221
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1398
 #, python-format
 msgid "With a"
 msgstr "S"
@@ -3724,6 +3950,12 @@ msgstr "S"
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Year"
 msgstr "Rok"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.poivron_jaunes
+#: model:product.template,name:point_of_sale.poivron_jaunes_product_template
+msgid "Yellow Peppers"
+msgstr "Žlté papriky"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.tea
@@ -3740,7 +3972,7 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:396
+#: code:addons/point_of_sale/models/pos_order.py:397
 #, python-format
 msgid ""
 "You cannot change the partner of a POS order for which an invoice has "
@@ -3823,19 +4055,19 @@ msgstr ""
 "pozadie / Nastavenie / Platobné metódy\"."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:621
+#: code:addons/point_of_sale/models/pos_order.py:622
 #, python-format
 msgid "You have to open at least one cashbox."
 msgstr "Musíte otvoriť aspoň jednu pokladňu."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:724
+#: code:addons/point_of_sale/models/pos_order.py:725
 #, python-format
 msgid "You have to select a pricelist in the sale form !"
 msgstr "Musíte zvoliť cenník vo formulári predaja !"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:712
+#: code:addons/point_of_sale/models/pos_order.py:713
 #, python-format
 msgid ""
 "You have to select a pricelist in the sale form !\n"
@@ -3894,21 +4126,27 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1124
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1240
 #, python-format
 msgid "Your shopping cart is empty"
 msgstr "Váš nákupný košík je prázdny"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:327
+#: code:addons/point_of_sale/static/src/xml/pos.xml:335
 #, python-format
 msgid "ZIP"
 msgstr "PSČ"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.courgette
+#: model:product.template,name:point_of_sale.courgette_product_template
+msgid "Zucchini"
+msgstr "Cuketa"
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1097
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1213
 #, python-format
 msgid "at"
 msgstr "k"
@@ -3920,14 +4158,20 @@ msgstr "barcode.rule"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1040
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1156
 #, python-format
 msgid "belong to another session:"
 msgstr "patrí k inej relácii:"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.partner_product_8
+#: model:product.template,name:point_of_sale.partner_product_8_product_template
+msgid "camptocamp.com"
+msgstr "camptocamp.com"
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1385
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1501
 #, python-format
 msgid "caps lock"
 msgstr "caps lock"
@@ -3944,23 +4188,23 @@ msgstr "cash.box.out"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1412
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1454
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1528
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1570
 #, python-format
 msgid "close"
 msgstr "zatvoriť"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1370
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1447
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1486
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1563
 #, python-format
 msgid "delete"
 msgstr "zmazať"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1107
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1223
 #, python-format
 msgid "discount"
 msgstr "zľava"
@@ -3980,7 +4224,7 @@ msgstr "nepoužité"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1034
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1150
 #, python-format
 msgid "paid orders"
 msgstr "zaplatené objednávky"
@@ -4012,6 +4256,11 @@ msgid "report.point_of_sale.report_invoice"
 msgstr "report.point_of_sale.report_invoice"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_saledetails
+msgid "report.point_of_sale.report_saledetails"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_statement
 msgid "report.point_of_sale.report_statement"
 msgstr "report.point_of_sale.report_statement"
@@ -4023,762 +4272,45 @@ msgstr "report.point_of_sale.report_usersproduct"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/models/pos_order.py:139
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1397
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1452
+#: code:addons/point_of_sale/models/pos_order.py:140
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1513
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1568
 #, python-format
 msgid "return"
 msgstr "návrat"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1398
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1409
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1514
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1525
 #, python-format
 msgid "shift"
 msgstr "shift"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1371
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1487
 #, python-format
 msgid "tab"
 msgstr "tab"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1035
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1151
 #, python-format
 msgid "unpaid orders"
 msgstr "nezaplatené objednávky"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1037
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1153
 #, python-format
 msgid "unpaid orders could not be imported"
 msgstr "nezaplatené objednávky nie je možné importovať"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1039
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1155
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "boli duplikáty existujúcich objednávok"
-
-#~ msgid "&lt;!DOCTYPE html&gt;"
-#~ msgstr "&lt;!DOCTYPE html&gt;"
-
-#~ msgid "2L Evian"
-#~ msgstr "2L Evian"
-
-#~ msgid "50cl Perrier"
-#~ msgstr "50cl Perrier"
-
-#~ msgid ""
-#~ "<br/>\n"
-#~ "                        Date:"
-#~ msgstr ""
-#~ "<br/>\n"
-#~ "Dátum:"
-
-#~ msgid ""
-#~ "<span class=\"o_stat_text\">Put</span>\n"
-#~ "                                    <span class=\"o_stat_text\">Money In</"
-#~ "span>"
-#~ msgstr ""
-#~ "<span class=\"o_stat_text\">Dať</span>\n"
-#~ "<span class=\"o_stat_text\">peniaze do</span>"
-
-#~ msgid ""
-#~ "<span class=\"o_stat_text\">Take</span>\n"
-#~ "                                    <span class=\"o_stat_text\">Money "
-#~ "Out</span>"
-#~ msgstr ""
-#~ "<span class=\"o_stat_text\">Vziať</span>\n"
-#~ "<span class=\"o_stat_text\">peniaze z</span>"
-
-#~ msgid "<strong>Closing Date</strong>:<br/>"
-#~ msgstr "<strong>Dátum uzávierky</strong>:<br/>"
-
-#~ msgid ""
-#~ "<strong>Company</strong>:\n"
-#~ "                            <br/>"
-#~ msgstr ""
-#~ "<strong>Spoločnosť</strong>:\n"
-#~ "<br/>"
-
-#~ msgid "<strong>Currency</strong>"
-#~ msgstr "<strong>Mena</strong>"
-
-#~ msgid "<strong>Date</strong>"
-#~ msgstr "<strong>Dátum</strong>"
-
-#~ msgid "<strong>Description</strong>"
-#~ msgstr "<strong>Popis</strong>"
-
-#~ msgid "<strong>Difference</strong>"
-#~ msgstr "<strong>Rozdiel</strong>"
-
-#~ msgid "<strong>Disc(%)</strong>"
-#~ msgstr "<strong>Zľava(%)</strong>"
-
-#~ msgid "<strong>Disc. (%)</strong>"
-#~ msgstr "<strong>Zľava (%)</strong>"
-
-#~ msgid "<strong>Disc.(%)</strong>"
-#~ msgstr "<strong>Zľava(%)</strong>"
-
-#~ msgid "<strong>End Period</strong>:<br/>"
-#~ msgstr "<strong>Obdobie ukončenia</strong>:<br/>"
-
-#~ msgid "<strong>Ending Balance</strong>"
-#~ msgstr "<strong>Konečný zostatok</strong>"
-
-#~ msgid "<strong>Invoiced</strong>"
-#~ msgstr "<strong>Vyfaktúrované</strong>"
-
-#~ msgid "<strong>Journal</strong>"
-#~ msgstr "<strong>Účtovná kniha</strong>"
-
-#~ msgid "<strong>Net Total</strong>"
-#~ msgstr "<strong>Celkovo netto</strong>"
-
-#~ msgid "<strong>No. Of Articles</strong>:<br/>"
-#~ msgstr "<strong>Počet článkov</strong>:<br/>"
-
-#~ msgid "<strong>Order</strong>"
-#~ msgstr "<strong>Objednávka</strong>"
-
-#~ msgid "<strong>Payment</strong>"
-#~ msgstr "<strong>Platba</strong>"
-
-#~ msgid "<strong>Point of Sale</strong>:<br/>"
-#~ msgstr "<strong>Miesto predaja</strong>:<br/>"
-
-#~ msgid "<strong>Price</strong>"
-#~ msgstr "<strong>Cena</strong>"
-
-#~ msgid ""
-#~ "<strong>Print date</strong>:\n"
-#~ "                            <br/>"
-#~ msgstr ""
-#~ "<strong>Dátum vytlačenia</strong>:\n"
-#~ "<br/>"
-
-#~ msgid "<strong>Print date</strong>:<br/>"
-#~ msgstr "<strong>Dátum vytlačenia</strong>:<br/>"
-
-#~ msgid "<strong>Product</strong>"
-#~ msgstr "<strong>Produkt</strong>"
-
-#~ msgid "<strong>Qty of product</strong>"
-#~ msgstr "<strong>Množstvo produktu</strong>"
-
-#~ msgid "<strong>Qty</strong>"
-#~ msgstr "<strong>Množstvo</strong>"
-
-#~ msgid "<strong>Quantity</strong>"
-#~ msgstr "<strong>Množstvo</strong>"
-
-#~ msgid "<strong>Reference</strong>"
-#~ msgstr "<strong>Odkaz</strong> "
-
-#~ msgid "<strong>Responsible</strong>:<br/>"
-#~ msgstr "<strong>Zodpovedný</strong>:<br/>"
-
-#~ msgid "<strong>Sales total(Revenue)</strong>"
-#~ msgstr "<strong>Predaje celkovo(Príjem)</strong>"
-
-#~ msgid "<strong>Start Period</strong>:<br/>"
-#~ msgstr "<strong>Obdobie začatia</strong>:<br/>"
-
-#~ msgid "<strong>Starting Balance</strong>"
-#~ msgstr "<strong>Počiatočný zostatok</strong>"
-
-#~ msgid "<strong>Status</strong>"
-#~ msgstr "<strong>Status</strong>"
-
-#~ msgid "<strong>Summary</strong>"
-#~ msgstr "<strong>Zhrnutie</strong>"
-
-#~ msgid "<strong>Tax</strong>"
-#~ msgstr "<strong>Daň</strong>"
-
-#~ msgid "<strong>Taxes</strong>"
-#~ msgstr "<strong>Dane</strong>"
-
-#~ msgid "<strong>Total Transactions</strong>"
-#~ msgstr "<strong>Transakcie celkovo</strong>"
-
-#~ msgid "<strong>Total Without Taxes</strong>"
-#~ msgstr "<strong>Celkom bez dane</strong>"
-
-#~ msgid "<strong>Total discount</strong>"
-#~ msgstr "<strong>Zľava celkovo</strong>"
-
-#~ msgid "<strong>Total invoiced</strong>"
-#~ msgstr "<strong>Celkovo vyfaktúrované</strong>"
-
-#~ msgid "<strong>Total of the day</strong>"
-#~ msgstr "<strong>Celkovo dňa</strong>"
-
-#~ msgid "<strong>Total paid</strong>"
-#~ msgstr "<strong>Celkovo uhradené</strong>"
-
-#~ msgid "<strong>Unit Price</strong>"
-#~ msgstr "<strong>Jednotková cena</strong>"
-
-#~ msgid "<strong>Users</strong>:<br/>"
-#~ msgstr "<strong>Používatelia</strong>:<br/>"
-
-#~ msgid "Account"
-#~ msgstr "Účet"
-
-#~ msgid "Acsone.eu"
-#~ msgstr "Acsone.eu"
-
-#~ msgid "Activate the customer portal"
-#~ msgstr "Aktivovať zákaznícky portál"
-
-#~ msgid "Activation"
-#~ msgstr "Aktivácia"
-
-#~ msgid "Alcohol"
-#~ msgstr "Alkohol"
-
-#~ msgid "Alias Domain"
-#~ msgstr "Alias doména"
-
-#~ msgid "Allow documents sharing"
-#~ msgstr "Povoliť zdieľanie dokumentov"
-
-#~ msgid "Allow external users to sign up"
-#~ msgstr "Povoliť externým používateľom prihlásiť sa"
-
-#~ msgid "Allow the users to synchronize their calendar  with Google Calendar"
-#~ msgstr "Povoliť používateľom synchronizovať svoj kalendár s Google Calendar"
-
-#~ msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
-#~ msgstr "Povoliť používateľom importovať dáta zo súborov CSV/XLS/XLSX/ODS"
-
-#~ msgid "Allow users to sign in with Google"
-#~ msgstr "Povoliť používateľom prihlásiť sa cez Google"
-
-#~ msgid "Attach Google documents to any record"
-#~ msgstr "Priložiť Google dokumenty k akémukoľvek záznamu"
-
-#~ msgid "Authorization Code"
-#~ msgstr "Autorizačný kód"
-
-#~ msgid "Auto-generated session for orphan orders, ignored in constraints"
-#~ msgstr ""
-#~ "Autogenrovaná relácia pre osirelé objednávky, orphan objednávky, "
-#~ "ignorované v obmedzeniach"
-
-#~ msgid "Belle-Vue Kriek 25cl"
-#~ msgstr "Belle-Vue Kriek 25cl"
-
-#~ msgid "Black Grapes"
-#~ msgstr "Čierne hrozno"
-
-#~ msgid "Boni Oranges"
-#~ msgstr "Boni pomaranče"
-
-#~ msgid "Carrots"
-#~ msgstr "Mrkva"
-
-#~ msgid "Cash Journals"
-#~ msgstr "Účtovné knihy hotovosti"
-
-#~ msgid "Chaudfontaine Petillante 1.5l"
-#~ msgstr "Chaudfontaine Petillante 1.5l"
-
-#~ msgid "Chimay Red 33cl"
-#~ msgstr "Chimay Red 33cl"
-
-#~ msgid "Client ID"
-#~ msgstr "ID klienta"
-
-#~ msgid "Client_id"
-#~ msgstr "Client_id"
-
-#~ msgid "Client_key"
-#~ msgstr "Client_key"
-
-#~ msgid "Coca-Cola Light 33cl"
-#~ msgstr "Coca-Cola Light 33cl"
-
-#~ msgid "Coca-Cola Light 50cl"
-#~ msgstr "Coca-Cola Light 50cl"
-
-#~ msgid "Coca-Cola Light Lemon 2L"
-#~ msgstr "Coca-Cola Light Lemon 2L"
-
-#~ msgid "Coca-Cola Regular 33cl"
-#~ msgstr "Coca-Cola 33cl"
-
-#~ msgid "Coca-Cola Regular 50cl"
-#~ msgstr "Coca-Cola 50cl"
-
-#~ msgid "Conference pears"
-#~ msgstr "Hrušky"
-
-#~ msgid "Could not close the point of sale."
-#~ msgstr "Nebolo možné zavrieť miesto predaja"
-
-#~ msgid "Datalp.com"
-#~ msgstr "Datalp.com"
-
-#~ msgid "Date"
-#~ msgstr "Dátum"
-
-#~ msgid "Date End"
-#~ msgstr "Dátum ukončenia"
-
-#~ msgid "Date Start"
-#~ msgstr "Dátum začatia"
-
-#~ msgid "Dates"
-#~ msgstr "Dátum"
-
-#~ msgid "Default Point of Sale"
-#~ msgstr "Prednastavené miesto predaja"
-
-#~ msgid "Description"
-#~ msgstr "Popis"
-
-#~ msgid "Details of Sales"
-#~ msgstr "Detaily predajov"
-
-#~ msgid "Disc."
-#~ msgstr "Zľava"
-
-#~ msgid "Display the Point of Sale in full screen mode"
-#~ msgstr "Zobraziť miesto predaja v režime celej obrazovky"
-
-#~ msgid "EGGS-solutions.fr"
-#~ msgstr "EGGS-solutions.fr"
-
-#~ msgid "Eezee-It"
-#~ msgstr "Eezee-It"
-
-#~ msgid "Ekomurz.nl"
-#~ msgstr "Ekomurz.nl"
-
-#~ msgid "Enable password reset from Login page"
-#~ msgstr "Povoliť obnovenie hesla z prihlasovacej stránky"
-
-#~ msgid "Error!"
-#~ msgstr "Chyba!"
-
-#~ msgid "Evian 50cl"
-#~ msgstr "Evian 50cl"
-
-#~ msgid "Extra Flandria chicory"
-#~ msgstr "Extra flámska čakanka"
-
-#~ msgid "Fail Mail"
-#~ msgstr "Zlyhanie pošty"
-
-#~ msgid "Fanta Orange 25cl"
-#~ msgstr "Fanta Orange 25cl"
-
-#~ msgid "Fanta Orange 33cl"
-#~ msgstr "Fanta Orange 33cl"
-
-#~ msgid "Fanta Orange 50cl"
-#~ msgstr "Fanta Orange 50cl"
-
-#~ msgid "Fanta Orange Zero 1.5L"
-#~ msgstr "Fanta Orange Zero 1.5L"
-
-#~ msgid "Fanta Zero Orange 33cl"
-#~ msgstr "Fanta Zero Orange 33cl"
-
-#~ msgid "Fruits and Vegetables"
-#~ msgstr "Ovocie a zelenina"
-
-#~ msgid "Fullscreen"
-#~ msgstr "Celá obrazovka"
-
-#~ msgid "Generate Entries"
-#~ msgstr "Generovať vstupy"
-
-#~ msgid "Generate Journal Entries"
-#~ msgstr "Generovať vstupy účtovnej knihy"
-
-#~ msgid ""
-#~ "Generate all sale journal entries for non invoiced orders linked to a "
-#~ "closed cash register or statement."
-#~ msgstr ""
-#~ "Vytvoriť všetky vstupy predaja účtovnej knihy pre nenafaktúrované "
-#~ "objednávky spojené s uzavretou pokladnicou alebo vyhlásením."
-
-#~ msgid "Give your customers access to their documents."
-#~ msgstr "Dajte vašim zákazníkom prístup k ich dokumentom."
-
-#~ msgid ""
-#~ "Gives the probability to assign a lead to this partner. (0 means no "
-#~ "assignation.)"
-#~ msgstr ""
-#~ "Dáva pravdepodobnosť priradenia iniciatívy k tomuto partnerovi. (0 "
-#~ "znamená žiadne priradenie.)"
-
-#~ msgid "Golden Apples Perlim"
-#~ msgstr "Zlatá jablká Perlite"
-
-#~ msgid "Granny Smith apples"
-#~ msgstr "Granny Smith jablká"
-
-#~ msgid "Green Peppers"
-#~ msgstr "Zelené papriky"
-
-#~ msgid "Grisette Cherry 25cl"
-#~ msgstr "Grisette Cherry 25cl"
-
-#~ msgid "Guests:"
-#~ msgstr "Hostia:"
-
-#~ msgid "If unchecked, only invited users may sign up."
-#~ msgstr "Ak nezaškrtnuté, iba pozvaný používatelia sa môžu prihlásiť."
-
-#~ msgid ""
-#~ "If you have setup a catch-all email domain redirected to the Odoo server, "
-#~ "enter the domain name here."
-#~ msgstr ""
-#~ "Ak máte nastavenú catch-all emailovú doménu presmerovanú na server Odoo, "
-#~ "tu zadajte názov domény."
-
-#~ msgid "Implementation References"
-#~ msgstr "Implementačné referencie"
-
-#~ msgid "Implemented by"
-#~ msgstr "Implementoval"
-
-#~ msgid "In Cluster Tomatoes"
-#~ msgstr "Paradajky v strapci"
-
-#~ msgid "Invoice Amount"
-#~ msgstr "Vyfaktúrovať čiastku"
-
-#~ msgid "Invoices"
-#~ msgstr "Faktúry"
-
-#~ msgid "Jonagold apples"
-#~ msgstr "Jonagold jablká"
-
-#~ msgid "Latest Partner Review"
-#~ msgstr "Najnovšie preskúmanie partnera"
-
-#~ msgid "Leeks"
-#~ msgstr "Pór"
-
-#~ msgid "Leffe Blonde 33cl"
-#~ msgstr "Leffe Blonde 33cl"
-
-#~ msgid "Leffe Brune 33cl"
-#~ msgstr "Leffe Brune 33cl"
-
-#~ msgid "Lemon"
-#~ msgstr "Citrón"
-
-#~ msgid "Level"
-#~ msgstr "Úroveň"
-
-#~ msgid "Level Weight"
-#~ msgstr "Hmotnosť úrovne"
-
-#~ msgid "Lindemans Kriek 37.5cl"
-#~ msgstr "Lindemans Kriek 37.5cl"
-
-#~ msgid "Manage Inter Company"
-#~ msgstr "Vnútropodnikové spravovanie"
-
-#~ msgid "Manage Product Variants"
-#~ msgstr "Spravovanie produktových variácií"
-
-#~ msgid "Manage multiple companies"
-#~ msgstr "Spravovanie viacerých spoločností"
-
-#~ msgid "Nbr Invoice"
-#~ msgstr "Číslo faktúry"
-
-#~ msgid "Next Partner Review"
-#~ msgstr "Nasledujúce preskúmanie partnera"
-
-#~ msgid "Number of Transaction"
-#~ msgstr "Číslo transakcie"
-
-#~ msgid "Onions"
-#~ msgstr "Cibule"
-
-#~ msgid "Orange Butterfly"
-#~ msgstr "Orange Butterfly"
-
-#~ msgid "Orval 33cl"
-#~ msgstr "Orval 33cl"
-
-#~ msgid "POS"
-#~ msgstr "POS"
-
-#~ msgid "POS Details"
-#~ msgstr "POS detaily"
-
-#~ msgid "POS Lines"
-#~ msgstr "POS riadky"
-
-#~ msgid "POS Report"
-#~ msgstr "POS výkaz"
-
-#~ msgid "Partner Services"
-#~ msgstr "Partnerské služby"
-
-#~ msgid "Partnership Date"
-#~ msgstr "Dátum partnerstva"
-
-#~ msgid "Peaches"
-#~ msgstr " Broskyne"
-
-#~ msgid "Post All Orders"
-#~ msgstr "Zverejniť všetky objednávky"
-
-#~ msgid "Post POS Journal Entries"
-#~ msgstr "Zverejniť POS vstupy účtovnej knihy"
-
-#~ msgid "Potatoes"
-#~ msgstr "Zemiaky"
-
-#~ msgid "Print Report"
-#~ msgstr "Vytlačiť výkaz"
-
-#~ msgid "Product Nb."
-#~ msgstr "Číslo produktu"
-
-#~ msgid "Red Pepper"
-#~ msgstr "Červené korenie"
-
-#~ msgid "Red grapefruit"
-#~ msgstr "Červený grapefruit"
-
-#~ msgid "Reference"
-#~ msgstr "Odkaz"
-
-#~ msgid "Reprint"
-#~ msgstr "Dotlač"
-
-#~ msgid "Rescue session"
-#~ msgstr "Záchranná relácia"
-
-#~ msgid "Rochefort \"8\" 33cl"
-#~ msgstr "Rochefort \"8\" 33cl"
-
-#~ msgid "Sale Details"
-#~ msgstr "Detaily predaja"
-
-#~ msgid "Sales Details"
-#~ msgstr "Detaily predajov"
-
-#~ msgid "Sales Journal"
-#~ msgstr "Účtovná kniha predajov"
-
-#~ msgid "Sales Lines"
-#~ msgstr "Riadky predajov"
-
-#~ msgid "Sales by User"
-#~ msgstr "Predaje za užívateľa"
-
-#~ msgid "Sales by User Monthly"
-#~ msgstr "Predaje za užívateľa mesačne"
-
-#~ msgid "Sales by day"
-#~ msgstr "Predaje za deň"
-
-#~ msgid "Sales by month"
-#~ msgstr "Predaje za mesiac"
-
-#~ msgid "Sales by user"
-#~ msgstr "Predaje za používateľa"
-
-#~ msgid "Sales by user monthly"
-#~ msgstr "Predaje za užívateľa mesačne"
-
-#~ msgid "Salespeople"
-#~ msgstr "Predajcovia"
-
-#~ msgid "San Pellegrino 1L"
-#~ msgstr "San Pellegrino 1L"
-
-#~ msgid "Session Summary"
-#~ msgstr "Zhrnutie relácie"
-
-#~ msgid "Session Summary:"
-#~ msgstr "Zhrnutie relácie:"
-
-#~ msgid "Share or embbed any screen of Odoo."
-#~ msgstr "Zdielať lebo vloźiť ktorúkoľvek Odoo obrazovku."
-
-#~ msgid "Share partners to all companies"
-#~ msgstr "Zdieľať partnerov pre všetky spoločnosti"
-
-#~ msgid "Share product to all companies"
-#~ msgstr "Zdieľať produkt pre všetky spoločnosti"
-
-#~ msgid ""
-#~ "Share your partners to all companies defined in your instance.\n"
-#~ " * Checked : Partners are visible for every companies, even if a company "
-#~ "is defined on the partner.\n"
-#~ " * Unchecked : Each company can see only its partner (partners where "
-#~ "company is defined). Partners not related to a company are visible for "
-#~ "all companies."
-#~ msgstr ""
-#~ "Zdieľajte svojich partnerov so všetkými spoločnosťami definovanými vo "
-#~ "vašej inštancii.\n"
-#~ "* Zaškrtnuté : Partneri sú viditeľný pre všetky spoločnosti, aj ked j "
-#~ "spoločnosť definovaná na paertnerovi.\n"
-#~ "* Nezaškrtnuté : Každá spoločnosť môže vidieť iba svojho partnera "
-#~ "(partnerov kde je definovaná spoločnosť). Partneri netýkajúci sa "
-#~ "spoločnosti sú viditeľný pre všetky spoločnosti."
-
-#~ msgid ""
-#~ "Share your product to all companies defined in your instance.\n"
-#~ " * Checked : Product are visible for every company, even if a company is "
-#~ "defined on the partner.\n"
-#~ " * Unchecked : Each company can see only its product (product where "
-#~ "company is defined). Product not related to a company are visible for all "
-#~ "companies."
-#~ msgstr ""
-#~ "Zdieľajte svoj produkt všetkými spoločnosťsami definovanými v inštancii.\n"
-#~ "* Zaškrtnuté : Produkty sú viditeľné pre všetky spoločnosti, aj ked j "
-#~ "spoločnosť definovaná na paertnerovi.\n"
-#~ "* Nezaškrtnuté : Každá spoločnosť môže vidieť iba svoj produkt (produkt "
-#~ "kde je definovaná spoločnosť). Produkty netýkajúce sa spoločnosti sú "
-#~ "viditeľné pre všetky spoločnosti."
-
-#~ msgid "Show Tutorial"
-#~ msgstr "Ukázať inštruktáž"
-
-#~ msgid "Soft"
-#~ msgstr "Mäkké"
-
-#~ msgid "Start Point of Sale"
-#~ msgstr "Miesto predaja začiatku"
-
-#~ msgid "Statement Details:"
-#~ msgstr "Detaily vyhlásenia:"
-
-#~ msgid "Statement Summary"
-#~ msgstr "Zhrnutie vyhlásenia"
-
-#~ msgid "Stella Artois 33cl"
-#~ msgstr "Stella Artois 33cl"
-
-#~ msgid "Stella Artois 50cl"
-#~ msgstr "Stella Artois 50cl"
-
-#~ msgid "Stringers"
-#~ msgstr "Pásy"
-
-#~ msgid "Template user for new users created through signup"
-#~ msgstr ""
-#~ "Šablóna užívateľa pre nových používateľov vytvorených prostredníctvom "
-#~ "registrácie"
-
-#~ msgid "The URL to generate the authorization code from Google"
-#~ msgstr "URL pre generovanie autorizačného kódu z Google"
-
-#~ msgid "The receipt will automatically be printed at the end of each order"
-#~ msgstr "Potvrdenka bude vytlačená automaticky na konci každej objednávky "
-
-#~ msgid "This allows users to trigger a password reset from the Login page."
-#~ msgstr "Toto umožňuje spustiť obnovenie hesla z prihlasovacej stránky."
-
-#~ msgid "This installs the module google_calendar."
-#~ msgstr "Toto nainštaluje modul google_calendar."
-
-#~ msgid "This installs the module google_docs."
-#~ msgstr "Toto nainštaluje modul google_docs."
-
-#~ msgid ""
-#~ "This installs the module inter_company_rules.\n"
-#~ " Configure company rules to automatically create SO/PO when one of your "
-#~ "company sells/buys to another of your company."
-#~ msgstr ""
-#~ "Toto nainštaluje modul inter_company_rules.\n"
-#~ "Nakonfigurujte pravidlá spoločnosti pre automatické vytvorenie SO/PO, keď "
-#~ "jedna vaša spoločnosť kupuje / predáva ďalšej vašej spoločnosti."
-
-#~ msgid "Timmermans Kriek 37.5cl"
-#~ msgstr "Timmermans Kriek 37.5cl"
-
-#~ msgid "Today's Payment"
-#~ msgstr "Dnešná platba"
-
-#~ msgid "Today's Payments"
-#~ msgstr "Dnešné platby"
-
-#~ msgid "Total Transaction"
-#~ msgstr "Transakcia celkom"
-
-#~ msgid "URI"
-#~ msgstr "URI"
-
-#~ msgid "URI for tuto"
-#~ msgstr "URI for tuto"
-
-#~ msgid "Unable to cancel the picking."
-#~ msgstr "Nemožno zrušiť vychystávanie."
-
-#~ msgid "Use external authentication providers, sign in with Google..."
-#~ msgstr ""
-#~ "Použiť externých poskytovateľov overenia, prihlásiť sa cez Google..."
-
-#~ msgid "Vauxoo.com"
-#~ msgstr "Vauxoo.com"
-
-#~ msgid ""
-#~ "Work in multi-company environments, with appropriate security access "
-#~ "between companies."
-#~ msgstr ""
-#~ "Práca v prostredí multi-spoločnosti, so zodpovedajúcim zabezpečením "
-#~ "prístupu medzi spoločnosťami."
-
-#~ msgid ""
-#~ "Work with product variant allows you to define some variant of the same "
-#~ "products, an ease the product management in the ecommerce for example"
-#~ msgstr ""
-#~ "Práca s variantou produktu vám umožňuje určovať variantu tých istých "
-#~ "produktov, napríklad ľahkosťou spravovania produktu v e-commerce "
-
-#~ msgid "Yellow Peppers"
-#~ msgstr "Žlté papriky"
-
-#~ msgid "Your internet connection is probably down."
-#~ msgstr "Vaše pripojenie k internetu pravdepodobne nefunguje."
-
-#~ msgid "Zucchini"
-#~ msgstr "Cuketa"
-
-#~ msgid "camptocamp.com"
-#~ msgstr "camptocamp.com"
-
-#~ msgid "report.point_of_sale.report_detailsofsales"
-#~ msgstr "report.point_of_sale.report_detailsofsales"
-
-#~ msgid "report.point_of_sale.report_payment"
-#~ msgstr "report.point_of_sale.report_payment"
-
-#~ msgid "report.point_of_sale.report_receipt"
-#~ msgstr "report.point_of_sale.report_receipt"
-
-#~ msgid "report.point_of_sale.report_saleslines"
-#~ msgstr "report.point_of_sale.report_saleslines"
-
-#~ msgid "transaction for the pos"
-#~ msgstr "transakcie pre pos"
-
-#~ msgid "unknown"
-#~ msgstr "neznámy"
-
-#~ msgid "uuid"
-#~ msgstr "uuid"

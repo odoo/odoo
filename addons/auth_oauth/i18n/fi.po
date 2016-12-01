@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-06-21 06:43+0000\n"
-"Last-Translator: Marko Happonen <marko.happonen@sprintit.fi>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-10-28 18:19+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -60,7 +60,7 @@ msgstr "Sallittu"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
 msgid "Authentication URL"
-msgstr ""
+msgstr "Autentikointi/todennus URL"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_bank_account_count
@@ -81,7 +81,7 @@ msgstr "CSS luokka"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_client_id
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_client_id
 msgid "Client ID"
-msgstr ""
+msgstr "Asiakkaan tunniste (ID)"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_ref_company_ids
@@ -106,9 +106,8 @@ msgstr "Luotu"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
-#, fuzzy
 msgid "Currency"
-msgstr "Valuutan tunniste"
+msgstr "Valuutta"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
@@ -192,42 +191,42 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
 msgid "OAuth Access Token"
-msgstr ""
+msgstr "OAuth Access Token"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_provider_id
 msgid "OAuth Provider"
-msgstr ""
+msgstr "OAuth Provider"
 
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
 msgid "OAuth Providers"
-msgstr ""
+msgstr "OAuth Providers"
 
 #. module: auth_oauth
 #: sql_constraint:res.users:0
 msgid "OAuth UID must be unique per provider"
-msgstr ""
+msgstr "OAuth UID täytyy olla Provider-kohtaisesti yksilöllinen "
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_uid
 msgid "OAuth User ID"
-msgstr ""
+msgstr "OAuth User ID"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_auth_oauth_provider
 msgid "OAuth2 provider"
-msgstr ""
+msgstr "OAuth2 provider"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_users_form
 msgid "Oauth"
-msgstr ""
+msgstr "Oauth"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_oauth_uid
 msgid "Oauth Provider user_id"
-msgstr ""
+msgstr "Oauth tarjoajan käyttäjätunnus/user_id"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit_limit
@@ -237,17 +236,17 @@ msgstr "Ostovelkaraja"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_name
 msgid "Provider name"
-msgstr ""
+msgstr "Palveluntarjoajan nimi"
 
 #. module: auth_oauth
 #: model:ir.actions.act_window,name:auth_oauth.action_oauth_provider
 msgid "Providers"
-msgstr ""
+msgstr "Palveluntarjoajat"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_scope
 msgid "Scope"
-msgstr ""
+msgstr "Laajuus"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:96
@@ -371,6 +370,8 @@ msgid ""
 "Please ask for an invitation and be sure to follow the link in your "
 "invitation email."
 msgstr ""
+"Sinulla ei ole pääsyä tähän tietokantaan tai käyttäjäkutsusi on vanhentunut. "
+"Pyydä uutta kutsua ja varmista että seuraat kutsuviestissä olevaa linkkiä."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
@@ -397,6 +398,3 @@ msgstr "ir.config_parameter"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
 msgid "unknown"
 msgstr "tuntematon"
-
-#~ msgid "Currency id"
-#~ msgstr "Valuutan tunniste"

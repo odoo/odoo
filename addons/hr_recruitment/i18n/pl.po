@@ -3,14 +3,15 @@
 # * hr_recruitment
 #
 # Translators:
+# zbik2607 <darek@krokus.com.pl>, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-08-12 10:16+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-10-16 21:31+0000\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -188,7 +189,7 @@ msgstr "Alias"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Zabezpieczenie aliasu"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_alias_id
@@ -336,7 +337,7 @@ msgstr "Oszacowana wartość"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Archived"
-msgstr "Zarchiwizowane"
+msgstr "Archiwalne"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_open
@@ -492,6 +493,16 @@ msgstr "Kontakt email"
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Contract"
 msgstr "Umowa"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
+msgid "Contract Proposal"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
+msgid "Contract Signed"
+msgstr "Podpisana umowa"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
@@ -793,6 +804,11 @@ msgid "Filter and view on next actions and date"
 msgstr "Filtruj i obejrzyj następne działanie i datę"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Pierwsza rozmowa"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr ""
@@ -856,7 +872,7 @@ msgstr "Pogrupuj wg"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
-msgstr ""
+msgstr "Zatrudnieni pracownicy"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
@@ -887,9 +903,8 @@ msgstr ""
 #: model:survey.question,comments_message:hr_recruitment.recruitment_2_3
 #: model:survey.question,comments_message:hr_recruitment.recruitment_2_4
 #: model:survey.question,comments_message:hr_recruitment.recruitment_3_1
-#, fuzzy
 msgid "If other, please specify:"
-msgstr "Jeśli inne, opisz:"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_template_id
@@ -918,6 +933,11 @@ msgstr "Ważność"
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
 msgstr "Ważne"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Initial Qualification"
+msgstr "Wstępna kwalifikacja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
@@ -1082,7 +1102,7 @@ msgstr "Najważniejsze"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "My"
-msgstr "moje"
+msgstr "Moje"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_name
@@ -1373,9 +1393,8 @@ msgstr "Regularne spotkania"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
-#, fuzzy
 msgid "Reopen Application"
-msgstr "reset aplikacji"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1460,6 +1479,11 @@ msgstr "Szukaj kandydatów"
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid "Search through resumes and motivation letters."
 msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "Druga rozmowa kwalifikacyjna"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
@@ -1807,81 +1831,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
-
-#~ msgid "Action Needed"
-#~ msgstr "Wymagana akcja"
-
-#~ msgid "Campaign"
-#~ msgstr "Kampania"
-
-#~ msgid "Contract Signed"
-#~ msgstr "Podpisana umowa"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data ostatniej wiadomości w rekordzie."
-
-#~ msgid "First Interview"
-#~ msgstr "Pierwsza rozmowa"
-
-#~ msgid "Followers"
-#~ msgstr "Obserwatorzy"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Obserwatorzy (kanały)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Obserwatorzy (partnerzy)"
-
-#~ msgid "HR Department"
-#~ msgstr "Dział kadr"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jeśli zaznaczone, to nowa wiadomość wymaga twojej uwagi."
-
-#~ msgid "If other, precise:"
-#~ msgstr "Jeśli inne, opisz:"
-
-#~ msgid "Initial Qualification"
-#~ msgstr "Wstępna kwalifikacja"
-
-#~ msgid "Is Follower"
-#~ msgstr "Jest obserwatorem"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data ostatniej wiadomości"
-
-#~ msgid "Messages"
-#~ msgstr "Wiadomosći"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Wiadomości i historia komunikacji"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Liczba akcji"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Liczba wiadomości wymagających akcji"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Liczba nieprzeczytanych wiadomości"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Otwórz menu kadr"
-
-#~ msgid "Reset Application"
-#~ msgstr "reset aplikacji"
-
-#~ msgid "Second Interview"
-#~ msgstr "Druga rozmowa kwalifikacyjna"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Licznik nieprzeczytanych wiadomości"
-
-#~ msgid "Website Messages"
-#~ msgstr "Wiadomości"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historia rozmowy"

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-07-30 20:45+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-10-24 20:10+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "Language: ru\n"
@@ -28,9 +28,8 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-#, fuzzy
 msgid ", go to the 'Sales' tab"
-msgstr ", перейдите на вкладку \"Продажи\""
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -625,6 +624,11 @@ msgid "Apply"
 msgstr "Применить"
 
 #. module: website_sale
+#: model:product.pricelist,name:website_sale.list_benelux
+msgid "Benelux Pricelist"
+msgstr "Прайс-лист для Бенелюкса"
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Bill To:"
@@ -691,6 +695,11 @@ msgstr "Выберите изображение из библиотеки."
 #, python-format
 msgid "Choose name"
 msgstr "Выбрать имя"
+
+#. module: website_sale
+#: model:product.pricelist,name:website_sale.list_christmas
+msgid "Christmas Pricelist"
+msgstr "Рождественский прайс-лист"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
@@ -1018,6 +1027,12 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Поровну: Стоимость будет разделена поровну.\n"
+"По количеству: Стоимость будет разделена в соответствии с количеством.\n"
+"По текущей стоимости: Стоимость будет разделена в соответствии с текущей "
+"стоимостью продукта.\n"
+"По весу: Стоимость будет разделена в зависимости от веса.\n"
+"По объёму: Стоимость будет разделена в зависимости от объёма."
 
 #. module: website_sale
 #: constraint:product.public.category:0
@@ -1063,19 +1078,15 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
-#, fuzzy
 msgid ""
 "Export the 3 products you have already created by checking them and choosing "
 "'Export' from the 'Action' menu"
 msgstr ""
-"Экспортируйте 3 уже созданных продукта, выбрав их и нажав &quot;"
-"Экспорт&quot; в меню &quot;Подробности&quot;"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info_option
-#, fuzzy
 msgid "Extra Info<span class=\"chevron\"/>"
-msgstr "Оплата<span class=\"chevron\"/>"
+msgstr "Дополнительная информация<span class=\"chevron\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
@@ -1186,7 +1197,7 @@ msgstr "Скрытый"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_id
 #: model:ir.model.fields,field_description:website_sale.field_product_style_id
-#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11001
+#: model:ir.model.fields,field_description:website_sale.field_website_pricelist_id_11000
 msgid "ID"
 msgstr "ID"
 
@@ -1569,9 +1580,8 @@ msgstr "Страницы продукта"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
-#, fuzzy
 msgid "Product Public Categories"
-msgstr "Продукт Продукт Категории"
+msgstr "Продукт публичных категорий"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template
@@ -1809,7 +1819,7 @@ msgstr "Продажа"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Sell More"
-msgstr ""
+msgstr "Продать больше"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_sequence
@@ -2020,9 +2030,8 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_temando
-#, fuzzy
 msgid "Temando integration"
-msgstr "Интеграция с Fedex"
+msgstr "Temando интеграция"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -2139,10 +2148,8 @@ msgstr "Обновить изображение"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.products
-msgid "Use the <i>'Content'</i> top menu to create a new product."
+msgid "Use the <i>'New page'</i> top menu to create a new product."
 msgstr ""
-"Используйте пункт верхнего меню <i>'Наполнение'</i>, чтобы создать новый "
-"товар."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2399,12 +2406,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_attribute_value
 msgid "product.attribute.value"
-msgstr ""
+msgstr "product.attribute.value"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_style
 msgid "product.style"
-msgstr ""
+msgstr "product.style"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
@@ -2440,72 +2447,3 @@ msgstr "☑ Счет высылается по электронной почте
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "☑ Processed by Ogone"
 msgstr "☑ Обработка Ogone"
-
-#~ msgid ", go in the 'Sales' tab"
-#~ msgstr ", перейдите на вкладку \"Продажи\""
-
-#~ msgid ", go the 'Sales' tab"
-#~ msgstr ", перейдите на вкладку \"Продажи\""
-
-#~ msgid "<span class=\"fa fa-envelope-o\"/> Email Our Website Expert"
-#~ msgstr "<span class=\"fa fa-envelope-o\"/> Напишите нашему веб-эксперту"
-
-#~ msgid "Available in the Point of Sale"
-#~ msgstr "Доступно в точке продажи"
-
-#~ msgid "Benelux Pricelist"
-#~ msgstr "Прайс-лист для Бенелюкса"
-
-#~ msgid ""
-#~ "Check if the product should be weighted using the hardware scale "
-#~ "integration"
-#~ msgstr "Выберите, если товар можно взвесить весами"
-
-#~ msgid "Check if you want this product to appear in the Point of Sale"
-#~ msgstr "Выберите, если товар должен присутствовать в точке продаж"
-
-#~ msgid ""
-#~ "Check this box to generate Call for Tenders instead of generating "
-#~ "requests for quotation from procurement."
-#~ msgstr ""
-#~ "Выберите, если требуется генерировать Call for Tenders вместо генерации "
-#~ "запросов на счет из закупок."
-
-#~ msgid "Christmas Pricelist"
-#~ msgstr "Рождественский прайс-лист"
-
-#~ msgid ""
-#~ "Export the 3 products you have already created by checking them and "
-#~ "choosing 'Export' from the 'More' menu"
-#~ msgstr ""
-#~ "Экспортируйте 3 уже созданных продукта, выбрав их и нажав &quot;"
-#~ "Экспорт&quot; в меню &quot;Подробности&quot;"
-
-#~ msgid "Extra Info"
-#~ msgstr "Доп. инфо."
-
-#~ msgid "Payment"
-#~ msgstr "Платеж"
-
-#~ msgid "Point of Sale Category"
-#~ msgstr "Категории для точки продаж"
-
-#~ msgid "Procurement"
-#~ msgstr "Снабжение"
-
-#~ msgid "Product Product Categories"
-#~ msgstr "Продукт Продукт Категории"
-
-#~ msgid "Project"
-#~ msgstr "Проект"
-
-#~ msgid ""
-#~ "Those categories are used to group similar products for point of sale."
-#~ msgstr ""
-#~ "Категории используются для группировки похожих товаров для точки продаж."
-
-#~ msgid "To Weigh With Scale"
-#~ msgstr "Для взвешивания на весах"
-
-#~ msgid "Website Comments"
-#~ msgstr "Комментарии на сайте"

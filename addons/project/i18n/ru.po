@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-06-02 13:10+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -187,6 +187,22 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+
+#. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+"\n"
+"<p>Уважаемый(ая) ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Благодарим вас за ваш запрос.<br></p>\n"
+"<p>Если у вас есть какие-либо вопросы, пожалуйста, сообщите нам об этом.</"
+"p>\n"
+"<p>С наилучшими пожеланиями,</p>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -793,7 +809,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-#, fuzzy
 msgid ""
 "<strong>Follow only what you need</strong><br/>\n"
 "                                    The simplest way to use notifications is "
@@ -801,7 +816,7 @@ msgid ""
 "and existing tasks or issues of a project."
 msgstr ""
 "<strong>Следите только за тем, что вам нужно</strong><br/>\n"
-"Самый простой способ использования уведомлений - это отслеживание всего "
+"Самый простой способ использования уведомлений — это отслеживание всего "
 "проекта: в этом случае вы будете получать все выбранные уведомления для всех "
 "новых и существующих задач и запросов."
 
@@ -1450,6 +1465,11 @@ msgstr ""
 "должности."
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr "Запустите или отметьте как сделанное"
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "Ответственным лицом"
@@ -1465,6 +1485,7 @@ msgstr "Отмена"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "Отменен"
@@ -1976,6 +1997,7 @@ msgstr "Выбирайте только те события, которые ва
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Сделано"
@@ -2010,9 +2032,8 @@ msgstr "Псевдоним электронной почты"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
-#, fuzzy
 msgid "Email Template"
-msgstr "Псевдоним электронной почты"
+msgstr "Шаблон письма"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2404,6 +2425,8 @@ msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
 msgstr ""
+"Если установлено, то будет отправлено письмо клиенту, когда задача или "
+"запрос достигнет этого шага."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_active
@@ -2461,6 +2484,7 @@ msgstr "Улучшение взаимодействия с клиентами"
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
+#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "В процессе"
@@ -2798,7 +2822,7 @@ msgstr "Отдел маркетинга"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "Члены"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2831,6 +2855,11 @@ msgstr "Мои задачи"
 #: model:ir.model.fields,field_description:project.field_project_tags_name
 msgid "Name"
 msgstr "Название"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "Требуется функциональная или техническая поддержка"
 
 #. module: project
 #. openerp-web
@@ -2874,6 +2903,11 @@ msgstr "Отключить рейтинг клиентов"
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
 msgstr "Нормальный"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr "Не проверено"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -3102,7 +3136,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -3293,12 +3326,22 @@ msgid "Ready to be displayed, published or sent"
 msgstr "Готово к показу, публикации или отправке"
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr "Готово к возобновлению работы"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
 msgstr "Причина для отмены задокументирована"
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
+msgstr "Прием ${object.name}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
@@ -3478,7 +3521,7 @@ msgstr "Обмениваться файлами и управлять верси
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_is_favorite
 msgid "Show Project on dashboard"
-msgstr ""
+msgstr "Показать проект на панели"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3587,9 +3630,8 @@ msgstr "Статус"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_child_ids
-#, fuzzy
 msgid "Sub-tasks"
-msgstr "задачи"
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3952,15 +3994,14 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
-#, fuzzy
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
-"Это установит единицу измерения, используемую в проектах и задачах. Если вы "
-"используете расписание, ссылающееся на проекты (модуль project_timesheet), "
-"не забудьте установить правильную единицу измерения для ваших сотрудников."
+"Это установит единицу измерения, используемую в проектах и задачах. \n"
+"Если вы используете расписание, ссылающееся на проекты, не забудьте "
+"установить правильную единицу измерения для ваших сотрудников."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -4031,6 +4072,7 @@ msgstr "Расписание работы для настройки отчета
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
+#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "Сделать"
@@ -4104,6 +4146,11 @@ msgid ""
 msgstr ""
 "Проводите отдельные встречи для решения глобальных проблем, а также "
 "вопросов, не имеющих значения для всей команды."
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the priority for tasks related to gold customers"
+msgstr "Используйте приоритеты для задач, связанных с важными клиентами"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -4251,7 +4298,7 @@ msgstr "Сколько в среднем часов за год они отра�
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_is_favorite
 msgid "Whether this project should be displayed on the dashboard or not"
-msgstr ""
+msgstr "Этот проект должен отображаться на приборной панели или нет"
 
 #. module: project
 #. openerp-web
@@ -4323,7 +4370,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-#, fuzzy
 msgid "You can save your reports to easily reuse it later"
 msgstr "Вы можете сохранять свои отчёты для повторного использования"
 
@@ -4351,7 +4397,7 @@ msgstr "Ваши цели"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_module_install_project
 msgid "Your Odoo Project application is up and running"
-msgstr ""
+msgstr "Odoo проект приложения включен и работает"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4454,153 +4500,3 @@ msgstr "расписание"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr "перечисленные на предыдущем шаге"
-
-#~ msgid "&times;"
-#~ msgstr "&times;"
-
-#~ msgid ""
-#~ "<strong>Follow only what you need</strong><br/>\n"
-#~ "                                    The simplest way to use notifications "
-#~ "is to follow a whole Project: you will then receive all the selected "
-#~ "notifications for all the Project's new and existing and new Tasks or "
-#~ "Issues."
-#~ msgstr ""
-#~ "<strong>Следите только за тем, что вам нужно</strong><br/>\n"
-#~ "Самый простой способ использования уведомлений - это отслеживание всего "
-#~ "проекта: в этом случае вы будете получать все выбранные уведомления для "
-#~ "всех новых и существующих задач и запросов."
-
-#~ msgid "Action Needed"
-#~ msgstr "Требуется реакция"
-
-#~ msgid "Buzz or set as done"
-#~ msgstr "Запустите или отметьте как сделанное"
-
-#~ msgid "Check this field if this project manages timesheets"
-#~ msgstr "Выберите это поле, если в проекте используются расписания"
-
-#~ msgid "Close"
-#~ msgstr "Закрыть"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата последнего сообщения"
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "Порученные задания"
-
-#~ msgid "Do not record timesheets on tasks"
-#~ msgstr "Не записывать расписания в задачах"
-
-#~ msgid "Followers"
-#~ msgstr "Подписчики"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Подписчики (Каналы)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Подписчики (Партнеры)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Если отмечено - новые сообщения требуют Вашего внимания."
-
-#~ msgid "Is Follower"
-#~ msgstr "Подписчик"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Последнее сообщение по дате"
-
-#~ msgid "Messages"
-#~ msgstr "Сообщения"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Сообщения и история общения"
-
-#~ msgid "Need functional or technical help"
-#~ msgstr "Требуется функциональная или техническая поддержка"
-
-#~ msgid "Not validated"
-#~ msgstr "Не проверено"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Количество действий"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Количество сообщений, требующих реакции"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Количество непрочтённых сообщений"
-
-#~ msgid "Open Project Menu"
-#~ msgstr "Открыть меню проекта"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Политики для сообщений в документе с использованием почтового шлюза:\n"
-#~ "- все: каждый может писать\n"
-#~ "- партнёры: только аутентифицированные партнёры;\n"
-#~ "- подписчики: только подписчики соответствующего документа\n"
-
-#~ msgid "Project Time Unit"
-#~ msgstr "Единица времени в проекте"
-
-#~ msgid "Ready to reopen"
-#~ msgstr "Готово к возобновлению работы"
-
-#~ msgid "Record timesheet lines per tasks"
-#~ msgstr "Вести табель учета задач"
-
-#~ msgid "Subscriptions"
-#~ msgstr "Подписки"
-
-#~ msgid "Task's Work on Tasks"
-#~ msgstr "Задачи, работающие на задачи"
-
-#~ msgid ""
-#~ "This allows you to transfer the entries under tasks defined for Project "
-#~ "Management to the timesheet line entries for particular date and user, "
-#~ "with the effect of creating, editing and deleting either ways.\n"
-#~ "-This installs the module project_timesheet."
-#~ msgstr ""
-#~ "Это позволяет Вам переносить записи под задачами, поставленными для "
-#~ "управления проектом, в записи строки учета рабочего времени для "
-#~ "определенной даты и пользователя, с целью создания, редактирования и "
-#~ "удаления любым способом.\n"
-#~ "-Здесь устанавливается модуль project_timesheet."
-
-#~ msgid ""
-#~ "This will set the unit of measure used in projects and tasks.\n"
-#~ "If you use the timesheet linked to projects (project_timesheet module), "
-#~ "don't forget to setup the right unit of measure in your employees."
-#~ msgstr ""
-#~ "Это установит единицу измерения, используемую в проектах и задачах. Если "
-#~ "вы используете расписание, ссылающееся на проекты (модуль "
-#~ "project_timesheet), не забудьте установить правильную единицу измерения "
-#~ "для ваших сотрудников."
-
-#~ msgid "Timesheets on Project"
-#~ msgstr "Табели по проекту"
-
-#~ msgid "Type of Account"
-#~ msgstr "Тип счёта"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Счетчик непрочтённых сообщений"
-
-#~ msgid "Use the priority for tasks related to gold customers"
-#~ msgstr "Используйте приоритеты для задач, связанных с важными клиентами"
-
-#~ msgid "Website Messages"
-#~ msgstr "Сообщения с сайта"
-
-#~ msgid "Website communication history"
-#~ msgstr "История общения с сайта"
-
-#~ msgid "You can save your reports to for easy reuse later"
-#~ msgstr "Вы можете сохранять свои отчёты для повторного использования"

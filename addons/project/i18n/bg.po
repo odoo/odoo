@@ -3,13 +3,14 @@
 # * project
 #
 # Translators:
+# Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-23 05:41+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-10-17 21:37+0000\n"
+"Last-Translator: Kaloyan Naumov <kaloyan@lumnus.net>\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/"
 "bg/)\n"
 "Language: bg\n"
@@ -182,20 +183,30 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
 msgid "# Tasks"
-msgstr ""
+msgstr "# Задачи"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_no_of_days
 msgid "# of Days"
-msgstr ""
+msgstr "# Дни"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_nbr_tasks
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
 msgid "# of Tasks"
-msgstr ""
+msgstr "# Задачи"
 
 #. module: project
 #: code:addons/project/project.py:273 code:addons/project/project.py:294
@@ -214,7 +225,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "- The Odoo Team"
-msgstr ""
+msgstr "- Екипът на Odoo"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -287,7 +298,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"o_label\">Documents</span>"
-msgstr ""
+msgstr "<span class=\"o_label\">Документ</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -567,7 +578,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Billing</strong>"
-msgstr ""
+msgstr "<strong>Плащания</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -618,7 +629,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Example: </strong>"
-msgstr ""
+msgstr "<strong>Пример: </strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -661,7 +672,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>For tasks:</strong>"
-msgstr ""
+msgstr "<strong>За задачи:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -735,7 +746,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Notes</strong>"
-msgstr ""
+msgstr "<strong>Бележки</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1052,22 +1063,22 @@ msgstr "Архивирани"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
 msgid "Assignation Date"
-msgstr ""
+msgstr "Дата на Възлагане"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Assignation Month"
-msgstr ""
+msgstr "Месец на Възлагане"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
 msgid "Assigned Tasks"
-msgstr ""
+msgstr "Назначени Задачи"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_user_id
 msgid "Assigned To"
-msgstr ""
+msgstr "Възложи На"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_user_id
@@ -1075,12 +1086,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Assigned to"
-msgstr "Присвоено на"
+msgstr "Възложена на"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_assign
 msgid "Assigning Date"
-msgstr ""
+msgstr "Дата на Възлагане"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -1131,7 +1142,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:63
 #, python-format
 msgid "Backlog"
-msgstr ""
+msgstr "Опашка"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_balance
@@ -1141,12 +1152,12 @@ msgstr "Баланс"
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_1
 msgid "Basic"
-msgstr ""
+msgstr "Базово"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Basic Management"
-msgstr ""
+msgstr "Базово Управление"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1167,7 +1178,7 @@ msgstr "Блокиран"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_crossovered_budget_line
 msgid "Budget Lines"
-msgstr ""
+msgstr "Редове на бюджет"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1178,6 +1189,11 @@ msgid ""
 "Odoo to plan but instead to\n"
 "                        collaborate, or why organizing your projects by role "
 "is wrong."
+msgstr ""
+
+#. module: project
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
 msgstr ""
 
 #. module: project
@@ -1196,6 +1212,7 @@ msgstr "Откажи"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "Отказанa"
@@ -1683,6 +1700,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Готово"
@@ -1714,7 +1732,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
 msgid "Email Template"
-msgstr ""
+msgstr "Шаблон за имейл"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2118,6 +2136,7 @@ msgstr ""
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
+#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "В развитие"
@@ -2408,7 +2427,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "Членове"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2441,6 +2460,11 @@ msgstr "Мои задачи"
 #: model:ir.model.fields,field_description:project.field_project_tags_name
 msgid "Name"
 msgstr "Име"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -2484,6 +2508,11 @@ msgstr ""
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
 msgstr "Нормален"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -2763,12 +2792,12 @@ msgstr "Име на проекта"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Project Settings"
-msgstr ""
+msgstr "Проектни Настройки"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Project Settings."
-msgstr ""
+msgstr "Проектни Настройки."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_task_graph
@@ -2863,11 +2892,21 @@ msgid "Ready to be displayed, published or sent"
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
+msgstr ""
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
 msgstr ""
 
 #. module: project
@@ -2987,7 +3026,7 @@ msgstr "Търси проект"
 #: code:addons/project/static/src/js/project.js:46
 #, python-format
 msgid "Select"
-msgstr ""
+msgstr "Избор"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3546,6 +3585,7 @@ msgstr ""
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
+#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "Трябва да се направи"
@@ -3612,6 +3652,11 @@ msgstr ""
 msgid ""
 "Use separate meetings to solve big issues or issues that aren’t important "
 "for the entire team."
+msgstr ""
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the priority for tasks related to gold customers"
 msgstr ""
 
 #. module: project
@@ -3832,12 +3877,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Projects"
-msgstr ""
+msgstr "Твоите Проекти"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Projects:"
-msgstr ""
+msgstr "Твоите Проекти:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3867,7 +3912,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_config_settings
 msgid "project.config.settings"
-msgstr ""
+msgstr "project.config.settings"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_history_cumulative
@@ -3928,66 +3973,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr ""
-
-#~ msgid "&times;"
-#~ msgstr "&times;"
-
-#~ msgid "Action Needed"
-#~ msgstr "Нужно е действие"
-
-#~ msgid "Close"
-#~ msgstr "Затвори"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата на последното съобщение, публикувано на записа."
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "Делегирани задачи"
-
-#~ msgid "Followers"
-#~ msgstr "Последователи"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Последователи (канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Последователи (партньори)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ако е отбелязано, новите съобщения ще изискват внимание."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ако е отбелязано, новите съобщения ще изискват внимание."
-
-#~ msgid "Is Follower"
-#~ msgstr "е последовател"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Дата на последното съобщение"
-
-#~ msgid "Messages"
-#~ msgstr "Съобщения"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "История на събщенията и комуникациите"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Брой действия"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Брой съобщения, които изискват внимание"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Брой непрочетени съобщения"
-
-#~ msgid "Type of Account"
-#~ msgstr "Тип акаунт"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Брой непрочетени съобщения"
-
-#~ msgid "Website Messages"
-#~ msgstr "Съобщения от уебсайта"
-
-#~ msgid "Website communication history"
-#~ msgstr "История на комуникацията в уебсайта"

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-16 13:08+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-10-06 11:46+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
 "Language: cs\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:348
+#: code:addons/account_asset/account_asset.py:347
 #, python-format
 msgid " (copy)"
 msgstr " (kopie)"
@@ -26,7 +26,7 @@ msgstr " (kopie)"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_entry_count
 msgid "# Asset Entries"
-msgstr ""
+msgstr "# Majetkové záznamy"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_depreciation_nbr
@@ -55,7 +55,7 @@ msgid "Active"
 msgstr "Aktivní"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #, python-format
 msgid "Amount"
 msgstr "Částka"
@@ -110,12 +110,12 @@ msgstr ""
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_asset_method_time
 msgid "Asset Method Time"
-msgstr ""
+msgstr "Způsob odepisování"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_name
 msgid "Asset Name"
-msgstr ""
+msgstr "Název majetku"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
@@ -144,7 +144,7 @@ msgid "Asset category"
 msgstr "Kategorie majetku"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:236
+#: code:addons/account_asset/account_asset.py:235
 #, python-format
 msgid "Asset created"
 msgstr ""
@@ -155,7 +155,7 @@ msgid "Asset depreciation line"
 msgstr "Odpisový řádek majetku"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:269
+#: code:addons/account_asset/account_asset.py:268
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr ""
@@ -343,7 +343,7 @@ msgid "Cumulative Depreciation"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -357,6 +357,11 @@ msgstr "Aktuální"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_amount
 msgid "Current Depreciation"
+msgstr "Běžný odpis"
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
+msgid "Customer"
 msgstr ""
 
 #. module: account_asset
@@ -463,7 +468,7 @@ msgstr "Odpisová metoda"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Depreciation Month"
-msgstr ""
+msgstr "Měsíční odpis"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_name
@@ -471,13 +476,13 @@ msgid "Depreciation Name"
 msgstr "Jméno odpisu"
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/account_asset_change_duration.py:83
+#: code:addons/account_asset/wizard/account_asset_change_duration.py:82
 #, python-format
 msgid "Depreciation board modified"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:489
+#: code:addons/account_asset/account_asset.py:487
 #, python-format
 msgid "Depreciation line posted."
 msgstr ""
@@ -493,19 +498,19 @@ msgid "Display Name"
 msgstr "Zobrazovaný název"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:272
+#: code:addons/account_asset/account_asset.py:271
 #, python-format
 msgid "Disposal Move"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:275
+#: code:addons/account_asset/account_asset.py:274
 #, python-format
 msgid "Disposal Moves"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:468
+#: code:addons/account_asset/account_asset.py:466
 #, python-format
 msgid "Document closed."
 msgstr ""
@@ -541,9 +546,8 @@ msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_asset_id
-#, fuzzy
 msgid "Expense Account"
-msgstr "Účet majetku"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -576,7 +580,7 @@ msgstr "Hrubá částka"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_value
 msgid "Gross Value"
-msgstr ""
+msgstr "Hrubá hodnota"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -652,7 +656,7 @@ msgid "Journal"
 msgstr "Deník"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:375
+#: code:addons/account_asset/account_asset.py:374
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
@@ -722,7 +726,7 @@ msgstr ""
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_remaining_value
 msgid "Next Period Depreciation"
-msgstr ""
+msgstr "Další etapa odpisu"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_note
@@ -746,12 +750,13 @@ msgstr ""
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_period
 msgid "Number of Months in a Period"
-msgstr ""
+msgstr "Počet měsíců za dobu"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:488
+#: code:addons/account_asset/account_asset.py:486
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #, python-format
 msgid "Partner"
 msgstr "Kontakt"
@@ -809,7 +814,7 @@ msgid "Prorata Temporis"
 msgstr "Prorata Temporis"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:314
+#: code:addons/account_asset/account_asset.py:313
 #, python-format
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
@@ -825,7 +830,7 @@ msgstr "Nákup"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Purchase Month"
-msgstr ""
+msgstr "Měsíc zakoupení"
 
 #. module: account_asset
 #: selection:account.asset.category,type:0
@@ -917,13 +922,13 @@ msgstr "Stav"
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_period
 msgid "The amount of time between two depreciations, in months"
-msgstr ""
+msgstr "Množství času mezi dvěma odpisy v měsíci"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_number
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_number
 msgid "The number of depreciations needed to depreciate your asset"
-msgstr ""
+msgstr "Počet odpisů nutný k odepsání vašeho majetku"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
@@ -957,7 +962,7 @@ msgstr "Druh"
 #: code:addons/account_asset/static/src/js/account_asset.js:24
 #, python-format
 msgid "Unposted"
-msgstr ""
+msgstr "Nezaúčtované"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_unposted_value
@@ -980,6 +985,11 @@ msgid ""
 "You can manually close an asset when the depreciation is over. If the last "
 "line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
+"Když se vytvoří nový majetek, jeho status je Návrh.\n"
+"Po jeh potvrzení ze status mění na Probíhající a v účetnictví může být "
+"započato odepisování.\n"
+"Po ukončení odpisování můžete majetek ručně uzavřít.  Pokud je zaevidovaný "
+"poslední řádek odpisů, majetek změní status na Uzavřený automaticky."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name
@@ -987,25 +997,25 @@ msgid "Year"
 msgstr "Rok"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:97
+#: code:addons/account_asset/account_asset.py:96
 #, python-format
 msgid "You cannot delete a document is in %s state."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:99
+#: code:addons/account_asset/account_asset.py:98
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:497
+#: code:addons/account_asset/account_asset.py:495
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:499
+#: code:addons/account_asset/account_asset.py:497
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr ""
@@ -1030,30 +1040,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "months"
 msgstr "měsíců"
-
-#~ msgid "Action Needed"
-#~ msgstr "Vyžadována akce"
-
-#~ msgid "Customer"
-#~ msgstr "Zákazník"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum posledního vzkazu u tohoto záznamu."
-
-#~ msgid "Followers"
-#~ msgstr "Sledující"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum posledního vzkazu"
-
-#~ msgid "Messages"
-#~ msgstr "Zprávy"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Nepřečtené zprávy"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Počítadlo nepřečtených zpráv"

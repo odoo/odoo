@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-07-22 05:15+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -193,6 +193,16 @@ msgid ""
 "\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
+msgstr ""
+
+#. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
 msgstr ""
 
 #. module: project
@@ -1375,6 +1385,11 @@ msgstr ""
 "本就是错的"
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr "Buzz or set as done"
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "按负责人"
@@ -1390,6 +1405,7 @@ msgstr "取消"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "已取消"
@@ -1435,7 +1451,7 @@ msgstr "在任务管道点击添加阶段"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Click to add/remove from favorite"
-msgstr "点击从收藏夹添加/删除"
+msgstr ""
 
 #. module: project
 #: model:web.tip,description:project.project_tip_1
@@ -1885,6 +1901,7 @@ msgstr "不要有任何犹豫，直接选择你喜欢的事件"
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "完成"
@@ -2040,7 +2057,7 @@ msgstr "当你和客户在一起的时候或者在会议中的时候非常有用
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Favorite"
-msgstr "喜好的"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -2338,6 +2355,7 @@ msgstr "改善与客户的协作"
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
+#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "进行中"
@@ -2684,6 +2702,11 @@ msgid "Name"
 msgstr "名称"
 
 #. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "需要功能或者技术帮助"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:64
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2725,6 +2748,11 @@ msgstr "没有客户评级"
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
 msgstr "一般"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr "没有确认的"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -3122,12 +3150,22 @@ msgid "Ready to be displayed, published or sent"
 msgstr "准备呈现，发布或者发送"
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr "准备重新打开"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
 msgstr "准备已经被文档化过的取消"
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
@@ -3829,6 +3867,7 @@ msgstr "时间表工作时间调整甘特图报表"
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
+#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "待办"
@@ -3896,6 +3935,11 @@ msgid ""
 "Use separate meetings to solve big issues or issues that aren’t important "
 "for the entire team."
 msgstr "用单独的会议来解决大的议题或者哪些队整个团队来说不重要的议题"
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the priority for tasks related to gold customers"
+msgstr "对重要的客户使用任务的优先级"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -4222,206 +4266,3 @@ msgstr "使用工时单"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr "先前步骤中你列出的"
-
-#~ msgid "&times;"
-#~ msgstr "&times;"
-
-#~ msgid ""
-#~ "<strong>Follow only what you need</strong><br/>\n"
-#~ "                                    The simplest way to use notifications "
-#~ "is to follow a whole Project: you will then receive all the selected "
-#~ "notifications for all the Project's new and existing and new Tasks or "
-#~ "Issues."
-#~ msgstr ""
-#~ "<strong>只跟进您需要的东西</strong><br/>\n"
-#~ "                                    最简单的通知使用方法是跟进整个项目: 您"
-#~ "将收到有关项目的新任务或议题的所有选定通知。"
-
-#~ msgid "Action Needed"
-#~ msgstr "所需行动"
-
-#~ msgid "Buzz or set as done"
-#~ msgstr "Buzz or set as done"
-
-#~ msgid "Check this field if this project manages timesheets"
-#~ msgstr "如果要用项目管理工时单，就勾选这个字段"
-
-#~ msgid "Close"
-#~ msgstr "关闭"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "已委派任务"
-
-#~ msgid "Do not record timesheets on tasks"
-#~ msgstr "任务上不做工时单记录"
-
-#~ msgid "Followers"
-#~ msgstr "关注者"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者(频道)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者（业务伙伴）"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "确认后, 会出现新消息."
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid "Messages"
-#~ msgstr "消息"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "消息和通信历史"
-
-#~ msgid "Need functional or technical help"
-#~ msgstr "需要功能或者技术帮助"
-
-#~ msgid "Not validated"
-#~ msgstr "没有确认的"
-
-#~ msgid "Number of Actions"
-#~ msgstr "动作的序列号"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要动作的消息编号"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读的消息数量"
-
-#~ msgid "Open Project Menu"
-#~ msgstr "打开项目菜单"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "文档信息发送使用邮件服务器规则。\n"
-#~ "- 所有人：所有人都允许\n"
-#~ "- 业务伙伴：仅认证的业务伙伴\n"
-#~ "- 关注者：仅关注相关文档者\n"
-
-#~ msgid "Project Time Unit"
-#~ msgstr "项目时间单位"
-
-#~ msgid "Ready to reopen"
-#~ msgstr "准备重新打开"
-
-#~ msgid "Record timesheet lines per tasks"
-#~ msgstr "记录每个任务的时间表线"
-
-#~ msgid "Subscriptions"
-#~ msgstr "订阅"
-
-#~ msgid "Task's Work on Tasks"
-#~ msgstr "任务的工作任务"
-
-#~ msgid ""
-#~ "This allows you to transfer the entries under tasks defined for Project "
-#~ "Management to the timesheet line entries for particular date and user, "
-#~ "with the effect of creating, editing and deleting either ways.\n"
-#~ "-This installs the module project_timesheet."
-#~ msgstr ""
-#~ "这可以允许你将用于项目管理任务下的分录调拨到时间表下的分录，特别是时间和用"
-#~ "户。无论哪种方式的都将影响生成、编辑、删除\n"
-#~ "这会安装项目时间表模块"
-
-#~ msgid ""
-#~ "This will set the unit of measure used in projects and tasks.\n"
-#~ "If you use the timesheet linked to projects (project_timesheet module), "
-#~ "don't forget to setup the right unit of measure in your employees."
-#~ msgstr ""
-#~ "此操作用于设置项目和任务的所采用的计量单位\n"
-#~ "如果您安装了project_timesheet模块，工作时间表会与项目连接，请记得在员工设"
-#~ "置中选择正确的计量单位。"
-
-#~ msgid "Timesheets on Project"
-#~ msgstr "项目的工时单"
-
-#~ msgid "Type of Account"
-#~ msgstr "科目的类型"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"
-
-#~ msgid "Use the priority for tasks related to gold customers"
-#~ msgstr "对重要的客户使用任务的优先级"
-
-#~ msgid "Website Messages"
-#~ msgstr "网站消息"
-
-#~ msgid "Website communication history"
-#~ msgstr "网站沟通记录"
-
-#~ msgid "You can save your reports to for easy reuse later"
-#~ msgstr "您可以将报表保存便于以后重复使用"
-
-#~ msgid "Activate Sample Project"
-#~ msgstr "激活示例项目"
-
-#~ msgid "Choose a Project Email"
-#~ msgstr "选择项目邮件"
-
-#~ msgid "Click on a card to get the details of the task."
-#~ msgstr "点击卡片查看任务详情。"
-
-#~ msgid "Click on this button to modify the task."
-#~ msgstr "点击按钮修改任务。"
-
-#~ msgid "Click to create a new project.<br>"
-#~ msgstr "点击创建新项目.<br>"
-
-#~ msgid "Configuration options are available in the Settings app."
-#~ msgstr "配置选项在模块的设置里可用。"
-
-#~ msgid "Create"
-#~ msgstr "创建"
-
-#~ msgid "Create a Project"
-#~ msgstr "创建项目"
-
-#~ msgid "Create date"
-#~ msgstr "创建日期"
-
-#~ msgid "Let's create your first project."
-#~ msgstr "创建第一个项目."
-
-#~ msgid "More Info"
-#~ msgstr "更多信息"
-
-#~ msgid "On invitation only"
-#~ msgstr "仅受邀请"
-
-#~ msgid "Or"
-#~ msgstr "或"
-
-#~ msgid "Privacy"
-#~ msgstr "隐私"
-
-#~ msgid "Project Count"
-#~ msgstr "项目计数"
-
-#~ msgid "Visible by all employees"
-#~ msgstr "所有员工可见"
-
-#~ msgid "Visible by following customers"
-#~ msgstr "关注中客户可见"
-
-#~ msgid "Write date"
-#~ msgstr "修改日期"
-
-#~ msgid "activate a sample project"
-#~ msgstr "激活示例项目"

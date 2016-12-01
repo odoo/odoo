@@ -12,16 +12,16 @@
 # liulixia <liu.lixia@elico-corp.com>, 2015
 # Martin Trigaux, 2015
 # Rona Lin <ssauapw@qq.com>, 2015
-# wxb <bd5dml@gmail.com>, 2015
+# xiaobin wu <bd5dml@gmail.com>, 2015
 # 卓忆科技 <zhanghao@jointd.com>, 2015-2016
 # liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-03 04:09+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-10-07 03:43+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
 "language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -240,6 +240,19 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
 msgstr "<i class=\"fa fa-question-circle\"> 视图案例</i>"
+
+#. module: crm
+#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
+msgid ""
+"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
+"since at least 5 days.</p>\n"
+"%if object.description:\n"
+"<p>Here is the description about the opportunity : </p><p><i>${object."
+"description}</i>\n"
+"%endif\n"
+"</p><p>Thank you!</p>\n"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1243,6 +1256,18 @@ msgid "Call"
 msgstr "电话"
 
 #. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for Demo"
+msgstr "来电要求演示"
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for a demo"
+msgstr "来电要求演示"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1343,7 +1368,7 @@ msgstr "点击输入一个新的销售标签。"
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Click to set a new stage in your opportunity pipeline."
-msgstr ""
+msgstr "点击，为你的线索／商机管道设置一个新的阶段"
 
 #. module: crm
 #: model:web.tip,description:crm.crm_tip_2
@@ -1806,6 +1831,11 @@ msgid "Download the"
 msgstr "下载"
 
 #. module: crm
+#: model:ir.filters,name:crm.filter_draft_lead
+msgid "Draft Leads"
+msgstr "草稿线索"
+
+#. module: crm
 #: selection:sale.config.settings,group_use_lead:0
 msgid "Each mail sent to the alias creates a new opportunity"
 msgstr "发送到别名的每一封电子邮件都将创建一个新的商机。"
@@ -2001,6 +2031,18 @@ msgstr "已完成"
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
 msgstr "在管道折叠"
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up Quote"
+msgstr "跟进报价"
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up quote"
+msgstr "跟进报价"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2468,6 +2510,11 @@ msgid "Leads by Source"
 msgstr "线索源头"
 
 #. module: crm
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr "来自USA的线索"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr "分配给我的线索"
@@ -2524,7 +2571,7 @@ msgstr "列出可能的痛点按段/简介"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
 msgid "Log & Schedule Next"
-msgstr ""
+msgstr "登记 & 安排下一个活动"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2578,6 +2625,12 @@ msgid "Low"
 msgstr "低"
 
 #. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Make Quote"
+msgstr "制作报价"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Lost"
 msgstr "标记失去"
@@ -2612,7 +2665,7 @@ msgstr "联系人组的最多联系人数量"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
-msgstr "普通"
+msgstr "媒介"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:1010
@@ -2885,7 +2938,7 @@ msgstr "没足够的库存"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_note
 msgid "Note"
-msgstr "笔记"
+msgstr "备注"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3305,7 +3358,7 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"策略是通过邮件网关在文档上提交一个消息\n"
+"政策是通过邮件网关在文档上提交一个消息\n"
 "- everyone: 任何人都可以提交\n"
 "- partners: 只有认证过的合作伙伴\n"
 "- followers: 只有相关文件或下列频道成员的跟随者\n"
@@ -3323,7 +3376,7 @@ msgstr "前一个活动"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Prices"
-msgstr "价格"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3430,6 +3483,12 @@ msgid "Relation field"
 msgstr "关联字段"
 
 #. module: crm
+#: model:ir.actions.server,name:crm.action_email_reminder_lead
+msgid "Reminder to User"
+msgstr "提醒用户"
+
+#. module: crm
+#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
 msgid ""
 "Reminder: Lead ${object.name} from ${object.partner_id != False and object."
@@ -3597,6 +3656,12 @@ msgid "Selection"
 msgstr "选择"
 
 #. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Send a quotation"
+msgstr "发送一个报价单"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -3608,6 +3673,11 @@ msgstr "发送电子邮件给所有在“合格”阶段20天以上的商机"
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "序号"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_set_team_sales_department
+msgid "Set team to Sales Department"
+msgstr "设置团队 到销售部"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4642,324 +4712,3 @@ msgstr "未知的"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "with your work above"
 msgstr "以上你的工作"
-
-#~ msgid ""
-#~ "<p>This opportunity did not have any activity since at least 5 days. Here "
-#~ "are some details:</p>\n"
-#~ "<ul>\n"
-#~ "<li>Name: ${object.name}</li>\n"
-#~ "<li>ID: ${object.id}</li>\n"
-#~ "<li>Description: ${object.description}</li>\n"
-#~ "</ul>"
-#~ msgstr ""
-#~ "<p>这个商机至少5天没有任何活动。这是一些详细信息：</p>\n"
-#~ "<ul>\n"
-#~ "<li>名称: ${object.name}</li>\n"
-#~ "<li>ID: ${object.id}</li>\n"
-#~ "<li>描述: ${object.description}</li>\n"
-#~ "</ul>"
-
-#~ msgid "Action Needed"
-#~ msgstr "所需动作"
-
-#~ msgid "Both"
-#~ msgstr "全部"
-
-#~ msgid "Call for Demo"
-#~ msgstr "来电要求演示"
-
-#~ msgid "Call for a demo"
-#~ msgstr "来电要求演示"
-
-#~ msgid "Click to set a new stage in your lead/opportunity pipeline."
-#~ msgstr "点击，为你的线索／商机管道设置一个新的阶段"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid "Deduplicate Contact"
-#~ msgstr "重复联系人"
-
-#~ msgid "Done"
-#~ msgstr "完成"
-
-#~ msgid "Draft Leads"
-#~ msgstr "草稿线索"
-
-#~ msgid "Follow-up"
-#~ msgstr "催款"
-
-#~ msgid "Follow-up Quote"
-#~ msgstr "跟进报价"
-
-#~ msgid "Follow-up call"
-#~ msgstr "跟进电话"
-
-#~ msgid "Follow-up quote"
-#~ msgstr "跟进报价"
-
-#~ msgid "Followers"
-#~ msgstr "关注者"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者(频道)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者（业务伙伴）"
-
-#~ msgid "Followup"
-#~ msgstr "关注"
-
-#~ msgid "Function"
-#~ msgstr "职能"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "确认后, 会出现新消息."
-
-#~ msgid ""
-#~ "If you followed the preceeding steps, you already setup\n"
-#~ "                        the foundations to a strong process leading to\n"
-#~ "                        continuous improvements of your sales teams."
-#~ msgstr ""
-#~ "如果你遵循上面的步骤，你已经设置了基础，能够让你不断改进销售的强大的流程"
-
-#~ msgid "Incoming"
-#~ msgstr "将要来的"
-
-#~ msgid ""
-#~ "Incoming email create leads automatically when a new prospect contacts "
-#~ "you.\n"
-#~ "                        That's the easiest way to integrate Odoo with "
-#~ "third party apps."
-#~ msgstr ""
-#~ "收到的邮件会自动创建线索,当一个新的联系人你时.那是最简单的方法去把第三方的"
-#~ "应用集成到Odoo."
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid "Last Activity"
-#~ msgstr "上个活动"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid "Leads from USA"
-#~ msgstr "来自USA的线索"
-
-#~ msgid ""
-#~ "Link between stages and sales teams. When set, this limitate the current "
-#~ "stage to the selected sales teams."
-#~ msgstr "在阶段和邮件地址建连接。设置后，将限制当前的阶段选择的销售团队。"
-
-#~ msgid "Make Quote"
-#~ msgstr "制作报价"
-
-#~ msgid "Mark As Lost"
-#~ msgstr "标记为已失去"
-
-#~ msgid "Messages"
-#~ msgstr "消息"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "消息和通信历史"
-
-#~ msgid "Negotiation"
-#~ msgstr "谈判"
-
-#~ msgid "Next Action Date"
-#~ msgstr "下一行动日期"
-
-#~ msgid "Next Activity 1"
-#~ msgstr "下一个活动1"
-
-#~ msgid "Next Activity 2"
-#~ msgstr "下一个活动2"
-
-#~ msgid "Next Activity 3"
-#~ msgstr "下一个活动3"
-
-#~ msgid "Note regarding the next action."
-#~ msgstr "关于下一行动的说明."
-
-#~ msgid "Number of Actions"
-#~ msgstr "行动数量"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要动作的消息编号"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读的消息数量"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "打开销售订单"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "文档信息发送使用邮件服务器规则。\n"
-#~ "- 所有人：所有人都允许\n"
-#~ "- 业务伙伴：仅认证的业务伙伴\n"
-#~ "- 关注者：仅关注相关文档者\n"
-
-#~ msgid "Qualification"
-#~ msgstr "资格"
-
-#~ msgid ""
-#~ "Reminder on Lead: ${object.id} from ${object.partner_id != False and "
-#~ "object.partner_id.name or object.contact_name}"
-#~ msgstr ""
-#~ "关于线索的提醒 : ${object.id} 来自 ${object.partner_id != False and "
-#~ "object.partner_id.name or object.contact_name}"
-
-#~ msgid "Reminder to User"
-#~ msgstr "提醒用户"
-
-#~ msgid "Sales Tags"
-#~ msgstr "销售标签"
-
-#~ msgid "Select Stages for this Sales Team"
-#~ msgstr "为这个销售团队选择阶段"
-
-#~ msgid "Send a quotation"
-#~ msgstr "发送一个报价单"
-
-#~ msgid "Set team to Sales Department"
-#~ msgstr "设置团队 到销售部"
-
-#~ msgid ""
-#~ "Show all opportunities for which the next action date is today or before"
-#~ msgstr "显示下一个行动日期是今天还是以前的所有机会"
-
-#~ msgid ""
-#~ "Stages will allow salespersons to easily track how a specific\n"
-#~ "                lead or opportunity is positioned in the sales cycle."
-#~ msgstr ""
-#~ "阶段会让销售人员轻松跟踪一个特定的线索\n"
-#~ "或在销售周期中的机会定位。"
-
-#~ msgid "Teams"
-#~ msgstr "团队"
-
-#~ msgid "The date before which no action should be taken."
-#~ msgstr "没有采取动作之前的日期"
-
-#~ msgid ""
-#~ "This field is used to distinguish stages related to Leads from stages "
-#~ "related to Opportunities, or to specify stages available for both types."
-#~ msgstr ""
-#~ "此域用于区分用于线索的阶段和用于商机的阶段，或者指示同时可用于两个类型。"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "这里是一个帮助跟踪您不同市场活动尝试的名称。例如：Fall_Drive，"
-#~ "Christmas_Special"
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr "这里是交付的方式。例如： 明信片、 电子邮件、 或横幅广告"
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr "这是链接的来源，例如：搜索引擎，其他领域，或者邮件列表名称"
-
-#~ msgid ""
-#~ "This stage is folded in the kanban view whenthere are no records in that "
-#~ "stage to display."
-#~ msgstr "当在该阶段没有可显示的记录时，此阶段在看板视图中被折叠。"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"
-
-#~ msgid "Unreconciled aml ids"
-#~ msgstr "未调节的aml ids"
-
-#~ msgid "Website Messages"
-#~ msgstr "网站消息"
-
-#~ msgid "Website communication history"
-#~ msgstr "网站沟通记录"
-
-#~ msgid ""
-#~ "What are the main KPIs you need to track for your the sales actities?"
-#~ msgstr "你最想追踪的你的销售活动的KPI是什么？"
-
-#~ msgid "Your Customers"
-#~ msgstr "您的客户"
-
-#~ msgid "Your Customizations"
-#~ msgstr "你的自定义设置"
-
-#~ msgid "Your Prices"
-#~ msgstr "你的价格"
-
-#~ msgid "Your Products"
-#~ msgstr "您的产品"
-
-#~ msgid "Your Proposal"
-#~ msgstr "你的建议"
-
-#~ msgid "oe_kanban_text_red"
-#~ msgstr "oe_kanban_text_red"
-
-#~ msgid "Closed Date"
-#~ msgstr "关闭的日期"
-
-#~ msgid "Configuration options are available in the Settings app."
-#~ msgstr "配置选项在模块的设置里可用。"
-
-#~ msgid "Create"
-#~ msgstr "创建"
-
-#~ msgid "Create Date"
-#~ msgstr "创建日期"
-
-#~ msgid "Create an Opportunity"
-#~ msgstr "创建商机"
-
-#~ msgid "Created By"
-#~ msgstr "创建者"
-
-#~ msgid "Discard"
-#~ msgstr "舍弃"
-
-#~ msgid "Expected Closing Date"
-#~ msgstr "预期结束日期"
-
-#~ msgid "Let's have a look at your opportunities pipeline."
-#~ msgstr "对商机漏斗有个认识."
-
-#~ msgid "More Info"
-#~ msgstr "更多信息"
-
-#~ msgid "Next activity is planned"
-#~ msgstr "下一个活动已计划"
-
-#~ msgid "Next activity late"
-#~ msgstr "下一个活动迟到"
-
-#~ msgid "Opportunity Title"
-#~ msgstr "商机主题"
-
-#~ msgid "Probable Turnover"
-#~ msgstr "可能的营业额"
-
-#~ msgid "Schedule an Activity"
-#~ msgstr "安排活动"
-
-#~ msgid "Use the breadcrumbs to <b>go back to your sales pipeline</b>."
-#~ msgstr "使用面包屑 <b>回到你的销售漏斗</b>."
-
-#~ msgid "Used to log into the system"
-#~ msgstr "用户登录入系统"
-
-#~ msgid "Voip integration"
-#~ msgstr "VoIP集成"

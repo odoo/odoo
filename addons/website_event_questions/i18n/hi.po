@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 12:00+0000\n"
-"PO-Revision-Date: 2015-11-05 11:12+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-09-02 19:31+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Hindi (http://www.transifex.com/odoo/odoo-9/language/hi/)\n"
 "Language: hi\n"
@@ -20,6 +20,11 @@ msgstr ""
 #. module: website_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.registration_attendee_details_questions
 msgid "<strong>Last questions</strong>"
+msgstr ""
+
+#. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_question_2
+msgid "Accommodation"
 msgstr ""
 
 #. module: website_event_questions
@@ -47,18 +52,23 @@ msgid "Attendee"
 msgstr ""
 
 #. module: website_event_questions
+#: model:event.answer,name:website_event_questions.event_suggestion_0_2
+msgid "Bronze"
+msgstr ""
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_create_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_create_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "निर्माण कर्ता"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_create_date
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_create_date
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_create_date
 msgid "Created on"
-msgstr ""
+msgstr "निर्माण तिथि"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_display_name
@@ -66,7 +76,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_display_name
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "नाम दिखाएँ"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_event
@@ -91,9 +101,14 @@ msgid "Event registration id"
 msgstr ""
 
 #. module: website_event_questions
+#: model:event.answer,name:website_event_questions.event_suggestion_0_0
+msgid "Gold"
+msgstr ""
+
+#. module: website_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Group By"
-msgstr ""
+msgstr "वर्गीकरण का आधार"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_id
@@ -101,7 +116,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_id
 msgid "ID"
-msgstr ""
+msgstr "पहचान"
 
 #. module: website_event_questions
 #: model:ir.model.fields,help:website_event_questions.field_event_question_is_individual
@@ -111,25 +126,45 @@ msgid ""
 msgstr ""
 
 #. module: website_event_questions
+#: model:event.answer,name:website_event_questions.event_suggestion_2_1
+msgid "In Charge"
+msgstr ""
+
+#. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_question_0
+msgid "Kind of partner"
+msgstr ""
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer___last_update
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question___last_update
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report___last_update
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "अन्तिम संशोधन कब"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_write_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_write_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "अंतिम सुधारकर्ता"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_write_date
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_write_date
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_write_date
 msgid "Last Updated on"
+msgstr "अंतिम सुधार की तिथि"
+
+#. module: website_event_questions
+#: model:event.answer,name:website_event_questions.event_suggestion_1_1
+msgid "No"
+msgstr "नही"
+
+#. module: website_event_questions
+#: model:event.answer,name:website_event_questions.event_suggestion_2_0
+msgid "Personal"
 msgstr ""
 
 #. module: website_event_questions
@@ -175,9 +210,24 @@ msgid "Sequence"
 msgstr "अनुक्रम"
 
 #. module: website_event_questions
+#: model:event.answer,name:website_event_questions.event_suggestion_0_1
+msgid "Silver"
+msgstr ""
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_title
 msgid "Title"
 msgstr ""
+
+#. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_question_1
+msgid "Veggie"
+msgstr ""
+
+#. module: website_event_questions
+#: model:event.answer,name:website_event_questions.event_suggestion_1_0
+msgid "Yes"
+msgstr "हाँ"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_answer
@@ -198,9 +248,3 @@ msgstr ""
 #: model:ir.model,name:website_event_questions.model_event_registration_answer
 msgid "event.registration.answer"
 msgstr ""
-
-#~ msgid "No"
-#~ msgstr "नही"
-
-#~ msgid "Yes"
-#~ msgstr "हाँ"

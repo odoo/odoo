@@ -3,14 +3,14 @@
 # * sale
 #
 # Translators:
-# Manuela Silva <h_manuela_rodsilva@gmail.com>, 2015
+# Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2015
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-03-10 09:16+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-22 13:46+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
 "pt/)\n"
@@ -106,13 +106,10 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
-#, fuzzy
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-"'Orçamento' or 'Ordem'} (Nº ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -454,6 +451,12 @@ msgid "Delivery address for current sales order."
 msgstr "Endereço de entrega para a ordem de venda corrente."
 
 #. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr "Depósito"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
 msgstr "Produto do Depósito"
@@ -471,9 +474,8 @@ msgstr "Preços diferentes por segmento de cliente"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "Disc.(%)"
-msgstr "Desconto (%)"
+msgstr "Desc.(%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
@@ -518,9 +520,8 @@ msgstr "Mostrar margens nos orçamentos e ordens de venda"
 
 #. module: sale
 #: selection:sale.config.settings,module_sale_layout:0
-#, fuzzy
 msgid "Do not personalize sale orders and invoice reports"
-msgstr "Mostrar incoterms nas vendas e faturas"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -571,9 +572,8 @@ msgstr "Assistente de criação de mensagem eletrónica"
 
 #. module: sale
 #: model:ir.model,name:sale.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "Assistente de criação de mensagem eletrónica"
+msgstr "Assistente de Composição de Email para os Inquéritos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
@@ -630,7 +630,7 @@ msgstr "Totalmente Faturado"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Peso bruto"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -922,7 +922,7 @@ msgstr "Nunca permitir modificar uma ordem de venda confirmada"
 #: code:addons/sale/sale.py:101
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "Novo"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
@@ -1331,9 +1331,8 @@ msgstr "Análise de cotações"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#, fuzzy
 msgid "Quotations Sent"
-msgstr "Orçamento enviado"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1347,9 +1346,8 @@ msgstr "Da referência do documento que gerou a ordem do pedido de vendas."
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
-#, fuzzy
 msgid "Reinvoice Costs"
-msgstr "Estado da Fatura"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1590,12 +1588,9 @@ msgstr "Mostrar listas de preços nos clientes"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
-"Alguns produtos podem ser vendidos/comprados em diferentes unidades medida "
-"(avançado)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -1780,9 +1775,8 @@ msgstr ""
 
 #. module: sale
 #: selection:product.template,track_service:0
-#, fuzzy
 msgid "Timesheets on project"
-msgstr "Folha de Horas em contratco"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -1832,9 +1826,8 @@ msgstr "Unidade de Medida"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
-#, fuzzy
 msgid "Units of Measure"
-msgstr "Unidade de Medida"
+msgstr "Unidades de Medida"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1883,7 +1876,7 @@ msgstr "IVA:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Volume"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
@@ -1933,9 +1926,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
-#, fuzzy
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr "Linhas de ordem de venda prontas para serem faturadas"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1960,9 +1952,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "Linha analítica"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1978,101 +1969,3 @@ msgstr "sale.config.settings"
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "Desconhecido"
-
-#~ msgid ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-#~ msgstr ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Orçamento' or 'Ordem'} (Nº ${object.name or 'n/a' })"
-
-#~ msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
-#~ msgstr "<span groups=\"sale.group_discount_per_so_line\">Desc.(%)</span>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Ação Necessária"
-
-#~ msgid "Allows you to specify an analytic account on sales orders."
-#~ msgstr "Permite indicar uma conta analítica nas ordens de venda."
-
-#~ msgid "Analytic Line"
-#~ msgstr "Linha analítica"
-
-#~ msgid "Analytic accounting for sales"
-#~ msgstr "Contabilidade analítica para vendas"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data da Ultmia Mensagem Inserida no Registo"
-
-#~ msgid "Deposit"
-#~ msgstr "Depósito"
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canais)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Parceiros)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
-
-#~ msgid "Invoice based on time and material"
-#~ msgstr "Faturar baseado no tempo e material"
-
-#~ msgid "Is Follower"
-#~ msgstr "É um seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data da Última Mensagem"
-
-#~ msgid "Messages"
-#~ msgstr "Mensagens"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Histórico de mensagens e comunicação"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de Ações"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensagens que requerem uma ação"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensagens por ler"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "Abrir menu de vendas"
-
-#~ msgid ""
-#~ "Some products may be sold/purchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr ""
-#~ "Alguns produtos podem ser vendidos/comprados em diferentes unidades "
-#~ "medida (avançado)"
-
-#~ msgid "Timesheets on contract"
-#~ msgstr "Folha de Horas em contratco"
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Unidades de Medida"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de Mensagens por Ler"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensagens do Website"
-
-#~ msgid "Website communication history"
-#~ msgstr "Histórico de Comunicação do Website"
-
-#~ msgid "You can only delete draft quotations!"
-#~ msgstr "Só pode apagar orçamentos em rascunho."
-
-#~ msgid "account.config.settings"
-#~ msgstr "account.config.settings"

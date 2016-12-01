@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-02 08:32+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-23 12:43+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
 "hu/)\n"
@@ -715,6 +715,8 @@ msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
+"A mellékletek a modell / res_id és ennek a mezőnek az üzenetével lesznek a "
+"dokumentumhoz hozzáfűzve."
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -1056,7 +1058,7 @@ msgstr "Párbeszéd lapozási állapot"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
 msgid "Conversation is minimized"
-msgstr ""
+msgstr "Párbeszéd lecsökkentése"
 
 #. module: mail
 #. openerp-web
@@ -1081,7 +1083,7 @@ msgstr "Létrehoz %s"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
 msgid "Create Date"
-msgstr "Dátum létrehozás"
+msgstr "Létrehozás dátuma"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_uid
@@ -1248,19 +1250,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete
 msgid "Delete Emails"
-msgstr ""
+msgstr "E-mailek törlése"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete_message
 msgid "Delete Message Copy"
-msgstr ""
+msgstr "Üzenet másolat törlése"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_auto_delete
 msgid "Delete sent emails (mass mailing only)"
-msgstr ""
+msgstr "Elküldött e-mailek törlése (kizárólag tömeges levélküldés)"
 
 #. module: mail
 #. openerp-web
@@ -1349,6 +1351,8 @@ msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
 msgstr ""
+"Ne tartsa az e-mail másolatát a kommunikációs történet dokumentumban "
+"(kizárólag tömeges levélküldés)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
@@ -2075,6 +2079,8 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible."
 msgstr ""
+"Ha beállított, a sorba állító vezérlő a dátum után fogja elküldeni. Ha nincs "
+"beállítva, az e-mail amilyen gyorsan csak lehet kiküldésre kerül."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_scheduled_date
@@ -2083,6 +2089,9 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. Jinja2 placeholders may be used."
 msgstr ""
+"Ha beállított, a sorba állító vezérlő a dátum után fogja elküldeni. Ha nincs "
+"beállítva, az e-mail amilyen gyorsan csak lehet kiküldésre kerül. Jinja2 "
+"üres mező kitöltést használhat."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_base_config_settings_alias_domain
@@ -2101,7 +2110,7 @@ msgstr "Nem aktív álnevek"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:974
+#: code:addons/mail/static/src/js/chat_manager.js:958
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2143,7 +2152,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:593
+#: code:addons/mail/static/src/js/chat_manager.js:577
 #, python-format
 msgid "Invitation"
 msgstr "Meghívó"
@@ -2263,7 +2272,7 @@ msgstr "Ez egy üzenet"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
 msgid "Is Subscribed"
-msgstr ""
+msgstr "Feliratkozott"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
@@ -3540,7 +3549,7 @@ msgstr "Privát csatornák"
 #: code:addons/mail/static/src/js/client_action.js:138
 #, python-format
 msgid "Public Channels"
-msgstr ""
+msgstr "Nyilvános csatornák"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180
@@ -3721,7 +3730,7 @@ msgstr "Tervezett dátum"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_scheduled_date
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr ""
+msgstr "Tervezett elküldési dátum"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -3904,7 +3913,7 @@ msgstr "Szmájlik"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:980
+#: code:addons/mail/static/src/js/chat_manager.js:964
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4021,7 +4030,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
 msgid "The escaped html code replacing the shortcut"
-msgstr ""
+msgstr "A kivett html kód helyettesíti a gyorsbillentyűt"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_model_id
@@ -4090,7 +4099,7 @@ msgstr "Gyorsbillentyű mely a társalgások menüben ki lesz cserélve"
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,help:mail.field_mail_template_model_id
 msgid "The type of document this template can be used with"
-msgstr ""
+msgstr "Ennek a sablonnak a dokumentum típusát használhatja ezzel"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4187,6 +4196,8 @@ msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
+"A követett értékek külön modellben vannak tárolva. Ez a mező lehetővé teszi "
+"a követést és a statisztika generálását a modellhez."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
@@ -4576,7 +4587,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:593
+#: code:addons/mail/static/src/js/chat_manager.js:577
 #, python-format
 msgid "You have been invited to: "
 msgstr "Ön meghívót kapott:"
@@ -4617,6 +4628,11 @@ msgstr "Sablonjának meg kell határoznia az email_from formát"
 #: model:ir.model,name:mail.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "igazgatósági-ülés"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -4661,7 +4677,7 @@ msgstr "ir.autovacuum"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "mail.alias.mixin"
-msgstr ""
+msgstr "mail.alias.mixin"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -4701,6 +4717,11 @@ msgid "publisher_warranty.contract"
 msgstr "publisher_warranty.contract"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "olvasott"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:16
 #, python-format
@@ -4720,69 +4741,13 @@ msgid "record:"
 msgstr "feljegyzés:"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "értékesítés"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:35
 #, python-format
 msgid "this document"
 msgstr "ez a dokumentum"
-
-#~ msgid ""
-#~ "Attachments are linked to a document through model / res_id and to the "
-#~ "messagethrough this field."
-#~ msgstr ""
-#~ "A mellékletek a modell / res_id és ennek a mezőnek az üzenetével lesznek "
-#~ "a dokumentumhoz hozzáfűzve."
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "Automatikusan letisztított HTML tartalom"
-
-#~ msgid "Automatically set needaction as Read"
-#~ msgstr "Olvasandó, mint szükséges művelet, automatikusan beállítva"
-
-#~ msgid "Compose a new message"
-#~ msgstr "Új üzenet szerkesztése"
-
-#~ msgid "Conversation is minimied"
-#~ msgstr "Párbeszéd lecsökkentése"
-
-#~ msgid "Join Group"
-#~ msgstr "Csatlakozás a csoporthoz"
-
-#~ msgid ""
-#~ "Odoo helps you easily track all activities related to\n"
-#~ "            a customer; discussions, history of business opportunities,\n"
-#~ "            documents, etc."
-#~ msgstr ""
-#~ " Odoo rendszer segít, hogy könnyen nyomon követhesse az ügyfelekkel, "
-#~ "megbeszélésekkel, üzleti lehetőségek történeteivel, dokumentumokkal , "
-#~ "stb. kapcsolatos tevékenységeket."
-
-#~ msgid ""
-#~ "Rich-text/HTML version of the message (placeholders may be used here)"
-#~ msgstr ""
-#~ "Az üzenet Rich-text/HTML verziója (üres karakterek is használhatóak itt)"
-
-#~ msgid "Send mail"
-#~ msgstr "Üzenetet küld"
-
-#~ msgid "The excaped html code replacing the shortcut"
-#~ msgstr "A kivett html kód helyettesíti a gyorsbillentyűt"
-
-#~ msgid "The kind of document with with this template can be used"
-#~ msgstr "A dokumentum típusa amit ezzel a sablonnal használni lehet"
-
-#~ msgid ""
-#~ "Tracked values are stored in a separate model. This field allow to "
-#~ "reconstructthe tracking and to generate statistics on the model."
-#~ msgstr ""
-#~ "A követett értékek külön modellben vannak tárolva. Ez a mező lehetővé "
-#~ "teszi a követést és a statisztika generálását a modellhez."
-
-#~ msgid "board-meetings"
-#~ msgstr "igazgatósági-ülés"
-
-#~ msgid "rd"
-#~ msgstr "olvasott"
-
-#~ msgid "sales"
-#~ msgstr "értékesítés"

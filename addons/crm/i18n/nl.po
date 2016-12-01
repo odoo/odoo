@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-06 10:39+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-10-09 11:40+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
@@ -196,6 +196,15 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"\n"
+"<p>Hallo ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>Op de prospect <strong>${object.name}</strong>zijn geen activiteiten "
+"uitgevoerd voor minimaal 5 dagen.</p>\n"
+"%if object.description:\n"
+"<p>Hier is beschrijving van de prospect: </p><p><i>${object.description}</"
+"i>\n"
+"%endif\n"
+"</p><p>Bedankt!</p>\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_meeting_count
@@ -233,6 +242,27 @@ msgstr "<i class=\"fa fa-envelope-o\"/>&amp;nbsp;"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
 msgstr "<i class=\"fa fa-question-circle\"> voorbeelden bekijken</i>"
+
+#. module: crm
+#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
+msgid ""
+"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
+"since at least 5 days.</p>\n"
+"%if object.description:\n"
+"<p>Here is the description about the opportunity : </p><p><i>${object."
+"description}</i>\n"
+"%endif\n"
+"</p><p>Thank you!</p>\n"
+msgstr ""
+"<p>Hallo ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>Op de prospect <strong>${object.name}</strong>zijn geen activiteiten "
+"uitgevoerd voor minimaal 5 dagen.</p>\n"
+"%if object.description:\n"
+"<p>Hier is beschrijving van de prospect: </p><p><i>${object.description}</"
+"i>\n"
+"%endif\n"
+"</p><p>Bedankt!</p>\n"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -891,7 +921,7 @@ msgid ""
 "our marketing apps:"
 msgstr ""
 "<strong>Om sneller en meer leads op te sporen</strong> moet u eens een "
-"kijkje nemen bij onze marketingtoepassingen:"
+"kijkje nemen bij onze marketing apps:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -904,7 +934,7 @@ msgstr ""
 "<strong>Opleidingen</strong><br/>\n"
 "                                Om een sterk verkooptrainingsprogramma uit "
 "te bouwen,\n"
-"                                kan u volgende Odoo-toepassingen gebruiken:"
+"                                kan u volgende Odoo apps gebruiken:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1291,6 +1321,18 @@ msgid "Call"
 msgstr "Bel"
 
 #. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for Demo"
+msgstr "Bel voor demo"
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for a demo"
+msgstr "Bel voor een demo"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1393,7 +1435,7 @@ msgstr "Klik om een nieuw verkooplabel toe te voegen."
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Click to set a new stage in your opportunity pipeline."
-msgstr ""
+msgstr "Klik om een nieuwe fase in te stellen voor uw prospect pijplijn."
 
 #. module: crm
 #: model:web.tip,description:crm.crm_tip_2
@@ -1866,6 +1908,11 @@ msgid "Download the"
 msgstr "Download het"
 
 #. module: crm
+#: model:ir.filters,name:crm.filter_draft_lead
+msgid "Draft Leads"
+msgstr "Concept leads"
+
+#. module: crm
 #: selection:sale.config.settings,group_use_lead:0
 msgid "Each mail sent to the alias creates a new opportunity"
 msgstr "Elke mail verzonden naar de alias maakt een nieuwe prospect aan."
@@ -2075,6 +2122,18 @@ msgstr "Klaar"
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
 msgstr "Gevouwen in pijplijn"
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up Quote"
+msgstr "Vervolgofferte"
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up quote"
+msgstr "Vervolgofferte"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2291,6 +2350,9 @@ msgid ""
 "                        the foundations to a strong process leading to\n"
 "                        continuous improvements of your sales teams."
 msgstr ""
+"Indien u de voorgaande stappen goed hebt opgevolgd, zou u nu reeds de "
+"fundering gelegd moeten hebben voor een sterk proces dat kan leiden tot "
+"voortdurende verbetering van uw verkoopteam."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2563,6 +2625,11 @@ msgid "Leads by Source"
 msgstr "Leads volgens bron"
 
 #. module: crm
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr "Leads uit America"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr "Leads welke aan mij zijn toegewezen"
@@ -2625,7 +2692,7 @@ msgstr "Lijst van mogelijke pijnpunten per segment/profiel"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
 msgid "Log & Schedule Next"
-msgstr ""
+msgstr "Log & Plan volgende in"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2677,6 +2744,12 @@ msgstr "Verliesredenen"
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Low"
 msgstr "Laag"
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Make Quote"
+msgstr "Maak offerte"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -3076,8 +3149,8 @@ msgid ""
 "Apps for your sales channel: insight sales, point of sale, ecommerce."
 msgstr ""
 "Odoo is wereldwijd de enige toepassing met een volledige integratie met "
-"marketing-toepassingen voor uw verkoopkanalen : interne verkoopmedewerkers, "
-"kassa en e-commerce."
+"marketing apps voor uw verkoopkanalen : interne verkoopmedewerkers, kassa en "
+"e-commerce."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_sale_config_settings_generate_sales_team_alias
@@ -3459,7 +3532,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_preceding_activity_ids
 msgid "Preceding Activities"
-msgstr ""
+msgstr "Voorgaande activiteiten"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_last_activity_id
@@ -3469,7 +3542,7 @@ msgstr "Vorige activiteit"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Prices"
-msgstr "Prijzen"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3548,12 +3621,12 @@ msgstr "Reden waarom leads verloren worden"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_recommended_activity_id
 msgid "Recommended Activities"
-msgstr ""
+msgstr "Aanbevolen activiteiten"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_recommended_activity_ids
 msgid "Recommended Next Activities"
-msgstr ""
+msgstr "Aanbevolen volgende activiteit"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_force_thread_id
@@ -3579,11 +3652,19 @@ msgid "Relation field"
 msgstr "Gerelateerd veld"
 
 #. module: crm
+#: model:ir.actions.server,name:crm.action_email_reminder_lead
+msgid "Reminder to User"
+msgstr "Herinnering naar gebruiker"
+
+#. module: crm
+#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
 msgid ""
 "Reminder: Lead ${object.name} from ${object.partner_id != False and object."
 "partner_id.name or object.contact_name}"
 msgstr ""
+"Herinnering van Lead: ${object.id} van ${object.partner_id != False en "
+"object.partner_id.name or object.contact_name}"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3614,7 +3695,7 @@ msgstr "Opbrengst per verkoper"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sale Flow"
-msgstr ""
+msgstr "Verkoop flow"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3682,12 +3763,12 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 msgid "Schedule Activity"
-msgstr ""
+msgstr "Plan activiteit"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 msgid "Schedule Next Activity"
-msgstr ""
+msgstr "Plan volgende activiteit"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3753,6 +3834,12 @@ msgid "Selection"
 msgstr "Selectie"
 
 #. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Send a quotation"
+msgstr "Verstuur een offerte"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -3766,6 +3853,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "Reeks"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_set_team_sales_department
+msgid "Set team to Sales Department"
+msgstr "Stel team in op verkoopafdeling"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3818,6 +3910,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Show all opportunities for which the next action date is before today"
 msgstr ""
+"Toon alle prospects voor welke de volgende actie datum voor vandaag is."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -3920,6 +4013,8 @@ msgid ""
 "Stages allow salespersons to easily track how a specific opportunity\n"
 "            is positioned in the sales cycle."
 msgstr ""
+"Fases biedt verkopers de mogelijkheid om eenvoudig te bepalen \n"
+"waar een prospect zich in de verkoopcyclus bevindt."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_state
@@ -4880,331 +4975,3 @@ msgstr "onbekend"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "with your work above"
 msgstr "met behulp van uw voorgaande werk"
-
-#~ msgid ""
-#~ "<p>This opportunity did not have any activity since at least 5 days. Here "
-#~ "are some details:</p>\n"
-#~ "<ul>\n"
-#~ "<li>Name: ${object.name}</li>\n"
-#~ "<li>ID: ${object.id}</li>\n"
-#~ "<li>Description: ${object.description}</li>\n"
-#~ "</ul>"
-#~ msgstr ""
-#~ "<p>Deze prospect vertoonde geen activiteit in de laatste 5 dagen. Hierbij "
-#~ "een aantal gegevens:</p>\n"
-#~ "<ul>\n"
-#~ "<li>Naam: ${object.name}</li>\n"
-#~ "<li>ID: ${object.id}</li>\n"
-#~ "<li>Omschrijving: ${object.description}</li>\n"
-#~ "</ul>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Vereist actie"
-
-#~ msgid "Both"
-#~ msgstr "Beide"
-
-#~ msgid "Call for Demo"
-#~ msgstr "Bel voor demo"
-
-#~ msgid "Call for a demo"
-#~ msgstr "Bel voor een demo"
-
-#~ msgid "Click to set a new stage in your lead/opportunity pipeline."
-#~ msgstr ""
-#~ "Klik om een nieuwe fase in uw pijplijn voor leads/prospects toe te voegen."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
-
-#~ msgid "Deduplicate Contact"
-#~ msgstr "Contact ontdubbelen"
-
-#~ msgid "Done"
-#~ msgstr "Voltooid"
-
-#~ msgid "Draft Leads"
-#~ msgstr "Concept leads"
-
-#~ msgid "Follow-up"
-#~ msgstr "Betalingsherinnering"
-
-#~ msgid "Follow-up Quote"
-#~ msgstr "Vervolgofferte"
-
-#~ msgid "Follow-up call"
-#~ msgstr "Opvolgtelefoongesprek"
-
-#~ msgid "Follow-up quote"
-#~ msgstr "Vervolgofferte"
-
-#~ msgid "Followers"
-#~ msgstr "Volgers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Volgers (Kanalen)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Volgers (Partners)"
-
-#~ msgid "Followup"
-#~ msgstr "Opvolging"
-
-#~ msgid "Function"
-#~ msgstr "Functie"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
-
-#~ msgid ""
-#~ "If you followed the preceeding steps, you already setup\n"
-#~ "                        the foundations to a strong process leading to\n"
-#~ "                        continuous improvements of your sales teams."
-#~ msgstr ""
-#~ "Indien u de voorgaande stappen goed hebt opgevolgd, zou u\n"
-#~ "nu reeds de fundering gelegd moeten hebben voor een sterk\n"
-#~ "proces dat kan leiden tot voortdurende verbetering van uw\n"
-#~ "verkoopteam."
-
-#~ msgid "Incoming"
-#~ msgstr "Inkomend"
-
-#~ msgid ""
-#~ "Incoming email create leads automatically when a new prospect contacts "
-#~ "you.\n"
-#~ "                        That's the easiest way to integrate Odoo with "
-#~ "third party apps."
-#~ msgstr ""
-#~ "Wanneer een prospect per e-mail contact met u opneemt zal er automatisch "
-#~ "een lead\n"
-#~ "aangemaakt worden. Dat is de eenvoudigste manier om Odoo te integreren "
-#~ "met andere apps."
-
-#~ msgid "Is Follower"
-#~ msgstr "Is een volger"
-
-#~ msgid "Last Activity"
-#~ msgstr "Laatste activiteit"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Laatste bericht datum"
-
-#~ msgid "Leads from USA"
-#~ msgstr "Leads uit America"
-
-#~ msgid ""
-#~ "Link between stages and sales teams. When set, this limitate the current "
-#~ "stage to the selected sales teams."
-#~ msgstr ""
-#~ "Koppeling tussen fases en verkoopteams. Wanneer aangevinkt wordt deze "
-#~ "fase beperkt tot de geselecteerde verkoopteams."
-
-#~ msgid "Make Quote"
-#~ msgstr "Maak offerte"
-
-#~ msgid "Mark As Lost"
-#~ msgstr "Markeer als verloren"
-
-#~ msgid "Messages"
-#~ msgstr "Berichten"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Berichten en communicatie historie"
-
-#~ msgid "Negotiation"
-#~ msgstr "Onderhandeling"
-
-#~ msgid "Next Action Date"
-#~ msgstr "Datum volgende actie"
-
-#~ msgid "Next Activity 1"
-#~ msgstr "Volgende activiteit 1"
-
-#~ msgid "Next Activity 2"
-#~ msgstr "Volgende activiteit 2"
-
-#~ msgid "Next Activity 3"
-#~ msgstr "Volgende activiteit 3"
-
-#~ msgid "Note regarding the next action."
-#~ msgstr "Opmerking in verband met de volgende actie."
-
-#~ msgid "Number of Actions"
-#~ msgstr "Aantal acties"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Aantal berichten die actie vereisen"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Aantal ongelezen berichten"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "Open verkoop menu"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Beleid om een bericht te versturen bij een document door gebruik te maken "
-#~ "van de mail gateway.\n"
-#~ "-iedereen: iedereen mag versturen\n"
-#~ "-relaties: alleen geautoriseerde relaties\n"
-#~ "-volgers: allen volgers van een bijbehorend document\n"
-
-#~ msgid "Qualification"
-#~ msgstr "Kwalificatie"
-
-#~ msgid ""
-#~ "Reminder on Lead: ${object.id} from ${object.partner_id != False and "
-#~ "object.partner_id.name or object.contact_name}"
-#~ msgstr ""
-#~ "Herinnering van Lead: ${object.id} from ${object.partner_id != False and "
-#~ "object.partner_id.name or object.contact_name}"
-
-#~ msgid "Reminder to User"
-#~ msgstr "Herinnering naar gebruiker"
-
-#~ msgid "Sales Tags"
-#~ msgstr "Verkoop labels"
-
-#~ msgid "Select Stages for this Sales Team"
-#~ msgstr "Selecteer de fases voor dit verkoopteam"
-
-#~ msgid "Send a quotation"
-#~ msgstr "Verstuur een offerte"
-
-#~ msgid "Set team to Sales Department"
-#~ msgstr "Stel team in op verkoopafdeling"
-
-#~ msgid ""
-#~ "Show all opportunities for which the next action date is today or before"
-#~ msgstr ""
-#~ "Toon alle prospects voor dewelke de volgende actie voor vandaag of eerder "
-#~ "gepland staat"
-
-#~ msgid ""
-#~ "Stages will allow salespersons to easily track how a specific\n"
-#~ "                lead or opportunity is positioned in the sales cycle."
-#~ msgstr ""
-#~ "Fases biedt verkopers de mogelijkheid om eenvoudig te bepalen\n"
-#~ "waar een lead of prospect zich in de verkoopcyclus bevindt."
-
-#~ msgid "Teams"
-#~ msgstr "Teams"
-
-#~ msgid "The date before which no action should be taken."
-#~ msgstr "De datum voor dewelke geen actie ondernomen mag worden."
-
-#~ msgid ""
-#~ "This field is used to distinguish stages related to Leads from stages "
-#~ "related to Opportunities, or to specify stages available for both types."
-#~ msgstr ""
-#~ "Dit veld wordt gebruikt om beter onderscheidt te maken tussen fases van "
-#~ "leads en fases van prospects. Het is ook mogelijk om fases aan te maken "
-#~ "voor beide soorten."
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Dit is de naam welke u helpt om uw verschillende campagnes te volgen. "
-#~ "Zoals bijvoorbeeld: Fall_drive, Christmas_Special"
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr ""
-#~ "Dit is de methode van afleveren. Bijvoorbeeld, Brief, E-mail of Banner "
-#~ "advertantie"
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr ""
-#~ "Dit is de bron van de link. Bijvoorbeeld: Search engine, ander domein of "
-#~ "de naam van de e-mail lijst"
-
-#~ msgid ""
-#~ "This stage is folded in the kanban view whenthere are no records in that "
-#~ "stage to display."
-#~ msgstr ""
-#~ "Deze fase is gevouwen in de kanban weergave, wanneer er geen regels zijn "
-#~ "in deze fase om weer te geven."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Teller ongelezen berichten"
-
-#~ msgid "Unreconciled aml ids"
-#~ msgstr "Onafgeletterde aml ids"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website berichten"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website communicatie geschiedenis"
-
-#~ msgid ""
-#~ "What are the main KPIs you need to track for your the sales actities?"
-#~ msgstr ""
-#~ "Welke zijn de voornaamste KPI's die u wenst op te volgen met betrekking "
-#~ "tot uw verkoopactiviteiten?"
-
-#~ msgid "Your Customers"
-#~ msgstr "Uw klanten"
-
-#~ msgid "Your Customizations"
-#~ msgstr "Uw aanpassingen"
-
-#~ msgid "Your Prices"
-#~ msgstr "Uw prijzen"
-
-#~ msgid "Your Products"
-#~ msgstr "Uw producten"
-
-#~ msgid "Your Proposal"
-#~ msgstr "Uw voorstel"
-
-#~ msgid "oe_kanban_text_red"
-#~ msgstr "oe_kanban_text_red"
-
-#~ msgid "Closed Date"
-#~ msgstr "Afsluitdatum"
-
-#~ msgid "Configuration options are available in the Settings app."
-#~ msgstr "Configuratie mogelijkheden zijn beschikbaar in de Instellingen app."
-
-#~ msgid "Create"
-#~ msgstr "Aanmaken"
-
-#~ msgid "Create Date"
-#~ msgstr "Aanmaakdatum"
-
-#~ msgid "Create an Opportunity"
-#~ msgstr "Maak een prospect aan"
-
-#~ msgid "Created By"
-#~ msgstr "Aangemaakt door"
-
-#~ msgid "Discard"
-#~ msgstr "Negeren"
-
-#~ msgid "More Info"
-#~ msgstr "Meer info"
-
-#~ msgid "Next activity is planned"
-#~ msgstr "Volgende activiteit is gepland"
-
-#~ msgid "No next activity planned"
-#~ msgstr "Geen volgende activiteit gepland"
-
-#~ msgid "Opportunity Title"
-#~ msgstr "Titel opportuniteit"
-
-#~ msgid "Used to log into the system"
-#~ msgstr "Gebruikt voor aanmelding aan het systeem"
-
-#~ msgid "Voip integration"
-#~ msgstr "VoIP integratie"

@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-05-29 19:46+0000\n"
-"Last-Translator: Virginia Castro <castrovirginia88@gmail.com>\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-11-07 18:24+0000\n"
+"Last-Translator: Gonzalo Ruzafa <gr@ingadhoc.com>\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/odoo/odoo-9/"
 "language/es_AR/)\n"
 "Language: es_AR\n"
@@ -1328,6 +1328,7 @@ msgstr "Pulse en el icono para adaptarlo a sus características"
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:49
 #: model:ir.ui.view,arch_db:website.s_banner
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #, python-format
 msgid "Click to customize this text"
 msgstr "Pulse para personalizar este texto"
@@ -1451,8 +1452,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.s_banner
 #: model:ir.ui.view,arch_db:website.s_big_message
 #: model:ir.ui.view,arch_db:website.s_comparisons
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #: model:ir.ui.view,arch_db:website.website_planner
 #: model:website.menu,name:website.menu_contactus
+#: model:website.menu,name:website.website2_menu_contactus
 msgid "Contact us"
 msgstr "Contáctenos"
 
@@ -1656,6 +1659,11 @@ msgstr ""
 #, python-format
 msgid "Discard"
 msgstr "Descartar"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Discuss and Comments"
+msgstr "Discusión y comentarios"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2166,6 +2174,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.footer_default
 #: model:website.menu,name:website.menu_homepage
+#: model:website.menu,name:website.website2_menu_homepage
 msgid "Home"
 msgstr "Inicio"
 
@@ -2174,6 +2183,11 @@ msgstr "Inicio"
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Homepage"
 msgstr "Página de inicio"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website2_homepage
+msgid "Homepage 0.0.0.0"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2536,6 +2550,11 @@ msgstr "Menú"
 #, python-format
 msgid "Menu <b>%s</b> seems to have a link to this page !"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Message"
+msgstr "Mensaje"
 
 #. module: website
 #. openerp-web
@@ -2934,6 +2953,16 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Partner Detail"
+msgstr "Detalles de la empresa"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Partners"
+msgstr "Partners"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Plan"
 msgstr ""
@@ -3088,6 +3117,11 @@ msgid "Real professional translators will translate all your contents"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Recipient"
+msgstr "Destinatario"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Reduce the time and resources spent on support."
 msgstr ""
@@ -3238,6 +3272,16 @@ msgstr "Venda en línea. Fácilmente."
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Sell more online"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send <span class=\"fa fa-long-arrow-right\"/>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send a Message to our Partners"
 msgstr ""
 
 #. module: website
@@ -3453,6 +3497,11 @@ msgstr ""
 #: code:addons/website/static/src/js/website.tour.banner.js:89
 #, python-format
 msgid "Test Your Mobile Version"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Thank you for posting a message !"
 msgstr ""
 
 #. module: website
@@ -3693,6 +3742,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/js/website.contentMenu.js:175
 #: model:website.menu,name:website.main_menu
+#: model:website.menu,name:website.website2_main_menu
 #, python-format
 msgid "Top Menu"
 msgstr ""
@@ -3704,7 +3754,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.snippets.editor.js:771
+#: code:addons/website/static/src/js/website.snippets.editor.js:772
 #, python-format
 msgid "Transform the picture (click twice to reset transformation)"
 msgstr ""
@@ -3984,6 +4034,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_config_settings_website_name
 #: model:ir.model.fields,field_description:website.field_website_name
 msgid "Website Name"
+msgstr ""
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_post
+msgid "Website Partner Post and Thanks Demo"
+msgstr ""
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_comment
+msgid "Website Partners Comment Form"
 msgstr ""
 
 #. module: website
@@ -4658,70 +4718,3 @@ msgstr "si"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "your Company details form"
 msgstr ""
-
-#~ msgid ".xml"
-#~ msgstr ".xml"
-
-#~ msgid ""
-#~ "A code server action can be executed from the website, using a "
-#~ "dedicatedcontroller. The address is <base>/website/action/<website_path>."
-#~ "Set this field as True to allow users to run this action. If itset to is "
-#~ "False the action cannot be run through the website."
-#~ msgstr ""
-#~ "Se puede ejecutar desde el sitio web una acción de servidor de código, "
-#~ "usando un controlador dedicado. La dirección es <base>/website/action/"
-#~ "<ruta_sitio_web>. Establezca este campo a verdadero para permitir a los "
-#~ "usuarios ejecutar esta acción. Si se establece a falso, la acción no se "
-#~ "podrá ejecutar a través del sitio web."
-
-#~ msgid "Add new pages and menus"
-#~ msgstr "Añadir nuevas páginas y menús"
-
-#~ msgid "Background"
-#~ msgstr "Fondo"
-
-#~ msgid "Check now and discover more today!"
-#~ msgstr "¡Pulse ahora y descubra más hoy!"
-
-#~ msgid "Color"
-#~ msgstr "Color"
-
-#~ msgid "Discover more about Odoo"
-#~ msgstr "Descubra más sobre Odoo"
-
-#~ msgid "Discuss and Comments"
-#~ msgstr "Discusión y comentarios"
-
-#~ msgid "Edit Menu Entry"
-#~ msgstr "Editar entrada de menú"
-
-#~ msgid "Hide link"
-#~ msgstr "Ocultar enlace"
-
-#~ msgid ""
-#~ "It might be possible to edit the relevant items\n"
-#~ "                                or fix the issue in"
-#~ msgstr ""
-#~ "Podría ser posible editar los elementos relevantes o arreglar el problema "
-#~ "en"
-
-#~ msgid "Menu Label"
-#~ msgstr "Etiqueta de menú"
-
-#~ msgid "Message"
-#~ msgstr "Mensaje"
-
-#~ msgid "Partner Detail"
-#~ msgstr "Detalles de la empresa"
-
-#~ msgid "Partners"
-#~ msgstr "Partners"
-
-#~ msgid "Recipient"
-#~ msgstr "Destinatario"
-
-#~ msgid "Reset Transformation"
-#~ msgstr "Restablecer transformación"
-
-#~ msgid "or"
-#~ msgstr "o"

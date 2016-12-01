@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2015-10-20 07:04+0000\n"
 "Last-Translator: Harry <harrierr@mail.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -19,6 +19,50 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_3
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to let you know that you have entered the select circle "
+"of our Gold Partners!</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"\n"
+"<p>Здравствуйте, </p>\n"
+"<p>Мы рады сообщить вам, что вы ввели выберите круг наших партнеров Gold!</"
+"p>\n"
+"<p>Спасибо,</p>\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_2
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to welcome you among our Silver Partners as of today!</"
+"p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"\n"
+"<p>Здравствуйте,</p>\n"
+"<p>Мы рады приветствовать Вас среди наших партнеров Silver на сегодняшний "
+"день!</p>\n"
+"<p>Спасибо,</p>\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_1
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>You will receive your welcome pack via email shortly.</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"\n"
+"<p>Здравствуйте,</p>\n"
+"<p>Вы получите приветственный пакет по электронной почте в ближайшее время.</"
+"p>\n"
+"<p>Спасибо,</p>\n"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -233,6 +277,16 @@ msgid "Condition"
 msgstr "Условие"
 
 #. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_2
+msgid "Congratulations! You are now a Silver Partner!"
+msgstr "Поздравляем! Теперь вы - Серебряный партнер!"
+
+#. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_3
+msgid "Congratulations! You are now one of our Gold Partners!"
+msgstr "Поздравляем! Теперь вы - один из наших Золотых партнеров!"
+
+#. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:480
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
@@ -369,9 +423,8 @@ msgstr "Шаблон письма"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template_preview
-#, fuzzy
 msgid "Email Template Preview"
-msgstr "Шаблон письма"
+msgstr "Предпросмотр шаблона письма"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_mail_template
@@ -616,7 +669,7 @@ msgstr "Лидер Автоматизации"
 #. module: marketing_campaign
 #: model:res.groups,name:marketing_campaign.group_lead_automation_manager
 msgid "Manager"
-msgstr ""
+msgstr "Менеджер"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
@@ -752,17 +805,15 @@ msgstr "Октябрь"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
-#, fuzzy
 msgid ""
 "Odoo's marketing campaign allows you to automate communication\n"
 "            to your prospects. You can define a segment (set of conditions) "
 "on\n"
 "            your leads and partners to fulfill the campaign."
 msgstr ""
-"Маркетинговые мероприятия Odoo позволяют  вам автоматизировать связи\n"
-"с вашими перспективами. Вы можете определить сегмент (набор условий) для\n"
-"вашего руководства и партнеров, чтобы в полной мере получить результат от "
-"мероприятия."
+"Маркетинговая кампания Odoo позволяет автоматизировать коммуникацию\n"
+"с потенциальными клиентами. Вы можете определить сегмент (набор условий) \n"
+"для ваших инициатив и партнёров, чтобы выполнить эту кампанию."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -789,6 +840,11 @@ msgstr "Контрагент"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid "Partner Field"
 msgstr "Поле партнера"
+
+#. module: marketing_campaign
+#: model:ir.filters,name:marketing_campaign.filter0
+msgid "Partners"
+msgstr "Контрагенты"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
@@ -1157,12 +1213,17 @@ msgstr "Уникальное поле"
 #. module: marketing_campaign
 #: model:res.groups,name:marketing_campaign.group_lead_automation_user
 msgid "User"
-msgstr ""
+msgstr "Пользователь"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_variable_cost
 msgid "Variable Cost"
 msgstr "Переменные затраты"
+
+#. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_1
+msgid "Welcome to the Odoo Partner Channel!"
+msgstr "Добро пожаловать на партнерский канал Odoo!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1183,79 +1244,3 @@ msgstr "Год (а)"
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
-
-#~ msgid "Congratulations! You are now a Silver Partner!"
-#~ msgstr "Поздравляем! Теперь вы - Серебряный партнер!"
-
-#~ msgid "Congratulations! You are now one of our Gold Partners!"
-#~ msgstr "Поздравляем! Теперь вы - один из наших Золотых партнеров!"
-
-#~ msgid "Hello, you will receive your welcome pack via email shortly."
-#~ msgstr ""
-#~ "<p>Здравствуйте, вы получите свой комплект информационных материалов для "
-#~ "новых клиентов по электронной почте в ближайшее время.</p>"
-
-#~ msgid ""
-#~ "Hi, we are delighted to let you know that you have entered the select "
-#~ "circle of our Gold Partners"
-#~ msgstr ""
-#~ "<p>Привет, мы рады сообщить, что вы вошли в избранный круг наших Золотых "
-#~ "партнеров</p>"
-
-#~ msgid ""
-#~ "Hi, we are delighted to welcome you among our Silver Partners as of today!"
-#~ msgstr ""
-#~ "<p>Привет, на сегодня мы рады приветствовать вас среди наших Серебряных "
-#~ "партнеров!</p>"
-
-#~ msgid ""
-#~ "Odoo's marketing campaign allows you to automate communication\n"
-#~ "            to your prospects. You can define a segment (set of "
-#~ "conditions) on\n"
-#~ "            your leads and partners to fullfil the campaign."
-#~ msgstr ""
-#~ "Маркетинговые мероприятия Odoo позволяют  вам автоматизировать связи\n"
-#~ "с вашими перспективами. Вы можете определить сегмент (набор условий) для\n"
-#~ "вашего руководства и партнеров, чтобы в полной мере получить результат от "
-#~ "мероприятия."
-
-#~ msgid "Open Marketing Menu"
-#~ msgstr "Открыть меню маркетинга"
-
-#~ msgid "Partners"
-#~ msgstr "Контрагенты"
-
-#~ msgid "Welcome to the Odoo Partner Channel!"
-#~ msgstr "Добро пожаловать на партнерский канал Odoo!"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "<p>Hello,</p>\n"
-#~ "<p>We are delighted to let you know that you have entered the select "
-#~ "circle of our Gold Partners!</p>\n"
-#~ "<p>Thank you,</p>\n"
-#~ msgstr ""
-#~ "<p>Привет, мы рады сообщить, что вы вошли в избранный круг наших Золотых "
-#~ "партнеров</p>"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "<p>Hello,</p>\n"
-#~ "<p>We are delighted to welcome you among our Silver Partners as of today!"
-#~ "</p>\n"
-#~ "<p>Thank you,</p>\n"
-#~ msgstr ""
-#~ "<p>Привет, на сегодня мы рады приветствовать вас среди наших Серебряных "
-#~ "партнеров!</p>"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "<p>Hello,</p>\n"
-#~ "<p>You will receive your welcome pack via email shortly.</p>\n"
-#~ "<p>Thank you,</p>\n"
-#~ msgstr ""
-#~ "<p>Здравствуйте, вы получите свой комплект информационных материалов для "
-#~ "новых клиентов по электронной почте в ближайшее время.</p>"

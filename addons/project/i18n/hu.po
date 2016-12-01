@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -183,6 +183,21 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+
+#. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+"\n"
+"<p>Tisztelt ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Köszönjük árajánlatkérését.<br /></p>\n"
+"<p>További felmerülő kérdésekkel, keressen fel bennünket.</p>\n"
+"<p>Legjobbakat,</p>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -824,6 +839,11 @@ msgid ""
 "to follow a whole project: you will receive notifications for all the new "
 "and existing tasks or issues of a project."
 msgstr ""
+"<strong>Csak azt kövesse amire szüksége van</strong><br/>\n"
+"                                    Az üzenetek használatának a "
+"legegyszerűbb módja a teljes Projekt téma követése: akkor az összes üzenetet "
+"megkapja az összes új és meglévő Projekt témához vagy Egy projekt téma "
+"bejelentett ügyéhez."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1486,6 +1506,11 @@ msgstr ""
 "a projekt témáit."
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr "Soroltassa előre vagy elvégzettnek jelölje"
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "Felelős szerint"
@@ -1501,6 +1526,7 @@ msgstr "Megszakítás"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "Törölt"
@@ -1548,7 +1574,7 @@ msgstr "Kattintson a egy új szakasz hozzáadásához a folyamat útvonalába."
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Click to add/remove from favorite"
-msgstr "Kattintson a kedvencek hozzáadásához/kikapcsolásához."
+msgstr ""
 
 #. module: project
 #: model:web.tip,description:project.project_tip_1
@@ -2012,6 +2038,7 @@ msgstr "Ne tétovázzon, válasszon az érdeklődésének megfelelő események 
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Kész"
@@ -2184,7 +2211,7 @@ msgstr "Kimondottan hasznos akkor, ha ügyféllel van vagy egy találkozón."
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Favorite"
-msgstr "Kedvenc"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -2446,6 +2473,8 @@ msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
 msgstr ""
+"Ha beállított, egy emailt küld a vásárlónak, ha a feladat vagy bejelentett "
+"ügy eléri ezt a lépést."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_active
@@ -2501,6 +2530,7 @@ msgstr "Fejlessze az együttműködést a vásárlókkal"
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
+#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "Folyamatban"
@@ -2871,6 +2901,11 @@ msgid "Name"
 msgstr "Név"
 
 #. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "Működési vagy műszaki segítség szükséges"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:64
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2912,6 +2947,11 @@ msgstr "Nincs vásárló értékelés"
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
 msgstr "Normál"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr "Nincs jóváhagyva"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -3332,12 +3372,22 @@ msgid "Ready to be displayed, published or sent"
 msgstr "Megjelenítésre,  közzétételre vagy küldésre kész"
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr "Újranyitásra kész"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
 msgstr "Az érvénytelenítés oka dokumentálva"
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
+msgstr "Enek átvétele ${object.name}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
@@ -3515,7 +3565,7 @@ msgstr "Fájlok megosztása és verziók kezelése"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_is_favorite
 msgid "Show Project on dashboard"
-msgstr ""
+msgstr "Projekt téma megjelenítése a műszerfalon"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3996,6 +4046,11 @@ msgid ""
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
+"Ez állítja be a projekt témákban és a feladatokban használt "
+"mértékegységet. \n"
+"Ha használja a projektekhez kapcsolt munkaidő-kiosztás /project_timesheet "
+"modul/, ne felejtse el beállítani a helyes mértékegységet az alkalmazotti "
+"űrlapon."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -4066,6 +4121,7 @@ msgstr "Munka órák időbeosztása a gantt diagram jelentés igazításához"
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
+#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "Tennivalók"
@@ -4138,6 +4194,12 @@ msgid ""
 msgstr ""
 "Használjon elkülönített találkozókat nagyon bonyolult ügyek vagy az egész "
 "csapat számára nem különösen fontos ügyek megoldására."
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the priority for tasks related to gold customers"
+msgstr ""
+"Használjon elsőbbséget az arany fokozatú vásárlókkal kapcsolatos feladatokhoz"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -4291,7 +4353,7 @@ msgstr "Mennyi az átlag értéke a munkaóráknak éves szinten?"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_is_favorite
 msgid "Whether this project should be displayed on the dashboard or not"
-msgstr ""
+msgstr "Ez a projekt téma megjelenítésre kerüljön a műszerfalon vagy sem"
 
 #. module: project
 #. openerp-web
@@ -4364,7 +4426,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "You can save your reports to easily reuse it later"
-msgstr ""
+msgstr "Elmentheti a jelentéseit későbbi újbóli felhasználáshoz"
 
 #. module: project
 #: code:addons/project/project.py:94
@@ -4389,7 +4451,7 @@ msgstr "Célkitűzései"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_module_install_project
 msgid "Your Odoo Project application is up and running"
-msgstr ""
+msgstr "Az Odoo rendszer Projekt téma alkalmazása fut"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4492,177 +4554,3 @@ msgstr "Munkaidő-kiosztásokkal"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr "az előbbi lépésen listáztás"
-
-#~ msgid "&times;"
-#~ msgstr "&times;"
-
-#~ msgid ""
-#~ "<strong>Follow only what you need</strong><br/>\n"
-#~ "                                    The simplest way to use notifications "
-#~ "is to follow a whole Project: you will then receive all the selected "
-#~ "notifications for all the Project's new and existing and new Tasks or "
-#~ "Issues."
-#~ msgstr ""
-#~ "<strong>Csak azt kövesse amire szüksége van</strong><br/>\n"
-#~ "                                    Az üzenetek használatának a "
-#~ "legegyszerűbb módja a teljes Projekt téma követése: akkor az összes "
-#~ "kiválasztott üzenetet megkapja az összes új és meglévő Projekt témához és "
-#~ "új Feladatokhoz és Ügyekhez."
-
-#~ msgid "Action Needed"
-#~ msgstr "Művelet szükséges"
-
-#~ msgid "Buzz or set as done"
-#~ msgstr "Soroltassa előre vagy elvégzettnek jelölje"
-
-#~ msgid "Check this field if this project manages timesheets"
-#~ msgstr ""
-#~ "Jelölje ki ezt a mezőt, ha ez a projekt téma munkaidő  időkiosztásokat is "
-#~ "kezel"
-
-#~ msgid "Close"
-#~ msgstr "Bezár"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "Átruházott feladatok"
-
-#~ msgid "Do not record timesheets on tasks"
-#~ msgstr "Ne jegyezze fel a munkaidő-beosztásokat a feladatokon"
-
-#~ msgid "Followers"
-#~ msgstr "Követők"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Követők (Csatornák)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Követők (Partnerek)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "Is Follower"
-#~ msgstr "Követő"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Utolsó üzenet dátuma"
-
-#~ msgid "Messages"
-#~ msgstr "Üzenetek"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Üzenetek és kommunikáció történet"
-
-#~ msgid "Need functional or technical help"
-#~ msgstr "Működési vagy műszaki segítség szükséges"
-
-#~ msgid "Not validated"
-#~ msgstr "Nincs jóváhagyva"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Műveletek száma"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Üzenetek száma, melyek akciót igényelnek"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Olvasatlan üzenetek száma"
-
-#~ msgid "Open Project Menu"
-#~ msgstr "Projekt menü megnyitás"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Az üzenetátjáró használatának alapvető irányvonalai a dokumentumra "
-#~ "vonatkozó üzenetek kiküldéséhez.\n"
-#~ "- mindenki: mindenki tud üzenni\n"
-#~ "- ügyfelek: csak a hitelesített partnerek\n"
-#~ "- követők: csak az idevonatkozó dokumentum követői\n"
-
-#~ msgid "Project Time Unit"
-#~ msgstr "Projekt idő egység"
-
-#~ msgid "Ready to reopen"
-#~ msgstr "Újranyitásra kész"
-
-#~ msgid "Record timesheet lines per tasks"
-#~ msgstr "Feladatonkénti időbeosztás sor felvétele"
-
-#~ msgid "Subscriptions"
-#~ msgstr "Feliratkozások"
-
-#~ msgid "Task's Work on Tasks"
-#~ msgstr "Feladatok munkái a feladaton"
-
-#~ msgid ""
-#~ "This allows you to transfer the entries under tasks defined for Project "
-#~ "Management to the timesheet line entries for particular date and user, "
-#~ "with the effect of creating, editing and deleting either ways.\n"
-#~ "-This installs the module project_timesheet."
-#~ msgstr ""
-#~ "Ez lehetővé teszi a projekt kezelésben meghatározott ügyek bevitt "
-#~ "időbeosztás tételsor adataihoz a kiegészítést a dátum és felhasználó "
-#~ "tekintetében, a létrehozás, szerkesztés és törlés bármely irányú "
-#~ "megvalósításával.\n"
-#~ "-Ez a project_timesheet modult telepíti."
-
-#~ msgid ""
-#~ "This will set the unit of measure used in projects and tasks.\n"
-#~ "If you use the timesheet linked to projects (project_timesheet module), "
-#~ "don't forget to setup the right unit of measure in your employees."
-#~ msgstr ""
-#~ "Ez állítja be a projektekben és a feladatokban használt mértékegységet.\n"
-#~ "Ha használja a projektekhez kapcsolt munkaidő-beosztás (project_timesheet "
-#~ "modul), ne felejtse el beállítani a helyes mértékegységet az alkalmazotti "
-#~ "űrlapon."
-
-#~ msgid "Timesheets on Project"
-#~ msgstr "A projekt témák időkiosztásai"
-
-#~ msgid "Type of Account"
-#~ msgstr "Bankszámla típusa"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Olvasatlan üzenetek számlálója"
-
-#~ msgid "Use the priority for tasks related to gold customers"
-#~ msgstr ""
-#~ "Használjon elsőbbséget az arany fokozatú vásárlókkal kapcsolatos "
-#~ "feladatokhoz"
-
-#~ msgid "Website Messages"
-#~ msgstr "Weboldal üzenetek"
-
-#~ msgid "Website communication history"
-#~ msgstr "Weboldal  kommunikáció történet"
-
-#~ msgid "You can save your reports to for easy reuse later"
-#~ msgstr "Elmentheti a  jelentéseit későbbi újbóli felhasználáshoz"
-
-#~ msgid "Configuration options are available in the Settings app."
-#~ msgstr "Beállítási lehetőségeket a Beállítások alkalmazásban talál."
-
-#~ msgid "Create"
-#~ msgstr "Létrehozás"
-
-#~ msgid "Create date"
-#~ msgstr "Létrehozás dátuma"
-
-#~ msgid "More Info"
-#~ msgstr "További információ"
-
-#~ msgid "Or"
-#~ msgstr "Vagy"
-
-#~ msgid "Privacy"
-#~ msgstr "Adatvédelem"

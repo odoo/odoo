@@ -4,15 +4,16 @@
 #
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
 # Marko Happonen <marko.happonen@sprintit.fi>, 2016
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-29 07:53+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-10-28 16:20+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:348
+#: code:addons/account_asset/account_asset.py:347
 #, python-format
 msgid " (copy)"
 msgstr " (kopio)"
@@ -58,7 +59,7 @@ msgid "Active"
 msgstr "Aktiivinen"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #, python-format
 msgid "Amount"
 msgstr "Määrä"
@@ -108,7 +109,7 @@ msgstr ""
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
 msgid "Asset End Date"
-msgstr ""
+msgstr "Hyödykkeen päättymispäivä"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_asset_method_time
@@ -123,7 +124,7 @@ msgstr "Omaisuuserän nimi"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
 msgid "Asset Start Date"
-msgstr ""
+msgstr "Hyödykkeen alkamispäivä"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_name
@@ -147,7 +148,7 @@ msgid "Asset category"
 msgstr "Varojen kategoria"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:236
+#: code:addons/account_asset/account_asset.py:235
 #, python-format
 msgid "Asset created"
 msgstr ""
@@ -155,10 +156,10 @@ msgstr ""
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
 msgid "Asset depreciation line"
-msgstr ""
+msgstr "Omaisuuserän poistorivi"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:269
+#: code:addons/account_asset/account_asset.py:268
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr ""
@@ -189,7 +190,7 @@ msgstr "Varallisuusanalyysi"
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
 msgid "Assets and Revenues"
-msgstr ""
+msgstr "Omaisuuserät ja tuotot"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -209,7 +210,7 @@ msgstr "Ehdotetut varat"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Assets in running state"
-msgstr ""
+msgstr "Käytössäolevat omaisuuserät"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -227,7 +228,7 @@ msgstr "Ryhmä"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Category of asset"
-msgstr ""
+msgstr "Omaisuuserän ryhmä"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_open_asset
@@ -307,7 +308,7 @@ msgstr "Hyväksy"
 #: code:addons/account_asset/wizard/wizard_asset_compute.py:18
 #, python-format
 msgid "Created Asset Moves"
-msgstr ""
+msgstr "Luodut omaisuuserän siirrot"
 
 #. module: account_asset
 #: code:addons/account_asset/wizard/wizard_asset_compute.py:20
@@ -339,7 +340,7 @@ msgid "Cumulative Depreciation"
 msgstr "Kumulatiivinen poisto"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -354,6 +355,11 @@ msgstr "Nykyinen"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_amount
 msgid "Current Depreciation"
 msgstr "Tämänhetkiset poistot"
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
+msgid "Customer"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_date
@@ -459,7 +465,7 @@ msgstr "Poistomenetelmä"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Depreciation Month"
-msgstr ""
+msgstr "Poistokuukausi"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_name
@@ -467,13 +473,13 @@ msgid "Depreciation Name"
 msgstr "Poiston nimi"
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/account_asset_change_duration.py:83
+#: code:addons/account_asset/wizard/account_asset_change_duration.py:82
 #, python-format
 msgid "Depreciation board modified"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:489
+#: code:addons/account_asset/account_asset.py:487
 #, python-format
 msgid "Depreciation line posted."
 msgstr ""
@@ -489,19 +495,19 @@ msgid "Display Name"
 msgstr "Näytä nimi"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:272
+#: code:addons/account_asset/account_asset.py:271
 #, python-format
 msgid "Disposal Move"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:275
+#: code:addons/account_asset/account_asset.py:274
 #, python-format
 msgid "Disposal Moves"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:468
+#: code:addons/account_asset/account_asset.py:466
 #, python-format
 msgid "Document closed."
 msgstr ""
@@ -537,9 +543,8 @@ msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_asset_id
-#, fuzzy
 msgid "Expense Account"
-msgstr "Varojen tili"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -648,7 +653,7 @@ msgid "Journal"
 msgstr "Loki"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:375
+#: code:addons/account_asset/account_asset.py:374
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
@@ -745,9 +750,10 @@ msgid "Number of Months in a Period"
 msgstr "Poistoerän pituus (kk)"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:488
+#: code:addons/account_asset/account_asset.py:486
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #, python-format
 msgid "Partner"
 msgstr "Kumppani"
@@ -786,12 +792,12 @@ msgstr "Kirjattu"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_posted_value
 msgid "Posted Amount"
-msgstr ""
+msgstr "Kirjattu summa"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Posted depreciation lines"
-msgstr ""
+msgstr "Kirjatut poistorivit"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_product_template
@@ -805,7 +811,7 @@ msgid "Prorata Temporis"
 msgstr "Suhteessa kuluneeseen aikaan"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:314
+#: code:addons/account_asset/account_asset.py:313
 #, python-format
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
@@ -933,7 +939,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_method_time
 msgid "Time Method"
-msgstr ""
+msgstr "Jaksotustapa"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
@@ -952,12 +958,12 @@ msgstr "Tyyppi"
 #: code:addons/account_asset/static/src/js/account_asset.js:24
 #, python-format
 msgid "Unposted"
-msgstr ""
+msgstr "Kirjaamatta"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_unposted_value
 msgid "Unposted Amount"
-msgstr ""
+msgstr "Kirjaamaton määrä"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -982,25 +988,25 @@ msgid "Year"
 msgstr "Vuosi"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:97
+#: code:addons/account_asset/account_asset.py:96
 #, python-format
 msgid "You cannot delete a document is in %s state."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:99
+#: code:addons/account_asset/account_asset.py:98
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:497
+#: code:addons/account_asset/account_asset.py:495
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:499
+#: code:addons/account_asset/account_asset.py:497
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr ""
@@ -1025,51 +1031,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "months"
 msgstr "kuukaudet"
-
-#~ msgid "Action Needed"
-#~ msgstr "Vaatii toimia"
-
-#~ msgid "Customer"
-#~ msgstr "Asiakas"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Viimeisen viestin päivämäärä"
-
-#~ msgid "Followers"
-#~ msgstr "Seuraajat"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seuraajat (kanavat)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seuraajat (kumppanit)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "Is Follower"
-#~ msgstr "on seuraaja"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Viimeinen viestipvm"
-
-#~ msgid "Messages"
-#~ msgstr "Viestit"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Toimenpiteiden määrä"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Toimenpiteitä vaativien viestien määrä"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Lukemattomien viestien määrä"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Lukemattomia viestejä"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Lukemattomien viestien laskuri"

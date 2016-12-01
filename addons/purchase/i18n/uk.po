@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-06-28 10:36+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-11-18 17:06+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
 "uk/)\n"
@@ -53,15 +53,11 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_stock_dropshipping
-#, fuzzy
 msgid ""
 "\n"
 "Creates the dropship Route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
-"\n"
-"Створює спосіб прямої доставки та додає складніші перевірки. Це встановлює "
-"модуль stock_dropshipping."
 
 #. module: purchase
 #: code:addons/purchase/stock.py:81
@@ -282,7 +278,7 @@ msgid "Billed Qty"
 msgstr "К-сть в рахунку"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:719 code:addons/purchase/stock.py:75
+#: code:addons/purchase/purchase.py:717 code:addons/purchase/stock.py:75
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -305,7 +301,6 @@ msgstr "Тендери"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_purchase_requisition
-#, fuzzy
 msgid ""
 "Calls for tenders are used when you want to generate requests for quotations "
 "to several vendors for a given set of products.\n"
@@ -313,12 +308,6 @@ msgid ""
 "one vendor or if you want a Call for Tenders to compare offers from several "
 "vendors."
 msgstr ""
-"Пошук пропозицій за допомогою тендерів використовується коли ви хочете "
-"згенерувати запити комерційної пропозиції для декількох постачальників по "
-"певному переліку товарів.\n"
-"Ви можете налаштувати це по кожному товару окремо, якщо ви відправляєте ЗКП "
-"вручну \n"
-"або якщо ви хочете порівняти ціни від різних постачальників."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_ok
@@ -328,7 +317,7 @@ msgid "Can be Purchased"
 msgstr "Можна купити"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:735
+#: code:addons/purchase/purchase.py:733
 #, python-format
 msgid ""
 "Can not cancel a procurement related to a purchase order. Please cancel the "
@@ -355,7 +344,7 @@ msgid "Cancelled"
 msgstr "Скасовано"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:614
+#: code:addons/purchase/purchase.py:612
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "Неможливо видалити замовлення на купівлю якщо воно в стані '%s'."
@@ -396,9 +385,8 @@ msgstr ""
 
 #. module: purchase
 #: model:web.tip,description:purchase.purchase_tip_1
-#, fuzzy
 msgid "Click to scrap products."
-msgstr "Натисніть, щоб створити новий товар."
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_commercial_partner_id
@@ -547,7 +535,7 @@ msgstr "Виконано"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation_amount
 msgid "Double validation amount"
-msgstr "Кількість подвійне затвердження"
+msgstr "Сума подвійного затвердження"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -576,9 +564,8 @@ msgstr "Помічник створення електронного листа"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "Помічник створення електронного листа"
+msgstr "Майстер створення електронного листа для опитування"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
@@ -615,7 +602,7 @@ msgstr "Отримати всі доставки пов’язані з цим �
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Вага"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -763,9 +750,8 @@ msgstr "Розташування та склад"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-#, fuzzy
 msgid "Lock Bills"
-msgstr "Рахунки постачальника"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -785,7 +771,7 @@ msgstr "Керувати ціною постачальника на формі �
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
 msgid "Manager"
-msgstr "Менеджер"
+msgstr "Керівник"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
@@ -807,7 +793,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
-msgstr "Мінімальна кількість, для якої необхідне дворівневе підтвердження"
+msgstr "Мінімальна сума, для якої необхідно робити дворівневе затвердження"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
@@ -834,7 +820,7 @@ msgid "No variants on products"
 msgstr "Немає варіантів товару"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:895
+#: code:addons/purchase/purchase.py:893
 #, python-format
 msgid ""
 "No vendor associated to product %s. Please set one to fix this procurement."
@@ -1141,7 +1127,7 @@ msgid "Purchase Orders Statistics"
 msgstr "Статистика замовленнь на купівлю"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:616
+#: code:addons/purchase/purchase.py:614
 #, python-format
 msgid "Purchase order line deleted."
 msgstr "Вилучено рядок із замовлення."
@@ -1162,7 +1148,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_to_resupply
 msgid "Purchase to resupply this warehouse"
-msgstr "Придбати для поповнення цього складу"
+msgstr "Купувати для поповнення цього складу"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_negociation
@@ -1348,13 +1334,10 @@ msgstr "Встановити фіксовану ціну на кожен тов�
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-#, fuzzy
 msgid ""
 "Set a purchase order as done if you don't want to receive vendor bills "
 "anymore for this purchase order."
 msgstr ""
-"Якщо замовлення на купівлю виконано, ви більше не можете його модифікувати. "
-"Також більше не можна отримувати рахунки по цьому замовленню."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1378,11 +1361,9 @@ msgstr "Простий тендер (обирати тільки з одного
 
 #. module: purchase
 #: selection:purchase.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/puchased in different units of measure (advanced)"
 msgstr ""
-"Деякі товари можуть бути продані/куплені в інших одиницях виміру (розширено)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_origin
@@ -1557,7 +1538,7 @@ msgid "Transfer"
 msgstr "Перемістити"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:302
+#: code:addons/purchase/purchase.py:300
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been done."
@@ -1566,14 +1547,12 @@ msgstr ""
 "виконано деякі надходження."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:305
-#, fuzzy, python-format
+#: code:addons/purchase/purchase.py:303
+#, python-format
 msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
 "bills."
 msgstr ""
-"Неможливо скасувати це замовлення на купівлю. Спочатку вам необхідно "
-"скасувати пов’язані рахунки постачальника."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -1694,7 +1673,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Об'єм"
 
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
@@ -1710,7 +1689,7 @@ msgstr "Warehouse"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr "Коли товари куплкно, вони можуть бути доставлені на цей склад."
+msgstr "При купівлі товари можуть бути доставлені на цей склад."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_product_variant
@@ -1733,17 +1712,14 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
-#, fuzzy
 msgid ""
 "You must define a product for everything you purchase, whether\n"
 "            it's a physical product, a consumable or services you buy to\n"
 "            subcontractors."
 msgstr ""
-"Ви повинні створити товар для всього, що ви купуєте не залежно від того чи "
-"це послуга, чи матеріальні цінності."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:337
+#: code:addons/purchase/purchase.py:335
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "Ви повинні вказати розташування для цього партнера %s"
@@ -1752,428 +1728,3 @@ msgstr "Ви повинні вказати розташування для ць�
 #: model:ir.model,name:purchase.model_purchase_config_settings
 msgid "purchase.config.settings"
 msgstr "purchase.config.settings"
-
-#~ msgid ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
-#~ "\">\n"
-#~ "\n"
-#~ "    <p>Hello ${object.partner_id.name},</p>\n"
-#~ "\n"
-#~ "    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
-#~ "quotation' or 'purchase order confirmation'} from ${object.company_id."
-#~ "name}: </p>\n"
-#~ "\n"
-#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-#~ "       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object."
-#~ "currency_id.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
-#~ "       % if object.origin:\n"
-#~ "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.partner_ref:\n"
-#~ "       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.create_uid:\n"
-#~ "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.create_uid."
-#~ "email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</"
-#~ "a>\n"
-#~ "       % endif\n"
-#~ "    </p>\n"
-#~ "\n"
-#~ "    <br/>\n"
-#~ "    <p>If you have any question, do not hesitate to contact us.</p>\n"
-#~ "    <p>Thank you!</p>\n"
-#~ "    <br/>\n"
-#~ "    <br/>\n"
-#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
-#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
-#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
-#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
-#~ "color: #DDD;\">\n"
-#~ "            <strong style=\"text-transform:uppercase;\">${object."
-#~ "company_id.name}</strong></h3>\n"
-#~ "    </div>\n"
-#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
-#~ "height: 16px; background-color: #F2F2F2;\">\n"
-#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
-#~ "\">\n"
-#~ "            ${object.company_id.partner_id.sudo()."
-#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
-#~ "safe}\n"
-#~ "        </span>\n"
-#~ "        % if object.company_id.phone:\n"
-#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
-#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
-#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
-#~ "                Phone:&nbsp; ${object.company_id.phone}\n"
-#~ "            </div>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.website:\n"
-#~ "            <div>\n"
-#~ "                Web :&nbsp;<a href=\"${object.company_id.website}\">"
-#~ "${object.company_id.website}</a>\n"
-#~ "            </div>\n"
-#~ "        %endif\n"
-#~ "        <p></p>\n"
-#~ "    </div>\n"
-#~ "</div>\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
-#~ "\">\n"
-#~ "\n"
-#~ "    <p>Вітаємо ${object.partner_id.name},</p>\n"
-#~ "    \n"
-#~ "    <p>Ось ${object.state in ('draft', 'sent') and 'запит комерційної "
-#~ "пропозиції' or 'підтвердження замовлення на купівлю'} від ${object."
-#~ "company_id.name}: </p>\n"
-#~ "    \n"
-#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "       &nbsp;&nbsp;<strong>ПОСИЛАННЯ</strong><br />\n"
-#~ "       &nbsp;&nbsp;Номер замовлення: <strong>${object.name}</strong><br /"
-#~ ">\n"
-#~ "       &nbsp;&nbsp;Загальна сума: <strong>${object.amount_total} ${object."
-#~ "currency_id.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Дата замовлення: ${object.date_order}<br />\n"
-#~ "       % if object.origin:\n"
-#~ "       &nbsp;&nbsp;Джерело: ${object.origin}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.partner_ref:\n"
-#~ "       &nbsp;&nbsp;Ваші посиланя: ${object.partner_ref}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.validator:\n"
-#~ "       &nbsp;&nbsp;Контактна особа: <a href=\"mailto:${object.validator."
-#~ "email or ''}?subject=Замовлення%20${object.name}\">${object.validator."
-#~ "name}</a>\n"
-#~ "       % endif\n"
-#~ "    </p>\n"
-#~ "\n"
-#~ "    <br/>\n"
-#~ "    <p>Якщо у вас виникли запитання, звертайтеся до нас.</p>\n"
-#~ "    <p>Дякуємо!</p>\n"
-#~ "    <br/>\n"
-#~ "    <br/>\n"
-#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
-#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
-#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
-#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
-#~ "color: #DDD;\">\n"
-#~ "            <strong style=\"text-transform:uppercase;\">${object."
-#~ "company_id.name}</strong></h3>\n"
-#~ "    </div>\n"
-#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
-#~ "height: 16px; background-color: #F2F2F2;\">\n"
-#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
-#~ "\">\n"
-#~ "        ${object.company_id.partner_id.sudo()."
-#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
-#~ "safe}\n"
-#~ "        </span>\n"
-#~ "        % if object.company_id.phone:\n"
-#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
-#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
-#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
-#~ "                Телефон:&nbsp; ${object.company_id.phone}\n"
-#~ "            </div>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.website:\n"
-#~ "            <div>\n"
-#~ "                Веб:&nbsp;<a href=\"${object.company_id.website}\">"
-#~ "${object.company_id.website}</a>\n"
-#~ "            </div>\n"
-#~ "        %endif\n"
-#~ "        <p></p>\n"
-#~ "    </div>\n"
-#~ "</div>\n"
-#~ "            "
-
-#~ msgid ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
-#~ "\">\n"
-#~ "\n"
-#~ "    <p>Hello ${object.partner_id.name},</p>\n"
-#~ "\n"
-#~ "    <p>Here is a ${object.state in ('draft', 'sent') and 'request for "
-#~ "quotation' or 'purchase order confirmation'} from ${object.company_id."
-#~ "name}: </p>\n"
-#~ "\n"
-#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-#~ "       &nbsp;&nbsp;RFQ number: <strong>${object.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;RFQ date: ${object.date_order}<br />\n"
-#~ "       % if object.origin:\n"
-#~ "       &nbsp;&nbsp;RFQ reference: ${object.origin}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.partner_ref:\n"
-#~ "       &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.create_uid:\n"
-#~ "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.create_uid."
-#~ "email or ''}?subject=Order%20${object.name}\">${object.create_uid.name}</"
-#~ "a>\n"
-#~ "       % endif\n"
-#~ "    </p>\n"
-#~ "\n"
-#~ "    <br/>\n"
-#~ "    <p>If you have any question, do not hesitate to contact us.</p>\n"
-#~ "    <p>Thank you!</p>\n"
-#~ "    <br/>\n"
-#~ "    <br/>\n"
-#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
-#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
-#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
-#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
-#~ "color: #DDD;\">\n"
-#~ "            <strong style=\"text-transform:uppercase;\">${object."
-#~ "company_id.name}</strong></h3>\n"
-#~ "    </div>\n"
-#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
-#~ "height: 16px; background-color: #F2F2F2;\">\n"
-#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
-#~ "\">\n"
-#~ "            ${object.company_id.partner_id.sudo()."
-#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
-#~ "safe}\n"
-#~ "        </span>\n"
-#~ "        % if object.company_id.phone:\n"
-#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
-#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
-#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
-#~ "                Phone:&nbsp; ${object.company_id.phone}\n"
-#~ "            </div>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.website:\n"
-#~ "            <div>\n"
-#~ "                Web :&nbsp;<a href=\"${object.company_id.website}\">"
-#~ "${object.company_id.website}</a>\n"
-#~ "            </div>\n"
-#~ "        %endif\n"
-#~ "        <p></p>\n"
-#~ "    </div>\n"
-#~ "</div>\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
-#~ "\">\n"
-#~ "\n"
-#~ "    <p>Вітаємо ${object.partner_id.name},</p>\n"
-#~ "    \n"
-#~ "    <p>Ось ${object.state in ('draft', 'sent') and 'запит комерційної "
-#~ "пропозиції' or 'підтвердження замовлення на купівлю'} від ${object."
-#~ "company_id.name}: </p>\n"
-#~ "    \n"
-#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "       &nbsp;&nbsp;<strong>ПОСИЛАННЯ</strong><br />\n"
-#~ "       &nbsp;&nbsp;ЗКП номер: <strong>${object.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Дата ЗКП: ${object.date_order}<br />\n"
-#~ "       % if object.origin:\n"
-#~ "       &nbsp;&nbsp;Джерело ЗКП: ${object.origin}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.partner_ref:\n"
-#~ "       &nbsp;&nbsp;Ваші посилання: ${object.partner_ref}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.validator:\n"
-#~ "       &nbsp;&nbsp;Контактна особа: <a href=\"mailto:${object.validator."
-#~ "email or ''}?subject=Замовлення%20${object.name}\">${object.validator."
-#~ "name}</a>\n"
-#~ "       % endif\n"
-#~ "    </p>\n"
-#~ "\n"
-#~ "    <br/>\n"
-#~ "    <p>Якщо у вас виникли запитання, звертайтеся до нас.</p>\n"
-#~ "    <p>Дякуємо!</p>\n"
-#~ "    <br/>\n"
-#~ "    <br/>\n"
-#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
-#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
-#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
-#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
-#~ "color: #DDD;\">\n"
-#~ "            <strong style=\"text-transform:uppercase;\">${object."
-#~ "company_id.name}</strong></h3>\n"
-#~ "    </div>\n"
-#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
-#~ "height: 16px; background-color: #F2F2F2;\">\n"
-#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
-#~ "\">\n"
-#~ "        ${object.company_id.partner_id.sudo()."
-#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
-#~ "safe}\n"
-#~ "        </span>\n"
-#~ "        % if object.company_id.phone:\n"
-#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
-#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
-#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
-#~ "                Телефон:&nbsp; ${object.company_id.phone}\n"
-#~ "            </div>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.website:\n"
-#~ "            <div>\n"
-#~ "                Веб:&nbsp;<a href=\"${object.company_id.website}\">"
-#~ "${object.company_id.website}</a>\n"
-#~ "            </div>\n"
-#~ "        %endif\n"
-#~ "        <p></p>\n"
-#~ "    </div>\n"
-#~ "</div>\n"
-#~ "            "
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship Route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "Створює спосіб прямої доставки та додає складніші перевірки. Це "
-#~ "встановлює модуль stock_dropshipping."
-
-#~ msgid "${object.company_id.name|safe} Order (Ref ${object.name or 'n/a' })"
-#~ msgstr ""
-#~ "${object.company_id.name|safe} Замовлення (Ref ${object.name or 'немає' })"
-
-#~ msgid "Action Needed"
-#~ msgstr "Необхідна дія"
-
-#~ msgid "Allows you to specify an analytic account on purchase order lines."
-#~ msgstr ""
-#~ "Дозволяє вам вказувати аналітичний рахунок в замовленнях на купівлю."
-
-#~ msgid "Analytic accounting for purchases"
-#~ msgstr "Аналітичний облік для закупівель"
-
-#~ msgid ""
-#~ "Calls for tenders are used when you want to generate requests for "
-#~ "quotations to several vendors for a given set of products.\n"
-#~ "                    You can configure per product if you directly do a "
-#~ "Request for Quotation\n"
-#~ "                    to one vendor or if you want a Call for Tenders to "
-#~ "compare offers from several vendors."
-#~ msgstr ""
-#~ "Пошук пропозицій за допомогою тендерів використовується коли ви хочете "
-#~ "згенерувати запити комерційної пропозиції для декількох постачальників по "
-#~ "певному переліку товарів.\n"
-#~ "Ви можете налаштувати це по кожному товару окремо, якщо ви відправляєте "
-#~ "ЗКП вручну \n"
-#~ "або якщо ви хочете порівняти ціни від різних постачальників."
-
-#~ msgid "Click to mark products as received."
-#~ msgstr "Натисніть, щоб позначити товари як отримані."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата останнього повідомлення по запису."
-
-#~ msgid "Expected Date"
-#~ msgstr "Очікувана дата"
-
-#~ msgid "Followers"
-#~ msgstr "Підписники"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Підписники (Канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Підписники (Партнери)"
-
-#~ msgid ""
-#~ "If a purchase order is done, you cannot modify it manually anymore. You "
-#~ "will not be able to receive invoices anymore for this purchase order."
-#~ msgstr ""
-#~ "Якщо замовлення на купівлю виконано, ви більше не можете його "
-#~ "модифікувати. Також більше не можна отримувати рахунки по цьому "
-#~ "замовленню."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
-
-#~ msgid "Incoming Shipments to Invoice"
-#~ msgstr "Вхідні поставки по рахунку"
-
-#~ msgid "Is Follower"
-#~ msgstr "Стежить"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Дата останнього повідомлення"
-
-#~ msgid "Messages"
-#~ msgstr "Повідомлення"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Повідомлення та історія бесіди"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Кількість дій"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Кількість повідомлень, які потебують дії"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Кількість непрочитаних повідомлень"
-
-#~ msgid "Open Purchase Menu"
-#~ msgstr "Відкрити меню купівлі"
-
-#~ msgid "Published"
-#~ msgstr "Опубліковано"
-
-#~ msgid "Set to Done"
-#~ msgstr "Зробити виконаним"
-
-#~ msgid ""
-#~ "Some products may be sold/puchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr ""
-#~ "Деякі товари можуть бути продані/куплені в інших одиницях виміру "
-#~ "(розширено)"
-
-#~ msgid ""
-#~ "Unable to cancel this purchase order.i You must first cancel related "
-#~ "vendor bills."
-#~ msgstr ""
-#~ "Неможливо скасувати це замовлення на купівлю. Спочатку вам необхідно "
-#~ "скасувати пов’язані рахунки постачальника."
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Одиниці виміру"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитані повідомлення"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Кількість непрочитаних повідомлень"
-
-#~ msgid "Visible on the website as a comment"
-#~ msgstr "Показано на сайті як коментар"
-
-#~ msgid "Website Messages"
-#~ msgstr "Повідомлення з веб-сайту"
-
-#~ msgid "Website communication history"
-#~ msgstr "Історія бесіди на веб-сайті"
-
-#~ msgid ""
-#~ "You must define a product for everything you purchase, whether\n"
-#~ "            it's a physical product, a consumable or services you buy to\n"
-#~ "            subcontractants."
-#~ msgstr ""
-#~ "Ви повинні створити товар для всього, що ви купуєте не залежно від того "
-#~ "чи це послуга, чи матеріальні цінності."
-
-#~ msgid "account.config.settings"
-#~ msgstr "account.config.settings"
-
-#~ msgid "unknown"
-#~ msgstr "невідомо"

@@ -4,13 +4,14 @@
 #
 # Translators:
 # Kostas Goutoudis <goutoudis@gmail.com>, 2015-2016
+# Kostas Goutoudis <goutoudis@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-08-04 20:25+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-11-15 14:50+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
@@ -486,6 +487,16 @@ msgid "Contract"
 msgstr "Σύμβαση"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
+msgid "Contract Proposal"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
+msgid "Contract Signed"
+msgstr "Υπογράφηκε Σύμβαση"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
 msgid "Create Date"
 msgstr "Ημερομηνία Δημιουργίας"
@@ -781,6 +792,11 @@ msgid "Filter and view on next actions and date"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr ""
@@ -844,7 +860,7 @@ msgstr "Ομαδοποίηση Ανά"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
-msgstr ""
+msgstr "Εργαζόμενοι που προσλήφθηκαν"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
@@ -900,6 +916,11 @@ msgstr ""
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Initial Qualification"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1040,7 +1061,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_medium_id
 msgid "Medium"
-msgstr "Μέτρια"
+msgstr "Μέσο"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_mobile
@@ -1055,7 +1076,7 @@ msgstr "Κινητό:"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr ""
+msgstr "Περισσότερα <i class=\"fa fa-caret-down\"/>"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rcol_3_1_5
@@ -1137,7 +1158,7 @@ msgstr "Επόμενη Ημερομηνία Ενέργειας"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Next Actions"
-msgstr ""
+msgstr "Επόμενες Ενέργειες"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -1254,7 +1275,6 @@ msgstr "Τηλέφωνο"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1262,11 +1282,6 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Πολιτική για να δημοσιεύσετε ένα μήνυμα σχετικά με το έγγραφο "
-"χρησιμοποιώντας το mailgateway.\n"
-"- Ο καθένας: ο καθένας μπορεί να δημοσιεύσει\n"
-"- Συνεργάτες: Μόνο πιστοποιημένοι συνεργάτες\n"
-"- Ακόλουθοι: μόνο οι ακόλουθοι του σχετικού εγγράφου\n"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -1362,9 +1377,8 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
-#, fuzzy
 msgid "Reopen Application"
-msgstr "Εφαρμογή"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1448,6 +1462,11 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid "Search through resumes and motivation letters."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1808,82 +1827,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
-
-#~ msgid "Action Needed"
-#~ msgstr "Απαιτείται ενέργεια"
-
-#~ msgid "Campaign"
-#~ msgstr "Εκστρατεία"
-
-#~ msgid "Contract Signed"
-#~ msgstr "Υπογράφηκε Σύμβαση"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Ημερομηνία του τελευταίου μηνύματος "
-
-#~ msgid "Followers"
-#~ msgstr "Ακόλουθοι"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Ακόλουθοι (Κανάλια)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Ακόλουθοι (Συνεργάτες)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
-
-#~ msgid "Is Follower"
-#~ msgstr "Είναι Ακόλουθος"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Τελευταία ημερομηνία μηνύματος"
-
-#~ msgid "Messages"
-#~ msgstr "Μηνύματα"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Μηνύματα και ιστορικό επικοινωνίας"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Αριθμός ενεργειών"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Άνοιγμα Μενού HR"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Πολιτική για να δημοσιεύσετε ένα μήνυμα σχετικά με το έγγραφο "
-#~ "χρησιμοποιώντας το mailgateway.\n"
-#~ "- Ο καθένας: ο καθένας μπορεί να δημοσιεύσει\n"
-#~ "- Συνεργάτες: Μόνο πιστοποιημένοι συνεργάτες\n"
-#~ "- Ακόλουθοι: μόνο οι ακόλουθοι του σχετικού εγγράφου\n"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Αυτό είναι το όνομα που θα σας βοηθήσει να ανιχνεύετε τις προσπάθειες των "
-#~ "διαφορετικών εκστρατειών σας π.χ.: Φθινόπωρο_Κίνητρο, Χριστούγεννα_Ειδικό"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
-
-#~ msgid "Website Messages"
-#~ msgstr "Μηνύματα Ιστότοπου"
-
-#~ msgid "Website communication history"
-#~ msgstr "Ιστορικό επικοινωνίας ιστότοπου"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 12:00+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-08-03 11:08+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -211,6 +211,11 @@ msgid "A problem has occured"
 msgstr "Се случи проблем"
 
 #. module: survey
+#: model:survey.label,value:survey.frow_2_2_4
+msgid "A process is defined for all enterprise flows"
+msgstr "Процес е дефиниран за сите текови на претпријатието"
+
+#. module: survey
 #: constraint:survey.user_input_line:0
 msgid "A question cannot be unanswered and skipped"
 msgstr "Прашање не може да се остави неодговорено или да се прескокне"
@@ -219,6 +224,11 @@ msgstr "Прашање не може да се остави неодговоре
 #: sql_constraint:survey.user_input:0
 msgid "A token must be unique!"
 msgstr "Токенот мора да биде уникатен"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_1
+msgid "About your Odoo usage"
+msgstr "За вашата употреба на Odoo"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_active
@@ -239,6 +249,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Add list of existing contacts..."
 msgstr "Додади листа на постоечки контакти..."
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_3
+#: model:survey.label,value:survey.fcol_2_2_3
+#: model:survey.label,value:survey.fcol_2_5_3
+#: model:survey.label,value:survey.fcol_2_7_3
+msgid "Agree"
+msgstr "Согласува"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -281,6 +299,11 @@ msgid "Answers"
 msgstr "Одговори"
 
 #. module: survey
+#: model:survey.question,question:survey.feedback_1_1
+msgid "Are you using Odoo on a daily basis?"
+msgstr "Дали го користите Odoo секој ден?"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_attachment_ids
 msgid "Attachments"
 msgstr "Привезоци"
@@ -289,6 +312,11 @@ msgstr "Привезоци"
 #: model:ir.ui.view,arch_db:survey.back
 msgid "Back to Survey"
 msgstr "Назад кон анкети"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_4
+msgid "CRM"
+msgstr "ЦРМ"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -356,6 +384,11 @@ msgid "Comment Message"
 msgstr "Порака со коментар"
 
 #. module: survey
+#: model:survey.page,title:survey.feedback_3
+msgid "Community and contributors"
+msgstr "Заедница и придонесувачи"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 #: selection:survey.user_input,state:0
@@ -371,6 +404,11 @@ msgstr "Состави е-пошта"
 #: model:ir.ui.menu,name:survey.menu_surveys_configuration
 msgid "Configuration"
 msgstr "Конфигурација"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_2
+msgid "Configuration wizard exists for each important setting"
+msgstr "Постои волшебник за конфигурирање за секое важно подесување"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -476,6 +514,11 @@ msgid "Description"
 msgstr "Опис"
 
 #. module: survey
+#: model:survey.label,value:survey.frow_2_7_1
+msgid "Descriptions and help tooltips are clear enough"
+msgstr ""
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Design"
 msgstr "Дизајн"
@@ -491,6 +534,14 @@ msgid ""
 "Design easily your survey, send invitations to answer by email and analyse "
 "answers."
 msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_2
+#: model:survey.label,value:survey.fcol_2_2_2
+#: model:survey.label,value:survey.fcol_2_5_2
+#: model:survey.label,value:survey.fcol_2_7_2
+msgid "Disagree"
+msgstr "не се согласувам"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_display_name
@@ -509,6 +560,21 @@ msgstr "Прикажи име"
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Display mode"
 msgstr "Начин на прикажување"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_3
+msgid "Do you have a proposition to attract new contributors?"
+msgstr "Дали имате предлог да привлечете нови придонесувачи?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_2
+msgid "Do you have a proposition to help people to contribute?"
+msgstr "Дали имате предлог да им помогнете на луиѓето да придонесат?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_3
+msgid "Do you have suggestions on how to improve the process view ?"
+msgstr "Дали имате предлози како да се подобри прегледот на процесот ?"
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_draft
@@ -546,6 +612,11 @@ msgid "Email composition wizard for Survey"
 msgstr "Волшебник за составување на анкетна е-маил порака"
 
 #. module: survey
+#: model:survey.page,title:survey.feedback_2
+msgid "Ergonomy and ease of use"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_error_msg
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
 msgid "Error message"
@@ -555,6 +626,16 @@ msgstr "Порака за грешка"
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_partner_ids
 msgid "Existing contacts"
 msgstr "Постоечки контакти"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_3
+msgid "Extra modules proposed are relevant"
+msgstr "Предложени екстра модули се релевантни"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_3
+msgid "Financial Management"
+msgstr "Финансиски менаџмент"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage_fold
@@ -583,6 +664,67 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Group By"
 msgstr "Групирај по"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_1
+msgid "How do you contribute or plan to contribute to Odoo?"
+msgstr "Како придонесувате или планирате да придонесете кон Odoo?"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_6
+#, fuzzy
+msgid "Human Resources"
+msgstr "Човечки ресурси"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_3
+msgid "I develop new features"
+msgstr "Јас развивам нови функции"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_4
+msgid "I do not publish my developments"
+msgstr "Јас не ги објавувам моите развои"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_4
+msgid "I help to translate"
+msgstr "Јас помагам со превод"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_3
+msgid "I host them on my own website"
+msgstr "Го хостирам на мојот сопствен вебсајт"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_1
+msgid "I participate to discussion and forums"
+msgstr "Учествувам во дискусии и форуми"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_1
+msgid "I use Github, like all official Odoo projects"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_2
+msgid "I use another repository system (SourceForge...)"
+msgstr "Јас користам друг репозиторен систем (SourceForge...)"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_3
+msgid "I use the contextual help in Odoo"
+msgstr "Ја користам контекстуалната помош во Odoo"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_5
+msgid "I write documentations"
+msgstr "Пишивам документации"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_2
+msgid "I'd like to contribute but I don't know how?"
+msgstr "Би сакал да придонесам но не знам како?"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_id
@@ -615,9 +757,27 @@ msgstr ""
 
 #. module: survey
 #: code:addons/survey/survey.py:624
+#: model:survey.question,comments_message:survey.feedback_1_1
+#: model:survey.question,comments_message:survey.feedback_1_2
+#: model:survey.question,comments_message:survey.feedback_2_1
+#: model:survey.question,comments_message:survey.feedback_2_2
+#: model:survey.question,comments_message:survey.feedback_2_3
+#: model:survey.question,comments_message:survey.feedback_2_4
+#: model:survey.question,comments_message:survey.feedback_2_5
+#: model:survey.question,comments_message:survey.feedback_2_6
+#: model:survey.question,comments_message:survey.feedback_2_7
+#: model:survey.question,comments_message:survey.feedback_3_1
+#: model:survey.question,comments_message:survey.feedback_3_2
+#: model:survey.question,comments_message:survey.feedback_3_3
+#: model:survey.question,comments_message:survey.feedback_4_1
 #, fuzzy, python-format
 msgid "If other, please specify:"
 msgstr "Ако е друго, нагласи:"
+
+#. module: survey
+#: model:survey.page,description:survey.feedback_4
+msgid "If you do not contribute or develop in Odoo, skip this page."
+msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
@@ -643,6 +803,36 @@ msgstr "Поканата е испратена"
 #: model:ir.model.fields,field_description:survey.field_survey_survey_designed
 msgid "Is designed?"
 msgstr "Е дизајнирано?"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_2
+msgid "It can be improved"
+msgstr "Може да се подобри"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_2
+msgid "It helps in the beginning"
+msgstr "Помага на почетокот"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_5
+msgid "It is clear"
+msgstr "Јасно е"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_4
+msgid "It is complete"
+msgstr "Комплетно е"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_1
+msgid "It is up-to-date"
+msgstr "Ажурирано е"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_5
+msgid "It's easy to find the process you need"
+msgstr "Лесно е да го најдеш процесот кој ти е потребен"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_sequence
@@ -819,6 +1009,11 @@ msgid "Next page"
 msgstr "Следна страна"
 
 #. module: survey
+#: model:survey.label,value:survey.choice_1_1_4
+msgid "No, I just tested it"
+msgstr "Не, само што го тестирав"
+
+#. module: survey
 #: model:ir.actions.act_window,help:survey.action_selected_survey_user_input
 msgid "Nobody has replied to your survey yet."
 msgstr ""
@@ -984,6 +1179,11 @@ msgid "Print link"
 msgstr "Испечати линк"
 
 #. module: survey
+#: model:survey.label,value:survey.choice_1_2_5
+msgid "Project Management"
+msgstr "Проектен менаџмент"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_public_url_html
 msgid "Public HTML web link"
 msgstr "Јавен HTML веб линк"
@@ -1014,6 +1214,11 @@ msgid "Public url"
 msgstr "Јавна адреса"
 
 #. module: survey
+#: model:survey.label,value:survey.choice_1_2_2
+msgid "Purchases Management"
+msgstr "Управување со нарачки"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_question_id
@@ -1041,6 +1246,11 @@ msgstr "Име на прашање"
 #: model:ir.ui.menu,name:survey.menu_survey_question_form1
 msgid "Questions"
 msgstr "Прашања"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_4
+msgid "Questions for developers"
+msgstr "Прашања за девелопери"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_quizz_mode
@@ -1086,6 +1296,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_question_labels_ids_2
 msgid "Rows of the Matrix"
 msgstr "Редови на матрицата"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_4
+msgid "Running the configuration wizards is a good way to spare time"
+msgstr ""
+"Стартувајќи го волшебникот за конфигурација е добар начин да заштедите време"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_1
+msgid "Sales Management"
+msgstr "Менаџмент за продажби"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -1398,12 +1619,37 @@ msgid "Thank you!"
 msgstr "Ви благодариме!"
 
 #. module: survey
+#: model:survey.label,value:survey.frow_2_5_3
+msgid "The 'Usability/Extended View' group helps in daily work"
+msgstr "Групата 'Употребливост/Продолжен преглед'  помага во дневната работа"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_4
+msgid "The 'Usability/Extended View' group hides only optional fields"
+msgstr ""
+"Групата 'Употребливост/Продолжен преглед'  ги сокрива само опционалните "
+"полиња"
+
+#. module: survey
 #: constraint:survey.user_input_line:0
 msgid "The answer must be in the right type"
 msgstr "Одоговорот мора да биде во правилниот тип"
 
 #. module: survey
 #: code:addons/survey/survey.py:622
+#: model:survey.question,validation_error_msg:survey.feedback_1_1
+#: model:survey.question,validation_error_msg:survey.feedback_1_2
+#: model:survey.question,validation_error_msg:survey.feedback_2_1
+#: model:survey.question,validation_error_msg:survey.feedback_2_2
+#: model:survey.question,validation_error_msg:survey.feedback_2_3
+#: model:survey.question,validation_error_msg:survey.feedback_2_4
+#: model:survey.question,validation_error_msg:survey.feedback_2_5
+#: model:survey.question,validation_error_msg:survey.feedback_2_6
+#: model:survey.question,validation_error_msg:survey.feedback_2_7
+#: model:survey.question,validation_error_msg:survey.feedback_3_1
+#: model:survey.question,validation_error_msg:survey.feedback_3_2
+#: model:survey.question,validation_error_msg:survey.feedback_3_3
+#: model:survey.question,validation_error_msg:survey.feedback_4_1
 #, python-format
 msgid "The answer you entered has an invalid format."
 msgstr "Одговорот што го внесовте не е во валиден формат."
@@ -1419,9 +1665,69 @@ msgstr ""
 "автометски конвртирано во специјалната адреса на анкетата."
 
 #. module: survey
+#: model:survey.label,value:survey.choice_2_4_1
+msgid "The current menu structure is good"
+msgstr "Моменталната структура на менито е добра"
+
+#. module: survey
 #: sql_constraint:survey.user_input:0
 msgid "The deadline cannot be in the past"
 msgstr "Последниот рок не може да биде во минатото"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_5
+msgid "The groups set on menu items are relevant"
+msgstr "Групите подесени на елементите на менито се релевантни"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_3
+msgid "The number of groups is good"
+msgstr "Бројот на групи е добар"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_1
+msgid "The security rules defined on groups are useful"
+msgstr "Безбедносните правила дефинирани на групите се корисни"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_2
+msgid "There are too few groups defined, security isn't accurate enough"
+msgstr "Има премалку групи дефинирано, безбедноста не е доволно прецизна"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_1
+msgid "There are too many groups defined, security is too complex to set"
+msgstr ""
+"Има дефинирано премногу групи, безбедноста е премногу комплексна да се "
+"постави"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_3
+msgid "There are too much menus, it's complex to understand"
+msgstr "Има премногу мениа, сложено е за разбирање"
+
+#. module: survey
+#: model:survey.page,description:survey.feedback_2
+msgid ""
+"These questions relate to the ergonomy and ease of use of Odoo. Try to "
+"remind your firsts days on Odoo and\n"
+"what have been your difficulties."
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_2
+msgid "They are clean and correct"
+msgstr "Чисти се и точни"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_3
+msgid "They are useful on a daily usage"
+msgstr "Корисни се за секојдневна употреба"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_1
+msgid "They help new users to understand Odoo"
+msgstr "Им помагаат на новите корисници да го разберат Odoo"
 
 #. module: survey
 #: code:addons/survey/survey.py:671 code:addons/survey/tests/test_survey.py:94
@@ -1457,6 +1763,19 @@ msgstr "Оваа порака ќе биде прикажана кога анке
 
 #. module: survey
 #: code:addons/survey/survey.py:621
+#: model:survey.question,constr_error_msg:survey.feedback_1_1
+#: model:survey.question,constr_error_msg:survey.feedback_1_2
+#: model:survey.question,constr_error_msg:survey.feedback_2_1
+#: model:survey.question,constr_error_msg:survey.feedback_2_2
+#: model:survey.question,constr_error_msg:survey.feedback_2_3
+#: model:survey.question,constr_error_msg:survey.feedback_2_4
+#: model:survey.question,constr_error_msg:survey.feedback_2_5
+#: model:survey.question,constr_error_msg:survey.feedback_2_6
+#: model:survey.question,constr_error_msg:survey.feedback_2_7
+#: model:survey.question,constr_error_msg:survey.feedback_3_1
+#: model:survey.question,constr_error_msg:survey.feedback_3_2
+#: model:survey.question,constr_error_msg:survey.feedback_3_3
+#: model:survey.question,constr_error_msg:survey.feedback_4_1
 #, python-format
 msgid "This question requires an answer."
 msgstr "Прашањето треба да има одговор."
@@ -1477,9 +1796,37 @@ msgid "This survey is open only to registered people. Please"
 msgstr "Оваа анкета е отворена само за регистрирани луѓе. Ве молиме"
 
 #. module: survey
+#: model:survey.survey,description:survey.feedback_form
+msgid "This survey should take less than five minutes."
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_2
+msgid ""
+"Those security rules are standard and can be used out-of-the-box in most "
+"cases"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_title
 msgid "Title"
 msgstr "Титула"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_4
+#: model:survey.label,value:survey.fcol_2_2_4
+#: model:survey.label,value:survey.fcol_2_5_4
+#: model:survey.label,value:survey.fcol_2_7_4
+msgid "Totally agree"
+msgstr "Целосно се согласувам"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_1
+#: model:survey.label,value:survey.fcol_2_2_1
+#: model:survey.label,value:survey.fcol_2_5_1
+#: model:survey.label,value:survey.fcol_2_7_1
+msgid "Totally disagree"
+msgstr "Воопшто не се согласувам"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_search
@@ -1513,6 +1860,11 @@ msgid ""
 msgstr ""
 "Искористете го ова поле за да додадете дополнително објаснување за вашето "
 "прашање"
+
+#. module: survey
+#: model:survey.survey,title:survey.feedback_form
+msgid "User Feedback Form"
+msgstr "Формулар за мислење на корисници"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_user_input_id
@@ -1582,6 +1934,44 @@ msgid "Vote"
 msgstr "Глас"
 
 #. module: survey
+#: model:survey.question,question:survey.feedback_2_7
+msgid "What do you think about configuration wizards?"
+msgstr "Што мислите за волшебниците за конфигурација?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_1
+msgid "What do you think about the documentation available on doc.odoo.com?"
+msgstr ""
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_5
+msgid "What do you think about the groups of users?"
+msgstr "Што мислите за групите на корисници?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_2
+msgid ""
+"What do you think about the process views of Odoo, available in the web "
+"client ?"
+msgstr "Што мислите за прегледот на процес во Odoo, достапен во веб клиентот ?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_4
+#: model:survey.question,question:survey.feedback_2_6
+msgid "What do you think about the structure of the menus?"
+msgstr "Што мислисте за структурата на мениата?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_4_1
+msgid "Where do you develop your new features?"
+msgstr "Каде ги развивате вашите нови функции?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_1_2
+msgid "Which modules are you using/testing?"
+msgstr "Кои модули ги користите/тестирате?"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.datetime
 msgid "YYYY-MM-DD hh:mm:ss"
 msgstr ""
@@ -1593,6 +1983,21 @@ msgid ""
 "                                            <i class=\"fa fa-calendar fa-2x"
 "\"/>"
 msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_1
+msgid "Yes, I use a version < 7.0"
+msgstr "Да, јас користам верзија < 7.0"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_2
+msgid "Yes, I use the 7.0 version, installed locally"
+msgstr "Да ја користам верзијата 7.0 инсталирана локално"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_3
+msgid "Yes, I use the online version of Odoo"
+msgstr "Да ја користам интернет верзијата на Odoo"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form
@@ -1663,397 +2068,3 @@ msgstr "прегледајте ги вашите одговори"
 #, python-format
 msgid "try to create and fill survey"
 msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "                \n"
-#~ "                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, "
-#~ "Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
-#~ "                    <p>Hello,</p>\n"
-#~ "                    <p>We are conducting a survey, and your response "
-#~ "would be appreciated.</p>\n"
-#~ "                    <p><a href=\"__URL__\">Please, click here to start "
-#~ "survey</a></p>\n"
-#~ "                    <p>Thanks for your participation!</p>\n"
-#~ "                </div>\n"
-#~ "                \n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "                \n"
-#~ "                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, "
-#~ "Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
-#~ "                    <p>Здраво,</p>\n"
-#~ "                    <p>Спроведуваме анкета и многу ќе ни значи вашето "
-#~ "учество.</p>\n"
-#~ "                    <p><a href=\"__URL__\">Ве молиме кликнете овде за да "
-#~ "започнете со анкетата</a></p>\n"
-#~ "                    <p>Ви благодариме за учеството!</p>\n"
-#~ "                </div>\n"
-#~ "                \n"
-#~ "            "
-
-#~ msgid "A process is defined for all enterprise flows"
-#~ msgstr "Процес е дефиниран за сите текови на претпријатието"
-
-#~ msgid "About your Odoo usage"
-#~ msgstr "За вашата употреба на Odoo"
-
-#~ msgid "Action Needed"
-#~ msgstr "Потребна е акција"
-
-#~ msgid "Active domain"
-#~ msgstr "Активен домен"
-
-#~ msgid "Agree"
-#~ msgstr "Согласува"
-
-#~ msgid "Are you using Odoo on a daily basis?"
-#~ msgstr "Дали го користите Odoo секој ден?"
-
-#~ msgid "Author"
-#~ msgstr "Автор"
-
-#~ msgid ""
-#~ "Author of the message. If not set, email_from may hold an email address "
-#~ "that did not match any partner."
-#~ msgstr ""
-#~ "Автор на пораката. Доколку не е подесено, email_from може да содржи e-"
-#~ "mail адреса што не се совпаѓа со никој партнер."
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "Автоматски санирани HTML содржини"
-
-#~ msgid "CRM"
-#~ msgstr "ЦРМ"
-
-#~ msgid "Channels"
-#~ msgstr "Канали"
-
-#~ msgid "Child Messages"
-#~ msgstr "Подредени пораки"
-
-#~ msgid "Community and contributors"
-#~ msgstr "Заедница и придонесувачи"
-
-#~ msgid "Composition mode"
-#~ msgstr "Режим на составување"
-
-#~ msgid "Configuration wizard exists for each important setting"
-#~ msgstr "Постои волшебник за конфигурирање за секое важно подесување"
-
-#~ msgid "Contents"
-#~ msgstr "Содржини"
-
-#~ msgid "Current user has a starred notification linked to this message"
-#~ msgstr "Моменталниот корисник има известување поврзано со оваа порака"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Датум на испраќање на последната порака"
-
-#~ msgid "Disagree"
-#~ msgstr "не се согласувам"
-
-#~ msgid "Do you have a proposition to attract new contributors?"
-#~ msgstr "Дали имате предлог да привлечете нови придонесувачи?"
-
-#~ msgid "Do you have a proposition to help people to contribute?"
-#~ msgstr "Дали имате предлог да им помогнете на луиѓето да придонесат?"
-
-#~ msgid "Do you have suggestions on how to improve the process view ?"
-#~ msgstr "Дали имате предлози како да се подобри прегледот на процесот ?"
-
-#~ msgid "Extra modules proposed are relevant"
-#~ msgstr "Предложени екстра модули се релевантни"
-
-#~ msgid "Financial Management"
-#~ msgstr "Финансиски менаџмент"
-
-#~ msgid "Followers"
-#~ msgstr "Пратители"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Пратители (Канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Пратители (Партнери)"
-
-#~ msgid "From"
-#~ msgstr "Од"
-
-#~ msgid "How do you contribute or plan to contribute to Odoo?"
-#~ msgstr "Како придонесувате или планирате да придонесете кон Odoo?"
-
-#~ msgid "Human Ressources"
-#~ msgstr "Човечки ресурси"
-
-#~ msgid "I develop new features"
-#~ msgstr "Јас развивам нови функции"
-
-#~ msgid "I do not publish my developments"
-#~ msgstr "Јас не ги објавувам моите развои"
-
-#~ msgid "I help to translate"
-#~ msgstr "Јас помагам со превод"
-
-#~ msgid "I host them on my own website"
-#~ msgstr "Го хостирам на мојот сопствен вебсајт"
-
-#~ msgid "I participate to discussion and forums"
-#~ msgstr "Учествувам во дискусии и форуми"
-
-#~ msgid "I use another repository system (SourceForge...)"
-#~ msgstr "Јас користам друг репозиторен систем (SourceForge...)"
-
-#~ msgid "I use the contextual help in Odoo"
-#~ msgstr "Ја користам контекстуалната помош во Odoo"
-
-#~ msgid "I write documentations"
-#~ msgstr "Пишивам документации"
-
-#~ msgid "I'd like to contribute but I don't know how?"
-#~ msgstr "Би сакал да придонесам но не знам како?"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето внимание."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
-
-#~ msgid "If other, precise:"
-#~ msgstr "Ако е друго, нагласи:"
-
-#~ msgid "Initial thread message."
-#~ msgstr "Почетна тема на пораката"
-
-#~ msgid "Is Follower"
-#~ msgstr "е следач"
-
-#~ msgid "It can be improved"
-#~ msgstr "Може да се подобри"
-
-#~ msgid "It helps in the beginning"
-#~ msgstr "Помага на почетокот"
-
-#~ msgid "It is clear"
-#~ msgstr "Јасно е"
-
-#~ msgid "It is complete"
-#~ msgstr "Комплетно е"
-
-#~ msgid "It is up-to-date"
-#~ msgstr "Ажурирано е"
-
-#~ msgid "It's easy to find the process you need"
-#~ msgstr "Лесно е да го најдеш процесот кој ти е потребен"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Датум на последна порака"
-
-#~ msgid "Log an Internal Note"
-#~ msgstr "Запиши интерна забелешка"
-
-#~ msgid "Message Record Name"
-#~ msgstr "Име на записот на пораката"
-
-#~ msgid ""
-#~ "Message type: email for email message, notification for system message, "
-#~ "comment for other messages such as user replies"
-#~ msgstr ""
-#~ "Тип на порака: e-mail за e-mail порака, известување за системски пораки, "
-#~ "коментар за други пораки како кориснички одговори"
-
-#~ msgid "Message unique identifier"
-#~ msgstr "Единствен идентификатор на порака"
-
-#~ msgid "Message-Id"
-#~ msgstr "Идентификатор на порака"
-
-#~ msgid "Messages"
-#~ msgstr "Пораки"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Пораки и историја на комуникација"
-
-#~ msgid "Name get of the related document."
-#~ msgstr "Превземи име од поврзаниот документ."
-
-#~ msgid "No threading for answers"
-#~ msgstr "Нема теми за одговори"
-
-#~ msgid "No, I just tested it"
-#~ msgstr "Не, само што го тестирав"
-
-#~ msgid "Notify followers"
-#~ msgstr "Извести следбеници"
-
-#~ msgid "Notify followers of the document (mass post only)"
-#~ msgstr "Извести ги следбениците на документот (само групна порака)"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Број на акции"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Број на пораки за кои ѝм е потребна акција"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Број на непрочитани пораки"
-
-#~ msgid "Outgoing mail server"
-#~ msgstr "Сервер за излезна пошта"
-
-#~ msgid "Parent Message"
-#~ msgstr "Надредна порака"
-
-#~ msgid "Project Management"
-#~ msgstr "Проектен менаџмент"
-
-#~ msgid "Purchases Management"
-#~ msgstr "Управување со нарачки"
-
-#~ msgid "Questions for developers"
-#~ msgstr "Прашања за девелопери"
-
-#~ msgid "Related Document ID"
-#~ msgstr "ID на поврзан документ"
-
-#~ msgid "Related Document Model"
-#~ msgstr "Поврзан модел на документ"
-
-#~ msgid ""
-#~ "Reply email address. Setting the reply_to bypasses the automatic thread "
-#~ "creation."
-#~ msgstr ""
-#~ "Е-маил адреса за одговор. Со подесување на reply_to го заобиколува "
-#~ "автомотското креирање на тема."
-
-#~ msgid "Reply-To"
-#~ msgstr "Одговори на"
-
-#~ msgid "Running the configuration wizards is a good way to spare time"
-#~ msgstr ""
-#~ "Стартувајќи го волшебникот за конфигурација е добар начин да заштедите "
-#~ "време"
-
-#~ msgid "Sales Management"
-#~ msgstr "Менаџмент за продажби"
-
-#~ msgid ""
-#~ "Small-sized image of this contact. It is automatically resized as a "
-#~ "64x64px image, with aspect ratio preserved. Use this field anywhere a "
-#~ "small image is required."
-#~ msgstr ""
-#~ "Мала слика од овој контакт. Автоматски се поставува големината како "
-#~ "64x64, со зачуван размер. Користи го оваа поле секаде каде што се бара "
-#~ "мала слика."
-
-#~ msgid "Starred"
-#~ msgstr "Набљудувани"
-
-#~ msgid "Subject"
-#~ msgstr "Тема"
-
-#~ msgid "Subtype"
-#~ msgstr "Подтип"
-
-#~ msgid "System notification"
-#~ msgstr "Системско известување"
-
-#~ msgid "The 'Usability/Extended View' group helps in daily work"
-#~ msgstr ""
-#~ "Групата 'Употребливост/Продолжен преглед'  помага во дневната работа"
-
-#~ msgid "The 'Usability/Extended View' group hides only optional fields"
-#~ msgstr ""
-#~ "Групата 'Употребливост/Продолжен преглед'  ги сокрива само опционалните "
-#~ "полиња"
-
-#~ msgid "The current menu structure is good"
-#~ msgstr "Моменталната структура на менито е добра"
-
-#~ msgid "The groups set on menu items are relevant"
-#~ msgstr "Групите подесени на елементите на менито се релевантни"
-
-#~ msgid "The number of groups is good"
-#~ msgstr "Бројот на групи е добар"
-
-#~ msgid "The security rules defined on groups are useful"
-#~ msgstr "Безбедносните правила дефинирани на групите се корисни"
-
-#~ msgid "There are too few groups defined, security isn't accurate enough"
-#~ msgstr "Има премалку групи дефинирано, безбедноста не е доволно прецизна"
-
-#~ msgid "There are too many groups defined, security is too complex to set"
-#~ msgstr ""
-#~ "Има дефинирано премногу групи, безбедноста е премногу комплексна да се "
-#~ "постави"
-
-#~ msgid "There are too much menus, it's complex to understand"
-#~ msgstr "Има премногу мениа, сложено е за разбирање"
-
-#~ msgid "They are clean and correct"
-#~ msgstr "Чисти се и точни"
-
-#~ msgid "They are useful on a daily usage"
-#~ msgstr "Корисни се за секојдневна употреба"
-
-#~ msgid "They help new users to understand Odoo"
-#~ msgstr "Им помагаат на новите корисници да го разберат Odoo"
-
-#~ msgid "Totally agree"
-#~ msgstr "Целосно се согласувам"
-
-#~ msgid "Totally disagree"
-#~ msgstr "Воопшто не се согласувам"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитани Пораки"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Тезга на непрочитаните пораки"
-
-#~ msgid "Use active domain"
-#~ msgstr "Употребете активен домен"
-
-#~ msgid "User Feedback Form"
-#~ msgstr "Формулар за мислење на корисници"
-
-#~ msgid "What do you think about configuration wizards?"
-#~ msgstr "Што мислите за волшебниците за конфигурација?"
-
-#~ msgid "What do you think about the groups of users?"
-#~ msgstr "Што мислите за групите на корисници?"
-
-#~ msgid ""
-#~ "What do you think about the process views of Odoo, available in the web "
-#~ "client ?"
-#~ msgstr ""
-#~ "Што мислите за прегледот на процес во Odoo, достапен во веб клиентот ?"
-
-#~ msgid "What do you think about the structure of the menus?"
-#~ msgstr "Што мислисте за структурата на мениата?"
-
-#~ msgid "Where do you develop your new features?"
-#~ msgstr "Каде ги развивате вашите нови функции?"
-
-#~ msgid "Whether the message is an internal note (comment mode only)"
-#~ msgstr "Дали пораката е интерна белешка (само мод на коментирање)"
-
-#~ msgid "Which modules are you using/testing?"
-#~ msgstr "Кои модули ги користите/тестирате?"
-
-#~ msgid "Yes, I use a version < 7.0"
-#~ msgstr "Да, јас користам верзија < 7.0"
-
-#~ msgid "Yes, I use the 7.0 version, installed locally"
-#~ msgstr "Да ја користам верзијата 7.0 инсталирана локално"
-
-#~ msgid "Yes, I use the online version of Odoo"
-#~ msgstr "Да ја користам интернет верзијата на Odoo"
-
-#~ msgid "on"
-#~ msgstr "на"
-
-#, fuzzy
-#~ msgid "Human Resources"
-#~ msgstr "Човечки ресурси"

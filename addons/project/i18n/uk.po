@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-28 12:33+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-03 13:39+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
 "uk/)\n"
@@ -184,6 +184,16 @@ msgid ""
 "\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
+msgstr ""
+
+#. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
 msgstr ""
 
 #. module: project
@@ -490,6 +500,10 @@ msgid ""
 "custom reports.\n"
 "                                    </span>"
 msgstr ""
+"<span><strong>Ми тут, щоб Вам допомогти:</strong> Якщо Вам не вдається "
+"досягти бажаного ККД, зв'яжіться з нами і ми допоможемо Вам створити "
+"персоналізовані звіти.\n"
+"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -612,7 +626,7 @@ msgstr "<strong>Аналізувати звіти</strong> (щороку)"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Approve your Timesheets</strong> (every week)"
-msgstr ""
+msgstr "<strong>Затвердьте свої розклади</strong> (щотижня)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1250,6 +1264,11 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr ""
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "По відповідальних"
@@ -1265,6 +1284,7 @@ msgstr "Скасувати"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "Скасовано"
@@ -1662,7 +1682,7 @@ msgstr "Процес розробки"
 #: code:addons/project/static/src/js/project.js:50
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "Відмінити"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
@@ -1752,6 +1772,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Виконано"
@@ -1782,9 +1803,8 @@ msgstr "Псевдонім ел. пошти"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
-#, fuzzy
 msgid "Email Template"
-msgstr "Псевдонім ел. пошти"
+msgstr "Шаблон ел. листа"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2193,6 +2213,7 @@ msgstr ""
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
+#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "В процесі"
@@ -2483,7 +2504,7 @@ msgstr "Відділ маркетингу"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "Учасники"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2516,6 +2537,11 @@ msgstr "Мої завдання"
 #: model:ir.model.fields,field_description:project.field_project_tags_name
 msgid "Name"
 msgstr "Назва"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "Потрібна функціональна або технічна консультація"
 
 #. module: project
 #. openerp-web
@@ -2559,6 +2585,11 @@ msgstr "Немає оцінок клієнтів"
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
 msgstr "Звичайний"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr "Не підтверджено"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -2938,11 +2969,21 @@ msgid "Ready to be displayed, published or sent"
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
+msgstr ""
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
 msgstr ""
 
 #. module: project
@@ -3226,9 +3267,8 @@ msgstr "Статус"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_child_ids
-#, fuzzy
 msgid "Sub-tasks"
-msgstr "завдання"
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3622,6 +3662,7 @@ msgstr ""
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
+#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "Зробити"
@@ -3688,6 +3729,11 @@ msgstr "Використовувати табелі робочого часу"
 msgid ""
 "Use separate meetings to solve big issues or issues that aren’t important "
 "for the entire team."
+msgstr ""
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the priority for tasks related to gold customers"
 msgstr ""
 
 #. module: project
@@ -4004,85 +4050,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr ""
-
-#~ msgid "&times;"
-#~ msgstr "&times;"
-
-#~ msgid "Action Needed"
-#~ msgstr "Необхідна дія"
-
-#~ msgid "Check this field if this project manages timesheets"
-#~ msgstr "Позначте це поле, якщо проект використовує табелі робочого часу"
-
-#~ msgid "Close"
-#~ msgstr "Закрити"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата останнього повідомлення по запису."
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "Делеговані завдання"
-
-#~ msgid "Followers"
-#~ msgstr "Підписники"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Підписники (Канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Підписники (Партнери)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
-
-#~ msgid "Is Follower"
-#~ msgstr "Стежить"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Дата останнього повідомлення"
-
-#~ msgid "Messages"
-#~ msgstr "Повідомлення"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Повідомлення та історія бесіди"
-
-#~ msgid "Need functional or technical help"
-#~ msgstr "Потрібна функціональна або технічна консультація"
-
-#~ msgid "Not validated"
-#~ msgstr "Не підтверджено"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Кількість дій"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Кількість повідомлень, які потебують дії"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Кількість непрочитаних повідомлень"
-
-#~ msgid "Open Project Menu"
-#~ msgstr "Відкрити меню проекту"
-
-#~ msgid "Project Time Unit"
-#~ msgstr "Одиниця виміру часу проекту"
-
-#~ msgid "Subscriptions"
-#~ msgstr "Підписки"
-
-#~ msgid "Type of Account"
-#~ msgstr "Тип рахунку"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Кількість непрочитаних повідомлень"
-
-#~ msgid "Website Messages"
-#~ msgstr "Повідомлення з веб-сайту"
-
-#~ msgid "Website communication history"
-#~ msgstr "Історія бесіди на веб-сайті"

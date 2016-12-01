@@ -14,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-03 04:06+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-22 13:46+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
 "language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -131,6 +131,8 @@ msgid ""
 "support\n"
 "                hours.</i>"
 msgstr ""
+"<i>示例：预付费服务提供给那些不得不购买额外时间包的客户，由于他之前的所有支"
+"持。</i>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -452,6 +454,12 @@ msgstr "交货提前期"
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
 msgid "Delivery address for current sales order."
 msgstr "当前销售订单的发运地址"
+
+#. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr "押金"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
@@ -875,6 +883,9 @@ msgid ""
 "Create a task and track hours: Create a task on the sale order validation "
 "and track the work hours."
 msgstr ""
+"手动设置订单数量：基于手动输入的数量发票，而无需创建一个帐户分析。\n"
+"合同工时表：基于跟踪小时的相关时间表发票。\n"
+"创建任务和跟踪时间：创建对销售订单验证任务，并跟踪工作时间。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_validity_date
@@ -1364,7 +1375,7 @@ msgstr "销售价格"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_layout
 msgid "Sale Reports Layout"
-msgstr "销售报表布局"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -1570,7 +1581,7 @@ msgstr "给客户显示价格表"
 #: selection:sale.config.settings,group_uom:0
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
-msgstr ""
+msgstr "一些产品可使用不同的销售 / 采购单位 ( 高级 )"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -1740,7 +1751,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Timesheets on project"
-msgstr "项目的工时单"
+msgstr "项目的工时表"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -1930,270 +1941,3 @@ msgstr "sale.config.settings"
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "未知的"
-
-#~ msgid ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-#~ msgstr ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-
-#~ msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
-#~ msgstr "<span groups=\"sale.group_discount_per_so_line\">折扣(%)</span>"
-
-#~ msgid "Action Needed"
-#~ msgstr "所需行动"
-
-#~ msgid "Allows you to specify an analytic account on sales orders."
-#~ msgstr "允许你在销售订单指定一个分析会计账户"
-
-#~ msgid "Analytic Line"
-#~ msgstr "分析行"
-
-#~ msgid "Analytic accounting for sales"
-#~ msgstr "销售分析会计账户"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid "Deposit"
-#~ msgstr "押金"
-
-#~ msgid "Expense Account"
-#~ msgstr "费用科目"
-
-#~ msgid "Followers"
-#~ msgstr "关注者"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者(频道)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者（业务伙伴）"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "确认后, 会出现新消息."
-
-#~ msgid "Invoice based on time and material"
-#~ msgstr "基于时间和物料开票"
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid "Messages"
-#~ msgstr "消息"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "消息和通信历史"
-
-#~ msgid "Number of Actions"
-#~ msgstr "动作的序列号"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要动作的消息编号"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读的消息数量"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "打开销售订单"
-
-#~ msgid ""
-#~ "Some products may be sold/purchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr "一些产品可使用不同的单位销售 / 采购 ( 高级 )"
-
-#~ msgid "Timesheets on contract"
-#~ msgstr "合同上的记工单"
-
-#~ msgid "Unit of Measures"
-#~ msgstr "计量单位"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"
-
-#~ msgid "Website Messages"
-#~ msgstr "网站消息"
-
-#~ msgid "Website communication history"
-#~ msgstr "网站沟通记录"
-
-#~ msgid "You can only delete draft quotations!"
-#~ msgstr "你只能删除草稿报价单！"
-
-#~ msgid "account.config.settings"
-#~ msgstr "会计.配置.设定"
-
-#~ msgid "&amp;bull;"
-#~ msgstr "&amp;bull;"
-
-#~ msgid "<strong>Subtotal: </strong>"
-#~ msgstr "<strong>分类汇总: </strong>"
-
-#~ msgid "A warning can be set on a product or a customer (Sale)"
-#~ msgstr "可以为产品和客户设置警告信息(销售)"
-
-#~ msgid "Add pagebreak"
-#~ msgstr "添加页面分隔"
-
-#~ msgid "Add subtotal"
-#~ msgstr "添加小计"
-
-#~ msgid "All the products and the customers can be used in sale orders"
-#~ msgstr "所有产品和客户在订单可用"
-
-#~ msgid "Allow discount policy on sale order line"
-#~ msgstr "允许在销售订单明细行上折扣"
-
-#~ msgid "Analytic Tags"
-#~ msgstr "分析标签"
-
-#~ msgid "At cost"
-#~ msgstr "成本"
-
-#~ msgid "At sale price"
-#~ msgstr "销售价格"
-
-#~ msgid "Attribute Values"
-#~ msgstr "属性值"
-
-#~ msgid "Attributes"
-#~ msgstr "属性"
-
-#~ msgid "Blocking Message"
-#~ msgstr "受阻消息"
-
-#~ msgid "Breaks Page"
-#~ msgstr "分隔页"
-
-#~ msgid "Configuration options are available in the Settings app."
-#~ msgstr "配置选项在模块的设置里可用。"
-
-#~ msgid "Confirmation Date"
-#~ msgstr "确认日期"
-
-#~ msgid "Date"
-#~ msgstr "日期"
-
-#~ msgid "Date on which the sale order is confirmed."
-#~ msgstr "销售订单确认日期。"
-
-#~ msgid "Delivery address for current invoice."
-#~ msgstr "当前发票的交货地址"
-
-#~ msgid "Discount Policy"
-#~ msgstr "折扣政策"
-
-#~ msgid "Group By Name"
-#~ msgstr "按名称分组"
-
-#~ msgid "Layout Sequence"
-#~ msgstr "布局序列"
-
-#~ msgid "Let's have a look at the quotations of this sales team."
-#~ msgstr "对此销售团队的报价单有个认识."
-
-#~ msgid "Lock"
-#~ msgstr "锁"
-
-#~ msgid "Locked"
-#~ msgstr "已锁定"
-
-#~ msgid "Material"
-#~ msgstr "物料"
-
-#~ msgid "Message for Sales Order"
-#~ msgstr "销售订单消息"
-
-#~ msgid "Message for Sales Order Line"
-#~ msgstr "销售订单行消息"
-
-#~ msgid "More Info"
-#~ msgstr "更多信息"
-
-#~ msgid "Name"
-#~ msgstr "名称"
-
-#~ msgid "No"
-#~ msgstr "否"
-
-#~ msgid "No Message"
-#~ msgstr "没消息"
-
-#~ msgid "No discount policy on sale order line"
-#~ msgstr "不允许在销售订单明细行中设置折扣"
-
-#~ msgid "Pricelists"
-#~ msgstr "价格表"
-
-#~ msgid "Product Categories"
-#~ msgstr "产品类别"
-
-#~ msgid "Report Configuration"
-#~ msgstr "设定报表"
-
-#~ msgid "Report Layout Categories"
-#~ msgstr "报表布局类别"
-
-#~ msgid "Sale pricelist setting"
-#~ msgstr "销售价格表设置"
-
-#~ msgid "Search Name"
-#~ msgstr "搜索名称"
-
-#~ msgid "Section"
-#~ msgstr "部分"
-
-#~ msgid ""
-#~ "Selecting the \"Warning\" option will notify user with the message, "
-#~ "Selecting \"Blocking Message\" will throw an exception with the message "
-#~ "and block the flow. The Message has to be written in the next field."
-#~ msgstr ""
-#~ "选择此“警告“选项，将通知用户此消息。\r\n"
-#~ "选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\r\n"
-#~ "消息写入下一个字段。"
-
-#~ msgid "Services"
-#~ msgstr "服务"
-
-#~ msgid "Show subtotal"
-#~ msgstr "显示小计"
-
-#~ msgid "Show total"
-#~ msgstr "显示总计"
-
-#~ msgid "TIN:"
-#~ msgstr "税务识别号码："
-
-#~ msgid "Tax Display"
-#~ msgstr "税金显示"
-
-#~ msgid "Tax display B2B"
-#~ msgstr "税金显示B2B"
-
-#~ msgid "Tax display B2C"
-#~ msgstr "税金显示B2C"
-
-#~ msgid "Unit of Measure Categories"
-#~ msgstr "计量单位类别"
-
-#~ msgid "Untaxed Total"
-#~ msgstr "不含税总计"
-
-#~ msgid "Warning"
-#~ msgstr "警告"
-
-#~ msgid "Warning for %s"
-#~ msgstr "%s 的警告"
-
-#~ msgid "Warning on the Sales Order"
-#~ msgstr "销售订单警告"
-
-#~ msgid "Warning when Selling this Product"
-#~ msgstr "销售这产品时的警告"

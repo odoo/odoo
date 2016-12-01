@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-04-12 10:04+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-09-23 13:49+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
 "hu/)\n"
@@ -35,7 +35,7 @@ msgstr "Műveleti szabályok"
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_line_test
 msgid "Action Rule Line Test"
-msgstr ""
+msgstr "Műveleti szabály tételsor teszt"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -299,7 +299,7 @@ msgstr "Utoljára frissítve"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
 msgid "Lead id"
-msgstr ""
+msgstr "Érdeklődés id azonosító"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -422,6 +422,21 @@ msgid "Subject"
 msgstr "Tárgy"
 
 #. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_done
+msgid "Test lead in state 'done'"
+msgstr "'Elvégezve' állapotú érdeklődések tesztje"
+
+#. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_draft
+msgid "Test lead in state 'draft'"
+msgstr "'Tervezet' állapotú érdeklődések tesztje"
+
+#. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_open
+msgid "Test lead in state 'open'"
+msgstr "'Nyitott' állapotú érdeklődések tesztje"
+
+#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_id
 msgid "Trigger Date"
 msgstr "Indítási dátum"
@@ -454,7 +469,7 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_user_id
 msgid "User id"
-msgstr ""
+msgstr "Felhasználó id azonosító"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_calendar_id
@@ -496,13 +511,4 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
 msgid "unknown"
-msgstr ""
-
-#~ msgid "Test lead in state 'done'"
-#~ msgstr "'Elvégezve' állapotú érdeklődések tesztje"
-
-#~ msgid "Test lead in state 'draft'"
-#~ msgstr "'Tervezet' állapotú érdeklődések tesztje"
-
-#~ msgid "Test lead in state 'open'"
-#~ msgstr "'Nyitott' állapotú érdeklődések tesztje"
+msgstr "ismeretlen"

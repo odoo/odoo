@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-22 23:03+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-09-18 06:11+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Persian (http://www.transifex.com/odoo/odoo-9/language/fa/)\n"
 "Language: fa\n"
@@ -868,6 +868,12 @@ msgid "Internal Reference"
 msgstr "مرجع داخلی"
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
@@ -1489,7 +1495,7 @@ msgstr "ویژگی"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9667
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1518,7 +1524,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Raw Materials"
-msgstr ""
+msgstr "مواد خام"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
@@ -1928,7 +1934,7 @@ msgstr "نوع"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Unit Cost"
-msgstr ""
+msgstr "هزینه واحد"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2171,6 +2177,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "روز"
@@ -2215,56 +2229,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "ناشناخته"
-
-#~ msgid "Action Needed"
-#~ msgstr "اقدام مورد نیاز است"
-
-#~ msgid "Change Quantity"
-#~ msgstr "تغییر تعداد"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "تاریخ آخرین پیغام پست شده از این رکورد"
-
-#~ msgid "Followers"
-#~ msgstr "دنبال‌کنندگان"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "پیروان (کانال ها)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "پیروان (شرکاء)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr ""
-#~ "اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
-
-#~ msgid "Is Follower"
-#~ msgstr "دنبال می کند"
-
-#~ msgid "Last Message Date"
-#~ msgstr "تاریخ آخرین پیام"
-
-#~ msgid "Messages"
-#~ msgstr "پیام‌ها"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "پیام‌ها و تاریخچه ارتباط"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "تعداد پیام‌های خوانده نشده"
-
-#~ msgid "Unread Messages"
-#~ msgstr "پیام های ناخوانده"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "شمارنده پیام‌های خوانده‌نشده"
-
-#~ msgid "Website Messages"
-#~ msgstr "پیام‌های وب‌سایت"
-
-#~ msgid "Website communication history"
-#~ msgstr "تاریخچه ارتباط با وبسایت"

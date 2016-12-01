@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -191,6 +191,11 @@ msgstr ""
 "csoport eltüntetését annak elvétele nélkül."
 
 #. module: sales_team
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "Indirect Sales"
+msgstr "Közvetett értékesítés"
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:140
 #, python-format
@@ -243,7 +248,7 @@ msgstr "További információ"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:216
 #, python-format
 msgid "My Pipeline"
-msgstr ""
+msgstr "Folyamatom"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -310,6 +315,8 @@ msgid ""
 "Sales Team the user is member of. Used to compute the members of a sales "
 "team through the inverse one2many"
 msgstr ""
+"Értékesítési csapat, melynek a felhasználó a tagja. Az értékesítési csapat "
+"tagok számításához használja a fordított  one2many keresztül"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_act
@@ -364,7 +371,7 @@ msgstr "Az értékesítési csapat kódjának egyedinek kell lennie !"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
 msgid "The color of the team"
-msgstr ""
+msgstr "A csapat színe"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_reply_to
@@ -498,136 +505,3 @@ msgstr "exp. closing"
 #, python-format
 msgid "overdue"
 msgstr "lejárt"
-
-#~ msgid "Action Needed"
-#~ msgstr "Művelet szükséges"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#~ msgid "Followers"
-#~ msgstr "Követők"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Követők (Csatornák)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Követők (Partnerek)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "Indirect Sales"
-#~ msgstr "Közvetett értékesítés"
-
-#~ msgid "Is Follower"
-#~ msgstr "Ő egy követő"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Utolsó üzenet dátuma"
-
-#~ msgid "Messages"
-#~ msgstr "Üzenetek"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Üzenetek és kommunikáció történet"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Műveletek száma"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Olvasatlan üzenetek száma"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Olvasatlan üzenetek"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Olvasatlan üzenetek számlálója"
-
-#~ msgid "Working Hours"
-#~ msgstr "Munkaórák"
-
-#~ msgid "Your Pipeline"
-#~ msgstr "Az Ön értékesítési folyamata"
-
-#~ msgid "Apply"
-#~ msgstr "Alkalmaz"
-
-#~ msgid "Archived"
-#~ msgstr "Archivált"
-
-#~ msgid "Bank Accounts"
-#~ msgstr "Bankszámlák"
-
-#~ msgid "Cancel"
-#~ msgstr "Mégse"
-
-#~ msgid "Configuration"
-#~ msgstr "Beállítások"
-
-#~ msgid "Configure Sales"
-#~ msgstr "Értékesítés beállításai"
-
-#~ msgid "Contact Titles"
-#~ msgstr "Kapcsolattartó megszólítások"
-
-#~ msgid "Contacts"
-#~ msgstr "Kapcsolattartók"
-
-#~ msgid "Countries"
-#~ msgstr "Országok"
-
-#~ msgid "Country Group"
-#~ msgstr "Ország csoport"
-
-#~ msgid "Customers"
-#~ msgstr "Vásárlók"
-
-#~ msgid "Fed. States"
-#~ msgstr "Szövetségi Államok"
-
-#~ msgid "Leads & Opportunities"
-#~ msgstr "Érdeklődések és lehetőségek"
-
-#~ msgid "Localization"
-#~ msgstr "Lokalizáció"
-
-#~ msgid "Manager"
-#~ msgstr "Igazgató"
-
-#~ msgid "Opportunities"
-#~ msgstr "Lehetőségek"
-
-#~ msgid "Sales"
-#~ msgstr "Értékesítések"
-
-#~ msgid "ir.ui.view"
-#~ msgstr "ir.ui.view"
-
-#~ msgid "sale.config.settings"
-#~ msgstr "sale.config.settings"
-
-#~ msgid ""
-#~ "the user will have access to all records of everyone in the sales "
-#~ "application."
-#~ msgstr ""
-#~ "a felhasználónak hozzáférése lesz az összes rekordhoz az értékesítés "
-#~ "alkalmazáson belül."
-
-#~ msgid "the user will have access to his own data in the sales application."
-#~ msgstr ""
-#~ "a felhasználónak be kell lépnie a saját adataihoz, az értékesítés "
-#~ "alkalmazásban."
-
-#~ msgid ""
-#~ "the user will have an access to the sales configuration as well as "
-#~ "statistic reports."
-#~ msgstr ""
-#~ "a felhasználónak hozzáférése lesz az Értékesítés konfigurálásához, "
-#~ "valamint a statikus kimutatásokhoz."

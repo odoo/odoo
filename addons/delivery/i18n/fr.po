@@ -7,7 +7,7 @@
 # Leo Schmitt <inactive+lschmitt@transifex.com>, 2015
 # Loic <loic.richard2@gmail.com>, 2015
 # Martin Trigaux, 2016
-# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015-2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2015-2016
 # Miguel Vidali <mvidali129@gmail.com>, 2015
 # Not Telling <levequevincel2@gmail.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2015
@@ -15,9 +15,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-07-16 23:09+0000\n"
-"Last-Translator: Not Telling <levequevincel2@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-09-23 10:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -673,7 +673,7 @@ msgstr "Donne l'ordre de la séquence lors du calcul du transporteur."
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
-msgstr "Regrouper par"
+msgstr "Grouper par"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_hs_code
@@ -1022,6 +1022,12 @@ msgstr "Coût normal"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_gap
 msgid "Normal Cost - Total Cost"
 msgstr "Coût normal - Coût total"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.normal_delivery_carrier_product_product
+msgid "Normal Delivery Charges"
+msgstr "Frais de livraison normaux"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
@@ -1526,6 +1532,12 @@ msgid "Template Name"
 msgstr "Nom du modèle"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.delivery_carrier_product_product
+msgid "The Poste"
+msgstr "La Poste"
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
 msgid ""
 "The average delay in days between the confirmation of the customer order and "
@@ -1967,87 +1979,3 @@ msgstr "Ex. : UPS Express"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "unknown"
 msgstr "inconnu"
-
-#~ msgid "Carrier Information"
-#~ msgstr "Information pour le transporteur"
-
-#~ msgid "Carrier Tracking Ref"
-#~ msgstr "Référence de suivi du transporteur"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Poids brut"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historique des messages et communications"
-
-#~ msgid "Normal Delivery Charges"
-#~ msgstr "Frais de livraison normaux"
-
-#~ msgid "Shipment sent to carrier %s for expedition with tracking number %s"
-#~ msgstr ""
-#~ "L'expédition envoyée au transporteur %s pour livraison avec le numéro de "
-#~ "suivi %s"
-
-#~ msgid "Status"
-#~ msgstr "Statut"
-
-#~ msgid "The Poste"
-#~ msgstr "La Poste"
-
-#~ msgid "Vendor"
-#~ msgstr "Vendeur"
-
-#~ msgid "Available in the Point of Sale"
-#~ msgstr "Disponible dans le point de vente"
-
-#~ msgid "Can be Expensed"
-#~ msgstr "Peut être inséré dans une note de frais"
-
-#~ msgid ""
-#~ "Check if the product should be weighted using the hardware scale "
-#~ "integration"
-#~ msgstr "Cocher si le produit doit être pesé par la balance électronique"
-
-#~ msgid "Check if you want this product to appear in the Point of Sale"
-#~ msgstr ""
-#~ "Cochez si vous voulez que cet article apparaisse dans le point de vente"
-
-#~ msgid "Event Registration"
-#~ msgstr "Inscription à l'évènement"
-
-#~ msgid "Message for Purchase Order Line"
-#~ msgstr "Message à la ligne de commande"
-
-#~ msgid "Message for Sales Order Line"
-#~ msgstr "Message à la ligne de commande de vente"
-
-#~ msgid "Point of Sale Category"
-#~ msgstr "Catégorie du point de vente"
-
-#~ msgid "Project"
-#~ msgstr "Projet"
-
-#~ msgid "Provider"
-#~ msgstr "Fournisseur"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Ligne de commande d'achat"
-
-#~ msgid ""
-#~ "Selecting the \"Warning\" option will notify user with the message, "
-#~ "Selecting \"Blocking Message\" will throw an exception with the message "
-#~ "and block the flow. The Message has to be written in the next field."
-#~ msgstr ""
-#~ "Sélectionner l'option 'Avertissement' notifiera l'utilisateur avec le "
-#~ "Message. Sélectionner 'Message Bloquant' lancera une exception avec le "
-#~ "message et bloquera le flux. Le Message doit être encodé dans le champ "
-#~ "suivant."
-
-#~ msgid ""
-#~ "Those categories are used to group similar products for point of sale."
-#~ msgstr ""
-#~ "Ces catégories sont utilisées pour grouper des produits semblables pour "
-#~ "un Point de Vente."
-
-#~ msgid "To Weigh With Scale"
-#~ msgstr "À peser avec une balance"

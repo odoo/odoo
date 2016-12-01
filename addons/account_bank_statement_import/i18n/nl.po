@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-08-06 10:39+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-11-15 11:47+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
@@ -112,7 +112,7 @@ msgstr "Bankafschriftregel"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr ""
+msgstr "Behoort bij het huidige bedrijf van de gebruiker"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -198,7 +198,7 @@ msgstr "Debet methoden"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
 msgid "Dedicated Refund Sequence"
-msgstr "Specifieke reeks voor terugbetalingen"
+msgstr "Specifieke reeks voor creditfacturen"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
@@ -425,7 +425,7 @@ msgstr "Winst & Verlies rekening"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
 msgid "Refund Entry Sequence"
-msgstr "Begin reeks voor terugbetalingen"
+msgstr "Begin reeks voor creditfacturen"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
@@ -436,6 +436,11 @@ msgid ""
 "payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Selecteer 'Verkoop' voor klantfactuur dagboeken.\n"
+"Selecteer 'Inkoop' voor leveranciersfacturen dagboeken.\n"
+"Selecteer 'Kas' of 'Bank' voor dagboeken, welke worden gebruikt in klant- en "
+"leveranciersbetalingen.\n"
+"Selecteer 'Diversen' voor diverse verwerkingen."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -516,7 +521,7 @@ msgid ""
 "entries of this journal."
 msgstr ""
 "Dit veld bevat de informatie gerelateerd aan de nummering van de "
-"terugbetalingen reeks van dit dagboek."
+"creditfacturen reeks van dit dagboek."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:111
@@ -574,16 +579,3 @@ msgstr "U hebt dit bestand reeds geïmporteerd."
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "_Import"
 msgstr "_Importeren"
-
-#~ msgid ""
-#~ "Select 'Sale' for customer invoices journals. Select 'Purchase' for "
-#~ "vendor bills journals. Select 'Cash' or 'Bank' for journals that are used "
-#~ "in customer or vendor payments. Select 'General' for miscellaneous "
-#~ "operations journals. Select 'Opening/Closing Situation' for entries "
-#~ "generated for new fiscal years."
-#~ msgstr ""
-#~ "Selecteer 'Verkoop' voor klantfactuur dagboeken. Selecteer 'Inkoop' voor "
-#~ "leveranciersfacturen dagboeken. Selecteer 'Kas' of 'Bank' voor dagboeken, "
-#~ "welke worden gebruikt in klant- en leveranciersbetalingen. Selecteer "
-#~ "'Normaaal' voor diverse verwerkingen. Selecteer 'Opening/Afsluit "
-#~ "situatie' voor boekingen gegenereerd in het nieuwe fiscale jaar."

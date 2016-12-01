@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-10 13:19+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
@@ -512,6 +512,16 @@ msgid "Contract"
 msgstr "Contrat"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
+msgid "Contract Proposal"
+msgstr "Proposition de contrat"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
+msgid "Contract Signed"
+msgstr "Contrat signé"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
 msgid "Create Date"
 msgstr "Date de création"
@@ -820,6 +830,11 @@ msgid "Filter and view on next actions and date"
 msgstr "Filtrer et afficher  les actions à venir et leur date"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Premier entretien"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr "Plié dans le flux de recrutement"
@@ -944,6 +959,11 @@ msgstr "Importance"
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
 msgstr "Important"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Initial Qualification"
+msgstr "Qualification initiale"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
@@ -1501,6 +1521,11 @@ msgstr ""
 "Recherchez parmi les curriculum vitae et les lettres de motivation         "
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "Second entretien"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_sequence
 msgid "Sequence"
@@ -1867,238 +1892,3 @@ msgstr "Candidats"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
-
-#~ msgid ""
-#~ "\n"
-#~ "            <p>\n"
-#~ "                %if object.department_id:\n"
-#~ "                    I’m very pleased to announce that <strong> ${object."
-#~ "name} </strong> will be joining us as a ${object.job_id.name}\n"
-#~ "                    in ${object.department_id.name}.\n"
-#~ "                %else:\n"
-#~ "                    I’m very pleased to announce that <strong> ${object."
-#~ "name} </strong> will be joining us as a ${object.job_id.name}.\n"
-#~ "                %endif\n"
-#~ "            </p>\n"
-#~ "            <p>Please welcome him/her and help him/her finding his/her "
-#~ "marks.</p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "<p>\n"
-#~ "\n"
-#~ "%if object.department_id:\n"
-#~ "\n"
-#~ "Je suis ravie(e) de vous annoncer que <strong> ${object.name} </strong> "
-#~ "nous a rejoint en tant que ${object.job_id.name}\n"
-#~ "\n"
-#~ "dans le département ${object.department_id.name}.\n"
-#~ "\n"
-#~ "%else:\n"
-#~ "\n"
-#~ "Je suis ravie(e) de vous annoncer que <strong> ${object.name} </strong> "
-#~ "nous a rejoint en tant que ${object.job_id.name}.\n"
-#~ "\n"
-#~ "%endif\n"
-#~ "\n"
-#~ "</p>\n"
-#~ "\n"
-#~ "<p>Veuillez l'accueillir comme il se doit et l'aider lors de ses premiers "
-#~ "pas.</p>"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>Congrats! Your resume's got our interest!\n"
-#~ "        I will call you as soon as possible to make a 10 minutes phone "
-#~ "interview and  plan a first meeting.</p>\n"
-#~ "        <p>If we can’t reach you or if you miss our call, feel free to "
-#~ "reach me back on the number 001 312 349 3030\n"
-#~ "        If I do not answer, please let me a message with some schedules "
-#~ "to call you back.</p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id.signature | safe}"
-#~ msgstr ""
-#~ "<p>Cher(e) ${object.partner_name or 'candidat(e)'},</p>\n"
-#~ "<p>Félicitations! Votre CV a retenu notre intérêt!\n"
-#~ "\n"
-#~ "Je vous appellerai dès que possible pour effectuer une entrevue "
-#~ "téléphonique de 10 minutes et pour également planifier une première "
-#~ "rencontre. </p>\n"
-#~ "\n"
-#~ "<p> Si je n'arrive pas à vous joindre ou si vous manquez mon appel, "
-#~ "n'hésitez pas à me rappeler au 001 312 349 3030\n"
-#~ "\n"
-#~ "Si je ne réponds pas, n'hésitez pas à me laisser un message avec vos "
-#~ "disponibilités pour que je puisse vous rappeler au moment le plus adéquat."
-#~ "</p>\n"
-#~ "\n"
-#~ "<p>Bien à vous,</p>\n"
-#~ "\n"
-#~ "<br/>\n"
-#~ "\n"
-#~ "${object.user_id.signature | safe}"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>We thank you for your interest in our company and for your "
-#~ "application.\n"
-#~ "        Unfortunately, your profile does not match with our needs or our "
-#~ "recruitment\n"
-#~ "        campaign has reached its term.</p>\n"
-#~ "        <p>If you want more details, feel free to contact us by phone.</"
-#~ "p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id and object.user_id.signature | safe or ''}"
-#~ msgstr ""
-#~ "<p>Cher ${object.partner_name or 'applicant'},</p>\n"
-#~ "<p>Nous vous remercion spour l'intérêt porté à notre entreprise et pour "
-#~ "votre candidature.\n"
-#~ "Malheureusement votre profil ne correspond à nos besoins. \n"
-#~ "Le poste a déjà été pourvu.</p>\n"
-#~ "<p>Si vous désirez plus de détails, n'hésitez pas à nous contacter.</p>\n"
-#~ "<p>Bien à vous,</p>\n"
-#~ "<br/>\n"
-#~ "${object.user_id and object.user_id.signature | safe or ''}"
-
-#~ msgid "Action Needed"
-#~ msgstr "A besoin d'une action"
-
-#~ msgid "Campaign"
-#~ msgstr "Campagne"
-
-#~ msgid "Contract Proposal"
-#~ msgstr "Proposition de contrat"
-
-#~ msgid "Contract Signed"
-#~ msgstr "Contrat signé"
-
-#~ msgid ""
-#~ "Create email and url for each distinct source. <br>\n"
-#~ "                When the applicant will arrive, you will know from wich "
-#~ "source the Job position is coming."
-#~ msgstr ""
-#~ "Créer un courriel et une url pour chaque source distincte. <br>\n"
-#~ "Ainsi quand un(e) candidat(e) arrivera, vous saurez d'où vient le CV. "
-
-#~ msgid ""
-#~ "Create here some alias...\n"
-#~ "                That will allow you to track from where the applicant is "
-#~ "coming from..."
-#~ msgstr ""
-#~ "Créer un alias...\n"
-#~ "Cela vous permettra de surveiller d'où le candidat vient..."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Date du dernier message posté sur cet enregistrement"
-
-#~ msgid "First Interview"
-#~ msgstr "Premier entretien"
-
-#~ msgid "Followers"
-#~ msgstr "Abonnés"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Abonnés (Canaux)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Abonnés (Partenaires)"
-
-#~ msgid "HR Department"
-#~ msgstr "Département RH"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si coché, de nouveaux messages demandent votre attention."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "si elle est cochée, de nouveaux messages requièrent votre attention."
-
-#~ msgid "If other, precise:"
-#~ msgstr "Si autre, précisez :"
-
-#~ msgid "Initial Qualification"
-#~ msgstr "Qualification initiale"
-
-#~ msgid "Is Follower"
-#~ msgstr "Est un abonné"
-
-#~ msgid "Job Stages"
-#~ msgstr "Etapes du recrutement"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Date du dernier message"
-
-#~ msgid "Messages"
-#~ msgstr "Messages"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historique des messages et communications"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Nombre d'Actions"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Nombre de messages demandant une action"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Nombre de messages non lus"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Ouvrir le menu RH"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Politique pour poster un message sur le document via la passerelle "
-#~ "email.\n"
-#~ "- tout le monde: tout le monde peut poster\n"
-#~ "- partenaires: seulement les partenaires authentifiés\n"
-#~ "- suiveurs: seulement les personnes qui suivent le document lié\n"
-
-#~ msgid "Reset Application"
-#~ msgstr "Réinitialiser la candidature"
-
-#~ msgid "Second Interview"
-#~ msgstr "Second entretien"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "C'est le nom qui vous permet de conserver la trace de vos campagnes. Par "
-#~ "exemple : Commercialisation_Automne, Spécial_Noël"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Compteur de messages non lus"
-
-#~ msgid "Website Messages"
-#~ msgstr "Messages du site web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historique de communication du site web"
-
-#~ msgid "Welcoming ${object.name} "
-#~ msgstr "Bienvenue à ${object.name}"
-
-#~ msgid "Click to add a new tag."
-#~ msgstr "Cliquez sur pour ajouter une nouvelle étiquette."
-
-#~ msgid "Content"
-#~ msgstr "Contenu"
-
-#~ msgid "Create"
-#~ msgstr "Créer"
-
-#~ msgid "Departments"
-#~ msgstr "Départements"
-
-#~ msgid "Discard"
-#~ msgstr "Annuler"
-
-#~ msgid "Refused"
-#~ msgstr "Refusée"

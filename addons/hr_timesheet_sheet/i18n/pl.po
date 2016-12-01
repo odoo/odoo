@@ -3,14 +3,16 @@
 # * hr_timesheet_sheet
 #
 # Translators:
+# zbik2607 <darek@krokus.com.pl>, 2016
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-07-07 11:51+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-11-19 11:41+0000\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +40,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_nbr
 msgid "# Nbr Timesheet"
-msgstr "# Nbr Karta czasu pracy"
+msgstr "# Liczba kart pracy"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_report_total_attendance
@@ -58,7 +60,7 @@ msgstr "# Suma karty czasu pracy"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "<span class=\"o_stat_text\">Timesheet</span>"
-msgstr "<span class=\"o_stat_text\">lista obecności</span>"
+msgstr "<span class=\"o_stat_text\">Karta pracy</span>"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -329,7 +331,7 @@ msgstr "Nowe"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
 msgid "New timesheet to approve."
-msgstr ""
+msgstr "Nowa karta pracy do aprobaty"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_name
@@ -466,7 +468,7 @@ msgstr "Dozwolone różnice karty pracy (w godzinach)"
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_approved
 msgid "Timesheet approved"
-msgstr ""
+msgstr "Karta pracy zaaprobowana"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
@@ -497,7 +499,7 @@ msgstr "Zakres kart"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_department_timesheet_to_approve_count
 msgid "Timesheet to Approve"
-msgstr ""
+msgstr "Karta pracy do aprobaty"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
@@ -513,7 +515,7 @@ msgstr "Karty czasu pracy"
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,name:hr_timesheet_sheet.mt_department_timesheet_approved
 msgid "Timesheets Approved"
-msgstr ""
+msgstr "Karty pracy zaaprobowane"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
@@ -708,9 +710,8 @@ msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "Pozycja analityczna"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
@@ -730,93 +731,4 @@ msgstr "do"
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_confirmed
 msgid "waiting approval"
-msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Wymagana akcja"
-
-#~ msgid "Analytic Line"
-#~ msgstr "Pozycja analityczna"
-
-#~ msgid "Cancel"
-#~ msgstr "Anuluj"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data ostatniej wiadomości w rekordzie."
-
-#~ msgid "Day"
-#~ msgstr "Dzień"
-
-#~ msgid "Followers"
-#~ msgstr "Obserwatorzy"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Obserwatorzy (kanały)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Obserwatorzy (partnerzy)"
-
-#~ msgid "HR Department"
-#~ msgstr "Dział kadr"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jeśli zaznaczone, to nowa wiadomość wymaga twojej uwagi."
-
-#~ msgid ""
-#~ "In order to create a timesheet for this employee, you must link the "
-#~ "employee to a product."
-#~ msgstr ""
-#~ "Aby utworzyć kartę pracy dla tego pracownika, musisz powiązać pracownika "
-#~ "z produktem."
-
-#~ msgid "Is Follower"
-#~ msgstr "Jest obserwatorem"
-
-#~ msgid "It will open your current timesheet"
-#~ msgstr "Otworcie bieżącej karty czasu pracy"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data ostatniej wiadomości"
-
-#~ msgid "Messages"
-#~ msgstr "Wiadomosći"
-
-#~ msgid ""
-#~ "My Timesheet opens your timesheet so that you can book your activities "
-#~ "into the system. From the same form, you can register your attendances "
-#~ "(Sign In/Out) and describe the working hours made on the different "
-#~ "projects. At the end of the period defined in the company, the timesheet "
-#~ "is confirmed by the user and can be validated by his manager. If "
-#~ "required, as defined on the project, you can generate the invoices based "
-#~ "on the timesheet."
-#~ msgstr ""
-#~ "Moja karta pracy otwiera kartę, w której możesz wprowadzać swoje "
-#~ "aktywności. W tym samym formularzu możesz rejestrować obecności (Wejścia/"
-#~ "Wyjścia) i opisywać godziny spędzone nad projektami. Na koniec okresu "
-#~ "zdefiniowanego w firmie karta jest potwierdzana przez użytkownika i może "
-#~ "być zatwierdzana przez menedżera. Jeśli trzeba, to według definicji w "
-#~ "projekcie, możesz generować faktury na podstawie kart pracy."
-
-#~ msgid "Number of Actions"
-#~ msgstr "Liczba akcji"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Liczba wiadomości wymagających akcji"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Liczba nieprzeczytanych wiadomości"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Otwórz menu kadr"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Licznik nieprzeczytanych wiadomości"
-
-#~ msgid "Website Messages"
-#~ msgstr "Wiadomości"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historia rozmowy"
+msgstr "oczekuje na aprobatę"

@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-07-15 13:52+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-10-28 16:37+0000\n"
 "Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "Language: fi\n"
@@ -99,7 +99,7 @@ msgstr "${object.company_id.name} Tilaus (Ref ${object.name or 'n/a' })"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Date Req.</strong>"
-msgstr ""
+msgstr "<strong>Tarvepvm</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -110,28 +110,28 @@ msgstr "<strong>Kuvaus</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Expected Date</strong>"
-msgstr ""
+msgstr "<strong>Oletettu pvm</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Net Price</strong>"
-msgstr ""
+msgstr "<strong>Nettohinta</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Order Date:</strong>"
-msgstr ""
+msgstr "<strong>Tilauspäivä:</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Our Order Reference:</strong>"
-msgstr ""
+msgstr "<strong>Tilausviitteemme:</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Qty</strong>"
-msgstr ""
+msgstr "<strong>Määrä</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -142,7 +142,7 @@ msgstr "<strong>Toimitusosoite:</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Taxes</strong>"
-msgstr ""
+msgstr "<strong>Verot</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -157,12 +157,12 @@ msgstr "<strong>Yhteensä</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Unit Price</strong>"
-msgstr ""
+msgstr "<strong>Yksikköhinta</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Your Order Reference</strong>"
-msgstr ""
+msgstr "<strong>Tilausviitteenne</strong>"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_purchase_id
@@ -273,7 +273,7 @@ msgid "Billed Qty"
 msgstr "Laskutettu määrä"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:719 code:addons/purchase/stock.py:75
+#: code:addons/purchase/purchase.py:717 code:addons/purchase/stock.py:75
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -312,7 +312,7 @@ msgid "Can be Purchased"
 msgstr "Voidaan ostaa"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:735
+#: code:addons/purchase/purchase.py:733
 #, python-format
 msgid ""
 "Can not cancel a procurement related to a purchase order. Please cancel the "
@@ -337,7 +337,7 @@ msgid "Cancelled"
 msgstr "Peruttu"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:614
+#: code:addons/purchase/purchase.py:612
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "Tilassa '%s' olevaa ostotilausriviä ei voi poistaa. "
@@ -376,9 +376,8 @@ msgstr ""
 
 #. module: purchase
 #: model:web.tip,description:purchase.purchase_tip_1
-#, fuzzy
 msgid "Click to scrap products."
-msgstr "Klikkaa luodaksesi uuden tuotteen. "
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_commercial_partner_id
@@ -554,9 +553,8 @@ msgstr "Sähköpostin ohjattu koostaminen"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "Sähköpostin ohjattu koostaminen"
+msgstr "Sähköpostin ohjattu koostaminen kyselytutkimukselle"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
@@ -590,7 +588,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Bruttopaino"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -731,9 +729,8 @@ msgstr "Paikka ja Varasto"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-#, fuzzy
 msgid "Lock Bills"
-msgstr "Toimittajien laskut"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -796,7 +793,7 @@ msgid "No variants on products"
 msgstr "Tuotteilla ei variantteja"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:895
+#: code:addons/purchase/purchase.py:893
 #, python-format
 msgid ""
 "No vendor associated to product %s. Please set one to fix this procurement."
@@ -936,7 +933,7 @@ msgstr "Hankinta"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_group_id
 msgid "Procurement Group"
-msgstr ""
+msgstr "Hankintaryhmä"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_rule
@@ -1058,7 +1055,7 @@ msgstr "Ostotilaus"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Purchase Order Confirmation #"
-msgstr ""
+msgstr "Ostotilausvahvistus #"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -1097,7 +1094,7 @@ msgid "Purchase Orders Statistics"
 msgstr "Ostotilausten tilastot"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:616
+#: code:addons/purchase/purchase.py:614
 #, python-format
 msgid "Purchase order line deleted."
 msgstr "Ostotilausrivi poistettu. "
@@ -1322,10 +1319,9 @@ msgstr ""
 
 #. module: purchase
 #: selection:purchase.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/puchased in different units of measure (advanced)"
-msgstr "Tuotteita voidaan myydä/ostaa eri mittayksiköissä (haastavampi)"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_origin
@@ -1488,19 +1484,19 @@ msgid "Transfer"
 msgstr "Siirrä"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:302
+#: code:addons/purchase/purchase.py:300
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been done."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:305
-#, fuzzy, python-format
+#: code:addons/purchase/purchase.py:303
+#, python-format
 msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
 "bills."
-msgstr "Poistaaksesi ostotilaus, se pitää ensin perua."
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -1591,7 +1587,7 @@ msgstr "Toimittajien laskut"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_manage_vendor_price
 msgid "Vendor Price"
-msgstr ""
+msgstr "Toimittajan hinta"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_partner_ref
@@ -1610,12 +1606,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Tilavuus"
 
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "Waiting Invoices"
-msgstr ""
+msgstr "Odottaa laskuja"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_warehouse
@@ -1634,6 +1630,8 @@ msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
 msgstr ""
+"Tuotevariaatiot sallivat sinun määritellä samalle tuotteelle eri "
+"variaatioita mikä helpottaa esimerkiksi verkkokaupan toimintaa"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
@@ -1651,95 +1649,12 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:337
+#: code:addons/purchase/purchase.py:335
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
-msgstr ""
+msgstr "Sinun on asetettava toimittajan fyysinen paikka tälle kumppanille %s"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_config_settings
 msgid "purchase.config.settings"
 msgstr "purchase.config.settings"
-
-#~ msgid "Action Needed"
-#~ msgstr "Vaatii toimia"
-
-#~ msgid "Analytic accounting for purchases"
-#~ msgstr "Ostojen analyyttinen kirjanpito"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Viimeisen viestin päivämäärä"
-
-#~ msgid "Expected Date"
-#~ msgstr "Oletettu päivämäärä"
-
-#~ msgid "Followers"
-#~ msgstr "Seuraajat"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seuraajat (kanavat)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seuraajat (kumppanit)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "Incoming Shipments to Invoice"
-#~ msgstr "Laskutettavat vastaanotetut toimitukset"
-
-#~ msgid "Is Follower"
-#~ msgstr "on seuraaja"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Viimeinen viestipvm"
-
-#~ msgid "Messages"
-#~ msgstr "Viestit"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Viesti- ja kommunikointihistoria"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Toimenpiteiden määrä"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Toimenpiteitä vaativien viestien määrä"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Lukemattomien viestien määrä"
-
-#~ msgid "Open Purchase Menu"
-#~ msgstr "Avaa ostovalikko"
-
-#~ msgid "Set to Done"
-#~ msgstr "Merkitse valmiiksi"
-
-#~ msgid ""
-#~ "Some products may be sold/puchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr "Tuotteita voidaan myydä/ostaa eri mittayksiköissä (haastavampi)"
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Mittayksiköt"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Lukemattomia viestejä"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Lukemattomien viestien laskuri"
-
-#~ msgid "Website Messages"
-#~ msgstr "Verkkosivun ilmoitukset"
-
-#~ msgid "Website communication history"
-#~ msgstr "Verkkosivun viestihistoria"
-
-#~ msgid "account.config.settings"
-#~ msgstr "account.config.settings"
-
-#~ msgid "unknown"
-#~ msgstr "Tuntematon"

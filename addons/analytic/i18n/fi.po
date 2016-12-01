@@ -4,13 +4,14 @@
 #
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
+# Jussi Lehto <jussi@gulfeo.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-03-24 16:58+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>\n"
+"PO-Revision-Date: 2016-10-28 18:42+0000\n"
+"Last-Translator: Jussi Lehto <jussi@gulfeo.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -37,7 +38,7 @@ msgstr "Tilin valuutta"
 #: selection:account.analytic.account,account_type:0
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Active"
-msgstr ""
+msgstr "Aktiivinen"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line_amount
@@ -92,17 +93,17 @@ msgstr "Analyyttiset rivit"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_name
 msgid "Analytic Tag"
-msgstr ""
+msgstr "Analyyttinen tunniste"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_tag
 msgid "Analytic Tags"
-msgstr ""
+msgstr "Analyyttiset tunnisteet"
 
 #. module: analytic
 #: selection:account.analytic.account,account_type:0
 msgid "Archived"
-msgstr ""
+msgstr "Arkistoitu"
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
@@ -128,7 +129,7 @@ msgstr "Analyyttiset tilikartat"
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Click to add an analytic account."
-msgstr ""
+msgstr "Klikkaa lisätäksesi analyyttinen tili."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag_color
@@ -158,6 +159,8 @@ msgid ""
 "Costs will be created automatically when you register supplier\n"
 "                invoices, expenses or timesheets."
 msgstr ""
+"Kirjatessasi ostolaskuja, kuluja tai tuntikortteja, luodaan kulut \n"
+"automaattisesti."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_create_uid
@@ -241,6 +244,9 @@ msgid ""
 "analyse\n"
 "                your margins easily."
 msgstr ""
+"Odoossa myyntitilaukset ja projektit on implementoitu käyttäen \n"
+"analyyttisiä tilejä. Voit seurata menoja ja tuloja analysoidaksesi \n"
+"marginaaleja vaivattomasti."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account___last_update
@@ -269,12 +275,12 @@ msgstr "Viimeksi päivitetty"
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action
 msgid "No activity yet on this account."
-msgstr ""
+msgstr "Tällä tilillä ei ole vielä toimintaa."
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid "No activity yet."
-msgstr ""
+msgstr "Ei vielä toimintaa."
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.account_analytic_chart_view
@@ -308,6 +314,10 @@ msgid ""
 "done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
+"Tulot luodaan automaattisesti luodessasi uuden myyntilaskun.\n"
+"Myyntilaskut voidaan luoda perustuen joko myyntitilauksiin \n"
+"(kiinteähintaiset laskut), tuntikortteihin (perustuen tehtyyn työhön) \n"
+"tai kuluihin (esim. matkalaskut)."
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -322,7 +332,7 @@ msgstr "Valitse analysointijakso"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_account_type
 msgid "State"
-msgstr ""
+msgstr "Tila"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account_tag_ids
@@ -333,12 +343,12 @@ msgstr "Tunnisteet"
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Tasks Month"
-msgstr ""
+msgstr "Tehtävän kuukausi"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_line_currency_id
 msgid "The related account currency if not equal to the company one."
-msgstr "Liittyvän tilin valuutta jos ei sama kun yrityksen valuutta."
+msgstr "Liittyvän tilin valuutta, jos ei sama kuin yrityksen valuutta."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_chart_to_date
@@ -357,62 +367,10 @@ msgstr "Käyttäjä"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "Analyyttisen kirjanpidon kartat"
+msgstr ""
 
 #. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
 msgid "e.g. Project XYZ"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Vaatii toimia"
-
-#~ msgid "Analytic Line"
-#~ msgstr "Analyyttinen rivi"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Viimeisen viestin päivämäärä"
-
-#~ msgid "Followers"
-#~ msgstr "Seuraajat"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seuraajat (kanavat)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seuraajat (kumppanit)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "Is Follower"
-#~ msgstr "on seuraaja"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Viimeinen viestipvm"
-
-#~ msgid "Messages"
-#~ msgstr "Viestit"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Viesti- ja kommunikointihistoria"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Toimenpiteiden määrä"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Toimenpiteitä vaativien viestien määrä"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Lukemattomien viestien määrä"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Lukemattomia viestejä"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Lukemattomien viestien laskuri"

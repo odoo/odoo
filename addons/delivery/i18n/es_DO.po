@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-03-21 00:56+0000\n"
-"Last-Translator: Juliano Henriquez <juliano@consultoriahenca.com>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-09-23 10:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/"
 "odoo-9/language/es_DO/)\n"
 "Language: es_DO\n"
@@ -435,9 +435,8 @@ msgstr "Entrega"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
-#, fuzzy
 msgid "Delivery Carrier Search"
-msgstr "Reglas de precio de entrega"
+msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -1022,6 +1021,12 @@ msgid "Normal Cost - Total Cost"
 msgstr "Coste normal - Coste total"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.normal_delivery_carrier_product_product
+msgid "Normal Delivery Charges"
+msgstr "Gastos de envío normales"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
 msgid "Number of Actions"
 msgstr "Número de acciones"
@@ -1296,9 +1301,8 @@ msgstr "Reglas de reabastecimiento"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
-#, fuzzy
 msgid "Return Picking"
-msgstr "Descripción de conduces"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
@@ -1530,6 +1534,12 @@ msgstr "Suma de Cantidad de facturas de proveedores"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name_template
 msgid "Template Name"
 msgstr "Nombre de la plantilla"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.delivery_carrier_product_product
+msgid "The Poste"
+msgstr "La Poste"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
@@ -1972,31 +1982,3 @@ msgstr "por ejemplo, UPS Express"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "unknown"
 msgstr "desconocido"
-
-#~ msgid "Carrier Information"
-#~ msgstr "Información del transportista"
-
-#~ msgid "Carrier Tracking Ref"
-#~ msgstr "Ref. seguimiento transportista"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Peso bruto"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Mensajes e historial de comunicación"
-
-#~ msgid "Normal Delivery Charges"
-#~ msgstr "Gastos de envío normales"
-
-#~ msgid "Shipment sent to carrier %s for expedition with tracking number %s"
-#~ msgstr ""
-#~ "Enviado al transportista %s para expedición con número %s de seguimiento"
-
-#~ msgid "Status"
-#~ msgstr "Estado"
-
-#~ msgid "The Poste"
-#~ msgstr "La Poste"
-
-#~ msgid "Vendor"
-#~ msgstr "Vendedor"

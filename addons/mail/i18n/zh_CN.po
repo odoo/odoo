@@ -6,8 +6,8 @@
 # Crazee ZHANG <15702414328@163.com>, 2016
 # Eddie Lim <bhweelim@yahoo.com>, 2016
 # Gary Wei <Gary.wei@elico-corp.com>, 2015-2016
-# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery Chen Fan <jeffery9@gmail.com>, 2015-2016
+# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
 # Joray <13637815@qq.com>, 2016
 # Joray <13637815@qq.com>, 2016
 # Joray <13637815@qq.com>, 2016
@@ -23,9 +23,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-09 07:32+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-11-13 12:16+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
 "language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -1242,7 +1242,7 @@ msgstr "删除消息副本"
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_auto_delete
 msgid "Delete sent emails (mass mailing only)"
-msgstr ""
+msgstr "删除已发送邮件(仅限群发邮件)"
 
 #. module: mail
 #. openerp-web
@@ -2061,7 +2061,7 @@ msgstr "不活动的别名"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:974
+#: code:addons/mail/static/src/js/chat_manager.js:958
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2100,7 +2100,7 @@ msgstr "无效的记录集：应为模型(无记录)或记录的记录单"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:593
+#: code:addons/mail/static/src/js/chat_manager.js:577
 #, python-format
 msgid "Invitation"
 msgstr "邀请"
@@ -2139,7 +2139,7 @@ msgstr "邀请人员"
 #: code:addons/mail/static/src/js/client_action.js:638
 #, python-format
 msgid "Invite people to #%s"
-msgstr ""
+msgstr "邀请人员 到 %s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -2220,7 +2220,7 @@ msgstr "是通知"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
 msgid "Is Subscribed"
-msgstr ""
+msgstr "已订阅"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
@@ -2377,7 +2377,7 @@ msgstr "最后更新时间"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Leave"
-msgstr "休假"
+msgstr "退出"
 
 #. module: mail
 #. openerp-web
@@ -3458,7 +3458,7 @@ msgstr "私人频道"
 #: code:addons/mail/static/src/js/client_action.js:138
 #, python-format
 msgid "Public Channels"
-msgstr ""
+msgstr "公共频道"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180
@@ -3629,13 +3629,13 @@ msgstr "说些什么..."
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_scheduled_date
 #: model:ir.model.fields,field_description:mail.field_mail_template_scheduled_date
 msgid "Scheduled Date"
-msgstr "计划日期"
+msgstr "安排的日期"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_scheduled_date
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr ""
+msgstr "安排的发送日期"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -3812,7 +3812,7 @@ msgstr "表情符"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:980
+#: code:addons/mail/static/src/js/chat_manager.js:964
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4458,7 +4458,7 @@ msgstr "你可以通过发送邮件给%(email_link)s.来增加新的%(document)s
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:593
+#: code:addons/mail/static/src/js/chat_manager.js:577
 #, python-format
 msgid "You have been invited to: "
 msgstr "你已被邀请："
@@ -4495,6 +4495,11 @@ msgstr "你的模板需要定义email_from"
 #: model:ir.model,name:mail.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "董事会会议"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -4579,11 +4584,16 @@ msgid "publisher_warranty.contract"
 msgstr "publisher_warranty.contract"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "rd"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:16
 #, python-format
 msgid "read less"
-msgstr "阅读更少"
+msgstr "更少"
 
 #. module: mail
 #. openerp-web
@@ -4598,64 +4608,13 @@ msgid "record:"
 msgstr "记录："
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "销售"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:35
 #, python-format
 msgid "this document"
 msgstr "这个单据"
-
-#~ msgid ""
-#~ "Attachments are linked to a document through model / res_id and to the "
-#~ "messagethrough this field."
-#~ msgstr "附件是通过模型 / res_id连接于文档并通过此字段链接到消息。"
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "自动整理HTML内容"
-
-#~ msgid "Automatically set needaction as Read"
-#~ msgstr "自动设置needaction为已读"
-
-#~ msgid "Compose a new message"
-#~ msgstr "撰写新消息"
-
-#~ msgid "Conversation is minimied"
-#~ msgstr "对话已最小化"
-
-#~ msgid "Join Group"
-#~ msgstr "加入群组"
-
-#~ msgid ""
-#~ "Odoo helps you easily track all activities related to\n"
-#~ "            a customer; discussions, history of business opportunities,\n"
-#~ "            documents, etc."
-#~ msgstr ""
-#~ "Odoo帮助您轻松地跟踪有关一个客户所有的活动，会谈，商业机会历史，文档等。"
-
-#~ msgid ""
-#~ "Rich-text/HTML version of the message (placeholders may be used here)"
-#~ msgstr "消息的富文本/HTML版本（这里可以使用占位符）"
-
-#~ msgid "Send mail"
-#~ msgstr "发送邮件"
-
-#~ msgid "The excaped html code replacing the shortcut"
-#~ msgstr "丢失的html代码替换快捷方式"
-
-#~ msgid "The kind of document with with this template can be used"
-#~ msgstr "使用该模版的这种类型的文档都是可选的"
-
-#~ msgid ""
-#~ "Tracked values are stored in a separate model. This field allow to "
-#~ "reconstructthe tracking and to generate statistics on the model."
-#~ msgstr ""
-#~ "追踪值被保存在一个单一的模型中。这个字段允许重新构建追踪值并且在模型上生成"
-#~ "统计分析"
-
-#~ msgid "board-meetings"
-#~ msgstr "董事会会议"
-
-#~ msgid "rd"
-#~ msgstr "rd"
-
-#~ msgid "sales"
-#~ msgstr "销售"

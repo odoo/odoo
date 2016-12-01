@@ -15,9 +15,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-07-12 00:48+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-23 08:50+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
 "language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:348
+#: code:addons/account_asset/account_asset.py:347
 #, python-format
 msgid " (copy)"
 msgstr " (副本)"
@@ -64,7 +64,7 @@ msgid "Active"
 msgstr "有效"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #, python-format
 msgid "Amount"
 msgstr "金额"
@@ -153,7 +153,7 @@ msgid "Asset category"
 msgstr "资产类别"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:236
+#: code:addons/account_asset/account_asset.py:235
 #, python-format
 msgid "Asset created"
 msgstr "资产创建"
@@ -164,7 +164,7 @@ msgid "Asset depreciation line"
 msgstr "资产折旧行"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:269
+#: code:addons/account_asset/account_asset.py:268
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr "资产出售或处置.  凭证待确认."
@@ -351,7 +351,7 @@ msgid "Cumulative Depreciation"
 msgstr "累计折旧"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -366,6 +366,11 @@ msgstr "当前的"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_amount
 msgid "Current Depreciation"
 msgstr "当前折旧"
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
+msgid "Customer"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_date
@@ -479,13 +484,13 @@ msgid "Depreciation Name"
 msgstr "折旧说明"
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/account_asset_change_duration.py:83
+#: code:addons/account_asset/wizard/account_asset_change_duration.py:82
 #, python-format
 msgid "Depreciation board modified"
 msgstr "折旧修改"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:489
+#: code:addons/account_asset/account_asset.py:487
 #, python-format
 msgid "Depreciation line posted."
 msgstr "折旧行已过账"
@@ -501,19 +506,19 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:272
+#: code:addons/account_asset/account_asset.py:271
 #, python-format
 msgid "Disposal Move"
 msgstr "处置凭证"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:275
+#: code:addons/account_asset/account_asset.py:274
 #, python-format
 msgid "Disposal Moves"
 msgstr "处置凭证"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:468
+#: code:addons/account_asset/account_asset.py:466
 #, python-format
 msgid "Document closed."
 msgstr "文档关闭"
@@ -659,7 +664,7 @@ msgid "Journal"
 msgstr "日记账"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:375
+#: code:addons/account_asset/account_asset.py:374
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
@@ -756,9 +761,10 @@ msgid "Number of Months in a Period"
 msgstr "在一个期间内的月数"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:488
+#: code:addons/account_asset/account_asset.py:486
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #, python-format
 msgid "Partner"
 msgstr "业务伙伴"
@@ -816,7 +822,7 @@ msgid "Prorata Temporis"
 msgstr "即时按比例分配"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:314
+#: code:addons/account_asset/account_asset.py:313
 #, python-format
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
@@ -999,25 +1005,25 @@ msgid "Year"
 msgstr "年"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:97
+#: code:addons/account_asset/account_asset.py:96
 #, python-format
 msgid "You cannot delete a document is in %s state."
 msgstr "在 %s 状态, 你不能删除文档."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:99
+#: code:addons/account_asset/account_asset.py:98
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
 msgstr "您不能删除包含已过账分录的文档"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:497
+#: code:addons/account_asset/account_asset.py:495
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr "你不能删除已过账折旧项."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:499
+#: code:addons/account_asset/account_asset.py:497
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr "你不能删除已过账的分期付款明细."
@@ -1042,80 +1048,3 @@ msgstr "例如: Ibook 笔记本"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "months"
 msgstr "月"
-
-#~ msgid "Action Needed"
-#~ msgstr "所需动作"
-
-#~ msgid "Customer"
-#~ msgstr "客户"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid "Followers"
-#~ msgstr "关注者"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者 ( 频道 )"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者 ( 业务伙伴 )"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "如果勾选此项，有新消息会提醒你"
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid "Messages"
-#~ msgstr "消息"
-
-#~ msgid "Number of Actions"
-#~ msgstr "动作数量"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要行动消息的数量"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读消息的数量"
-
-#~ msgid "Unread Messages"
-#~ msgstr "未读消息"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"
-
-#~ msgid ""
-#~ "You already have assets with the reference %s.\n"
-#~ "Please delete these assets before creating new ones for this invoice."
-#~ msgstr ""
-#~ "已经存在资产引用 %s.\n"
-#~ "请在创建这张发票前删除这些资产."
-
-#~ msgid " (grouped)"
-#~ msgstr " (分组)"
-
-#~ msgid ""
-#~ "Account used to record the purchase of the asset at its original price."
-#~ msgstr "会计用于记录资产采购的原始价格"
-
-#~ msgid "Additional Options"
-#~ msgstr "额外选项"
-
-#~ msgid "Assets Depreciation Lines"
-#~ msgstr "资产折旧行"
-
-#~ msgid "Depreciation Entries: Asset Account"
-#~ msgstr "折旧分录: 资产科目"
-
-#~ msgid "Depreciation Entries: Expense Account"
-#~ msgstr "折旧分录: 费用科目"
-
-#~ msgid "Recognition Account"
-#~ msgstr "识别科目"

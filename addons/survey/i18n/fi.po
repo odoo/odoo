@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 12:00+0000\n"
-"PO-Revision-Date: 2016-07-15 13:36+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-11-17 22:22+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "Language: fi\n"
@@ -207,6 +207,11 @@ msgid "A problem has occured"
 msgstr "Ongelmatilanne"
 
 #. module: survey
+#: model:survey.label,value:survey.frow_2_2_4
+msgid "A process is defined for all enterprise flows"
+msgstr ""
+
+#. module: survey
 #: constraint:survey.user_input_line:0
 msgid "A question cannot be unanswered and skipped"
 msgstr "Kysymykseen on pakko vastata"
@@ -217,10 +222,14 @@ msgid "A token must be unique!"
 msgstr ""
 
 #. module: survey
+#: model:survey.page,title:survey.feedback_1
+msgid "About your Odoo usage"
+msgstr "Odoon käytöstäsi"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_active
-#, fuzzy
 msgid "Active"
-msgstr "Aktiivinen verkkotunnus"
+msgstr "Active"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -235,6 +244,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Add list of existing contacts..."
 msgstr "Lisää lista olemassaolevista yhteystiedoista..."
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_3
+#: model:survey.label,value:survey.fcol_2_2_3
+#: model:survey.label,value:survey.fcol_2_5_3
+#: model:survey.label,value:survey.fcol_2_7_3
+msgid "Agree"
+msgstr "Hyväksy"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -277,6 +294,11 @@ msgid "Answers"
 msgstr "Vastaukset"
 
 #. module: survey
+#: model:survey.question,question:survey.feedback_1_1
+msgid "Are you using Odoo on a daily basis?"
+msgstr "Käytätkö Odoo'ta päivittäin?"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_attachment_ids
 msgid "Attachments"
 msgstr "Liitteet"
@@ -285,6 +307,11 @@ msgstr "Liitteet"
 #: model:ir.ui.view,arch_db:survey.back
 msgid "Back to Survey"
 msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_4
+msgid "CRM"
+msgstr "CRM"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -352,6 +379,11 @@ msgid "Comment Message"
 msgstr "Palauteviesti"
 
 #. module: survey
+#: model:survey.page,title:survey.feedback_3
+msgid "Community and contributors"
+msgstr "Yhteisö ja kehittäjät"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 #: selection:survey.user_input,state:0
@@ -367,6 +399,11 @@ msgstr "Luo sähköposti"
 #: model:ir.ui.menu,name:survey.menu_surveys_configuration
 msgid "Configuration"
 msgstr "Asetukset"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_2
+msgid "Configuration wizard exists for each important setting"
+msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -471,6 +508,11 @@ msgid "Description"
 msgstr "Kuvaus"
 
 #. module: survey
+#: model:survey.label,value:survey.frow_2_7_1
+msgid "Descriptions and help tooltips are clear enough"
+msgstr ""
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Design"
 msgstr "Suunnittelu"
@@ -486,6 +528,14 @@ msgid ""
 "Design easily your survey, send invitations to answer by email and analyse "
 "answers."
 msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_2
+#: model:survey.label,value:survey.fcol_2_2_2
+#: model:survey.label,value:survey.fcol_2_5_2
+#: model:survey.label,value:survey.fcol_2_7_2
+msgid "Disagree"
+msgstr "Eri mieltä"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_display_name
@@ -504,6 +554,21 @@ msgstr "Näytä nimi"
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Display mode"
 msgstr "Näyttötapa"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_3
+msgid "Do you have a proposition to attract new contributors?"
+msgstr "Onko sinulla ehdotus uusien kehittäjien houkuttelemiseksi?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_2
+msgid "Do you have a proposition to help people to contribute?"
+msgstr "Onko sinulla ehdotus kehittäjien helpottamiseksi?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_3
+msgid "Do you have suggestions on how to improve the process view ?"
+msgstr ""
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_draft
@@ -541,6 +606,11 @@ msgid "Email composition wizard for Survey"
 msgstr "Sähköpostin ohjattu koostaminen kyselytutkimukselle"
 
 #. module: survey
+#: model:survey.page,title:survey.feedback_2
+msgid "Ergonomy and ease of use"
+msgstr "Ergonomia ja helppokäyttöisyys"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_error_msg
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
 msgid "Error message"
@@ -550,6 +620,16 @@ msgstr "Virheilmoitus"
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_partner_ids
 msgid "Existing contacts"
 msgstr "Olemassaolevat yhteyshenkilöt"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_3
+msgid "Extra modules proposed are relevant"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_3
+msgid "Financial Management"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage_fold
@@ -580,6 +660,66 @@ msgid "Group By"
 msgstr "Ryhmittele"
 
 #. module: survey
+#: model:survey.question,question:survey.feedback_3_1
+msgid "How do you contribute or plan to contribute to Odoo?"
+msgstr "Kuinka osallistut, tai aiot osallistua, Odoon kehitykseen?"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_6
+msgid "Human Resources"
+msgstr "Henkilöstöhallinto"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_3
+msgid "I develop new features"
+msgstr "Kehitän uusia ominaisuuksia"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_4
+msgid "I do not publish my developments"
+msgstr "En julkaise kehitystyötäni"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_4
+msgid "I help to translate"
+msgstr "Autan kääntämisessä"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_3
+msgid "I host them on my own website"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_1
+msgid "I participate to discussion and forums"
+msgstr "Osallistun keskusteluun ja foorumeihin"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_1
+msgid "I use Github, like all official Odoo projects"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_2
+msgid "I use another repository system (SourceForge...)"
+msgstr "Käytän toista repositoryn allintaa (SourceForge...)"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_3
+msgid "I use the contextual help in Odoo"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_5
+msgid "I write documentations"
+msgstr "Kirjoitan dokumentaatiota"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_2
+msgid "I'd like to contribute but I don't know how?"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_id
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_id
 #: model:ir.model.fields,field_description:survey.field_survey_page_id
@@ -608,9 +748,27 @@ msgstr ""
 
 #. module: survey
 #: code:addons/survey/survey.py:624
-#, fuzzy, python-format
+#: model:survey.question,comments_message:survey.feedback_1_1
+#: model:survey.question,comments_message:survey.feedback_1_2
+#: model:survey.question,comments_message:survey.feedback_2_1
+#: model:survey.question,comments_message:survey.feedback_2_2
+#: model:survey.question,comments_message:survey.feedback_2_3
+#: model:survey.question,comments_message:survey.feedback_2_4
+#: model:survey.question,comments_message:survey.feedback_2_5
+#: model:survey.question,comments_message:survey.feedback_2_6
+#: model:survey.question,comments_message:survey.feedback_2_7
+#: model:survey.question,comments_message:survey.feedback_3_1
+#: model:survey.question,comments_message:survey.feedback_3_2
+#: model:survey.question,comments_message:survey.feedback_3_3
+#: model:survey.question,comments_message:survey.feedback_4_1
+#, python-format
 msgid "If other, please specify:"
-msgstr "Jos muu, tarkenna:"
+msgstr ""
+
+#. module: survey
+#: model:survey.page,description:survey.feedback_4
+msgid "If you do not contribute or develop in Odoo, skip this page."
+msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
@@ -635,6 +793,36 @@ msgstr "Kutsut lähetetty"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_designed
 msgid "Is designed?"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_2
+msgid "It can be improved"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_2
+msgid "It helps in the beginning"
+msgstr "Se auttaa alussa"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_5
+msgid "It is clear"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_4
+msgid "It is complete"
+msgstr "Se on valmis"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_1
+msgid "It is up-to-date"
+msgstr "Se on ajan tasalla"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_5
+msgid "It's easy to find the process you need"
 msgstr ""
 
 #. module: survey
@@ -812,6 +1000,11 @@ msgid "Next page"
 msgstr "Seuraava sivu"
 
 #. module: survey
+#: model:survey.label,value:survey.choice_1_1_4
+msgid "No, I just tested it"
+msgstr "Ei, kokeilin vain sitä"
+
+#. module: survey
 #: model:ir.actions.act_window,help:survey.action_selected_survey_user_input
 msgid "Nobody has replied to your survey yet."
 msgstr ""
@@ -977,6 +1170,11 @@ msgid "Print link"
 msgstr "Tulosta linkki"
 
 #. module: survey
+#: model:survey.label,value:survey.choice_1_2_5
+msgid "Project Management"
+msgstr "Projektinhallinta"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_public_url_html
 msgid "Public HTML web link"
 msgstr "Julkinen HTML verkkolinkki"
@@ -1007,6 +1205,11 @@ msgid "Public url"
 msgstr "Julkinen url"
 
 #. module: survey
+#: model:survey.label,value:survey.choice_1_2_2
+msgid "Purchases Management"
+msgstr "Ostojen hallinta"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_question_id
@@ -1034,6 +1237,11 @@ msgstr "Kysymyksen nimi"
 #: model:ir.ui.menu,name:survey.menu_survey_question_form1
 msgid "Questions"
 msgstr "Kysymykset"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_4
+msgid "Questions for developers"
+msgstr "Kysymys kehittäjille"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_quizz_mode
@@ -1079,6 +1287,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_question_labels_ids_2
 msgid "Rows of the Matrix"
 msgstr "Matriisin rivit"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_4
+msgid "Running the configuration wizards is a good way to spare time"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_1
+msgid "Sales Management"
+msgstr "Myynti"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -1389,12 +1607,35 @@ msgid "Thank you!"
 msgstr "Kiitoksia!"
 
 #. module: survey
+#: model:survey.label,value:survey.frow_2_5_3
+msgid "The 'Usability/Extended View' group helps in daily work"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_4
+msgid "The 'Usability/Extended View' group hides only optional fields"
+msgstr ""
+
+#. module: survey
 #: constraint:survey.user_input_line:0
 msgid "The answer must be in the right type"
 msgstr ""
 
 #. module: survey
 #: code:addons/survey/survey.py:622
+#: model:survey.question,validation_error_msg:survey.feedback_1_1
+#: model:survey.question,validation_error_msg:survey.feedback_1_2
+#: model:survey.question,validation_error_msg:survey.feedback_2_1
+#: model:survey.question,validation_error_msg:survey.feedback_2_2
+#: model:survey.question,validation_error_msg:survey.feedback_2_3
+#: model:survey.question,validation_error_msg:survey.feedback_2_4
+#: model:survey.question,validation_error_msg:survey.feedback_2_5
+#: model:survey.question,validation_error_msg:survey.feedback_2_6
+#: model:survey.question,validation_error_msg:survey.feedback_2_7
+#: model:survey.question,validation_error_msg:survey.feedback_3_1
+#: model:survey.question,validation_error_msg:survey.feedback_3_2
+#: model:survey.question,validation_error_msg:survey.feedback_3_3
+#: model:survey.question,validation_error_msg:survey.feedback_4_1
 #, python-format
 msgid "The answer you entered has an invalid format."
 msgstr "Tarkista vastauksen sisältö"
@@ -1408,8 +1649,66 @@ msgid ""
 msgstr ""
 
 #. module: survey
+#: model:survey.label,value:survey.choice_2_4_1
+msgid "The current menu structure is good"
+msgstr ""
+
+#. module: survey
 #: sql_constraint:survey.user_input:0
 msgid "The deadline cannot be in the past"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_5
+msgid "The groups set on menu items are relevant"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_3
+msgid "The number of groups is good"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_1
+msgid "The security rules defined on groups are useful"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_2
+msgid "There are too few groups defined, security isn't accurate enough"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_1
+msgid "There are too many groups defined, security is too complex to set"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_3
+msgid "There are too much menus, it's complex to understand"
+msgstr ""
+
+#. module: survey
+#: model:survey.page,description:survey.feedback_2
+msgid ""
+"These questions relate to the ergonomy and ease of use of Odoo. Try to "
+"remind your firsts days on Odoo and\n"
+"what have been your difficulties."
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_2
+msgid "They are clean and correct"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_3
+msgid "They are useful on a daily usage"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_1
+msgid "They help new users to understand Odoo"
 msgstr ""
 
 #. module: survey
@@ -1444,6 +1743,19 @@ msgstr ""
 
 #. module: survey
 #: code:addons/survey/survey.py:621
+#: model:survey.question,constr_error_msg:survey.feedback_1_1
+#: model:survey.question,constr_error_msg:survey.feedback_1_2
+#: model:survey.question,constr_error_msg:survey.feedback_2_1
+#: model:survey.question,constr_error_msg:survey.feedback_2_2
+#: model:survey.question,constr_error_msg:survey.feedback_2_3
+#: model:survey.question,constr_error_msg:survey.feedback_2_4
+#: model:survey.question,constr_error_msg:survey.feedback_2_5
+#: model:survey.question,constr_error_msg:survey.feedback_2_6
+#: model:survey.question,constr_error_msg:survey.feedback_2_7
+#: model:survey.question,constr_error_msg:survey.feedback_3_1
+#: model:survey.question,constr_error_msg:survey.feedback_3_2
+#: model:survey.question,constr_error_msg:survey.feedback_3_3
+#: model:survey.question,constr_error_msg:survey.feedback_4_1
 #, python-format
 msgid "This question requires an answer."
 msgstr "Kysymykseen ei voi jättää vastaamatta."
@@ -1464,9 +1776,37 @@ msgid "This survey is open only to registered people. Please"
 msgstr ""
 
 #. module: survey
+#: model:survey.survey,description:survey.feedback_form
+msgid "This survey should take less than five minutes."
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_2
+msgid ""
+"Those security rules are standard and can be used out-of-the-box in most "
+"cases"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_title
 msgid "Title"
 msgstr "Titteli"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_4
+#: model:survey.label,value:survey.fcol_2_2_4
+#: model:survey.label,value:survey.fcol_2_5_4
+#: model:survey.label,value:survey.fcol_2_7_4
+msgid "Totally agree"
+msgstr "Täysin samaa mieltä"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_1
+#: model:survey.label,value:survey.fcol_2_2_1
+#: model:survey.label,value:survey.fcol_2_5_1
+#: model:survey.label,value:survey.fcol_2_7_1
+msgid "Totally disagree"
+msgstr "Täysin eri mieltä"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_search
@@ -1497,6 +1837,11 @@ msgstr "Käytä mallia"
 #: model:ir.model.fields,help:survey.field_survey_question_description
 msgid ""
 "Use this field to add             additional explanations about your question"
+msgstr ""
+
+#. module: survey
+#: model:survey.survey,title:survey.feedback_form
+msgid "User Feedback Form"
 msgstr ""
 
 #. module: survey
@@ -1565,6 +1910,44 @@ msgid "Vote"
 msgstr "Äänestä"
 
 #. module: survey
+#: model:survey.question,question:survey.feedback_2_7
+msgid "What do you think about configuration wizards?"
+msgstr ""
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_1
+msgid "What do you think about the documentation available on doc.odoo.com?"
+msgstr ""
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_5
+msgid "What do you think about the groups of users?"
+msgstr ""
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_2
+msgid ""
+"What do you think about the process views of Odoo, available in the web "
+"client ?"
+msgstr ""
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_4
+#: model:survey.question,question:survey.feedback_2_6
+msgid "What do you think about the structure of the menus?"
+msgstr ""
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_4_1
+msgid "Where do you develop your new features?"
+msgstr ""
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_1_2
+msgid "Which modules are you using/testing?"
+msgstr "Mitä moduuleita käytät/testaat?"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.datetime
 msgid "YYYY-MM-DD hh:mm:ss"
 msgstr ""
@@ -1576,6 +1959,21 @@ msgid ""
 "                                            <i class=\"fa fa-calendar fa-2x"
 "\"/>"
 msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_1
+msgid "Yes, I use a version < 7.0"
+msgstr "Kyllä, käytän versiota < 7.0"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_2
+msgid "Yes, I use the 7.0 version, installed locally"
+msgstr "Kyllä, käytän versiota 7.0, asennettuna paikallisesti"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_3
+msgid "Yes, I use the online version of Odoo"
+msgstr "Kyllä, käytän Odoon verkkoversiota"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form
@@ -1642,284 +2040,3 @@ msgstr "tarkastele vastauksiasi"
 #, python-format
 msgid "try to create and fill survey"
 msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "                \n"
-#~ "                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, "
-#~ "Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
-#~ "                    <p>Hello,</p>\n"
-#~ "                    <p>We are conducting a survey, and your response "
-#~ "would be appreciated.</p>\n"
-#~ "                    <p><a href=\"__URL__\">Please, click here to start "
-#~ "survey</a></p>\n"
-#~ "                    <p>Thanks for your participation!</p>\n"
-#~ "                </div>\n"
-#~ "                \n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
-#~ "<p>Hei,</p>\n"
-#~ "<p>Teemme kyselytutkimusta, ja olisi mukavaa, jos ehdit vastata siihen.</"
-#~ "p>\n"
-#~ "<p><a href=\"__URL__\">Ole hyvä ja napsauta linkkiä aloittaaksesi kyselyn."
-#~ "</a></p>\n"
-#~ "<p>Kiitos osallistumisestasi!</p>\n"
-#~ "</div>"
-
-#~ msgid "About your Odoo usage"
-#~ msgstr "Odoon käytöstäsi"
-
-#~ msgid "Action Needed"
-#~ msgstr "Vaatii toimia"
-
-#~ msgid "Active domain"
-#~ msgstr "Aktiivinen verkkotunnus"
-
-#~ msgid "Agree"
-#~ msgstr "Hyväksy"
-
-#~ msgid "Are you using Odoo on a daily basis?"
-#~ msgstr "Käytätkö Odoo'ta päivittäin?"
-
-#~ msgid "Author"
-#~ msgstr "Laatija"
-
-#~ msgid ""
-#~ "Author of the message. If not set, email_from may hold an email address "
-#~ "that did not match any partner."
-#~ msgstr ""
-#~ "Viestin luoja. Jos tätä ei ole asetettu, viestin lähettäjä (email_from) "
-#~ "voi olla osoite, joka ei täsmännyt mihinkään kumppaniin."
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "Automaattisesti puhdistetut HTML-sisällöt"
-
-#~ msgid "CRM"
-#~ msgstr "CRM"
-
-#~ msgid "Channels"
-#~ msgstr "Kanavat"
-
-#~ msgid "Child Messages"
-#~ msgstr "Aliviestit"
-
-#~ msgid "Community and contributors"
-#~ msgstr "Yhteisö ja kehittäjät"
-
-#~ msgid "Composition mode"
-#~ msgstr "Kirjoitustila"
-
-#~ msgid "Contents"
-#~ msgstr "Sisältö"
-
-#~ msgid "Current user has a starred notification linked to this message"
-#~ msgstr ""
-#~ "Nykyinen käyttäjä on merkannut tähän viestiin linkitetyn huomautuksen "
-#~ "tärkeäksi"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Viimeisen viestin päivämäärä"
-
-#~ msgid "Disagree"
-#~ msgstr "Eri mieltä"
-
-#~ msgid "Do you have a proposition to attract new contributors?"
-#~ msgstr "Onko sinulla ehdotus uusien kehittäjien houkuttelemiseksi?"
-
-#~ msgid "Do you have a proposition to help people to contribute?"
-#~ msgstr "Onko sinulla ehdotus kehittäjien helpottamiseksi?"
-
-#~ msgid "Ergonomy and ease of use"
-#~ msgstr "Ergonomia ja helppokäyttöisyys"
-
-#~ msgid "Followers"
-#~ msgstr "Seuraajat"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seuraajat (kanavat)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seuraajat (kumppanit)"
-
-#~ msgid "From"
-#~ msgstr "Alkaen"
-
-#~ msgid "How do you contribute or plan to contribute to Odoo?"
-#~ msgstr "Kuinka osallistut, tai aiot osallistua, Odoon kehitykseen?"
-
-#~ msgid "Human Ressources"
-#~ msgstr "Henkilöstöhallinto"
-
-#~ msgid "I develop new features"
-#~ msgstr "Kehitän uusia ominaisuuksia"
-
-#~ msgid "I do not publish my developments"
-#~ msgstr "En julkaise kehitystyötäni"
-
-#~ msgid "I help to translate"
-#~ msgstr "Autan kääntämisessä"
-
-#~ msgid "I participate to discussion and forums"
-#~ msgstr "Osallistun keskusteluun ja foorumeihin"
-
-#~ msgid "I use another repository system (SourceForge...)"
-#~ msgstr "Käytän toista repositoryn allintaa (SourceForge...)"
-
-#~ msgid "I write documentations"
-#~ msgstr "Kirjoitan dokumentaatiota"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "If other, precise:"
-#~ msgstr "Jos muu, tarkenna:"
-
-#~ msgid "Initial thread message."
-#~ msgstr "Viestiketjun alkuperäinen viesti"
-
-#~ msgid "Is Follower"
-#~ msgstr "on seuraaja"
-
-#~ msgid "It helps in the beginning"
-#~ msgstr "Se auttaa alussa"
-
-#~ msgid "It is complete"
-#~ msgstr "Se on valmis"
-
-#~ msgid "It is up-to-date"
-#~ msgstr "Se on ajan tasalla"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Viimeinen viestipvm"
-
-#~ msgid "Log an Internal Note"
-#~ msgstr "Kirjaa sisäinen muistiinpano"
-
-#~ msgid "Message Record Name"
-#~ msgstr "Viestin tietuenimi"
-
-#~ msgid ""
-#~ "Message type: email for email message, notification for system message, "
-#~ "comment for other messages such as user replies"
-#~ msgstr ""
-#~ "Viestityyppi: Sähköposti  sähköposteille, Ilmoitus järjestelmän "
-#~ "viesteille, ja Kommentti muille viesteille, kuten käyttäjien vastauksille."
-
-#~ msgid "Message unique identifier"
-#~ msgstr "Viestin yksilöivä tunniste"
-
-#~ msgid "Message-Id"
-#~ msgstr "Viestin ID"
-
-#~ msgid "Messages"
-#~ msgstr "Viestit"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Viesti- ja kommunikointihistoria"
-
-#~ msgid "No, I just tested it"
-#~ msgstr "Ei, kokeilin vain sitä"
-
-#~ msgid "Notify followers"
-#~ msgstr "Huomauta seuraajia"
-
-#~ msgid "Notify followers of the document (mass post only)"
-#~ msgstr "Huomauta tämän dokumentin seuraajia (vain massapostitus)"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Toimenpiteiden määrä"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Toimenpiteitä vaativien viestien määrä"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Lukemattomien viestien määrä"
-
-#~ msgid "Outgoing mail server"
-#~ msgstr "Lähtevän postin palvelin"
-
-#~ msgid "Parent Message"
-#~ msgstr "Edeltävä viesti"
-
-#~ msgid "Project Management"
-#~ msgstr "Projektinhallinta"
-
-#~ msgid "Purchases Management"
-#~ msgstr "Ostojen hallinta"
-
-#~ msgid "Questions for developers"
-#~ msgstr "Kysymys kehittäjille"
-
-#~ msgid "Related Document ID"
-#~ msgstr "Liittyvä dokumentti ID"
-
-#~ msgid "Related Document Model"
-#~ msgstr "Liittyvä dokumenttimalli"
-
-#~ msgid "Reply-To"
-#~ msgstr "Vastausosoite"
-
-#~ msgid "Sales Management"
-#~ msgstr "Myynti"
-
-#~ msgid ""
-#~ "Small-sized image of this contact. It is automatically resized as a "
-#~ "64x64px image, with aspect ratio preserved. Use this field anywhere a "
-#~ "small image is required."
-#~ msgstr ""
-#~ "Pienikokoinen kuva kontaktista. Liian suuret kuvat skaalataan "
-#~ "automaattisesti 64x64px kokoisiksi kuvasuhde säilyttäen. Käytä tätä "
-#~ "kenttää aina kun tarvitaan pientä kuvaa."
-
-#~ msgid "Starred"
-#~ msgstr "Tähdellä varustetut"
-
-#~ msgid "Subject"
-#~ msgstr "Aihe"
-
-#~ msgid "Subtype"
-#~ msgstr "Alityyppi"
-
-#~ msgid "System notification"
-#~ msgstr "Järjestelmän ilmoitus"
-
-#~ msgid "Totally agree"
-#~ msgstr "Täysin samaa mieltä"
-
-#~ msgid "Totally disagree"
-#~ msgstr "Täysin eri mieltä"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Lukemattomia viestejä"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Lukemattomien viestien laskuri"
-
-#~ msgid "Use active domain"
-#~ msgstr "Käytä aktiivista domainia"
-
-#~ msgid "Which modules are you using/testing?"
-#~ msgstr "Mitä moduuleita käytät/testaat?"
-
-#~ msgid "Yes, I use a version < 7.0"
-#~ msgstr "Kyllä, käytän versiota < 7.0"
-
-#~ msgid "Yes, I use the 7.0 version, installed locally"
-#~ msgstr "Kyllä, käytän versiota 7.0, asennettuna paikallisesti"
-
-#~ msgid "Yes, I use the online version of Odoo"
-#~ msgstr "Kyllä, käytän Odoon verkkoversiota"
-
-#~ msgid "on"
-#~ msgstr "käytössä"
-
-#, fuzzy
-#~ msgid "Human Resources"
-#~ msgstr "Henkilöstöhallinto"

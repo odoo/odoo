@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-03-10 09:16+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-22 13:46+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Basque (http://www.transifex.com/odoo/odoo-9/language/eu/)\n"
 "Language: eu\n"
@@ -103,13 +103,10 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
-#, fuzzy
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -446,6 +443,12 @@ msgid "Delivery address for current sales order."
 msgstr "Delivery address for current sales order."
 
 #. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
 msgstr ""
@@ -463,9 +466,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "Disc.(%)"
-msgstr "Deskontua (%)"
+msgstr "Desk. (%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
@@ -1914,49 +1916,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "ezezaguna"
-
-#~ msgid ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-#~ msgstr ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-
-#~ msgid "Action Needed"
-#~ msgstr "Beharrezko ekintza"
-
-#~ msgid "Allows you to specify an analytic account on sales orders."
-#~ msgstr "Allows you to specify an analytic account on sales orders."
-
-#~ msgid "Analytic Line"
-#~ msgstr "Lerro analitikoa"
-
-#~ msgid "Analytic accounting for sales"
-#~ msgstr "Analytic accounting for sales"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Date of the last message posted on the record."
-
-#~ msgid "Followers"
-#~ msgstr "Followers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Jarraitzaileak(kanalak)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "If checked new messages require your attention."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Last Message Date"
-
-#~ msgid "Messages"
-#~ msgstr "Mezuak"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Messages and communication history"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Akzioen zenbakia"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "Ireki salmenta menua"

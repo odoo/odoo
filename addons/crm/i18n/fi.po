@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-24 07:25+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-23 09:39+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -231,6 +231,19 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
 msgstr "<i class=\"fa fa-question-circle\"> näytä esimerkit</i>"
+
+#. module: crm
+#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
+msgid ""
+"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
+"since at least 5 days.</p>\n"
+"%if object.description:\n"
+"<p>Here is the description about the opportunity : </p><p><i>${object."
+"description}</i>\n"
+"%endif\n"
+"</p><p>Thank you!</p>\n"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -627,6 +640,10 @@ msgid ""
 "number of customizations!\n"
 "                                    </span>"
 msgstr ""
+"<span><strong>Contact us to customize your application:</strong><br/>\n"
+"                                    We have special options for unlimited "
+"number of customizations!\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -746,9 +763,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "<strong>Recommended activities:</strong>"
-msgstr "<strong>Neuvottelu:</strong>"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -954,15 +970,14 @@ msgstr "Toiminto"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_activity_log.py:75
-#, fuzzy, python-format
+#, python-format
 msgid "Activity Done"
-msgstr "Toiminto"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_kanban_state
-#, fuzzy
 msgid "Activity State"
-msgstr "Seuraava toimenpide"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1083,9 +1098,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
-#, fuzzy
 msgid "Assign this opportunity to"
-msgstr "Anna mahdollisuus tehtäväksi"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_opening_date
@@ -1193,6 +1207,18 @@ msgid "Call"
 msgstr "Soitto"
 
 #. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for Demo"
+msgstr "Soita demosta"
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for a demo"
+msgstr "Soita demosta"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1296,9 +1322,8 @@ msgstr "Napsauta määrittääksesi uusi myynnin tunniste."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_stage_action
-#, fuzzy
 msgid "Click to set a new stage in your opportunity pipeline."
-msgstr "Napsauta lisätäksesi uusi vaihe myyntiputkeen."
+msgstr ""
 
 #. module: crm
 #: model:web.tip,description:crm.crm_tip_2
@@ -1605,9 +1630,8 @@ msgstr "Asiakkaat"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Customizations"
-msgstr "Asiakkaat"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_date
@@ -1626,9 +1650,8 @@ msgstr "Päivää sulkemiseen"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_deduplicate
-#, fuzzy
 msgid "Deduplicate Contacts"
-msgstr "Yhdistä päällekkäinen kontakti"
+msgstr "Poista kaksoiskappaleet yhteystiedoista"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1759,6 +1782,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Download the"
 msgstr "Lataa"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_draft_lead
+msgid "Draft Leads"
+msgstr "Liidiehdotukset"
 
 #. module: crm
 #: selection:sale.config.settings,group_use_lead:0
@@ -1949,6 +1977,18 @@ msgstr "Valmis"
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
 msgstr "Laskostettu myyntiputken näkymässä"
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up Quote"
+msgstr "Seurantatarjous"
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up quote"
+msgstr "Seurantatarjous"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2220,13 +2260,12 @@ msgstr "Laskujen analyysi"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_is_company
 msgid "Is Company"
-msgstr "Yritys"
+msgstr "On yritys"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_function
-#, fuzzy
 msgid "Job Position"
-msgstr "Ehdotus"
+msgstr "Tehtävänimike"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_exclude_journal_item
@@ -2419,6 +2458,11 @@ msgid "Leads by Source"
 msgstr "Liidit lähteittäin"
 
 #. module: crm
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr "Liidit USA:sta"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr "Minulle vastuutetut liidit."
@@ -2484,9 +2528,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-#, fuzzy
 msgid "Log Activity"
-msgstr "Viimeisin toimenpide"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
@@ -2495,17 +2538,15 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
-#, fuzzy
 msgid "Log a note..."
-msgstr "Valitse päivä..."
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_log_action
 #: model:ir.model,name:crm.model_crm_activity_log
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
-#, fuzzy
 msgid "Log an Activity"
-msgstr "Viimeisin toimenpide"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2537,6 +2578,12 @@ msgid "Low"
 msgstr "Matala"
 
 #. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Make Quote"
+msgstr "Tee tarjous"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Lost"
 msgstr "Merkitse hävityksi"
@@ -2548,9 +2595,8 @@ msgstr "Merkitse voitetuksi"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
-#, fuzzy
 msgid "Mark as lost"
-msgstr "Merkitse hävityksi"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2761,9 +2807,8 @@ msgstr "Omat Mahdollisuudet"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_your_pipeline
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
-#, fuzzy
 msgid "My Pipeline"
-msgstr "Myyntiputki"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_group_by_name
@@ -2812,9 +2857,9 @@ msgstr "Toimenpiteen kuvaus"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_activity_log.py:56
-#, fuzzy, python-format
+#, python-format
 msgid "Next activity"
-msgstr "Seuraava toimenpide"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:966
@@ -2824,9 +2869,8 @@ msgstr "Ei aihetta"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "No activity"
-msgstr "Seuraava toimenpide"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2847,9 +2891,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_note
-#, fuzzy
 msgid "Note"
-msgstr "Muistiinpanot"
+msgstr "Muistiinpano"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3261,15 +3304,13 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_preceding_activity_ids
-#, fuzzy
 msgid "Preceding Activities"
-msgstr "Seuraavat toimenpiteet"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_last_activity_id
-#, fuzzy
 msgid "Previous Activity"
-msgstr "Viimeisin toimenpide"
+msgstr "Edellinen toiminto"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3308,7 +3349,7 @@ msgstr "Todennäköisyys (%)"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Products"
-msgstr ""
+msgstr "Tuotteet"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3347,15 +3388,13 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_recommended_activity_id
-#, fuzzy
 msgid "Recommended Activities"
-msgstr "Tiimin toimenpiteet"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_recommended_activity_ids
-#, fuzzy
 msgid "Recommended Next Activities"
-msgstr "Seuraavat toimenpiteet"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_force_thread_id
@@ -3381,14 +3420,17 @@ msgid "Relation field"
 msgstr "Yhdistämiskenttä"
 
 #. module: crm
+#: model:ir.actions.server,name:crm.action_email_reminder_lead
+msgid "Reminder to User"
+msgstr "Muistutus käyttäjälle"
+
+#. module: crm
+#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
-#, fuzzy
 msgid ""
 "Reminder: Lead ${object.name} from ${object.partner_id != False and object."
 "partner_id.name or object.contact_name}"
 msgstr ""
-"Muistutus liidistä: ${object.id} kumppanilta ${object.partner_id != False "
-"and object.partner_id.name or object.contact_name}"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3418,9 +3460,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Sale Flow"
-msgstr "Myyntityökalut"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3485,15 +3526,13 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "Schedule Activity"
-msgstr "Myöhässä olevat toim.piteet"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "Schedule Next Activity"
-msgstr "Seuraava toimenpide"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3554,6 +3593,12 @@ msgid "Selection"
 msgstr "Valinta"
 
 #. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Send a quotation"
+msgstr "Lähetä tarjous"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -3565,6 +3610,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "Järjestysluku"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_set_team_sales_department
+msgid "Set team to Sales Department"
+msgstr "Aseta tiimi myyntiosastolle"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3755,7 +3805,7 @@ msgstr "Tilaustenhallinta"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_title_action
 msgid "Summary"
-msgstr ""
+msgstr "Yhteenveto"
 
 #. module: crm
 #: model:web.tip,description:crm.crm_tip_5
@@ -3797,9 +3847,8 @@ msgstr "Tehtävä"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_team_id
-#, fuzzy
 msgid "Team"
-msgstr "Tiimit"
+msgstr "Tiimi"
 
 #. module: crm
 #: model:ir.filters,name:crm.ir_filters_crm_opportunity_report_next_action
@@ -3833,6 +3882,9 @@ msgid ""
 "before converting it into a real business opportunity. Check this box to "
 "manage leads in this sales team."
 msgstr ""
+"Ensimmäinen kontakti, jonka saat potentiaalisen asiakkaan kanssa, on liidi, "
+"jonka hyväksyt ennen sen muuntamista oikeaksi myyntimahdollisuudeksi. "
+"Valitse tämä jos haluat hallita liidejä tässä myyntitiimissä."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3969,13 +4021,10 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_fold
-#, fuzzy
 msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Tämä vaihe on laskostettuna kanban-näkymässä, kun vaiheessa ei ole yhtään "
-"näytettävää tietuetta."
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:1164
@@ -4580,212 +4629,3 @@ msgstr "tuntematon"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "with your work above"
 msgstr ""
-
-#~ msgid ""
-#~ "<p>This opportunity did not have any activity since at least 5 days. Here "
-#~ "are some details:</p>\n"
-#~ "<ul>\n"
-#~ "<li>Name: ${object.name}</li>\n"
-#~ "<li>ID: ${object.id}</li>\n"
-#~ "<li>Description: ${object.description}</li>\n"
-#~ "</ul>"
-#~ msgstr ""
-#~ "<p>Tässä mahdollisuudessa ei ole ollut toimintaa ainakaan viiteen "
-#~ "päivään. Tässä  lisätietoja:</p>\n"
-#~ "<ul>\n"
-#~ "<li>Nimi: ${object.name}</li>\n"
-#~ "<li>ID: ${object.id}</li>\n"
-#~ "<li>Kuvaus: ${object.description}</li>\n"
-#~ "</ul>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Vaatii toimia"
-
-#~ msgid "Both"
-#~ msgstr "Molemmat"
-
-#~ msgid "Call for Demo"
-#~ msgstr "Soita demosta"
-
-#~ msgid "Call for a demo"
-#~ msgstr "Soita demosta"
-
-#~ msgid "Click to set a new stage in your lead/opportunity pipeline."
-#~ msgstr "Napsauta lisätäksesi uusi vaihe myyntiputkeen."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Viimeisen viestin päivämäärä"
-
-#~ msgid "Deduplicate Contact"
-#~ msgstr "Yhdistä päällekkäinen kontakti"
-
-#~ msgid "Done"
-#~ msgstr "Valmis"
-
-#~ msgid "Draft Leads"
-#~ msgstr "Liidiehdotukset"
-
-#~ msgid "Follow-up"
-#~ msgstr "Seuranta"
-
-#~ msgid "Follow-up Quote"
-#~ msgstr "Seurantatarjous"
-
-#~ msgid "Follow-up call"
-#~ msgstr "Seurantasoitto"
-
-#~ msgid "Follow-up quote"
-#~ msgstr "Seurantatarjous"
-
-#~ msgid "Followers"
-#~ msgstr "Seuraajat"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seuraajat (kanavat)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seuraajat (kumppanit)"
-
-#~ msgid "Followup"
-#~ msgstr "Seuranta"
-
-#~ msgid "Function"
-#~ msgstr "Toiminto"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "Incoming"
-#~ msgstr "Saapuva"
-
-#~ msgid "Is Follower"
-#~ msgstr "on seuraaja"
-
-#~ msgid "Last Activity"
-#~ msgstr "Viimeisin toimenpide"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Viimeinen viestipvm"
-
-#~ msgid "Leads from USA"
-#~ msgstr "Liidit USA:sta"
-
-#~ msgid ""
-#~ "Link between stages and sales teams. When set, this limitate the current "
-#~ "stage to the selected sales teams."
-#~ msgstr ""
-#~ "Yhdistä vaiheet  ja myyntitiimit. Kun tämä on asetettu, niin rajoittaa "
-#~ "nykyvaiheen valituille myyntitiimeille."
-
-#~ msgid "Make Quote"
-#~ msgstr "Tee tarjous"
-
-#~ msgid "Mark As Lost"
-#~ msgstr "Merkitse hävityksi"
-
-#~ msgid "Messages"
-#~ msgstr "Viestit"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Viesti- ja kommunikointihistoria"
-
-#~ msgid "Negotiation"
-#~ msgstr "Neuvottelu"
-
-#~ msgid "Next Action Date"
-#~ msgstr "Seuraava toimenpide"
-
-#~ msgid "Next Activity 1"
-#~ msgstr "Seuraava toimenpide 1"
-
-#~ msgid "Next Activity 2"
-#~ msgstr "Seuraava toimenpide 2"
-
-#~ msgid "Next Activity 3"
-#~ msgstr "Seuraava toimenpide 3"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Toimenpiteiden määrä"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Toimenpiteitä vaativien viestien määrä"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Lukemattomien viestien määrä"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "Avaa myyntivalikko"
-
-#~ msgid "Qualification"
-#~ msgstr "Valinta"
-
-#~ msgid ""
-#~ "Reminder on Lead: ${object.id} from ${object.partner_id != False and "
-#~ "object.partner_id.name or object.contact_name}"
-#~ msgstr ""
-#~ "Muistutus liidistä: ${object.id} kumppanilta ${object.partner_id != False "
-#~ "and object.partner_id.name or object.contact_name}"
-
-#~ msgid "Reminder to User"
-#~ msgstr "Muistutus käyttäjälle"
-
-#~ msgid "Sales Tags"
-#~ msgstr "Myyntitunnisteet"
-
-#~ msgid "Select Stages for this Sales Team"
-#~ msgstr "Valitse vaiheet tälle myyntitiimille"
-
-#~ msgid "Send a quotation"
-#~ msgstr "Lähetä tarjous"
-
-#~ msgid "Set team to Sales Department"
-#~ msgstr "Aseta tiimi myyntiosastolle"
-
-#~ msgid "Teams"
-#~ msgstr "Tiimit"
-
-#~ msgid ""
-#~ "This field is used to distinguish stages related to Leads from stages "
-#~ "related to Opportunities, or to specify stages available for both types."
-#~ msgstr ""
-#~ "Tätä kentää käytetään erottamaan Liidivaiheet Myyntivaiheista, tai "
-#~ "määrittelemään molemmalle yhteiset vaiheet."
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Nimi, joka auttaa luokittelemaan erilaiset kampanjatoimet, esim. "
-#~ "joulutervehdys, kesäkampanja"
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr "Toimitustapa, esim. postikortti, sähköposti tai mainosbanneri"
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr ""
-#~ "Linkin lähde, esim. hakukone, toinen verkkotunnus tai sähköpostilistan "
-#~ "nimi"
-
-#~ msgid ""
-#~ "This stage is folded in the kanban view whenthere are no records in that "
-#~ "stage to display."
-#~ msgstr ""
-#~ "Tämä vaihe on laskostettuna kanban-näkymässä, kun vaiheessa ei ole yhtään "
-#~ "näytettävää tietuetta."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Lukemattomien viestien laskuri"
-
-#~ msgid "Website Messages"
-#~ msgstr "Verkkosivun ilmoitukset"
-
-#~ msgid "Website communication history"
-#~ msgstr "Verkkosivun viestihistoria"
-
-#~ msgid "oe_kanban_text_red"
-#~ msgstr "oe_kanban_text_red"
