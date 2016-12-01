@@ -22,7 +22,7 @@ class ProjectIssue(models.Model):
         for issue in self:
             rating_template = issue.stage_id.rating_template_id
             if rating_template:
-                issue.rating_send_request(rating_template, reuse_rating=False)
+                issue.rating_send_request(rating_template, partner=issue.partner_id, reuse_rating=False)
 
     @api.multi
     def rating_apply(self, rate, token=None, feedback=None, subtype=None):
