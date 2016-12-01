@@ -1,8 +1,4 @@
 -
-  !python {model: ir.values}: |
-    whr = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock.warehouse0'), context=context)
-    self.set_default(cr, uid, 'purchase.order', 'picking_type_id', whr.in_type_id.id, for_all_users=True, company_id=True, condition=False)
--
   !python {model: stock.warehouse}: |
     warehouse_with_buy_ids = self.search(cr, uid, [('buy_to_resupply', '=', True)], context=context)
     self.write(cr, uid, warehouse_with_buy_ids, {'buy_to_resupply': True}, context=context)
