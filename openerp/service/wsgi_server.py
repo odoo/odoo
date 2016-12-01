@@ -44,6 +44,7 @@ import werkzeug.contrib.fixers
 import openerp
 import openerp.modules
 import openerp.tools.config as config
+from openerp.tools.translate import _
 import websrv_lib
 
 _logger = logging.getLogger(__name__)
@@ -123,17 +124,18 @@ def xmlrpc_handle_exception(e):
     return response
 
 def xmlrpc_handle_exception_legacy(e):
+    code_string = u"%s -- %s\n\n%s"
     if isinstance(e, openerp.osv.osv.except_osv):
-        fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + e.value, '')
+        fault = xmlrpclib.Fault(code_string % (_("warning"), e.name, e.value), '')
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, openerp.exceptions.Warning):
-        fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
+        fault = xmlrpclib.Fault(code_string % (_("warning"), _("Warning"), e), '')
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, openerp.exceptions.AccessError):
-        fault = xmlrpclib.Fault('warning -- AccessError\n\n' + str(e), '')
+        fault = xmlrpclib.Fault(code_string % (_("warning"), _("AccessError"), e), '')
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, openerp.exceptions.AccessDenied):
-        fault = xmlrpclib.Fault('AccessDenied', str(e))
+        fault = xmlrpclib.Fault(_('AccessDenied'), str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     elif isinstance(e, openerp.exceptions.DeferredException):
         info = e.traceback

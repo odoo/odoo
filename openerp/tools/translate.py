@@ -196,7 +196,7 @@ class GettextAlias(object):
             lang = ctx.get('lang')
         s = frame.f_locals.get('self', {})
         if not lang:
-            c = getattr(s, 'localcontext', None)
+            c = getattr(s, 'localcontext', None) or getattr(s, 'context', None)
             if c:
                 lang = c.get('lang')
         if not lang:
@@ -861,7 +861,7 @@ def trans_generate(lang, modules, cr):
         path_list = [root_path,] + apaths
 
     # Also scan these non-addon paths
-    for bin_path in ['osv', 'report' ]:
+    for bin_path in ['osv', 'report', 'tools', 'service' ]:
         path_list.append(os.path.join(config.config['root_path'], bin_path))
 
     _logger.debug("Scanning modules at paths: %s", path_list)

@@ -8,6 +8,7 @@ import sys
 import xmlrpclib
 
 import openerp
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -84,17 +85,17 @@ class OpenERPSession(object):
         self.jsonp_requests = {}     # FIXME use a LRU
 
     def send(self, service_name, method, *args):
-        code_string = u"warning -- %s\n\n%s"
+        code_string = _(u"warning -- %s\n\n%s")
         try:
             return openerp.netsvc.dispatch_rpc(service_name, method, args)
         except openerp.osv.osv.except_osv, e:
             raise xmlrpclib.Fault(code_string % (e.name, e.value), '')
         except openerp.exceptions.Warning, e:
-            raise xmlrpclib.Fault(code_string % ("Warning", e), '')
+            raise xmlrpclib.Fault(code_string % (_("Warning"), e), '')
         except openerp.exceptions.AccessError, e:
-            raise xmlrpclib.Fault(code_string % ("AccessError", e), '')
+            raise xmlrpclib.Fault(code_string % (_("AccessError"), e), '')
         except openerp.exceptions.AccessDenied, e:
-            raise xmlrpclib.Fault('AccessDenied', openerp.tools.ustr(e))
+            raise xmlrpclib.Fault(_('AccessDenied'), openerp.tools.ustr(e))
         except openerp.exceptions.DeferredException, e:
             formatted_info = "".join(traceback.format_exception(*e.traceback))
             raise xmlrpclib.Fault(openerp.tools.ustr(e), formatted_info)
