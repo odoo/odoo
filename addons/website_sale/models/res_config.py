@@ -3,6 +3,8 @@
 
 from odoo import api, models, fields
 
+import logging
+_logger = logging.getLogger(__name__)
 
 class WebsiteConfigSettings(models.TransientModel):
     _inherit = 'website.config.settings'
@@ -59,8 +61,16 @@ class WebsiteConfigSettings(models.TransientModel):
     group_product_pricelist = fields.Boolean("Show pricelists On Products",
         implied_group='product.group_product_pricelist')
     order_mail_template = fields.Many2one('mail.template', string='Email Template', readonly=True, default=_default_order_mail_template, help="Email sent to customer at the end of the checkout process")
-    group_show_price_total = fields.Boolean("Show taxes on total", implied_group='sale.group_show_price_total')
-    group_show_price_subtotal = fields.Boolean("Show taxes on subtotal", implied_group='sale.group_show_price_subtotal')
+    group_show_price_subtotal = fields.Boolean(
+        "Show subtotal",
+        store=True,
+        implied_group='sale.group_show_price_subtotal',
+        group='base.group_portal,base.group_user,base.group_public')
+    group_show_price_total = fields.Boolean(
+        "Show total",
+        store=True,
+        implied_group='sale.group_show_price_total',
+        group='base.group_portal,base.group_user,base.group_public')
 
     default_invoice_policy = fields.Selection([
         ('order', 'Ordered quantities'),
@@ -79,7 +89,8 @@ class WebsiteConfigSettings(models.TransientModel):
         related='company_id.chart_template_id'
     )
 
-    sale_tax_id = fields.Many2one('account.tax.template', string='Default sale tax', oldname="sale_tax")
+    sale_tax_id = fields.Many2one('account.tax', string='Default sale tax')
+
     currency_id = fields.Many2one(
         'res.currency', related='company_id.currency_id', string='Currency', required=True,
         default=lambda self: self.env.user.company_id.currency_id.id
@@ -92,7 +103,8 @@ class WebsiteConfigSettings(models.TransientModel):
             ('total', 'Tax-Included Prices'),
             ('subtotal', 'Tax-Excluded Prices')],
         "Product Prices",
-        default=lambda self: 'total' if self.group_show_price_total else 'subtotal',
+        compute='_compute_sale_show_tax',
+        readonly=False,
         required=True)
 
     @api.model
@@ -159,6 +171,10 @@ class WebsiteConfigSettings(models.TransientModel):
                     'group_pricelist_item': True,
                 })
 
+    @api.depends('group_show_price_total')
+    def _compute_sale_show_tax(self):
+        self.sale_show_tax = 'total' if self.group_show_price_total else 'subtotal'
+
     @api.onchange('sale_show_tax')
     def _onchange_sale_tax(self):
         if self.sale_show_tax == "subtotal":
@@ -171,3 +187,27 @@ class WebsiteConfigSettings(models.TransientModel):
                 'group_show_price_total': True,
                 'group_show_price_subtotal': False,
             })
+
+    @api.multi
+    def set_sale_tax_id(self):
+        """ Set the product taxes if they have changed """
+        ir_values_obj = self.env['ir.values']
+        if self.sale_tax_id:
+            ir_values_obj.sudo().set_default(
+                'product.template',
+                "taxes_id",
+                [self.sale_tax_id.id], for_all_users=True, company_id=self.company_id.id
+            )
+
+    @api.model
+    def get_default_sale_tax_id(self, fields):
+        company_id = self.company_id.id or self.env.user.company_id.id
+        tax_id = self.env['ir.values'].get_default('product.template', 'taxes_id', company_id=company_id)
+        if isinstance(tax_id, list):
+            if len(tax_id):
+                return {'sale_tax_id': tax_id[0]}
+
+        else:
+            return {'sale_tax_id': tax_id}
+
+        return {'sale_tax_id': None}
