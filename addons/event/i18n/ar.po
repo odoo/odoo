@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:15+0000\n"
-"PO-Revision-Date: 2016-07-21 10:49+0000\n"
+"POT-Creation-Date: 2016-12-01 11:53+0000\n"
+"PO-Revision-Date: 2016-09-14 05:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "Language: ar\n"
@@ -192,7 +192,7 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<strong>Requirements:</strong>"
-msgstr ""
+msgstr "المتطلبات:"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -964,6 +964,9 @@ msgid ""
 "status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
+"عند إنشاء الحدث فإن حالته الافتراضية 'مسودة'. عند تأكيد الحدث في التواريخ "
+"المحددة فإن حالته تتغير إلى 'مؤكد'. عندما ينتهي الحدث فإن حالته تتغير إلى "
+"'منتهي'. إذا تم إلغاء الحجز تصبح حالته 'ملغي'."
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1038,7 +1041,7 @@ msgstr "سيتم اختيار القيمة القصوى الافتراضية ع�
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_min
 msgid "It will select this default minimum value when you choose this event"
-msgstr ""
+msgstr "سيقوم باختيار القيمة الدنيا الافتراضية عند اختيارك لهذا الحدث"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_color
@@ -1555,6 +1558,10 @@ msgid ""
 "registrations confirmation. You can also put the email address of your mail "
 "gateway if you use one."
 msgstr ""
+"عنوان بريد المنظم الإلكتروني غالباً هو ما ستضعه هنا، مع ملاحظة أنه سيتم "
+"إضافته في كافة المراسلات بصفته عنوان 'الرد إلى' عند تأكيد الحدث والتسجيل "
+"فيه. يمكنك أيضاً أن تضع عنوان بريد مؤسستك الذي يتلقى النظام عليه كافة "
+"المراسلات."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail_template_id
@@ -1713,6 +1720,8 @@ msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
 msgstr ""
+"لديك اشتراك أو تسجيل تم تحديد حالته على أنه 'حضر'. يرجى إعادة حالته إلى "
+"'مسودة' لتتمكن من إلغاء هذا الحدث."
 
 #. module: event
 #: code:addons/event/models/event.py:357

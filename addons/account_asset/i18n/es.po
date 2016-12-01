@@ -5,18 +5,18 @@
 # Translators:
 # Alejandro Santana <alejandrosantana@anubia.es>, 2015
 # Javier Ramirez <elbomba887@gmail.com>, 2015
-# Luis Triana <luistriana.28@gmail.com>, 2016
+# Luis Triana <luis.triana@jarsa.com.mx>, 2016
 # Martin Trigaux, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2015
-# Oihane Crucelaegui <oihanecruce@gmail.com>, 2015
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2015
+# oihane <oihanecruce@gmail.com>, 2015
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-07-08 15:06+0000\n"
-"Last-Translator: Luis Triana <luistriana.28@gmail.com>\n"
+"PO-Revision-Date: 2016-10-11 13:28+0000\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -194,7 +194,8 @@ msgstr "Línea de depreciación del activo"
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr ""
-"Producto vendido o reservado. Apunte contable esperando para contabilización"
+"Activo vendido o deshechado. El asiento contable está esperando la "
+"validación."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_asset
@@ -420,7 +421,7 @@ msgstr "Amortización actual"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Customer"
-msgstr "Cliente"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_date
@@ -479,7 +480,7 @@ msgstr "Amortización"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Asset Account"
-msgstr "Cuenta de Depreciación de Activos"
+msgstr "Cuenta de amortización del activo"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -494,6 +495,7 @@ msgstr "Fecha de depreciación"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Depreciation Entries: Asset Account"
 msgstr ""
 
@@ -510,7 +512,7 @@ msgstr "Asiento de amortización"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Expense Account"
-msgstr "Cuenta de Depreciación de Gastos"
+msgstr "Cuenta de gastos de amortización"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -542,13 +544,13 @@ msgstr "Nombre depreciación"
 #: code:addons/account_asset/wizard/account_asset_change_duration.py:83
 #, python-format
 msgid "Depreciation board modified"
-msgstr "Cuadro de amortización modificada"
+msgstr "Cuadro de amortización modificado"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:557
 #, python-format
 msgid "Depreciation line posted."
-msgstr "Entrada de amortización asentada"
+msgstr "Línea de amortización asentada."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_display_name
@@ -942,7 +944,7 @@ msgstr "Ventas"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_salvage_value
 msgid "Salvage Value"
-msgstr "Valor residual"
+msgstr "Valor de rescate"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -952,7 +954,7 @@ msgstr "Buscar categoría de activo"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Sell or Dispose"
-msgstr "Vendido o Disponible"
+msgstr "Vender o deshechar"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_sequence
@@ -1105,68 +1107,3 @@ msgstr "Por ejemplo, portátil iBook"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "months"
 msgstr "meses"
-
-#~ msgid "Action Needed"
-#~ msgstr "Acción necesaria"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Fecha del último mensaje publicado en el registro."
-
-#~ msgid "Depreciation Account"
-#~ msgstr "Cuenta de amortización"
-
-#~ msgid "Entries"
-#~ msgstr "Asientos"
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canales)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Empresas)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención."
-
-#~ msgid "Income Account"
-#~ msgstr "Cuenta de ingresos"
-
-#~ msgid "Is Follower"
-#~ msgstr "Es un seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Fecha del último mensaje"
-
-#~ msgid "Messages"
-#~ msgstr "Mensajes"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de acciones"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensajes que requieren una acción"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensajes no leidos"
-
-#~ msgid "Post Journal Entries"
-#~ msgstr "Asentar asientos"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Mensajes sin leer"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de mensajes no leidos"
-
-#~ msgid ""
-#~ "You already have assets with the reference %s.\n"
-#~ "Please delete these assets before creating new ones for this invoice."
-#~ msgstr ""
-#~ "Ya tiene activos con la referencia %s.\n"
-#~ "Por favor, elimine estos activos antes de crear otros nuevos para esta "
-#~ "factura."

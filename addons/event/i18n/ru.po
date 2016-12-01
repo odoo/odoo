@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:15+0000\n"
-"PO-Revision-Date: 2016-05-27 23:18+0000\n"
+"POT-Creation-Date: 2016-12-01 11:53+0000\n"
+"PO-Revision-Date: 2016-10-16 16:14+0000\n"
 "Last-Translator: Владимир Куряев <istercul@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "Language: ru\n"
@@ -32,6 +32,12 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Уважаемый(-я) ${object.name},</p>\n"
+"<p>Спасибо за проявленный интерес.</p>\n"
+"<p>Получите свой бейдж для события ${object.event_id.name}.</p>\n"
+"<p>Если будут вопросы — дайте знать.</p>\n"
+"<p>С наилучшими пожеланиями,</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -80,7 +86,7 @@ msgstr " Кол-во неподтверждённых регистраций"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "(stats)"
-msgstr ""
+msgstr "(статистические данные)"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -99,6 +105,9 @@ msgid ""
 "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the "
 "event or change the dates on which it is held.)</em>"
 msgstr ""
+"<em>(Камерные произведения оставляет за собой право отменить, переименовать "
+"или переместить<br>событие или изменить даты, на которые оно проводится.)</"
+"em>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -124,6 +133,8 @@ msgid ""
 "<i>You will be able to develop a full application with backend and user "
 "interface.</i>"
 msgstr ""
+"<i>Вы сможете разработать полное приложение с программным и пользовательским "
+"интерфейсом</i>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -132,12 +143,14 @@ msgstr ""
 msgid ""
 "<i>You will be able to develop simple dynamic components in HTML pages.</i>"
 msgstr ""
+"<i>Вы сможете создать простые динамические составляющие в HTML- страницах.</"
+"i>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "<i>to</i>"
-msgstr ""
+msgstr "<i>к</i>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -170,7 +183,7 @@ msgstr "<strong>Конференция по бизнес-приложениям<
 #: model:event.event,description:event.event_3
 msgid ""
 "<strong>Having attended this course, participants should be able to:</strong>"
-msgstr ""
+msgstr "<strong>Посетив этот курс ученикам следует знать о:</strong>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -202,7 +215,7 @@ msgstr "<strong>Требования:</strong>"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "<strong>Where to find us:</strong>"
-msgstr ""
+msgstr "<strong>Где нас найти:</strong>"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_active
@@ -214,7 +227,7 @@ msgstr "Активен"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Advanced JQuery"
-msgstr ""
+msgstr "Дополнительно JQuery"
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -229,7 +242,7 @@ msgstr "После мероприятия"
 #. module: event
 #: selection:event.config.settings,module_event_sale:0
 msgid "All events are free"
-msgstr ""
+msgstr "Все мероприятия бесплатные"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_questions:0
@@ -239,7 +252,7 @@ msgstr ""
 #. module: event
 #: selection:event.config.settings,module_event_sale:0
 msgid "Allow selling tickets"
-msgstr ""
+msgstr "Норма проданных билетов"
 
 #. module: event
 #: selection:event.config.settings,module_website_event_track:0
@@ -290,13 +303,13 @@ msgstr "Участник"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Attendee / Contact"
-msgstr ""
+msgstr "Слушатель / Контактная информация"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_name
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 msgid "Attendee Name"
-msgstr ""
+msgstr "Имя слушателя"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -354,28 +367,28 @@ msgstr "С наилучшими пожеланиями,"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Bootstrap CSS"
-msgstr ""
+msgstr "Bootstrap CSS"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Bring your own laptop."
-msgstr ""
+msgstr "Принесите свой собственный ноутбук."
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Building a Full Application"
-msgstr ""
+msgstr "Создание полного приложения"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Calling the ORM"
-msgstr ""
+msgstr "Вызов ORM"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_configuration
@@ -510,7 +523,7 @@ msgstr "Контакт"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Controllers and Views"
-msgstr ""
+msgstr "Контроллеры и представления"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
@@ -954,7 +967,7 @@ msgstr "Час(ов)"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "How to Debug"
-msgstr ""
+msgstr "Как выполнить отладку"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_id
@@ -1013,7 +1026,7 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Integrated Help"
-msgstr ""
+msgstr "Встроенная справка"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_nbr
@@ -1025,21 +1038,21 @@ msgstr "Интервал"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Introduction to JQuery"
-msgstr ""
+msgstr "Введение в JQuery"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Introduction to Javascript"
-msgstr ""
+msgstr "Введение в Javascript"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Introduction to QWeb"
-msgstr ""
+msgstr "Введение в QWeb"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1114,7 +1127,7 @@ msgstr "Место хранения"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Loops"
-msgstr ""
+msgstr "Петли"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1268,7 +1281,7 @@ msgstr "Официальный вебсайт Odoo"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Odoo Web Client"
-msgstr ""
+msgstr "Odoo веб-клиент"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -1350,7 +1363,7 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Python Objects"
-msgstr ""
+msgstr "Объекты Python"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_registration_origin
@@ -1447,7 +1460,7 @@ msgstr "Ответить на письмо"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Report Engine"
-msgstr ""
+msgstr "Движок отчетов"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -1639,14 +1652,14 @@ msgstr "Неподтвержденное бронирование посадоч
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Underscore"
-msgstr ""
+msgstr "Подчеркивание"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Understand the development concepts and architecture;"
-msgstr ""
+msgstr "Понимать концепции развития и архитектуры;"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1782,7 +1795,7 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "drinks and lunch;"
-msgstr ""
+msgstr "напитки и обед;"
 
 #. module: event
 #: model:ir.model,name:event.model_event_config_settings
@@ -1829,4 +1842,4 @@ msgstr ""
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "training material."
-msgstr ""
+msgstr "учебные материалы."

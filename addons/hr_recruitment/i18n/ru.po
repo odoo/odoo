@@ -31,6 +31,13 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Уважаемый ${object.partner_name or 'applicant'},</p>\n"
+"<p>Благодарим вас за Ваш запрос.<br />\n"
+"К сожалению Ваш профиль не соответствует нашим потребностям</p>\n"
+"<p>Если у Вас есть какие-либо вопросы, пожалуйста, сообщите нам об этом.</"
+"p>\n"
+"<p>Всего хорошего,</p>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -44,6 +51,15 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Уважаемый ${object.partner_name or 'applicant'},</p>\n"
+"<p>Благодарим вас за Ваш запрос.<br />\n"
+"Ваше резюме заинтересовало нас. Мы свяжемся с Вами как можно скорее, что бы "
+"планировать</p>\n"
+"дальнейшие шаги процесса набора персонала.</p>\n"
+"<p>Если у Вас есть какие-либо вопросы, пожалуйста, сообщите нам об этом.</"
+"p>\n"
+"<p>Всего хорошего,</p>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_employee
@@ -59,6 +75,15 @@ msgid ""
 ".</p>\n"
 "<p>Please welcome him/her and help him/her finding his/her marks.</p>"
 msgstr ""
+"\n"
+"<p>Уважаемые,</p>\n"
+"<p>Я очень рад сообщить, что <strong> ${object.name} </strong> будете\n"
+"присоединятся к нам как ${object.job_id.name}\n"
+"%if object.department_id:\n"
+"    в ${object.department_id.name}.\n"
+"%endif\n"
+".</p>\n"
+"<p>Пожалуйста приветствуйте его/ее и помогите ему/ей найти его/ее место.</p>"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_1
@@ -452,7 +477,7 @@ msgstr "Нажмите для добавления новой стадии по�
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
 msgid "Click to add a new tag."
-msgstr ""
+msgstr "Кликните, чтобы создать новый тэг."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
@@ -537,6 +562,8 @@ msgstr "Создать алиас"
 msgid ""
 "Create some aliases that will allow you to track where applicants come from."
 msgstr ""
+"Создайте несколько псевдонимов, которые позволят вам отслеживать, откуда "
+"заявители пришли."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
@@ -898,7 +925,7 @@ msgstr "Существующие сотрудники"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_department
 msgid "Hr Department"
-msgstr ""
+msgstr "Отдел кадров"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
@@ -1016,7 +1043,7 @@ msgstr "Штатное расписание"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Job Specific"
-msgstr ""
+msgstr "Конкретная вакансия"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -1333,6 +1360,10 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
+"Политики для сообщений в документе с использованием почтового шлюза:\n"
+"- все: каждый может писать\n"
+"- партнёры: только аутентифицированные партнёры;\n"
+"- подписчики: только подписчики соответствующего документа\n"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -1429,7 +1460,7 @@ msgstr "Регулярные встречи"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Reopen Application"
-msgstr ""
+msgstr "Пере открыть Заявителя"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1569,6 +1600,8 @@ msgstr "Специальный электронный адрес"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Specific job that uses this stage. Other jobs will not use this stage."
 msgstr ""
+"Конкретные вакансии, которые используют этот этап. Другие вакансии не будут "
+"использовать этот этап."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
@@ -1718,6 +1751,9 @@ msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
 msgstr ""
+"Эти псевдонимы могут быть email или url-адресами для каждого источника. "
+"Когда заявитель прибудет сюда через один из них вы будете знать, откуда он "
+"прибыл."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1830,7 +1866,7 @@ msgstr "Адреса наблюдателей"
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_employee
 msgid "Welcome ${object.name} "
-msgstr ""
+msgstr "Добро пожаловать $${object.name} "
 
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_1_3

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:15+0000\n"
+"POT-Creation-Date: 2016-12-01 11:53+0000\n"
 "PO-Revision-Date: 2016-02-17 22:10+0000\n"
 "Last-Translator: Felipe Palomino <omega@nubark.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/"
@@ -91,7 +91,7 @@ msgid "Agreement Selection Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_11150
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10664
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
@@ -130,7 +130,7 @@ msgid "Cancelled"
 msgstr "Cancelado(a)"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:98
+#: code:addons/purchase_requisition/purchase_requisition.py:99
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
@@ -397,6 +397,11 @@ msgid "Purchase Order"
 msgstr "Orden de Compra"
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Línea de Orden de Compra"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
 msgid "Purchase Orders"
 msgstr "Órdenes de Compra"
@@ -417,7 +422,7 @@ msgid "Purchase Requisition Line"
 msgstr "Línea de Requerimiento de Compra"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:323
+#: code:addons/purchase_requisition/purchase_requisition.py:342
 #, python-format
 msgid "Purchase Requisition created"
 msgstr "Requerimiento de Compra creada"
@@ -588,13 +593,13 @@ msgid "Warehouse"
 msgstr "Almacén"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:103
+#: code:addons/purchase_requisition/purchase_requisition.py:104
 #, python-format
 msgid "You cannot confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:118
+#: code:addons/purchase_requisition/purchase_requisition.py:119
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
@@ -610,262 +615,3 @@ msgstr "ej. OC0025"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "unknown"
 msgstr ""
-
-#~ msgid ""
-#~ "A Call for Tenders is a procedure for generating competing offers from\n"
-#~ "            different bidders. In the call for tenders, you can record "
-#~ "the\n"
-#~ "            products you need to buy and generate the creation of RfQs "
-#~ "to\n"
-#~ "            vendors. Once the tenders have been registered, you can "
-#~ "review and\n"
-#~ "            compare them and you can validate some and cancel others."
-#~ msgstr ""
-#~ "Una licitación es un procedimiento para la generación de ofertas "
-#~ "competidoras de diferentes proveedores. En la convocatoria de la "
-#~ "licitación, puede grabar la productos que necesitan comprar y generar la "
-#~ "creación de la Orden de Compras. Una vez que las ofertas se han "
-#~ "registrado, se puede revisar, compararlas, validar algunas y cancelar "
-#~ "otras."
-
-#~ msgid "Action Needed"
-#~ msgstr "Acción Requerida"
-
-#~ msgid "Approved by Vendor"
-#~ msgstr "Aprobado por Proveedor"
-
-#~ msgid "Bid Line Qty"
-#~ msgstr "Cantidad Licitada"
-
-#~ msgid "Call for Tenders Reference"
-#~ msgstr "Referencia de Licitaciones"
-
-#~ msgid "Call for Tenders in negotiation"
-#~ msgstr "Licitaciones en negociación"
-
-#~ msgid "Call for Tenders where tenders are closed"
-#~ msgstr "Licitaciones donde las ofertas están cerradas"
-
-#~ msgid "Cancel"
-#~ msgstr "Cancelar"
-
-#~ msgid "Cancel Choice"
-#~ msgstr "Cancelar Opción"
-
-#~ msgid "Cancel Purchase Order"
-#~ msgstr "Cancelar Órden de Compra"
-
-#~ msgid ""
-#~ "Cancelled by the call for tenders associated to this request for "
-#~ "quotation."
-#~ msgstr ""
-#~ "Cancelada por la licitación asociada a esta solicitud de cotización."
-
-#~ msgid "Cancelled by the tender associated to this quotation."
-#~ msgstr "Cancelado por la licitación asociada a esta cotización."
-
-#~ msgid "Change Bid line quantity"
-#~ msgstr "Cambiar Cantidad licitada"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Cambiar Cantidad"
-
-#~ msgid ""
-#~ "Check this box to generate Call for Tenders instead of generating "
-#~ "requests for quotation from procurement."
-#~ msgstr ""
-#~ "Marque esta casilla para generar una icitación en vez de generar una "
-#~ "solicitud de cotización desde abastecimiento."
-
-#~ msgid "Choose Vendor"
-#~ msgstr "Escoger Proveedor"
-
-#~ msgid "Choose product lines"
-#~ msgstr "Escoga las líneas de producto"
-
-#~ msgid "Click to start a new Call for Tenders process."
-#~ msgstr "Clic para iniciar un nuevo proceso de Licitación."
-
-#~ msgid "Close Call for Tenders"
-#~ msgstr "Cerrar Licitación"
-
-#~ msgid "Closed Tenders"
-#~ msgstr "Licitaciones Cerradas"
-
-#~ msgid "Confirm Call"
-#~ msgstr "Confirmar Licitación"
-
-#~ msgid "Confirm Order"
-#~ msgstr "Confirmar Orden"
-
-#~ msgid "Confirm Purchase Order"
-#~ msgstr "Confirmar Orden de Compra"
-
-#~ msgid "Create Request for Quotation"
-#~ msgstr "Crear Solicitud de Cotización"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Fecha del último mensaje publicado en el registro."
-
-#~ msgid "Define product(s) you want to include in the call for tenders."
-#~ msgstr "Defina el(los) producto(s) que quiere incluir en la licitación."
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canales)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Asociados)"
-
-#~ msgid "Generate PO"
-#~ msgstr "Generar PO"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si está marcado, los nuevos mensajes requerirán su atención."
-
-#~ msgid "Is Follower"
-#~ msgstr "Es Seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Fecha del Último Mensaje"
-
-#~ msgid "Messages"
-#~ msgstr "Mensajes"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historial de mensajes y de comunicación"
-
-#~ msgid "Multiple RFQ per vendor"
-#~ msgstr "Varias SDC por proveedor"
-
-#~ msgid "New"
-#~ msgstr "Nueva"
-
-#~ msgid "New Call for Tenders"
-#~ msgstr "Nueva Licitación"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de Acciones"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensajes que requieren una acción"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensajes no leidos"
-
-#~ msgid "Order Date"
-#~ msgstr "Fecha Orden"
-
-#~ msgid "PO Created"
-#~ msgstr "PO Creado"
-
-#~ msgid "Product Lines"
-#~ msgstr "Líneas de Producto"
-
-#~ msgid "Products by vendor"
-#~ msgstr "Productos por proveedor"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Línea de Orden de Compra"
-
-#~ msgid "Purchase Order Lines"
-#~ msgstr "Líneas de Orden de Compra"
-
-#~ msgid "Purchase Requisition Partner"
-#~ msgstr "Requerimiento de Compra de Asociado"
-
-#~ msgid "Purchase Requisitions (exclusive)"
-#~ msgstr "Requerimientos de Compra (exclusivas)"
-
-#~ msgid "Purchase Tenders"
-#~ msgstr "Licitaciones de Compra"
-
-#~ msgid "Quantity Tendered"
-#~ msgstr "Cantidad Licitada"
-
-#~ msgid "RFQ created"
-#~ msgstr "SDC creada"
-
-#~ msgid "RFQs/Bids"
-#~ msgstr "SDCs/Ofertas"
-
-#~ msgid "Reference"
-#~ msgstr "Referencia"
-
-#~ msgid "Request a Quotation"
-#~ msgstr "Solicitar una Cotización"
-
-#~ msgid "Requests for Quotation"
-#~ msgstr "Solicitudes de Cotización"
-
-#~ msgid "Scheduled Ordering Date"
-#~ msgstr "Fecha Programada del Pedido"
-
-#~ msgid "Search Call for Tenders"
-#~ msgstr "Buscar Licitación"
-
-#~ msgid ""
-#~ "Select only one RFQ (exclusive):  On the confirmation of a purchase "
-#~ "order, it cancels the remaining purchase order.\n"
-#~ "Select multiple RFQ:  It allows to have multiple purchase orders.On "
-#~ "confirmation of a purchase order it does not cancel the remaining orders"
-#~ msgstr ""
-#~ "Seleccionar sólo una SDC (exclusiva): En la confirmación de una orden de "
-#~ "compra, cancela las demás.\n"
-#~ "Seleccionar múltiples SDCs: Permite tener varias órdenes de compra. Al "
-#~ "confirmar alguna, no cancela las órdenes restantes."
-
-#~ msgid "Send RFQ by Email"
-#~ msgstr "Enviar SDC por Correo"
-
-#~ msgid ""
-#~ "Technical field for not loosing the initial information about the "
-#~ "quantity proposed in the tender"
-#~ msgstr ""
-#~ "Campo técnico para no perder la información inicial acerca de la cantidad "
-#~ "propuesta en la oferta"
-
-#~ msgid "Tender Closing Deadline"
-#~ msgstr "Fecha Límite de Cierre de la Oferta"
-
-#~ msgid "Tender Lines"
-#~ msgstr "Líneas de Oferta"
-
-#~ msgid "Tender Selection Type"
-#~ msgstr "Tipo de Selección de Oferta"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Mensajes sin Leer"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de Mensajes no Leídos"
-
-#~ msgid "Vendors"
-#~ msgstr "Proveedores"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensajes del Sitio Web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historial de comunicación del sitio web"
-
-#~ msgid "You can not confirm call because there is no product line."
-#~ msgstr "No puede confirmar la licitación porque no hay línea de producto."
-
-#~ msgid "You have already generate the purchase order(s)."
-#~ msgstr "Usted ya ha generado la(s) orden(es) de compra."
-
-#~ msgid ""
-#~ "You have already one %s purchase order for this partner, you must cancel "
-#~ "this purchase order to create a new quotation."
-#~ msgstr ""
-#~ "Usted ya tiene una orden de compra %s para este asociado, debe cancelar "
-#~ "esta orden de compra para crear una nueva cotización."
-
-#~ msgid "You have no line selected for buying."
-#~ msgstr "Usted no tiene una línea seleccionada para comprar."

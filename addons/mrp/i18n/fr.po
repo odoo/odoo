@@ -15,9 +15,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-08-16 06:58+0000\n"
-"Last-Translator: Nicolas Seinlet <nicolas@seinlet.com>\n"
+"POT-Creation-Date: 2016-12-01 11:52+0000\n"
+"PO-Revision-Date: 2016-10-18 09:48+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -259,7 +259,7 @@ msgstr "En attente des matières premières"
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_bom_price
 msgid "BOM Cost"
-msgstr ""
+msgstr "Cout Matières"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrpbomstructure
@@ -921,6 +921,12 @@ msgid "Internal Reference"
 msgstr "Référence interne"
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
@@ -1557,7 +1563,7 @@ msgstr "Propriété"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_10092
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9626
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -2311,6 +2317,14 @@ msgstr ""
 "concernés d'abord."
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "jours"
@@ -2348,410 +2362,10 @@ msgstr "report.mrp.report_mrpbomstructure"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_bom_cost
 msgid "report.mrp_bom_cost"
-msgstr ""
+msgstr "report.mrp_bom_cost"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "inconnu"
-
-#~ msgid "Action Needed"
-#~ msgstr "A besoin d'une action"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Changer la quantité"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Date du dernier message posté sur cet enregistrement."
-
-#~ msgid "Followers"
-#~ msgstr "Abonnés"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Abonnés (Canaux)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Abonnés (Partenaires)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si coché, de nouveaux messages demandent votre attention."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "Si elle est cochée, de nouveaux messages requièrent votre attention."
-
-#~ msgid ""
-#~ "If the active field is set to False, it will allow you to hide the "
-#~ "resource record without removing it."
-#~ msgstr ""
-#~ "Si vous cochez la case \"Active\", la resource sera cachée mais pas "
-#~ "supprimée."
-
-#~ msgid "Inactive"
-#~ msgstr "Inactive"
-
-#~ msgid "Is Follower"
-#~ msgstr "Est un abonné"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Date du dernier message"
-
-#~ msgid "Messages"
-#~ msgstr "Messages"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historique des messages et communications"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Nombre d'Actions"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Nombre de messages demandant une action"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Nombre de messages non lus"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "Ouvrir le menu MRP"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Messages non lus"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Compteur de messages non lus"
-
-#~ msgid "Website Messages"
-#~ msgstr "Messages du site web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historique de communication du site web"
-
-#~ msgid ""
-#~ "<p class=\"oe_view_nocontent_create\">\n"
-#~ "                        Documents are attached to the tasks and issues of "
-#~ "your project.</p><p>\n"
-#~ "                        Send messages or log internal notes with "
-#~ "attachments to link\n"
-#~ "                        documents to your project.\n"
-#~ "                    </p>"
-#~ msgstr ""
-#~ "<p class=\"oe_view_nocontent_create\">\n"
-#~ "                        Les documents sont jointes aux tâches et "
-#~ "problèmes de votre projet.</p><p>\n"
-#~ "                        Envoyez des messages ou entrez une note interne "
-#~ "avec des pièces jointes pour lier des documents à votre projet.\n"
-#~ "                    </p>"
-
-#~ msgid "<span>New</span>"
-#~ msgstr "<span>Nouvelle</span>"
-
-#~ msgid "<span>Reports</span>"
-#~ msgstr "<span>Rapports</span>"
-
-#~ msgid "<span>View</span>"
-#~ msgstr "<span>Vue</span>"
-
-#~ msgid "Add a description..."
-#~ msgstr "Ajouter une description…"
-
-#~ msgid "All"
-#~ msgstr "Tous"
-
-#~ msgid "Attachments"
-#~ msgstr "Pièces jointes"
-
-#~ msgid "Author"
-#~ msgstr "Auteur"
-
-#~ msgid "Availability"
-#~ msgstr "Disponibilité"
-
-#~ msgid "Available"
-#~ msgstr "Disponible"
-
-#~ msgid "Based on"
-#~ msgstr "Basée sur"
-
-#~ msgid "Blocked"
-#~ msgstr "Bloqué"
-
-#~ msgid "Can be Expensed"
-#~ msgstr "Peut être inséré dans une note de frais"
-
-#~ msgid "Capacity"
-#~ msgstr "Capacité"
-
-#~ msgid "Click to start a new work order."
-#~ msgstr "Cliquez pour démarrer un nouvel ordre de travail"
-
-#~ msgid "Color"
-#~ msgstr "Couleur"
-
-#~ msgid "Confirmed"
-#~ msgstr "Confirmée"
-
-#~ msgid "Current Production"
-#~ msgstr "Production actuelle"
-
-#~ msgid "Dashboard"
-#~ msgstr "Tableau de bord"
-
-#~ msgid "Date"
-#~ msgstr "Date "
-
-#~ msgid "Destination Location"
-#~ msgstr "Emplacement de destination"
-
-#~ msgid "Discard"
-#~ msgstr "Annuler"
-
-#~ msgid "Draft"
-#~ msgstr "Brouillon"
-
-#~ msgid "Duration"
-#~ msgstr "Durée"
-
-#~ msgid "Effective Date"
-#~ msgstr "Date effective"
-
-#~ msgid "Expected Date"
-#~ msgstr "Date prévue"
-
-#~ msgid "Extra Features"
-#~ msgstr "Fonctionnalités additionnelles"
-
-#~ msgid "Filters"
-#~ msgstr "Filtres"
-
-#~ msgid "Finish Order"
-#~ msgstr "Terminer l'ordre"
-
-#~ msgid "Finished"
-#~ msgstr "Terminé"
-
-#~ msgid "Gives the sequence order when displaying a list of tasks."
-#~ msgstr "Donne la séquence (l'ordre) d'affichage d'une liste de tâches"
-
-#~ msgid "Group by..."
-#~ msgstr "Regrouper par..."
-
-#~ msgid "High"
-#~ msgstr "Élevé"
-
-#~ msgid ""
-#~ "If checked, when the previous move of the move (which was generated by a "
-#~ "next procurement) is cancelled or split, the move generated by this move "
-#~ "will too"
-#~ msgstr ""
-#~ "Si coché, lorsque le mouvement précédant (qui a été généré par un "
-#~ "approvisionnement prochain) est annulé ou divisé, le mouvement généré par "
-#~ "ce mouvement l'est aussi."
-
-#~ msgid "In Progress"
-#~ msgstr "En cours"
-
-#~ msgid "Lots"
-#~ msgstr "Lots"
-
-#~ msgid "Low"
-#~ msgstr "Faible"
-
-#~ msgid "Maintenance"
-#~ msgstr "Maintenance"
-
-#~ msgid "Message"
-#~ msgstr "Message"
-
-#~ msgid "Miscellaneous"
-#~ msgstr "Divers"
-
-#~ msgid "More <i class=\"fa fa-caret-down\"/>"
-#~ msgstr "Plus <i class=\"fa fa-caret-down\"/>"
-
-#~ msgid "Move"
-#~ msgstr "Mouvement"
-
-#~ msgid "Moves"
-#~ msgstr "Mouvements"
-
-#~ msgid "None"
-#~ msgstr "Aucun"
-
-#~ msgid "Operations"
-#~ msgstr "Opérations"
-
-#~ msgid "Orders"
-#~ msgstr "Tri"
-
-#~ msgid "Partially Available"
-#~ msgstr "Partiellement disponible"
-
-#~ msgid "Pause"
-#~ msgstr "Mettre en attente"
-
-#~ msgid "Performance"
-#~ msgstr "Performance"
-
-#~ msgid "Picking Type"
-#~ msgstr "Type de préparation"
-
-#~ msgid "Planned Date"
-#~ msgstr "Date planifiée"
-
-#~ msgid "Procurement Group"
-#~ msgstr "Groupe d'approvisionnement"
-
-#~ msgid "Production Workcenter"
-#~ msgstr "Poste de charge"
-
-#~ msgid "Propagate cancel and split"
-#~ msgstr "Propager les annulations et les divisions"
-
-#~ msgid "Quality"
-#~ msgstr "Qualité"
-
-#~ msgid "Quantity Available"
-#~ msgstr "Quantité disponible"
-
-#~ msgid "Quantity Produced"
-#~ msgstr "Quantité produite"
-
-#~ msgid "Quants"
-#~ msgstr "Quants"
-
-#~ msgid "Reason"
-#~ msgstr "Motif"
-
-#~ msgid "Reporting"
-#~ msgstr "Rapport"
-
-#~ msgid "Save"
-#~ msgstr "Sauvegarder"
-
-#~ msgid "Scrap"
-#~ msgstr "Rebut"
-
-#~ msgid "Scrap Move"
-#~ msgstr "Mise au rebut"
-
-#~ msgid "Scraps"
-#~ msgstr "Rebut"
-
-#~ msgid "Search Work Orders"
-#~ msgstr "Recherche dans les ordres de travail"
-
-#~ msgid "Settings"
-#~ msgstr "Configuration"
-
-#~ msgid "Source"
-#~ msgstr "Origine"
-
-#~ msgid "Specify whether the product can be selected in an HR expense."
-#~ msgstr "Indiquer si l'article peut être sélectionné dans une note de frais."
-
-#~ msgid "Start Working"
-#~ msgstr "Commencer le travail"
-
-#~ msgid "State"
-#~ msgstr "État"
-
-#~ msgid "Stock Moves"
-#~ msgstr "Mouvements de stocks"
-
-#~ msgid "The picking type determines the picking view"
-#~ msgstr "Le type de préparation détermine la vue de préparation"
-
-#~ msgid "This Month"
-#~ msgstr "Ce mois"
-
-#~ msgid "This Year"
-#~ msgstr "Cette année"
-
-#~ msgid "Time Tracking"
-#~ msgstr "Suivi des heures"
-
-#~ msgid "To Do"
-#~ msgstr "À faire"
-
-#~ msgid ""
-#~ "To manufacture or assemble products, and use raw materials and\n"
-#~ "            finished products you must also handle manufacturing "
-#~ "operations.\n"
-#~ "            Manufacturing operations are often called Work Orders. The "
-#~ "various\n"
-#~ "            operations will have different impacts on the costs of\n"
-#~ "            manufacturing and planning depending on the available "
-#~ "workload."
-#~ msgstr ""
-#~ "Pour fabriquer ou assembler des produits, et utiliser des matières "
-#~ "premières et\n"
-#~ "des produits finis vous devez également gérer les opérations de "
-#~ "fabrication.\n"
-#~ "Les opérations de fabrication sont souvent appelées ordres de travail. \n"
-#~ "Les différentes opérations influeront différemment sur les coûts de\n"
-#~ "fabrication et sur la planification selon la charge de travail disponible."
-
-#~ msgid "Today"
-#~ msgstr "Aujourd'hui"
-
-#~ msgid "Tracking"
-#~ msgstr "Suivi"
-
-#~ msgid "Unreserve"
-#~ msgstr "Annuler la réservation"
-
-#~ msgid "Variant"
-#~ msgstr "Variante"
-
-#~ msgid "Very High"
-#~ msgstr "Très haut"
-
-#~ msgid "Waiting"
-#~ msgstr "En attente"
-
-#~ msgid "Waiting Availability"
-#~ msgstr "Attente de disponibilité"
-
-#~ msgid ""
-#~ "When processing a sales order for this product, the delivery order\n"
-#~ "                                will contain the raw materials, instead "
-#~ "of the finished product."
-#~ msgstr ""
-#~ "Lors du traitement de la commande de ce produit, le bon de livraison\n"
-#~ "contiendra les matières premières au lieu du produit fini."
-
-#~ msgid "Work Orders Planning"
-#~ msgstr "Planification des ordres de travail"
-
-#~ msgid ""
-#~ "Work Orders is the list of operations to be performed for each\n"
-#~ "            manufacturing order. Once you start the first work order of "
-#~ "a\n"
-#~ "            manufacturing order, the manufacturing order is "
-#~ "automatically\n"
-#~ "            marked as started. Once you finish the latest operation of a\n"
-#~ "            manufacturing order, the MO is automatically done and the "
-#~ "related\n"
-#~ "            products are produced."
-#~ msgstr ""
-#~ "Les ordres de travail sont la liste des opérations à effectuer pour "
-#~ "chaque\n"
-#~ "ordre de fabrication. Dès que commence le premier ordre de travail \n"
-#~ "d'un ordre de fabrication, celui-ci est automatiquement considéré comme "
-#~ "commencé. \n"
-#~ "Une fois la dernière opération d'un ordre de production terminée, \n"
-#~ "l'OF est automatiquement considéré comme terminé et les produits liés "
-#~ "sont fabriqués."
-
-#~ msgid "ir.attachment"
-#~ msgstr "ir.attachment"
-
-#~ msgid "last"
-#~ msgstr "dernier"
-
-#~ msgid "minutes"
-#~ msgstr "minutes"
-
-#~ msgid "to"
-#~ msgstr "au"

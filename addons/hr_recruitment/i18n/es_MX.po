@@ -46,6 +46,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_employee
+#, fuzzy
 msgid ""
 "\n"
 "<p>Dear all,</p>\n"
@@ -58,6 +59,19 @@ msgid ""
 ".</p>\n"
 "<p>Please welcome him/her and help him/her finding his/her marks.</p>"
 msgstr ""
+"\n"
+"<p>\n"
+"%if object.department_id:\n"
+"Estoy muy contento de anunciar que <strong> ${object.name} </strong> se "
+"unirá a nosotros como ${object.job_id.name}\n"
+"en ${object.department_id.name}.\n"
+"%else:\n"
+"Estoy muy contento de anunciar que <strong> ${object.name} </strong> se "
+"unirá a nosotros como a ${object.job_id.name}.\n"
+"%endif\n"
+"</p>\n"
+"<p>Por favor, darle la bienvenida / ella y ayudar a él / ella la búsqueda de "
+"su / sus marcas.</p>"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_1
@@ -1385,8 +1399,9 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#, fuzzy
 msgid "Reopen Application"
-msgstr ""
+msgstr "Aplicación"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment

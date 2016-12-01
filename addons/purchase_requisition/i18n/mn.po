@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:15+0000\n"
+"POT-Creation-Date: 2016-12-01 11:53+0000\n"
 "PO-Revision-Date: 2015-12-23 08:13+0000\n"
 "Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -89,7 +89,7 @@ msgid "Agreement Selection Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_11150
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10664
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
@@ -128,7 +128,7 @@ msgid "Cancelled"
 msgstr "Цуцлагдсан"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:98
+#: code:addons/purchase_requisition/purchase_requisition.py:99
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
@@ -395,6 +395,11 @@ msgid "Purchase Order"
 msgstr "Худалдан авах захиалга"
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Захиалгын мөр"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
 msgid "Purchase Orders"
 msgstr "Худалдан авах захиалгууд"
@@ -415,7 +420,7 @@ msgid "Purchase Requisition Line"
 msgstr "Худалдан авалтын шаардахын мөр"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:323
+#: code:addons/purchase_requisition/purchase_requisition.py:342
 #, python-format
 msgid "Purchase Requisition created"
 msgstr "Худалдан авалтын шаардах үүссэн"
@@ -584,13 +589,13 @@ msgid "Warehouse"
 msgstr "Агуулах"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:103
+#: code:addons/purchase_requisition/purchase_requisition.py:104
 #, python-format
 msgid "You cannot confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:118
+#: code:addons/purchase_requisition/purchase_requisition.py:119
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
@@ -606,160 +611,3 @@ msgstr "Жнь: OP0025"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "unknown"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Үйлдэл Шаардлагатай"
-
-#~ msgid "Bid Line Qty"
-#~ msgstr "Үнийн саналын мөрийн тоо"
-
-#~ msgid "Cancel"
-#~ msgstr "Цуцлах"
-
-#~ msgid "Cancel Choice"
-#~ msgstr "Сонголт цуцлах"
-
-#~ msgid "Cancel Purchase Order"
-#~ msgstr "Захиалга цуцлах"
-
-#~ msgid "Cancelled by the tender associated to this quotation."
-#~ msgstr "Энэ үнийн саналд холбогдсон тендерээр цуцлагдсан"
-
-#~ msgid "Change Bid line quantity"
-#~ msgstr "Үнийн саналын мөрийн тоо хэмжээг өөрчлөх"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Тоо хэмжээг өөрчлөх"
-
-#~ msgid "Choose product lines"
-#~ msgstr "Барааны мөрүүдээс сонгох"
-
-#~ msgid "Confirm Call"
-#~ msgstr "Дуудлагыг батлах"
-
-#~ msgid "Confirm Order"
-#~ msgstr "Захиалга батлах"
-
-#~ msgid "Confirm Purchase Order"
-#~ msgstr "Худалдан авах захиалгыг батлах"
-
-#~ msgid "Create Request for Quotation"
-#~ msgstr "Үнийн саналын хүсэлт үүсгэх"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
-
-#~ msgid "Followers"
-#~ msgstr "Дагагчид"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Дагагчид (Сувагууд)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Дагагчид (Харилцагчид)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr ""
-#~ "Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг "
-#~ "шаардана."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
-
-#~ msgid "Is Follower"
-#~ msgstr "Дагагч эсэх"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Сүүлийн зурвасын огноо"
-
-#~ msgid "Messages"
-#~ msgstr "Зурвасууд"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Зурвас болон харилцсан түүх"
-
-#~ msgid "New"
-#~ msgstr "Шинэ"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Үйлдлийн тоо"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Үйлдэл шаардлагатай зурвасын тоо"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Уншаагүй зурвасын тоо"
-
-#~ msgid "Order Date"
-#~ msgstr "Захиалгын Огноо"
-
-#~ msgid "PO Created"
-#~ msgstr "Худалдан авах захиалга үүссэн"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Захиалгын мөр"
-
-#~ msgid "Purchase Order Lines"
-#~ msgstr "Худалдан авалтын захиалгын мөр"
-
-#~ msgid "Purchase Requisition Partner"
-#~ msgstr "Худалдан авалтын шаардахын харилцагч"
-
-#~ msgid "Purchase Requisitions (exclusive)"
-#~ msgstr "Худалдан авах шаардах (цор ганц)"
-
-#~ msgid "RFQ created"
-#~ msgstr "Үнийн хүсэлт үүссэн"
-
-#~ msgid "Reference"
-#~ msgstr "Дугаар"
-
-#~ msgid "Request a Quotation"
-#~ msgstr "Үнийн санал хүсэх"
-
-#~ msgid "Requests for Quotation"
-#~ msgstr "Үнийн саналын хүсэлт"
-
-#~ msgid "Scheduled Ordering Date"
-#~ msgstr "Товлосон захиалгын огноо"
-
-#~ msgid ""
-#~ "Select only one RFQ (exclusive):  On the confirmation of a purchase "
-#~ "order, it cancels the remaining purchase order.\n"
-#~ "Select multiple RFQ:  It allows to have multiple purchase orders.On "
-#~ "confirmation of a purchase order it does not cancel the remaining orders"
-#~ msgstr ""
-#~ "Зөвхөн ганц үнийн хүсэлт сонгох (цор ганц):  Худалдан авах захиалгыг "
-#~ "батлахад энэ тохиолдолд бусад худалдан авах захиалгыг цуцладаг.\n"
-#~ "Олон үнийн хүсэлт сонгох:  Энэ олон худалдан авах захиалгыг зөвшөөрдөг. "
-#~ "Худалдан авах захиалгыг батлахад бусад худалдан авах захиалгыг "
-#~ "цуцладаггүй."
-
-#~ msgid "Send RFQ by Email"
-#~ msgstr "Үнийн хүсэлтийг эмэйлээр илгээх"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Уншаагүй Зурвасууд"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Уншаагүй зурвасын тоолуур"
-
-#~ msgid "Vendors"
-#~ msgstr "Нийлүүлэгч"
-
-#~ msgid "Website Messages"
-#~ msgstr "Вебсайтын зурвасууд"
-
-#~ msgid "Website communication history"
-#~ msgstr "Вебсайтын харилцааны түүх"
-
-#~ msgid "You have already generate the purchase order(s)."
-#~ msgstr "Аль хэдийн худалдан авалтын захиалга үүссэн"
-
-#~ msgid ""
-#~ "You have already one %s purchase order for this partner, you must cancel "
-#~ "this purchase order to create a new quotation."
-#~ msgstr ""
-#~ "Танд %s гэсэн хэзээний нэг худалд авалтын захиалга энэ харилцагчид байна, "
-#~ "шинэ үнийн санал үүсгэхийн тулд эхлээд энэ худалдан авалтын захиалгыг "
-#~ "цуцлах ёстой."

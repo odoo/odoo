@@ -228,7 +228,7 @@ msgstr "Tentang penggunaan Odoo Anda"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_active
 msgid "Active"
-msgstr ""
+msgstr "Aktif"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -295,7 +295,7 @@ msgstr "Semua Jawaban"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Archived"
-msgstr ""
+msgstr "Diarsipkan"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -681,7 +681,7 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_6
 msgid "Human Resources"
-msgstr ""
+msgstr "Sumber Daya Manusia"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_3
@@ -1623,6 +1623,15 @@ msgstr "Apa yang Anda terima untuk?"
 #: model:ir.ui.view,arch_db:survey.sfinished
 msgid "Thank you!"
 msgstr ""
+"<p>Dear ${object.partner_name atau 'pelamar'},</p>\n"
+"        <p>Kami terima kasih atas minat Anda pada perusahaan kami dan untuk "
+"aplikasi Anda.\n"
+"        Sayangnya, profil Anda tidak cocok dengan kebutuhan kita atau "
+"kampanye rekrutmen kami telah mencapai istilah.</p>\n"
+"        <p>Jika Anda ingin informasi lebih lanjut, jangan ragu untuk "
+"menghubungi kami melalui telepon.</p>\n"
+"        <p>Salam</p>\n"
+"        <br>${object.user_id dan object.user_id.signature | aman atau ''}"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_3
@@ -2064,7 +2073,7 @@ msgstr "Login Member"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid "of"
-msgstr ""
+msgstr "dari"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished

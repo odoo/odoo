@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-06-28 00:05+0000\n"
-"Last-Translator: palica <pavol.cupka@gmail.com>\n"
+"PO-Revision-Date: 2016-09-22 13:46+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
@@ -110,6 +110,8 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -542,7 +544,7 @@ msgstr "Rôzne ceny za zákaznícky segment"
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Disc.(%)"
-msgstr ""
+msgstr "Zľava(%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
@@ -588,8 +590,9 @@ msgstr "Zobraziť marže a cenové ponuky na objednávkach predaja"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
+#, fuzzy
 msgid "Do not personalize sale orders and invoice reports"
-msgstr ""
+msgstr "Zobraziť Incoterms na objednávkach predaja a faktúrach"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -640,8 +643,9 @@ msgstr "Sprievodca zostavovaním emailov"
 
 #. module: sale
 #: model:ir.model,name:sale.model_survey_mail_compose_message
+#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr ""
+msgstr "Sprievodca zostavovaním emailov"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
@@ -1450,8 +1454,9 @@ msgstr "Analýza cenových ponúk"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#, fuzzy
 msgid "Quotations Sent"
-msgstr ""
+msgstr "Cenová ponuka poslaná"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1465,8 +1470,9 @@ msgstr "Odkaz na dokument, ktorý vytvoril túto požiadavku objednávky predaja
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
+#, fuzzy
 msgid "Reinvoice Costs"
-msgstr ""
+msgstr "Stav faktúry"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.report_configuration_action
@@ -1752,9 +1758,12 @@ msgstr "Zobraziť cenníky zákazníkom"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
+#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
+"Niektoré výrobky môžu byť predávané / zakúpené v inej mernej jednotke "
+"(pokročilé)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -1946,8 +1955,9 @@ msgstr ""
 
 #. module: sale
 #: selection:product.template,track_service:0
+#, fuzzy
 msgid "Timesheets on project"
-msgstr ""
+msgstr "Časové rozvrhy na kontrakte"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -1999,8 +2009,9 @@ msgstr "Merná jednotka"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
+#, fuzzy
 msgid "Units of Measure"
-msgstr ""
+msgstr "Merná jednotka"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2126,8 +2137,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
+#, fuzzy
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr ""
+msgstr "Riadky objednávky predaja pripravené na fakturáciu"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -2159,8 +2171,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
+#, fuzzy
 msgid "account analytic line"
-msgstr ""
+msgstr "Analytický riadok"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form

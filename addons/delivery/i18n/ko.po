@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:15+0000\n"
-"PO-Revision-Date: 2016-02-11 10:34+0000\n"
+"PO-Revision-Date: 2016-10-31 14:46+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
 "Language: ko\n"
@@ -439,8 +439,9 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#, fuzzy
 msgid "Delivery Information"
-msgstr ""
+msgstr "운송회사 정보"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -580,7 +581,7 @@ msgstr "비용 계정"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
 msgid "Expense Invoice Policy"
-msgstr ""
+msgstr "경비 송장 정책"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
@@ -608,12 +609,12 @@ msgstr "팔로워"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "팔로워"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "팔로워(파트너)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_virtual_available
@@ -683,8 +684,9 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_height
+#, fuzzy
 msgid "Height"
-msgstr ""
+msgstr "무게"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -910,8 +912,9 @@ msgstr "생산 소요 시간"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
+#, fuzzy
 msgid "Margin"
-msgstr ""
+msgstr "총 이익"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
@@ -930,8 +933,9 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
+#, fuzzy
 msgid "Max Weight"
-msgstr ""
+msgstr "무게"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -997,8 +1001,9 @@ msgstr "이름"
 
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
+#, fuzzy
 msgid "No carrier integration"
-msgstr ""
+msgstr "운송회사 정보"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:63
@@ -1076,20 +1081,22 @@ msgstr "내보내기"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+#, fuzzy
 msgid "Package"
-msgstr ""
+msgstr "꾸러미"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
+#, fuzzy
 msgid "Package Code"
-msgstr ""
+msgstr "꾸러미"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
 #: code:addons/delivery/models/stock_picking.py:129
-#, python-format
+#, fuzzy, python-format
 msgid "Package Details"
-msgstr ""
+msgstr "꾸러미"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1098,8 +1105,9 @@ msgstr "꾸러미"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
+#, fuzzy
 msgid "Packaging"
-msgstr ""
+msgstr "꾸러미"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_pack_operation
@@ -1693,8 +1701,9 @@ msgstr "추적"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
+#, fuzzy
 msgid "Tracking Reference"
-msgstr ""
+msgstr "내부 참조"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1751,7 +1760,7 @@ msgstr "읽지 않은 메시지"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "읽지 않은 메시지"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable

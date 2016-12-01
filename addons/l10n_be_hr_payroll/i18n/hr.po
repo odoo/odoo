@@ -1,15 +1,16 @@
-# Translation of OpenERP Server.
+# Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * l10n_be_hr_payroll
 #
 # Translators:
+# Filip Cuk <filipcuk2@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-21 09:29+0000\n"
-"PO-Revision-Date: 2015-09-08 05:24+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-10-15 21:45+0000\n"
+"Last-Translator: Filip Cuk <filipcuk2@gmail.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
@@ -51,12 +52,12 @@ msgstr "Ugovor"
 #. module: l10n_be_hr_payroll
 #: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_employee_disabled_children_bool
 msgid "Disabled Children"
-msgstr ""
+msgstr "Invalidna djeca"
 
 #. module: l10n_be_hr_payroll
 #: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_employee_disabled_spouse_bool
 msgid "Disabled Spouse"
-msgstr ""
+msgstr "Bračni partner invalid"
 
 #. module: l10n_be_hr_payroll
 #: model:ir.model,name:l10n_be_hr_payroll.model_hr_employee
@@ -66,7 +67,7 @@ msgstr "Radnik"
 #. module: l10n_be_hr_payroll
 #: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_contract_insurance_employee_deduction
 msgid "Insurance Group - by worker "
-msgstr ""
+msgstr "Grupa osiguranja - po radniku"
 
 #. module: l10n_be_hr_payroll
 #: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_contract_misc_onss_deduction
@@ -86,12 +87,12 @@ msgstr ""
 #. module: l10n_be_hr_payroll
 #: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_employee_resident_bool
 msgid "Nonresident"
-msgstr ""
+msgstr "Nije stanovnik"
 
 #. module: l10n_be_hr_payroll
 #: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_employee_disabled_children_number
 msgid "Number of disabled children"
-msgstr ""
+msgstr "Broj invalidne djece"
 
 #. module: l10n_be_hr_payroll
 #: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_contract_travel_reimbursement_amount
@@ -101,27 +102,27 @@ msgstr ""
 #. module: l10n_be_hr_payroll
 #: model:ir.model.fields,field_description:l10n_be_hr_payroll.field_hr_employee_spouse_fiscal_status
 msgid "Tax status for spouse"
-msgstr ""
+msgstr "Status poreza u depozitima"
 
 #. module: l10n_be_hr_payroll
 #: selection:hr.employee,spouse_fiscal_status:0
 msgid "With Income"
-msgstr ""
+msgstr "Sa primanjima"
 
 #. module: l10n_be_hr_payroll
 #: selection:hr.employee,spouse_fiscal_status:0
 msgid "Without Income"
-msgstr ""
+msgstr "Bez primanja"
 
 #. module: l10n_be_hr_payroll
 #: model:ir.model.fields,help:l10n_be_hr_payroll.field_hr_employee_disabled_children_bool
 msgid "if recipient children is/are declared disabled by law"
-msgstr ""
+msgstr "Ukoliko su djeca imaju status invalida"
 
 #. module: l10n_be_hr_payroll
 #: model:ir.model.fields,help:l10n_be_hr_payroll.field_hr_employee_resident_bool
 msgid "if recipient lives in a foreign country"
-msgstr ""
+msgstr "Ako primatelj živi u drugoj državi"
 
 #. module: l10n_be_hr_payroll
 #: model:ir.model.fields,help:l10n_be_hr_payroll.field_hr_employee_disabled_spouse_bool
@@ -131,12 +132,9 @@ msgstr ""
 #. module: l10n_be_hr_payroll
 #: model:ir.ui.view,arch_db:l10n_be_hr_payroll.hr_employee_form__l10n_be_view_for
 msgid "if spouse has professionnel income or not"
-msgstr ""
+msgstr "Ako supružnik ima primanja ili ne"
 
 #. module: l10n_be_hr_payroll
 #: model:ir.ui.view,arch_db:l10n_be_hr_payroll.hr_employee_form__l10n_be_view_for
 msgid "number of dependent children declared as disabled"
 msgstr ""
-
-#~ msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-#~ msgstr "Pogreška! Ne možete kreirati rekurzivnu hijerarhiju radnika."

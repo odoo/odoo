@@ -481,7 +481,7 @@ msgstr "Etapas de Campaña"
 #: model:ir.ui.menu,name:mass_mailing.mass_mailing_tag_menu
 #: model:ir.ui.view,arch_db:mass_mailing.mail_mass_mailing_tag_view_form
 msgid "Campaign Tags"
-msgstr ""
+msgstr "Etiquetas de campaña"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mass_mailing_config_settings_group_mass_mailing_campaign
@@ -528,7 +528,7 @@ msgstr "Haga clic aquí para crear un nuevo correo."
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.action_email_template_marketing
 msgid "Click here to create a new template."
-msgstr ""
+msgstr "Clica aquí para crear un nuevo modelo"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,help:mass_mailing.mass_mailing_tag_action
@@ -874,7 +874,7 @@ msgstr "Fallido"
 #: model:mail.mass_mailing,name:mass_mailing.mass_mail_1
 #: model:utm.source,name:mass_mailing.mass_mail_1_utm_source
 msgid "First Newsletter"
-msgstr ""
+msgstr "Primer Boletín de noticias"
 
 #. module: mass_mailing
 #: selection:mail.mass_mailing,reply_to_mode:0
@@ -964,7 +964,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_hr_department
 msgid "Hr Department"
-msgstr ""
+msgstr "Departamento de Recursos Humanos"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_id
@@ -987,6 +987,9 @@ msgid ""
 "related mail_mail can be deleted separately from its statistics. However the "
 "ID is needed for several action and controllers."
 msgstr ""
+"La ID del mail_mail relacionado. Este campo es un campo entero porque el "
+"mail_mail relacionado se puede eliminar por separado de sus estadísticas. "
+"Sin embargo la ID es necesaria para muchas acciones y controladores."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_unique_ab_testing
@@ -994,6 +997,9 @@ msgid ""
 "If checked, recipients will be mailed only once, allowing to send various "
 "mailings in a single campaign to test the effectiveness of the mailings."
 msgstr ""
+"Si está seleccionado, el correo se enviará a los destinatarios una sola vez, "
+"permitiendo realizar varios envíos en una sola campaña para comprobar la "
+"efectividad de los envíos."
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mass_mailing.py:640
@@ -1126,6 +1132,8 @@ msgid ""
 "Mail templates are meant to design e-mails that can be used for several mass "
 "mailing campaigns."
 msgstr ""
+"Las plantillas Mail están creadas para diseñar e-mails que se pueden usar "
+"para muchas campañas masivas de mailing."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_test_mass_mailing_id
@@ -1617,7 +1625,7 @@ msgstr "Mes planificado"
 #: model:mail.mass_mailing,name:mass_mailing.mass_mail_2
 #: model:utm.source,name:mass_mailing.mass_mail_2_utm_source
 msgid "Second Newsletter"
-msgstr ""
+msgstr "Segundo Boletín de Noticias"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.FieldTextHtmlInline
@@ -1865,6 +1873,8 @@ msgstr "El contacto ha elegido no recibir más correos de esta lista"
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_medium_id
 msgid "This is the delivery method, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
+"Éste es el método de entrega, por ejemplo, envío postal, Email, o el anuncio "
+"en un Bammer"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_source_id
@@ -1872,6 +1882,8 @@ msgid ""
 "This is the link source, e.g. Search Engine, another domain, or name of "
 "email list"
 msgstr ""
+"Ésta es la fuente del link, por ejemplo, buscador, otro dominio, o nombre de "
+"lista de email"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_source_id
@@ -1879,6 +1891,8 @@ msgid ""
 "This is the link source, e.g. Search Engine, another domain,or name of email "
 "list"
 msgstr ""
+"Ésta es la fuente del link, por ejemplo, buscador, otro dominio, o nombre de "
+"lista de email"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1892,6 +1906,8 @@ msgid ""
 "This name helps you tracking your different campaign efforts, e.g. "
 "Fall_Drive, Christmas_Special"
 msgstr ""
+"Este nombre te ayuda a hacer el seguimiento de tus diferentes resultados de "
+"campañas, por ejemplo Fall_Drive, Christmas_Special "
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1981,7 +1997,7 @@ msgstr "Usted recibe un descuento del 20% por registrarse!"
 #: code:addons/mass_mailing/controllers/main.py:25
 #, python-format
 msgid "You have been unsubscribed successfully"
-msgstr ""
+msgstr "Tu suscripción ha sido eliminada correctamente."
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -2052,225 +2068,3 @@ msgstr "desconocido"
 #: model:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "© 2014 All Rights Reserved"
 msgstr "© 2014 Todos los derechos reservados"
-
-#~ msgid ""
-#~ "&amp;nbsp;\n"
-#~ "                                                <span class=\"fa fa-10x "
-#~ "fa-music\"/>\n"
-#~ "                                                &amp;nbsp;"
-#~ msgstr ""
-#~ "&amp;nbsp;\n"
-#~ "<span class=\"fa fa-10x fa-music\"/>\n"
-#~ "&amp;nbsp;"
-
-#~ msgid ""
-#~ "&amp;nbsp;\n"
-#~ "                                <span class=\"fa fa-10x fa-music\"/>\n"
-#~ "                                &amp;nbsp;"
-#~ msgstr ""
-#~ "&amp;nbsp;\n"
-#~ "<span class=\"fa fa-10x fa-music\"/>\n"
-#~ "&amp;nbsp;"
-
-#~ msgid ""
-#~ "&amp;nbsp;\n"
-#~ "                                <span class=\"fa fa-check fa-3x\"/>\n"
-#~ "                                &amp;nbsp;"
-#~ msgstr ""
-#~ "&amp;nbsp;\n"
-#~ "<span class=\"fa fa-check fa-3x\"/>\n"
-#~ "&amp;nbsp;"
-
-#~ msgid ""
-#~ "&amp;nbsp;\n"
-#~ "                                <span class=\"fa fa-truck fa-3x\"/>\n"
-#~ "                                &amp;nbsp;"
-#~ msgstr ""
-#~ "&amp;nbsp;\n"
-#~ "<span class=\"fa fa-truck fa-3x\"/>\n"
-#~ "&amp;nbsp;"
-
-#~ msgid ""
-#~ "&amp;nbsp;\n"
-#~ "                                <span class=\"fa fa-usd fa-3x\"/>\n"
-#~ "                                &amp;nbsp;"
-#~ msgstr ""
-#~ "&amp;nbsp;\n"
-#~ "<span class=\"fa fa-usd fa-3x\"/>\n"
-#~ "&amp;nbsp;"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-align-justify fa-stack-1x\" style=\" margin-"
-#~ "top: 0.7em; height: 0.9em; display: inline-block; overflow: hidden;\"/>\n"
-#~ "            <i class=\"fa fa-arrow-down fa-stack-1x\" style=\"display: "
-#~ "inline-block; font-size: 0.6em; margin-top: -0.15em;\"/>\n"
-#~ "        </span> Footers"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "<i class=\"fa fa-align-justify fa-stack-1x\" style=\" margin-top: 0.7em; "
-#~ "height: 0.9em; display: inline-block; overflow: hidden;\"/>\n"
-#~ "<i class=\"fa fa-arrow-down fa-stack-1x\" style=\"display: inline-block; "
-#~ "font-size: 0.6em; margin-top: -0.15em;\"/>\n"
-#~ "</span> Pies"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-align-justify fa-stack-1x\" style=\"margin-"
-#~ "top: -0.15em; height: 0.9em; display: inline-block; overflow: hidden;\"/"
-#~ ">\n"
-#~ "            <i class=\"fa fa-arrow-up fa-stack-1x\" style=\"margin-top: "
-#~ "0.25em; display: inline-block; font-size: 0.6em;\"/>\n"
-#~ "        </span> Headers"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "<i class=\"fa fa-align-justify fa-stack-1x\" style=\"margin-top: -0.15em; "
-#~ "height: 0.9em; display: inline-block; overflow: hidden;\"/>\n"
-#~ "<i class=\"fa fa-arrow-up fa-stack-1x\" style=\"margin-top: 0.25em; "
-#~ "display: inline-block; font-size: 0.6em;\"/>\n"
-#~ "</span> Cabeceras"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-align-left fa-stack-1x\" style=\"display: "
-#~ "inline-block; height: 0.93em; margin-top: 0.3em; overflow: hidden;\"/>\n"
-#~ "        </span> Extra"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "<i class=\"fa fa-align-left fa-stack-1x\" style=\"display: inline-block; "
-#~ "height: 0.93em; margin-top: 0.3em; overflow: hidden;\"/>\n"
-#~ "</span> Extra"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-align-left fa-stack-1x\"/>\n"
-#~ "        </span> Body"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "<i class=\"fa fa-align-left fa-stack-1x\"/>\n"
-#~ "</span> Cuerpo"
-
-#~ msgid "Action Needed"
-#~ msgstr "Acción Necesaria"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Fecha del último mensaje publicado en el registro."
-
-#~ msgid ""
-#~ "Dear Bob,<br/>\n"
-#~ "                                    We would like you to know that your "
-#~ "order has shipped! To track your order or make any changes please click "
-#~ "the \"my order\" button below."
-#~ msgstr ""
-#~ "Estimado Bob,<br/>\n"
-#~ "Nos gustaría informarte que tu pedido ha sido enviado! Para realizar un "
-#~ "seguimiento de su pedido o hacer cualquier cambio por favor haga clic en "
-#~ "el botón \"mi pedido\" más adelante."
-
-#~ msgid "Email Campaign - Products"
-#~ msgstr "Campaña email - productos"
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canales)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Empresas)"
-
-#~ msgid ""
-#~ "Great stories have personality. Consider telling a great story that "
-#~ "provides personality. Writing a story with personality for potential "
-#~ "clients will assist with making a relationship connection. This shows up "
-#~ "in small quirks like word choices or phrases. Write from your point of "
-#~ "view, not from someone else's experience.<br/>"
-#~ msgstr ""
-#~ "Las grandes historias tienen personalidad. Piensa contar una buena "
-#~ "historia que aporte personalidad. Escribir una historia con personalidad "
-#~ "para clientes potenciales ayudará creando una relación de conexión. Esto "
-#~ "se muestra en pequeñas porciones, como cuando elegimos palabras o frases. "
-#~ "Escribe desde tu punto de vista, no desde la experiencia de otra persona. "
-#~ "<br/>"
-
-#~ msgid ""
-#~ "ID of the related mail_mail. This field is an integer field becausethe "
-#~ "related mail_mail can be deleted separately from its statistics.However "
-#~ "the ID is needed for several action and controllers."
-#~ msgstr ""
-#~ "ID del objeto mail.mail relacionado. Esta campo es un campo entero porque "
-#~ "el registro relacionado se puede eliminar separadamente de sus "
-#~ "estadísticas. Sin embargo, el ID es necesario para varios acciones y "
-#~ "controladores."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención."
-
-#~ msgid ""
-#~ "If checked, recipients will be mailed only once, allowing to sendvarious "
-#~ "mailings in a single campaign to test the effectivenessof the mailings."
-#~ msgstr ""
-#~ "Si está marcado, se enviará el correo a los destinatarios una vez, "
-#~ "permitiendo realizar varios  envíos en una sola campaña para probar la "
-#~ "efectividad de los envíos."
-
-#~ msgid "Is Follower"
-#~ msgstr "Es un seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Fecha del último mensaje"
-
-#~ msgid "Messages"
-#~ msgstr "Mensajes"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de acciones"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensajes que requieren una acción"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensajes no leidos"
-
-#~ msgid "Open Mass Mailing Menu"
-#~ msgstr "Abrir Menú de Correo Masivo"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Éste es un nombre que facilita la búsqueda de los diferentes esfuerzos de "
-#~ "campañas. Por ejemplo: campaña de Navidad, rebajas de otoño"
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr ""
-#~ "Éste es el método de envío. Por ejemplo: carta postal, correo "
-#~ "electrónico, publicidad web"
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr ""
-#~ "Ésta es la fuente del enlace. Por ejemplo: motor de búsqueda, otro "
-#~ "dominio o nombre de unos lista de correos"
-
-#~ msgid "Tracked Link"
-#~ msgstr "Link en Seguimiento"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Mensajes sin leer"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de mensajes no leidos"
-
-#~ msgid "Asset Category"
-#~ msgstr "Categoría de activo"
-
-#~ msgid "Equipment"
-#~ msgstr "Equipamiento"
-
-#~ msgid "Maintenance Requests"
-#~ msgstr "Peticiones de mantenimiento"

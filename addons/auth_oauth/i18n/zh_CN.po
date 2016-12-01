@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-06-26 00:54+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2016-09-23 09:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
 "language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -79,18 +79,20 @@ msgid ""
 "                                        Now configure the allowed pages on "
 "which you will be redirected."
 msgstr ""
+"检查此申请是否已经在 <b>Web 申请</b>上被设置. \n"
+"现在你将被重定向到有权限的页面进行配置."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
 "Click on <b>Create Project</b> and enter the project name and \n"
 "                                        other details."
-msgstr ""
+msgstr "点击<b>创建项目</b> 输入项目名称和细节."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Click on <b>Use Google APIs</b>"
-msgstr ""
+msgstr "点击<b>使用 Google APIs</b>"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_client_id
@@ -154,7 +156,7 @@ msgstr "显示名称"
 msgid ""
 "Fill in your address, email and the product name (for example odoo) \n"
 "                                        and then save."
-msgstr ""
+msgstr "输入你的地址, 邮件和产品名称 (例如 odoo) 然后点击保存."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
@@ -274,6 +276,8 @@ msgid ""
 "                                        (from <b>API Manager</b>) then "
 "select <b>OAuth consent screen</b>."
 msgstr ""
+"在左侧菜单中, 选择子菜单 <b> Credentials </b> (从 <b>API Manager</b>)开始\n"
+",然后选择 <b>OAuth consent screen</b>."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -316,8 +320,8 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"选择此“警告“选项，将通知用户此消息。\r\n"
-"选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\r\n"
+"选择此“警告“选项，将通知用户此消息。\n"
+"选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\n"
 "消息写入下一个字段。"
 
 #. module: auth_oauth
@@ -333,7 +337,7 @@ msgstr "显示向导"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_tutorial_enabled
 msgid "Show tutorial"
-msgstr ""
+msgstr "显示向导"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:96
@@ -366,7 +370,7 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Then click on <b>Create</b>."
-msgstr ""
+msgstr "然后点击<b>创建</b>"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
@@ -403,6 +407,8 @@ msgid ""
 "                                        Copy paste the following link in the "
 "box"
 msgstr ""
+"为了实现这个, 完成此字段<b>Authorized redirect URIs</b>.复制\n"
+"粘贴下列连接"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -497,42 +503,3 @@ msgstr "ir.config_parameter"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
 msgid "unknown"
 msgstr "unknown"
-
-#~ msgid ""
-#~ "<br/>\n"
-#~ "                                    - Ceate a new project<br/>\n"
-#~ "                                    - Go to Api Access<br/>\n"
-#~ "                                    - Create an oauth client_id<br/>\n"
-#~ "                                    - Edit settings and set both "
-#~ "Authorized Redirect URIs and Authorized JavaScript Origins to your "
-#~ "hostname.<br/>\n"
-#~ "                                    <br/>\n"
-#~ "                                    Now copy paste the client_id here:"
-#~ msgstr ""
-#~ "<br/>\n"
-#~ "                                    - 创建一个新的项目<br/>\n"
-#~ "                                    - 进入 Api 权限<br/>\n"
-#~ "                                    - 创建一个　oauth client_id<br/>\n"
-#~ "                                    - 编辑设置和设置授权重定向的URI和源于"
-#~ "你的主机名授权的JavaScript。<br/>\n"
-#~ "                                    <br/>\n"
-#~ "                                    现在在这里复制 client_id :"
-
-#~ msgid "Currency id"
-#~ msgstr "货币id"
-
-#~ msgid "Google APIs console"
-#~ msgstr "Google APIs 控制台"
-
-#~ msgid ""
-#~ "To setup the signin process with Google, first you have to perform the "
-#~ "following steps:<br/>\n"
-#~ "                                    <br/>\n"
-#~ "                                    - Go to the"
-#~ msgstr ""
-#~ "设置用Google登陆的流程，首先要遵循以下步骤：<br/>\n"
-#~ "                                    <br/>\n"
-#~ "                                    - 进入"
-
-#~ msgid "Sequence"
-#~ msgstr "序号"

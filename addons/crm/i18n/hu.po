@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:13+0000\n"
-"PO-Revision-Date: 2016-06-06 19:55+0000\n"
+"PO-Revision-Date: 2016-09-23 13:51+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
 "hu/)\n"
@@ -252,6 +252,13 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"<p>Tisztelt ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>Ez a lehetőség: <strong>${object.name}</strong> az elmúlt 5 napja nem "
+"aktív.</p>\n"
+"%if object.description:\n"
+"<p>Itt találja a lehetőség leírását : </p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>Köszönöm!</p>\n"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3020,7 +3027,7 @@ msgstr "Következő művelet"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_payment_next_action_date
 msgid "Next Action Date"
-msgstr "Következő művelet időpontja"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_activities
@@ -3101,7 +3108,7 @@ msgstr "Jegyzet"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_users_payment_next_action
 msgid "Note regarding the next action."
-msgstr "Megjegyzés a következő művelethez."
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3585,7 +3592,7 @@ msgstr "Előző tevékenység"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Prices"
-msgstr "Árak"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4008,8 +4015,6 @@ msgid ""
 "Specific team that uses this stage. Other teams will not ne able to see or "
 "use this stage."
 msgstr ""
-"Ezt a szakaszt használó csapat részletezése. Többi csapatnak nem lesz "
-"lehetősége megnézni vagy használni ezt a szakaszt."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_stage_id
@@ -4182,7 +4187,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_users_payment_next_action_date
 msgid "The date before which no action should be taken."
-msgstr "Az a dátum ami előtt nem végezhet műveletet."
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_id
@@ -4454,7 +4459,7 @@ msgstr "Olvasatlan üzenetek"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_unreconciled_aml_ids
 msgid "Unreconciled aml ids"
-msgstr "Rendezetlen, párosítatlan aml id azonosítók"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_write_date

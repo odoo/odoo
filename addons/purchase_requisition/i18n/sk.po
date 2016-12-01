@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:15+0000\n"
+"POT-Creation-Date: 2016-12-01 11:53+0000\n"
 "PO-Revision-Date: 2016-03-19 10:04+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -89,7 +89,7 @@ msgid "Agreement Selection Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_11150
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10664
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
@@ -128,7 +128,7 @@ msgid "Cancelled"
 msgstr "Zrušené"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:98
+#: code:addons/purchase_requisition/purchase_requisition.py:99
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
@@ -395,6 +395,11 @@ msgid "Purchase Order"
 msgstr "Objednávka"
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Riadok nákupnej objednávky"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
 msgid "Purchase Orders"
 msgstr "Nakupné objednávky"
@@ -415,7 +420,7 @@ msgid "Purchase Requisition Line"
 msgstr "Riadok nákupnej rekvizície"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:323
+#: code:addons/purchase_requisition/purchase_requisition.py:342
 #, python-format
 msgid "Purchase Requisition created"
 msgstr "Nákupná rekvizícia vytvorená"
@@ -584,13 +589,13 @@ msgid "Warehouse"
 msgstr "Sklad"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:103
+#: code:addons/purchase_requisition/purchase_requisition.py:104
 #, python-format
 msgid "You cannot confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:118
+#: code:addons/purchase_requisition/purchase_requisition.py:119
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
@@ -606,262 +611,3 @@ msgstr "napr. PO0025"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "unknown"
 msgstr ""
-
-#~ msgid ""
-#~ "A Call for Tenders is a procedure for generating competing offers from\n"
-#~ "            different bidders. In the call for tenders, you can record "
-#~ "the\n"
-#~ "            products you need to buy and generate the creation of RfQs "
-#~ "to\n"
-#~ "            vendors. Once the tenders have been registered, you can "
-#~ "review and\n"
-#~ "            compare them and you can validate some and cancel others."
-#~ msgstr ""
-#~ "Výzva na predkladanie ponúk je postup pre vytváranie konkurenčných ponúk\n"
-#~ "rôznych záujemcov. V rámci výzvy na podávanie ponúk, môžete zaznamenať\n"
-#~ "produkty ktoré potrebujete kúpiť a generovať vytvorenie RFQ na\n"
-#~ "predajcov. Akonáhle ponuky boli registrované, môžete skontrolovať a\n"
-#~ "porovnať ich, a môžete zvalidovať niektoré a zrušiť ďalšie."
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebná akcia"
-
-#~ msgid "Approved by Vendor"
-#~ msgstr "Schválené predajcom"
-
-#~ msgid "Bid Line Qty"
-#~ msgstr "Množ riadku ponuky"
-
-#~ msgid "Call for Tenders Reference"
-#~ msgstr "Výzva na referenciu cenovej ponuky"
-
-#~ msgid "Call for Tenders in negotiation"
-#~ msgstr "Výzva na vyjednávanie cenovej ponuky"
-
-#~ msgid "Call for Tenders where tenders are closed"
-#~ msgstr "Výzva na cenové ponuky keď sú ponuky uzavreté"
-
-#~ msgid "Cancel"
-#~ msgstr "Zrušiť"
-
-#~ msgid "Cancel Choice"
-#~ msgstr "Zrušiť voľbu"
-
-#~ msgid "Cancel Purchase Order"
-#~ msgstr "Zrušiť nákupnú objednávku"
-
-#~ msgid ""
-#~ "Cancelled by the call for tenders associated to this request for "
-#~ "quotation."
-#~ msgstr ""
-#~ "Zrušené výzvou na cenové ponuky spojené s touto žiadosťou pre ponuku."
-
-#~ msgid "Cancelled by the tender associated to this quotation."
-#~ msgstr "Zrušené ponukou pridruženou k tejto cenovej ponuke."
-
-#~ msgid "Change Bid line quantity"
-#~ msgstr "Zmeniť množstvo riadku ponuky"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Zmeniť množstvo"
-
-#~ msgid ""
-#~ "Check this box to generate Call for Tenders instead of generating "
-#~ "requests for quotation from procurement."
-#~ msgstr ""
-#~ "Zaškrtnite, ak chcete generovať výzvu na cenovú ponuku namiesto "
-#~ "generovania žiadosti o cenovú ponuku."
-
-#~ msgid "Choose Vendor"
-#~ msgstr "Zvolitť predajcu"
-
-#~ msgid "Choose product lines"
-#~ msgstr "Zvoliť riadky produktu"
-
-#~ msgid "Click to start a new Call for Tenders process."
-#~ msgstr "Kliknite pre začatie procesu novej výzvy na cenovú ponuku."
-
-#~ msgid "Close Call for Tenders"
-#~ msgstr "Zavrieť výzvu na predkladanie cenových ponúk"
-
-#~ msgid "Closed Tenders"
-#~ msgstr "Zavreté výzvy na cenové ponuky"
-
-#~ msgid "Confirm Call"
-#~ msgstr "Potvrdiť výzvu"
-
-#~ msgid "Confirm Order"
-#~ msgstr "Potvrdiť objednávku"
-
-#~ msgid "Confirm Purchase Order"
-#~ msgstr "Potvrdiť nákupnú objednávku"
-
-#~ msgid "Create Request for Quotation"
-#~ msgstr "Vytvoriť žiadosť o cenovú ponuku"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Dátum poslednej správy zaslanej záznamu."
-
-#~ msgid "Define product(s) you want to include in the call for tenders."
-#~ msgstr ""
-#~ "Definujte produkt(y) ktoré chcete zahrnúť do výzvy na cenové ponuky."
-
-#~ msgid "Followers"
-#~ msgstr "Odberatelia"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Odberatelia (Kanály)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Odberatelia (Partneri)"
-
-#~ msgid "Generate PO"
-#~ msgstr "Vytvoriť PO"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#~ msgid "Is Follower"
-#~ msgstr "Je odberateľ"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Dátum poslednej správy"
-
-#~ msgid "Messages"
-#~ msgstr "Správy"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Správa a história komunikácie"
-
-#~ msgid "Multiple RFQ per vendor"
-#~ msgstr "Viaceré RFQ za predajcu"
-
-#~ msgid "New"
-#~ msgstr "Nové"
-
-#~ msgid "New Call for Tenders"
-#~ msgstr "Nová výzva na cenové ponuky"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Počet akcií"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Počet správ ktoré vyžadujú akciu"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Počet neprečítaných správ"
-
-#~ msgid "Order Date"
-#~ msgstr "Dátum objednávky"
-
-#~ msgid "PO Created"
-#~ msgstr "PO vytvorené"
-
-#~ msgid "Product Lines"
-#~ msgstr "Produktové riadky"
-
-#~ msgid "Products by vendor"
-#~ msgstr "Produkty podľa predajcu"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Riadok nákupnej objednávky"
-
-#~ msgid "Purchase Order Lines"
-#~ msgstr "Riadky nákupnej objednávky"
-
-#~ msgid "Purchase Requisition Partner"
-#~ msgstr "Partner nákupnej rekvizície"
-
-#~ msgid "Purchase Requisitions (exclusive)"
-#~ msgstr "Nákupné rekvizície (exkluzívne)"
-
-#~ msgid "Purchase Tenders"
-#~ msgstr "Nákupne cenové ponuky"
-
-#~ msgid "Quantity Tendered"
-#~ msgstr "Ponúknuté množstvo "
-
-#~ msgid "RFQ created"
-#~ msgstr "RFQ vytvorené"
-
-#~ msgid "RFQs/Bids"
-#~ msgstr "RFQ/Ponuky"
-
-#~ msgid "Reference"
-#~ msgstr "Odkaz"
-
-#~ msgid "Request a Quotation"
-#~ msgstr "Vyžiadať cenovú ponuku"
-
-#~ msgid "Requests for Quotation"
-#~ msgstr "Žiadosti o cenovú ponuku"
-
-#~ msgid "Scheduled Ordering Date"
-#~ msgstr "Naplánovaný dátum objednávania"
-
-#~ msgid "Search Call for Tenders"
-#~ msgstr "Vyhľadať vývu na cenové ponuky"
-
-#~ msgid ""
-#~ "Select only one RFQ (exclusive):  On the confirmation of a purchase "
-#~ "order, it cancels the remaining purchase order.\n"
-#~ "Select multiple RFQ:  It allows to have multiple purchase orders.On "
-#~ "confirmation of a purchase order it does not cancel the remaining orders"
-#~ msgstr ""
-#~ "Vybrať iba jednu RFQ (exkluzívne): Pri potvrdení nákupnej objednávky to "
-#~ "zruší zostávajúcu nákupnú objednávku.\n"
-#~ "Zvoliť viaceré RFQ: To umožňuje mať viaceré nákupné objednávky. Pri "
-#~ "potvrdení nákupnej objednávky to nezruší zostávajúce objednávky."
-
-#~ msgid "Send RFQ by Email"
-#~ msgstr "Poslať RFQ emailom"
-
-#~ msgid ""
-#~ "Technical field for not loosing the initial information about the "
-#~ "quantity proposed in the tender"
-#~ msgstr ""
-#~ "Technické pole používané pre nestrácanie počiatočnej informácie o "
-#~ "množstve navhrnutom v ponuke"
-
-#~ msgid "Tender Closing Deadline"
-#~ msgstr "Záverečná uzávierka predloženého návrhu"
-
-#~ msgid "Tender Lines"
-#~ msgstr "Riadky predloženého návrhu"
-
-#~ msgid "Tender Selection Type"
-#~ msgstr "Typ výberu predloženej ponuky"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Neprečítané správy"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Počítadlo neprečítaných správ"
-
-#~ msgid "Vendors"
-#~ msgstr "Predajcovia"
-
-#~ msgid "Website Messages"
-#~ msgstr "Správy webovej stránky"
-
-#~ msgid "Website communication history"
-#~ msgstr "História komunikácie webovej stránky"
-
-#~ msgid "You can not confirm call because there is no product line."
-#~ msgstr "Nemôžete potvrdiť výzvu pretože neexistuje riadok produktu."
-
-#~ msgid "You have already generate the purchase order(s)."
-#~ msgstr "Už ste vygenerovali nákupú objednávku(y)."
-
-#~ msgid ""
-#~ "You have already one %s purchase order for this partner, you must cancel "
-#~ "this purchase order to create a new quotation."
-#~ msgstr ""
-#~ "Už máte jednu %s nákupnú objednávku pre tohto partnera, musíte zrušiť "
-#~ "túto nákupnú objednávku pre vytvorenie novej cenovej ponuky."
-
-#~ msgid "You have no line selected for buying."
-#~ msgstr "Nemáte zvolený žiadny riadok pre kupovanie."

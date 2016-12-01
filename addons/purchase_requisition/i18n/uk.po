@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:15+0000\n"
+"POT-Creation-Date: 2016-12-01 11:53+0000\n"
 "PO-Revision-Date: 2016-07-04 09:20+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -92,7 +92,7 @@ msgid "Agreement Selection Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_11150
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10664
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
@@ -131,7 +131,7 @@ msgid "Cancelled"
 msgstr "Скасовано"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:98
+#: code:addons/purchase_requisition/purchase_requisition.py:99
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
@@ -150,7 +150,7 @@ msgstr "Компанія"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm"
-msgstr ""
+msgstr "Підтвердити"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -293,7 +293,7 @@ msgstr "Остання заявка"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_line_copy
 msgid "Lines"
-msgstr ""
+msgstr "Рядки"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -308,7 +308,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "New Quotation"
-msgstr ""
+msgstr "Нова пропозиція"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_qty_ordered
@@ -398,6 +398,11 @@ msgid "Purchase Order"
 msgstr "Purchase Order"
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Рядок замовлення на купівлю"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
 msgid "Purchase Orders"
 msgstr "Замовлення на купівлю"
@@ -418,7 +423,7 @@ msgid "Purchase Requisition Line"
 msgstr "Рядок пошуку пропозицій"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:323
+#: code:addons/purchase_requisition/purchase_requisition.py:342
 #, python-format
 msgid "Purchase Requisition created"
 msgstr "Тендер створено"
@@ -451,7 +456,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
 msgid "Request for Quotation"
-msgstr ""
+msgstr "Запит комерційної пропозиції"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
@@ -512,7 +517,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Послідовність"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
@@ -559,7 +564,7 @@ msgstr "Непризначений тендер"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "Ціна одиниці"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
@@ -574,7 +579,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Validate"
-msgstr ""
+msgstr "Підтвердити"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_vendor_id
@@ -587,13 +592,13 @@ msgid "Warehouse"
 msgstr "Warehouse"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:103
+#: code:addons/purchase_requisition/purchase_requisition.py:104
 #, python-format
 msgid "You cannot confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:118
+#: code:addons/purchase_requisition/purchase_requisition.py:119
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
@@ -609,264 +614,3 @@ msgstr "напр. ЗНК0025"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "unknown"
 msgstr ""
-
-#~ msgid ""
-#~ "A Call for Tenders is a procedure for generating competing offers from\n"
-#~ "            different bidders. In the call for tenders, you can record "
-#~ "the\n"
-#~ "            products you need to buy and generate the creation of RfQs "
-#~ "to\n"
-#~ "            vendors. Once the tenders have been registered, you can "
-#~ "review and\n"
-#~ "            compare them and you can validate some and cancel others."
-#~ msgstr ""
-#~ "Тендер - це процедура вибору постачальника з декількох конкурентних "
-#~ "пропозицій.\n"
-#~ "В тендерних закупівлях ви можете додавати товари, які необхідно купити та "
-#~ "згенерувати запити комерційної пропозиції декільком постачальникам.\n"
-#~ "Коли пропозиції будуть отримані, ви можете переглянути їх  і порівняти. "
-#~ "Також можете прийняти одні та скасувати інші пропозиції."
-
-#~ msgid "Action Needed"
-#~ msgstr "Необхідна дія"
-
-#~ msgid "Approved by Vendor"
-#~ msgstr "Затверджено постачальником."
-
-#~ msgid "Bid Line Qty"
-#~ msgstr "К-сть у рядку пропозиції"
-
-#~ msgid "Call for Tenders Reference"
-#~ msgstr "Посилання тендера"
-
-#~ msgid "Call for Tenders in negotiation"
-#~ msgstr "Тендери на узгодженні"
-
-#~ msgid "Call for Tenders where tenders are closed"
-#~ msgstr "Закриті тендери"
-
-#~ msgid "Cancel"
-#~ msgstr "Скасувати"
-
-#~ msgid "Cancel Choice"
-#~ msgstr "Скасувати вибір"
-
-#~ msgid "Cancel Purchase Order"
-#~ msgstr "Скасувати замовлення на купівлю"
-
-#~ msgid ""
-#~ "Cancelled by the call for tenders associated to this request for "
-#~ "quotation."
-#~ msgstr ""
-#~ "Скасовано у тендері пов’язаному з цим запитом комерційної пропозиції."
-
-#~ msgid "Cancelled by the tender associated to this quotation."
-#~ msgstr "Скасовано у тендері пов’язаному з цією пропозицією."
-
-#~ msgid "Change Bid line quantity"
-#~ msgstr "Змінити кількість у пропозиції"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Змінити кількість"
-
-#~ msgid ""
-#~ "Check this box to generate Call for Tenders instead of generating "
-#~ "requests for quotation from procurement."
-#~ msgstr ""
-#~ "Поставте галочку, щоб створювати тендери замість звичайних запитів "
-#~ "комерційної пропозиції під час забезпечення."
-
-#~ msgid "Choose Vendor"
-#~ msgstr "Оберіть постачальника"
-
-#~ msgid "Choose product lines"
-#~ msgstr "Оберіть рядки товару"
-
-#~ msgid "Click to start a new Call for Tenders process."
-#~ msgstr "Натисніть, щоб розпочати новий процес тендерних закупівель."
-
-#~ msgid "Close Call for Tenders"
-#~ msgstr "Закрити тендер."
-
-#~ msgid "Closed Tenders"
-#~ msgstr "Закриті тендери."
-
-#~ msgid "Confirm Call"
-#~ msgstr "Підтвердити тендер"
-
-#~ msgid "Confirm Order"
-#~ msgstr "Підтвердити замовлення"
-
-#~ msgid "Confirm Purchase Order"
-#~ msgstr "Підтвердити замовлення на купівлю"
-
-#~ msgid "Create Request for Quotation"
-#~ msgstr "Створити запит комерційної пропозиції"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата останнього повідомлення по запису."
-
-#~ msgid "Define product(s) you want to include in the call for tenders."
-#~ msgstr "Вкажіть товар(и), які ви хочете включити в тендер."
-
-#~ msgid "Followers"
-#~ msgstr "Підписники"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Підписники (Канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Підписники (Партнери)"
-
-#~ msgid "Generate PO"
-#~ msgstr "Згенерувати ЗНК"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
-
-#~ msgid "Is Follower"
-#~ msgstr "Стежить"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Дата останнього повідомлення"
-
-#~ msgid "Messages"
-#~ msgstr "Повідомлення"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Повідомлення та історія бесіди"
-
-#~ msgid "Multiple RFQ per vendor"
-#~ msgstr "Декілька ЗКП на постачальника"
-
-#~ msgid "New"
-#~ msgstr "Новий"
-
-#~ msgid "New Call for Tenders"
-#~ msgstr "Новий тендер"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Кількість дій"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Кількість повідомлень, які потебують дії"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Кількість непрочитаних повідомлень"
-
-#~ msgid "Order Date"
-#~ msgstr "Дата замовлення"
-
-#~ msgid "PO Created"
-#~ msgstr "ЗНК створено"
-
-#~ msgid "Product Lines"
-#~ msgstr "Рядки товару"
-
-#~ msgid "Products by vendor"
-#~ msgstr "Товари по постачальникам"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Рядок замовлення на купівлю"
-
-#~ msgid "Purchase Order Lines"
-#~ msgstr "Рядки замовлення на купівлю"
-
-#~ msgid "Purchase Requisition Partner"
-#~ msgstr "Партнет у тендері"
-
-#~ msgid "Purchase Requisitions (exclusive)"
-#~ msgstr "Тендери (виключно)"
-
-#~ msgid "Purchase Tenders"
-#~ msgstr "Тендери"
-
-#~ msgid "Quantity Tendered"
-#~ msgstr "Кількість по тендеру"
-
-#~ msgid "RFQ created"
-#~ msgstr "ЗКП створено"
-
-#~ msgid "RFQs/Bids"
-#~ msgstr "ЗКП/Пропозиції"
-
-#~ msgid "Reference"
-#~ msgstr "Посилання"
-
-#~ msgid "Request a Quotation"
-#~ msgstr "Зробити запит пропозиції"
-
-#~ msgid "Requests for Quotation"
-#~ msgstr "Запити комерційної пропозиції"
-
-#~ msgid "Scheduled Ordering Date"
-#~ msgstr "Запланована дата замовлення"
-
-#~ msgid "Search Call for Tenders"
-#~ msgstr "Пошук тендерів"
-
-#~ msgid ""
-#~ "Select only one RFQ (exclusive):  On the confirmation of a purchase "
-#~ "order, it cancels the remaining purchase order.\n"
-#~ "Select multiple RFQ:  It allows to have multiple purchase orders.On "
-#~ "confirmation of a purchase order it does not cancel the remaining orders"
-#~ msgstr ""
-#~ "Вибрати тільки один ЗКП (виключно): При підтвердженні замовлення на "
-#~ "купівлю інші замовлення скасовуються.\n"
-#~ "Вибрати декілька ЗКП: Дозволяє мати декілька замовлень на придбання. При "
-#~ "підтвердженні замовлення інші не скасовуються."
-
-#~ msgid "Send RFQ by Email"
-#~ msgstr "Відправити ЗКП по пошті"
-
-#~ msgid ""
-#~ "Technical field for not loosing the initial information about the "
-#~ "quantity proposed in the tender"
-#~ msgstr ""
-#~ "Технічне поле для зберігання початкової кількості запропонованої у "
-#~ "пропозиції по тендеру."
-
-#~ msgid "Tender Closing Deadline"
-#~ msgstr "Кінцевий термін дії тендеру"
-
-#~ msgid "Tender Lines"
-#~ msgstr "Рядки тендера"
-
-#~ msgid "Tender Selection Type"
-#~ msgstr "Тип вибору переможця"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитані повідомлення"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Кількість непрочитаних повідомлень"
-
-#~ msgid "Vendors"
-#~ msgstr "Постачальники"
-
-#~ msgid "Website Messages"
-#~ msgstr "Повідомлення з веб-сайту"
-
-#~ msgid "Website communication history"
-#~ msgstr "Історія бесіди на веб-сайті"
-
-#~ msgid "You can not confirm call because there is no product line."
-#~ msgstr ""
-#~ "Ви не можете підтвердити тендер оскільки від не містить жодного товару."
-
-#~ msgid "You have already generate the purchase order(s)."
-#~ msgstr "Ви вже згенерували замовлення на придбання."
-
-#~ msgid ""
-#~ "You have already one %s purchase order for this partner, you must cancel "
-#~ "this purchase order to create a new quotation."
-#~ msgstr ""
-#~ "Уже існує одне замовлення на купівлю %s для цього партнера, ви повинні "
-#~ "скасувати це замовлення, щоб створити нове."
-
-#~ msgid "You have no line selected for buying."
-#~ msgstr "Не обрано жодного рядка для купівлі."

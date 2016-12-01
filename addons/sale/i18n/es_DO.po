@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-06-21 16:52+0000\n"
-"Last-Translator: Eneldo Serrata <eneldoserrata@gmail.com>\n"
+"PO-Revision-Date: 2016-09-24 18:01+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/"
 "odoo-9/language/es_DO/)\n"
 "Language: es_DO\n"
@@ -112,6 +112,8 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"'Cotización' or 'Pedido'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -547,7 +549,7 @@ msgstr "Diferentes precios por segmento de clientes"
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Disc.(%)"
-msgstr ""
+msgstr "Desc.(%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
@@ -593,8 +595,9 @@ msgstr "Mostrar márgenes en cotizaciones y pedidos de venta"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
+#, fuzzy
 msgid "Do not personalize sale orders and invoice reports"
-msgstr ""
+msgstr "Mostrar incoterms en los pedidos de ventas y en facturas"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -645,8 +648,9 @@ msgstr "Asistente de redacción de correo electrónico."
 
 #. module: sale
 #: model:ir.model,name:sale.model_survey_mail_compose_message
+#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr ""
+msgstr "Asistente de redacción de correo electrónico."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
@@ -1465,8 +1469,9 @@ msgstr "Análisis de Cotizaciones"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#, fuzzy
 msgid "Quotations Sent"
-msgstr ""
+msgstr "Cotización enviada"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1481,8 +1486,9 @@ msgstr ""
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
+#, fuzzy
 msgid "Reinvoice Costs"
-msgstr ""
+msgstr "Estado factura"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.report_configuration_action
@@ -1767,9 +1773,12 @@ msgstr "Mostrar tarifas a los clientes"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
+#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
+"Algunos productos pueden ser vendidos/comprados en diferentes unidades de "
+"medidas (avanzado)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -1965,8 +1974,9 @@ msgstr ""
 
 #. module: sale
 #: selection:product.template,track_service:0
+#, fuzzy
 msgid "Timesheets on project"
-msgstr ""
+msgstr "Horas de contrato"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -2018,8 +2028,9 @@ msgstr "Unidad de medida"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
+#, fuzzy
 msgid "Units of Measure"
-msgstr ""
+msgstr "Unidad de medida"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2145,8 +2156,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
+#, fuzzy
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr ""
+msgstr "Líneas de pedidos de venta listas para facturar"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -2178,8 +2190,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
+#, fuzzy
 msgid "account analytic line"
-msgstr ""
+msgstr "Línea Analítica"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form

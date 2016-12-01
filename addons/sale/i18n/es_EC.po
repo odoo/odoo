@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-04-18 20:09+0000\n"
+"PO-Revision-Date: 2016-10-03 05:34+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/"
 "language/es_EC/)\n"
@@ -109,6 +109,8 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -546,7 +548,7 @@ msgstr "Precios diferentes por segmento de clientes"
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Disc.(%)"
-msgstr ""
+msgstr "Desc.(%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
@@ -592,8 +594,9 @@ msgstr "Mostrar márgenes de cotización y órdenes de venta"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
+#, fuzzy
 msgid "Do not personalize sale orders and invoice reports"
-msgstr ""
+msgstr "Mostrar icoterms en ordenes de venta y facturas"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -644,8 +647,9 @@ msgstr "Asistente para composición de Email"
 
 #. module: sale
 #: model:ir.model,name:sale.model_survey_mail_compose_message
+#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr ""
+msgstr "Asistente para composición de Email"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
@@ -1462,8 +1466,9 @@ msgstr "Análisis de Presupuestos"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#, fuzzy
 msgid "Quotations Sent"
-msgstr ""
+msgstr "Presupuesto enviado"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1478,8 +1483,9 @@ msgstr ""
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
+#, fuzzy
 msgid "Reinvoice Costs"
-msgstr ""
+msgstr "Estado de Factura"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.report_configuration_action
@@ -1766,9 +1772,12 @@ msgstr "Mostrar lista de precios a clientes"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
+#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
+"Algunos productos pueden ser vendidos/comprados en diferentes unidades de "
+"medida (avanzado)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -1960,8 +1969,9 @@ msgstr ""
 
 #. module: sale
 #: selection:product.template,track_service:0
+#, fuzzy
 msgid "Timesheets on project"
-msgstr ""
+msgstr "Hojas de tiempo en contrato"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -2013,8 +2023,9 @@ msgstr "Unidad de Medida"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
+#, fuzzy
 msgid "Units of Measure"
-msgstr ""
+msgstr "Unidad de Medida"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2141,8 +2152,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
+#, fuzzy
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr ""
+msgstr "Líneas de ordenes de venta lista para ser facturada"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -2176,8 +2188,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
+#, fuzzy
 msgid "account analytic line"
-msgstr ""
+msgstr "Linea Analitica"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form

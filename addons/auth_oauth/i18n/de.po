@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-06-03 09:33+0000\n"
-"Last-Translator: Fabian Liesch <fabian.liesch@gmail.com>\n"
+"PO-Revision-Date: 2016-09-23 09:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -51,7 +51,7 @@ msgstr "Erlaubt"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Authentication"
-msgstr ""
+msgstr "Authentifizierung"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
@@ -91,7 +91,7 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Click on <b>Use Google APIs</b>"
-msgstr ""
+msgstr "Klicke auf <b>Benutze Google APIs</b>"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_client_id
@@ -107,7 +107,7 @@ msgstr "Unternehmen mit Bezug zu diesem Partner"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Connect to your Google account and go to"
-msgstr ""
+msgstr "Verbinde dein Google Benutzerkonto und gehe zu"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contract_ids
@@ -128,7 +128,7 @@ msgstr "Angelegt am"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Währung"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
@@ -143,7 +143,7 @@ msgstr "Daten URL"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
 msgid "Degree of trust you have in this debtor"
-msgstr ""
+msgstr "Grad des Vertrauens in diesen Debitor"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
@@ -165,7 +165,7 @@ msgstr "Steuerzuordnung"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Google Client ID:"
-msgstr ""
+msgstr "Google Client ID:"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
@@ -180,7 +180,7 @@ msgstr "ID"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn
 msgid "Invoice"
-msgstr ""
+msgstr "Rechnung"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_ids
@@ -228,7 +228,7 @@ msgstr "Letzte Rechnungen & Zahlungen am Datum"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn_msg
 msgid "Message for Invoice"
-msgstr ""
+msgstr "Nachricht zu Rechnung"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
@@ -305,7 +305,7 @@ msgstr "Provider"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Return to Top"
-msgstr ""
+msgstr "Zurück nach oben"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_scope
@@ -319,21 +319,25 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Die Auswahl \n"
+"   \"Warnung\" wird dem Benutzer die Meldung zeigen.\n"
+"   \"Blockiere\" wird die Meldung ausgeben und den Workflow abbrechen.\n"
+"Die Meldung bitte ins nächste Feld eintragen."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
 msgid "Server uri"
-msgstr ""
+msgstr "Server URI"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Show Tutorial"
-msgstr ""
+msgstr "Tutorial anzeigen"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_tutorial_enabled
 msgid "Show tutorial"
-msgstr ""
+msgstr "Zeige Anleitung"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:96
@@ -364,11 +368,13 @@ msgid ""
 "Then click on <b>Add Credentials</b> and select the second option \n"
 "                                        (OAuth 2.0 Client ID)."
 msgstr ""
+"Danach klicke auf <b>Add Credentials</b> und wähle die zweite Option aus\n"
+"(OAuth 2.0 Client ID)."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Then click on <b>Create</b>."
-msgstr ""
+msgstr "Danach klicke auf <b>Erstellen</b>."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
@@ -496,7 +502,7 @@ msgstr "z. B. 1234-xyz.apps.googleusercontent.com"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "https://console.developers.google.com/"
-msgstr ""
+msgstr "https://console.developers.google.com/"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:15+0000\n"
+"POT-Creation-Date: 2016-12-01 11:53+0000\n"
 "PO-Revision-Date: 2016-02-21 12:42+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -31,6 +31,7 @@ msgstr ""
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
+#, fuzzy
 msgid ""
 "\n"
 "<p>Dear ${object.name},</p>\n"
@@ -40,6 +41,12 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"<p>Dobrý deň ${object.name},</p>\n"
+"<p>Potvrdzujeme že Vaše predplatné na udalosť ${object.event_id.name} bolo "
+"zaznamenané.\n"
+"Prosím, nájdite Vaše <b>Event Badge</b> pripojené k tomuto emailu.</p>\n"
+"<p>Ďakujeme za Vašu účasť!</p>\n"
+"<p>S pozdravom</p>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -91,10 +98,13 @@ msgstr "5 intenzívnych dní"
 
 #. module: event
 #: model:event.event,description:event.event_2
+#, fuzzy
 msgid ""
 "<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the "
 "event or change the dates on which it is held.)</em>"
 msgstr ""
+"<em>(Pracovná komora si vyhradzuje právo zrušiť, premenovať alebo premiesniť "
+"<br/>udalosť alebo meniť dátumy počas ktorých sa koná.)</em>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -335,8 +345,9 @@ msgstr "Predok odznaku"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerleft
+#, fuzzy
 msgid "Badge Inner Left"
-msgstr ""
+msgstr "Ľavé vnútro odznaku"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_badge_innerright
@@ -520,8 +531,9 @@ msgstr "Kontakt"
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
+#, fuzzy
 msgid "Controllers and Views"
-msgstr ""
+msgstr "Ovládače a Zobrazenia"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id

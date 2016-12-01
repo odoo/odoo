@@ -6,16 +6,16 @@
 # Eddie Lim <bhweelim@yahoo.com>, 2016
 # fausthuang, 2015
 # Gary Wei <Gary.wei@elico-corp.com>, 2015
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
+# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
 # Jonathon <jonathonli@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:15+0000\n"
-"PO-Revision-Date: 2016-07-22 05:37+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2016-11-19 03:37+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
 "language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -72,6 +72,9 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"oe_view_nocontent\">\n"
+"                    升级到 Odoo企业版可以获取更多的提供商。\n"
+"                </p>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
@@ -140,7 +143,7 @@ msgstr "所需行动"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
 msgid "Action while validating Delivery Orders"
-msgstr ""
+msgstr "操作在验证交货的订单"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -248,7 +251,7 @@ msgstr "可销售"
 #: model:ir.model.fields,help:delivery.field_stock_quant_package_shipping_weight
 msgid ""
 "Can be changed during the 'put in pack' to adjust the weight of the shipping."
-msgstr ""
+msgstr "可以在“加入包装”时调节航运的重量。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_can_be_expensed
@@ -508,7 +511,7 @@ msgstr "决定显示顺序"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Discard"
-msgstr "舍弃"
+msgstr "丢弃"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
@@ -597,7 +600,7 @@ msgstr "如果你打算根据发货的实际数量开票的话，就填写这一
 msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
-msgstr ""
+msgstr "填写此表，你可以根据你的客户的送货地址进行过滤。"
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -785,12 +788,12 @@ msgstr "入库"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
-msgstr ""
+msgstr "增加更多供应商"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
 msgid "Integration Level"
-msgstr ""
+msgstr "基础等级"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_categ_id
@@ -885,7 +888,7 @@ msgstr "长度"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Length must be positive"
-msgstr ""
+msgstr "长度必须大于0"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_location_id
@@ -900,7 +903,7 @@ msgstr "逻辑单位"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Manage Package Type"
-msgstr ""
+msgstr "管理封装类型"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_track_service
@@ -912,6 +915,9 @@ msgid ""
 "Create a task and track hours: Create a task on the sale order validation "
 "and track the work hours."
 msgstr ""
+"手动设置订单数量：基于手动输入的数量发票，而无需创建一个帐户分析。\n"
+"合同时间表：基于跟踪小时的相关工时表发票。\n"
+"创建任务和跟踪时间：创建对销售订单验证任务，并跟踪工作时间。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
@@ -921,7 +927,7 @@ msgstr "生产提前期(日)"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
 msgid "Margin"
-msgstr "毛利"
+msgstr "边距"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
@@ -941,12 +947,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
 msgid "Max Weight"
-msgstr ""
+msgstr "最大重量"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Max Weight must be positive"
-msgstr ""
+msgstr "最大重量必须是正数"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
@@ -956,7 +962,7 @@ msgstr "最大值"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
 msgid "Maximum weight shippable in this packaging"
-msgstr ""
+msgstr "可交付最大重量包装。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_medium
@@ -1092,14 +1098,14 @@ msgstr "包裹"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
 msgid "Package Code"
-msgstr ""
+msgstr "封装代码"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
 #: code:addons/delivery/models/stock_picking.py:129
 #, python-format
 msgid "Package Details"
-msgstr ""
+msgstr "包装明细行"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1403,8 +1409,8 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"选择此“警告“选项，将通知用户此消息。\r\n"
-"选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\r\n"
+"选择此“警告“选项，将通知用户此消息。\n"
+"选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\n"
 "消息写入下一个字段。"
 
 #. module: delivery
@@ -1444,7 +1450,7 @@ msgstr "发货成本"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
 msgid "Shipping Weight"
-msgstr ""
+msgstr "发货重量"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
@@ -1487,7 +1493,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_hs_code
 #: model:ir.model.fields,help:delivery.field_product_template_hs_code
 msgid "Standardized code for international shipping and goods declaration"
-msgstr ""
+msgstr "国际航运和货物申报代码规范"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -1512,7 +1518,7 @@ msgstr "仓库出货科目"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
 msgid "Stock move ids"
-msgstr "仓库移动 ids"
+msgstr "库存移动 ids"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
@@ -1645,7 +1651,7 @@ msgstr "这是所有属性额外价格的总和"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
 msgid "This percentage will be added to the shipping price."
-msgstr ""
+msgstr "这个百分比将被添加到航运价格。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_production
@@ -1703,7 +1709,7 @@ msgstr "跟踪"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr ""
+msgstr "跟踪参考"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1830,7 +1836,7 @@ msgstr "重量* 体积"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
 msgid "Weight for Shipping"
-msgstr ""
+msgstr "航运重量"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_alert_time
@@ -1903,7 +1909,7 @@ msgstr "宽度"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Width must be positive"
-msgstr ""
+msgstr "宽度必须是正数"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:188
@@ -1912,6 +1918,8 @@ msgid ""
 "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
 msgstr ""
+"你在同一批货出货不同的包装类型。\n"
+"包装类型: '％s' "
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:164

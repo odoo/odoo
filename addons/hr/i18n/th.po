@@ -430,7 +430,7 @@ msgstr "ข้อผิดพลาด! คุณไม่สามารถส�
 #: code:addons/hr/models/hr.py:177
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
+msgstr "ข้อผิดพลาด! คุณไม่สามารถสร้างลำดับชั้น ซ้ำ ของพนักงาน"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
@@ -852,7 +852,7 @@ msgstr "จำนวนบุคลากรปัจจุบันที่ท
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_hired_employee
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
-msgstr ""
+msgstr "จำนวนพนักงานที่ได้รับการจ้างสำหรับตำแหน่งงานนี้ ระหว่างกระบวนการสรรหา"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_recruitment
@@ -896,7 +896,7 @@ msgstr "ภายใต้สังกัด"
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "คู่ค้า"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -964,7 +964,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitment in Progress"
-msgstr ""
+msgstr "อยู่ในระหว่างการสรรหาพนักงาน"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -1126,7 +1126,7 @@ msgstr ""
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
-msgstr ""
+msgstr "ชื่อของตำแหน่งงานจะต้องไม่ซ้ำกันในแต่ละแผนกในบริษัท!"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
@@ -1170,7 +1170,7 @@ msgstr "ข้อความที่ยังไม่ได้อ่าน"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_login
 msgid "Used to log into the system"
-msgstr ""
+msgstr "นำมาใช้ในการเข้าสู่ระบบ"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -1489,48 +1489,3 @@ msgstr "แผนก"
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Part Time"
 msgstr "ต.ย. (รายวัน/รายชั่วโมง)"
-
-#~ msgid "Action Needed"
-#~ msgstr "ต้องดำเนินการ"
-
-#~ msgid "Create Your Departments"
-#~ msgstr "สร้างแผนกของคุณ"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "วันที่ข้อความล่าสุดโพสต์ในระเบียน"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "ผู้ติดตาม (ช่องทาง)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "ผู้ติดตาม (คู่ค้า)"
-
-#~ msgid "HR Department"
-#~ msgstr "แผนก HR"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
-
-#~ msgid "Is Follower"
-#~ msgstr "เป็นผู้ติดตาม"
-
-#~ msgid "Last Message Date"
-#~ msgstr "วันที่ข้อความล่าสุด"
-
-#~ msgid "Number of Actions"
-#~ msgstr "จำนวนกิจกรรม"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "เปิดเมนู HR"
-
-#~ msgid "Subscriptions"
-#~ msgstr "การสมัครรับข้อมูลข่าวสาร"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "จำนวนข้อความที่ยังไม่ได้อ่าน"
-
-#~ msgid "Update Date"
-#~ msgstr "วันที่ปรับปรุง"

@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:15+0000\n"
-"PO-Revision-Date: 2016-08-09 14:00+0000\n"
+"PO-Revision-Date: 2016-11-15 11:47+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
@@ -69,6 +69,9 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"oe_view_nocontent\">\n"
+"Koop Odoo Enterprise om meer providers te krijgen\n"
+"</p>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
@@ -96,7 +99,7 @@ msgid ""
 msgstr ""
 "Een omschrijving van het product die u wilt delen met uw klanten. Deze "
 "omschrijving wordt gekopieerd naar elke verkooporder, leveringsbon en "
-"factuur/terugbetaling."
+"factuur/creditfactuur."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_purchase
@@ -107,7 +110,7 @@ msgid ""
 msgstr ""
 "Een omschrijving van het product die u wilt delen met uw leveranciers. Deze "
 "omschrijving wordt gekopieerd naar elke inkooporder, ontvanstbon en factuur/"
-"credit factuur."
+"creditfactuur."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description
@@ -130,6 +133,15 @@ msgid ""
 "e-books, music, pictures,... The \"Digital Product\" module has to be "
 "installed."
 msgstr ""
+"Een voorraad product is een product waarvan uw voorraad houdt. De \"voorraad"
+"\" app moet geïnstalleerd worden.\n"
+"Een verbruiksproduct, is een product waarvoor geen voorraad wordt "
+"gehouden..\n"
+"Een dienst is een immateriëel product dat uw verkoopt.\n"
+"Digitale inhoud is een immateriëeel product dat u online verkoopt. De "
+"bestanden die toegevoegd zijn aan producten worden verkoop via het e-"
+"commerce platform, zoals bijv. digitale boeken, muziek, afbeeldingen. De "
+"'digitale product' module moet geïnstalleerd worden."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
@@ -139,7 +151,7 @@ msgstr "Vereist actie"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
 msgid "Action while validating Delivery Orders"
-msgstr ""
+msgstr "Actie bij het bevestigen van uitgaande leveringen."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -257,6 +269,8 @@ msgstr "Kan verkocht worden"
 msgid ""
 "Can be changed during the 'put in pack' to adjust the weight of the shipping."
 msgstr ""
+"Kan worden gewijzigd bij het \"Doe in verpakking\" om het gewicht van de "
+"levering aan te passen."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_can_be_expensed
@@ -528,7 +542,7 @@ msgstr "Bepaal de weergave volgorde"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Discard"
-msgstr "Negeren"
+msgstr "Annuleren"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
@@ -621,6 +635,8 @@ msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
 msgstr ""
+"Door het invullen van dit formulier kunt u vervoerders filteren op basis van "
+"het afleveradres van uw klant."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -683,12 +699,12 @@ msgstr "Gratis indien het orderbedrag meer is dan"
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate"
-msgstr ""
+msgstr "Koers ophalen"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate and Create Shipment"
-msgstr ""
+msgstr "Zoek tarief een maak verzending"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_packaging_ids
@@ -724,7 +740,7 @@ msgstr "Hoogte"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Height must be positive"
-msgstr ""
+msgstr "Hoogte moet positief zien"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
@@ -829,12 +845,12 @@ msgstr "Inkomend"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
-msgstr ""
+msgstr "Installeer meer aanbieders"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
 msgid "Integration Level"
-msgstr ""
+msgstr "Integratie niveau"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_categ_id
@@ -931,7 +947,7 @@ msgstr "Lengte"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Length must be positive"
-msgstr ""
+msgstr "Lengte moet positief zijn"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_location_id
@@ -946,7 +962,7 @@ msgstr "Logistieke eenheden"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Manage Package Type"
-msgstr ""
+msgstr "Beheer verpakkingen"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_track_service
@@ -958,6 +974,12 @@ msgid ""
 "Create a task and track hours: Create a task on the sale order validation "
 "and track the work hours."
 msgstr ""
+"Bepaal handmatig de hoeveelheden voor de order: Factuur op basis van de "
+"handmatig ingevoerde hoeveelheid, zonder het aanmaken van een kostenplaats.\n"
+"Urenstaten op projecten: Factuur op basis van de geschreven uren op "
+"gerelateerde urenstaten.\n"
+"Maak een taak aan en volg de uren ervan op: Een taak maken bij verkoop order "
+"validatie en volg werkuren via taken."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
@@ -982,17 +1004,17 @@ msgstr "Marge datum t/m"
 #. module: delivery
 #: sql_constraint:delivery.carrier:0
 msgid "Margin cannot be lower than -100%"
-msgstr ""
+msgstr "Marge kan niet minder zijn dan -100%"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
 msgid "Max Weight"
-msgstr ""
+msgstr "Max. gewicht"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Max Weight must be positive"
-msgstr ""
+msgstr "Max. gewicht moet positief zien"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
@@ -1002,7 +1024,7 @@ msgstr "Maximumwaarde"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
 msgid "Maximum weight shippable in this packaging"
-msgstr ""
+msgstr "Maximum gewicht verzendbaar in deze verpakking"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_medium
@@ -1054,7 +1076,7 @@ msgstr "Naam"
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
 msgid "No carrier integration"
-msgstr ""
+msgstr "Geen vervoerder informatie"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:63
@@ -1138,14 +1160,14 @@ msgstr "Verpakking"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
 msgid "Package Code"
-msgstr ""
+msgstr "Verpakkingcode"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
 #: code:addons/delivery/models/stock_picking.py:129
 #, python-format
 msgid "Package Details"
-msgstr ""
+msgstr "Verpakkingdetails"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1484,6 +1506,7 @@ msgstr "Bepaal prijs"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
 msgid "Set to True if your credentials are certified for production."
 msgstr ""
+"Zet op Waar wanneer uw inloggegevens gecertificeerd zijn voor productie."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:148
@@ -1492,6 +1515,8 @@ msgid ""
 "Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost: "
 "%.2f %s"
 msgstr ""
+"Levering verzonden naar vervoerder %s voor expeditie met traceernummer %s<br/"
+">Kosten: %.2f %s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
@@ -1501,7 +1526,7 @@ msgstr "Verzendkosten"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
 msgid "Shipping Weight"
-msgstr ""
+msgstr "Aflevergewicht"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
@@ -1552,6 +1577,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_product_template_hs_code
 msgid "Standardized code for international shipping and goods declaration"
 msgstr ""
+"Gestandaardiseerde code voor internationaal vervoer en goederen aangifte"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -1581,7 +1607,7 @@ msgstr "Voorraadmutatie ids"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
 msgid "Stock quant ids"
-msgstr ""
+msgstr "Voorraadmutatie ids"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_normal_cost
@@ -1627,7 +1653,7 @@ msgstr "Totale hoeveelheid over leveranciersfacturen"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_quant_ids
 msgid "Technical: used to compute quantities."
-msgstr ""
+msgstr "Technisch: wordt gebruikt om hoeveelheden te berekenen."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name_template
@@ -1685,10 +1711,10 @@ msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
 msgstr ""
-"Het product dat gebruikt wordt om een vooruitbetaling te factureren, moet "
-"een factuurbeleid hebben dat gebaseerd is op \"Bestelde hoeveelheden\". "
-"Wijzig de eigenschappen van het product om een vooruitbetalingsfactuur te "
-"kunnen opmaken."
+"Het product dat gebruikt wordt om een aanbetaling te factureren, moet een "
+"factuurbeleid hebben dat gebaseerd is op \"Bestelde hoeveelheden\". Wijzig "
+"de eigenschappen van het product om een vooruitbetalingsfactuur te kunnen "
+"opmaken."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_income_id
@@ -1731,7 +1757,7 @@ msgstr "Dit is de som van de extra prijs van alle kenmerken"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
 msgid "This percentage will be added to the shipping price."
-msgstr ""
+msgstr "Dit percentage wordt toegevoegd aan de afleverprijs."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_production
@@ -2017,6 +2043,8 @@ msgid ""
 "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
 msgstr ""
+"U verzend verschillende verpakking types in dezelfde verzending.\n"
+"Verpakking types: %s"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:164

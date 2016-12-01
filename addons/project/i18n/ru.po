@@ -197,6 +197,12 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Уважаемый(ая) ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Благодарим вас за ваш запрос.<br></p>\n"
+"<p>Если у вас есть какие-либо вопросы, пожалуйста, сообщите нам об этом.</"
+"p>\n"
+"<p>С наилучшими пожеланиями,</p>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -809,6 +815,10 @@ msgid ""
 "to follow a whole project: you will receive notifications for all the new "
 "and existing tasks or issues of a project."
 msgstr ""
+"<strong>Следите только за тем, что вам нужно</strong><br/>\n"
+"Самый простой способ использования уведомлений — это отслеживание всего "
+"проекта: в этом случае вы будете получать все выбранные уведомления для всех "
+"новых и существующих задач и запросов."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2023,7 +2033,7 @@ msgstr "Псевдоним электронной почты"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
 msgid "Email Template"
-msgstr ""
+msgstr "Шаблон письма"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2415,6 +2425,8 @@ msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
 msgstr ""
+"Если установлено, то будет отправлено письмо клиенту, когда задача или "
+"запрос достигнет этого шага."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_active
@@ -2810,7 +2822,7 @@ msgstr "Отдел маркетинга"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "Члены"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2825,7 +2837,7 @@ msgstr "Больше<i class=\"fa fa-caret-down\"/>"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "More Info"
-msgstr ""
+msgstr "Подробности"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3136,6 +3148,10 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
+"Политики для сообщений в документе с использованием почтового шлюза:\n"
+"- все: каждый может писать\n"
+"- партнёры: только аутентифицированные партнёры;\n"
+"- подписчики: только подписчики соответствующего документа\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3256,7 +3272,7 @@ msgstr "Проекты"
 #. module: project
 #: model:mail.channel,name:project.mail_channel_project_task
 msgid "Projects & Tasks"
-msgstr ""
+msgstr "Проекты и задачи"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3335,7 +3351,7 @@ msgstr "Причина для отмены задокументирована"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of ${object.name}"
-msgstr ""
+msgstr "Прием ${object.name}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
@@ -3515,7 +3531,7 @@ msgstr "Обмениваться файлами и управлять верси
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_is_favorite
 msgid "Show Project on dashboard"
-msgstr ""
+msgstr "Показать проект на панели"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3988,6 +4004,9 @@ msgid ""
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
+"Это установит единицу измерения, используемую в проектах и задачах. \n"
+"Если вы используете расписание, ссылающееся на проекты, не забудьте "
+"установить правильную единицу измерения для ваших сотрудников."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -4284,7 +4303,7 @@ msgstr "Сколько в среднем часов за год они отра�
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_is_favorite
 msgid "Whether this project should be displayed on the dashboard or not"
-msgstr ""
+msgstr "Этот проект должен отображаться на приборной панели или нет"
 
 #. module: project
 #. openerp-web
@@ -4357,7 +4376,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "You can save your reports to easily reuse it later"
-msgstr ""
+msgstr "Вы можете сохранять свои отчёты для повторного использования"
 
 #. module: project
 #: code:addons/project/project.py:94
@@ -4383,7 +4402,7 @@ msgstr "Ваши цели"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_module_install_project
 msgid "Your Odoo Project application is up and running"
-msgstr ""
+msgstr "Odoo проект приложения включен и работает"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner

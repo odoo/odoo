@@ -194,6 +194,11 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Beste ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Bedankt voor uw aanvraag.<br /></p>\n"
+"<p>Indien u vragen heeft kan u ons steeds contacteren.</p>\n"
+"<p>Met vriendelijke groeten,</p>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -822,6 +827,10 @@ msgid ""
 "to follow a whole project: you will receive notifications for all the new "
 "and existing tasks or issues of a project."
 msgstr ""
+"<strong>Volg alleen wat u nodig heeft</strong><br/>\n"
+"De gemakkelijkste weg om notificaties te gebruiken is door een heel project "
+"te volgen: u ontvangt dan al de geselecteerde notificaties voor alle "
+"bestaande en nieuwe taken/issues van een project."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2430,6 +2439,8 @@ msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
 msgstr ""
+"Wanneer ingesteld wordt een e-mail verstuurt naar de klant als de taak of "
+"issue deze fase behaalt."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_active
@@ -3272,7 +3283,7 @@ msgstr "Projecten"
 #. module: project
 #: model:mail.channel,name:project.mail_channel_project_task
 msgid "Projects & Tasks"
-msgstr ""
+msgstr "Projecten & Taken"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3351,7 +3362,7 @@ msgstr "De reden van annulering is gedocumenteerd"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of ${object.name}"
-msgstr ""
+msgstr "Ontvangst van ${object.name}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
@@ -4008,6 +4019,10 @@ msgid ""
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
+"Hiermee wordt de gebruikte maateenheid ingesteld die wordt gebruikt in "
+"projecten en taken.\n"
+"Wanneer u gebruik maakt van urenstaten gekoppeld aan projecten, vergeet dan "
+"niet de juiste eenheid voor uw werknemers in te stellen."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -4310,6 +4325,7 @@ msgstr "Wat is hun gemiddelde aantal gewerkte uren over een jaar?"
 #: model:ir.model.fields,help:project.field_project_project_is_favorite
 msgid "Whether this project should be displayed on the dashboard or not"
 msgstr ""
+"Bepaalt of dit project al dan niet getoond moet worden in het dashboard"
 
 #. module: project
 #. openerp-web
@@ -4384,7 +4400,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "You can save your reports to easily reuse it later"
 msgstr ""
-"U kan uw rapporten ook opslaan om ze later gemakkelijk opnieuw te gebruiken"
+"U kan uw rapportages ook opslaan om ze later gemakkelijk opnieuw te gebruiken"
 
 #. module: project
 #: code:addons/project/project.py:94

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:15+0000\n"
+"POT-Creation-Date: 2016-12-01 11:53+0000\n"
 "PO-Revision-Date: 2015-10-29 14:58+0000\n"
 "Last-Translator: Ricardo Martins <ricardo.nbs.martins@gmail.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -77,7 +77,7 @@ msgstr "<strong>Fornecedor </strong>"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_date_end
 msgid "Agreement Deadline"
-msgstr ""
+msgstr "Data Limite do Acordo"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_name
@@ -90,11 +90,11 @@ msgid "Agreement Selection Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_11150
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10664
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
-msgstr ""
+msgstr "Tipo de Acordo"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_account_analytic_id
@@ -129,7 +129,7 @@ msgid "Cancelled"
 msgstr "Cancelado"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:98
+#: code:addons/purchase_requisition/purchase_requisition.py:99
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
@@ -148,7 +148,7 @@ msgstr "Empresa"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmar"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -291,7 +291,7 @@ msgstr "Ultima requisição"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_line_copy
 msgid "Lines"
-msgstr ""
+msgstr "Linhas"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -306,7 +306,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "New Quotation"
-msgstr ""
+msgstr "Novo Orçamento"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_qty_ordered
@@ -396,6 +396,11 @@ msgid "Purchase Order"
 msgstr "Ordem de Compra"
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Linha de Ordem de Compra"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
 msgid "Purchase Orders"
 msgstr "Ordens de Compra"
@@ -416,7 +421,7 @@ msgid "Purchase Requisition Line"
 msgstr "Linha de Requisição da compra"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:323
+#: code:addons/purchase_requisition/purchase_requisition.py:342
 #, python-format
 msgid "Purchase Requisition created"
 msgstr "Requisição de Compra Criada"
@@ -434,7 +439,7 @@ msgstr "Ordens de compra"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_quantity_copy
 msgid "Quantities"
-msgstr ""
+msgstr "Quantidades"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_qty
@@ -449,7 +454,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
 msgid "Request for Quotation"
-msgstr ""
+msgstr "Pedido de cotação"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
@@ -510,7 +515,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Sequência"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
@@ -557,7 +562,7 @@ msgstr "Requisição não atribuída"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "Preço Unitário"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
@@ -572,7 +577,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Validate"
-msgstr ""
+msgstr "Validar"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_vendor_id
@@ -585,13 +590,13 @@ msgid "Warehouse"
 msgstr "Armazém"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:103
+#: code:addons/purchase_requisition/purchase_requisition.py:104
 #, python-format
 msgid "You cannot confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:118
+#: code:addons/purchase_requisition/purchase_requisition.py:119
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
@@ -607,202 +612,3 @@ msgstr "e.g. PO0025"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "unknown"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Ação Necessária"
-
-#~ msgid "Approved by Vendor"
-#~ msgstr "Aprovado pelo fornecedor"
-
-#~ msgid "Bid Line Qty"
-#~ msgstr "Qtd Linha de Licitação"
-
-#~ msgid "Call for Tenders Reference"
-#~ msgstr "Referência de Chamada de Concurso"
-
-#~ msgid "Cancel"
-#~ msgstr "Cancelar"
-
-#~ msgid "Cancel Choice"
-#~ msgstr "Cancelar Opcção"
-
-#~ msgid "Cancel Purchase Order"
-#~ msgstr "Cancelar ordem de compra"
-
-#~ msgid "Cancelled by the tender associated to this quotation."
-#~ msgstr "Cancelado pelo concurso associado a esta citação."
-
-#~ msgid "Change Bid line quantity"
-#~ msgstr "Alterar a quantidade da linha de licitação"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Mudar a quantidade"
-
-#~ msgid "Choose Vendor"
-#~ msgstr "Escolher Fornecedor"
-
-#~ msgid "Choose product lines"
-#~ msgstr "Escolher linhas de produto"
-
-#~ msgid "Click to start a new Call for Tenders process."
-#~ msgstr "Clique para criar um novo processo de concurso."
-
-#~ msgid "Close Call for Tenders"
-#~ msgstr "Fechar Realização de Concursos"
-
-#~ msgid "Confirm Call"
-#~ msgstr "Confirmar Chamada"
-
-#~ msgid "Confirm Order"
-#~ msgstr "Confirmar Pedido"
-
-#~ msgid "Confirm Purchase Order"
-#~ msgstr "Confirmar Ordem de Compra"
-
-#~ msgid "Create Request for Quotation"
-#~ msgstr "Criar Requisição de Cotação"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data da Ultmia Mensagem Inserida no Registo"
-
-#~ msgid "Define product(s) you want to include in the call for tenders."
-#~ msgstr "Definir produto(s) que deseja incluir no edital de licitação."
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canais)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Parceiros)"
-
-#~ msgid "Generate PO"
-#~ msgstr "Gerar PO"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
-
-#~ msgid "Is Follower"
-#~ msgstr "É um seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data da Última Mensagem"
-
-#~ msgid "Messages"
-#~ msgstr "Mensagens"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Histórico de mensagens e comunicação"
-
-#~ msgid "Multiple RFQ per vendor"
-#~ msgstr " Múltiplas RFQ por fornecedor"
-
-#~ msgid "New"
-#~ msgstr "Novo"
-
-#~ msgid "New Call for Tenders"
-#~ msgstr "Novo Concurso"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de Ações"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensagens que requerem uma ação"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensagens por ler"
-
-#~ msgid "Order Date"
-#~ msgstr "Ordem da Data"
-
-#~ msgid "PO Created"
-#~ msgstr "PO Criada"
-
-#~ msgid "Product Lines"
-#~ msgstr "Linhas de Produtos"
-
-#~ msgid "Products by vendor"
-#~ msgstr "Produtos por Fornecedor"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Linha de Ordem de Compra"
-
-#~ msgid "Purchase Order Lines"
-#~ msgstr "Linhas de Ordem de Compra"
-
-#~ msgid "Purchase Requisition Partner"
-#~ msgstr "Parceiro da requisição de compra"
-
-#~ msgid "Purchase Requisitions (exclusive)"
-#~ msgstr "Requisições de Compras (exclusivas)"
-
-#~ msgid "RFQ created"
-#~ msgstr "RFQ criada"
-
-#~ msgid "RFQs/Bids"
-#~ msgstr "Ver RFQ's/Licitações"
-
-#~ msgid "Reference"
-#~ msgstr "Referência"
-
-#~ msgid "Request a Quotation"
-#~ msgstr "Solicitar uma cotação"
-
-#~ msgid "Requests for Quotation"
-#~ msgstr "Pedido de cotaçao"
-
-#~ msgid "Scheduled Ordering Date"
-#~ msgstr "Data Programada de Ordem"
-
-#~ msgid "Search Call for Tenders"
-#~ msgstr "Procurar Chamadas de Licitação"
-
-#~ msgid ""
-#~ "Select only one RFQ (exclusive):  On the confirmation of a purchase "
-#~ "order, it cancels the remaining purchase order.\n"
-#~ "Select multiple RFQ:  It allows to have multiple purchase orders.On "
-#~ "confirmation of a purchase order it does not cancel the remaining orders"
-#~ msgstr ""
-#~ "Selecione apenas um RFQ (exclusive): Na confirmação de uma ordem de "
-#~ "compra, cancela a ordem de compra restante. \n"
-#~ "Selecione RFQ múltipla: Permite ter a confirmação múltiplos da compra "
-#~ "orders.On de uma ordem de compra não cancelar as ordens restantes"
-
-#~ msgid "Send RFQ by Email"
-#~ msgstr "Enviar RFQ por Email"
-
-#~ msgid "Tender Selection Type"
-#~ msgstr "Tipo de Selecção de Concurso"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Mensagens por ler"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de Mensagens por Ler"
-
-#~ msgid "Vendors"
-#~ msgstr "Vendedores"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensagens do Website"
-
-#~ msgid "Website communication history"
-#~ msgstr "Histórico de Comunicação do Website"
-
-#~ msgid "You can not confirm call because there is no product line."
-#~ msgstr ""
-#~ "Você não pode confirmar uma ordem de venda que não tem nenhuma linha."
-
-#~ msgid "You have already generate the purchase order(s)."
-#~ msgstr "Já gerou a (s) ordem (s) de compra."
-
-#~ msgid ""
-#~ "You have already one %s purchase order for this partner, you must cancel "
-#~ "this purchase order to create a new quotation."
-#~ msgstr ""
-#~ "Já tem uma ordem %s de compra para este parceiro, deve cancelar esta "
-#~ "ordem de compra para criar uma nova cotação."
