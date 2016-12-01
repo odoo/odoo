@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 07:43+0000\n"
-"PO-Revision-Date: 2016-07-06 08:35+0000\n"
+"POT-Creation-Date: 2016-12-01 14:45+0000\n"
+"PO-Revision-Date: 2016-09-06 09:12+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
 "mn/)\n"
@@ -66,7 +66,7 @@ msgid "19v,5.5 x 2.5 mm Pin Type Adapter (Power Cord Included)"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:261
+#: code:addons/mrp/models/mrp_bom.py:266
 #, python-format
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -227,7 +227,7 @@ msgid "<strong>WorkCenter</strong>"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:419
+#: code:addons/mrp/models/mrp_workorder.py:426
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled!"
 msgstr ""
@@ -310,7 +310,7 @@ msgid "Archived"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:253
+#: code:addons/mrp/models/mrp_bom.py:258
 #, python-format
 msgid "Attachments"
 msgstr ""
@@ -466,7 +466,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_blocked_time
-msgid "Blocked hours over the last month"
+msgid "Blocked hour(s) over the last month"
 msgstr ""
 
 #. module: mrp
@@ -539,23 +539,20 @@ msgid "Cannot delete a manufacturing order not in cancel state"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/change_production_qty.py:56
-#: code:addons/mrp/wizard/change_production_qty.py:59
-#, python-format
-msgid "Cannot find bill of material for this production."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_capacity
 msgid "Capacity"
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.action_change_production_qty
 #: model:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid "Change Product Qty"
 msgstr "Барааны Тоо Хэмжээг Өөрчлөх"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_change_production_qty
+msgid "Change Quantity To Produce"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
@@ -823,6 +820,16 @@ msgid "Date"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_finished
+msgid "Deadline End"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_start
+msgid "Deadline Start"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Default Duration"
 msgstr ""
@@ -926,7 +933,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_tree_view
-msgid "Duration (hours)"
+msgid "Duration (minutes)"
 msgstr ""
 
 #. module: mrp
@@ -982,23 +989,8 @@ msgid "End Date"
 msgstr "Дуусах огноо"
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Expected Date"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_duration_expected
 msgid "Expected Duration"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_finished
-msgid "Expected End Date"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_start
-msgid "Expected Start Date"
 msgstr ""
 
 #. module: mrp
@@ -1357,6 +1349,14 @@ msgid "Late"
 msgstr "Хоцрох"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_production.py:365
+#, python-format
+msgid ""
+"Lines need to be deleted, but can not as you still have some quantities to "
+"consume in them. "
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_location_id
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_location_id
 msgid "Location"
@@ -1373,7 +1373,7 @@ msgid "Location where the system will stock the finished products."
 msgstr "Дууссан барааг систем хадгалах  байрлал."
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_9451
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_9454
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
 msgstr ""
@@ -1930,7 +1930,7 @@ msgid "Planned Date"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:264
+#: code:addons/mrp/models/mrp_workorder.py:268
 #, python-format
 msgid ""
 "Please set the quantity you produced in the Current Qty field. It can not be "
@@ -2012,11 +2012,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Product"
 msgstr "Бараа"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_change_production_qty_product_qty
-msgid "Product Qty"
-msgstr "Барааны тоо"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_product_qty
@@ -2127,7 +2122,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_productive_time
-msgid "Productive hours over the last month"
+msgid "Productive hour(s) over the last month"
 msgstr ""
 
 #. module: mrp
@@ -2203,13 +2198,14 @@ msgid "Quantity Produced"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_batch_size
-msgid "Quantity to Process"
+#: model:ir.model.fields,field_description:mrp.field_change_production_qty_product_qty
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_qty
+msgid "Quantity To Produce"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production_product_qty
-msgid "Quantity to Produce"
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_batch_size
+msgid "Quantity to Process"
 msgstr ""
 
 #. module: mrp
@@ -2264,7 +2260,7 @@ msgid "Record Production"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:126
+#: code:addons/mrp/models/mrp_bom.py:131
 #, python-format
 msgid ""
 "Recursion error!  A product with a Bill of Material should not have itself "
@@ -2290,7 +2286,7 @@ msgid "Reference of the document that generated this production order request."
 msgstr "Энэ үйлдвэрлэлийн захиалгын хүсэлтийг үүсгэсэн баримтын код"
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:244
+#: code:addons/mrp/models/stock_move.py:292
 #, python-format
 msgid "Register Lots"
 msgstr ""
@@ -2427,8 +2423,8 @@ msgid "Scheduled Month"
 msgstr "Товлосон сар"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:529
-#: code:addons/mrp/models/mrp_workorder.py:428
+#: code:addons/mrp/models/mrp_production.py:534
+#: code:addons/mrp/models/mrp_workorder.py:435
 #: model:ir.ui.menu,name:mrp.menu_mrp_scrap
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -2682,7 +2678,7 @@ msgid "Technical: used in views only."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:222
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:227
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -2783,7 +2779,7 @@ msgid "Time Tracking"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:355
+#: code:addons/mrp/models/mrp_workorder.py:362
 #, python-format
 msgid "Time Tracking: "
 msgstr ""
@@ -3057,7 +3053,7 @@ msgid "Warehouse"
 msgstr "Агуулах"
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:222
+#: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:227
 #, python-format
 msgid "Warning"
 msgstr "Сануулга"
@@ -3102,6 +3098,13 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_manufacture_to_resupply
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_batch
+msgid ""
+"Will determine if the next work order will be planned after the previous one "
+"or after the first Quantity To Process of the previous one."
 msgstr ""
 
 #. module: mrp
@@ -3251,7 +3254,7 @@ msgid "Work Sheet"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:507
+#: code:addons/mrp/models/mrp_production.py:512
 #, python-format
 msgid "Work order %s is still running"
 msgstr ""
@@ -3330,13 +3333,13 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_production.py:445
+#: code:addons/mrp/models/mrp_production.py:450
 #, python-format
 msgid "You can not cancel production order, a work order is still in progress."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:226
+#: code:addons/mrp/models/mrp_workorder.py:230
 #, python-format
 msgid "You can not change the finished work order."
 msgstr ""
@@ -3356,14 +3359,13 @@ msgid "You cannot cancel a move move having already consumed material"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/change_production_qty.py:45
+#: code:addons/mrp/wizard/change_production_qty.py:44
 #, python-format
-msgid ""
-"You have already produced %d qty , Please give update quantity more then %d "
+msgid "You have already processed %d. Please input a quantity higher than %d "
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:348
+#: code:addons/mrp/models/mrp_workorder.py:355
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3372,7 +3374,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:344
+#: code:addons/mrp/models/mrp_workorder.py:351
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
@@ -3381,7 +3383,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:396
+#: code:addons/mrp/models/mrp_workorder.py:403
 #, python-format
 msgid ""
 "You need to define at least one unactive productivity loss in the category "
@@ -3390,19 +3392,25 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/mrp_product_produce.py:95
+#: code:addons/mrp/wizard/mrp_product_produce.py:99
 #, python-format
 msgid "You need to provide a lot for the finished product"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:282
+#: code:addons/mrp/wizard/mrp_product_produce.py:78
+#, python-format
+msgid "You should at least produce some quantity"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_workorder.py:286
 #, python-format
 msgid "You should provide a lot for a component"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/models/mrp_workorder.py:267
+#: code:addons/mrp/models/mrp_workorder.py:271
 #, python-format
 msgid "You should provide a lot for the final product"
 msgstr ""
@@ -3465,7 +3473,6 @@ msgid "stock.scrap"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "to"
 msgstr ""

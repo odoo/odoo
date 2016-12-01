@@ -111,7 +111,7 @@ msgstr "Позиция банковской выписки"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr ""
+msgstr "Соответствует пользователю данной компании"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -241,7 +241,7 @@ msgstr "Нумерация проводок"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_filename
 msgid "Filename"
-msgstr ""
+msgstr "Имя файла"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_data_file
@@ -425,7 +425,6 @@ msgstr "Последовательность записей возмещений
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
-#, fuzzy
 msgid ""
 "Select 'Sale' for customer invoices journals.\n"
 "Select 'Purchase' for vendor bills journals.\n"
@@ -433,11 +432,11 @@ msgid ""
 "payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"Выберите «Продажа» для журналов счетов-фактур клиента. Выберите 'Покупку' "
-"для журналов счетов-фактур поставщика. Выберите \"Наличные\" или \"Банк\" "
-"для журналов, которые используются в платежах клиента или поставщика. "
-"Выберите 'Разное' для журналов прочих операций. Выберите 'Состояние Открытия/"
-"Закрытия' для записей созданных для нового финансового года."
+"«Продажи» для журналов счетов заказчиков.\n"
+"«Закупки» для журналов счетов поставщиков.\n"
+"«Наличные» или «Банк» для журналов платежей, используемых покупателем или "
+"поставщиком.\n"
+"«Общий» для остальных журналов."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -572,16 +571,3 @@ msgstr "Вы уже импортировали данный файл."
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "_Import"
 msgstr "_Импорт"
-
-#~ msgid ""
-#~ "Select 'Sale' for customer invoices journals. Select 'Purchase' for "
-#~ "vendor bills journals. Select 'Cash' or 'Bank' for journals that are used "
-#~ "in customer or vendor payments. Select 'General' for miscellaneous "
-#~ "operations journals. Select 'Opening/Closing Situation' for entries "
-#~ "generated for new fiscal years."
-#~ msgstr ""
-#~ "Выберите «Продажа» для журналов счетов-фактур клиента. Выберите 'Покупку' "
-#~ "для журналов счетов-фактур поставщика. Выберите \"Наличные\" или \"Банк\" "
-#~ "для журналов, которые используются в платежах клиента или поставщика. "
-#~ "Выберите 'Разное' для журналов прочих операций. Выберите 'Состояние "
-#~ "Открытия/Закрытия' для записей созданных для нового финансового года."

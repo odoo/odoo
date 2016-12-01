@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-09-03 01:31+0000\n"
-"Last-Translator: Febrasari Almania <febrasari.almania@gmail.com>\n"
+"POT-Creation-Date: 2016-12-01 14:46+0000\n"
+"PO-Revision-Date: 2016-10-19 00:40+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
 "id/)\n"
 "Language: id\n"
@@ -223,7 +223,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_pos_data_drinks
 msgid ""
 "\n"
-"        Common drinks data for point of sales\n"
+"        Common drinks data for points of sale\n"
 "    "
 msgstr ""
 
@@ -351,6 +351,15 @@ msgid ""
 "    PayuMoney Payment Acquirer for India.\n"
 "\n"
 "    PayUmoney payment gateway supports only INR currency.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_tax_exigible
+msgid ""
+"\n"
+"    This is a bugfix-module backporting 39d68ac and adding the concept of "
+"tax exigibility on journal items.\n"
 "    "
 msgstr ""
 
@@ -3955,15 +3964,15 @@ msgid "%p - Equivalent of either AM or PM.\""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_filters.py:36 code:addons/base/res/res_partner.py:305
-#: code:addons/base/res/res_users.py:141 code:addons/base/res/res_users.py:406
-#: code:addons/base/res/res_users.py:408
+#: code:addons/base/ir/ir_filters.py:38 code:addons/base/res/res_partner.py:305
+#: code:addons/base/res/res_users.py:141 code:addons/base/res/res_users.py:405
+#: code:addons/base/res/res_users.py:407
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copy)"
 
 #. module: base
-#: code:addons/models.py:6233
+#: code:addons/models.py:6242
 #, python-format
 msgid ""
 "%s This might be '%s' in the current model, or a field of the same name in "
@@ -3981,7 +3990,7 @@ msgid "%y - Year without century [00,99].\""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1005
+#: code:addons/base/ir/ir_model.py:1029
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -4312,7 +4321,7 @@ msgid "<u><strong>Views</strong></u>"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3595
+#: code:addons/models.py:3605
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
 msgstr ""
@@ -4638,7 +4647,7 @@ msgstr "Tindakan"
 #. module: base
 #: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
 msgid "Activate"
-msgstr ""
+msgstr "Aktifkan"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_active
@@ -4844,8 +4853,8 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:568 code:addons/base/ir/ir_model.py:627
-#: code:addons/base/ir/ir_model.py:1111
+#: code:addons/base/ir/ir_model.py:592 code:addons/base/ir/ir_model.py:651
+#: code:addons/base/ir/ir_model.py:1135
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr "Akses administrator diperlukan untuk membongkar sebuah modul"
@@ -5014,7 +5023,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:716
+#: code:addons/base/res/res_users.py:715
 #: model:ir.model,name:base.model_ir_module_category
 #: model:ir.model.fields,field_description:base.field_ir_module_module_application
 #: model:ir.model.fields,field_description:base.field_res_groups_category_id
@@ -5707,7 +5716,7 @@ msgid "Can not upgrade module '%s'. It is not installed."
 msgstr "Tidak dapat memperbarui modul '%s'. Modul tersebut tidak dipasang."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:494
+#: code:addons/base/ir/ir_model.py:518
 #, python-format
 msgid "Can only rename one field at a time!"
 msgstr "Hanya bisa mengganti satu baris nama dalam satu waktu!"
@@ -5764,7 +5773,7 @@ msgid "Cannot duplicate configuration!"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:496
+#: code:addons/base/ir/ir_model.py:520
 #, python-format
 msgid "Cannot rename field to %s, because that field already exists!"
 msgstr ""
@@ -5854,19 +5863,19 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:482
+#: code:addons/base/ir/ir_model.py:505
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:460
+#: code:addons/base/ir/ir_model.py:483
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:485
+#: code:addons/base/ir/ir_model.py:508
 #, python-format
 msgid ""
 "Changing the type of a field is not yet supported. Please drop it and create "
@@ -6203,7 +6212,7 @@ msgstr "Entitas komersial"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_data_drinks
-msgid "Common Drinks data for point of sales"
+msgid "Common Drinks data for points of sale"
 msgstr ""
 
 #. module: base
@@ -6719,7 +6728,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
 msgid "Create date"
-msgstr ""
+msgstr "Buat Tanggal"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -7037,7 +7046,7 @@ msgid "Custom Shortcuts"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:432
+#: code:addons/base/ir/ir_model.py:455
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr ""
@@ -7142,7 +7151,7 @@ msgid "Database Structure"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3520
+#: code:addons/models.py:3530
 #, python-format
 msgid ""
 "Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
@@ -7599,10 +7608,10 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_document_management
 msgid "Document Management"
-msgstr ""
+msgstr "Manajemen dokumen"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:774 code:addons/base/ir/ir_model.py:777
+#: code:addons/base/ir/ir_model.py:798 code:addons/base/ir/ir_model.py:801
 #, python-format
 msgid "Document model"
 msgstr ""
@@ -7623,7 +7632,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_rule_domain
 #: model:ir.model.fields,field_description:base.field_ir_rule_domain_force
 msgid "Domain"
-msgstr ""
+msgstr "Filter"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_domain
@@ -7648,7 +7657,7 @@ msgstr ""
 #. module: base
 #: selection:ir.actions.todo,state:0
 msgid "Done"
-msgstr ""
+msgstr "selesai"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
@@ -7739,7 +7748,7 @@ msgid "El Salvador"
 msgstr "El Salvador"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:565
+#: code:addons/base/ir/ir_ui_view.py:581
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr ""
@@ -7792,10 +7801,10 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
 msgid "Employees"
-msgstr ""
+msgstr "Karyawan"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:302
+#: code:addons/base/ir/ir_model.py:306
 #, python-format
 msgid "Empty dependency in %r"
 msgstr ""
@@ -7846,7 +7855,7 @@ msgid "Error ! You cannot create recursive companies."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:426
+#: code:addons/base/ir/ir_ui_view.py:442
 #, python-format
 msgid ""
 "Error context:\n"
@@ -7854,13 +7863,13 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:1233
+#: code:addons/models.py:1243
 #, python-format
 msgid "Error details:"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:1246
+#: code:addons/models.py:1256
 #, python-format
 msgid "Error while validating constraint"
 msgstr ""
@@ -8198,19 +8207,19 @@ msgid "Field"
 msgstr "kolom"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:135
+#: code:addons/base/ir/ir_model.py:139
 #, python-format
 msgid "Field \"Model\" cannot be modified on models."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:139
+#: code:addons/base/ir/ir_model.py:143
 #, python-format
 msgid "Field \"Transient Model\" cannot be modified on models."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:137
+#: code:addons/base/ir/ir_model.py:141
 #, python-format
 msgid "Field \"Type\" cannot be modified on models."
 msgstr ""
@@ -8239,7 +8248,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_exports_line_name
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_name
 msgid "Field Name"
-msgstr ""
+msgstr "Nama Kolom"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_ttype
@@ -8247,7 +8256,7 @@ msgid "Field Type"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:877
+#: code:addons/base/ir/ir_ui_view.py:893
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr ""
@@ -8279,7 +8288,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_base_language_export_data
 #: model:ir.model.fields,field_description:base.field_base_language_import_data
 msgid "File"
-msgstr ""
+msgstr "Berkas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_datas
@@ -8296,7 +8305,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_base_language_import_filename
 #: model:ir.model.fields,field_description:base.field_ir_attachment_datas_fname
 msgid "File Name"
-msgstr ""
+msgstr "Nama Berkas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_file_size
@@ -8448,6 +8457,12 @@ msgid ""
 "  - tree_but_open\n"
 "For defaults, an optional condition"
 msgstr ""
+"Untuk aksi, pilih salah satu slot aksi yang mungkin:  \n"
+"  - client_action_multi\n"
+"  - client_print_multi\n"
+"  - client_action_relate\n"
+"  - tree_but_open\n"
+"Untuk defaults, kondisi opsional"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -8470,13 +8485,13 @@ msgid "For relationship fields, the technical name of the target model"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:425
+#: code:addons/base/ir/ir_model.py:448
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3655
+#: code:addons/models.py:3665
 #, python-format
 msgid ""
 "For this kind of document, you may only access records you created "
@@ -8490,7 +8505,7 @@ msgstr ""
 #: selection:ir.actions.act_window.view,view_mode:0
 #: model:ir.ui.view,arch_db:base.view_view_search selection:ir.ui.view,type:0
 msgid "Form"
-msgstr ""
+msgstr "Formulir"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum
@@ -8531,7 +8546,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.gf
 msgid "French Guyana"
-msgstr ""
+msgstr "Guyana Perancis"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll
@@ -8546,7 +8561,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range_date_from
 msgid "From"
-msgstr ""
+msgstr "Dari"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_access_view_search
@@ -8628,7 +8643,7 @@ msgstr "Umum"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
 msgid "General Information"
-msgstr ""
+msgstr "Informasi Umum"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_config
@@ -8709,7 +8724,7 @@ msgstr ""
 #: code:addons/base/res/res_config.py:666
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Menuju panel konfigurasi"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_4
@@ -8719,7 +8734,7 @@ msgstr "Gold"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_calendar
 msgid "Google Calendar"
-msgstr ""
+msgstr "Google Calendar"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_drive
@@ -8739,7 +8754,7 @@ msgstr ""
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0 selection:ir.ui.view,type:0
 msgid "Graph"
-msgstr ""
+msgstr "Diagram"
 
 #. module: base
 #: model:res.country,name:base.gr
@@ -8945,7 +8960,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 #: model:ir.ui.view,arch_db:base.view_window_action_form
 msgid "Help"
-msgstr ""
+msgstr "Bantuan"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_planner
@@ -8960,7 +8975,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_point_of_sale
 msgid ""
-"Helps you get the most out of your points of sales with fast sale encoding, "
+"Helps you get the most out of your points of sale with fast sale encoding, "
 "simplified payment mode encoding, automatic picking lists generation and "
 "more."
 msgstr ""
@@ -9021,6 +9036,8 @@ msgid ""
 "Helps you manage your projects and tasks by tracking them, generating "
 "plannings, etc..."
 msgstr ""
+"Membantu anda mengelola proyek dan tugas dengan cara melacak, menghasilkan "
+"perencanaan, dan lain sebagainya..."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_purchase_management
@@ -9280,7 +9297,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_icon_image
 msgid "Icon"
-msgstr ""
+msgstr "Ikon"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_icon
@@ -9443,7 +9460,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_image
 #: model:ir.model.fields,field_description:base.field_res_users_image
 msgid "Image"
-msgstr ""
+msgstr "Gambar"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -9531,7 +9548,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
 msgid "Indian Payroll"
-msgstr ""
+msgstr "Payroll untuk India"
 
 #. module: base
 #: selection:res.partner,company_type:0
@@ -9548,7 +9565,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.ir_cron_view
 #: model:ir.ui.view,arch_db:base.module_form
 msgid "Information"
-msgstr ""
+msgstr "Informasi"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_search
@@ -9654,13 +9671,13 @@ msgid "Instant Messaging Bus allow you to send messages to users, in live."
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:1448
+#: code:addons/models.py:1458
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:1458
+#: code:addons/models.py:1468
 #, python-format
 msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
@@ -9691,7 +9708,7 @@ msgstr "Catatan internal"
 #: model:ir.model.fields,field_description:base.field_res_partner_ref
 #: model:ir.model.fields,field_description:base.field_res_users_ref
 msgid "Internal Reference"
-msgstr ""
+msgstr "Referensi internal"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_translation_src
@@ -9729,12 +9746,18 @@ msgid "Introspection report on objects"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:4576
+#: code:addons/models.py:4585
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
 "separated list of valid field names (optionally followed by asc/desc for the "
 "direction)"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_users.py:317
+#, python-format
+msgid "Invalid 'group by' parameter"
 msgstr ""
 
 #. module: base
@@ -9756,6 +9779,8 @@ msgid ""
 "Invalid date/time format directive specified. Please refer to the list of "
 "allowed directives, displayed when you edit a language."
 msgstr ""
+"Penetapan format data/time salah. Silakan contoh yang ditampilkan ketika "
+"mengedit bahasa."
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:720
@@ -9764,7 +9789,7 @@ msgid "Invalid expression"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:743
+#: code:addons/models.py:749
 #, python-format
 msgid ""
 "Invalid function definition %s in object %s !\n"
@@ -9773,17 +9798,11 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:2128
+#: code:addons/models.py:2138
 #, python-format
 msgid ""
 "Invalid group_by specification: \"%s\".\n"
 "A group_by specification must be a list of valid fields."
-msgstr ""
-
-#. module: base
-#: code:addons/base/res/res_users.py:318
-#, python-format
-msgid "Invalid groupby"
 msgstr ""
 
 #. module: base
@@ -9800,7 +9819,7 @@ msgid "Invalid model name %r in action definition."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:557
+#: code:addons/base/ir/ir_ui_view.py:573
 #, python-format
 msgid "Invalid position attribute: '%s'"
 msgstr ""
@@ -9812,7 +9831,7 @@ msgid "Invalid prefix or suffix for sequence '%s'"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:326
+#: code:addons/base/res/res_users.py:325
 #, python-format
 msgid "Invalid search criterion"
 msgstr ""
@@ -9824,7 +9843,7 @@ msgid "Invalid type"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:296 code:addons/base/ir/ir_ui_view.py:298
+#: code:addons/base/ir/ir_ui_view.py:298 code:addons/base/ir/ir_ui_view.py:300
 #, python-format
 msgid "Invalid view definition"
 msgstr ""
@@ -9972,12 +9991,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_function
 #: model:ir.model.fields,field_description:base.field_res_users_function
 msgid "Job Position"
-msgstr ""
+msgstr "Posisi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr
 msgid "Jobs, Departments, Employees Details"
-msgstr ""
+msgstr "Detail Pekerjaan, Departemen, Karyawan"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment
@@ -10026,7 +10045,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_key
 #: model:ir.ui.view,arch_db:base.view_ir_config_search
 msgid "Key"
-msgstr ""
+msgstr "Kunci"
 
 #. module: base
 #: sql_constraint:ir.config_parameter:0
@@ -10090,7 +10109,7 @@ msgid "Language Name"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/wizard/base_language_install.py:29
+#: code:addons/base/module/wizard/base_language_install.py:28
 #, python-format
 msgid "Language Pack"
 msgstr ""
@@ -10471,7 +10490,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_logging_level
 #: model:ir.ui.view,arch_db:base.ir_logging_search_view
 msgid "Level"
-msgstr ""
+msgstr "Tingkat"
 
 #. module: base
 #: model:res.country,name:base.lr
@@ -10557,7 +10576,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_localization
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Localization"
-msgstr ""
+msgstr "Lokalisasi"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -10573,7 +10592,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_login
 msgid "Login"
-msgstr ""
+msgstr "Log masuk"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_logo_web
@@ -10663,7 +10682,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range_sequence_id
 msgid "Main Sequence"
-msgstr ""
+msgstr "Urutan Utama"
 
 #. module: base
 #: selection:ir.actions.act_window,target:0
@@ -10772,7 +10791,7 @@ msgid "Manufacturing Orders, Bill of Materials, Routings"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:2858
+#: code:addons/models.py:2868
 #, python-format
 msgid "Many2Many destination model does not exist: `%s`"
 msgstr ""
@@ -10783,7 +10802,7 @@ msgid "Many2One"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:439
+#: code:addons/base/ir/ir_model.py:462
 #, python-format
 msgid "Many2one %s on model %s does not exist!"
 msgstr ""
@@ -10809,7 +10828,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
 msgid "Marketing"
-msgstr ""
+msgstr "Pemasaran"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_campaign_crm_demo
@@ -10819,7 +10838,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_campaign
 msgid "Marketing Campaigns"
-msgstr ""
+msgstr "Kampanye Pemasaran"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ma
@@ -10930,7 +10949,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_message
 msgid "Message"
-msgstr ""
+msgstr "Pesan"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
@@ -10996,19 +11015,19 @@ msgid "Missing SMTP Server"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3624
+#: code:addons/models.py:3634
 #, python-format
 msgid "Missing document(s)"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:6218
+#: code:addons/models.py:6227
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:6215
+#: code:addons/models.py:6224
 #, python-format
 msgid "Missing required value for the field '%s'."
 msgstr ""
@@ -11022,7 +11041,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_mobile
 #: model:ir.model.fields,field_description:base.field_res_users_mobile
 msgid "Mobile"
-msgstr ""
+msgstr "Ponsel"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
@@ -11032,7 +11051,7 @@ msgstr "HP:"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_font_mode
 msgid "Mode"
-msgstr ""
+msgstr "Contoh"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_model
@@ -11048,10 +11067,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_model_search
 #: model:ir.ui.view,arch_db:base.view_server_action_search
 msgid "Model"
-msgstr ""
+msgstr "Contoh"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:435
+#: code:addons/base/ir/ir_model.py:458
 #, python-format
 msgid "Model %s does not exist!"
 msgstr ""
@@ -11065,7 +11084,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_values_model_id
 msgid "Model (change only)"
-msgstr ""
+msgstr "Contoh"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_constraint
@@ -11092,7 +11111,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_data_model
 #: model:ir.model.fields,field_description:base.field_ir_values_model
 msgid "Model Name"
-msgstr ""
+msgstr "Nama Contoh"
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.report_ir_model_overview
@@ -11121,9 +11140,10 @@ msgstr ""
 msgid ""
 "Model name on which the method to be called is located, e.g. 'res.partner'."
 msgstr ""
+"Nama model dimana terletak metode yang akan dipanggil, contoh 'res.partner'."
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:666 code:addons/base/ir/ir_ui_view.py:828
+#: code:addons/base/ir/ir_ui_view.py:682 code:addons/base/ir/ir_ui_view.py:844
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr ""
@@ -11294,7 +11314,7 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_multi_currency
 msgid "Multi Currencies"
-msgstr ""
+msgstr "Multi Mata Uang"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_multilang
@@ -11391,7 +11411,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.an
 msgid "Netherlands Antilles"
-msgstr ""
+msgstr "Netherlands Antilles"
 
 #. module: base
 #: model:res.country,name:base.nt
@@ -11432,7 +11452,7 @@ msgid "New Zealand - Accounting"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:498
+#: code:addons/base/ir/ir_model.py:522
 #, python-format
 msgid "New field name must still start with x_ , because it is a custom field!"
 msgstr ""
@@ -11495,7 +11515,7 @@ msgid "Niue"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:1556
+#: code:addons/models.py:1566
 #, python-format
 msgid "No default view of type '%s' could be found !"
 msgstr ""
@@ -11503,7 +11523,7 @@ msgstr ""
 #. module: base
 #: selection:ir.sequence,implementation:0
 msgid "No gap"
-msgstr ""
+msgstr "Tidak ada gap"
 
 #. module: base
 #: code:addons/base/module/wizard/base_update_translations.py:33
@@ -11524,13 +11544,13 @@ msgid "Non Updatable"
 msgstr "Tidak dapat diperbarui"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:311
+#: code:addons/base/ir/ir_model.py:315
 #, python-format
 msgid "Non-relational field %r in dependency %r"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:268
+#: code:addons/base/ir/ir_model.py:272
 #, python-format
 msgid "Non-relational field name '%s' in related field '%s'"
 msgstr ""
@@ -11700,7 +11720,7 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_hr_user
 msgid "Officer"
-msgstr ""
+msgstr "Petugas"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_ogone
@@ -11735,7 +11755,7 @@ msgid "On delete property for many2one fields"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3624
+#: code:addons/models.py:3634
 #, python-format
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
@@ -11743,7 +11763,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:4010
+#: code:addons/models.py:4019
 #, python-format
 msgid ""
 "One of the records you are trying to modify has already been deleted "
@@ -11807,7 +11827,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:774
+#: code:addons/base/ir/ir_model.py:798
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
@@ -11887,10 +11907,10 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_custom_ref_id
 msgid "Original View"
-msgstr ""
+msgstr "View Asli"
 
 #. module: base
-#: code:addons/base/res/res_users.py:730 code:addons/base/res/res_users.py:895
+#: code:addons/base/res/res_users.py:729 code:addons/base/res/res_users.py:892
 #, python-format
 msgid "Other"
 msgstr "Lainnya"
@@ -12038,7 +12058,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.ir_property_view_search
 #: model:ir.ui.view,arch_db:base.ir_property_view_tree
 msgid "Parameters"
-msgstr ""
+msgstr "Parameter"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_property_view_search
@@ -12058,7 +12078,7 @@ msgstr "Aplikasi Induk"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category_parent_id
 msgid "Parent Category"
-msgstr ""
+msgstr "Induk Kategori"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_parent_id
@@ -12228,7 +12248,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll
 msgid "Payroll"
-msgstr ""
+msgstr "Penggajian"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account
@@ -12306,7 +12326,7 @@ msgid "Plano de contas SNC para Portugal"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:777
+#: code:addons/base/ir/ir_model.py:801
 #, python-format
 msgid "Please contact your system administrator if you think this is an error."
 msgstr ""
@@ -12359,7 +12379,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
 msgid "Point of Sale"
-msgstr ""
+msgstr "POS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_data_drinks
@@ -12458,7 +12478,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Preferences"
-msgstr ""
+msgstr "preferensi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_prefix
@@ -12565,12 +12585,14 @@ msgid "Properties"
 msgstr "Properti"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:477
+#: code:addons/base/ir/ir_model.py:500
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
 "them through Python code, preferably through a custom addon!"
 msgstr ""
+"Sifat field basis tidak dapat diubah dengan cara ini! Silahkan "
+"memodifikasinya melalui kode Python, sebaiknya dibuat modul terpisah."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_theme_install
@@ -12597,7 +12619,7 @@ msgstr ""
 #. module: base
 #: model:res.groups,name:base.group_public
 msgid "Public"
-msgstr ""
+msgstr "Umum"
 
 #. module: base
 #: model:res.groups,comment:base.group_public
@@ -12673,7 +12695,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_act_server_code
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Python Code"
-msgstr ""
+msgstr "Kode Python"
 
 #. module: base
 #: selection:ir.server.object.lines,type:0
@@ -12719,11 +12741,11 @@ msgid "Quotations, Sales Orders, Invoicing"
 msgstr "Penawaran, Pesanan Penjualan, Faktur"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:305
+#: code:addons/base/ir/ir_ui_view.py:307
 #, python-format
 msgid ""
-"Qweb view cannot have 'Groups' define on the record. Use 'groups' "
-"atttributes inside the view definition"
+"Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes "
+"inside the view definition"
 msgstr ""
 
 #. module: base
@@ -12824,7 +12846,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:358 code:addons/models.py:4984
+#: code:addons/base/ir/ir_actions.py:358 code:addons/models.py:4993
 #, python-format
 msgid "Record does not exist or has been deleted."
 msgstr ""
@@ -12858,7 +12880,7 @@ msgid "Recursion found in child server actions"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:4118
+#: code:addons/models.py:4127
 #, python-format
 msgid "Recursivity Detected."
 msgstr ""
@@ -12902,13 +12924,13 @@ msgid "Related Server Action"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:280
+#: code:addons/base/ir/ir_model.py:284
 #, python-format
 msgid "Related field '%s' does not have comodel '%s'"
 msgstr "Relasi field '%s' tidak memiliki comodel '%s'"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:278
+#: code:addons/base/ir/ir_model.py:282
 #, python-format
 msgid "Related field '%s' does not have type '%s'"
 msgstr "Relasi field '%s' tidak memiliki tipe '%s'"
@@ -12926,7 +12948,7 @@ msgstr "Relasi - Nama"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_relation_field
 msgid "Relation field"
-msgstr ""
+msgstr "Bidang hubungan"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_relation_table
@@ -12964,7 +12986,7 @@ msgid "Remove the contextual action related to this server action"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:462
+#: code:addons/base/ir/ir_model.py:485
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "Menganti nama field \"%s\" tidak diizinkan"
@@ -13070,7 +13092,7 @@ msgid "Resellers"
 msgstr "Reseller"
 
 #. module: base
-#: code:addons/models.py:1064
+#: code:addons/models.py:1070
 #, python-format
 msgid "Resolve other errors first"
 msgstr ""
@@ -13269,7 +13291,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sh
 msgid "Saint Helena"
-msgstr ""
+msgstr "Santa Helena"
 
 #. module: base
 #: model:res.country,name:base.kn
@@ -13434,7 +13456,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_search selection:ir.ui.view,type:0
 msgid "Search"
-msgstr ""
+msgstr "Penelusuran"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.config_wizard_step_view_search
@@ -13444,7 +13466,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Search Partner"
-msgstr ""
+msgstr "Pencarian Partner"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_search_view_id
@@ -13515,6 +13537,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Memilih opsi \"Peringatan\" akan memberitahu pengguna dengan pesan, memilih "
+"\"Blokir pesan\" akan memunculkan exception dengan pesan dan memblokir "
+"aliran. Pesan harus ditulis dalam bidang berikutnya."
 
 #. module: base
 #: selection:ir.property,type:0 selection:ir.translation,type:0
@@ -13591,7 +13616,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.sequence_view_tree
 #: model:ir.ui.view,arch_db:base.view_sequence_search
 msgid "Sequences"
-msgstr ""
+msgstr "Urutan"
 
 #. module: base
 #: model:ir.ui.menu,name:base.next_id_5
@@ -13642,7 +13667,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_11
 msgid "Services"
-msgstr ""
+msgstr "Layanan"
 
 #. module: base
 #: selection:ir.model.fields,on_delete:0
@@ -13666,6 +13691,7 @@ msgid ""
 "Set the font into the report header, it will be used as default font in the "
 "RML reports of the user company"
 msgstr ""
+"Atur huruf pada kop laporan perusahaan, huruf ini digunakan pada laporan RML."
 
 #. module: base
 #: code:addons/base/res/res_users.py:521
@@ -13845,25 +13871,25 @@ msgid "Sometimes called BIC or Swift."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_attachment.py:288 code:addons/base/ir/ir_model.py:768
+#: code:addons/base/ir/ir_attachment.py:288 code:addons/base/ir/ir_model.py:792
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr "Maaf, anda tidak diizinkan mengakses dokumen ini."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:770
+#: code:addons/base/ir/ir_model.py:794
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr "Maaf, anda tidak diizinkan membuat dokumen baru"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:771
+#: code:addons/base/ir/ir_model.py:795
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr "Maaf, anda tidak diizinkan menghapus dokumen"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:769
+#: code:addons/base/ir/ir_model.py:793
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr "Maaf, anda tidak diizinkan melakukan perubahan dokumen"
@@ -13874,7 +13900,7 @@ msgid "Sort"
 msgstr "Diurutkan"
 
 #. module: base
-#: code:addons/models.py:4711
+#: code:addons/models.py:4720
 #, python-format
 msgid "Sorting field %s not found on model %s"
 msgstr ""
@@ -14017,12 +14043,6 @@ msgid "State Name"
 msgstr "Nama Propinsi"
 
 #. module: base
-#: code:addons/base/res/res_country.py:138
-#, python-format
-msgid "State with id [%s] (%s) seems to have duplicated code: %s"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state_ids
 msgid "States"
 msgstr "Negara"
@@ -14064,7 +14084,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_stock
 msgid "Stock"
-msgstr ""
+msgstr "Popor"
 
 #. module: base
 #: selection:workflow.activity,kind:0
@@ -14170,12 +14190,12 @@ msgstr "Nilai akhiran rekor urutan"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_summary
 msgid "Summary"
-msgstr ""
+msgstr "Ringkasan"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_client_params
 msgid "Supplementary arguments"
-msgstr ""
+msgstr "Argumen tambahan"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bootswatch
@@ -14211,7 +14231,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sz
 msgid "Swaziland"
-msgstr ""
+msgstr "Swaziland"
 
 #. module: base
 #: model:res.country,name:base.se
@@ -14355,7 +14375,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_act_client_target
 #: model:ir.model.fields,field_description:base.field_ir_act_window_target
 msgid "Target Window"
-msgstr ""
+msgstr "Jendela Sasaran"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_vat
@@ -14369,6 +14389,11 @@ msgstr "PPN"
 msgid ""
 "Tax Identification Number. Fill it if the company is subjected to taxes. "
 "Used by the some of the legal statements."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_tax_exigible
+msgid "Tax exigible"
 msgstr ""
 
 #. module: base
@@ -14404,7 +14429,7 @@ msgid "Technical Settings"
 msgstr "Pengaturan Teknis"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:746
+#: code:addons/base/ir/ir_translation.py:758
 #, python-format
 msgid "Technical Translations"
 msgstr ""
@@ -14453,7 +14478,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_todo_note
 #: selection:ir.property,type:0
 msgid "Text"
-msgstr ""
+msgstr "Teks"
 
 #. module: base
 #: model:res.country,name:base.th
@@ -14473,7 +14498,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:251
+#: code:addons/base/ir/ir_model.py:255
 #, python-format
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
@@ -14581,6 +14606,12 @@ msgid "The destination activity."
 msgstr ""
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:412
+#, python-format
+msgid "The field '%s' cannot be removed because the field '%s' depends on it."
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid ""
 "The field <strong>Compute</strong> is the Python code to\n"
@@ -14659,7 +14690,7 @@ msgstr ""
 msgid ""
 "The internal user that is in charge of communicating with this contact if "
 "any."
-msgstr ""
+msgstr "Pengguna/user yang ditugaskan berhubungan dengan kontak ini, jika ada."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_inherited_model_ids
@@ -14718,7 +14749,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The name of the language must be unique !"
-msgstr ""
+msgstr "Nama bahasa harus unik"
 
 #. module: base
 #: sql_constraint:ir.module.module:0
@@ -14748,6 +14779,9 @@ msgid ""
 "specified as a Python expression defining a list of triplets. For example: "
 "[('color','=','red')]"
 msgstr ""
+"Sebuah domain (opsional) untuk membatasi nilai untuk field yang terelasi, "
+"dimana merupakan ekspresi Python yang mendefinisikan daftar triplet. Sebagai "
+"contoh: [('color', '=', 'merah')]"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_tz
@@ -14796,8 +14830,8 @@ msgid "The record id this is attached to."
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3258 code:addons/models.py:3529
-#: code:addons/models.py:3614
+#: code:addons/models.py:3268 code:addons/models.py:3539
+#: code:addons/models.py:3624
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. "
@@ -14830,7 +14864,7 @@ msgid "The state code."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:363
+#: code:addons/base/ir/ir_model.py:367
 #, python-format
 msgid "The table %r if used for other, possibly incompatible fields."
 msgstr ""
@@ -14855,7 +14889,7 @@ msgid "The user will be able to manage equipments."
 msgstr "Pengguna dapat mengatur peralatan-peralatan."
 
 #. module: base
-#: code:addons/models.py:6230
+#: code:addons/models.py:6239
 #, python-format
 msgid "The value for the field '%s' already exists."
 msgstr "Nilai untuk field '%s' sudah ada."
@@ -14866,21 +14900,23 @@ msgid "Theme"
 msgstr "Tema"
 
 #. module: base
-#: code:addons/base/ir/ir_filters.py:97
+#: code:addons/base/ir/ir_filters.py:104
 #, python-format
 msgid ""
 "There is already a shared filter set as default for %(model)s, delete or "
 "change it before setting a new default"
 msgstr ""
+"Sudah ada filter yang telah ditetapkan untuk  %(model)s, silakan hapus atau "
+"rubah dulu sebelum menetapkan nilai baru."
 
 #. module: base
-#: code:addons/models.py:2716
+#: code:addons/models.py:2726
 #, python-format
 msgid "There is no reference available for %s"
 msgstr "Tidak ada nomor ref. untuk %s"
 
 #. module: base
-#: code:addons/models.py:2841
+#: code:addons/models.py:2851
 #, python-format
 msgid "There is no reference field '%s' found for '%s'"
 msgstr ""
@@ -14896,7 +14932,7 @@ msgid "This Window"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:403
+#: code:addons/base/ir/ir_model.py:420
 #, python-format
 msgid "This column contains module data and cannot be removed!"
 msgstr ""
@@ -15033,13 +15069,13 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range_date_to
 msgid "To"
-msgstr ""
+msgstr "Kepada"
 
 #. module: base
 #: selection:ir.actions.todo,state:0
 #: model:ir.ui.view,arch_db:base.config_wizard_step_view_search
 msgid "To Do"
-msgstr ""
+msgstr "Yang harus dilakukan .."
 
 #. module: base
 #: selection:ir.translation,state:0
@@ -15067,7 +15103,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Todo"
-msgstr ""
+msgstr "Yang harus dilakukan .."
 
 #. module: base
 #: model:res.country,name:base.tg
@@ -15092,7 +15128,7 @@ msgstr "Alat"
 #. module: base
 #: model:ir.module.module,summary:base.module_point_of_sale
 msgid "Touchscreen Interface for Shops"
-msgstr ""
+msgstr "Antarmuka Layar Sentuh untuk Toko"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_tour
@@ -15135,7 +15171,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_workflow_transition_search
 #: model:ir.ui.view,arch_db:base.view_workflow_transition_tree
 msgid "Transition"
-msgstr ""
+msgstr "Transisi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_instance_transition_ids
@@ -15147,7 +15183,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_workflow_transition
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_form
 msgid "Transitions"
-msgstr ""
+msgstr "Transisi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_trans_implied_ids
@@ -15198,7 +15234,7 @@ msgid "Translation comments"
 msgstr "Komentar terjemahan"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:634
+#: code:addons/base/ir/ir_translation.py:646
 #, python-format
 msgid ""
 "Translation features are unavailable until you install an extra translation."
@@ -15211,7 +15247,7 @@ msgid "Translation in Progress"
 msgstr "Terjemahan yang Sedang Dikerjakan"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:555
+#: code:addons/base/ir/ir_translation.py:567
 #, python-format
 msgid ""
 "Translation is not valid:\n"
@@ -15262,7 +15298,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tr
 msgid "Turkey - Accounting"
-msgstr ""
+msgstr "Turki - Akunting"
 
 #. module: base
 #: model:res.country,name:base.tm
@@ -15277,7 +15313,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.tv
 msgid "Tuvalu"
-msgstr ""
+msgstr "Tuvalu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_twitter
@@ -15382,7 +15418,7 @@ msgid "Ukraine"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3736
+#: code:addons/models.py:3746
 #, python-format
 msgid "Unable to delete this document because it is used as a default property"
 msgstr ""
@@ -15451,28 +15487,28 @@ msgstr ""
 #. module: base
 #: selection:ir.module.module.dependency,state:0
 msgid "Unknown"
-msgstr ""
+msgstr "Tidak diketahui"
 
 #. module: base
-#: code:addons/models.py:1198
+#: code:addons/models.py:1208
 #, python-format
 msgid "Unknown database identifier '%s'"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:1063
+#: code:addons/models.py:1069
 #, python-format
 msgid "Unknown error during import:"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:309
+#: code:addons/base/ir/ir_model.py:313
 #, python-format
 msgid "Unknown field %r in dependency %r"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:266
+#: code:addons/base/ir/ir_model.py:270
 #, python-format
 msgid "Unknown field name '%s' in related field '%s'"
 msgstr ""
@@ -15515,7 +15551,7 @@ msgstr "Perbarui Daftar Aplikasi"
 #: model:ir.model.fields,field_description:base.field_ir_model_data_date_update
 #: model:ir.model.fields,field_description:base.field_ir_model_relation_date_update
 msgid "Update Date"
-msgstr ""
+msgstr "Pembaharuan Tanggal"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_tree
@@ -15628,7 +15664,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users_login
 msgid "Used to log into the system"
-msgstr ""
+msgstr "Digunakan untuk masuk ke sistem"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_sequence
@@ -15846,7 +15882,7 @@ msgstr "Tampilkan"
 #: model:ir.ui.view,arch_db:base.view_view_custom_form
 #: model:ir.ui.view,arch_db:base.view_view_search
 msgid "View Architecture"
-msgstr ""
+msgstr "Lihat Arsitektur"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_name
@@ -15950,7 +15986,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_warehouse
 msgid "Warehouse"
-msgstr ""
+msgstr "Gudang"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_picking_wave
@@ -15959,11 +15995,11 @@ msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:474
-#: code:addons/base/ir/ir_model.py:288 code:addons/base/ir/ir_model.py:362
+#: code:addons/base/ir/ir_model.py:292 code:addons/base/ir/ir_model.py:366
 #: code:addons/base/res/res_partner.py:317
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Peringatan"
 
 #. module: base
 #: code:addons/base/res/res_config.py:444
@@ -15972,10 +16008,10 @@ msgid "Warning!"
 msgstr "Peringatan!"
 
 #. module: base
-#: code:addons/models.py:5946
+#: code:addons/models.py:5955
 #, python-format
 msgid "Warnings"
-msgstr ""
+msgstr "Peringatan"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -16270,7 +16306,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_workflow_search
 #: model:ir.ui.view,arch_db:base.view_workflow_tree
 msgid "Workflow"
-msgstr ""
+msgstr "Alur kerja"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_search
@@ -16292,7 +16328,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_workflow_transition_search
 msgid "Workflow Transition"
-msgstr ""
+msgstr "Transisi Alurkerja"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_workflow_workitem_form
@@ -16306,7 +16342,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_workflow
 #: model:ir.ui.menu,name:base.menu_workflow_root
 msgid "Workflows"
-msgstr ""
+msgstr "Alur kerja"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_triggers_workitem_id
@@ -16362,7 +16398,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_report_xsl
 msgid "XSL Path"
-msgstr ""
+msgstr "Lokasi file XSL"
 
 #. module: base
 #: selection:workflow.activity,join_mode:0
@@ -16430,7 +16466,7 @@ msgid "You can not register two fonts with the same name"
 msgstr "Anda tidak dapat mendaftarkan dua fonts dengan nama yang sama"
 
 #. module: base
-#: code:addons/base/res/res_users.py:384
+#: code:addons/base/res/res_users.py:383
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -16478,13 +16514,13 @@ msgid "You cannot create recursive Partner hierarchies."
 msgstr "Anda tidak boleh membuat hirarki rekanan yang rekursif."
 
 #. module: base
-#: code:addons/base/res/res_users.py:343
+#: code:addons/base/res/res_users.py:342
 #, python-format
 msgid "You cannot deactivate the admin user."
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:345
+#: code:addons/base/res/res_users.py:344
 #, python-format
 msgid "You cannot deactivate the user you're currently logged in as."
 msgstr ""
@@ -16562,7 +16598,7 @@ msgstr ""
 msgid ""
 "Your server does not seem to support SSL, you may want to try STARTTLS "
 "instead"
-msgstr ""
+msgstr "Server anda tidak mendukung SSL, anda bisa mencoba dengan STARTTLS"
 
 #. module: base
 #: model:res.country,name:base.yu
@@ -16613,7 +16649,7 @@ msgstr "_unknown"
 #. module: base
 #: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
 msgid "a new currency before creating a new company."
-msgstr ""
+msgstr "sebuah mata uang baru sebelum membuat perusahaan baru."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_partner_kanban_view
@@ -16623,7 +16659,7 @@ msgstr "pada"
 #. module: base
 #: model:ir.model,name:base.model_base
 msgid "base"
-msgstr ""
+msgstr "base"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -16653,23 +16689,23 @@ msgstr "condition: True"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "condition: object.list_price &gt; 5000"
-msgstr ""
+msgstr "condition: object.list_price &gt; 5000"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "context: current context"
-msgstr ""
+msgstr "context: context saat ini"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "cr: database cursor"
-msgstr ""
+msgstr "cr: kursor database"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:314
 #, python-format
 msgid "database id"
-msgstr ""
+msgstr "id database"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -16765,7 +16801,7 @@ msgstr ""
 #: code:addons/base/res/res_lang.py:260
 #, python-format
 msgid "format() must be given exactly one %char format specifier"
-msgstr ""
+msgstr "format() must be given exactly one %char format specifier"
 
 #. module: base
 #: selection:base.language.export,state:0
@@ -16775,7 +16811,7 @@ msgstr "get"
 #. module: base
 #: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
 msgid "here"
-msgstr ""
+msgstr "baik paman"
 
 #. module: base
 #: selection:base.language.install,state:0 selection:base.module.update,state:0
@@ -16791,34 +16827,34 @@ msgstr "catatan internal..."
 #: model:ir.model,name:base.model_ir_actions_act_url
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.act_url"
-msgstr ""
+msgstr "ir.actions.act_url"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.action.act_window"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_view
 msgid "ir.actions.act_window.view"
-msgstr ""
+msgstr "ir.actions.act_window.view"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_close
 msgid "ir.actions.act_window_close"
-msgstr ""
+msgstr "ir.actions.act_window_close"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_actions
 msgid "ir.actions.actions"
-msgstr ""
+msgstr "ir.actions.actions"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_client
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.client"
-msgstr ""
+msgstr "ir.actions.client"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report_xml
@@ -16830,7 +16866,7 @@ msgstr "ir.actions.report.xml"
 #: model:ir.model,name:base.model_ir_actions_server
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.server"
-msgstr ""
+msgstr "ir.actions.server"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_attachment
@@ -16840,7 +16876,7 @@ msgstr "ir.attachment"
 #. module: base
 #: model:ir.model,name:base.model_ir_autovacuum
 msgid "ir.autovacuum"
-msgstr ""
+msgstr "ir.autovacuum"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_config_parameter
@@ -16850,92 +16886,92 @@ msgstr "ir.config_parameter"
 #. module: base
 #: model:ir.model,name:base.model_ir_cron
 msgid "ir.cron"
-msgstr ""
+msgstr "ir.cron"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_exports
 msgid "ir.exports"
-msgstr ""
+msgstr "ir.exports"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_exports_line
 msgid "ir.exports.line"
-msgstr ""
+msgstr "ir.exports.line"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_fields_converter
 msgid "ir.fields.converter"
-msgstr ""
+msgstr "ir.fields.converter"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_logging
 msgid "ir.logging"
-msgstr ""
+msgstr "ir.logging"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_mail_server
 msgid "ir.mail_server"
-msgstr ""
+msgstr "ir.mail_server"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_access
 msgid "ir.model.access"
-msgstr ""
+msgstr "ir.model.access"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_constraint
 msgid "ir.model.constraint"
-msgstr ""
+msgstr "ir.model.constraint"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_data
 msgid "ir.model.data"
-msgstr ""
+msgstr "ir.model.data"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_model_relation
 msgid "ir.model.relation"
-msgstr ""
+msgstr "ir.model.relation"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_needaction_mixin
 msgid "ir.needaction_mixin"
-msgstr ""
+msgstr "ir.needaction_mixin"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_property
 msgid "ir.property"
-msgstr ""
+msgstr "ir.property"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb
 msgid "ir.qweb"
-msgstr ""
+msgstr "ir.qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field
 msgid "ir.qweb.field"
-msgstr ""
+msgstr "ir.qweb.field"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_contact
 msgid "ir.qweb.field.contact"
-msgstr ""
+msgstr "ir.qweb.field.contact"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_date
 msgid "ir.qweb.field.date"
-msgstr ""
+msgstr "ir.qweb.field.date"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_datetime
 msgid "ir.qweb.field.datetime"
-msgstr ""
+msgstr "ir.qweb.field.datetime"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_duration
 msgid "ir.qweb.field.duration"
-msgstr ""
+msgstr "ir.qweb.field.duration"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_float
@@ -16945,82 +16981,82 @@ msgstr "ir.qweb.field.float"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_html
 msgid "ir.qweb.field.html"
-msgstr ""
+msgstr "ir.qweb.field.html"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_image
 msgid "ir.qweb.field.image"
-msgstr ""
+msgstr "ir.qweb.field.image"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_integer
 msgid "ir.qweb.field.integer"
-msgstr ""
+msgstr "ir.qweb.field.integer"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_many2one
 msgid "ir.qweb.field.many2one"
-msgstr ""
+msgstr "ir.qweb.field.many2one"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_monetary
 msgid "ir.qweb.field.monetary"
-msgstr ""
+msgstr "ir.qweb.field.monetary"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_qweb
 msgid "ir.qweb.field.qweb"
-msgstr ""
+msgstr "ir.qweb.field.qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_relative
 msgid "ir.qweb.field.relative"
-msgstr ""
+msgstr "ir.qweb.field.relative"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_selection
 msgid "ir.qweb.field.selection"
-msgstr ""
+msgstr "ir.qweb.field.selection"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_text
 msgid "ir.qweb.field.text"
-msgstr ""
+msgstr "ir.qweb.field.text"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_rule
 msgid "ir.rule"
-msgstr ""
+msgstr "ir.rule"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_sequence
 msgid "ir.sequence"
-msgstr ""
+msgstr "ir.sequence"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_sequence_date_range
 msgid "ir.sequence.date_range"
-msgstr ""
+msgstr "ir.sequence.date_range"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_translation
 msgid "ir.translation"
-msgstr ""
+msgstr "ir.translation"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_menu
 msgid "ir.ui.menu"
-msgstr ""
+msgstr "ir.ui.menu"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view
 msgid "ir.ui.view"
-msgstr ""
+msgstr "ir.ui.view"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_custom
 msgid "ir.ui.view.custom"
-msgstr ""
+msgstr "ir.ui.view.custom"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_values
@@ -17035,38 +17071,39 @@ msgstr ""
 "log(message, level='info'): fungsi logging untuk membuat record ir_logging"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:423
+#: code:addons/base/ir/ir_ui_view.py:439
 #, python-format
 msgid "n/a"
-msgstr ""
+msgstr "kosong"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:338
 #, python-format
 msgid "name"
-msgstr ""
+msgstr "nama"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:143
 #, python-format
 msgid "no"
-msgstr ""
+msgstr "no"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "object or obj: browse_record of the record on which the action is triggered"
 msgstr ""
+"object or obj: browse_record of the record on which the action is triggered"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "object.partner_id"
-msgstr ""
+msgstr "object.partner_id"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "object.partner_id.currency_id"
-msgstr ""
+msgstr "object.partner_id.currency_id"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
@@ -17076,22 +17113,22 @@ msgstr "hidup"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "pool: ORM model pool (i.e. self.pool)"
-msgstr ""
+msgstr "pool: ORM model pool (contoh self.pool)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_cache
 msgid "pos_cache"
-msgstr ""
+msgstr "pos_cache"
 
 #. module: base
 #: model:ir.model,name:base.model_report_base_report_irmodulereference
 msgid "report.base.report_irmodulereference"
-msgstr ""
+msgstr "report.base.report_irmodulereference"
 
 #. module: base
 #: model:ir.model,name:base.model_res_config
 msgid "res.config"
-msgstr ""
+msgstr "res.config"
 
 #. module: base
 #: model:ir.model,name:base.model_res_config_installer
@@ -17106,72 +17143,72 @@ msgstr "res.config.settings"
 #. module: base
 #: model:ir.model,name:base.model_res_partner_title
 msgid "res.partner.title"
-msgstr ""
+msgstr "res.partner.title"
 
 #. module: base
 #: model:ir.model,name:base.model_res_request_link
 msgid "res.request.link"
-msgstr ""
+msgstr "res.request.link"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users_log
 msgid "res.users.log"
-msgstr ""
+msgstr "res.users.log"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "self: ORM model of the record on which the action is triggered"
-msgstr ""
+msgstr "self: ORM model of the record on which the action is triggered"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mimetypes
 msgid "test mimetypes-guessing"
-msgstr ""
+msgstr "test mimetypes-guessing"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_access_rights
 msgid "test of access rights and rules"
-msgstr ""
+msgstr "test hak ases dan aturan"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_read_group
 msgid "test read_group"
-msgstr ""
+msgstr "test read_group"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_assetsbundle
 msgid "test-assetsbundle"
-msgstr ""
+msgstr "test-assetsbundle"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_exceptions
 msgid "test-exceptions"
-msgstr ""
+msgstr "test-exceptions"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_converter
 msgid "test-field-converter"
-msgstr ""
+msgstr "test-field-converter"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_impex
 msgid "test-import-export"
-msgstr ""
+msgstr "test-import-export"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherit
 msgid "test-inherit"
-msgstr ""
+msgstr "test-inherit"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_inherits
 msgid "test-inherits"
-msgstr ""
+msgstr "test-inherits"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_limits
 msgid "test-limits"
-msgstr ""
+msgstr "test-limits"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_uninstall
@@ -17181,17 +17218,17 @@ msgstr "test-uninstall"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_workflow
 msgid "test-workflow"
-msgstr ""
+msgstr "test-workflow"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_convert
 msgid "test_convert"
-msgstr ""
+msgstr "test_konversi"
 
 #. module: base
 #: model:res.groups,comment:base.group_hr_user
 msgid "the user will be able to approve document created by employees."
-msgstr ""
+msgstr "pengguna akan dapat menyetujui dokumen yang dibuat oleh karyawan."
 
 #. module: base
 #: model:res.groups,comment:base.group_user
@@ -17199,6 +17236,8 @@ msgid ""
 "the user will be able to manage his own human resources stuff (leave "
 "request, timesheets, ...), if he is linked to an employee in the system."
 msgstr ""
+"pengguna dapat mengatur pengaturan personalia (permohonan izin, "
+"timesheet,...), jika dihubungkan ke karyawan disistem"
 
 #. module: base
 #: model:res.groups,comment:base.group_hr_manager
@@ -17206,22 +17245,24 @@ msgid ""
 "the user will have an access to the human resources configuration as well as "
 "statistic reports."
 msgstr ""
+"pengguna akan memiliki akses ke konfigurasi sumber daya manusia serta "
+"laporan statistik."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "time: Python time module"
-msgstr ""
+msgstr "time: Modul time Python"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_installer
 msgid "title"
-msgstr ""
+msgstr "judul"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:143
 #, python-format
 msgid "true"
-msgstr ""
+msgstr "benar"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -17277,4 +17318,4 @@ msgstr "Ya"
 #. module: base
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
-msgstr ""
+msgstr "Kepulauan Aland"

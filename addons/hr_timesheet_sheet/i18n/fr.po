@@ -1,51 +1,44 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_timesheet_sheet
-# 
+#
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
-# Lucas Deliege <lud@odoo.com>, 2016
-# Clo <clo@odoo.com>, 2016
-# lucasdeliege <deliegelucas@gmail.com>, 2016
-# Miguel Vidali <mvidali129@gmail.com>, 2016
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Benedicte HANET <hanetb@gmail.com>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
-# Xavier Symons <xsy@openerp.com>, 2016
-# Tony Galmiche <tony.galmiche@infosaone.com>, 2016
-# Nicolas JEUDY <nicolas@sudokeys.com>, 2016
-# Nancy Bolognesi <nb@microcom.ca>, 2016
-# Frédéric LIETART <stuff@thelinuxfr.org>, 2016
-# Fabien Pinckaers <fp@openerp.com>, 2016
-# Richard Mathot <rim@odoo.com>, 2016
-# Melanie Bernard <mbe@odoo.com>, 2016
+# Clo <clo@odoo.com>, 2015
+# Leo Schmitt <inactive+lschmitt@transifex.com>, 2015
+# Lucas Deliege <lud@odoo.com>, 2015
+# Martin Trigaux, 2016
+# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~12c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-08-22 10:08+0000\n"
-"Last-Translator: Melanie Bernard <mbe@odoo.com>, 2016\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"PO-Revision-Date: 2016-01-25 18:12+0000\n"
+"Last-Translator: Benedicte HANET <hanetb@gmail.com>\n"
+"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed timesheet.                 \n"
-"* The 'Confirmed' status is used for to confirm the timesheet by user.                 \n"
-"* The 'Done' status is used when users timesheet is accepted by his/her senior."
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"timesheet.                 \n"
+"* The 'Confirmed' status is used for to confirm the timesheet by "
+"user.                 \n"
+"* The 'Done' status is used when users timesheet is accepted by his/her "
+"senior."
 msgstr ""
-"* Le statut \"Brouillon\" est utilisé quand un utilisateur enregistre une nouvelle feuille de temps  non confirmée.\n"
-"* Le statut \"Confirmée\" est utilisé pour confirmer la feuille de temps par l'utilisateur\n"
-"* Le statut \"Terminée\" est utilisé lorsque les feuilles  de temps sont acceptées par le/la responsable."
+"* Le statut \"Brouillon\" est utilisé quand un utilisateur enregistre une "
+"nouvelle feuille de temps  non confirmée.\n"
+"* Le statut \"Confirmée\" est utilisé pour confirmer la feuille de temps par "
+"l'utilisateur\n"
+"* Le statut \"Terminée\" est utilisé lorsque les feuilles  de temps sont "
+"acceptées par le/la responsable."
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -70,9 +63,9 @@ msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
 msgstr ""
-"Différence autorisée entre les heures de présence (pointage en "
-"entrée/sortie) et les temps saisis et imputés pour une feuille. Mettez \"0\""
-" si vous ne souhaitez aucun contrôle."
+"Différence autorisée entre les heures de présence (pointage en entrée/"
+"sortie) et les temps saisis et imputés pour une feuille. Mettez \"0\" si "
+"vous ne souhaitez aucun contrôle."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
@@ -152,7 +145,7 @@ msgstr "Statut actuel"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_day_name
 msgid "Date"
-msgstr "Date "
+msgstr "Date"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_date_from
@@ -192,7 +185,7 @@ msgstr "Différences"
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_day_display_name
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
@@ -255,8 +248,8 @@ msgstr "A l'état \"Brouillon\""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:74
 #, python-format
 msgid ""
-"In order to create a timesheet for this employee, you must link him/her to a"
-" user."
+"In order to create a timesheet for this employee, you must link him/her to a "
+"user."
 msgstr ""
 "Pour créer une feuille de temps pour cet employé, vous devez lier l'employé "
 "à un utilisateur."
@@ -267,19 +260,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account___last_update
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_day___last_update
 msgid "Last Modified on"
-msgstr "Dernière Modification le"
+msgstr "Dernière modification le"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_write_uid
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_write_uid
 msgid "Last Updated by"
-msgstr "Dernière mise à jour par"
+msgstr "Mis à jour par"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_write_date
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_write_date
 msgid "Last Updated on"
-msgstr "Dernière mise à jour le"
+msgstr "Mis à jour le"
 
 #. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
@@ -320,7 +313,7 @@ msgstr "Note"
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "Open"
-msgstr "Ouvertes"
+msgstr "Ouvert"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:30
@@ -410,7 +403,7 @@ msgstr "Soumettre au responsable"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Summary"
-msgstr "Résumé"
+msgstr "Résumé"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:55

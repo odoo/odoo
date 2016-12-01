@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 07:45+0000\n"
-"PO-Revision-Date: 2016-03-30 00:24+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
+"PO-Revision-Date: 2016-10-29 19:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "Language: ru\n"
@@ -121,17 +121,17 @@ msgstr ""
 #. module: rating_project
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Service Rating Request"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Сервис запросов рейтинга"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
 msgid "% On tasks"
-msgstr ""
+msgstr "% По задачам"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr ""
+msgstr "Статус автоматического Канбан"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -143,11 +143,17 @@ msgid ""
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red "
 "bullet).\n"
 msgstr ""
+"Автоматически измените состояние kanban, когда клиент ответ на обратную "
+"связь для этого этапа.\n"
+" * Хорошая обратная связь от клиента будет обновлять состояние kanban "
+"«готово для нового этапа» (зеленый маркер).\n"
+" * Средний или плохой обратной связи будет установить состояние kanban "
+"«заблокирован» (красный маркер).\n"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_task
 msgid "Customer Ratings"
-msgstr ""
+msgstr "Рейтинги клиента"
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_task
@@ -155,6 +161,8 @@ msgid ""
 "Customer ratings on tasks. If you have no rating, change your project "
 "Settings to activate it."
 msgstr ""
+"Клиентские рейтинги по задачам. Если вы не имеете оценок, измените проект "
+"настройки, чтобы активировать его."
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_project
@@ -162,11 +170,13 @@ msgid ""
 "Customer ratings on tasks/issues. If you have no rating, change your project "
 "Settings to activate it."
 msgstr ""
+"Клиентские рейтинги по задачам/вопросам. Если вы не имеете оценок, измените "
+"проект настройки, чтобы активировать его."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
 msgid "Customer(s) Ratings"
-msgstr ""
+msgstr "Рейтинг заказчика(ов)"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_project
@@ -178,7 +188,7 @@ msgstr ""
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Daily"
-msgstr ""
+msgstr "Ежедневно"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
@@ -187,16 +197,19 @@ msgid ""
 "                            on the stages on which you want to activate the "
 "rating."
 msgstr ""
+"Редактировать этапы проекта и установить шаблон электронной почты\n"
+"                            на этапы, на которых вы хотите активировать "
+"рейтинг."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
 msgid "Happy % on Project"
-msgstr ""
+msgstr "Счастливый % по проекту"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
 msgid "Happy % on Task"
-msgstr ""
+msgstr "Счастливый % по задаче"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_project_rating_status
@@ -209,36 +222,43 @@ msgid ""
 "Don't forget to set up the mail templates on the stages for which you want "
 "to get the customer's feedbacks."
 msgstr ""
+"Как получить отзывы клиентов?\n"
+"- Рейтинг при смене этапа: Email будет отправлено, когда задача/запрос "
+"перетянут в другой этап \n"
+"- Периодическая оценка: будет отправлено периодически\n"
+"\n"
+"Не забудьте настроить шаблоны почты на этапы, для которых вы хотите получить "
+"отзывы клиентов."
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Higly Dissatisfied"
-msgstr ""
+msgstr "Последний рейтинг: Очень неудовлетворены"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Not Satisfied"
-msgstr ""
+msgstr "Последний рейтинг: Неудовлетворённые"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Satisfied"
-msgstr ""
+msgstr "Последнее рейтинг: Довольные"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "No rating"
-msgstr ""
+msgstr "Без оценки"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "No rating yet"
-msgstr ""
+msgstr "Ещё нет оценок"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Once a Month"
-msgstr ""
+msgstr "Раз в месяц"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
@@ -246,11 +266,13 @@ msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
+"Доля счастливых рейтингов за последние 30 дней. Получите рейтинг детали из "
+"меню Дополнительно."
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Periodical Rating"
-msgstr ""
+msgstr "Периодичные оценки"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_project
@@ -260,7 +282,7 @@ msgstr "Проект"
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Quarterly"
-msgstr ""
+msgstr "Ежеквартально"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_form_inherit_rating
@@ -270,27 +292,27 @@ msgstr "Рейтинг"
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_rating_template_id
 msgid "Rating Email Template"
-msgstr ""
+msgstr "Рейтинг шаблона электронной почты"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status_period
 msgid "Rating Frequency"
-msgstr ""
+msgstr "Частота оценок"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
 msgid "Rating request deadline"
-msgstr ""
+msgstr "Крайний срок запроса рейтинг"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Rating when changing stage"
-msgstr ""
+msgstr "Оценивать при смене этапа"
 
 #. module: rating_project
 #: model:mail.message.subtype,description:rating_project.mt_task_rating
 msgid "Ratings"
-msgstr ""
+msgstr "Рейтинги"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
@@ -298,6 +320,8 @@ msgid ""
 "Select an email template. An email will be sent to the customer when the "
 "task reach this step."
 msgstr ""
+"Выберите шаблон электронной почты. Письмо будет отправлено клиенту, когда "
+"задача достигнет этого шага."
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task
@@ -308,7 +332,7 @@ msgstr "Задача"
 #: model:mail.message.subtype,name:rating_project.mt_project_task_rating
 #: model:mail.message.subtype,name:rating_project.mt_task_rating
 msgid "Task Rating"
-msgstr ""
+msgstr "Рейтинг задачи"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task_type
@@ -318,14 +342,14 @@ msgstr "Стадия Задачи"
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Twice a Month"
-msgstr ""
+msgstr "Дважды в месяц"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Weekly"
-msgstr ""
+msgstr "Еженедельно"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Yearly"
-msgstr ""
+msgstr "Ежегодно"

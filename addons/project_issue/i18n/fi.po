@@ -4,13 +4,14 @@
 #
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
+# Melina Mantyla <melina.mantyla@web-veistamo.fi>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 07:44+0000\n"
-"PO-Revision-Date: 2016-04-27 09:13+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
+"POT-Creation-Date: 2016-08-22 10:08+0000\n"
+"PO-Revision-Date: 2016-10-28 18:51+0000\n"
+"Last-Translator: Melina Mantyla <melina.mantyla@web-veistamo.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -34,7 +35,7 @@ msgid "# of Issues"
 msgstr "Tapausten lukumäärä"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:170
+#: code:addons/project_issue/models/project_issue.py:162
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopio)"
@@ -47,17 +48,18 @@ msgstr "<b>Kategoria:</b>"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "<b>Project:</b>"
-msgstr ""
+msgstr "<b>Projekti:</b>"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">nimeltään: </span>"
 
 #. module: project_issue
 #: selection:project.config.settings,module_project_issue_sheet:0
 msgid "Activate timesheets on issues"
-msgstr ""
+msgstr "Aktivoi tuntikortit tapauksissa"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_active
@@ -159,7 +161,7 @@ msgstr "Kanava"
 #: model:ir.model.fields,help:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,help:project_issue.field_project_project_use_issues
 msgid "Check this box to manage customer activities through this project"
-msgstr ""
+msgstr "Valitse tämä ottaaksesi asiakastoiminnot käyttöön tässä projektissa"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_closed
@@ -216,7 +218,7 @@ msgstr "Luonut"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_create_date
 msgid "Created on"
-msgstr ""
+msgstr "Luotu"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
@@ -224,13 +226,13 @@ msgid "Creation Date"
 msgstr "Luontipäivämäärä"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:310
+#: code:addons/project_issue/models/project_issue.py:300
 #, python-format
 msgid "Customer"
 msgstr "Asiakas"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:312
+#: code:addons/project_issue/models/project_issue.py:302
 #, python-format
 msgid "Customer Email"
 msgstr "Asiakkaan sähköposti"
@@ -238,7 +240,7 @@ msgstr "Asiakkaan sähköposti"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_project_label_issues
 msgid "Customize the issues label, for example to call them cases."
-msgstr ""
+msgstr "Räätälöi tapausten tunnistetta."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date
@@ -314,7 +316,7 @@ msgstr "Näytä nimi"
 #. module: project_issue
 #: selection:project.config.settings,module_project_issue_sheet:0
 msgid "Do not track working hours on issues"
-msgstr ""
+msgstr "Älä laske työtunteja tapauksissa"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
@@ -324,7 +326,7 @@ msgstr "Kesto"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "Edit Issue"
-msgstr ""
+msgstr "Muokkaa tapausta"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_email_from
@@ -355,7 +357,7 @@ msgstr "Ryhmittele"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
 msgid "Helpdesk & Support"
-msgstr ""
+msgstr "Asiakastuki"
 
 #. module: project_issue
 #: selection:project.issue,priority:0 selection:project.issue.report,priority:0
@@ -363,7 +365,7 @@ msgid "High"
 msgstr "Korkea"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:285
+#: code:addons/project_issue/models/project_issue.py:275
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -391,13 +393,13 @@ msgstr "Tapaus estetty"
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Opened"
-msgstr ""
+msgstr "Tapaus avattu"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_ready
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_ready
 msgid "Issue Ready"
-msgstr ""
+msgstr "Tapaus valmis"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
@@ -407,7 +409,7 @@ msgstr "Tapauksen tila/vaihe muuttunut"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Issue Summary..."
-msgstr ""
+msgstr "Tapauksen yhteenveto "
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -427,7 +429,7 @@ msgstr "Tapaus estetty"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue opened"
-msgstr ""
+msgstr "Tapaus avattu"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
@@ -506,7 +508,7 @@ msgstr "Viimeksi päivittänyt"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Viimeksi päivitetty"
 
 #. module: project_issue
 #: selection:project.issue,priority:0 selection:project.issue.report,priority:0
@@ -537,10 +539,10 @@ msgid "New"
 msgstr "Uusi"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:289
+#: code:addons/project_issue/models/project_issue.py:279
 #, python-format
 msgid "New Issue"
-msgstr ""
+msgstr "Uusi tapaus"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_next
@@ -548,7 +550,7 @@ msgid "Next Action"
 msgstr "Seuraava toimenpide"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:336
+#: code:addons/project_issue/models/project_issue.py:326
 #, python-format
 msgid "No Subject"
 msgstr "Ei aihetta"
@@ -659,6 +661,9 @@ msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
 msgstr ""
+"Ota käyttöön työmäärän seuranta (tuntikortit) tapauksille ja "
+"virheidenhallinnalle. \n"
+"- Tämä toiminto asentaa moduulin project_issue_sheet."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
@@ -714,7 +719,7 @@ msgstr "Tehtävä"
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_task_type
 msgid "Task Stage"
-msgstr ""
+msgstr "Tehtävän vaihe"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
@@ -770,7 +775,7 @@ msgstr ""
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_config_settings_form_inherit_project_issue
 msgid "Timesheets"
-msgstr ""
+msgstr "Tuntikortit"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
@@ -798,7 +803,7 @@ msgstr "Lukemattomia viestejä"
 #: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 msgid "Use Issues"
-msgstr ""
+msgstr "Käytä tapauksia"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_project_label_issues
@@ -831,9 +836,11 @@ msgid ""
 "You can link this issue to an existing task or directly create a new one "
 "from here"
 msgstr ""
+"Voit linkittää tämän tapauksen olemassa olevaan tehtävään tai luoda suoraan "
+"uuden tästä"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:205
+#: code:addons/project_issue/models/project_issue.py:197
 #, python-format
 msgid "issues"
 msgstr "tapaukset"
@@ -841,7 +848,7 @@ msgstr "tapaukset"
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_config_settings
 msgid "project.config.settings"
-msgstr ""
+msgstr "project.config.settings"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report

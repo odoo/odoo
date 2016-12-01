@@ -1,25 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * report
-# 
+#
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~12c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:09+0000\n"
-"PO-Revision-Date: 2016-08-22 10:09+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"PO-Revision-Date: 2016-10-19 09:25+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: report
@@ -205,7 +202,7 @@ msgstr "Standaard papier formaat?"
 #: code:addons/report/static/src/xml/report.xml:12
 #, python-format
 msgid "Discard"
-msgstr "Negeren"
+msgstr "Annuleren"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
@@ -213,7 +210,7 @@ msgstr "Negeren"
 #: model:ir.model.fields,field_description:report.field_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_paperformat_display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergave naam"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_line
@@ -251,6 +248,7 @@ msgstr "E-mail:"
 #: constraint:report.paperformat:0
 msgid "Error ! You cannot select a format AND specific page width/height."
 msgstr ""
+"Fout! U kan geen formaat EN specifieke pagina breedte/hoogte selecteren."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -368,7 +366,7 @@ msgstr "Pagina:"
 #. module: report
 #: model:ir.ui.menu,name:report.paper_format_menuitem
 msgid "Paper Format"
-msgstr "Papierformaat"
+msgstr "Papier formaat"
 
 #. module: report
 #: model:ir.actions.act_window,name:report.paper_format_action
@@ -432,7 +430,7 @@ msgstr "Rapportnaam bij afdrukken"
 #: model:ir.model,name:report.model_report
 #, python-format
 msgid "Report"
-msgstr "Rapport"
+msgstr "Overzicht"
 
 #. module: report
 #: model:ir.actions.act_window,name:report.reports_action
@@ -466,7 +464,7 @@ msgstr "Juiste papiergrootte selecteren"
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "TIN:"
-msgstr "BTW:"
+msgstr "BTW Nr.:"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -490,6 +488,9 @@ msgid ""
 "change the report filename. You can use a python expression with the object "
 "and time variables."
 msgstr ""
+"Dit is de bestandsnaam van het rapport dat gedownload wordt. Laat leeg om de "
+"bestandsnaam niet te wijzigen. U kan een Python expressie gebruiken met het "
+"object en de tijdsvariabelen."
 
 #. module: report
 #: code:addons/report/models/report.py:287
@@ -508,11 +509,13 @@ msgstr "Bovenmarge (mm)"
 #, python-format
 msgid ""
 "Unable to find Wkhtmltopdf on this \n"
-"system. The report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
+"system. The report will be shown in html.<br><br><a href=\"http://"
+"wkhtmltopdf.org/\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
 msgstr ""
 "Kan geen Wkhtmltopdf op dit systeem vinden \n"
-"Het rapport wordt getoond in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\n"
+"Het rapport wordt getoond in html.<br><br><a href=\"http://wkhtmltopdf.org/"
+"\" target=\"_blank\">\n"
 "wkhtmltopdf.org</a>"
 
 #. module: report
@@ -543,13 +546,17 @@ msgstr ""
 #, python-format
 msgid ""
 "You should upgrade your version of\n"
-"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\n"
-"support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
+"Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers "
+"and footers as well as\n"
+"support for table-breaking between pages.<br><br><a href=\"http://"
+"wkhtmltopdf.org/\" \n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
 msgstr ""
 "U moet uw versie van\n"
-"Wkhtmltopdf updaten naar ten minste versie 0.12.0 om een correcte weergave van hoofdingen en voeteindes te krijgen\n"
-"en om tabel-breking tussen pagina's te ondersteunen.<br><br><a href=\"http://wkhtmltopdf.org/\"\n"
+"Wkhtmltopdf updaten naar ten minste versie 0.12.0 om een correcte weergave "
+"van koppen en voeteindes te krijgen\n"
+"en om tabel-breking tussen pagina's te ondersteunen.<br><br><a href=\"http://"
+"wkhtmltopdf.org/\"\n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report

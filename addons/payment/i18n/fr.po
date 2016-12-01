@@ -1,43 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment
-# 
+#
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
-# Clo <clo@odoo.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Melanie Bernard <mbe@odoo.com>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Lucas Deliege <lud@odoo.com>, 2016
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-# Xavier Symons <xsy@openerp.com>, 2016
-# Fabien Pinckaers <fp@openerp.com>, 2016
-# Nancy Bolognesi <nb@microcom.ca>, 2016
-# Florian Hatat <mininet@wanadoo.fr>, 2016
-# Hamid Darabi <hamid.darabi@gmail.com>, 2016
-# Daniel & Delphine <dd2013@leschoupinous.net>, 2016
-# Miguel Vidali <mvidali129@gmail.com>, 2016
-# Simon CARRIER <carrier.sim@gmail.com>, 2016
-# Shark McGnark <peculiarcheese@gmail.com>, 2016
+# Clo <clo@odoo.com>, 2015
+# Lucas Deliege <lud@odoo.com>, 2015
+# Maxime Chambreuil <maxime.chambreuil@gmail.com>, 2015-2016
+# Melanie Bernard <mbe@odoo.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~12c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:09+0000\n"
-"PO-Revision-Date: 2016-08-22 10:09+0000\n"
-"Last-Translator: Shark McGnark <peculiarcheese@gmail.com>, 2016\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"PO-Revision-Date: 2016-01-08 22:20+0000\n"
+"Last-Translator: Maxime Chambreuil <maxime.chambreuil@gmail.com>\n"
+"Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_callback_eval
 msgid ""
-"            Will be safe_eval with `self` being the current transaction. i.e.:\n"
+"            Will be safe_eval with `self` being the current transaction. i."
+"e.:\n"
 "                self.env['my.model'].payment_validated(self)"
 msgstr ""
 "            Sera safe_eval avec `self` étant la transaction actuelle. i.e.:\n"
@@ -52,14 +40,16 @@ msgstr "3D Secure HTML"
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</span>"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</span>"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 
 #. module: payment
@@ -107,9 +97,6 @@ msgid ""
 "transaction. The order has been confirmed but won't be paid. Don't hesitate "
 "to contact us if you have any questions on the status of your order.</span>"
 msgstr ""
-"<span><i>Erreur,</i> une erreur est survenue pendant la transaction. La "
-"commande a été confirmée mais ne sera pas payée. N'hésitez pas à nous "
-"contacter si vous avez une question sur le statut de votre commande.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -130,8 +117,7 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid ""
-"<span><i>Pending</i>... The order will be validated after the "
-"payment.</span>"
+"<span><i>Pending</i>... The order will be validated after the payment.</span>"
 msgstr ""
 
 #. module: payment
@@ -142,7 +128,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_journal_id
 msgid "Accounting Journal"
-msgstr "Journal de comptabilité"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
@@ -326,12 +312,12 @@ msgstr "Détermine l'ordre d'affichage"
 #: model:ir.model.fields,field_description:payment.field_payment_token_display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Done"
-msgstr "Fait"
+msgstr "Terminé"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
@@ -378,8 +364,7 @@ msgstr "Frais"
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
 msgid "Fees amount; set by the system because depends on the acquirer"
 msgstr ""
-"Montant des commissions; fixé par le système car dépendant de "
-"l'intermédiaire"
+"Montant des commissions; fixé par le système car dépendant de l'intermédiaire"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_state_message
@@ -466,21 +451,21 @@ msgstr "Langue"
 #: model:ir.model.fields,field_description:payment.field_payment_token___last_update
 #: model:ir.model.fields,field_description:payment.field_payment_transaction___last_update
 msgid "Last Modified on"
-msgstr "Dernière Modification le"
+msgstr "Dernière modification le"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_token_write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_write_uid
 msgid "Last Updated by"
-msgstr "Dernière mise à jour par"
+msgstr "Mis à jour par"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_write_date
 #: model:ir.model.fields,field_description:payment.field_payment_token_write_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_write_date
 msgid "Last Updated on"
-msgstr "Dernière mise à jour le"
+msgstr "Mis à jour le"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
@@ -500,8 +485,8 @@ msgid ""
 "or some kanban views."
 msgstr ""
 "Image de taille moyenne de ce fournisseur. C'est automatiquement "
-"redimensionné à 128x128px avec les proportions préservées. Utilisez ce champ"
-" dans la vue formulaire ou dans certaines vues kanban."
+"redimensionné à 128x128px avec les proportions préservées. Utilisez ce champ "
+"dans la vue formulaire ou dans certaines vues kanban."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
@@ -531,8 +516,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
 msgstr ""
-"Message affiché, si la commande est annulée pendant le processus de "
-"paiement."
+"Message affiché, si la commande est annulée pendant le processus de paiement."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
@@ -602,7 +586,7 @@ msgstr "Nom du partenaire"
 #: model:ir.model,name:payment.model_payment_acquirer
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr "Intermédiaire de Paiement"
+msgstr "Intermédiaire de paiement"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
@@ -673,12 +657,12 @@ msgstr "Message en attente"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_phone
 msgid "Phone"
-msgstr "Téléphone"
+msgstr "Tél."
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
 msgid "Production"
-msgstr "Fabrication"
+msgstr "Production"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_provider
@@ -742,14 +726,14 @@ msgstr "Sips"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
 msgid "Small-sized image"
-msgstr "Image de petite taille"
+msgstr "Vignette de l'image"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
 msgid ""
-"Small-sized image of this provider. It is automatically resized as a 64x64px"
-" image, with aspect ratio preserved. Use this field anywhere a small image "
-"is required."
+"Small-sized image of this provider. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 "Image de petite taille de ce fournisseur. Elle est automatiquement "
 "redimensionnée pour une image de 64x64px avec les proportions conservées. "
@@ -796,7 +780,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                            It is be rendered with qWeb with the following evaluation context:"
+"                                            It is be rendered with qWeb with "
+"the following evaluation context:"
 msgstr ""
 "Ce modèle rend le bouton acquéreur avec toutes les valeurs nécessaire. \n"
 "C'est rendu avec le qWeb avec le contexte d'évaluation suivant:"
@@ -863,17 +848,17 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
 msgid ""
-"You will be redirected to the Buckaroo website after clicking on the payment"
-" button."
+"You will be redirected to the Buckaroo website after clicking on the payment "
+"button."
 msgstr ""
-"Vous serez redirigé sur le site Buckaroo après avoir cliqué sur le bouton de"
-" paiement."
+"Vous serez redirigé sur le site Buckaroo après avoir cliqué sur le bouton de "
+"paiement."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
 msgid ""
-"You will be redirected to the Ingenico website after clicking on the payment"
-" button."
+"You will be redirected to the Ingenico website after clicking on the payment "
+"button."
 msgstr ""
 
 #. module: payment
@@ -901,7 +886,7 @@ msgstr "Code postal"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_zip
 msgid "Zip"
-msgstr "Code postal"
+msgstr "Code Postal"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -921,8 +906,7 @@ msgstr "context: le dictionnaire du contexte actuel"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr ""
-"devise : l'enregistrement de navigation de la devise de la transaction"
+msgstr "devise : l'enregistrement de navigation de la devise de la transaction"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

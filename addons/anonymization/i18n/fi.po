@@ -45,7 +45,7 @@ msgstr "Anonymisoitu"
 #. module: anonymization
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymization_form
 msgid "Anonymized Field"
-msgstr ""
+msgstr "Anonymisoitu kenttä"
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_tree
@@ -66,7 +66,7 @@ msgstr ""
 msgid ""
 "Before executing the anonymization process, you should make a backup of your "
 "database."
-msgstr ""
+msgstr "Ennen kuin aloitat anonymisoinnin, tee tietokannastasi varmuuskopio."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:430
@@ -75,6 +75,8 @@ msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
 "one2many, reference."
 msgstr ""
+"Binary, many2many, many2one, one2many ja reference kenttiä ei voi "
+"anonymisoida."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
@@ -194,7 +196,7 @@ msgstr "Tuo"
 msgid ""
 "It is not possible to reverse the anonymization process without supplying "
 "the anonymization export file."
-msgstr ""
+msgstr "Anonymisointia ei voi peruuttaa lataamatta tuontitidostoa. "
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization___last_update
@@ -287,7 +289,7 @@ msgstr "Yhteenveto"
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_target_version
 msgid "Target Version"
-msgstr ""
+msgstr "Kohdeversio"
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:75
@@ -297,6 +299,8 @@ msgid ""
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to create, write or delete fields."
 msgstr ""
+"Tietokannan anonymisaatio on kesken. Osan kentistä on anonymisoitu, osa ei. "
+"Tilanne on ratkaistava ennen kuin luot, muutat tai poistat kenttiä."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:342
@@ -306,6 +310,8 @@ msgid ""
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything else."
 msgstr ""
+"Tietokannan anonymisaatio on kesken. Osan kentistä on anonymisoitu, osa ei. "
+"Tilanne on ratkaistava ennen kuin jatkat."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:375
@@ -316,12 +322,14 @@ msgid ""
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything."
 msgstr ""
+"Tietokannan anonymisaatio on kesken. Osan kentistä on anonymisoitu, osa ei. "
+"Tilanne on ratkaistava ennen kuin jatkat."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:373
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
-msgstr ""
+msgstr "Tietokanta on jo anonymisoitu, sitä ei voi tehdä sitä uudestaan."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:73
@@ -345,6 +353,7 @@ msgid ""
 "This is the file created by the anonymization process. It should have the '."
 "pickle' extention."
 msgstr ""
+"Anonymisointi on luonut tämän tiedoston. Sen päätteen pitäisi olla '.pickle' "
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymize.wizard,state:0
@@ -356,7 +365,7 @@ msgstr "Epävakaa"
 #: sql_constraint:ir.model.fields.anonymization:0
 #, python-format
 msgid "You cannot have two fields with the same name on the same object!"
-msgstr ""
+msgstr "Samassa objektissa ei voi olla kahta samannimistä kenttää."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,direction:0
@@ -391,12 +400,12 @@ msgstr ""
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
 msgid "python"
-msgstr ""
+msgstr "python"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
 msgid "sql"
-msgstr ""
+msgstr "sql"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_state

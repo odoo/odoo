@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 07:43+0000\n"
-"PO-Revision-Date: 2016-07-23 09:04+0000\n"
+"POT-Creation-Date: 2016-12-01 14:46+0000\n"
+"PO-Revision-Date: 2016-09-23 08:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
 "mn/)\n"
@@ -248,7 +248,7 @@ msgid "%s (copy)"
 msgstr "%s (хуулбар)"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:241
+#: code:addons/mail/models/mail_thread.py:243
 #, python-format
 msgid "%s created"
 msgstr "%s үүсгэгдсэн"
@@ -693,7 +693,7 @@ msgstr "Бүр зурвасууд"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:192
+#: code:addons/mail/static/src/js/chat_manager.js:193
 #, python-format
 msgid "Anonymous"
 msgstr "Зочин"
@@ -742,10 +742,13 @@ msgstr "Хавсралтууд"
 #: model:ir.model.fields,help:mail.field_mail_compose_message_attachment_ids
 #: model:ir.model.fields,help:mail.field_mail_mail_attachment_ids
 #: model:ir.model.fields,help:mail.field_mail_message_attachment_ids
+#, fuzzy
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
+"Хавсралтууд нь баримттай холбогдохдоо модул / res_id -р холбогдох бөгөөд "
+"зурвас руу энэ талбараар холбогдоно."
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -976,7 +979,7 @@ msgid "Choose an example"
 msgstr "Жишээ сонго"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:347
+#: code:addons/mail/models/mail_thread.py:349
 #, python-format
 msgid "Click here to add new %(document)s or send an email to: %(email_link)s"
 msgstr ""
@@ -984,7 +987,7 @@ msgstr ""
 "илгээнэ: %(email_link)s"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:363
+#: code:addons/mail/models/mail_thread.py:365
 #, python-format
 msgid "Click here to add new %s"
 msgstr "Шинэ %s нэмэхдээ дарна уу"
@@ -1081,8 +1084,9 @@ msgstr "Хөөрөлдөөн Эвхэгдсэн Төлөв"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
+#, fuzzy
 msgid "Conversation is minimized"
-msgstr ""
+msgstr "Хөөрөлдөөнийг багасгасан"
 
 #. module: mail
 #. openerp-web
@@ -1274,20 +1278,23 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete
+#, fuzzy
 msgid "Delete Emails"
-msgstr ""
+msgstr "Эмэйл цуцлах"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete_message
+#, fuzzy
 msgid "Delete Message Copy"
-msgstr ""
+msgstr "Холбогдох зурвас"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_auto_delete
+#, fuzzy
 msgid "Delete sent emails (mass mailing only)"
-msgstr ""
+msgstr "Зохиогчийн гарын үсэг (зөвхөн масс мэйлийн)"
 
 #. module: mail
 #. openerp-web
@@ -1629,7 +1636,7 @@ msgstr "Эвхсэн"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:676
+#: code:addons/mail/models/mail_thread.py:689
 #: code:addons/mail/static/src/xml/followers.xml:20
 #, python-format
 msgid "Follow"
@@ -2138,7 +2145,7 @@ msgstr "Идэвхгүй хуурмаг нэр"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1024
+#: code:addons/mail/static/src/js/chat_manager.js:1033
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2169,7 +2176,7 @@ msgstr ""
 "тухайлбал \"{'field': 'value'}\""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:1711
+#: code:addons/mail/models/mail_thread.py:1729
 #, python-format
 msgid ""
 "Invalid record set: should be called as model (without records) or on single-"
@@ -2179,8 +2186,14 @@ msgstr ""
 "бичлэгийн олонлог дээр нэг бичлэг байгаа."
 
 #. module: mail
+#: code:addons/mail/controllers/main.py:43
+#, python-format
+msgid "Invalid token in route %s"
+msgstr ""
+
+#. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:617
+#: code:addons/mail/static/src/js/chat_manager.js:618
 #, python-format
 msgid "Invitation"
 msgstr ""
@@ -2301,8 +2314,9 @@ msgstr "Мэдэгдэл үү"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
+#, fuzzy
 msgid "Is Subscribed"
-msgstr ""
+msgstr "Бүртгэл арилгагдсан"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
@@ -2506,7 +2520,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:37
+#: code:addons/mail/static/src/js/chatter.js:38
 #, python-format
 msgid "Log"
 msgstr ""
@@ -3491,7 +3505,7 @@ msgstr "Байрлал тогтоогчийн Илэрхийллийг"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:186
+#: code:addons/mail/static/src/js/chatter.js:187
 #, python-format
 msgid "Please complete partner's informations"
 msgstr "Харилцагчийн мэдээллийг гүйцээнэ үү"
@@ -3510,7 +3524,7 @@ msgstr "Үйлдлийн дэлгэрэнгүйг тохируулахын өм�
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:640
+#: code:addons/mail/static/src/js/composer.js:645
 #, python-format
 msgid "Please, wait while the file is uploading."
 msgstr "Файл хуулагдаж байх хооронд хүлээнэ үү."
@@ -3577,9 +3591,9 @@ msgstr "Хувийн Суваг"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:138
-#, python-format
+#, fuzzy, python-format
 msgid "Public Channels"
-msgstr ""
+msgstr "Хувийн Суваг"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180
@@ -3946,7 +3960,7 @@ msgstr "Инээмсэглэл"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1030
+#: code:addons/mail/static/src/js/chat_manager.js:1039
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4062,8 +4076,9 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
+#, fuzzy
 msgid "The escaped html code replacing the shortcut"
-msgstr ""
+msgstr "Богино кодыг солигч html код"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_model_id
@@ -4130,8 +4145,9 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,help:mail.field_mail_template_model_id
+#, fuzzy
 msgid "The type of document this template can be used with"
-msgstr ""
+msgstr "Энэ үлгэртэй хэрэглэгдэж болох баримтуудын төрөл"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4229,10 +4245,13 @@ msgstr "Энэ бүлгэмд хөөрөлдөх сэдэвүүд..."
 #: model:ir.model.fields,help:mail.field_mail_mail_tracking_value_ids
 #: model:ir.model.fields,help:mail.field_mail_message_tracking_value_ids
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_tracking_value_ids
+#, fuzzy
 msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
+"Хөтлөгдсөн утга нь тусдаа моделд хадгалагдана. Энэ талбар нь хөтлөлтийн "
+"бүтцийг өөрчилж модель дээр статистикийг үүсгэх боломжийг олгодог."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
@@ -4290,7 +4309,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:677
+#: code:addons/mail/models/mail_thread.py:690
 #: code:addons/mail/static/src/xml/followers.xml:22
 #, python-format
 msgid "Unfollow"
@@ -4472,7 +4491,7 @@ msgstr "Ачааллаж байна"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:640
+#: code:addons/mail/static/src/js/composer.js:645
 #, python-format
 msgid "Uploading error"
 msgstr "Хуулалтын алдаа"
@@ -4513,8 +4532,8 @@ msgid "Users in this channel: %s %s and you."
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:664
-#: code:addons/mail/models/mail_thread.py:666
+#: code:addons/mail/models/mail_thread.py:677
+#: code:addons/mail/models/mail_thread.py:679
 #, python-format
 msgid "View"
 msgstr "Дэлгэц"
@@ -4630,7 +4649,7 @@ msgstr ""
 "модулиудад шаардлагатай."
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:354
+#: code:addons/mail/models/mail_thread.py:356
 #, python-format
 msgid ""
 "You could also add a new %(document)s by sending an email to: %(email_link)s."
@@ -4640,7 +4659,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:617
+#: code:addons/mail/static/src/js/chat_manager.js:618
 #, python-format
 msgid "You have been invited to: "
 msgstr "Таны уригдсан зүйл: "
@@ -4655,14 +4674,14 @@ msgstr "Энэ имэйл үлгэрээр үүсгэгдэх бүх имэйл�
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:513
+#: code:addons/mail/static/src/js/chat_manager.js:514
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:511
+#: code:addons/mail/static/src/js/chat_manager.js:512
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr "Та <b>%s</b>-с бүртгэл чинь хасагдлаа."
@@ -4703,7 +4722,7 @@ msgid "created"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:320
+#: code:addons/mail/models/mail_thread.py:322
 #, python-format
 msgid "document"
 msgstr "баримт"
@@ -4802,9 +4821,9 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:16
-#, python-format
+#, fuzzy, python-format
 msgid "read less"
-msgstr ""
+msgstr "Уншаагүй Зурвасууд"
 
 #. module: mail
 #. openerp-web

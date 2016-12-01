@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 07:45+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2015-10-29 14:59+0000\n"
 "Last-Translator: Ricardo Martins <ricardo.nbs.martins@gmail.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -45,33 +45,33 @@ msgstr "Funcionário"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Order Line"
-msgstr ""
+msgstr "Linha da ordem"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_procurement_order
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
 msgid "Procurement"
-msgstr ""
+msgstr "Aquisição"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Produto"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_alert_time
 msgid "Product Alert Time"
-msgstr ""
+msgstr "Alerta da validade do Artigo"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_life_time
 msgid "Product Life Time"
-msgstr ""
+msgstr "Tempo de vida do artigo"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_removal_time
 msgid "Product Removal Time"
-msgstr ""
+msgstr "Tempo de remoção do artigo"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
@@ -81,14 +81,14 @@ msgstr "Template Artigo"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_use_time
 msgid "Product Use Time"
-msgstr ""
+msgstr "Data Validade do Artigo"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_project_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template_project_id
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Project"
-msgstr ""
+msgstr "Projeto"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
@@ -111,10 +111,10 @@ msgstr "Linha da ordem de venda"
 #: model:ir.model,name:sale_timesheet.model_project_task
 #: model:ir.model.fields,field_description:sale_timesheet.field_procurement_order_task_id
 msgid "Task"
-msgstr ""
+msgstr "Tarefa"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_service.py:94
+#: code:addons/sale_timesheet/models/sale_service.py:84
 #, python-format
 msgid "Task created"
 msgstr ""
@@ -123,12 +123,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Tasks"
-msgstr ""
+msgstr "Tarefas"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
 msgid "Tasks associated to this sale"
-msgstr ""
+msgstr "Tarefas associadas a esta venda"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
@@ -146,7 +146,7 @@ msgstr "Custos de Folhas de Horas"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.project_time_mode_id_duplicate_xmlid
 msgid "Timesheet UoM"
-msgstr ""
+msgstr "UdM das Folhas de Horas"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
@@ -170,6 +170,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
 msgstr ""
+"Quando um novo número de série é emitido, este valor indica o número de dias "
+"até um alerta ser ativado."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
@@ -177,6 +179,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
 msgstr ""
+"Quando um novo número de série é emitido, este valor indica o número de dias "
+"até os bens se tornarem perigosos e não deverem ser consumidos."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
@@ -184,6 +188,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
 msgstr ""
+"Quando um novo número de série é emitido, este valor indica o número de dias "
+"até o produto ser removido das existências."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
@@ -191,6 +197,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
 msgstr ""
+"Quando um novo número de série é emitido, este valor indica o número de dias "
+"até que os bens comecem a deteriorar-se (sem serem, ainda, perigosos)."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_timesheet.py:143
@@ -202,9 +210,11 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_service.py:113
+#: code:addons/sale_timesheet/models/sale_service.py:103
 #, python-format
 msgid ""
 "You cannot delete a task related to a Sale Order. You can only archive this "
 "task."
 msgstr ""
+"Não apagar uma tarefa relacionada com a Ordem de Venda. Apenas pode arquivar "
+"a tarefa. "

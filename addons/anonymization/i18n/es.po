@@ -1,34 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * anonymization
-# 
+#
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# oihane <oihanecruce@gmail.com>, 2016
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Alejandro Santana <alejandrosantana@anubia.es>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# Sergio Flores <vitavitae1@gmail.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# RGB Consulting <odoo@rgbconsulting.com>, 2016
+# Alejandro Santana <alejandrosantana@anubia.es>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.saas~12c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-08-22 10:08+0000\n"
-"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2016\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"PO-Revision-Date: 2015-09-15 00:56+0000\n"
+"Last-Translator: Alejandro Santana <alejandrosantana@anubia.es>\n"
+"Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: anonymization
@@ -78,11 +65,11 @@ msgstr "El valor anonimizado no puede estar vacío."
 #: code:addons/anonymization/anonymization.py:284
 #, python-format
 msgid ""
-"Before executing the anonymization process, you should make a backup of your"
-" database."
+"Before executing the anonymization process, you should make a backup of your "
+"database."
 msgstr ""
-"Antes de ejecutar el proceso de anonimización, debería realizar una copia de"
-" seguridad de su base de datos."
+"Antes de ejecutar el proceso de anonimización, debería realizar una copia de "
+"seguridad de su base de datos."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:430
@@ -114,7 +101,7 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_create_date
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_create_date
 msgid "Created on"
-msgstr "Creado el"
+msgstr "Creado en"
 
 #. module: anonymization
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymize_wizard_form
@@ -142,12 +129,12 @@ msgstr "Dirección"
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_display_name
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_display_name
 msgid "Display Name"
-msgstr "Nombre a mostrar"
+msgstr "Mostrar nombre"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
 msgid "Done"
-msgstr "Hecho"
+msgstr "Realizado"
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:373
@@ -199,7 +186,7 @@ msgstr "Ruta de archivo"
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_id
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_id
 msgid "ID"
-msgstr "ID"
+msgstr "ID (identificación)"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_file_import
@@ -230,7 +217,7 @@ msgstr "Última modificación en"
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_write_uid
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_write_uid
 msgid "Last Updated by"
-msgstr "Última actualización por"
+msgstr "Última actualización de"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_write_date
@@ -238,7 +225,7 @@ msgstr "Última actualización por"
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_write_date
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_write_date
 msgid "Last Updated on"
-msgstr "Última actualización el"
+msgstr "Última actualización en"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_msg
@@ -270,7 +257,7 @@ msgstr "Objeto"
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_model_name
 msgid "Object Name"
-msgstr "Nombre de objeto"
+msgstr "Nombre del objeto"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_query
@@ -318,8 +305,8 @@ msgid ""
 "solve this problem before trying to create, write or delete fields."
 msgstr ""
 "La anonimización de la base de datos está actualmente en un estado "
-"inestable. Algunos campos se anonimizan, mientras otros no. Debería intentar"
-" resolver este problema antes de crear, escribir o eliminar campos."
+"inestable. Algunos campos se anonimizan, mientras otros no. Debería intentar "
+"resolver este problema antes de crear, escribir o eliminar campos."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:342
@@ -330,8 +317,8 @@ msgid ""
 "solve this problem before trying to do anything else."
 msgstr ""
 "La anonimización de la base de datos está actualmente en un estado "
-"inestable. Algunos campos se anonimizan, mientras otros no. Debería intentar"
-" resolver este problema antes de hacer nada más."
+"inestable. Algunos campos se anonimizan, mientras otros no. Debería intentar "
+"resolver este problema antes de hacer nada más."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:375
@@ -343,8 +330,8 @@ msgid ""
 "solve this problem before trying to do anything."
 msgstr ""
 "La anonimización de la base de datos está actualmente en un estado "
-"inestable. Algunos campos se anonimizan, mientras otros no. Debería intentar"
-" resolver este problema antes de hacer nada."
+"inestable. Algunos campos se anonimizan, mientras otros no. Debería intentar "
+"resolver este problema antes de hacer nada."
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:373
@@ -374,8 +361,8 @@ msgstr ""
 #. module: anonymization
 #: model:ir.model.fields,help:anonymization.field_ir_model_fields_anonymize_wizard_file_import
 msgid ""
-"This is the file created by the anonymization process. It should have the "
-"'.pickle' extention."
+"This is the file created by the anonymization process. It should have the '."
+"pickle' extention."
 msgstr ""
 "Éste es el archivo creado por el proceso de anonimización. Debería tener la "
 "extensión '.pickle'."

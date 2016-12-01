@@ -4,14 +4,15 @@
 #
 # Translators:
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2015-2016
+# Anica Milanova, 2016
 # Martin Trigaux, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-22 10:08+0000\n"
-"PO-Revision-Date: 2016-06-16 08:56+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-12-01 14:46+0000\n"
+"PO-Revision-Date: 2016-11-25 12:31+0000\n"
+"Last-Translator: Anica Milanova\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
 "mk/)\n"
 "Language: mk\n"
@@ -83,6 +84,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu
+#, fuzzy
 msgid ""
 "\n"
 "\n"
@@ -96,6 +98,18 @@ msgid ""
 " - Hungarian Bank information\n"
 " "
 msgstr ""
+"\n"
+"\n"
+"Base module for Hungarian localization\n"
+"==========================================\n"
+"\n"
+"This module consists :\n"
+"\n"
+" - Generic Hungarian chart of accounts\n"
+" - Hungarian taxes\n"
+" - Hungarian Bank information\n"
+" \n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
@@ -232,7 +246,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_pos_data_drinks
 msgid ""
 "\n"
-"        Common drinks data for point of sales\n"
+"        Common drinks data for points of sale\n"
 "    "
 msgstr ""
 
@@ -376,6 +390,15 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_account_tax_exigible
+msgid ""
+"\n"
+"    This is a bugfix-module backporting 39d68ac and adding the concept of "
+"tax exigibility on journal items.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_report_intrastat
 msgid ""
 "\n"
@@ -408,7 +431,7 @@ msgstr ""
 "Права за пристап до сметководство\n"
 "========================\n"
 "Дава пристап на администраторскиот корисник до сите сметководствени "
-"карактеристики како ставки на дневник и контни планови.\n"
+"карактеристики како што се ставки на налог и контни планови.\n"
 "\n"
 "Доделува менаџерски и кориснички права за пристап на Администраторот за "
 "апликацијата на сметководство и единствено кориснички права на Демо "
@@ -776,7 +799,7 @@ msgstr ""
 "Управување со средства\n"
 "========================\n"
 "Управувај со средства поседувани од компанија или лице.\n"
-"Води сметка за амортизација, и создавање на соодветни внесови во дневник."
+"Води сметка за амортизација, и создавање на соодветни внесови во налог."
 
 #. module: base
 #: model:ir.module.module,description:base.module_document
@@ -867,6 +890,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
+#, fuzzy
 msgid ""
 "\n"
 "Base Module for Ethiopian Localization\n"
@@ -879,9 +903,20 @@ msgid ""
 "    - Regional State listings\n"
 "    "
 msgstr ""
+"\n"
+"Base Module for Ethiopian Localization\n"
+"======================================\n"
+"\n"
+"This is the latest Ethiopian OpenERP localization and consists of:\n"
+"    - Chart of Accounts\n"
+"    - VAT tax structure\n"
+"    - Withholding tax structure\n"
+"    - Regional State listings\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br
+#, fuzzy
 msgid ""
 "\n"
 "Base module for the Brazilian localization\n"
@@ -925,6 +960,48 @@ msgid ""
 "come with any additional paid permission for online use of 'private "
 "modules'.\n"
 msgstr ""
+"\n"
+"Base module for the Brazilian localization\n"
+"==========================================\n"
+"\n"
+"This module consists in:\n"
+"\n"
+" - Generic Brazilian chart of accounts\n"
+" - Brazilian taxes such as:\n"
+"\n"
+"        - IPI\n"
+"        - ICMS\n"
+"        - PIS\n"
+"        - COFINS\n"
+"        - ISS\n"
+"        - IR\n"
+"        - IRPJ\n"
+"        - CSLL\n"
+"\n"
+"The field tax_discount has also been added in the account.tax.template and \n"
+"account.tax objects to allow the proper computation of some Brazilian VATs \n"
+"such as ICMS. The chart of account creation wizard has been extended to \n"
+"propagate those new data properly.\n"
+"\n"
+"It's important to note however that this module lack many implementations "
+"to \n"
+"use OpenERP properly in Brazil. Those implementations (such as the "
+"electronic \n"
+"fiscal Invoicing which is already operational) are brought by more than 15 \n"
+"additional modules of the Brazilian Launchpad localization project \n"
+"https://launchpad.net/openerp.pt-br-localiz and their dependencies in the \n"
+"extra addons branch. Those modules aim at not breaking with the remarkable \n"
+"OpenERP modularity, this is why they are numerous but small. One of the \n"
+"reasons for maintaining those modules apart is that Brazilian Localization \n"
+"leaders need commit rights agility to complete the localization as "
+"companies \n"
+"fund the remaining legal requirements (such as soon fiscal ledgers, \n"
+"accounting SPED, fiscal SPED and PAF ECF that are still missing as "
+"September \n"
+"2011). Those modules are also strictly licensed under AGPL V3 and today "
+"don't \n"
+"come with any additional paid permission for online use of 'private "
+"modules'.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll
@@ -1177,6 +1254,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_subscription
+#, fuzzy
 msgid ""
 "\n"
 "Create recurring documents.\n"
@@ -1193,6 +1271,19 @@ msgid ""
 "      above. Specify the interval information and partner to be invoiced.\n"
 "    "
 msgstr ""
+"\n"
+"Генерирање периодични документи.\n"
+"==================================\n"
+"\n"
+"Овој модул овозможува создавање на нови документи и додавање на претплати на "
+"истите.\n"
+"\n"
+"На пр. Периодично и автоматски да се генерира фактура.\n"
+"-------------------------------------------------------------------------------\n"
+"* Дефинирај тип на документ според информации од фактура\n"
+"* Дефинирај претплата чијшто изворен документ е документот дефиниран како\n"
+"примерот горе. Наведи ги информациите за интервалот и партнерот кој што "
+"треба да биде фактуриран."
 
 #. module: base
 #: model:ir.module.module,description:base.module_link_tracker
@@ -1280,6 +1371,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
+#, fuzzy
 msgid ""
 "\n"
 "Customize access to your Odoo database to external users by creating "
@@ -1298,6 +1390,21 @@ msgid ""
 "very handy when used in combination with the module 'share'.\n"
 "    "
 msgstr ""
+"\n"
+"Костимизирај пристап до Вашата Odoo база на податоци за надворешни корисници "
+"со помош на портали.\n"
+"==========================================================================\n"
+"Портал дефинира специфично корисничко мени и право на пристап за своите "
+"членови. Ова \n"
+"мени може да биде видено од порталните членови, јавни корисници и било кој "
+"друг корисник кој\n"
+"има пристап кон техничките функции (пр. администраторот).\n"
+"Исто така, секој портален член е поврзан со специфичен партнер.\n"
+"\n"
+"Модулот исто така придружува кориснички групи кон портал членовите \n"
+"( додавајќи група во порталот автоматски ја додава и на портал корисниците, "
+"итн. )\n"
+" Оваа функција е многу корисна во комбинација со модулот 'сподели'."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -1590,6 +1697,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
+#, fuzzy
 msgid ""
 "\n"
 "Gamification process\n"
@@ -1609,6 +1717,26 @@ msgid ""
 "modules and actions. When installed, this module creates easy goals to help "
 "new users to discover Odoo and configure their user profile.\n"
 msgstr ""
+"\n"
+"Процес на гејмификација\n"
+"========================\n"
+"Модулот на гејмификација нуди начини за евалуирање и мотивирање на "
+"корисниците на Odoo.\n"
+"\n"
+"Корисникот може да биде евалуиран користејќи цели и нумерички задачи кои "
+"треба да ги изврши.\n"
+"**Целите** се одредуваат преку **предизвици** за да се евалуираат и "
+"споредуваат меѓусебно и времено членовите од тимот.\n"
+"\n"
+"За без нумеричките постигнувања, **амблеми** можат да се доделат на "
+"корисниците. Од едно обично \"благодарам\" до некое исклучително "
+"постигнување, амблемот е едноставен начин за изразување благодарност кон "
+"корисникот за одлично извршената работа.\n"
+"\n"
+"Обете цели и амблеми се флексибилни и можат да се адаптираат спрема голем "
+"број на модули и дејствија. Кога е инсталиран модулот, создава едноставни "
+"цели за да им помогне на новите корисници да го откриваат Odoo и да го "
+"создадат својот сопствен профил.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy
@@ -1762,6 +1890,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
+#, fuzzy
 msgid ""
 "\n"
 "Indian Accounting: Chart of Account.\n"
@@ -1781,6 +1910,23 @@ msgid ""
 "Odoo.\n"
 "  "
 msgstr ""
+"\n"
+"Indian Accounting: Chart of Account.\n"
+"====================================\n"
+"\n"
+"Indian accounting chart and localization.\n"
+"\n"
+"OpenERP allows to manage Indian Accounting by providing Two Formats Of Chart "
+"of Accounts i.e Indian Chart Of Accounts - Standard and Indian Chart Of "
+"Accounts - Schedule VI.\n"
+"\n"
+"Note: The Schedule VI has been revised by MCA and is applicable for all "
+"Balance Sheet made after\n"
+"31st March, 2011. The Format has done away with earlier two options of "
+"format of Balance\n"
+"Sheet, now only Vertical format has been permitted Which is Supported By "
+"OpenERP.\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_hr_payroll
@@ -1821,6 +1967,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_drive
+#, fuzzy
 msgid ""
 "\n"
 "Integrate google document to Odoo record.\n"
@@ -1832,6 +1979,19 @@ msgid ""
 "Configuration > General Settings by clicking on \"Generate Google "
 "Authorization Code\"\n"
 msgstr ""
+"\n"
+"Прикачи google документ на Odoo запис.\n"
+"==========================================\n"
+"\n"
+"Овој модул овозможува да прикачувате google документи на било кој од вашите "
+"Odoo записи, брзо и едноставно користејќи OAuth 2.0 за инсталираните "
+"апликации.\n"
+"Можете да го конфигурирате Вашиот google авторизациски код од: Подесувања > "
+"Конфигурација > Општи подесувања, со кликањето на \"Generate Google "
+"Authorization Code\" и потоа впишете го во даденото поле и кликнете \"Примени"
+"\" во горниот лев агол. Но за да ви се појави оваа опција на генерирање на "
+"код, претходно треба да го штиклирате полето \"Прикачете Google документи до "
+"било кој запис\" и да притиснете \"Примени\". \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -2114,6 +2274,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock
+#, fuzzy
 msgid ""
 "\n"
 "Manage multi-warehouses, multi- and structured stock locations\n"
@@ -2145,6 +2306,34 @@ msgid ""
 "* Moves Analysis\n"
 "    "
 msgstr ""
+"\n"
+"Менаџирај со повеќе магацини, повеќе- и структуирани залихни локации\n"
+"===================================================================\n"
+"\n"
+"Магацинското и инвентарско менаџирање е базирано врз структурата на "
+"хиерархната локација, од магацините до складиштата.\n"
+"Двојниот инвентарски систем овозможува да менаџирате со клиентите, "
+"добавувачите и исто така со производствените инвентари.\n"
+"\n"
+"Odoo has the capacity to manage lots and serial numbers ensuring compliance "
+"with the traceability requirements imposed by the majority of industries.\n"
+"\n"
+"Key Features\n"
+" ------------\n"
+" * Moves history and planning,\n"
+" * Minimum stock rules\n"
+" * Support for barcodes\n"
+" * Rapid detection of mistakes through double entry system\n"
+" * Traceability (Serial Numbers, Packages, ...)\n"
+" \n"
+" Dashboard / Reports for Warehouse Management will include:\n"
+" ----------------------------------------------------------\n"
+" * Incoming Products (Graph)\n"
+" * Outgoing Products (Graph)\n"
+" * Procurement in Exception\n"
+" * Inventory Analysis\n"
+" * Last Product Inventories\n"
+" * Moves Analysis"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale
@@ -2296,6 +2485,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic
+#, fuzzy
 msgid ""
 "\n"
 "Module for defining analytic accounting object.\n"
@@ -2307,6 +2497,15 @@ msgid ""
 "that have no counterpart in the general financial accounts.\n"
 "    "
 msgstr ""
+"\n"
+"Модул за дефинирање на аналитички сметководствен објект\n"
+"====================================================\n"
+"\n"
+"Во Odoo, аналитичкото сметководство е поврзано со генералното сметководтсво "
+"но е третирано\n"
+"тотално не зависно. Така што можете да внесувате различни аналитички "
+"операции \n"
+"што би немале удел во генералното финансиско сметководство."
 
 #. module: base
 #: model:ir.module.module,description:base.module_resource
@@ -2360,6 +2559,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import
+#, fuzzy
 msgid ""
 "\n"
 "New extensible file import for Odoo\n"
@@ -2382,6 +2582,26 @@ msgid ""
 "* In a module, so that administrators and users of Odoo who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
 msgstr ""
+"\n"
+"Нов екстензибилен импорт на документи во Odoo\n"
+"==============================================\n"
+"\n"
+"Ре-имплементирај го Odoo-виот документациски импортирачки систем:\n"
+"\n"
+"* Server side, the previous system forces most of the logic into the\n"
+" client which duplicates the effort (between clients), makes the\n"
+" import system much harder to use without a client (direct RPC or\n"
+" other forms of automation) and makes knowledge about the\n"
+" import/export system much harder to gather as it is spread over\n"
+" 3+ different projects.\n"
+" \n"
+" * In a more extensible manner, so users and partners can build their\n"
+" own front-end to import from other file formats (e.g. OpenDocument\n"
+" files) which may be simpler to handle in their work flow or from\n"
+" their data production sources.\n"
+" \n"
+" * In a module, so that administrators and users of Odoo who do not\n"
+" need or want an online import can avoid it being available to users.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa
@@ -2396,6 +2616,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_blog
+#, fuzzy
 msgid ""
 "\n"
 "Odoo Blog\n"
@@ -2403,11 +2624,15 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Odoo блог\n"
+"============"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm
 #: model:ir.module.module,description:base.module_website_hr_recruitment
 #: model:ir.module.module,description:base.module_website_issue
+#, fuzzy
 msgid ""
 "\n"
 "Odoo Contact Form\n"
@@ -2415,18 +2640,26 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Odoo контакт формулар\n"
+"======================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_customer
+#, fuzzy
 msgid ""
 "\n"
 "Odoo Customer References\n"
 "===========================\n"
 msgstr ""
+"\n"
+"Odoo референци на клиенти\n"
+"==========================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale
 #: model:ir.module.module,description:base.module_website_sale_options
+#, fuzzy
 msgid ""
 "\n"
 "Odoo E-Commerce\n"
@@ -2434,6 +2667,8 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Odoo е-трговија"
 
 #. module: base
 #: model:ir.module.module,description:base.module_im_odoo_support
@@ -2456,6 +2691,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mail_channel
+#, fuzzy
 msgid ""
 "\n"
 "Odoo Mail Group : Mailing List Archives\n"
@@ -2463,9 +2699,13 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Odoo меил група: Меилинг лист архиви\n"
+"====================================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_quote
+#, fuzzy
 msgid ""
 "\n"
 "Odoo Sale Quote Roller\n"
@@ -2473,15 +2713,23 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Odoo веб страна Google мапи\n"
+"============================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_calendar
+#, fuzzy
 msgid ""
 "\n"
 "Odoo Web Calendar view.\n"
 "==========================\n"
 "\n"
 msgstr ""
+"\n"
+"OpenERP веб календарски преглед.\n"
+"===============================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_editor
@@ -2498,6 +2746,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_web
+#, fuzzy
 msgid ""
 "\n"
 "Odoo Web core module.\n"
@@ -2506,15 +2755,24 @@ msgid ""
 "This module provides the core of the Odoo Web Client.\n"
 "        "
 msgstr ""
+"\n"
+"Odoo веб јадрен модул.\n"
+"======================\n"
+"\n"
+"Овој модул го обезбедува јадрото од Odoo веб клиентот."
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban
+#, fuzzy
 msgid ""
 "\n"
 "Odoo Web kanban view.\n"
 "========================\n"
 "\n"
 msgstr ""
+"\n"
+"Odoo веб Канбан преглед.\n"
+"========================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_tour
@@ -2527,6 +2785,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website
+#, fuzzy
 msgid ""
 "\n"
 "Odoo Website CMS\n"
@@ -2534,9 +2793,13 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Odoo веб страна CMS\n"
+"==================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_google_map
+#, fuzzy
 msgid ""
 "\n"
 "Odoo Website Google Map\n"
@@ -2544,9 +2807,13 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Odoo веб страна Google мапи\n"
+"============================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_livechat
+#, fuzzy
 msgid ""
 "\n"
 "Odoo Website LiveChat\n"
@@ -2557,6 +2824,14 @@ msgid ""
 "display your channel and its ratings on the website.\n"
 "        "
 msgstr ""
+"\n"
+"Odoo чат во живо на веб страна\n"
+"===============================\n"
+"Правено за веб страна со Odoo CMS, овој модул вклучува чат копче на вашата "
+"веб страна, им овозможува на посетителите на вашата веб страна да "
+"комуницираат со вашите соработници.\n"
+"Исто така ќе го содржи алатот за оценка на чатот, и веб страни за "
+"прикажување на вашиот канал и неговите оцени на веб страната."
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_settings_dashboard
@@ -2702,12 +2977,16 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_geolocalize
+#, fuzzy
 msgid ""
 "\n"
 "Partners Geolocation\n"
 "========================\n"
 "    "
 msgstr ""
+"\n"
+"Партнерска геолокализација\n"
+"=========================="
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe
@@ -2936,6 +3215,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_fetchmail
+#, fuzzy
 msgid ""
 "\n"
 "Retrieve incoming email on POP/IMAP servers.\n"
@@ -2974,6 +3254,43 @@ msgid ""
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 "    "
 msgstr ""
+"\n"
+"Превземи ги доаѓачките е-пораки на POP/IMAP серверите.\n"
+"=====================================================\n"
+"\n"
+"Внесете ги параметрите од вашите POP/IMAP акаунт(и), и сите доаѓачки е-"
+"пораки \n"
+"на овие акаунти ќе ви бидат автоматски симнати на вашиот Odoo систем. \n"
+"Сите POP3/IMAP-компатибилни сервери се поддржани, вклучувајќи ги тие што "
+"имаат потреба од скриптирана SSL/TLS  конекција.\n"
+"\n"
+"Ова може да биде користено за едноставно креирање на емаил базиран работен "
+"тек за многу емаил Odoo документи, како што се:\n"
+"----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"* CRM траги/можности\n"
+"* CRM рекламации\n"
+"* Проектни проблеми/изданија\n"
+"* Проектни задачи\n"
+"* Хумани ресурси - вработувања (аплицирања)\n"
+"\n"
+"Инсталирајте ја само релевантната апликација, и ќе можете да назначувате "
+"било\n"
+" кој од овие документи (траги, проектни проблеми/изданија) кон вашите "
+"стигачки емаил акаунти.\n"
+" Новите е-пораки автоматски ќе произведуваат нови документи од избраниот "
+"тип, \n"
+"така што многу е едноставно да создадете меил-кутија-Odoo интеграција. Уште "
+"подобро: овие документи директно служат \n"
+"како мини конверзации синхронизирани од е-пораките. Можете да одговорите "
+"директно од Odoo, и одговорите \n"
+"автоматски ќе ви бидат собрани кога ќе дојдат назад, и ќе Ви бидат "
+"прикачени \n"
+"на истиот *конверзацииски* документ.\n"
+"\n"
+"За поспецифични потреби, можете исто така да назначувате мануелно-дефинирани "
+"акции \n"
+"(технички: сервер акции) да Ви бидат активирани за секоја пристигнувачка "
+"порака."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_digital
@@ -3300,16 +3617,16 @@ msgstr ""
 "Основниот модул за менаџирање со оброци.\n"
 "============================================\n"
 "\n"
-"Многу компании порачуваат сендвичи, пици и други видови на оброци на "
-"работното место, од одредени набавувачки прехранбени компании, со цел на "
-"подобрување на работната способност на вработените во таа компанија.\n"
+"Многу компании порачуваат сендвичи, пици и други видови на оброци, од "
+"договорени набавувачи, со цел подобрување на работната способност на "
+"вработените во таа компанија.\n"
 "\n"
-"Меѓутоа менаџирањето со оброци во компанијата наложува на најпогодна "
-"администрација посебно кога зависи од бројот на вработени или/и добавувачи.\n"
+"Меѓутоа менаџирањето со оброци во компанијата наложува соодветна "
+"администрација особено кога зависи од бројот на вработени или добавувачи.\n"
 "\n"
-"“Оброк нарачка“ модулот е создаден за ја олесни оваа задача но исто така да "
-"обезбеди поголема практичност кај вработените кога станува збор за исто така "
-"нивното користење на овој модул.\n"
+"Модулот “нарачка на оброк“ е создаден за ја олесни оваа задача но исто така "
+"да обезбеди поголема практичност кај вработените кога станува збор за исто "
+"така нивното користење на овој модул.\n"
 "\n"
 "Во склоп на менаџирањето со оброците и добавувачите, овој модул исто така Ви "
 "ја нуди можноста да ги следите известувањата на екран и овозможува брза "
@@ -3321,6 +3638,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm
+#, fuzzy
 msgid ""
 "\n"
 "The generic Odoo Customer Relationship Management\n"
@@ -3351,14 +3669,48 @@ msgid ""
 "* Planned Revenue by Stage and User (graph)\n"
 "* Opportunities by Stage (graph)\n"
 msgstr ""
+"\n"
+"Генеричниот Odoo \"менаџмент со клиентски односи\" \"CRM\"\n"
+"==================================================\n"
+"\n"
+"Оваа апликација им овозможува на вработените, групно да менаџираат со "
+"трагите, можностите, состаноците и телефонските повици.\n"
+"\n"
+"Менаџира со клучни задачи како што се комуникација, идентификација, "
+"приоритизација, доделување на должност, одлука/решение, објави/известувања.\n"
+"\n"
+"Odoo ветува дека сите случаеви ќе можат да бидат следени/евидентирани од "
+"страна на корисниците, клиентите и добавувачите. Возможно е и да автоматски "
+"се испраќаат потсетници, да се ескалираат барањата, да се активираат "
+"специфични методи и многу други акции базирани на Вашите сопствени "
+"предефинирани правила.\n"
+"\n"
+"Најдобрата работа за овој систем е дека корисниците не треба да направат "
+"било што комплицирано. CRM модулот има емаил gateway за синхронизацијата на "
+"интерфејсот помеѓу мејловите и Odoo. На тој начин, корисниците можат само да "
+"праќат мејлови до побарувачкиот tracker.\n"
+"\n"
+"Odoo ќе се погрижи за нивното заблагодарување за нивната порака, автоматски "
+"поврзувајки ја со соодветниот вработен и ќе се погрижи за сите идни слични "
+"наредби да пристигаат на правилните места.\n"
+"\n"
+"\n"
+"Командната табла на CRM ќе го содржи следното:\n"
+"-----------------------------------------------------------------\n"
+"* Планирани приходи по стази и корисници (графикон)\n"
+"* Можности по стази (графикон)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
+#, fuzzy
 msgid ""
 "\n"
 "The kernel of Odoo, needed for all installation.\n"
 "===================================================\n"
 msgstr ""
+"\n"
+"Јадрото на Odoo, потребно за сите инсталации.\n"
+"============================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_account
@@ -3373,20 +3725,29 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_spreadsheet
+#, fuzzy
 msgid ""
 "\n"
 "The module adds the possibility to display data from Odoo in Google "
 "Spreadsheets in real time.\n"
 "=================================================================================================\n"
 msgstr ""
+"\n"
+"Модулот овозможува да се прикаже датата/информациите од Odoo во Google "
+"Spreadsheets во живо.\n"
+"=========================================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_calendar
+#, fuzzy
 msgid ""
 "\n"
 "The module adds the possibility to synchronize Google Calendar with Odoo\n"
 "===========================================================================\n"
 msgstr ""
+"\n"
+"Овој модул овозможува да се синхронизираат Google Calendar со Odoo\n"
+"=================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_cache
@@ -3429,6 +3790,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_product
+#, fuzzy
 msgid ""
 "\n"
 "This is the base module for managing products and pricelists in Odoo.\n"
@@ -3451,9 +3813,31 @@ msgid ""
 "Print product labels with barcode.\n"
 "    "
 msgstr ""
+"\n"
+"Ова е основниот модул за менаџирање на производи и ценовници во OpenERP.\n"
+"========================================================================\n"
+"\n"
+"Варијанти за поддршка на производи, различни методи за формирање на цена, "
+"информации за добавувачи,\n"
+"направи го залиха/налог, различни единици мерки, пакување и својства.\n"
+"\n"
+"Поддршка на ценовници:\n"
+"-------------------\n"
+"    * Повеќекратно ниво на попуст (по производ, категорија, количина)\n"
+"    * Пресметај цена врз основа на различен критериум:\n"
+"        * Друг ценовник\n"
+"        * Цена на чинење\n"
+"        * Листа на цени\n"
+"        * Набавна цена\n"
+"\n"
+"Предности на ценовници по производ и/или партнери.\n"
+"\n"
+"Печати етикети на производ со баркод.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be
+#, fuzzy
 msgid ""
 "\n"
 "This is the base module to manage the accounting chart for Belgium in Odoo.\n"
@@ -3496,6 +3880,47 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"This is the base module to manage the accounting chart for Belgium in "
+"OpenERP.\n"
+"==============================================================================\n"
+"\n"
+"After installing this module, the Configuration wizard for accounting is "
+"launched.\n"
+"    * We have the account templates which can be helpful to generate Charts "
+"of Accounts.\n"
+"    * On that particular wizard, you will be asked to pass the name of the "
+"company,\n"
+"      the chart template to follow, the no. of digits to generate, the code "
+"for your\n"
+"      account and bank account, currency to create journals.\n"
+"\n"
+"Thus, the pure copy of Chart Template is generated.\n"
+"\n"
+"Wizards provided by this module:\n"
+"--------------------------------\n"
+"    * Partner VAT Intra: Enlist the partners with their related VAT and "
+"invoiced\n"
+"      amounts. Prepares an XML file format.\n"
+"      \n"
+"        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
+"Statements/Partner VAT Intra\n"
+"    * Periodical VAT Declaration: Prepares an XML file for Vat Declaration "
+"of\n"
+"      the Main company of the User currently Logged in.\n"
+"      \n"
+"        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
+"Statements/Periodical VAT Declaration\n"
+"    * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for "
+"Vat\n"
+"      Declaration of the Main company of the User currently Logged in Based "
+"on\n"
+"      Fiscal year.\n"
+"      \n"
+"        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium "
+"Statements/Annual Listing Of VAT-Subjected Customers\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -3522,6 +3947,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
+#, fuzzy
 msgid ""
 "\n"
 "This is the base module to manage the accounting chart for Ecuador in Odoo.\n"
@@ -3530,6 +3956,13 @@ msgid ""
 "Accounting chart and localization for Ecuador.\n"
 "    "
 msgstr ""
+"\n"
+"Ова е основниот модул за менаџирање на сметководствениот план за Еквадор во "
+"OpenERP.\n"
+"==============================================================================\n"
+"\n"
+"Сметководствен план и локализација за Еквадор.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -3660,6 +4093,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
+#, fuzzy
 msgid ""
 "\n"
 "This is the latest UK Odoo localisation necessary to run Odoo accounting for "
@@ -3670,6 +4104,14 @@ msgid ""
 "    - InfoLogic UK counties listing\n"
 "    - a few other adaptations"
 msgstr ""
+"\n"
+"This is the latest UK OpenERP localisation necessary to run OpenERP "
+"accounting for UK SME's with:\n"
+"=================================================================================================\n"
+"    - a CT600-ready chart of accounts\n"
+"    - VAT100-ready tax structure\n"
+"    - InfoLogic UK counties listing\n"
+"    - a few other adaptations"
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement
@@ -3740,6 +4182,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
+#, fuzzy
 msgid ""
 "\n"
 "This is the module to manage the Accounting Chart, VAT structure, Fiscal "
@@ -3750,6 +4193,14 @@ msgid ""
 "Romanian accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"This is the module to manage the Accounting Chart, VAT structure, Fiscal "
+"Position and Tax Mapping.\n"
+"It also adds the Registration Number for Romania in OpenERP.\n"
+"================================================================================================================\n"
+"\n"
+"Romanian accounting chart and localization.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca
@@ -3793,6 +4244,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl
+#, fuzzy
 msgid ""
 "\n"
 "This is the module to manage the accounting chart and taxes for Poland in "
@@ -3808,9 +4260,23 @@ msgid ""
 "Wewnętrzny numer wersji OpenGLOBE 1.02\n"
 "    "
 msgstr ""
+"\n"
+"This is the module to manage the accounting chart and taxes for Poland in "
+"OpenERP.\n"
+"==================================================================================\n"
+"\n"
+"To jest moduł do tworzenia wzorcowego planu kont, podatków, obszarów "
+"podatkowych i\n"
+"rejestrów podatkowych. Moduł ustawia też konta do kupna i sprzedaży towarów\n"
+"zakładając, że wszystkie towary są w obrocie hurtowym.\n"
+"\n"
+"Niniejszy moduł jest przeznaczony dla odoo 8.0.\n"
+"Wewnętrzny numer wersji OpenGLOBE 1.02\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
+#, fuzzy
 msgid ""
 "\n"
 "This is the module to manage the accounting chart for France in Odoo.\n"
@@ -3845,6 +4311,38 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
+"\n"
+"This is the module to manage the accounting chart for France in OpenERP.\n"
+"========================================================================\n"
+"\n"
+"This module applies to companies based in France mainland. It doesn't apply "
+"to\n"
+"companies based in the DOM-TOMs (Guadeloupe, Martinique, Guyane, Réunion, "
+"Mayotte).\n"
+"\n"
+"This localisation module creates the VAT taxes of type 'tax included' for "
+"purchases\n"
+"(it is notably required when you use the module 'hr_expense'). Beware that "
+"these\n"
+"'tax included' VAT taxes are not managed by the fiscal positions provided by "
+"this\n"
+"module (because it is complex to manage both 'tax excluded' and 'tax "
+"included'\n"
+"scenarios in fiscal positions).\n"
+"\n"
+"This localisation module doesn't properly handle the scenario when a France-"
+"mainland\n"
+"company sells services to a company based in the DOMs. We could manage it in "
+"the\n"
+"fiscal positions, but it would require to differentiate between 'product' "
+"VAT taxes\n"
+"and 'service' VAT taxes. We consider that it is too 'heavy' to have this by "
+"default\n"
+"in l10n_fr; companies that sell services to DOM-based companies should "
+"update the\n"
+"configuration of their taxes and fiscal positions manually.\n"
+"\n"
+"**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl
@@ -3870,6 +4368,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
+#, fuzzy
 msgid ""
 "\n"
 "This is the module to manage the accounting chart for Vietnam in Odoo.\n"
@@ -3880,6 +4379,14 @@ msgid ""
 "\n"
 "**Credits:** General Solutions.\n"
 msgstr ""
+"\n"
+"This is the module to manage the accounting chart for Vietnam in OpenERP.\n"
+"=========================================================================\n"
+"\n"
+"This module applies to companies based in Vietnamese Accounting Standard "
+"(VAS).\n"
+"\n"
+"**Credits:** General Solutions.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating_project
@@ -3955,6 +4462,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_webkit
+#, fuzzy
 msgid ""
 "\n"
 "This module adds a new Report Engine based on WebKit library (wkhtmltopdf) "
@@ -4011,6 +4519,61 @@ msgid ""
 "    * Zip return for separated PDF\n"
 "    * Web client WYSIWYG\n"
 msgstr ""
+"\n"
+"Овој модул додава нов Report Engine базиран на WebKit library (wkhtmltopdf) "
+"за поддршка на извештаи дизајнирани во HTML + CSS.\n"
+"=======================================================================================================================\n"
+"\n"
+"Структурата на модулот и на кодот е инспирирана од report_openoffice "
+"модулот.\n"
+"\n"
+"Модулот го овозможува следното:\n"
+"-----------------------------------------------------\n"
+"- HTML дефинирање на извештај\n"
+"- Поддршка за креирање на повеќе поглавја\n"
+"- Поддршка за повеќе логоа\n"
+"- Поддршка за повеќе компании\n"
+"- Поддршка за HTML and CSS-3 (во лимитот на самата WebKIT верзија)\n"
+"- Поддршка за JavaScript\n"
+"- Raw HTML дебагери\n"
+"- Дефинирање на големината на хартијата\n"
+"\n"
+"Мноштво на поглавја и логоа можат да бидат дефинирани по компанија. CSS "
+"стилот, поглавјата и \n"
+"телото на дното\"на документот\" се дефинират по компанија.\n"
+"\n"
+"За пример извештај види го исто така webkit_report_sample модулот, и ова "
+"видео:\n"
+"http://files.me.com/nbessi/06n92k.mov\n"
+"\n"
+"Побарувања и инсталација:\n"
+"------------------------------------------\n"
+"На овој модул му е потребно ``wkhtmltopdf`` датотеката да рендерира HTML "
+"документи \n"
+"како PDF. Верзија 0.9.9 или подоцна, е неопходна, и може да ја најдете на \n"
+"http://code.google.com/p/wkhtmltopdf/ за Linux, Mac OS X (i386) и Windows "
+"(32bits).\n"
+"\n"
+"Откако ќе ја инсталирате датотеката на Odoo сервер машината, може ќе треба "
+"да го подесите \n"
+"патот до ``wkhtmltopdf`` егзекутирачкиот file во системски параметар "
+"наречен\n"
+"``webkit_path`` во Подесувања > Костумизирање > Параметри > Системски "
+"параметри\n"
+"\n"
+"Ако доживеете проблеми со поглавјето/дното\"да недостасуваат\" на Linux, "
+"тогаш \n"
+"инсталирајте 'static' верзија од датотеката. Кај стандардниот "
+"``wkhtmltopdf`` на \n"
+"Ubuntu е препознатлив тој проблем.\n"
+"\n"
+"\n"
+"TODO:\n"
+"----------\n"
+"* Поддршка за JavaScript активација/деактивација\n"
+"* Поддршка за Collated and book формат\n"
+"* Zip поврат за одвоени PDF документи\n"
+"* Веб клиент WYSIWYG\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_crm
@@ -4302,6 +4865,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_note
+#, fuzzy
 msgid ""
 "\n"
 "This module allows users to create their own notes inside Odoo\n"
@@ -4317,6 +4881,21 @@ msgid ""
 "\n"
 "Notes can be found in the 'Home' menu.\n"
 msgstr ""
+"\n"
+"Овој модул овозможува на корисниците да креираат сопствени белешки во Odoo\n"
+"=========================================================================\n"
+"\n"
+"Користете белешки за да запишувате распореди на средби, организирајте идеи, "
+"организирајте \n"
+"персонален распоред, итн. Секој корисник си поседува сопствени белешки. "
+"Белешките се достапни за пристап \n"
+"само на своите автори, но можат да се споделуваат белешките меѓу "
+"корисниците, \n"
+"така што ќе можат заедно да работат на истата белешка во живо. Пример, многу "
+"е корисно да се споделуваат \n"
+"распоредите на средби.\n"
+"\n"
+"Белешките можат да се најдат во 'Home' менито.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_anonymization
@@ -4488,6 +5067,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet
+#, fuzzy
 msgid ""
 "\n"
 "This module implements a timesheet system.\n"
@@ -4503,6 +5083,20 @@ msgid ""
 "up a management by affair.\n"
 "    "
 msgstr ""
+"\n"
+"Овој модул го имплементира системот на работа со табла за работни часови "
+"\"Временска таблица\"\n"
+"==============================================================================\n"
+"\n"
+"Секој вработен може да го внесува и следи своето  време поминато на разните "
+"проекти.\n"
+" Проект претставува аналитичка сметка и времето поминато на некој проект, "
+"пресметува цена \n"
+"на таа сметка.\n"
+"\n"
+"Многу начини за следењето на работните часови на вашите вработени се "
+"овозможени. Ви дозволува да подесите \n"
+"и менаџмент по деловна зделка."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_syscohada
@@ -4741,6 +5335,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_note_pad
+#, fuzzy
 msgid ""
 "\n"
 "This module update memos inside Odoo for using an external pad\n"
@@ -4750,6 +5345,13 @@ msgid ""
 "invite.\n"
 "\n"
 msgstr ""
+"\n"
+"Овој модул ги ажурира белешките во Odoo користејќи надворешен пад\n"
+"================================================================\n"
+"\n"
+"Користете за ажурирање на вашите белешки во живо со следниот корисник што "
+"сте го поканиле.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement_jit
@@ -5139,33 +5741,39 @@ msgstr "%A - Целосно име на ден."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
+#, fuzzy
 msgid "%B - Full month name.\""
-msgstr ""
+msgstr "%B -Цело име на месецот"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
+#, fuzzy
 msgid "%H - Hour (24-hour clock) [00,23].\""
-msgstr ""
+msgstr "%H - Час (24-часа) [00,23]."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
+#, fuzzy
 msgid "%I - Hour (12-hour clock) [01,12].\""
-msgstr ""
+msgstr "%I - Час (12-часа) [01,12]."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
+#, fuzzy
 msgid "%M - Minute [00,59].\""
-msgstr ""
+msgstr "%M - Минута [00,59]."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
+#, fuzzy
 msgid "%S - Seconds [00,61].\""
-msgstr ""
+msgstr "%S - Секунди [00,61]."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
+#, fuzzy
 msgid "%Y - Year with century.\""
-msgstr ""
+msgstr "%Y - Година со век."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -5179,34 +5787,38 @@ msgstr "%b - Скратено име на месец."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
+#, fuzzy
 msgid "%d - Day of the month [01,31].\""
-msgstr ""
+msgstr "%d - Ден од месецот [01,31]."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
+#, fuzzy
 msgid "%j - Day of the year [001,366].\""
-msgstr ""
+msgstr "%j - Ден од годината [001,366]."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
+#, fuzzy
 msgid "%m - Month number [01,12].\""
-msgstr ""
+msgstr "%m - Број на месец [01,12]."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
+#, fuzzy
 msgid "%p - Equivalent of either AM or PM.\""
-msgstr ""
+msgstr "%p - еквивалент на AM или PM."
 
 #. module: base
-#: code:addons/base/ir/ir_filters.py:36 code:addons/base/res/res_partner.py:305
-#: code:addons/base/res/res_users.py:141 code:addons/base/res/res_users.py:406
-#: code:addons/base/res/res_users.py:408
+#: code:addons/base/ir/ir_filters.py:38 code:addons/base/res/res_partner.py:305
+#: code:addons/base/res/res_users.py:141 code:addons/base/res/res_users.py:405
+#: code:addons/base/res/res_users.py:407
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копија)"
 
 #. module: base
-#: code:addons/models.py:6233
+#: code:addons/models.py:6242
 #, python-format
 msgid ""
 "%s This might be '%s' in the current model, or a field of the same name in "
@@ -5215,16 +5827,18 @@ msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
+#, fuzzy
 msgid "%w - Weekday number [0(Sunday),6].\""
-msgstr ""
+msgstr "%w - Број на недела [0(Sunday),6]."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
+#, fuzzy
 msgid "%y - Year without century [00,99].\""
-msgstr ""
+msgstr "%y - Година без век [00,99]."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:1005
+#: code:addons/base/ir/ir_model.py:1029
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -5363,8 +5977,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
+#, fuzzy
 msgid "2. %a ,%A         ==&gt; Fri, Friday"
-msgstr ""
+msgstr "2.  %a ,%A         ==> пет, Петок"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -5568,7 +6183,7 @@ msgid "<u><strong>Views</strong></u>"
 msgstr "<u><strong>Прикази</strong></u>"
 
 #. module: base
-#: code:addons/models.py:3595
+#: code:addons/models.py:3605
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
 msgstr "После последниот преглед документот бил модифициран (%s:%d)"
@@ -5996,8 +6611,9 @@ msgstr "Тип на адреса"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_address_format
+#, fuzzy
 msgid "Address format"
-msgstr ""
+msgstr "Формат на адреса"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_country_form
@@ -6111,8 +6727,8 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:568 code:addons/base/ir/ir_model.py:627
-#: code:addons/base/ir/ir_model.py:1111
+#: code:addons/base/ir/ir_model.py:592 code:addons/base/ir/ir_model.py:651
+#: code:addons/base/ir/ir_model.py:1135
 #, python-format
 msgid "Administrator access is required to uninstall a module"
 msgstr "Администраторски пристап е потребен за деинсталирањето на модулот"
@@ -6170,8 +6786,8 @@ msgid ""
 "All pending configuration wizards have been executed. You may restart "
 "individual wizards via the list of configuration wizards."
 msgstr ""
-"Сите нерешени конфигурациски волшебници се егзекутирани. Можете да ги "
-"рестартирате волшебниците индивидуално преку листата на конфигурациски "
+"Сите конфигурациски волшебници кои биле во тек, се извршени. Можете да "
+"рестартирате индивидуални волшебници преку листата на конфигурациски "
 "волшебници."
 
 #. module: base
@@ -6293,7 +6909,7 @@ msgstr ""
 "документи(заглавие)"
 
 #. module: base
-#: code:addons/base/res/res_users.py:716
+#: code:addons/base/res/res_users.py:715
 #: model:ir.model,name:base.model_ir_module_category
 #: model:ir.model.fields,field_description:base.field_ir_module_module_application
 #: model:ir.model.fields,field_description:base.field_res_groups_category_id
@@ -6447,9 +7063,9 @@ msgstr "Здруженија: Членови"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:52
-#, python-format
+#, fuzzy, python-format
 msgid "At least one language must be active."
-msgstr ""
+msgstr "Кодот на јазикот мора да биде уникатен !"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_link_new_record
@@ -6458,8 +7074,9 @@ msgstr "Прикачи го новиот запис"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_search
+#, fuzzy
 msgid "Attached Document Name"
-msgstr ""
+msgstr "Име на прилог"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
@@ -6995,7 +7612,7 @@ msgid "Can not upgrade module '%s'. It is not installed."
 msgstr "Не може да се ажурира модулот '%s'. Не е инсталиран"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:494
+#: code:addons/base/ir/ir_model.py:518
 #, python-format
 msgid "Can only rename one field at a time!"
 msgstr "Може да се преименува само едно поле од еднаш!"
@@ -7033,7 +7650,7 @@ msgstr "Откажи инсталација"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_cancel
 msgid "Cancel Journal Entries"
-msgstr "Откажи внесови во дневник"
+msgstr "Откажи внесови во налог"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
@@ -7052,7 +7669,7 @@ msgid "Cannot duplicate configuration!"
 msgstr "Не  може да се дуплицира конфигурацијата!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:496
+#: code:addons/base/ir/ir_model.py:520
 #, python-format
 msgid "Cannot rename field to %s, because that field already exists!"
 msgstr "Не може да се преименува полето во %s, бидејќи тоа поле веќе постои!"
@@ -7147,20 +7764,20 @@ msgstr ""
 "промена."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:482
+#: code:addons/base/ir/ir_model.py:505
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr "Менување на моделот на полето е забрането!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:460
+#: code:addons/base/ir/ir_model.py:483
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr ""
 "Поврзувањето на системот за складирање за полето \"%s\" не е дозволено."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:485
+#: code:addons/base/ir/ir_model.py:508
 #, python-format
 msgid ""
 "Changing the type of a field is not yet supported. Please drop it and create "
@@ -7234,10 +7851,13 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_custom_footer
+#, fuzzy
 msgid ""
 "Check this to define the report footer manually. Otherwise it will be filled "
 "in automatically."
 msgstr ""
+"Чекирајте го ова за да го дефинирате извештајот на дното/подглавјето "
+"мануелно. Доколку не чекирате, истиот ќе ви биде автоматски пополнет."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -7280,8 +7900,9 @@ msgstr "Подредени документи за идентификација"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category_child_ids
+#, fuzzy
 msgid "Child Tags"
-msgstr ""
+msgstr "Подреден таг"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_child_ids
@@ -7516,7 +8137,7 @@ msgstr "Правно лице"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_data_drinks
-msgid "Common Drinks data for point of sales"
+msgid "Common Drinks data for points of sale"
 msgstr ""
 
 #. module: base
@@ -7542,8 +8163,9 @@ msgstr "Компании"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
+#, fuzzy
 msgid "Companies count"
-msgstr ""
+msgstr "Компании"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_company_id
@@ -7601,8 +8223,9 @@ msgstr "Тип на компанија"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_company_registry
+#, fuzzy
 msgid "Company registry"
-msgstr ""
+msgstr "Регистри на компанија"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_contact_address
@@ -7813,7 +8436,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_partner_category_form
 #: model:ir.ui.view,arch_db:base.view_partner_category_list
 msgid "Contact Tags"
-msgstr ""
+msgstr "Ознаки на контакт"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
@@ -8367,15 +8990,16 @@ msgid "Custom Shortcuts"
 msgstr "Прилагодени кратенки"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:432
+#: code:addons/base/ir/ir_model.py:455
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "Прилагодените полиња мора да имаат име кое почнува со 'x_' !"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_custom_footer
+#, fuzzy
 msgid "Custom footer"
-msgstr ""
+msgstr "Сопствено подножје"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_rating
@@ -8474,7 +9098,7 @@ msgid "Database Structure"
 msgstr "Структура на датабазата"
 
 #. module: base
-#: code:addons/models.py:3520
+#: code:addons/models.py:3530
 #, python-format
 msgid ""
 "Database fetch misses ids ({}) and has extra ids ({}), may be caused by a "
@@ -8586,8 +9210,9 @@ msgstr "Децимален знак"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_decimal_places
+#, fuzzy
 msgid "Decimal places"
-msgstr ""
+msgstr "Децимален знак"
 
 #. module: base
 #: selection:ir.values,key:0
@@ -8943,11 +9568,12 @@ msgstr "Доктор"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_document_management
+#, fuzzy
 msgid "Document Management"
-msgstr ""
+msgstr "Проектен менаџмент"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:774 code:addons/base/ir/ir_model.py:777
+#: code:addons/base/ir/ir_model.py:798 code:addons/base/ir/ir_model.py:801
 #, python-format
 msgid "Document model"
 msgstr "Модел на документ"
@@ -9086,7 +9712,7 @@ msgid "El Salvador"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:565
+#: code:addons/base/ir/ir_ui_view.py:581
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr "Елементот '%s' не може да биде лоциран во надредниот приказот"
@@ -9142,7 +9768,7 @@ msgid "Employees"
 msgstr "Вработени"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:302
+#: code:addons/base/ir/ir_model.py:306
 #, python-format
 msgid "Empty dependency in %r"
 msgstr ""
@@ -9186,16 +9812,16 @@ msgstr ""
 #: code:addons/base/res/res_partner.py:85
 #, python-format
 msgid "Error ! You can not create recursive tags."
-msgstr "Грешка ! Не може да направите рекурзивни тагови."
+msgstr "Грешка ! Не може да креирате рекурзивни ознаки."
 
 #. module: base
 #: code:addons/base/res/res_company.py:354
-#, python-format
+#, fuzzy, python-format
 msgid "Error ! You cannot create recursive companies."
-msgstr ""
+msgstr "Грешка! Не може да креирате рекурсивни компании."
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:426
+#: code:addons/base/ir/ir_ui_view.py:442
 #, python-format
 msgid ""
 "Error context:\n"
@@ -9205,13 +9831,13 @@ msgstr ""
 "Приказ `%(view_name)s`"
 
 #. module: base
-#: code:addons/models.py:1233
+#: code:addons/models.py:1243
 #, python-format
 msgid "Error details:"
 msgstr "Опис на дисфункцијата/еророт:"
 
 #. module: base
-#: code:addons/models.py:1246
+#: code:addons/models.py:1256
 #, python-format
 msgid "Error while validating constraint"
 msgstr ""
@@ -9360,10 +9986,10 @@ msgid ""
 "evaluation."
 msgstr ""
 "Изразот содржи спецификација на вредноста. \n"
-"Кога типот на Формула е избран, ова поле може да биде Python израз кој може "
+"Кога е избран типот „Формула“, ова поле може да биде Python израз кој може "
 "да користи исти вредности како за условното поле на акцијата на серверот.\n"
-"Доколку е селектиран типот Вредност, вредноста може да се употреби директно "
-"без евалуација."
+"Доколку е селектиран типот „Вредност“, вредноста ќе се употреби директно без "
+"евалуација."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_wkf_transition_condition
@@ -9437,8 +10063,9 @@ msgstr "Екстра права"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra_tools
+#, fuzzy
 msgid "Extra Tools"
-msgstr ""
+msgstr "Екстра"
 
 #. module: base
 #: model:res.country,name:base.fk
@@ -9548,19 +10175,19 @@ msgid "Field"
 msgstr "Поле"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:135
+#: code:addons/base/ir/ir_model.py:139
 #, python-format
 msgid "Field \"Model\" cannot be modified on models."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:139
+#: code:addons/base/ir/ir_model.py:143
 #, python-format
 msgid "Field \"Transient Model\" cannot be modified on models."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:137
+#: code:addons/base/ir/ir_model.py:141
 #, python-format
 msgid "Field \"Type\" cannot be modified on models."
 msgstr ""
@@ -9597,7 +10224,7 @@ msgid "Field Type"
 msgstr "Тип на поле"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:877
+#: code:addons/base/ir/ir_ui_view.py:893
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr "Полето `%(field_name)s` не постои"
@@ -9828,13 +10455,13 @@ msgid "For relationship fields, the technical name of the target model"
 msgstr "За здружени полиња, техничкото име на таргет моделот"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:425
+#: code:addons/base/ir/ir_model.py:448
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr "За избирачки полиња, опцијата за избирање мора да биде прикажена!"
 
 #. module: base
-#: code:addons/models.py:3655
+#: code:addons/models.py:3665
 #, python-format
 msgid ""
 "For this kind of document, you may only access records you created "
@@ -9883,8 +10510,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
+#, fuzzy
 msgid "France - FEC"
-msgstr ""
+msgstr "Франција"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -10323,13 +10951,10 @@ msgstr "Помош со Python expressions."
 #. module: base
 #: model:ir.module.category,description:base.module_category_point_of_sale
 msgid ""
-"Helps you get the most out of your points of sales with fast sale encoding, "
+"Helps you get the most out of your points of sale with fast sale encoding, "
 "simplified payment mode encoding, automatic picking lists generation and "
 "more."
 msgstr ""
-"Ви помага на тоа да извадете највеќе од вашиот 'point of sale' со брзото "
-"шифрирање на продажбите, едноставени платежни мод шифрирања, автоматско "
-"генерирање на преносни листи и многу  повеќе."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_accounting_and_finance
@@ -10836,19 +11461,27 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_access_active
+#, fuzzy
 msgid ""
 "If you uncheck the active field, it will disable the ACL without deleting it "
 "(if you delete a native ACL, it will be re-created when you reload the "
 "module)."
 msgstr ""
+"Ако го отчекирате активното поле, тогаш ќе Ви се прекине ACL без да Ви се "
+"избрише (ако избришете нативен ACL, тогаш ќе Ви биде рекреиран кога ќе го "
+"приклучите модулот повторно."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule_active
+#, fuzzy
 msgid ""
 "If you uncheck the active field, it will disable the record rule without "
 "deleting it (if you delete a native record rule, it may be re-created when "
 "you reload the module)."
 msgstr ""
+"Ако го отчекирате активното поле, тогаш ќе Ви биде исклучено записното "
+"правило без да Ви се избрише (ако избришете нативно записно правило, тогаш "
+"можно е тоа да Ви биде рекреирано откога ќе го приклучите модулот повторно."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -10955,7 +11588,7 @@ msgstr ""
 #. module: base
 #: selection:res.partner,company_type:0
 msgid "Individual"
-msgstr ""
+msgstr "Лице"
 
 #. module: base
 #: model:res.country,name:base.id
@@ -11075,13 +11708,13 @@ msgstr ""
 "живо."
 
 #. module: base
-#: code:addons/models.py:1448
+#: code:addons/models.py:1458
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr "Недоволни полиња за календарски преглед!"
 
 #. module: base
-#: code:addons/models.py:1458
+#: code:addons/models.py:1468
 #, python-format
 msgid ""
 "Insufficient fields to generate a Calendar View for %s, missing a date_stop "
@@ -11150,12 +11783,18 @@ msgid "Introspection report on objects"
 msgstr "Интроспекциски извештај на објекти"
 
 #. module: base
-#: code:addons/models.py:4576
+#: code:addons/models.py:4585
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
 "separated list of valid field names (optionally followed by asc/desc for the "
 "direction)"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_users.py:317
+#, python-format
+msgid "Invalid 'group by' parameter"
 msgstr ""
 
 #. module: base
@@ -11187,7 +11826,7 @@ msgid "Invalid expression"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:743
+#: code:addons/models.py:749
 #, python-format
 msgid ""
 "Invalid function definition %s in object %s !\n"
@@ -11196,17 +11835,11 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:2128
+#: code:addons/models.py:2138
 #, python-format
 msgid ""
 "Invalid group_by specification: \"%s\".\n"
 "A group_by specification must be a list of valid fields."
-msgstr ""
-
-#. module: base
-#: code:addons/base/res/res_users.py:318
-#, python-format
-msgid "Invalid groupby"
 msgstr ""
 
 #. module: base
@@ -11225,7 +11858,7 @@ msgid "Invalid model name %r in action definition."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:557
+#: code:addons/base/ir/ir_ui_view.py:573
 #, python-format
 msgid "Invalid position attribute: '%s'"
 msgstr "Неважечки позициски атрибут: '%s'"
@@ -11237,10 +11870,10 @@ msgid "Invalid prefix or suffix for sequence '%s'"
 msgstr "Неважечки префикс или суфикс за секвенца '%s'"
 
 #. module: base
-#: code:addons/base/res/res_users.py:326
-#, python-format
+#: code:addons/base/res/res_users.py:325
+#, fuzzy, python-format
 msgid "Invalid search criterion"
-msgstr ""
+msgstr "Невалидна дефиниција на приказ"
 
 #. module: base
 #: code:addons/base/res/ir_property.py:68
@@ -11249,7 +11882,7 @@ msgid "Invalid type"
 msgstr "Неважечки тип"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:296 code:addons/base/ir/ir_ui_view.py:298
+#: code:addons/base/ir/ir_ui_view.py:298 code:addons/base/ir/ir_ui_view.py:300
 #, python-format
 msgid "Invalid view definition"
 msgstr "Невалидна дефиниција на приказ"
@@ -11267,7 +11900,7 @@ msgstr "Менаџирање на залихи"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_account
 msgid "Inventory, Logistic, Valuation, Accounting"
-msgstr "Залихи, логистика, валуација, сметководство"
+msgstr "Залихи, логистика, вреднување, сметководство"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock
@@ -11515,7 +12148,7 @@ msgid "Language Name"
 msgstr "Име на јазик"
 
 #. module: base
-#: code:addons/base/module/wizard/base_language_install.py:29
+#: code:addons/base/module/wizard/base_language_install.py:28
 #, python-format
 msgid "Language Pack"
 msgstr "Пакет Јазици"
@@ -12003,8 +12636,9 @@ msgstr "Најави се"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_logo_web
+#, fuzzy
 msgid "Logo web"
-msgstr ""
+msgstr "Веб лого"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_logging_search_view
@@ -12208,7 +12842,7 @@ msgid "Manufacturing Orders, Bill of Materials, Routings"
 msgstr "Налози за изработка, Нормативи, Насочување"
 
 #. module: base
-#: code:addons/models.py:2858
+#: code:addons/models.py:2868
 #, python-format
 msgid "Many2Many destination model does not exist: `%s`"
 msgstr ""
@@ -12219,7 +12853,7 @@ msgid "Many2One"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:439
+#: code:addons/base/ir/ir_model.py:462
 #, python-format
 msgid "Many2one %s on model %s does not exist!"
 msgstr ""
@@ -12435,19 +13069,19 @@ msgid "Missing SMTP Server"
 msgstr "Недостасува SMTP сервер"
 
 #. module: base
-#: code:addons/models.py:3624
+#: code:addons/models.py:3634
 #, python-format
 msgid "Missing document(s)"
 msgstr "Недостасувачки документ(и)"
 
 #. module: base
-#: code:addons/models.py:6218
+#: code:addons/models.py:6227
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr "Недостига потребната вредност за полето '%s' (%s)"
 
 #. module: base
-#: code:addons/models.py:6215
+#: code:addons/models.py:6224
 #, python-format
 msgid "Missing required value for the field '%s'."
 msgstr "Недостига потребната вредност за полето '%s'."
@@ -12490,7 +13124,7 @@ msgid "Model"
 msgstr "Модел"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:435
+#: code:addons/base/ir/ir_model.py:458
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "Моделот %s не постои!"
@@ -12566,7 +13200,7 @@ msgstr ""
 "partner'"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:666 code:addons/base/ir/ir_ui_view.py:828
+#: code:addons/base/ir/ir_ui_view.py:682 code:addons/base/ir/ir_ui_view.py:844
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr "Модулот не е пронајден: %(model)s"
@@ -12878,7 +13512,7 @@ msgid "New Zealand - Accounting"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:498
+#: code:addons/base/ir/ir_model.py:522
 #, python-format
 msgid "New field name must still start with x_ , because it is a custom field!"
 msgstr ""
@@ -12945,7 +13579,7 @@ msgid "Niue"
 msgstr "Ниуе"
 
 #. module: base
-#: code:addons/models.py:1556
+#: code:addons/models.py:1566
 #, python-format
 msgid "No default view of type '%s' could be found !"
 msgstr ""
@@ -12976,13 +13610,13 @@ msgid "Non Updatable"
 msgstr "Не може да се ажурира"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:311
+#: code:addons/base/ir/ir_model.py:315
 #, python-format
 msgid "Non-relational field %r in dependency %r"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:268
+#: code:addons/base/ir/ir_model.py:272
 #, python-format
 msgid "Non-relational field name '%s' in related field '%s'"
 msgstr ""
@@ -13044,8 +13678,9 @@ msgstr "Број на позиви"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_companies_count
+#, fuzzy
 msgid "Number of Companies"
-msgstr ""
+msgstr "Број на позиви"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_update_added
@@ -13115,8 +13750,9 @@ msgstr "Командна табла на нагодувања во Odoo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_diagram
+#, fuzzy
 msgid "Odoo Web Diagram"
-msgstr ""
+msgstr "OpenERP веб дијаграм"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_customer_form
@@ -13187,7 +13823,7 @@ msgid "On delete property for many2one fields"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3624
+#: code:addons/models.py:3634
 #, python-format
 msgid ""
 "One of the documents you are trying to access has been deleted, please try "
@@ -13197,7 +13833,7 @@ msgstr ""
 "обидете се повторно после обновувањето."
 
 #. module: base
-#: code:addons/models.py:4010
+#: code:addons/models.py:4019
 #, python-format
 msgid ""
 "One of the records you are trying to modify has already been deleted "
@@ -13263,7 +13899,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:774
+#: code:addons/base/ir/ir_model.py:798
 #, python-format
 msgid ""
 "Only users with the following access level are currently allowed to do that"
@@ -13352,7 +13988,7 @@ msgid "Original View"
 msgstr "Оригинален приказ"
 
 #. module: base
-#: code:addons/base/res/res_users.py:730 code:addons/base/res/res_users.py:895
+#: code:addons/base/res/res_users.py:729 code:addons/base/res/res_users.py:892
 #, python-format
 msgid "Other"
 msgstr "Друго"
@@ -13519,8 +14155,9 @@ msgstr "Надредна апликација"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category_parent_id
+#, fuzzy
 msgid "Parent Category"
-msgstr ""
+msgstr "Надреден таг"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_parent_id
@@ -13576,7 +14213,7 @@ msgstr "Партнер модул за веб-страна"
 #. module: base
 #: model:ir.model,name:base.model_res_partner_category
 msgid "Partner Tags"
-msgstr "Етикети на партнер"
+msgstr "Ознаки на партнер"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_title_form
@@ -13597,8 +14234,9 @@ msgstr "Партнери"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_geolocalize
+#, fuzzy
 msgid "Partners Geolocation"
-msgstr ""
+msgstr "Географска локализација на партнери"
 
 #. module: base
 #: code:addons/base/res/res_partner.py:742
@@ -13768,7 +14406,7 @@ msgid "Plano de contas SNC para Portugal"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:777
+#: code:addons/base/ir/ir_model.py:801
 #, python-format
 msgid "Please contact your system administrator if you think this is an error."
 msgstr ""
@@ -13832,8 +14470,9 @@ msgstr "Точка на продажба"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_data_drinks
+#, fuzzy
 msgid "Point of Sale Common Data Drinks"
-msgstr ""
+msgstr "Точка на продажба попусти"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -13988,8 +14627,9 @@ msgstr "Производна екстензија за следење на пр�
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity
 #: model:ir.module.module,shortdesc:base.module_note
+#, fuzzy
 msgid "Productivity"
-msgstr ""
+msgstr "Активност"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product
@@ -14037,7 +14677,7 @@ msgid "Properties"
 msgstr "Својства"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:477
+#: code:addons/base/ir/ir_model.py:500
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
@@ -14202,11 +14842,11 @@ msgid "Quotations, Sales Orders, Invoicing"
 msgstr "Понуди, налози за продажба, фактурирање"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:305
+#: code:addons/base/ir/ir_ui_view.py:307
 #, python-format
 msgid ""
-"Qweb view cannot have 'Groups' define on the record. Use 'groups' "
-"atttributes inside the view definition"
+"Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes "
+"inside the view definition"
 msgstr ""
 
 #. module: base
@@ -14310,7 +14950,7 @@ msgstr ""
 "неколку минути повторно."
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:358 code:addons/models.py:4984
+#: code:addons/base/ir/ir_actions.py:358 code:addons/models.py:4993
 #, python-format
 msgid "Record does not exist or has been deleted."
 msgstr "Записот не постои или бил избришан."
@@ -14344,7 +14984,7 @@ msgid "Recursion found in child server actions"
 msgstr "Повторување е пронајдено во подредените серверски акции"
 
 #. module: base
-#: code:addons/models.py:4118
+#: code:addons/models.py:4127
 #, python-format
 msgid "Recursivity Detected."
 msgstr "Детектирана е рекурзивност."
@@ -14388,13 +15028,13 @@ msgid "Related Server Action"
 msgstr "Поврзана серверска акција"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:280
+#: code:addons/base/ir/ir_model.py:284
 #, python-format
 msgid "Related field '%s' does not have comodel '%s'"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:278
+#: code:addons/base/ir/ir_model.py:282
 #, python-format
 msgid "Related field '%s' does not have type '%s'"
 msgstr ""
@@ -14453,7 +15093,7 @@ msgstr ""
 "акција"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:462
+#: code:addons/base/ir/ir_model.py:485
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "Преименување на ретко поле \"%s\" не е дозловено"
@@ -14559,7 +15199,7 @@ msgid "Resellers"
 msgstr "Препродавачи"
 
 #. module: base
-#: code:addons/models.py:1064
+#: code:addons/models.py:1070
 #, python-format
 msgid "Resolve other errors first"
 msgstr "Реши други проблеми прво"
@@ -14642,8 +15282,9 @@ msgstr "Десно-кон-лево"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_rml_header
+#, fuzzy
 msgid "Rml header"
-msgstr ""
+msgstr "RML заглавие"
 
 #. module: base
 #: model:res.country,name:base.ro
@@ -15340,25 +15981,25 @@ msgid "Sometimes called BIC or Swift."
 msgstr "Понекогаш наречен BIC или Swift."
 
 #. module: base
-#: code:addons/base/ir/ir_attachment.py:288 code:addons/base/ir/ir_model.py:768
+#: code:addons/base/ir/ir_attachment.py:288 code:addons/base/ir/ir_model.py:792
 #, python-format
 msgid "Sorry, you are not allowed to access this document."
 msgstr "Се извинуваме но не ви е дозволен пристап до овој документ."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:770
+#: code:addons/base/ir/ir_model.py:794
 #, python-format
 msgid "Sorry, you are not allowed to create this kind of document."
 msgstr "Извинете, не ви е дозволено да креирате таков тип на документ"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:771
+#: code:addons/base/ir/ir_model.py:795
 #, python-format
 msgid "Sorry, you are not allowed to delete this document."
 msgstr "Извинете, не ви е дозволено да го избришете овој документ."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:769
+#: code:addons/base/ir/ir_model.py:793
 #, python-format
 msgid "Sorry, you are not allowed to modify this document."
 msgstr "Извинете, не ви е дозволено да го модифицирате овој документ."
@@ -15369,7 +16010,7 @@ msgid "Sort"
 msgstr "Сортирај"
 
 #. module: base
-#: code:addons/models.py:4711
+#: code:addons/models.py:4720
 #, python-format
 msgid "Sorting field %s not found on model %s"
 msgstr ""
@@ -15516,12 +16157,6 @@ msgid "State Name"
 msgstr "Име на држава"
 
 #. module: base
-#: code:addons/base/res/res_country.py:138
-#, python-format
-msgid "State with id [%s] (%s) seems to have duplicated code: %s"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state_ids
 msgid "States"
 msgstr "Состојби"
@@ -15553,12 +16188,12 @@ msgstr "Чекорот не смее да биде нула."
 #. module: base
 #: model:ir.module.module,summary:base.module_note_pad
 msgid "Sticky memos, Collaborative"
-msgstr "Лепливи мемоа, Соработка"
+msgstr "Лепливи белешки, Соработка"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_note
 msgid "Sticky notes, Collaborative, Memos"
-msgstr "Лепливи белешки, Соработка, Мемоа"
+msgstr "Лепливи белешки, Соработка, Белешки"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_stock
@@ -15820,12 +16455,12 @@ msgstr "Етикета"
 #: model:ir.model.fields,field_description:base.field_res_partner_category_id_965
 #: model:ir.model.fields,field_description:base.field_res_users_category_id
 msgid "Tags"
-msgstr "Етикети"
+msgstr "Ознаки"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Tags..."
-msgstr "Етикети..."
+msgstr "Ознаки..."
 
 #. module: base
 #: model:res.country,name:base.tw
@@ -15875,6 +16510,11 @@ msgstr ""
 "Ова е користено од неколку законски пријави."
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_tax_exigible
+msgid "Tax exigible"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_hr
 msgid "Team Page"
 msgstr "Страна на тим"
@@ -15907,7 +16547,7 @@ msgid "Technical Settings"
 msgstr "Технички поставки"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:746
+#: code:addons/base/ir/ir_translation.py:758
 #, python-format
 msgid "Technical Translations"
 msgstr ""
@@ -15970,13 +16610,16 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
+#, fuzzy
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"ISO државен код со два знака.\n"
+"Може да го користите ова поле за брзо пребарување."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:251
+#: code:addons/base/ir/ir_model.py:255
 #, python-format
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
@@ -16088,6 +16731,12 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_wkf_transition_act_to
 msgid "The destination activity."
 msgstr "Активноста на дестинацијата."
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:412
+#, python-format
+msgid "The field '%s' cannot be removed because the field '%s' depends on it."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -16323,8 +16972,8 @@ msgid "The record id this is attached to."
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3258 code:addons/models.py:3529
-#: code:addons/models.py:3614
+#: code:addons/models.py:3268 code:addons/models.py:3539
+#: code:addons/models.py:3624
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. "
@@ -16357,7 +17006,7 @@ msgid "The state code."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:363
+#: code:addons/base/ir/ir_model.py:367
 #, python-format
 msgid "The table %r if used for other, possibly incompatible fields."
 msgstr ""
@@ -16382,7 +17031,7 @@ msgid "The user will be able to manage equipments."
 msgstr "Корисникот ќе биде во можност да управува со опремата."
 
 #. module: base
-#: code:addons/models.py:6230
+#: code:addons/models.py:6239
 #, python-format
 msgid "The value for the field '%s' already exists."
 msgstr "Вредноста за полето '%s' веќе постои."
@@ -16393,7 +17042,7 @@ msgid "Theme"
 msgstr "Тема"
 
 #. module: base
-#: code:addons/base/ir/ir_filters.py:97
+#: code:addons/base/ir/ir_filters.py:104
 #, python-format
 msgid ""
 "There is already a shared filter set as default for %(model)s, delete or "
@@ -16403,13 +17052,13 @@ msgstr ""
 "изменете го пред да сетирате нов стандарден"
 
 #. module: base
-#: code:addons/models.py:2716
+#: code:addons/models.py:2726
 #, python-format
 msgid "There is no reference available for %s"
 msgstr "Нема референца достапна за %s"
 
 #. module: base
-#: code:addons/models.py:2841
+#: code:addons/models.py:2851
 #, python-format
 msgid "There is no reference field '%s' found for '%s'"
 msgstr "Референтното поле '%s' не е пронајдено за '%s'"
@@ -16425,7 +17074,7 @@ msgid "This Window"
 msgstr "Овој прозорец"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:403
+#: code:addons/base/ir/ir_model.py:420
 #, python-format
 msgid "This column contains module data and cannot be removed!"
 msgstr "Оваа колона содржи податоци за модул и не може да биде отстранета!"
@@ -16735,7 +17384,7 @@ msgid "Translation comments"
 msgstr "Преведувачки коментари"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:634
+#: code:addons/base/ir/ir_translation.py:646
 #, python-format
 msgid ""
 "Translation features are unavailable until you install an extra translation."
@@ -16749,7 +17398,7 @@ msgid "Translation in Progress"
 msgstr "Прведувањето е во тек"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:555
+#: code:addons/base/ir/ir_translation.py:567
 #, python-format
 msgid ""
 "Translation is not valid:\n"
@@ -16931,7 +17580,7 @@ msgid "Ukraine"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:3736
+#: code:addons/models.py:3746
 #, python-format
 msgid "Unable to delete this document because it is used as a default property"
 msgstr ""
@@ -17009,25 +17658,25 @@ msgid "Unknown"
 msgstr "Непознато"
 
 #. module: base
-#: code:addons/models.py:1198
+#: code:addons/models.py:1208
 #, python-format
 msgid "Unknown database identifier '%s'"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:1063
+#: code:addons/models.py:1069
 #, python-format
 msgid "Unknown error during import:"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:309
+#: code:addons/base/ir/ir_model.py:313
 #, python-format
 msgid "Unknown field %r in dependency %r"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:266
+#: code:addons/base/ir/ir_model.py:270
 #, python-format
 msgid "Unknown field name '%s' in related field '%s'"
 msgstr ""
@@ -17075,8 +17724,9 @@ msgstr "Ажурирај датум"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_tree
+#, fuzzy
 msgid "Update Language Terms"
-msgstr ""
+msgstr "Ажурирај јазични термини"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_update
@@ -17152,6 +17802,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_gamification
+#, fuzzy
 msgid ""
 "Use the HR resources for the gamification process.\n"
 "\n"
@@ -17159,6 +17810,12 @@ msgid ""
 "This allow the user to send badges to employees instead of simple users.\n"
 "Badge received are displayed on the user profile.\n"
 msgstr ""
+"Користи ги HR ресурсите за гејмификацискиот процес.\n"
+"\n"
+"HR офицерот сега може да менаџира со предизвици и амблеми.\n"
+"Ова му овозможува на корисникот да испраќа амблеми на вработените наместо на "
+"обичните корисници.\n"
+"Примениот амблем е поставен на профилот на корисникот.\n"
 
 #. module: base
 #: selection:ir.actions.server,use_relational_model:0
@@ -17526,7 +18183,7 @@ msgstr "Менаџмент на магацин: Бранови"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:474
-#: code:addons/base/ir/ir_model.py:288 code:addons/base/ir/ir_model.py:362
+#: code:addons/base/ir/ir_model.py:292 code:addons/base/ir/ir_model.py:366
 #: code:addons/base/res/res_partner.py:317
 #, python-format
 msgid "Warning"
@@ -17539,7 +18196,7 @@ msgid "Warning!"
 msgstr "Внимание!"
 
 #. module: base
-#: code:addons/models.py:5946
+#: code:addons/models.py:5955
 #, python-format
 msgid "Warnings"
 msgstr "Предупредувања"
@@ -17691,13 +18348,15 @@ msgstr "Веб страна дигитална продажба - Продава
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock
+#, fuzzy
 msgid "Website Sale Stock - Website Delivery Information"
-msgstr ""
+msgstr "Веб страна залиха на продажба - Веб страна информации на испорака"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_theme_install
+#, fuzzy
 msgid "Website Theme Install"
-msgstr ""
+msgstr "Портал на веб страна"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_website
@@ -17807,8 +18466,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_store
+#, fuzzy
 msgid "Whether the value is stored in the database."
-msgstr ""
+msgstr "ID од таргет записот во базата на информации"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_translate
@@ -18024,7 +18684,7 @@ msgid "You can not register two fonts with the same name"
 msgstr "Не може да се регистрираат два фонта со исто име"
 
 #. module: base
-#: code:addons/base/res/res_users.py:384
+#: code:addons/base/res/res_users.py:383
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -18058,16 +18718,16 @@ msgid "You cannot create recursive Partner hierarchies."
 msgstr "Не може да се креира рекурзивна хиерархија на партнери."
 
 #. module: base
-#: code:addons/base/res/res_users.py:343
-#, python-format
+#: code:addons/base/res/res_users.py:342
+#, fuzzy, python-format
 msgid "You cannot deactivate the admin user."
-msgstr ""
+msgstr "Не можете да го деактивирате админ корисникот."
 
 #. module: base
-#: code:addons/base/res/res_users.py:345
-#, python-format
+#: code:addons/base/res/res_users.py:344
+#, fuzzy, python-format
 msgid "You cannot deactivate the user you're currently logged in as."
-msgstr ""
+msgstr "Не можете да го деактивирате корисникот со кој што сте веќе логирани."
 
 #. module: base
 #: code:addons/base/res/res_lang.py:238
@@ -18093,8 +18753,9 @@ msgstr "Немате авторизација за да ја извршите о
 
 #. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
+#, fuzzy
 msgid "You should try other search criteria."
-msgstr ""
+msgstr "Треба да пробате со други пребарувачки критериуми."
 
 #. module: base
 #: code:addons/base/module/module.py:327
@@ -18207,8 +18868,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_base
+#, fuzzy
 msgid "base"
-msgstr ""
+msgstr "База на податоци"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -18617,7 +19279,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:423
+#: code:addons/base/ir/ir_ui_view.py:439
 #, python-format
 msgid "n/a"
 msgstr ""

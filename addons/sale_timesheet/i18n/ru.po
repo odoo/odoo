@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 07:45+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2016-02-10 19:08+0000\n"
 "Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -46,33 +46,33 @@ msgstr "Сотрудник"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Order Line"
-msgstr ""
+msgstr "Строка заказа"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_procurement_order
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
 msgid "Procurement"
-msgstr ""
+msgstr "Снабжение"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Продукт"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_alert_time
 msgid "Product Alert Time"
-msgstr ""
+msgstr "Время оповещения товара"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_life_time
 msgid "Product Life Time"
-msgstr ""
+msgstr "Время жизни продукции"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_removal_time
 msgid "Product Removal Time"
-msgstr ""
+msgstr "Время удаления продукта"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
@@ -82,14 +82,14 @@ msgstr "Шаблон продукта"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_use_time
 msgid "Product Use Time"
-msgstr ""
+msgstr "Время использования продукта"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_project_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template_project_id
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Project"
-msgstr ""
+msgstr "Проект"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
@@ -112,10 +112,10 @@ msgstr "Позиция заказа на продажу"
 #: model:ir.model,name:sale_timesheet.model_project_task
 #: model:ir.model.fields,field_description:sale_timesheet.field_procurement_order_task_id
 msgid "Task"
-msgstr ""
+msgstr "Задача"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_service.py:94
+#: code:addons/sale_timesheet/models/sale_service.py:84
 #, python-format
 msgid "Task created"
 msgstr ""
@@ -124,12 +124,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Tasks"
-msgstr ""
+msgstr "Задачи"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
 msgid "Tasks associated to this sale"
-msgstr ""
+msgstr "Задачи, связанные с этой продажей"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
@@ -138,6 +138,9 @@ msgid ""
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
+"Устанавливает единицу измерения, используемую в проектах и задачах. \n"
+"Если вы используете связанный с проектом табель, не забудьте установить "
+"правильную единицу измерения для ваших сотрудников."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
@@ -147,7 +150,7 @@ msgstr "Расписание Стоимость"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.project_time_mode_id_duplicate_xmlid
 msgid "Timesheet UoM"
-msgstr ""
+msgstr "Ед. изм. табеля"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
@@ -171,6 +174,7 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
 msgstr ""
+"При присвоении нового серийного номера, это количество дней до оповещения."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
@@ -178,6 +182,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
 msgstr ""
+"При присвоении нового серийного номера, это количество дней , прежде чем "
+"товар может стать опасным и не должен потребляться."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
@@ -185,6 +191,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
 msgstr ""
+"При присвоении нового серийного номера, это количество дней до того, как "
+"товары должны быть удалены из запаса."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
@@ -192,6 +200,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
 msgstr ""
+"При присвоении нового серийного номера, это количество дней, прежде чем "
+"товар начинает ухудшаться, еще не будучи опасным."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_timesheet.py:143
@@ -206,9 +216,11 @@ msgstr ""
 "контракт основанный на времени и материале."
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_service.py:113
+#: code:addons/sale_timesheet/models/sale_service.py:103
 #, python-format
 msgid ""
 "You cannot delete a task related to a Sale Order. You can only archive this "
 "task."
 msgstr ""
+"Вы не можете удалить задачу, связанную с заказом. Вы можете только "
+"архивировать эту задачу."

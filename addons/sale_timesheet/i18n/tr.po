@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 07:45+0000\n"
+"POT-Creation-Date: 2016-08-22 10:09+0000\n"
 "PO-Revision-Date: 2015-11-20 10:10+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
@@ -43,33 +43,33 @@ msgstr "Personel"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Order Line"
-msgstr ""
+msgstr "Sipariş Kalemi"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_procurement_order
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
 msgid "Procurement"
-msgstr ""
+msgstr "Tedarik"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Ürün"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_alert_time
 msgid "Product Alert Time"
-msgstr ""
+msgstr "Ürün Uyarı Zamanı"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_life_time
 msgid "Product Life Time"
-msgstr ""
+msgstr "Ürünün Kulanım Tarihi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_removal_time
 msgid "Product Removal Time"
-msgstr ""
+msgstr "Ürün Kaldırma Süresi"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
@@ -79,14 +79,14 @@ msgstr "Ürün Şablonu"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_use_time
 msgid "Product Use Time"
-msgstr ""
+msgstr "Ürün Kullanım Süresi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_project_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template_project_id
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Project"
-msgstr ""
+msgstr "Proje"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
@@ -109,10 +109,10 @@ msgstr "Satış Siparişi Satırı"
 #: model:ir.model,name:sale_timesheet.model_project_task
 #: model:ir.model.fields,field_description:sale_timesheet.field_procurement_order_task_id
 msgid "Task"
-msgstr ""
+msgstr "Görevler"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_service.py:94
+#: code:addons/sale_timesheet/models/sale_service.py:84
 #, python-format
 msgid "Task created"
 msgstr ""
@@ -121,12 +121,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Tasks"
-msgstr ""
+msgstr "Görevler"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
 msgid "Tasks associated to this sale"
-msgstr ""
+msgstr "Bu satışla ilişkilendirilmiş görevler"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
@@ -144,7 +144,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.project_time_mode_id_duplicate_xmlid
 msgid "Timesheet UoM"
-msgstr ""
+msgstr "Zaman Çizelgesi Ölçü Birimi"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
@@ -168,6 +168,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
 msgstr ""
+"Yeni bir seri Numarası verildiğinde bir uyarı verilmeden önceki gün "
+"sayısıdır."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
@@ -175,6 +177,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
 msgstr ""
+"Yeni bir seri Numarası verildiğinde malların tehlikeli olacağı ve "
+"tüketilmemesi gereken duruma gelmeden önceki gün sayısıdır."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
@@ -182,6 +186,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
 msgstr ""
+"Yeni bir seri Numarası verildiğinde malların stoktan kaldırılmadan önceki "
+"gerekli gün sayısıdır."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
@@ -189,6 +195,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
 msgstr ""
+"Yeni bir Seri Numarası verildiğinde malların bozulmaya başlamasından önceki, "
+"henüz tehlikeli değilken, gerekli gün sayısıdır."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_timesheet.py:143
@@ -200,9 +208,11 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_service.py:113
+#: code:addons/sale_timesheet/models/sale_service.py:103
 #, python-format
 msgid ""
 "You cannot delete a task related to a Sale Order. You can only archive this "
 "task."
 msgstr ""
+"Bir Satış Sipariş ile ilgili bir görevi silemezsiniz. Bu görevi yalnızca "
+"arşivleyebilirsiniz."
