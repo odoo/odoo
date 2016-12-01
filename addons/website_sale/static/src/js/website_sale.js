@@ -49,7 +49,6 @@ odoo.define('website_sale.cart', function (require) {
 odoo.define('website_sale.website_sale_category', function (require) {
     "use strict";
 
-    var utils = require('web.utils');
     var base = require('web_editor.base');
 
     if(!$('#o_shop_collapse_category').length) {
@@ -73,6 +72,9 @@ odoo.define('website_sale.website_sale', function (require) {
 
     var base = require('web_editor.base');
     var ajax = require('web.ajax');
+    var utils = require('web.utils');
+    var core = require('web.core');
+    var _t = core._t;
 
     if(!$('.oe_website_sale').length) {
         return $.Deferred().reject("DOM doesn't contain '.oe_website_sale'");
