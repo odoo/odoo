@@ -868,11 +868,6 @@ class DataSet(http.Controller):
             return clean_action(action)
         return False
 
-    @http.route('/web/dataset/exec_workflow', type='json', auth="user")
-    def exec_workflow(self, model, id, signal):
-        request.session.check_security()
-        return request.env[model].browse(id).signal_workflow(signal)[id]
-
     @http.route('/web/dataset/resequence', type='json', auth="user")
     def resequence(self, model, ids, field='sequence', offset=0):
         """ Re-sequences a number of records in the model, by their ids

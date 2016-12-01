@@ -30,6 +30,11 @@ html, body {
             min-width: 20px;
         }
     }
+    @media (max-width: @screen-xs-max) {
+        .table-responsive > table.table {
+            table-layout: auto;
+        }
+    }
 }
 
 /* Media */

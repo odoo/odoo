@@ -295,25 +295,6 @@
                                 <field name="code" widget="ace" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
                             </page>
 
-                            <page string="Worflow Signal" autofocus="autofocus"
-                                    attrs="{'invisible': [('state', '!=', 'trigger')]}">
-                                <p attrs="{'invisible': [('model_id', '!=', False)]}">
-                                    Please set the Base Model before setting the action details.
-                                </p>
-                                <group attrs="{'invisible': [('model_id', '=', False)]}">
-                                    <field name="use_relational_model" widget="radio"
-                                            attrs="{'readonly': [('model_id', '=', False)]}"/>
-                                    <field name="wkf_field_id" context="{'key': ''}"
-                                            attrs="{'required': [('state', '=', 'trigger'), ('use_relational_model', '=', 'relational')],
-                                                    'invisible': [('use_relational_model', '=', 'base')]}"
-                                            domain="[('model_id', '=', model_id), ('ttype', 'in', ['many2one'])]"/>
-                                    <field name="wkf_model_id" invisible="1"/>
-                                    <field name="wkf_model_name" invisible="1"/>
-                                    <field name="wkf_transition_id" attrs="{'required': [('state', '=', 'trigger')]}"
-                                            domain="[('wkf_id.osv', '=', wkf_model_name)]"/>
-                                </group>
-                            </page>
-
                             <page string="Client" autofocus="autofocus"
                                     attrs="{'invisible': [('state', '!=', 'client_action')]}">
                                 <group>

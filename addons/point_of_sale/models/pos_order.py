@@ -463,9 +463,6 @@ class PosOrder(models.Model):
 
             new_invoice.with_context(local_context).sudo().compute_taxes()
             order.sudo().write({'state': 'invoiced'})
-            # this workflow signal didn't exist on account.invoice -> should it have been 'invoice_open' ? (and now method .action_invoice_open())
-            # shouldn't the created invoice be marked as paid, seing the customer paid in the POS?
-            # new_invoice.sudo().signal_workflow('validate')
 
         if not Invoice:
             return {}

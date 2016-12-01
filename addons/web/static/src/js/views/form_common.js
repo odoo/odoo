@@ -245,7 +245,6 @@ var CompletionFieldMixin = {
                 values.push({
                     label: _t("No results to show..."),
                     action: function() {},
-                    classname: 'o_m2o_dropdown_option'
                 });
             }
 

@@ -217,7 +217,6 @@ class CrmLead(models.Model):
 
     @api.multi
     def update_lead_portal(self, values):
-        # YTI FIXME : Use the standard workflow defined in crm_activity
         self.check_access_rights('write')
         for lead in self:
             if values['date_action'] == '':

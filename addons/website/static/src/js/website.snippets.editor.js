@@ -299,34 +299,34 @@ options.registry.parallax = options.Class.extend({
         this.grid.size = 8;
         return this.grid;
     },
-    on_resize: function () {
-        this._refresh();
-    },
-    _refresh: function () {
-        this.$target.data("snippet-view").set_values();
-    },
     start: function () {
         this._super.apply(this, arguments);
         if (!this.$target.data("snippet-view")) {
             this.$target.data("snippet-view", new animation.registry.parallax(this.$target));
         }
-        this.scroll();
-
         this._refresh_callback = this._refresh.bind(this);
-        this.buildingBlock.$el.on("snippet-dropped snippet-activated", this._refresh_callback);
-        this.$target.on('snippet-option-change snippet-option-preview', this._refresh_callback);
+        this._toggle_refresh_callback(true);
+    },
+    on_focus: function () {
+        this._super.apply(this, arguments);
+        this._update_target_to_bg();
+    },
+    on_resize: function () {
+        this._super.apply(this, arguments);
+        this._refresh();
     },
     scroll: function (type, value) {
         this.$target.attr("data-scroll-background-ratio", value);
         this._refresh();
     },
     set_active: function () {
+        this._super.apply(this, arguments);
         this.$el.find('[data-scroll]').removeClass("active")
             .filter('[data-scroll="' + (this.$target.attr('data-scroll-background-ratio') || 0) + '"]').addClass("active");
     },
     clean_for_save: function () {
         this._super.apply(this, arguments);
-        this.$target.css("background-position", '').css("background-attachment", '');
+        this._toggle_refresh_callback(false);
     },
     on_move: function () {
         this._super.apply(this, arguments);
@@ -334,8 +334,23 @@ options.registry.parallax = options.Class.extend({
     },
     on_remove: function () {
         this._super.apply(this, arguments);
-        this.$target.off("snippet-option-change snippet-option-preview", this._refresh_callback);
-        this.buildingBlock.$el.off("snippet-dropped snippet-activated", this._refresh_callback);
+        this._toggle_refresh_callback(false);
+    },
+    _update_target_to_bg: function () {
+        this.editor.styles.background.$target = this.$target.data("snippet-view").$bg;
+        this.editor.styles.background.set_active();
+        this.editor.styles.background_position.$target = this.$target.data("snippet-view").$bg;
+        this.editor.styles.background_position.set_active();
+    },
+    _refresh: function () {
+        _.defer((function () {
+            this.$target.data("snippet-view")._rebuild();
+            this._update_target_to_bg();
+        }).bind(this));
+    },
+    _toggle_refresh_callback: function (on) {
+        this.$target[on ? "on" : "off"]("snippet-option-change snippet-option-preview", this._refresh_callback);
+        this.buildingBlock.$el[on ? "on" : "off"]("snippet-dropped snippet-activated", this._refresh_callback);
     },
 });
 

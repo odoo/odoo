@@ -3303,51 +3303,6 @@ class BaseModel(object):
                     self.browse(sub_ids)._check_record_rules_result_count(returned_ids, operation)
 
     @api.multi
-    def create_workflow(self):
-        """ Create a workflow instance for the given records. """
-        from odoo import workflow
-        for res_id in self.ids:
-            workflow.trg_create(self._uid, self._name, res_id, self._cr)
-        return True
-
-    @api.multi
-    def delete_workflow(self):
-        """ Delete the workflow instances bound to the given records. """
-        from odoo import workflow
-        for res_id in self.ids:
-            workflow.trg_delete(self._uid, self._name, res_id, self._cr)
-        self.invalidate_cache()
-        return True
-
-    @api.multi
-    def step_workflow(self):
-        """ Reevaluate the workflow instances of the given records. """
-        from odoo import workflow
-        for res_id in self.ids:
-            workflow.trg_write(self._uid, self._name, res_id, self._cr)
-        return True
-
-    @api.multi
-    def signal_workflow(self, signal):
-        """ Send the workflow signal, and return a dict mapping ids to workflow results. """
-        from odoo import workflow
-        result = {}
-        for res_id in self.ids:
-            result[res_id] = workflow.trg_validate(self._uid, self._name, res_id, signal, self._cr)
-        return result
-
-    @api.model
-    def redirect_workflow(self, old_new_ids):
-        """ Rebind the workflow instance bound to the given 'old' record IDs to
-            the given 'new' IDs. (``old_new_ids`` is a list of pairs ``(old, new)``.
-        """
-        from odoo import workflow
-        for old_id, new_id in old_new_ids:
-            workflow.trg_redirect(self._uid, self._name, old_id, new_id, self._cr)
-        self.invalidate_cache()
-        return True
-
-    @api.multi
     def unlink(self):
         """ unlink()
 
@@ -3375,8 +3330,6 @@ class BaseModel(object):
 
         # Delete the records' properties.
         self.env['ir.property'].search([('res_id', 'in', refs)]).unlink()
-
-        self.delete_workflow()
 
         self.check_access_rule('unlink')
 
@@ -3750,7 +3703,6 @@ class BaseModel(object):
         if self.env.recompute and self._context.get('recompute', True):
             self.recompute()
 
-        self.step_workflow()
         return True
 
     #
@@ -3964,7 +3916,6 @@ class BaseModel(object):
                 self.recompute()
 
         self.check_access_rule('create')
-        self.create_workflow()
         return id_new
 
     # TODO: ameliorer avec NULL

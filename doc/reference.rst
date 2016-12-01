@@ -19,7 +19,6 @@ Reference
     reference/javascript
     reference/translations
     reference/reports
-    reference/workflows
     reference/mixins
     reference/guidelines
     reference/upgrade_api

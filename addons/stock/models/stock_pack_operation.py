@@ -206,7 +206,6 @@ class PackOperation(models.Model):
             'target': 'new',
             'res_id': self.ids[0],
             'context': action_ctx}
-    split_lot = action_split_lots
 
     @api.multi
     def show_details(self):
