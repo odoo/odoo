@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-06-22 09:11+0000\n"
+"PO-Revision-Date: 2016-11-03 18:42+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
 "sl/)\n"
@@ -162,7 +162,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Shipping address:</strong>"
-msgstr ""
+msgstr "<strong>Naslov za dostavo:</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -172,7 +172,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Total Without Taxes</strong>"
-msgstr ""
+msgstr "<strong>Skupaj brez DDV:</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -242,7 +242,7 @@ msgstr ""
 #: selection:purchase.config.settings,group_warning_purchase:0
 msgid ""
 "An informative or blocking warning can be set on a product or a customer"
-msgstr ""
+msgstr "Na izdelku ali na kupcu se lahko nastavi informativno opozorilo"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_account_analytic_id
@@ -258,7 +258,7 @@ msgstr "Analitičen konto nabave"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_analytic_tag_ids
 msgid "Analytic Tags"
-msgstr ""
+msgstr "Analitične oznake"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
@@ -306,7 +306,7 @@ msgstr ""
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "Blocking Message"
-msgstr ""
+msgstr "Sporočilo ob blokadi"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:777 code:addons/purchase/stock.py:77
@@ -585,7 +585,7 @@ msgstr "Čarovnik za sestavljanje e-pošte"
 #. module: purchase
 #: model:ir.model,name:purchase.model_survey_mail_compose_message
 msgid "Email composition wizard for Survey"
-msgstr ""
+msgstr "Čarovnik za sestavljanje e-pošte za ankete"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
@@ -624,7 +624,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Bruto masa"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -769,7 +769,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Locked"
-msgstr ""
+msgstr "Zakljenjeno"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_manage_vendor_price
@@ -802,13 +802,13 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
 msgid "Message for Purchase Order"
-msgstr ""
+msgstr "Sporočilo za nabavni nalog"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_product_template_purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
-msgstr ""
+msgstr "Sporočilo ob postavki nabavnega naloga"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
@@ -836,7 +836,7 @@ msgstr "Nova e-pošta"
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "No Message"
-msgstr ""
+msgstr "Brez sporočila"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_product_variant:0
@@ -1207,7 +1207,7 @@ msgstr "Ponudbe"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "RFQ"
-msgstr ""
+msgstr "Povpraševanje po predračunu"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
@@ -1338,6 +1338,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Izbira možnosti \"Opozorilo\" uporabnika obvesti s sporočilom. Izbira "
+"\"Sporočila ob blokadi\" povzroči izjemo, izpiše sporočilo in zaustavi "
+"potek. Sporočilo je potrebno zapisati v naslednje polje."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1670,7 +1673,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_supplier_name
 msgid "Vendors"
-msgstr ""
+msgstr "Prodajalci"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -1684,7 +1687,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Prostornina"
 
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
@@ -1702,23 +1705,23 @@ msgstr "Skladišče"
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "Warning"
-msgstr ""
+msgstr "Opozorilo"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:244 code:addons/purchase/purchase.py:720
 #, python-format
 msgid "Warning for %s"
-msgstr ""
+msgstr "Opozorila za %s"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "Warning on the Purchase Order"
-msgstr ""
+msgstr "Opozorilo na nabavnem nalogu"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Warning when Purchasing this Product"
-msgstr ""
+msgstr "Opozorilo ob nabavi tega proizvoda"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply

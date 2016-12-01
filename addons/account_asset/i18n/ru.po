@@ -3,6 +3,7 @@
 # * account_asset
 #
 # Translators:
+# Mekan Bash <tmbashimov@gmail.com>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2015
 msgid ""
@@ -10,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-06-01 18:43+0000\n"
-"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
+"PO-Revision-Date: 2016-10-08 17:56+0000\n"
+"Last-Translator: Mekan Bash <tmbashimov@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +32,7 @@ msgstr " (копия)"
 #: code:addons/account_asset/account_asset.py:497
 #, python-format
 msgid " (grouped)"
-msgstr ""
+msgstr "(сгруппировано)"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_entry_count
@@ -62,6 +63,7 @@ msgstr "Проводка по счету"
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_id
 msgid "Account used in the depreciation entries, to decrease the asset value."
 msgstr ""
+"Аккаунт используется в записях амортизации, для уменьшения стоимости активов"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_expense_id
@@ -69,11 +71,15 @@ msgid ""
 "Account used in the periodical entries, to record a part of the asset as "
 "expense."
 msgstr ""
+"Учетная запись, используемая в периодических записей, чтобы записать часть "
+"актива в качестве расхода."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
 msgid "Account used to record the purchase of the asset at its original price."
 msgstr ""
+"Учетная запись, используемая для записи покупки актива в его первоначальной "
+"цены"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -84,7 +90,7 @@ msgstr "Активен"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Additional Options"
-msgstr ""
+msgstr "Дополнительные опции"
 
 #. module: account_asset
 #: code:addons/account_asset/account_asset.py:554
@@ -219,7 +225,7 @@ msgstr "Анализ активов"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_move_asset_depreciation_ids
 msgid "Assets Depreciation Lines"
-msgstr ""
+msgstr "Активы Амортизация Линии"
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
@@ -249,7 +255,7 @@ msgstr "Активы в рабочем состоянии"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_open_asset
 msgid "Auto-confirm Assets"
-msgstr ""
+msgstr "Авто-подтверждение актива"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -282,6 +288,7 @@ msgstr ""
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_group_entries
 msgid "Check this if you want to group the generated entries by categories."
 msgstr ""
+"Отметьте, если хотите сгруппировать сформированные данные по категориям"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
@@ -417,7 +424,7 @@ msgstr "Текущая аммортизация"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Customer"
-msgstr "Заказчик"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_date
@@ -491,13 +498,14 @@ msgstr "Дата амортизации"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Depreciation Entries: Asset Account"
-msgstr ""
+msgstr "Амортизация записей: счет актива"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_expense_id
 msgid "Depreciation Entries: Expense Account"
-msgstr ""
+msgstr "Износ записей: расходный счет"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
@@ -654,7 +662,7 @@ msgstr "Объединять по..."
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_group_entries
 msgid "Group Journal Entries"
-msgstr ""
+msgstr "Группа записей журнала"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_id
@@ -899,7 +907,7 @@ msgstr "Причина"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Account"
-msgstr ""
+msgstr "Счет Признание"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
@@ -1104,71 +1112,3 @@ msgstr "например Ноутбук Ibook"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "months"
 msgstr "месяцы"
-
-#~ msgid "Action Needed"
-#~ msgstr "Требуется реакция"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата последнего сообщения"
-
-#~ msgid "Depreciation Account"
-#~ msgstr "Счет амортизации"
-
-#~ msgid "Entries"
-#~ msgstr "Проводки"
-
-#~ msgid "Followers"
-#~ msgstr "Подписчики"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Подписчики (Каналы)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Подписчики (Партнеры)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
-
-#~ msgid "Income Account"
-#~ msgstr "Cчёт доходов и расходов"
-
-#~ msgid "Is Follower"
-#~ msgstr "Подписчик"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Последнее сообщение по дате"
-
-#~ msgid "Messages"
-#~ msgstr "Сообщения"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Количество действий"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Количество сообщений, требующих реакции"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Количество непрочтённых сообщений"
-
-#~ msgid "Post Journal Entries"
-#~ msgstr "Провести записи журнала"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитанные"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Счетчик непрочтённых сообщений"
-
-#~ msgid ""
-#~ "You already have assets with the reference %s.\n"
-#~ "Please delete these assets before creating new ones for this invoice."
-#~ msgstr ""
-#~ "У вас уже есть активы со ссылкой %s.\n"
-#~ "Пожалуйста, удалите эти активы до создания новых для данного инвойса."
-
-#, fuzzy
-#~ msgid "Expense Account"
-#~ msgstr "Счет активов"

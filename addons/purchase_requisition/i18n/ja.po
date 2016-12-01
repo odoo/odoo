@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:15+0000\n"
-"PO-Revision-Date: 2016-08-04 14:53+0000\n"
+"POT-Creation-Date: 2016-12-01 11:53+0000\n"
+"PO-Revision-Date: 2016-10-14 03:20+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "Language: ja\n"
@@ -89,7 +89,7 @@ msgid "Agreement Selection Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_11150
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10664
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
@@ -115,7 +115,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:purchase_requisition.action_report_purchase_requisitions
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Call for Tenders"
-msgstr ""
+msgstr "入札"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -128,7 +128,7 @@ msgid "Cancelled"
 msgstr "キャンセル済"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:98
+#: code:addons/purchase_requisition/purchase_requisition.py:99
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
@@ -147,7 +147,7 @@ msgstr "会社"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm"
-msgstr ""
+msgstr "確認"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -290,7 +290,7 @@ msgstr "最終要求書"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_line_copy
 msgid "Lines"
-msgstr ""
+msgstr "明細"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -305,7 +305,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "New Quotation"
-msgstr ""
+msgstr "新規見積"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_qty_ordered
@@ -395,6 +395,11 @@ msgid "Purchase Order"
 msgstr "発注"
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "発注明細"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
 msgid "Purchase Orders"
 msgstr "発注"
@@ -415,7 +420,7 @@ msgid "Purchase Requisition Line"
 msgstr "発注要求書行"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:323
+#: code:addons/purchase_requisition/purchase_requisition.py:342
 #, python-format
 msgid "Purchase Requisition created"
 msgstr ""
@@ -433,7 +438,7 @@ msgstr "発注"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_quantity_copy
 msgid "Quantities"
-msgstr ""
+msgstr "数量"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_qty
@@ -448,7 +453,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
 msgid "Request for Quotation"
-msgstr ""
+msgstr "見積依頼"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
@@ -509,7 +514,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "付番"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
@@ -556,7 +561,7 @@ msgstr "未割当の要求書"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "単価"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
@@ -571,7 +576,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Validate"
-msgstr ""
+msgstr "検証"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_vendor_id
@@ -584,13 +589,13 @@ msgid "Warehouse"
 msgstr "倉庫"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:103
+#: code:addons/purchase_requisition/purchase_requisition.py:104
 #, python-format
 msgid "You cannot confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:118
+#: code:addons/purchase_requisition/purchase_requisition.py:119
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
@@ -606,145 +611,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "unknown"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "必要なアクション"
-
-#~ msgid "Call for Tenders Reference"
-#~ msgstr "入札参照"
-
-#~ msgid "Call for Tenders in negotiation"
-#~ msgstr "交渉中の入札"
-
-#~ msgid "Call for Tenders where tenders are closed"
-#~ msgstr "完了済の入札"
-
-#~ msgid "Cancel"
-#~ msgstr "取消"
-
-#~ msgid "Cancel Purchase Order"
-#~ msgstr "発注取消"
-
-#~ msgid "Change Quantity"
-#~ msgstr "数量変更"
-
-#~ msgid "Choose Vendor"
-#~ msgstr "仕入先を選択"
-
-#~ msgid "Click to start a new Call for Tenders process."
-#~ msgstr "クリックして入札を新規作成してください。"
-
-#~ msgid "Closed Tenders"
-#~ msgstr "完了済入札"
-
-#~ msgid "Confirm Call"
-#~ msgstr "入札確認"
-
-#~ msgid "Confirm Order"
-#~ msgstr "発注確認"
-
-#~ msgid "Confirm Purchase Order"
-#~ msgstr "発注確認"
-
-#~ msgid "Create Request for Quotation"
-#~ msgstr "見積依頼作成"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "記録上の最後のメッセージが投稿された日"
-
-#~ msgid "Followers"
-#~ msgstr "フォロワー"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "フォロワー(チャンネル)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "フォロワー(取引先)"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最終メッセージ日"
-
-#~ msgid "Messages"
-#~ msgstr "メッセージ"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "メッセージと通信履歴"
-
-#~ msgid "Multiple RFQ per vendor"
-#~ msgstr "1仕入先に複数見積依頼許可"
-
-#~ msgid "New"
-#~ msgstr "新規"
-
-#~ msgid "New Call for Tenders"
-#~ msgstr "新規の入札"
-
-#~ msgid "Number of Actions"
-#~ msgstr "アクションの数"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未読メッセージ数"
-
-#~ msgid "Order Date"
-#~ msgstr "オーダ日"
-
-#~ msgid "PO Created"
-#~ msgstr "発注作成済"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "発注明細"
-
-#~ msgid "Purchase Order Lines"
-#~ msgstr "発注明細"
-
-#~ msgid "Purchase Requisition Partner"
-#~ msgstr "発注要求書パートナ"
-
-#~ msgid "Purchase Tenders"
-#~ msgstr "購買入札"
-
-#~ msgid "RFQs/Bids"
-#~ msgstr "見積依頼/応札"
-
-#~ msgid "Reference"
-#~ msgstr "参照"
-
-#~ msgid "Request a Quotation"
-#~ msgstr "見積依頼"
-
-#~ msgid "Requests for Quotation"
-#~ msgstr "見積依頼"
-
-#~ msgid "Scheduled Ordering Date"
-#~ msgstr "発注予定日"
-
-#~ msgid "Send RFQ by Email"
-#~ msgstr "見積依頼をEメールで送信"
-
-#~ msgid "Tender Closing Deadline"
-#~ msgstr "入札締切"
-
-#~ msgid "Tender Selection Type"
-#~ msgstr "入札選択タイプ"
-
-#~ msgid "Unread Messages"
-#~ msgstr "未読メッセージ"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未読メッセージカウンター"
-
-#~ msgid "Vendors"
-#~ msgstr "仕入先"
-
-#~ msgid "Website Messages"
-#~ msgstr "ウェブサイトメッセージ"
-
-#~ msgid "Website communication history"
-#~ msgstr "ウェブサイトコミュニケーション履歴"
-
-#~ msgid ""
-#~ "You have already one %s purchase order for this partner, you must cancel "
-#~ "this purchase order to create a new quotation."
-#~ msgstr ""
-#~ "このパートナに既に %s の発注を持っています、新しい見積を作成するためにはこ"
-#~ "の発注をキャンセルする必要があります。"

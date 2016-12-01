@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-06-13 15:11+0000\n"
+"PO-Revision-Date: 2016-10-19 09:19+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
@@ -32,6 +32,12 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Beste ${object.partner_name or 'applicant'},</p>\n"
+"<p>Bedankt voor je sollicitatie.<br />\n"
+"Helaas voldoet uw profiel niet aan onze eisen</p>\n"
+"<p>Indien u vragen heeft, laat het ons weten.</p>\n"
+"<p>Met vriendelijke groet,</p>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -45,6 +51,13 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Beste ${object.partner_name or 'applicant'},</p>\n"
+"<p>Bedankt voor je sollicitatie.<br />\n"
+"Uw profiel heeft onze interesse gewekt. Ik zal zo snel mogelijk contact "
+"opnemen om de volgende stappen in uw sollicitatie te plannen.</p>\n"
+"<p>Indien u vragen heeft, laat het ons weten.</p>\n"
+"<p>Met vriendelijke groet,</p>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_employee
@@ -60,6 +73,15 @@ msgid ""
 ".</p>\n"
 "<p>Please welcome him/her and help him/her finding his/her marks.</p>"
 msgstr ""
+"\n"
+"<p>Beste allen,</p>\n"
+"<p>Ik ben erg blij aan te kondigen dat<strong> ${object.name} </strong> ons "
+"zal versterken als ${object.job_id.name}\n"
+"%if object.department_id:\n"
+"in ${object.department_id.name}.\n"
+"%endif\n"
+".</p>\n"
+"<p>Geef hem/haar een warm welkom, en help hem/haar op weg in ons bedrijf.</p>"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_1
@@ -114,7 +136,7 @@ msgstr "<b>Graad:</b>"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<b>Departement:</b>"
-msgstr "<b>Departement:</b>"
+msgstr "<b>Afdeling:</b>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -541,6 +563,8 @@ msgstr "Maak alias"
 msgid ""
 "Create some aliases that will allow you to track where applicants come from."
 msgstr ""
+"Maak aliassen aan die u toestaan om te volgen waar sollicitanten vandaan "
+"komen."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
@@ -1020,7 +1044,7 @@ msgstr "Functies"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Job Specific"
-msgstr ""
+msgstr "Baan specifiek"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -1254,7 +1278,7 @@ msgid ""
 "etc."
 msgstr ""
 "Odoo helpt u bij het werven van sollicitanten en volgt\n"
-"alle handelingen op: vergaderingen, interviews, enz."
+"alle handelingen op: afspraken, interviews, enz."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -1263,7 +1287,7 @@ msgid ""
 "            process and follow up all operations: meetings, interviews, etc."
 msgstr ""
 "Odoo helpt u bij het werven van sollicitanten en volgt\n"
-"alle handelingen op: vergaderingen, interviews, enz."
+"alle handelingen op: afspraken, interviews, enz."
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_3
@@ -1434,12 +1458,12 @@ msgstr "Weigeren"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_12
 msgid "Regular meetings"
-msgstr "Regelmatig vergaderingen"
+msgstr "Regelmatig afspraken"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Reopen Application"
-msgstr ""
+msgstr "Heropen sollicitatie"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1579,6 +1603,8 @@ msgstr "Specifiek e-mail adres"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Specific job that uses this stage. Other jobs will not use this stage."
 msgstr ""
+"Specifieke job die deze fase gebruikt. Andere jobs zullen deze fase niet "
+"gebruiken."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
@@ -1730,6 +1756,9 @@ msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
 msgstr ""
+"Deze aliassen kunnen e-mails of links zij voor elke bron. Wanneer de "
+"sollicitant hier terecht komt via een van deze zult u weten waar de "
+"sollicitant vandaan gekomen is."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc

@@ -6,17 +6,18 @@
 # Anja Funk <anja.funk@afimage.de>, 2016
 # Ermin Trevisan <trevi@twanda.com>, 2016
 # Leon Fischer <leon.fischer621@gmail.com>, 2016
+# Marvin Elia Hoppe <marvin_elia@web.de>, 2016
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
-# darenkster <renkosp@gmail.com>, 2016
+# darenkster <inactive+darenkster@transifex.com>, 2016
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Wolfgang Taferner, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-08-17 15:05+0000\n"
-"Last-Translator: Leon Fischer <leon.fischer621@gmail.com>\n"
+"POT-Creation-Date: 2016-12-01 11:52+0000\n"
+"PO-Revision-Date: 2016-10-12 09:31+0000\n"
+"Last-Translator: Marvin Elia Hoppe <marvin_elia@web.de>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -257,7 +258,7 @@ msgid "%s (copy)"
 msgstr "%s (copy)"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:241
+#: code:addons/mail/models/mail_thread.py:243
 #, python-format
 msgid "%s created"
 msgstr "%s erstellt"
@@ -506,7 +507,6 @@ msgstr "Berechtigungsgruppen"
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_needaction
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_needaction
 #: model:ir.model.fields,field_description:mail.field_note_note_message_needaction
-#: model:ir.model.fields,field_description:mail.field_online_account_message_needaction
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_needaction
 #: model:ir.model.fields,field_description:mail.field_product_product_message_needaction
 #: model:ir.model.fields,field_description:mail.field_product_template_message_needaction
@@ -677,7 +677,7 @@ msgstr "Alle Nachrichten"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:191
+#: code:addons/mail/static/src/js/chat_manager.js:192
 #, python-format
 msgid "Anonymous"
 msgstr "Anonym"
@@ -818,7 +818,7 @@ msgstr "Mitteilung"
 #: model:ir.model.fields,field_description:mail.field_res_partner_message_bounce
 #: model:ir.model.fields,field_description:mail.field_res_users_message_bounce
 msgid "Bounce"
-msgstr ""
+msgstr "Unzustellbar"
 
 #. module: mail
 #. openerp-web
@@ -956,7 +956,7 @@ msgid "Choose an example"
 msgstr "Wählen Sie ein Beispiel"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:347
+#: code:addons/mail/models/mail_thread.py:349
 #, python-format
 msgid "Click here to add new %(document)s or send an email to: %(email_link)s"
 msgstr ""
@@ -964,7 +964,7 @@ msgstr ""
 "%(email_link)s zu senden"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:363
+#: code:addons/mail/models/mail_thread.py:365
 #, python-format
 msgid "Click here to add new %s"
 msgstr "Klicken Sie hier, um %s neu hinzuzufügen"
@@ -1085,7 +1085,7 @@ msgstr "Gespräche"
 #: model:ir.model.fields,help:mail.field_res_partner_message_bounce
 #: model:ir.model.fields,help:mail.field_res_users_message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr ""
+msgstr "Zähler der unzustellbaren Emails für diesen Kontakt"
 
 #. module: mail
 #. openerp-web
@@ -1097,7 +1097,7 @@ msgstr "%s erstellen"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
 msgid "Create Date"
-msgstr ""
+msgstr "Erstellt am"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_uid
@@ -1199,7 +1199,6 @@ msgstr "Datum"
 #: model:ir.model.fields,help:mail.field_mrp_production_workcenter_line_message_last_post
 #: model:ir.model.fields,help:mail.field_mrp_repair_message_last_post
 #: model:ir.model.fields,help:mail.field_note_note_message_last_post
-#: model:ir.model.fields,help:mail.field_online_account_message_last_post
 #: model:ir.model.fields,help:mail.field_procurement_order_message_last_post
 #: model:ir.model.fields,help:mail.field_product_product_message_last_post
 #: model:ir.model.fields,help:mail.field_product_template_message_last_post
@@ -1617,7 +1616,7 @@ msgstr "Zusammen gefaltet"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:676
+#: code:addons/mail/models/mail_thread.py:689
 #: code:addons/mail/static/src/xml/followers.xml:20
 #, python-format
 msgid "Follow"
@@ -1664,7 +1663,6 @@ msgstr "Beobachten"
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_note_note_message_follower_ids
-#: model:ir.model.fields,field_description:mail.field_online_account_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_product_product_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_product_template_message_follower_ids
@@ -1728,7 +1726,6 @@ msgstr "Beobachter"
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_note_note_message_channel_ids
-#: model:ir.model.fields,field_description:mail.field_online_account_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_product_product_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_product_template_message_channel_ids
@@ -1790,7 +1787,6 @@ msgstr "Beobachter (Kanäle)"
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_note_note_message_partner_ids
-#: model:ir.model.fields,field_description:mail.field_online_account_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_product_product_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_product_template_message_partner_ids
@@ -1973,7 +1969,6 @@ msgstr "ungenutzt"
 #: model:ir.model.fields,help:mail.field_mrp_production_workcenter_line_message_unread
 #: model:ir.model.fields,help:mail.field_mrp_repair_message_unread
 #: model:ir.model.fields,help:mail.field_note_note_message_unread
-#: model:ir.model.fields,help:mail.field_online_account_message_unread
 #: model:ir.model.fields,help:mail.field_procurement_order_message_unread
 #: model:ir.model.fields,help:mail.field_product_product_message_unread
 #: model:ir.model.fields,help:mail.field_product_template_message_unread
@@ -2035,7 +2030,6 @@ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 #: model:ir.model.fields,help:mail.field_mrp_production_workcenter_line_message_needaction
 #: model:ir.model.fields,help:mail.field_mrp_repair_message_needaction
 #: model:ir.model.fields,help:mail.field_note_note_message_needaction
-#: model:ir.model.fields,help:mail.field_online_account_message_needaction
 #: model:ir.model.fields,help:mail.field_procurement_order_message_needaction
 #: model:ir.model.fields,help:mail.field_product_product_message_needaction
 #: model:ir.model.fields,help:mail.field_product_template_message_needaction
@@ -2120,7 +2114,7 @@ msgstr "Inaktiver Alias"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1007
+#: code:addons/mail/static/src/js/chat_manager.js:1024
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2151,7 +2145,7 @@ msgstr ""
 "werden, z.B. \"{'field': 'value'}\""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:1711
+#: code:addons/mail/models/mail_thread.py:1729
 #, python-format
 msgid ""
 "Invalid record set: should be called as model (without records) or on single-"
@@ -2159,8 +2153,14 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/controllers/main.py:43
+#, python-format
+msgid "Invalid token in route %s"
+msgstr ""
+
+#. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:600
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "Invitation"
 msgstr "Einladung"
@@ -2251,7 +2251,6 @@ msgstr "Nur eingeladene Personen"
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_note_note_message_is_follower
-#: model:ir.model.fields,field_description:mail.field_online_account_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_product_product_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_product_template_message_is_follower
@@ -2296,7 +2295,7 @@ msgstr "Wurde auf der Oberfläche hinterlegt"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Join"
-msgstr ""
+msgstr "Verbinden"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_action_view
@@ -2349,7 +2348,6 @@ msgstr "Sprache"
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_last_post
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_last_post
 #: model:ir.model.fields,field_description:mail.field_note_note_message_last_post
-#: model:ir.model.fields,field_description:mail.field_online_account_message_last_post
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_last_post
 #: model:ir.model.fields,field_description:mail.field_product_product_message_last_post
 #: model:ir.model.fields,field_description:mail.field_product_template_message_last_post
@@ -2439,7 +2437,7 @@ msgstr "Zuletzt aktualisiert am"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Leave"
-msgstr ""
+msgstr "Urlaub"
 
 #. module: mail
 #. openerp-web
@@ -2484,11 +2482,11 @@ msgstr "Zuhörer"
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Livechat Conversation"
-msgstr ""
+msgstr "Livechat Verlauf"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:37
+#: code:addons/mail/static/src/js/chatter.js:38
 #, python-format
 msgid "Log"
 msgstr "Protokoll"
@@ -2754,7 +2752,6 @@ msgstr "Nachricht-ID"
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_ids
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_ids
 #: model:ir.model.fields,field_description:mail.field_note_note_message_ids
-#: model:ir.model.fields,field_description:mail.field_online_account_message_ids
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_ids
 #: model:ir.model.fields,field_description:mail.field_product_product_message_ids
 #: model:ir.model.fields,field_description:mail.field_product_template_message_ids
@@ -3036,7 +3033,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_note_note_message_needaction_counter
-#: model:ir.model.fields,field_description:mail.field_online_account_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_product_product_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_product_template_message_needaction_counter
@@ -3098,7 +3094,6 @@ msgstr "Anzahl der Aktionen"
 #: model:ir.model.fields,help:mail.field_mrp_production_workcenter_line_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_mrp_repair_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_note_note_message_needaction_counter
-#: model:ir.model.fields,help:mail.field_online_account_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_procurement_order_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_product_product_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_product_template_message_needaction_counter
@@ -3160,7 +3155,6 @@ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 #: model:ir.model.fields,help:mail.field_mrp_production_workcenter_line_message_unread_counter
 #: model:ir.model.fields,help:mail.field_mrp_repair_message_unread_counter
 #: model:ir.model.fields,help:mail.field_note_note_message_unread_counter
-#: model:ir.model.fields,help:mail.field_online_account_message_unread_counter
 #: model:ir.model.fields,help:mail.field_procurement_order_message_unread_counter
 #: model:ir.model.fields,help:mail.field_product_product_message_unread_counter
 #: model:ir.model.fields,help:mail.field_product_template_message_unread_counter
@@ -3469,7 +3463,7 @@ msgstr "Platzhalterausdruck"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:186
+#: code:addons/mail/static/src/js/chatter.js:187
 #, python-format
 msgid "Please complete partner's informations"
 msgstr "Bitte vervollständingen Sie den Partnerdatensatz"
@@ -3490,7 +3484,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:640
+#: code:addons/mail/static/src/js/composer.js:645
 #, python-format
 msgid "Please, wait while the file is uploading."
 msgstr "Bitte warten, während die Datei hochgeladen wird."
@@ -3734,7 +3728,7 @@ msgstr "Sag etwas"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_scheduled_date
 #: model:ir.model.fields,field_description:mail.field_mail_template_scheduled_date
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Geplantes Datum"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_scheduled_date
@@ -3862,7 +3856,7 @@ msgstr "Tastenkombination (Shortcut)"
 #: code:addons/mail/models/mail_channel.py:619
 #, python-format
 msgid "Show an helper message"
-msgstr ""
+msgstr "mehr Nachrichten anzeigen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_ref_ir_value
@@ -3929,7 +3923,7 @@ msgstr "Smiley"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1013
+#: code:addons/mail/static/src/js/chat_manager.js:1030
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4268,7 +4262,7 @@ msgstr "Rückgängig"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:677
+#: code:addons/mail/models/mail_thread.py:690
 #: code:addons/mail/static/src/xml/followers.xml:22
 #, python-format
 msgid "Unfollow"
@@ -4322,7 +4316,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_unread
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_unread
 #: model:ir.model.fields,field_description:mail.field_note_note_message_unread
-#: model:ir.model.fields,field_description:mail.field_online_account_message_unread
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_unread
 #: model:ir.model.fields,field_description:mail.field_product_product_message_unread
 #: model:ir.model.fields,field_description:mail.field_product_template_message_unread
@@ -4384,7 +4377,6 @@ msgstr "Ungelesene Mitteilungen"
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_note_note_message_unread_counter
-#: model:ir.model.fields,field_description:mail.field_online_account_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_product_product_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_product_template_message_unread_counter
@@ -4448,7 +4440,7 @@ msgstr "Lade hoch"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:640
+#: code:addons/mail/static/src/js/composer.js:645
 #, python-format
 msgid "Uploading error"
 msgstr "Uploadfehler"
@@ -4489,8 +4481,8 @@ msgid "Users in this channel: %s %s and you."
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:664
-#: code:addons/mail/models/mail_thread.py:666
+#: code:addons/mail/models/mail_thread.py:677
+#: code:addons/mail/models/mail_thread.py:679
 #, python-format
 msgid "View"
 msgstr "Ansicht"
@@ -4604,7 +4596,7 @@ msgstr ""
 "Gesamtunternehmen in anderen Modulen benötigt wird."
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:354
+#: code:addons/mail/models/mail_thread.py:356
 #, python-format
 msgid ""
 "You could also add a new %(document)s by sending an email to: %(email_link)s."
@@ -4614,7 +4606,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:600
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "You have been invited to: "
 msgstr "Sie wurden eingeladen zu:"
@@ -4631,14 +4623,14 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:496
+#: code:addons/mail/static/src/js/chat_manager.js:513
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:494
+#: code:addons/mail/static/src/js/chat_manager.js:511
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr "Sie wurden von <b>%s</b> abgemeldet."
@@ -4674,7 +4666,7 @@ msgid "by"
 msgstr "durch"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:320
+#: code:addons/mail/models/mail_thread.py:322
 #, python-format
 msgid "document"
 msgstr "Dokument"
@@ -4760,14 +4752,14 @@ msgstr "rd"
 #: code:addons/mail/static/src/js/thread.js:16
 #, python-format
 msgid "read less"
-msgstr ""
+msgstr "Einklappen"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:15
 #, python-format
 msgid "read more"
-msgstr ""
+msgstr "weiterlesen"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form

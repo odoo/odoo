@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-06-22 10:10+0000\n"
+"PO-Revision-Date: 2016-10-06 08:55+0000\n"
 "Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "Language: pl\n"
@@ -111,7 +111,7 @@ msgstr "Pozycja wyciągu bankowego"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr ""
+msgstr "Należy do obecnej firmy użytkownika"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -192,7 +192,7 @@ msgstr "Waluta"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_inbound_payment_method_ids
 msgid "Debit Methods"
-msgstr "Metody płatności"
+msgstr "Metody otrzymywania płatności"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
@@ -230,7 +230,7 @@ msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
 msgstr ""
-"Pobierz świadczenie bankowe z Twojego banku i importuj je tutaj. Wspierane "
+"Pobierz wyciąg bankowy z Twojego banku i importuj go tutaj. Wspierane "
 "formaty:"
 
 #. module: account_bank_statement_import
@@ -241,7 +241,7 @@ msgstr "Numeracja zapisów"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_filename
 msgid "Filename"
-msgstr ""
+msgstr "Nazwa"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_data_file
@@ -249,8 +249,8 @@ msgid ""
 "Get you bank statements in electronic format from your bank and select them "
 "here."
 msgstr ""
-"Pobierz swoje świadczenie bankowe w formacie elektronicznym ze swojego banku "
-"i wybierz je z tego miejsca."
+"Pobierz swój wyciąg bankowy w formacie elektronicznym ze swojego banku i "
+"wybierz go z tego miejsca."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_group_invoice_lines
@@ -385,8 +385,7 @@ msgid ""
 msgstr ""
 "Sposób płatności lub otrzymywania środków pieniężnych. Moduły Odoo oferują "
 "różne ułatwienia w zakresie zarządzania płatnościami, ale zawsze możesz użyć "
-"\"Ręcznej\" metody płatności w celu zarządzania nimi poza  bez względu na "
-"oprogramowanie."
+"metody \"Ręcznej\" w celu zarządzania nimi poza oprogramowaniem."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
@@ -414,7 +413,7 @@ msgstr "OK"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
 msgid "Payment Methods"
-msgstr "Metody płatności"
+msgstr "Metody wysyłania płatności"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
@@ -428,7 +427,6 @@ msgstr "Numeracja zapisów korekt"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
-#, fuzzy
 msgid ""
 "Select 'Sale' for customer invoices journals.\n"
 "Select 'Purchase' for vendor bills journals.\n"
@@ -436,15 +434,15 @@ msgid ""
 "payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"Wybierz Sprzedaż dla dziennika faktur sprzedaży. Wybierz Zakup dla dziennika "
-"faktur zakupu. Wybierz Bank dla dzienników związanych z płatnościami. "
-"Wybierz Ogólne dla pozostałych operacji. Wybierz Sytuacja otwarcia/"
-"zamknięcia dla zapisów wygenerowanych dla nowego roku podatkowego."
+"Wybierz 'Sprzedaż' dla dziennika do faktur klientów.\n"
+"Wybierz 'Zakupy' dla dziennika do faktur dostawców.\n"
+"Wybierz 'Gotówka' lub 'Bank' dla dzienników do płatności i kont bankowych.\n"
+"Wybierz 'Ogólne' dla dzienników do innych zapisów księgowych."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Select a bank statement file to import"
-msgstr "Wybierz świadczenie bankowe do importowania"
+msgstr "Wybierz wyciąg bankowy do importowania"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence
@@ -473,8 +471,8 @@ msgid ""
 "In order to proceed with the import, you need to create a bank journal for "
 "this account."
 msgstr ""
-"Świadczenie bankowe, które importujesz nie jest jeszcze zaksięgowane w Odoo. "
-"By kontynuować importowanie potrzebujesz stworzyć dziennik bankowy dla tego "
+"Wyciąg bankowy, który importujesz nie jest jeszcze zarejestrowany w Odoo. By "
+"kontynuować importowanie potrzebujesz stworzyć dziennik bankowy dla tego "
 "konta."
 
 #. module: account_bank_statement_import
@@ -570,22 +568,9 @@ msgstr "Czy ten dziennik powinien być wyświetlony na konsoli czy nie"
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
 #, python-format
 msgid "You have already imported that file."
-msgstr "Importowałeś już ten plik."
+msgstr "Ten plik został już zaimportowany."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "_Import"
 msgstr "_Importuj"
-
-#~ msgid ""
-#~ "Select 'Sale' for customer invoices journals. Select 'Purchase' for "
-#~ "vendor bills journals. Select 'Cash' or 'Bank' for journals that are used "
-#~ "in customer or vendor payments. Select 'General' for miscellaneous "
-#~ "operations journals. Select 'Opening/Closing Situation' for entries "
-#~ "generated for new fiscal years."
-#~ msgstr ""
-#~ "Wybierz Sprzedaż dla dziennika faktur sprzedaży. Wybierz Zakup dla "
-#~ "dziennika faktur zakupu. Wybierz Bank dla dzienników związanych z "
-#~ "płatnościami. Wybierz Ogólne dla pozostałych operacji. Wybierz Sytuacja "
-#~ "otwarcia/zamknięcia dla zapisów wygenerowanych dla nowego roku "
-#~ "podatkowego."

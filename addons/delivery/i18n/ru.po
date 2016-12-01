@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:15+0000\n"
-"PO-Revision-Date: 2016-08-19 17:45+0000\n"
-"Last-Translator: Andrey Samorukov <andrey.samorukov@me.com>\n"
+"PO-Revision-Date: 2016-11-04 12:36+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -74,7 +74,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "<span>kg</span>"
-msgstr ""
+msgstr "<span>кг</span>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -527,7 +527,7 @@ msgstr "Определить порядок отображения"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Discard"
-msgstr ""
+msgstr "Отказаться"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
@@ -550,7 +550,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
 msgid "Environment"
-msgstr ""
+msgstr "Окружение"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
@@ -706,18 +706,18 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
-msgstr ""
+msgstr "Группировать"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_hs_code
 #: model:ir.model.fields,field_description:delivery.field_product_template_hs_code
 msgid "HS Code"
-msgstr ""
+msgstr "HS Code"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_height
 msgid "Height"
-msgstr ""
+msgstr "Высота"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -922,7 +922,7 @@ msgstr "Последний раз обновлено"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_length
 msgid "Length"
-msgstr ""
+msgstr "Длина"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -954,6 +954,12 @@ msgid ""
 "Create a task and track hours: Create a task on the sale order validation "
 "and track the work hours."
 msgstr ""
+"Вручную установить количество по заказу: счета, с ручным вводом кол-ва, без "
+"создания счёта аналитики.\n"
+"Табели по договору: счета, основанные на отслеживании часов соответствующих "
+"привязанным табелям.\n"
+"Установить задачи и отслеживание времени: создание задачи в заказе на "
+"продажу и отслеживание рабочих часов."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
@@ -963,7 +969,7 @@ msgstr "Время производства"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
 msgid "Margin"
-msgstr ""
+msgstr "Наценка"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
@@ -1023,12 +1029,12 @@ msgstr "Дата Начала Членства"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
-msgstr ""
+msgstr "Сообщение о покупке позиции в заказе"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_line_warn_msg
 msgid "Message for Sales Order Line"
-msgstr ""
+msgstr "Сообщение по позиции заказа продаж"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_ids
@@ -1129,7 +1135,7 @@ msgstr "Исходящие"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Package"
-msgstr ""
+msgstr "Пакет"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
@@ -1151,12 +1157,12 @@ msgstr "Упаковка"
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
 msgid "Packaging"
-msgstr ""
+msgstr "Упаковка"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_pack_operation
 msgid "Packing Operation"
-msgstr ""
+msgstr "Операция упаковки"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -1272,14 +1278,14 @@ msgstr "Продукция"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_project_id
 msgid "Project"
-msgstr ""
+msgstr "Проект"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_delivery_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Provider"
-msgstr ""
+msgstr "Провайдер"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_purchase
@@ -1294,7 +1300,7 @@ msgstr "Отставание закупок"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "Позиция заказа на закупку"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_po_id
@@ -1374,7 +1380,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "Разукомплектовать"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
@@ -1419,7 +1425,7 @@ msgstr "Позиция заказа на продажу"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Save"
-msgstr ""
+msgstr "Сохранить"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_categ_id
@@ -1453,6 +1459,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"\"Предупреждение\" - сообщить пользователю. \"Блокирующее сообщение\" - "
+"исключительная ситуация, сообщить пользователю и заблокировать рабочий "
+"процесс. Текст сообщения должен быть записан в следующее поле."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -1541,7 +1550,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_hs_code
 #: model:ir.model.fields,help:delivery.field_product_template_hs_code
 msgid "Standardized code for international shipping and goods declaration"
-msgstr ""
+msgstr "Стандартный код для международной доставки и декларации товаров"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -1862,7 +1871,7 @@ msgstr "Налоги Поставщика"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
 msgid "Vendors"
-msgstr ""
+msgstr "Поставщики"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1979,7 +1988,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_width
 msgid "Width"
-msgstr ""
+msgstr "Ширина"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0

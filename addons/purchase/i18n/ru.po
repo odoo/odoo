@@ -4,13 +4,14 @@
 #
 # Translators:
 # Sergey Vilizhanin <sv@grimmette.ru>, 2015
+# Vladimir Lukianov <lvm.mobile@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-06-22 09:11+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-10-04 21:35+0000\n"
+"Last-Translator: Vladimir Lukianov <lvm.mobile@gmail.com>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -220,6 +221,8 @@ msgstr "Разрешить использование и импорт прайс
 msgid ""
 "Allow using call for tenders to get quotes from multiple suppliers (advanced)"
 msgstr ""
+"Разрешить использование запроса квот от нескольких поставщиков для "
+"тендеров(расширенные)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_group_costing_method
@@ -238,6 +241,8 @@ msgid ""
 "An administrator can set up default Terms and conditions in your Company "
 "settings."
 msgstr ""
+"Администратор может установить сроки и условия по умолчанию в настройках "
+"вашего предприятия."
 
 #. module: purchase
 #: selection:purchase.config.settings,group_warning_purchase:0
@@ -259,7 +264,7 @@ msgstr "Аналитический учет закупок"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_analytic_tag_ids
 msgid "Analytic Tags"
-msgstr ""
+msgstr "Тэги аналитики"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
@@ -309,7 +314,7 @@ msgstr "Объявленное Кол-во"
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "Blocking Message"
-msgstr ""
+msgstr "Блокирующее сообщение"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:777 code:addons/purchase/stock.py:77
@@ -364,7 +369,7 @@ msgstr ""
 #: code:addons/purchase/stock.py:80
 #, python-format
 msgid "Can't find any generic Buy route."
-msgstr ""
+msgstr "Не могу найти общий Маршут покупки."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -381,7 +386,7 @@ msgstr "Отменен"
 #: code:addons/purchase/purchase.py:652
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr ""
+msgstr "Нельзя удалить строку заказа на закупку, которая в состоянии '%s'."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -551,7 +556,7 @@ msgstr "Описание"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_default_location_dest_id_usage
 msgid "Destination Location Type"
-msgstr ""
+msgstr "Тип места хранения назначения"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_display_name
@@ -594,7 +599,7 @@ msgstr "Мастер составления эл. почты"
 #. module: purchase
 #: model:ir.model,name:purchase.model_survey_mail_compose_message
 msgid "Email composition wizard for Survey"
-msgstr ""
+msgstr "E-mail состав мастер настройки для опроса"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
@@ -628,12 +633,12 @@ msgstr "Получите 2 уровня разрешений, чтобы под�
 #. module: purchase
 #: model:web.tip,description:purchase.purchase_tip_3
 msgid "Get all the shipments related to this order."
-msgstr ""
+msgstr "Все поступающие грузы, связанные с этим заказом."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Вес брутто"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -811,13 +816,13 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
 msgid "Message for Purchase Order"
-msgstr ""
+msgstr "Сообщение для заказа на закупку"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_product_template_purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
-msgstr ""
+msgstr "Сообщение о покупке позиции в заказе"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
@@ -845,7 +850,7 @@ msgstr "Новое письмо"
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "No Message"
-msgstr ""
+msgstr "Не предупреждать"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_product_variant:0
@@ -942,7 +947,7 @@ msgstr "Исходящие письма"
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
 msgid "PO_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "PO_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1176,6 +1181,8 @@ msgstr "Заказы закупок, которые имеют позиции н
 msgid ""
 "Purchase propositions trigger draft purchase orders to a single supplier"
 msgstr ""
+"Предложения на закупку активируют черновики заказов на закупку от одного "
+"поставщика"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_to_resupply
@@ -1220,7 +1227,7 @@ msgstr "Предложения цен"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "RFQ"
-msgstr ""
+msgstr "ЗЦП"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
@@ -1351,6 +1358,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"\"Предупреждение\" - сообщить пользователю. \"Блокирующее сообщение\" - "
+"исключительная ситуация, сообщить пользователю и заблокировать рабочий "
+"процесс. Текст сообщения должен быть записан в следующее поле."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1453,7 +1463,7 @@ msgstr "Налоги"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr ""
+msgstr "Техническое поле используется для показа Адрес Дроп-Шиппинг доставки"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
@@ -1485,6 +1495,8 @@ msgid ""
 "                you had with your vendor. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order."
 msgstr ""
+"Запрос содержит историю обсуждения/переговоров с поставщиком.\n"
+"Будучи подтверждённым становится заказом на поставку."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1494,6 +1506,9 @@ msgid ""
 "control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
+"Запрос цен поставщика является первым этапом процесса закупок.\n"
+"Сделав его заказом на поставку, вы сможете контролировать приход\n"
+"продукта и счёт-фактуру поставщика."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category_property_account_creditor_price_difference_categ
@@ -1694,7 +1709,7 @@ msgstr "Ссылка на Поставщика"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_supplier_name
 msgid "Vendors"
-msgstr ""
+msgstr "Поставщики"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -1708,7 +1723,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Объем"
 
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
@@ -1726,23 +1741,23 @@ msgstr "Склад"
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "Warning"
-msgstr ""
+msgstr "Внимание"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:244 code:addons/purchase/purchase.py:720
 #, python-format
 msgid "Warning for %s"
-msgstr ""
+msgstr "Предупреждение для %s"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "Warning on the Purchase Order"
-msgstr ""
+msgstr "Предупреждение при заказе на закупку"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Warning when Purchasing this Product"
-msgstr ""
+msgstr "Предупреждение при покупке этого товара"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply
@@ -1786,7 +1801,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:371
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
-msgstr ""
+msgstr "Вы должны указать местоположение Поставщика для партнера  %s"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_config_settings

@@ -71,7 +71,7 @@ msgstr "Все сразу"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "Archived"
-msgstr ""
+msgstr "Архивировано "
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
@@ -156,7 +156,7 @@ msgstr "Создан"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
 msgid "Delivery Type"
-msgstr ""
+msgstr "Тип доставки"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -287,6 +287,8 @@ msgid ""
 "                having a vendor defined on the product, and products to\n"
 "                manufacture without having a bill of materials."
 msgstr ""
+"Наиболее частым исключением из правил являются продукты без указания "
+"поставщика и  производство продуктов без ведомости материалов."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -538,6 +540,9 @@ msgid ""
 "purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
+"При подтверждении заказа на поставку он автоматически\n"
+"создаёт операции для закрытия потребностей: предложение\n"
+"по закупке, производственную заявку и т. п."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form

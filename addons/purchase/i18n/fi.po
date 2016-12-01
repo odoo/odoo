@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-07-15 13:52+0000\n"
+"PO-Revision-Date: 2016-10-28 16:37+0000\n"
 "Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "Language: fi\n"
@@ -126,7 +126,7 @@ msgstr "${object.company_id.name} Tilaus (Ref ${object.name or 'n/a' })"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Date Req.</strong>"
-msgstr ""
+msgstr "<strong>Tarvepvm</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -137,28 +137,28 @@ msgstr "<strong>Kuvaus</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Expected Date</strong>"
-msgstr ""
+msgstr "<strong>Oletettu pvm</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Net Price</strong>"
-msgstr ""
+msgstr "<strong>Nettohinta</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Order Date:</strong>"
-msgstr ""
+msgstr "<strong>Tilauspäivä:</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Our Order Reference:</strong>"
-msgstr ""
+msgstr "<strong>Tilausviitteemme:</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Qty</strong>"
-msgstr ""
+msgstr "<strong>Määrä</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -169,7 +169,7 @@ msgstr "<strong>Toimitusosoite:</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Taxes</strong>"
-msgstr ""
+msgstr "<strong>Verot</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -184,12 +184,12 @@ msgstr "<strong>Yhteensä</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Unit Price</strong>"
-msgstr ""
+msgstr "<strong>Yksikköhinta</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Your Order Reference</strong>"
-msgstr ""
+msgstr "<strong>Tilausviitteenne</strong>"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
@@ -261,7 +261,7 @@ msgstr "Analyyttinen kirjanpito ostoille"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_analytic_tag_ids
 msgid "Analytic Tags"
-msgstr ""
+msgstr "Analyyttiset tunnisteet"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
@@ -309,7 +309,7 @@ msgstr "Laskutettu määrä"
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "Blocking Message"
-msgstr ""
+msgstr "Estoviesti"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:777 code:addons/purchase/stock.py:77
@@ -589,7 +589,7 @@ msgstr "Sähköpostin ohjattu koostaminen"
 #. module: purchase
 #: model:ir.model,name:purchase.model_survey_mail_compose_message
 msgid "Email composition wizard for Survey"
-msgstr ""
+msgstr "Sähköpostin ohjattu koostaminen kyselytutkimukselle"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
@@ -628,7 +628,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Bruttopaino"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -806,13 +806,13 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
 msgid "Message for Purchase Order"
-msgstr ""
+msgstr "Viesti ostotilaukselle"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_product_template_purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
-msgstr ""
+msgstr "Viesti ostotilausriville"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
@@ -840,7 +840,7 @@ msgstr "Uusi viesti"
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "No Message"
-msgstr ""
+msgstr "Ei viestiä"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_product_variant:0
@@ -988,7 +988,7 @@ msgstr "Hankinta"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_group_id
 msgid "Procurement Group"
-msgstr ""
+msgstr "Hankintaryhmä"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_rule
@@ -1113,7 +1113,7 @@ msgstr "Ostotilaus"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Purchase Order Confirmation #"
-msgstr ""
+msgstr "Ostotilausvahvistus #"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -1213,7 +1213,7 @@ msgstr "Myyntitarjoukset"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "RFQ"
-msgstr ""
+msgstr "Tarjouspyyntö"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
@@ -1344,6 +1344,11 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Valittaessa vaihtoehto:\n"
+"  \"Varoitusviesti\", käyttäjälle näytetään varoitusviesti\n"
+"  \"Estoviesti, käyttäjälle näytetään poikkeusviesti ja toimenpide "
+"estetään.\n"
+"Kirjoita näytettävä viesti seuraavaan kenttään."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1666,7 +1671,7 @@ msgstr "Toimittajien laskut"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_group_manage_vendor_price
 msgid "Vendor Price"
-msgstr ""
+msgstr "Toimittajan hinta"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
@@ -1681,7 +1686,7 @@ msgstr "Toimittajan viite"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_supplier_name
 msgid "Vendors"
-msgstr ""
+msgstr "Toimittajat"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -1695,12 +1700,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Tilavuus"
 
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "Waiting Invoices"
-msgstr ""
+msgstr "Odottaa laskuja"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_warehouse
@@ -1713,23 +1718,23 @@ msgstr "Varasto"
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "Warning"
-msgstr ""
+msgstr "Varoitus"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:244 code:addons/purchase/purchase.py:720
 #, python-format
 msgid "Warning for %s"
-msgstr ""
+msgstr "Varoitus %s"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "Warning on the Purchase Order"
-msgstr ""
+msgstr "Varoitus ostotilaukselle"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Warning when Purchasing this Product"
-msgstr ""
+msgstr "Varoitus tätä tuotetta ostettaessa"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply
@@ -1742,6 +1747,8 @@ msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
 msgstr ""
+"Tuotevariaatiot sallivat sinun määritellä samalle tuotteelle eri "
+"variaatioita mikä helpottaa esimerkiksi verkkokaupan toimintaa"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
@@ -1771,7 +1778,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:371
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
-msgstr ""
+msgstr "Sinun on asetettava toimittajan fyysinen paikka tälle kumppanille %s"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_config_settings

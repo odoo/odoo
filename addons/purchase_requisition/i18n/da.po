@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:15+0000\n"
+"POT-Creation-Date: 2016-12-01 11:53+0000\n"
 "PO-Revision-Date: 2016-04-11 12:48+0000\n"
 "Last-Translator: Morten Schou <ms@msteknik.dk>\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
@@ -88,7 +88,7 @@ msgid "Agreement Selection Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_11150
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10664
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
@@ -127,7 +127,7 @@ msgid "Cancelled"
 msgstr "Annulleret"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:98
+#: code:addons/purchase_requisition/purchase_requisition.py:99
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
@@ -146,7 +146,7 @@ msgstr "Virksomhed"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm"
-msgstr ""
+msgstr "Bekræft"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -289,7 +289,7 @@ msgstr "Seneste rekvisition"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_line_copy
 msgid "Lines"
-msgstr ""
+msgstr "Linier"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -394,6 +394,11 @@ msgid "Purchase Order"
 msgstr "Indkøbsordre"
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Indkøbsordrelinie"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
 msgid "Purchase Orders"
 msgstr "Indkøbsordrer"
@@ -414,7 +419,7 @@ msgid "Purchase Requisition Line"
 msgstr "Indkøbsrekvisitions linie"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:323
+#: code:addons/purchase_requisition/purchase_requisition.py:342
 #, python-format
 msgid "Purchase Requisition created"
 msgstr "Indkøbsordre oprettet"
@@ -447,7 +452,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
 msgid "Request for Quotation"
-msgstr ""
+msgstr "Anmodning om tilbud"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
@@ -508,7 +513,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Rækkefølge"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
@@ -555,7 +560,7 @@ msgstr "Ikke tildelt rekvisition"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "Enhedspris"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
@@ -570,7 +575,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Validate"
-msgstr ""
+msgstr "Validér"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_vendor_id
@@ -583,13 +588,13 @@ msgid "Warehouse"
 msgstr "Lagerstyrning"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:103
+#: code:addons/purchase_requisition/purchase_requisition.py:104
 #, python-format
 msgid "You cannot confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:118
+#: code:addons/purchase_requisition/purchase_requisition.py:119
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
@@ -605,139 +610,3 @@ msgstr "F.eks PO0025"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "unknown"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Aktion påkrævet"
-
-#~ msgid "Bid Line Qty"
-#~ msgstr "Bud linie antal"
-
-#~ msgid "Cancel"
-#~ msgstr "Annuller"
-
-#~ msgid "Cancel Choice"
-#~ msgstr "Fortryd valg"
-
-#~ msgid "Cancel Purchase Order"
-#~ msgstr "Annuller indkøbsordre"
-
-#~ msgid "Change Bid line quantity"
-#~ msgstr "Ændre bud antal"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Skift antal"
-
-#~ msgid "Choose product lines"
-#~ msgstr "Vælg vare linier"
-
-#~ msgid "Confirm Call"
-#~ msgstr "Bekræft anmodning"
-
-#~ msgid "Confirm Order"
-#~ msgstr "Bekræft ordre"
-
-#~ msgid "Confirm Purchase Order"
-#~ msgstr "Bekræft indkøbsordre"
-
-#~ msgid "Create Request for Quotation"
-#~ msgstr "Opret forespørgsel"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Dato for sidste besked på denne post."
-
-#~ msgid "Followers"
-#~ msgstr "Followers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Følgere (kanaler)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Følgere (partnere)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Hvis afmærket, kræver nye beskeder din attention"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Hvis afmærket kræver nye beskeder din opmærksomhed "
-
-#~ msgid "Is Follower"
-#~ msgstr "Følger"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Sidste dato for besked"
-
-#~ msgid "Messages"
-#~ msgstr "Beskeder"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Besked- og kommunikations historik"
-
-#~ msgid "New"
-#~ msgstr "Opret"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Antal aktioner"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Antal meddelser der kræver handling"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Antal ulæste beskeder"
-
-#~ msgid "Order Date"
-#~ msgstr "Ordredato"
-
-#~ msgid "PO Created"
-#~ msgstr "Indkøbsordre oprettet"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Indkøbsordrelinie"
-
-#~ msgid "Purchase Order Lines"
-#~ msgstr "Indkøbsordrelinier"
-
-#~ msgid "Purchase Requisition Partner"
-#~ msgstr "Indkøbs rekvisitions partner"
-
-#~ msgid "Purchase Requisitions (exclusive)"
-#~ msgstr "Indkøbs ordrer (exclusive)"
-
-#~ msgid "RFQ created"
-#~ msgstr "Forespørgsel oprettet"
-
-#~ msgid "Reference"
-#~ msgstr "Reference"
-
-#~ msgid "Request a Quotation"
-#~ msgstr "Anmod om tilbud"
-
-#~ msgid "Requests for Quotation"
-#~ msgstr "Forespørgsel"
-
-#~ msgid "Scheduled Ordering Date"
-#~ msgstr "Planlagt bestillings dato"
-
-#~ msgid "Send RFQ by Email"
-#~ msgstr "Send forespørgsel på email"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Ulæste beskeder"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Ulæste besked tæller"
-
-#~ msgid "Vendors"
-#~ msgstr "Leverandører"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website beskeder"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website kommunikations historik"
-
-#~ msgid ""
-#~ "You have already one %s purchase order for this partner, you must cancel "
-#~ "this purchase order to create a new quotation."
-#~ msgstr ""
-#~ "Du har allerede en %s indkøbsordre hos denne partner, du må annullere "
-#~ "denne indkøbsordre for at oprette et nyt tilbud."

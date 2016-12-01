@@ -3,14 +3,14 @@
 # * gamification
 #
 # Translators:
-# Jesus Alan Ramos Rodriguez <alan.ramos@jarsa.com.mx>, 2015
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2015
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-02-26 16:53+0000\n"
+"PO-Revision-Date: 2016-10-03 05:56+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/"
 "language/es_EC/)\n"
@@ -53,6 +53,7 @@ msgstr ""
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
+#, fuzzy
 msgid ""
 "\n"
 "    <p>\n"
@@ -64,9 +65,19 @@ msgid ""
 "least ${object.remind_update_delay} days. Do not forget to do it.</p>\n"
 "            "
 msgstr ""
+"\n"
+"    <header>\n"
+"        <strong>Recordatorio ${object.name}</strong>\n"
+"    </header>\n"
+"    \n"
+"    <p>No ha actualizado su progreso para el objetivo ${object.definition_id."
+"name} (currently reached at ${object.completeness}%) durante al menos "
+"${object.remind_update_delay} días. No olvide hacerlo.</p>\n"
+"            "
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
+#, fuzzy
 msgid ""
 "\n"
 "<p>\n"
@@ -140,6 +151,77 @@ msgid ""
 "% endif\n"
 "            "
 msgstr ""
+"\n"
+"<header>\n"
+"    <strong>${object.name}</strong>\n"
+"</header>\n"
+"<p class=\"oe_grey\">El siguiente mensaje contiene el progreso actual para "
+"el desafío ${object.name}</p>\n"
+"\n"
+"% if object.visibility_mode == 'personal':\n"
+"    <table width=\"100%\" border=\"1\">\n"
+"    <tr>\n"
+"        <th>Objetivo</th>\n"
+"        <th>Valor objetivo</th>\n"
+"        <th>Actual</th>\n"
+"        <th>Completitud</th>\n"
+"    </tr>\n"
+"    % for line in ctx[\"challenge_lines\"]:\n"
+"        <tr\n"
+"            % if line['completeness'] >= 100:\n"
+"                style=\"font-weight:bold;\"\n"
+"            % endif\n"
+"            >\n"
+"            <td>${line['name']}</td>\n"
+"            <td>${line['target']}\n"
+"            % if line['suffix']:\n"
+"                ${line['suffix']}\n"
+"            % endif\n"
+"            </td>\n"
+"            <td>${line['current']}\n"
+"            % if line['suffix']:\n"
+"                ${line['suffix']}\n"
+"            % endif\n"
+"            </td>\n"
+"            <td>${line['completeness']} %</td>\n"
+"        </tr>\n"
+"    % endfor\n"
+"    </table>\n"
+"% else:\n"
+"    % for line in ctx[\"challenge_lines\"]:\n"
+"        <table width=\"100%\" border=\"1\">\n"
+"            <tr>\n"
+"                <th colspan=\"4\">${line['name']}</th>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <th>#</th>\n"
+"                <th>Persona</th>\n"
+"                <th>Completitud</th>\n"
+"                <th>Actual</th>\n"
+"            </tr>\n"
+"            % for goal in line['goals']:\n"
+"                <tr\n"
+"                    % if goal.completeness >= 100:\n"
+"                        style=\"font-weight:bold;\"\n"
+"                    % endif\n"
+"                    >\n"
+"                    <td>${goal['rank']}</td>\n"
+"                    <td>${goal['name']}</td>\n"
+"                    <td>${goal['completeness']}%</td>\n"
+"                    <td>${goal['current']}/${line['target']}\n"
+"                    % if line['suffix']:\n"
+"                        ${line['suffix']}\n"
+"                    % endif\n"
+"                    </td>\n"
+"                </tr>\n"
+"            % endfor\n"
+"        </table>\n"
+"\n"
+"        <br/><br/>\n"
+"\n"
+"    % endfor\n"
+"% endif\n"
+"            "
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:746
@@ -750,8 +832,9 @@ msgstr "Para el tercer usuario"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_reward_id
+#, fuzzy
 msgid "For Every Succeeding User"
-msgstr ""
+msgstr "Para todos los usuarios exitosos"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -1659,6 +1742,10 @@ msgid ""
 "\n"
 "%s not found"
 msgstr ""
+"La configuración del modelo para la definición %s parece incorrecto, por "
+"favor, revisar.\n"
+"\n"
+"% no encontrado."
 
 #. module: gamification
 #: code:addons/gamification/models/goal.py:143
@@ -1669,6 +1756,10 @@ msgid ""
 "\n"
 "%s not stored"
 msgstr ""
+"La configuración del modelo para la definición %s parece incorrecto, por "
+"favor, revisar.\n"
+"\n"
+"% no grabado."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition_model_id

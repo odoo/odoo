@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:15+0000\n"
-"PO-Revision-Date: 2016-06-27 08:35+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
+"PO-Revision-Date: 2016-10-14 15:32+0000\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -38,18 +38,18 @@ msgstr "Pracownik"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Order Line"
-msgstr ""
+msgstr "Pozycja zamówienia"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_procurement_order
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
 msgid "Procurement"
-msgstr ""
+msgstr "Zapotrzebowanie"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Produkt"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
@@ -61,12 +61,12 @@ msgstr "Szablon produktu"
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template_project_id
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
 msgid "Project associated to this sale"
-msgstr ""
+msgstr "Projekt związany z tą sprzedażą"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
@@ -84,7 +84,7 @@ msgstr "Pozycja zamówienia sprzedaży"
 #: model:ir.model,name:sale_timesheet.model_project_task
 #: model:ir.model.fields,field_description:sale_timesheet.field_procurement_order_task_id
 msgid "Task"
-msgstr ""
+msgstr "Zadanie"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_service.py:84
@@ -96,12 +96,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Tasks"
-msgstr ""
+msgstr "Zadania"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
 msgid "Tasks associated to this sale"
-msgstr ""
+msgstr "Zadania zwiane z tą sprzedażą"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
@@ -110,6 +110,9 @@ msgid ""
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
+"To ustawi jednostkę miary dla projektów i zadań.\n"
+"Jeśli stosujesz karty pracy doprojektów, to nie zapomnij ustawić odpowiednią "
+"jednostkę w pracownikach."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
@@ -119,7 +122,7 @@ msgstr "koszt listy obecności"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.project_time_mode_id_duplicate_xmlid
 msgid "Timesheet UoM"
-msgstr ""
+msgstr "JM karty pracy"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
@@ -129,7 +132,7 @@ msgstr "Aktywności karty pracy"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr ""
+msgstr "Aktywności kart pracy związane z tą sprzedażą"
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
@@ -145,6 +148,9 @@ msgid ""
 "should split your order to include only one contract based on time and "
 "material."
 msgstr ""
+"Możesz stosować tylko jeden produkt w karcie pracy w ramach tego samego "
+"zamówienia sprzedaży. Powinieneś podzielić zamówienie, aby zawierało tylko "
+"jedną umowę opartą na kosztach czasu i materiałów."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_service.py:103
@@ -153,6 +159,8 @@ msgid ""
 "You cannot delete a task related to a Sale Order. You can only archive this "
 "task."
 msgstr ""
+"Nie można usunąć zadania powiązanego do Zleceń Sprzedaży. Można tylko "
+"archiwizować to zadanie."
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line

@@ -3,14 +3,14 @@
 # * purchase_requisition
 #
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
+# Kostas Goutoudis <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:15+0000\n"
-"PO-Revision-Date: 2016-03-03 14:18+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
+"POT-Creation-Date: 2016-12-01 11:53+0000\n"
+"PO-Revision-Date: 2016-10-29 11:23+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgstr "<strong>Μονάδα Μέτρησης Προϊόντος</strong>"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Qty</strong>"
-msgstr ""
+msgstr "<strong>Ποσ.</strong>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -89,7 +89,7 @@ msgid "Agreement Selection Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_11150
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10664
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
@@ -128,7 +128,7 @@ msgid "Cancelled"
 msgstr "Ακυρωμένο"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:98
+#: code:addons/purchase_requisition/purchase_requisition.py:99
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
@@ -147,7 +147,7 @@ msgstr "Εταιρεία"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm"
-msgstr ""
+msgstr "Επιβεβαίωση"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -290,7 +290,7 @@ msgstr "Τελευταία Ανάκτηση"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_line_copy
 msgid "Lines"
-msgstr ""
+msgstr "Γραμμές"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -305,7 +305,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "New Quotation"
-msgstr ""
+msgstr "Νέα Προσφορά"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_qty_ordered
@@ -395,6 +395,11 @@ msgid "Purchase Order"
 msgstr "Παραγγελία Αγοράς"
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Γραμμή Παραγγελίας Αγοράς"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
 msgid "Purchase Orders"
 msgstr "Παραγγελίες Αγοράς"
@@ -415,7 +420,7 @@ msgid "Purchase Requisition Line"
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:323
+#: code:addons/purchase_requisition/purchase_requisition.py:342
 #, python-format
 msgid "Purchase Requisition created"
 msgstr ""
@@ -433,7 +438,7 @@ msgstr "Παραγγελίες Αγοράς"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_quantity_copy
 msgid "Quantities"
-msgstr ""
+msgstr "Ποσότητες"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_qty
@@ -448,7 +453,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
 msgid "Request for Quotation"
-msgstr ""
+msgstr "Αίτηση Προσφοράς"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
@@ -509,7 +514,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Ακολουθία"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
@@ -556,7 +561,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "Τιμή Μονάδας"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
@@ -571,12 +576,12 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Validate"
-msgstr ""
+msgstr "Επικύρωση"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_vendor_id
 msgid "Vendor"
-msgstr ""
+msgstr "Προμηθευτής"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_warehouse_id
@@ -584,13 +589,13 @@ msgid "Warehouse"
 msgstr "Αποθήκη"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:103
+#: code:addons/purchase_requisition/purchase_requisition.py:104
 #, python-format
 msgid "You cannot confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:118
+#: code:addons/purchase_requisition/purchase_requisition.py:119
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
@@ -606,126 +611,3 @@ msgstr "π.χ. PO0025"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "unknown"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Απαιτείται ενέργεια"
-
-#~ msgid "Cancel"
-#~ msgstr "Ακύρωση"
-
-#~ msgid "Cancel Choice"
-#~ msgstr "Ακύρωση Επιλογής"
-
-#~ msgid "Cancel Purchase Order"
-#~ msgstr "Ακύρωση Παραγγελίας Αγοράς"
-
-#~ msgid "Change Bid line quantity"
-#~ msgstr "Αλλαγή ποσότητα προσφοράς στη γραμμή"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Αλλαγή Ποσότητας"
-
-#~ msgid "Confirm Call"
-#~ msgstr "Επιβεβαίωση Κλήσης"
-
-#~ msgid "Confirm Order"
-#~ msgstr "Επιβεβαίωση Εντολής"
-
-#~ msgid "Confirm Purchase Order"
-#~ msgstr "Επιβεβαίωση Εντολής Αγοράς"
-
-#~ msgid "Create Request for Quotation"
-#~ msgstr "Δημιουργία Αίτησης για Προσφορά"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Ημερομηνία του τελευταίου μηνύματος "
-
-#~ msgid "Followers"
-#~ msgstr "Ακόλουθοι"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Ακόλουθοι (Κανάλια)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Ακόλουθοι (Συνεργάτες)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
-
-#~ msgid "Is Follower"
-#~ msgstr "Είναι Ακόλουθος"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Τελευταία ημερομηνία μηνύματος"
-
-#~ msgid "Messages"
-#~ msgstr "Μηνύματα"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Μηνύματα και ιστορικό επικοινωνίας"
-
-#~ msgid "New"
-#~ msgstr "Νέο"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Αριθμός ενεργειών"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
-
-#~ msgid "Order Date"
-#~ msgstr "Ημερομηνία Παραγγελίας"
-
-#~ msgid "Product Lines"
-#~ msgstr "Γραμμές Προϊόντος"
-
-#~ msgid "Products by vendor"
-#~ msgstr "Προϊόντα από τον Προμηθευτή"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Γραμμή Παραγγελίας Αγοράς"
-
-#~ msgid "Purchase Order Lines"
-#~ msgstr "Γραμμές Παραγγελίας Αγοράς"
-
-#~ msgid "Quantity Tendered"
-#~ msgstr "Προσφερθείσα Ποσότητα"
-
-#~ msgid "RFQ created"
-#~ msgstr "Δημιουργήθηκε ΑγΠ"
-
-#~ msgid "Reference"
-#~ msgstr "Αναφορά"
-
-#~ msgid "Request a Quotation"
-#~ msgstr "Αίτηση Προσφοράς"
-
-#~ msgid "Requests for Quotation"
-#~ msgstr "Αιτήσεις Προσφορών"
-
-#~ msgid "Scheduled Ordering Date"
-#~ msgstr "Προγραμματισμένη Ημερομηνία Παραγγελίας"
-
-#~ msgid "Send RFQ by Email"
-#~ msgstr "Αποστολή ΑγΠ μέσω Email"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Αδιάβαστα Μηνύματα"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
-
-#~ msgid "Website Messages"
-#~ msgstr "Μηνύματα Ιστότοπου"
-
-#~ msgid "Website communication history"
-#~ msgstr "Ιστορικό επικοινωνίας ιστότοπου"
-
-#~ msgid "You have already generate the purchase order(s)."
-#~ msgstr "Έχετε ήδη δημιουργήσει τις παραγγελίες αγοράς."

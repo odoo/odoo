@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-08-09 16:29+0000\n"
-"Last-Translator: Wolfgang Taferner\n"
+"POT-Creation-Date: 2016-12-01 11:52+0000\n"
+"PO-Revision-Date: 2016-09-06 09:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -237,7 +237,7 @@ msgstr "Genehmigen"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
-msgstr ""
+msgstr "Archiviert"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_product_product_produce_delay
@@ -592,7 +592,7 @@ msgstr "Verbraucht für"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Cost Structure"
-msgstr ""
+msgstr "Kostenstruktur"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
@@ -897,6 +897,12 @@ msgstr "In Produktion"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
 msgid "Internal Reference"
 msgstr "Interne Referenz"
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
@@ -1280,7 +1286,7 @@ msgstr "Mutterstückliste"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_routing_id
 msgid "Parent Routing"
-msgstr ""
+msgstr "Übergeordneter Arbeitsplan"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1530,7 +1536,7 @@ msgstr "Eigenschaften"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_10092
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9626
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1559,7 +1565,7 @@ msgstr "Menge (in Standard ME)"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Raw Materials"
-msgstr ""
+msgstr "Rohmaterial"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
@@ -1657,7 +1663,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Routing"
-msgstr ""
+msgstr "Arbeitsplan"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -1961,7 +1967,7 @@ msgstr "Benötigte Produkte"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Total Cost"
-msgstr ""
+msgstr "Gesamtkosten"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
@@ -1993,7 +1999,7 @@ msgstr "Typ"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Unit Cost"
-msgstr ""
+msgstr "Stückpreis"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2247,6 +2253,14 @@ msgstr ""
 "laufen. Bitte schließen Sie die entsprechenden Fertigungsaufträge zuerst."
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "Tage"
@@ -2291,72 +2305,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "unbekannt"
-
-#~ msgid "Action Needed"
-#~ msgstr "Aktion notwendig"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Anzahl ändern"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum der letzten Nachricht."
-
-#~ msgid "Followers"
-#~ msgstr "Beobachter"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Beobachter (Kanäle)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Beobachter (Partner)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#~ msgid ""
-#~ "If the active field is set to False, it will allow you to hide the "
-#~ "resource record without removing it."
-#~ msgstr ""
-#~ "Bei Deaktivierung kann die Ansicht der Ressource ausgeblendet werden."
-
-#~ msgid "Inactive"
-#~ msgstr "Inaktiv"
-
-#~ msgid "Is Follower"
-#~ msgstr "Ist Beobachter"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Letzte Benachrichtigung"
-
-#~ msgid "Messages"
-#~ msgstr "Nachrichten"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Nachrichten- und Kommunikationshistorie"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Anzahl der Aktionen"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Anzahl ungelesener Nachrichten"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "Menü Fertigungsplanung"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Ungelesene Nachrichten"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Zähler der ungelesenen Nachrichten"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website Nachrichten"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website Kommunikationshistorie"

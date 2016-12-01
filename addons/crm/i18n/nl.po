@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:13+0000\n"
-"PO-Revision-Date: 2016-08-06 10:39+0000\n"
+"PO-Revision-Date: 2016-10-09 11:40+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
@@ -196,6 +196,15 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"\n"
+"<p>Hallo ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>Op de prospect <strong>${object.name}</strong>zijn geen activiteiten "
+"uitgevoerd voor minimaal 5 dagen.</p>\n"
+"%if object.description:\n"
+"<p>Hier is beschrijving van de prospect: </p><p><i>${object.description}</"
+"i>\n"
+"%endif\n"
+"</p><p>Bedankt!</p>\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_meeting_count
@@ -246,6 +255,14 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"<p>Hallo ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>Op de prospect <strong>${object.name}</strong>zijn geen activiteiten "
+"uitgevoerd voor minimaal 5 dagen.</p>\n"
+"%if object.description:\n"
+"<p>Hier is beschrijving van de prospect: </p><p><i>${object.description}</"
+"i>\n"
+"%endif\n"
+"</p><p>Bedankt!</p>\n"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -904,7 +921,7 @@ msgid ""
 "our marketing apps:"
 msgstr ""
 "<strong>Om sneller en meer leads op te sporen</strong> moet u eens een "
-"kijkje nemen bij onze marketingtoepassingen:"
+"kijkje nemen bij onze marketing apps:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -917,7 +934,7 @@ msgstr ""
 "<strong>Opleidingen</strong><br/>\n"
 "                                Om een sterk verkooptrainingsprogramma uit "
 "te bouwen,\n"
-"                                kan u volgende Odoo-toepassingen gebruiken:"
+"                                kan u volgende Odoo apps gebruiken:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1418,7 +1435,7 @@ msgstr "Klik om een nieuw verkooplabel toe te voegen."
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Click to set a new stage in your opportunity pipeline."
-msgstr ""
+msgstr "Klik om een nieuwe fase in te stellen voor uw prospect pijplijn."
 
 #. module: crm
 #: model:web.tip,description:crm.crm_tip_2
@@ -2333,6 +2350,9 @@ msgid ""
 "                        the foundations to a strong process leading to\n"
 "                        continuous improvements of your sales teams."
 msgstr ""
+"Indien u de voorgaande stappen goed hebt opgevolgd, zou u nu reeds de "
+"fundering gelegd moeten hebben voor een sterk proces dat kan leiden tot "
+"voortdurende verbetering van uw verkoopteam."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2673,7 +2693,7 @@ msgstr "Lijst van mogelijke pijnpunten per segment/profiel"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
 msgid "Log & Schedule Next"
-msgstr ""
+msgstr "Log & Plan volgende in"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2996,7 +3016,7 @@ msgstr "Volgende actie"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_payment_next_action_date
 msgid "Next Action Date"
-msgstr "Datum volgende actie"
+msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_activities
@@ -3035,7 +3055,7 @@ msgstr "Volgende activiteit is gepland"
 #. module: crm
 #: selection:crm.lead,kanban_state:0
 msgid "Next activity late"
-msgstr ""
+msgstr "Te late volgende activiteit"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:964
@@ -3077,7 +3097,7 @@ msgstr "Notitie"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_users_payment_next_action
 msgid "Note regarding the next action."
-msgstr "Opmerking in verband met de volgende actie."
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3160,8 +3180,8 @@ msgid ""
 "Apps for your sales channel: insight sales, point of sale, ecommerce."
 msgstr ""
 "Odoo is wereldwijd de enige toepassing met een volledige integratie met "
-"marketing-toepassingen voor uw verkoopkanalen : interne verkoopmedewerkers, "
-"kassa en e-commerce."
+"marketing apps voor uw verkoopkanalen : interne verkoopmedewerkers, kassa en "
+"e-commerce."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_sale_config_settings_generate_sales_team_alias
@@ -3543,7 +3563,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_preceding_activity_ids
 msgid "Preceding Activities"
-msgstr ""
+msgstr "Voorgaande activiteiten"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_last_activity_id
@@ -3553,7 +3573,7 @@ msgstr "Vorige activiteit"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Prices"
-msgstr "Prijzen"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3628,12 +3648,12 @@ msgstr "Reden waarom leads verloren worden"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_recommended_activity_id
 msgid "Recommended Activities"
-msgstr ""
+msgstr "Aanbevolen activiteiten"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_recommended_activity_ids
 msgid "Recommended Next Activities"
-msgstr ""
+msgstr "Aanbevolen volgende activiteit"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_force_thread_id
@@ -3670,6 +3690,8 @@ msgid ""
 "Reminder: Lead ${object.name} from ${object.partner_id != False and object."
 "partner_id.name or object.contact_name}"
 msgstr ""
+"Herinnering van Lead: ${object.id} van ${object.partner_id != False en "
+"object.partner_id.name or object.contact_name}"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3700,7 +3722,7 @@ msgstr "Opbrengst per verkoper"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sale Flow"
-msgstr ""
+msgstr "Verkoop flow"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3768,17 +3790,17 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 msgid "Schedule Activity"
-msgstr ""
+msgstr "Plan activiteit"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
 msgid "Schedule Next Activity"
-msgstr ""
+msgstr "Plan volgende activiteit"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_schedule_action
 msgid "Schedule an Activity"
-msgstr ""
+msgstr "Plan een activiteit"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3920,6 +3942,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Show all opportunities for which the next action date is before today"
 msgstr ""
+"Toon alle prospects voor welke de volgende actie datum voor vandaag is."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -4022,6 +4045,8 @@ msgid ""
 "Stages allow salespersons to easily track how a specific opportunity\n"
 "            is positioned in the sales cycle."
 msgstr ""
+"Fases biedt verkopers de mogelijkheid om eenvoudig te bepalen \n"
+"waar een prospect zich in de verkoopcyclus bevindt."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_state
@@ -4135,7 +4160,7 @@ msgstr "Voorbeelden van offertes (gebruik hiervoor Odoo Online Proposals)"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_users_payment_next_action_date
 msgid "The date before which no action should be taken."
-msgstr "De datum voor dewelke geen actie ondernomen mag worden."
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_id
@@ -4408,7 +4433,7 @@ msgstr "Ongelezen berichten"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users_unreconciled_aml_ids
 msgid "Unreconciled aml ids"
-msgstr "Onafgeletterde aml ids"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_write_date

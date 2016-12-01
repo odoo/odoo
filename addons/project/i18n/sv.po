@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-09-02 12:13+0000\n"
+"PO-Revision-Date: 2016-09-09 08:51+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
 "Language: sv\n"
@@ -985,7 +985,7 @@ msgstr "Alias modell"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_name
 msgid "Alias Name"
-msgstr ""
+msgstr "Aliasnamn"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_domain
@@ -1617,7 +1617,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project.js:50
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "Ignorera"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
@@ -1739,7 +1739,7 @@ msgstr "E-postalias"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
 msgid "Email Template"
-msgstr ""
+msgstr "E-postmall"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2442,7 +2442,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "Medlemmar"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2457,7 +2457,7 @@ msgstr "Mer <i class=\"fa fa-caret-down\"/>"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "More Info"
-msgstr ""
+msgstr "Mer information"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2542,7 +2542,7 @@ msgstr "Anteckningar"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Notifications"
-msgstr ""
+msgstr "Aviseringar"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_opening_days
@@ -3011,7 +3011,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Responsibilities"
-msgstr ""
+msgstr "Ansvarsområden"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3054,7 +3054,7 @@ msgstr "Sök projekt"
 #: code:addons/project/static/src/js/project.js:46
 #, python-format
 msgid "Select"
-msgstr ""
+msgstr "Välj"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3219,7 +3219,7 @@ msgstr ""
 #. module: project
 #: sql_constraint:project.tags:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Namntaggen existerar redan !"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -3449,6 +3449,9 @@ msgid ""
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
+"Klassen (Odoo-dokumenttyp) som detta alias är knutet till. All inkommande e-"
+"post som inte ingår i en pågående diskussion skapar en ny post av denna "
+"klass (t ex Aktivitet)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_name
@@ -3456,6 +3459,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Namnet på e-post-alias, eg 'jobb' om du vill fånga e-post för <jobb@example."
+"se>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_user_id

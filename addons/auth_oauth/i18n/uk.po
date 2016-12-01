@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-05-06 12:24+0000\n"
+"PO-Revision-Date: 2016-10-29 19:26+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
 "uk/)\n"
@@ -51,7 +51,7 @@ msgstr "Дозволено"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Authentication"
-msgstr ""
+msgstr "Призначення"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
@@ -128,7 +128,7 @@ msgstr "Дата створення"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Валюта"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
@@ -180,7 +180,7 @@ msgstr "ID"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn
 msgid "Invoice"
-msgstr ""
+msgstr "Рахунок"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_ids
@@ -315,6 +315,10 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Обираючи \"Попередження\" ви надішлете повідомлення користувачу. Якщо обрати "
+"\"Повідомлення блокування\", то буде запущено виключення з відповідним "
+"повідомленням користувачу та процес зупиниться. Повідомлення потрібно "
+"вказати у наступному полі."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
@@ -324,7 +328,7 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Show Tutorial"
-msgstr ""
+msgstr "Показати інструктаж"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_tutorial_enabled
@@ -342,6 +346,7 @@ msgstr ""
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
 msgstr ""
+"Схема оподаткування визначає податки та рахунки проведень для партнера."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_has_unreconciled_entries
@@ -349,6 +354,8 @@ msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
 msgstr ""
+"Партнер має щонайменше один неузгоджений запис від останнього узгодження "
+"рахунків та платежів."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -367,14 +374,14 @@ msgstr ""
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr ""
+msgstr "Цей рахунок буде використовуватися як типовий рахунок кредитора."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_receivable_id
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr ""
+msgstr "Цей рахунок буде використовуватися як типовий рахунок дебітора."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_supplier_payment_term_id

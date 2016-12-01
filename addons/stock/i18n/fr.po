@@ -16,15 +16,16 @@
 # Régis GEROMEGNACE <regis.geromegnace@gmail.com>, 2016
 # Saad Thaifa <saad.thaifa@gmail.com>, 2015
 # Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2016
+# Simone Orsi <simahawk@gmail.com>, 2016
 # Xavier Symons <xsy@openerp.com>, 2015
 # zoe <yann.hoareau@migs.re>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-08-18 12:02+0000\n"
-"Last-Translator: Régis GEROMEGNACE <regis.geromegnace@gmail.com>\n"
+"POT-Creation-Date: 2016-12-01 11:52+0000\n"
+"PO-Revision-Date: 2016-11-21 13:42+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -41,13 +42,13 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:219
+#: code:addons/stock/models/stock_move.py:216
 #, python-format
 msgid " (%s reserved)"
 msgstr " (%s réservé)"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:222
+#: code:addons/stock/models/stock_move.py:219
 #, python-format
 msgid " (reserved)"
 msgstr " (réservé)"
@@ -72,13 +73,13 @@ msgid "#Products"
 msgstr "Nb d'articles"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:923
+#: code:addons/stock/models/stock_move.py:920
 #, python-format
 msgid "%s %s %s has been <b>moved to</b> scrap."
 msgstr "%s %s %s a été <b>mis au rebut</b>."
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:449
+#: code:addons/stock/models/stock_warehouse.py:453
 #, python-format
 msgid "%s: Supply Product from %s"
 msgstr "%s : approvisionner l'article depuis %s"
@@ -697,7 +698,7 @@ msgstr ""
 "list\"/>"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:96
+#: code:addons/stock/models/stock_inventory.py:94
 #, python-format
 msgid "A Pack"
 msgstr "Un colis"
@@ -841,7 +842,7 @@ msgid "All returned moves"
 msgstr "Tous les mouvements de retour"
 
 #. module: stock
-#: code:addons/stock/models/procurement.py:220
+#: code:addons/stock/models/procurement.py:225
 #, python-format
 msgid "All stock moves have been cancelled for this procurement."
 msgstr ""
@@ -901,12 +902,12 @@ msgstr "Ancêtres"
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_2
 msgid "Apple In-Ear Headphones"
-msgstr ""
+msgstr "Écouteurs intra-auriculaire Apple"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_4
 msgid "Apple Wireless Keyboard"
-msgstr ""
+msgstr "Clavier sans-fil Apple"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -1021,7 +1022,7 @@ msgid "Back order <em>%s</em> <b>cancelled</b>."
 msgstr "Reliquat <em>%s</em> <b>annulé</b>."
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:967
+#: code:addons/stock/models/stock_picking.py:977
 #, python-format
 msgid "Back order <em>%s</em> <b>created</b>."
 msgstr "Reliquat <em>%s</em> <b>créé</b>."
@@ -1095,7 +1096,7 @@ msgstr "Message Bloquant"
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_15
 msgid "Bose Mini Bluetooth Speaker"
-msgstr ""
+msgstr "Mini haut-parleur Bluetooth Bose"
 
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
@@ -1121,7 +1122,7 @@ msgid "By Unique Serial Number"
 msgstr "Numéro de série unique"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:393
+#: code:addons/stock/models/stock_move.py:390
 #, python-format
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
@@ -1171,13 +1172,13 @@ msgid "Calendar View"
 msgstr "Vue calendrier"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:396
+#: code:addons/stock/models/stock_warehouse.py:400
 #, python-format
 msgid "Can't find any customer or supplier location."
 msgstr "Impossible de trouver un emplacement client ou fournisseur."
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:444
+#: code:addons/stock/models/stock_warehouse.py:448
 #, python-format
 msgid "Can't find any generic Make To Order route."
 msgstr "Impossible de trouver une route de production à la demande générique."
@@ -1205,7 +1206,7 @@ msgid "Cancelled"
 msgstr "Annulé"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:353
+#: code:addons/stock/models/stock_move.py:350
 #, python-format
 msgid "Cannot unreserve a done move"
 msgstr "Impossible d'annuler la réservation d'un mouvement terminé"
@@ -1501,7 +1502,7 @@ msgid "Create Backorder"
 msgstr "Créer un reliquat "
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:803
+#: code:addons/stock/models/stock_picking.py:812
 #, python-format
 msgid "Create Backorder?"
 msgstr "Créer un reliquat? "
@@ -1649,7 +1650,7 @@ msgid "Creation Date, usually the time of the order"
 msgstr "Date de création, en général la date de la commande"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:401
+#: code:addons/stock/models/stock_warehouse.py:405
 #, python-format
 msgid "Cross-Dock"
 msgstr "Correspondance"
@@ -1942,7 +1943,7 @@ msgid "Delay (days)"
 msgstr "Délai (jours)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:320
+#: code:addons/stock/models/product.py:328
 #, python-format
 msgid "Delivered Qty"
 msgstr "Qté livrée"
@@ -1960,7 +1961,7 @@ msgid "Delivery"
 msgstr "Livraison"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:206
+#: code:addons/stock/models/stock_warehouse.py:210
 #: model:stock.picking.type,name:stock.chi_picking_type_out
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
@@ -2233,7 +2234,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:629
+#: code:addons/stock/models/stock_quant.py:691
 #, python-format
 msgid "Everything inside a package should be in the same location"
 msgstr "Tous ce qui est dans un colis doit être au même emplacement"
@@ -2265,7 +2266,7 @@ msgid "External note..."
 msgstr "Note externe..."
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:942
+#: code:addons/stock/models/stock_picking.py:952
 #, python-format
 msgid "Extra Move: "
 msgstr "Mouvement supplémentaire : "
@@ -2339,7 +2340,7 @@ msgstr ""
 "emplacements de type \"interne\""
 
 #. module: stock
-#: code:addons/stock/models/product.py:315
+#: code:addons/stock/models/product.py:323
 #: model:ir.model.fields,field_description:stock.field_product_template_virtual_available
 #: model:ir.model.fields,field_description:stock.field_stock_move_availability
 #, python-format
@@ -2357,31 +2358,31 @@ msgid "Full Location Name"
 msgstr "Nom complet de l'emplacement "
 
 #. module: stock
-#: code:addons/stock/models/product.py:318
+#: code:addons/stock/models/product.py:326
 #, python-format
 msgid "Future Deliveries"
 msgstr "Livraison future"
 
 #. module: stock
-#: code:addons/stock/models/product.py:323
+#: code:addons/stock/models/product.py:331
 #, python-format
 msgid "Future P&L"
 msgstr "P&L future"
 
 #. module: stock
-#: code:addons/stock/models/product.py:333
+#: code:addons/stock/models/product.py:341
 #, python-format
 msgid "Future Productions"
 msgstr "Production future"
 
 #. module: stock
-#: code:addons/stock/models/product.py:328
+#: code:addons/stock/models/product.py:336
 #, python-format
 msgid "Future Qty"
 msgstr "Qté à venir"
 
 #. module: stock
-#: code:addons/stock/models/product.py:310
+#: code:addons/stock/models/product.py:318
 #, python-format
 msgid "Future Receipts"
 msgstr "Réceptions à venir"
@@ -2438,7 +2439,7 @@ msgstr "Graphe"
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_1
 msgid "Graphics Card"
-msgstr ""
+msgstr "Carte graphique"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -2464,7 +2465,7 @@ msgstr "Préparations du groupe"
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_9
 msgid "HDD SH-1"
-msgstr ""
+msgstr "Disque dur SH-1"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_pack_operation_exist
@@ -2567,7 +2568,7 @@ msgstr "Comment utiliser la gestion des lots: "
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_id
-#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_8694
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_8226
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_id
@@ -2576,7 +2577,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:321
+#: code:addons/stock/models/stock_inventory.py:319
 #, python-format
 msgid "INV:"
 msgstr "INV:"
@@ -2803,7 +2804,7 @@ msgid "Immediate Transfer"
 msgstr "Transfert immédiat"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:785
+#: code:addons/stock/models/stock_picking.py:794
 #, python-format
 msgid "Immediate Transfer?"
 msgstr "Transfert immédiat? "
@@ -2923,7 +2924,7 @@ msgid "Initial Inventory"
 msgstr "Inventaire initial"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:93
+#: code:addons/stock/models/stock_warehouse.py:97
 #: model:stock.location,name:stock.stock_location_company
 #, python-format
 msgid "Input"
@@ -2971,7 +2972,7 @@ msgid "Internal Reference"
 msgstr "Référence interne"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:228
+#: code:addons/stock/models/stock_warehouse.py:232
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
@@ -3205,12 +3206,12 @@ msgstr ""
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_13
 msgid "Laptop Customized"
-msgstr ""
+msgstr "Portable personnalisé"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_14
 msgid "Laptop E5023"
-msgstr ""
+msgstr "Portable E5023"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_last_done_picking
@@ -3495,7 +3496,7 @@ msgid "Lot BarCode"
 msgstr "Code-barre du lot"
 
 #. module: stock
-#: code:addons/stock/models/stock_pack_operation.py:198
+#: code:addons/stock/models/stock_pack_operation.py:199
 #, python-format
 msgid "Lot Details"
 msgstr "Détails du lot"
@@ -3516,7 +3517,7 @@ msgid "Lot Split"
 msgstr "Lot divisé"
 
 #. module: stock
-#: code:addons/stock/models/stock_pack_operation.py:268
+#: code:addons/stock/models/stock_pack_operation.py:282
 #, python-format
 msgid "Lot required"
 msgstr ""
@@ -3570,7 +3571,7 @@ msgid "Lots visible"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:504
+#: code:addons/stock/models/stock_warehouse.py:514
 #, python-format
 msgid "MTO"
 msgstr ""
@@ -3586,7 +3587,7 @@ msgid "Make Procurements"
 msgstr "Réaliser les approvisionnements"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:442
+#: code:addons/stock/models/stock_warehouse.py:446
 #: model:stock.location.route,name:stock.route_warehouse0_mto
 #, python-format
 msgid "Make To Order"
@@ -3793,12 +3794,12 @@ msgstr ""
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_5
 msgid "Mouse, Optical"
-msgstr ""
+msgstr "Souris optique"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_11
 msgid "Mouse, Wireless"
-msgstr ""
+msgstr "Souris, sans fil"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_operation_link_move_id
@@ -3807,7 +3808,7 @@ msgid "Move"
 msgstr "Mouvement"
 
 #. module: stock
-#: code:addons/stock/models/procurement.py:49
+#: code:addons/stock/models/procurement.py:51
 #, python-format
 msgid "Move From Another Location"
 msgstr "Déplacer d'un autre emplacement"
@@ -3970,7 +3971,7 @@ msgid "No automatic routing of products"
 msgstr "Pas de routage automatique des produits"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:816
+#: code:addons/stock/models/stock_picking.py:825
 #, python-format
 msgid "No negative quantities allowed"
 msgstr "Les quantités négatives ne sont pas autorisées"
@@ -3986,7 +3987,7 @@ msgstr ""
 "n'ont pas été entièrement retournées peuvent être retournées !"
 
 #. module: stock
-#: code:addons/stock/models/procurement.py:181
+#: code:addons/stock/models/procurement.py:186
 #, python-format
 msgid "No source location defined!"
 msgstr "Pas d'emplacement source défini!"
@@ -4024,7 +4025,7 @@ msgid "Notes"
 msgstr "Notes"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:454
+#: code:addons/stock/models/stock_picking.py:463
 #, python-format
 msgid "Nothing to check the availability for."
 msgstr "Pas de vérification de disponibilité à effectuer"
@@ -4134,19 +4135,19 @@ msgstr ""
 "envoyer une photo de votre entrepôt à "
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:94
+#: code:addons/stock/models/stock_inventory.py:92
 #, python-format
 msgid "One Lot/Serial Number"
 msgstr "Un lot/numéro de série"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:92
+#: code:addons/stock/models/stock_inventory.py:90
 #, python-format
 msgid "One owner only"
 msgstr "Un propriétaire seulement"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:92
+#: code:addons/stock/models/stock_inventory.py:90
 #, python-format
 msgid "One product for a specific owner"
 msgstr "Un article pour un propriétaire spécifique"
@@ -4163,7 +4164,7 @@ msgid "Operation"
 msgstr "Opération"
 
 #. module: stock
-#: code:addons/stock/models/stock_pack_operation.py:215
+#: code:addons/stock/models/stock_pack_operation.py:216
 #, python-format
 msgid "Operation Details"
 msgstr "Détails de l'opération"
@@ -4279,7 +4280,7 @@ msgid "Original location id"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:246
+#: code:addons/stock/models/stock_quant.py:226
 #, python-format
 msgid "Otherwise make sure the right stock/owner is set."
 msgstr "Sinon s'assurer que le stock et propriétaire est corectement indiqué."
@@ -4301,7 +4302,7 @@ msgid "Outgoing Shippings"
 msgstr "Expéditions"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:95
+#: code:addons/stock/models/stock_warehouse.py:99
 #: model:stock.location,name:stock.stock_location_output
 #, python-format
 msgid "Output"
@@ -4339,13 +4340,13 @@ msgid "Owner of the quants"
 msgstr "Propriétaire des quants"
 
 #. module: stock
-#: code:addons/stock/models/product.py:325
+#: code:addons/stock/models/product.py:333
 #, python-format
 msgid "P&L Qty"
 msgstr "Qté pertes et profits"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:213
+#: code:addons/stock/models/stock_warehouse.py:217
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_package_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_pack_operation_pack_ids
 #, python-format
@@ -4467,7 +4468,7 @@ msgid "Packing Operation"
 msgstr "Colisage"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:96
+#: code:addons/stock/models/stock_warehouse.py:100
 #: model:stock.location,name:stock.location_pack_zone
 #, python-format
 msgid "Packing Zone"
@@ -4558,19 +4559,19 @@ msgid "Physical Packages"
 msgstr "Colis physiques"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:221
+#: code:addons/stock/models/stock_warehouse.py:225
 #, python-format
 msgid "Pick"
 msgstr "Préparer"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:403
+#: code:addons/stock/models/stock_warehouse.py:407
 #, python-format
 msgid "Pick + Pack + Ship"
 msgstr "Préparer + coliser + expédier"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:402
+#: code:addons/stock/models/stock_warehouse.py:406
 #, python-format
 msgid "Pick + Ship"
 msgstr "Préparer + expédier"
@@ -4604,7 +4605,7 @@ msgstr "Listes de préparation"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_picking
 msgid "Picking Operations"
-msgstr " Bon de préparation"
+msgstr "Bon de préparation avec code barre"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_picking_type_id
@@ -4681,7 +4682,7 @@ msgid "Planner"
 msgstr "Planificateur"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:772
+#: code:addons/stock/models/stock_picking.py:781
 #, python-format
 msgid ""
 "Please create some Initial Demand or Mark as Todo and create some "
@@ -4691,13 +4692,13 @@ msgstr ""
 "quelques opérations."
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:1001
+#: code:addons/stock/models/stock_picking.py:1015
 #, python-format
 msgid "Please process some quantities to put in the pack first!"
 msgstr "Merci de marquer des quantités à mettre dans le packet!"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:907
+#: code:addons/stock/models/stock_move.py:904
 #, python-format
 msgid "Please provide a positive quantity to scrap."
 msgstr "Merci de saisir une quantité positive à mettre au rebut"
@@ -4835,7 +4836,7 @@ msgid "Procurements"
 msgstr "Approvisionnements"
 
 #. module: stock
-#: code:addons/stock/models/product.py:335
+#: code:addons/stock/models/product.py:343
 #, python-format
 msgid "Produced Qty"
 msgstr "Qté produite"
@@ -4865,7 +4866,7 @@ msgid "Product"
 msgstr "Article"
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:152
+#: code:addons/stock/models/stock_location.py:159
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_categ_ids
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -4941,7 +4942,7 @@ msgid "Production Location"
 msgstr "Emplacement de production"
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:141
+#: code:addons/stock/models/stock_location.py:148
 #: model:ir.actions.act_window,name:stock.act_product_location_open
 #: model:ir.actions.act_window,name:stock.product_template_action_product
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_product_ids
@@ -4971,7 +4972,7 @@ msgid "Products have only one unit of measure (easier)"
 msgstr "Les produits ont seulement une unité de mesure (plus facile)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:298
+#: code:addons/stock/models/product.py:306
 #, python-format
 msgid "Products: "
 msgstr "Articles : "
@@ -5032,7 +5033,7 @@ msgid "Qty Multiple must be greater than or equal to zero."
 msgstr "Le multiple qté. doit être supérieur ou égal à zéro."
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:94
+#: code:addons/stock/models/stock_warehouse.py:98
 #, python-format
 msgid "Quality Control"
 msgstr "Contrôle qualité"
@@ -5043,7 +5044,7 @@ msgid "Quality Control Location"
 msgstr "Emplacement de contrôle qualité"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:265
+#: code:addons/stock/models/stock_move.py:262
 #, python-format
 msgid ""
 "Quantities, Units of Measure, Products and Locations cannot be modified on "
@@ -5176,7 +5177,7 @@ msgstr "Quants"
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_12
 msgid "RAM SR5"
-msgstr ""
+msgstr "RAM SR5"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_rate_picking_backorders
@@ -5212,25 +5213,25 @@ msgid "Receipt Route"
 msgstr "Route de réception"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:400
+#: code:addons/stock/models/stock_warehouse.py:404
 #, python-format
 msgid "Receipt in 1 step"
 msgstr "Réception en 1 étape"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:400
+#: code:addons/stock/models/stock_warehouse.py:404
 #, python-format
 msgid "Receipt in 2 steps"
 msgstr "Réception en 2 étapes"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:401
+#: code:addons/stock/models/stock_warehouse.py:405
 #, python-format
 msgid "Receipt in 3 steps"
 msgstr "Réception en 3 étapes"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:199
+#: code:addons/stock/models/stock_warehouse.py:203
 #: model:ir.actions.act_window,name:stock.action_receive_move
 #: model:ir.ui.view,arch_db:stock.product_kanban_stock_view
 #: model:stock.picking.type,name:stock.chi_picking_type_in
@@ -5245,10 +5246,15 @@ msgid "Receive goods directly in stock (1 step)"
 msgstr "Marchandises reçues directement en stock (1 étape)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:312
+#: code:addons/stock/models/product.py:320
 #, python-format
 msgid "Received Qty"
 msgstr "Qté reçue"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Recheck Availability"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5337,7 +5343,7 @@ msgid "Removal Strategy"
 msgstr "Stratégie d'enlèvement"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:449
+#: code:addons/stock/models/stock_quant.py:484
 #, python-format
 msgid "Removal strategy %s not implemented."
 msgstr "La stratégie d'enlèvement %s n'est pas implémentée."
@@ -5667,31 +5673,31 @@ msgid "Sequence"
 msgstr "Séquence"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:658
+#: code:addons/stock/models/stock_warehouse.py:688
 #, python-format
 msgid "Sequence in"
 msgstr " Séquence d'entrée"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:662
+#: code:addons/stock/models/stock_warehouse.py:692
 #, python-format
 msgid "Sequence internal"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:659
+#: code:addons/stock/models/stock_warehouse.py:689
 #, python-format
 msgid "Sequence out"
 msgstr " Séquence de sortie"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:660
+#: code:addons/stock/models/stock_warehouse.py:690
 #, python-format
 msgid "Sequence packing"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:661
+#: code:addons/stock/models/stock_warehouse.py:691
 #, python-format
 msgid "Sequence picking"
 msgstr ""
@@ -5795,7 +5801,7 @@ msgid "Shelves (Y)"
 msgstr "Rayon (Y)"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:402
+#: code:addons/stock/models/stock_warehouse.py:406
 #, python-format
 msgid "Ship Only"
 msgstr "Expédition en 1 étape"
@@ -5837,7 +5843,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:780
+#: code:addons/stock/models/stock_picking.py:789
 #, python-format
 msgid "Some products require lots, so you need to specify those first!"
 msgstr ""
@@ -5928,7 +5934,7 @@ msgid "Status"
 msgstr "Statut"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:92
+#: code:addons/stock/models/stock_warehouse.py:96
 #: model:stock.location,name:stock.stock_location_shop0
 #: model:stock.location,name:stock.stock_location_stock
 #, python-format
@@ -6041,7 +6047,7 @@ msgid "Stockable"
 msgstr "Stockable"
 
 #. module: stock
-#: code:addons/stock/models/product.py:450
+#: code:addons/stock/models/product.py:472
 #, python-format
 msgid "Stockable Product"
 msgstr "Produit stockable"
@@ -6241,7 +6247,7 @@ msgstr ""
 "et pour la validation des mouvements de stock correspondant à cet inventaire."
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:140
+#: code:addons/stock/models/stock_warehouse.py:144
 #, python-format
 msgid ""
 "The default resupply warehouse should be different than the warehouse itself!"
@@ -6250,7 +6256,7 @@ msgstr ""
 "l'entrepôt lui-même !"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:510
+#: code:addons/stock/models/stock_picking.py:519
 #, python-format
 msgid ""
 "The destination location must be the same for all the moves of the picking."
@@ -6338,7 +6344,7 @@ msgid "The push rule that created this stock move"
 msgstr "La règle poussée qui a créé ce mouvement de stock"
 
 #. module: stock
-#: code:addons/stock/models/stock_pack_operation.py:170
+#: code:addons/stock/models/stock_pack_operation.py:171
 #, python-format
 msgid "The quantity to split should be smaller than the quantity To Do.  "
 msgstr ""
@@ -6361,7 +6367,7 @@ msgstr ""
 "`product_uom_qty`."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:814
+#: code:addons/stock/models/stock_move.py:811
 #, python-format
 msgid ""
 "The roundings of your unit of measure %s on the move vs. %s on the product "
@@ -6370,22 +6376,22 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:114
 #: code:addons/stock/models/stock_inventory.py:116
 #: code:addons/stock/models/stock_inventory.py:118
 #: code:addons/stock/models/stock_inventory.py:120
-#: code:addons/stock/models/stock_inventory.py:122
 #, python-format
 msgid "The selected inventory options are not coherent."
 msgstr "Les options d'inventaire choisies ne sont pas cohérentes."
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:246
+#: code:addons/stock/models/stock_quant.py:226
 #, python-format
 msgid "The serial number %s is already in stock."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:508
+#: code:addons/stock/models/stock_picking.py:517
 #, python-format
 msgid "The source location must be the same for all the moves of the picking."
 msgstr ""
@@ -6781,7 +6787,7 @@ msgid "Tracking"
 msgstr "Suivi"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:992
+#: code:addons/stock/models/stock_move.py:989
 #: model:ir.model,name:stock.model_stock_picking
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -6846,7 +6852,7 @@ msgid "USPS integration"
 msgstr "Intégration d'USPS"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:98
+#: code:addons/stock/models/stock_quant.py:102
 #, python-format
 msgid "Under no circumstances should you delete or change quants yourselves!"
 msgstr "En aucun cas vous ne devez supprimer ou modifier les quants!"
@@ -6905,7 +6911,7 @@ msgid "Units of Measures"
 msgstr "Unités de mesure"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:551
+#: code:addons/stock/models/stock_quant.py:586
 #, python-format
 msgid "Unknown Pack"
 msgstr "Colis inconnu"
@@ -6939,7 +6945,7 @@ msgid "Unpack"
 msgstr "Défaire le colis"
 
 #. module: stock
-#: code:addons/stock/models/product.py:330
+#: code:addons/stock/models/product.py:338
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Qté non prévu"
@@ -7150,7 +7156,7 @@ msgid "Warehouse to consider for the route selection"
 msgstr "Entrepôt à prendre en compte pour le choix de la route"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:688
+#: code:addons/stock/models/stock_warehouse.py:718
 #, python-format
 msgid "Warehouse's Routes"
 msgstr "Routes de l'entrepôt"
@@ -7180,7 +7186,7 @@ msgid "Warning on the Picking"
 msgstr "Avertissement sur les Colisages"
 
 #. module: stock
-#: code:addons/stock/models/product.py:291
+#: code:addons/stock/models/product.py:299
 #, python-format
 msgid "Warning!"
 msgstr "Attention !"
@@ -7389,7 +7395,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:464
+#: code:addons/stock/models/product.py:486
 #, python-format
 msgid ""
 "You can not change the unit of measure of a product that has already been "
@@ -7407,13 +7413,13 @@ msgid "You can not delete pack operations of a done picking"
 msgstr "Vous ne pouvez pas supprimer les lignes d'un picking qui est cloturé."
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:143
+#: code:addons/stock/models/stock_quant.py:147
 #, python-format
 msgid "You can not reserve a negative quantity or a negative quant."
 msgstr "Impossible de réserver une quantité négative ou un quant négatif."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:898
+#: code:addons/stock/models/stock_move.py:895
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Vous ne pouvez supprimer que les mouvements en brouillon"
@@ -7424,14 +7430,14 @@ msgid "You can review and edit the predefined units via the"
 msgstr "Vous pouvez réviser et éditer les unités prédéfinies via le"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:648
+#: code:addons/stock/models/stock_move.py:645
 #, python-format
 msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr ""
 "Impossible d'annuler un mouvement de stock qui est dans l'état \"Terminé\"."
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:299
+#: code:addons/stock/models/stock_inventory.py:297
 #, python-format
 msgid ""
 "You cannot have two inventory adjustements in state 'in Progess' with the "
@@ -7441,13 +7447,13 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:176
+#: code:addons/stock/models/stock_quant.py:180
 #, python-format
 msgid "You cannot move to a location of type view %s."
 msgstr "Vous ne pouvez pas déplacer vers un emplacement de type vue %s."
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:134
+#: code:addons/stock/models/stock_inventory.py:132
 #, python-format
 msgid ""
 "You cannot set a negative product quantity in an inventory line:\n"
@@ -7458,7 +7464,7 @@ msgstr ""
 "\t%s - qté : %s"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:951
+#: code:addons/stock/models/stock_move.py:948
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr ""
@@ -7466,7 +7472,7 @@ msgstr ""
 "être confirmé."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:947
+#: code:addons/stock/models/stock_move.py:944
 #, python-format
 msgid "You cannot split a move done"
 msgstr "Vous ne pouvez pas fractionner un mouvement terminé"
@@ -7483,7 +7489,7 @@ msgstr ""
 "pour vérifier la disponibilité des produits."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:797
+#: code:addons/stock/models/stock_move.py:794
 #, python-format
 msgid ""
 "You have a difference between the quantity on the operation and the "
@@ -7516,7 +7522,7 @@ msgid "You have processed less products than the initial demand."
 msgstr "Vous avez traité moins d'articles que la demande initiale. "
 
 #. module: stock
-#: code:addons/stock/models/product.py:292
+#: code:addons/stock/models/product.py:300
 #, python-format
 msgid ""
 "You have products in stock that have no lot number.  You can assign serial "
@@ -7526,7 +7532,7 @@ msgstr ""
 "des numéros de série en faisant un inventaire. "
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:768
+#: code:addons/stock/models/stock_warehouse.py:798
 #, python-format
 msgid ""
 "You have to select a product unit of measure in the same category than the "
@@ -7552,26 +7558,26 @@ msgid "You may only return Done pickings"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:549
-#: code:addons/stock/models/stock_pack_operation.py:234
+#: code:addons/stock/models/stock_move.py:546
+#: code:addons/stock/models/stock_pack_operation.py:235
 #, python-format
 msgid "You need to provide a Lot/Serial Number for product %s"
 msgstr "Vous devez affecter un numéro de série/lot pour l'article %s"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:241
+#: code:addons/stock/models/stock_quant.py:264
 #, python-format
 msgid "You should only receive by the piece with the same serial number"
 msgstr "Vous ne devez recevoir que la pièce avec un même numéro de série"
 
 #. module: stock
-#: code:addons/stock/models/stock_pack_operation.py:238
+#: code:addons/stock/models/stock_pack_operation.py:239
 #, python-format
 msgid "You should provide a different serial number for each piece"
 msgstr "Vous devez donner un numéro de série différent pour chaque pièce"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:228
+#: code:addons/stock/models/stock_move.py:225
 #, python-format
 msgid ""
 "You try to move a product using a UoM that is not compatible with the UoM of "
@@ -7702,12 +7708,12 @@ msgstr "de votre fournisseur avec les produits et les quantités demandées"
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_3
 msgid "iPad Mini"
-msgstr ""
+msgstr "iPad Mini"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_6
 msgid "iPod"
-msgstr ""
+msgstr "iPod"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7803,615 +7809,3 @@ msgstr "↳Ajouter au colis"
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "⇒ Set quantities to 0"
 msgstr "⇒ Mettre les quantités à 0"
-
-#~ msgid ""
-#~ "\n"
-#~ "                * Draft: not confirmed yet and will not be scheduled "
-#~ "until confirmed\n"
-#~ "\n"
-#~ "                * Waiting Another Operation: waiting for another move to "
-#~ "proceed before it becomes automatically available (e.g. in Make-To-Order "
-#~ "flows)\n"
-#~ "\n"
-#~ "                * Waiting Availability: still waiting for the "
-#~ "availability of products\n"
-#~ "\n"
-#~ "                * Partially Available: some products are available and "
-#~ "reserved\n"
-#~ "\n"
-#~ "                * Ready to Transfer: products reserved, simply waiting "
-#~ "for confirmation.\n"
-#~ "\n"
-#~ "                * Transferred: has been processed, can't be modified or "
-#~ "cancelled anymore\n"
-#~ "\n"
-#~ "                * Cancelled: has been cancelled, can't be confirmed "
-#~ "anymore"
-#~ msgstr ""
-#~ "\n"
-#~ "                * Brouillon : non confirmé et ne sera pas planifié avant "
-#~ "d'être confirmé\n"
-#~ "\n"
-#~ "                * En attente d'une autre opération : en attente d'un "
-#~ "autre mouvement avant de devenir automatiquement disponible (p. ex. dans "
-#~ "un flux de production à la demande)\n"
-#~ "\n"
-#~ "                * En attente de disponibilité : encore en attente de la "
-#~ "disponibilité des articles\n"
-#~ "\n"
-#~ "                * Partiellement disponibles : certains articles sont "
-#~ "disponibles et réservés\n"
-#~ "\n"
-#~ "                * Disponible : les articles sont réservés, simplement en "
-#~ "attente de confirmation.\n"
-#~ "\n"
-#~ "                * Transféré : a été traité, ne peut plus être modifié ou "
-#~ "annulé\n"
-#~ "\n"
-#~ "                * Annulé : a été annulé, ne peut plus être confirmé"
-
-#~ msgid ""
-#~ "\n"
-#~ "Creates the dropship route and add more complex tests-This installs the "
-#~ "module stock_dropshipping."
-#~ msgstr ""
-#~ "\n"
-#~ "Crée la route \"Expédition directe\" et ajoute des tests  complexes  -"
-#~ "ceci installe le module stock_dropshipping."
-
-#~ msgid " MTO"
-#~ msgstr " Production à la demande"
-
-#~ msgid " On Hand"
-#~ msgstr " En stock"
-
-#~ msgid " Sequence in"
-#~ msgstr " Séquence d'entrée"
-
-#~ msgid " Sequence internal"
-#~ msgstr " Séquence interne"
-
-#~ msgid " Sequence out"
-#~ msgstr " Séquence de sortie"
-
-#~ msgid " Sequence packing"
-#~ msgstr " Séquence de colisage"
-
-#~ msgid " Sequence picking"
-#~ msgstr " Séquence de préparation"
-
-#~ msgid ""
-#~ "* New: When the stock move is created and not yet confirmed.\n"
-#~ "* Waiting Another Move: This state can be seen when a move is waiting for "
-#~ "another one, for example in a chained flow.\n"
-#~ "* Waiting Availability: This state is reached when the procurement "
-#~ "resolution is not straight forward. It may need the scheduler to run, a "
-#~ "component to me manufactured...\n"
-#~ "* Available: When products are reserved, it is set to 'Available'.\n"
-#~ "* Done: When the shipment is processed, the state is 'Done'."
-#~ msgstr ""
-#~ "* Nouveau : Quand le mouvement est crée mais pas encore confirmé.\n"
-#~ "* Attente d'un autre mouvement : Cet état est visible quand un mouvement "
-#~ "est en attente d'au autre, par exemple pour des transferts qui "
-#~ "s'enchainent.\n"
-#~ "* En attente de disponibilité : Cet état est atteint lorsque la "
-#~ "résolution de l'approvisionnement n'est pas finie. Le lancement du "
-#~ "planificateur peut être nécessaire, ou la fabrication d'un composant...\n"
-#~ "* Disponible : Quand les produits sont disponibles, l'état est "
-#~ "'Disponible'.\n"
-#~ "* Terminé : Quand le bon d'expédition est traité, l'état est 'Terminé'."
-
-#~ msgid ""
-#~ "* Vendor Location: Virtual location representing the source location for "
-#~ "products coming from your vendors\n"
-#~ "                       \n"
-#~ "* View: Virtual location used to create a hierarchical structures for "
-#~ "your warehouse, aggregating its child locations ; can't directly contain "
-#~ "products\n"
-#~ "                       \n"
-#~ "* Internal Location: Physical locations inside your own warehouses,\n"
-#~ "                       \n"
-#~ "* Customer Location: Virtual location representing the destination "
-#~ "location for products sent to your customers\n"
-#~ "                       \n"
-#~ "* Inventory Loss: Virtual location serving as counterpart for inventory "
-#~ "operations used to correct stock levels (Physical inventories)\n"
-#~ "                       \n"
-#~ "* Procurement: Virtual location serving as temporary counterpart for "
-#~ "procurement operations when the source (vendor or production) is not "
-#~ "known yet. This location should be empty when the procurement scheduler "
-#~ "has finished running.\n"
-#~ "                       \n"
-#~ "* Production: Virtual counterpart location for production operations: "
-#~ "this location consumes the raw material and produces finished products\n"
-#~ "                       \n"
-#~ "* Transit Location: Counterpart location that should be used in inter-"
-#~ "companies or inter-warehouses operations\n"
-#~ "                      "
-#~ msgstr ""
-#~ "* Emplacement Fournisseur: emplacement virtuel représentant l'emplacement "
-#~ "de la source pour les produits venant de votre fournisseur\n"
-#~ "\n"
-#~ "* Vue: emplacement virtuel utilisé pour créer des structures "
-#~ "hiérarchiques pour votre entrepôt, agrégeant ses emplacements enfants; ne "
-#~ "peut contenir directement des produits\n"
-#~ "\n"
-#~ "* Emplacement interne: emplacement physique dans vos entrepôts\n"
-#~ "\n"
-#~ "* Emplacement client: emplacement virtuel représentant l'emplacement de "
-#~ "destination pour les produits envoyés à vos clients\n"
-#~ "\n"
-#~ "* Pertes d'inventaire: emplacement virtuel servant d'équivalent pour les "
-#~ "opérations d'inventaire utilisées pour corriger les niveaux de stocks "
-#~ "(inventaire physique)\n"
-#~ "\n"
-#~ "* Approvisionnement: emplacement virtuel servant d'équivalent temporaire "
-#~ "pour les opération d'approvisionnement quand la source (fournisseur ou "
-#~ "production) n'est pas encore connue. Cet emplacement doit être vide quand "
-#~ "le planificateur d'approvisionnement a terminé de tourner.\n"
-#~ "\n"
-#~ "* Production: emplacement virtuel équivalent pour les opérations de "
-#~ "production: cet emplacement utilise les matériaux bruts et produit des "
-#~ "produits finis.\n"
-#~ "\n"
-#~ "* Emplacement de transit: Emplacement équivalent qui devrait être utilisé "
-#~ "dans les opérations inter-sociétés ou inter-entrepôts."
-
-#~ msgid "<span><strong>Contact Address:</strong></span>"
-#~ msgstr "<span><strong>Adresse de contact :</strong></span>"
-
-#~ msgid "<strong>Serial Number</strong>"
-#~ msgstr "<strong>Numéro de série</strong>"
-
-#~ msgid "<strong>Status</strong>"
-#~ msgstr "<strong>Statut</strong>"
-
-#~ msgid "A barcode nomenclature"
-#~ msgstr "Nomenclature de code-barres"
-
-#~ msgid ""
-#~ "A good inventory management aims to optimize stock levels: not too low "
-#~ "(or\n"
-#~ "                        you may find yourself out of stock) and not too "
-#~ "high (your products occupy\n"
-#~ "                        space and may loose value)."
-#~ msgstr ""
-#~ "Une bonne gestion d'inventaire a pour but d'optimiser les niveaux de "
-#~ "stock : pas trop bas (ou\n"
-#~ "vous pourriez vous retrouver en rupture de stock) et pas trop haut (vos "
-#~ "produits utilisent\n"
-#~ "trop d'espace et pourraient perdre de leur valeur)."
-
-#~ msgid "Action Needed"
-#~ msgstr "A besoin d'une action"
-
-#~ msgid ""
-#~ "Adds a Claim link to the delivery order.\n"
-#~ "-This installs the module claim_from_delivery."
-#~ msgstr ""
-#~ "Ajoute un lien \"Réclamations\" au bon de livraison.\n"
-#~ "- Ceci installe le module claim_from_delivery."
-
-#~ msgid "Allow claims on deliveries"
-#~ msgstr "Permet les réclamations sur les livraisons"
-
-#~ msgid ""
-#~ "Allows you to automatically reserve the available\n"
-#~ "            products when confirming a sale order.\n"
-#~ "                This installs the module procurement_jit."
-#~ msgstr ""
-#~ "Permet de réserver automatiquement les produits disponibles à la "
-#~ "confirmation de commande. Cette option va installer le module "
-#~ "procurement_jit."
-
-#~ msgid ""
-#~ "By default, the system will take from the stock in the source location "
-#~ "and passively wait for availability. The other possibility allows you to "
-#~ "directly create a procurement on the source location (and thus ignore its "
-#~ "current stock) to gather products. If we want to chain moves and have "
-#~ "this one to wait for the previous, this second option should be chosen."
-#~ msgstr ""
-#~ "Par défaut, le système prendra dans le stock de l'emplacement d'origine "
-#~ "et attendra passivement la disponibilité. L'autre possibilité vous permet "
-#~ "de créer d'office un approvisionnement à l'emplacement source (sans tenir "
-#~ "compte son niveau de stock actuel) pour acheminer les articles. Pour "
-#~ "faire des mouvements chaînés et faire en sorte que celui-ci attende le "
-#~ "précédent, la seconde option devra être choisie."
-
-#~ msgid "Check the existance of pack operation on the picking"
-#~ msgstr "Vérifier la possibilité de faire un packaging lors du picking."
-
-#~ msgid "Check the existance of stock moves linked to this inventory"
-#~ msgstr "Vérifier l'existence de mouvements de stock liés à cet inventaire."
-
-#~ msgid "Claims"
-#~ msgstr "Réclamations"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Date du dernier message posté sur cet enregistrement"
-
-#~ msgid "Delivery Method"
-#~ msgstr "Méthode de livraison"
-
-#~ msgid "Do not manage claims"
-#~ msgstr "Ne pas gérer les plaintes"
-
-#~ msgid "Do not record internal moves within a warehouse"
-#~ msgstr "Ne pas enregistrer des mouvements internes dans l'entrepôt"
-
-#~ msgid "Do not use Expiration Date"
-#~ msgstr "Ne pas utiliser de dates d'expiration"
-
-#~ msgid ""
-#~ "Every stock operation in Odoo moves the products from one\n"
-#~ "                location to another one.  For instance, if you receive "
-#~ "products\n"
-#~ "                from a vendor, Odoo will move products from the Vendor\n"
-#~ "                location to the Stock location. Each report can be "
-#~ "performed on\n"
-#~ "                physical, partner or virtual locations."
-#~ msgstr ""
-#~ "Chaque opération dans Odoo fait bouger les produits d'un\n"
-#~ "emplacement vers un autre. Par exemple, si vous recevez des produits\n"
-#~ "d'un fournisseur, Odoo fera bouger les produits de l'emplacement\n"
-#~ "fournisseur vers l'emplacement Stockage. Chaque rapport peut être "
-#~ "effectué sur base\n"
-#~ "des emplacements physiques, virtuels ou de partenaires."
-
-#~ msgid "Followers"
-#~ msgstr "Abonnés"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Abonnés (Canaux)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Abonnés (Partenaires)"
-
-#~ msgid "Forecasted:"
-#~ msgstr "Prévu :"
-
-#~ msgid "Has Stock Moves"
-#~ msgstr "A des Mouvements de stock"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si coché, de nouveaux messages demandent votre attention."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "si elle est cochée, de nouveaux messages requièrent votre attention."
-
-#~ msgid "Information"
-#~ msgstr "Information"
-
-#~ msgid "Inventory Lines."
-#~ msgstr "Lignes d'inventaire"
-
-#~ msgid "Inventory Moves."
-#~ msgstr "Mouvements de stock"
-
-#~ msgid "Inventory Name."
-#~ msgstr "Nom d'inventaire"
-
-#~ msgid "Inventory loss"
-#~ msgstr "Pertes d'inventaire"
-
-#~ msgid "Is Follower"
-#~ msgstr "Est un abonné"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Date du dernier message"
-
-#~ msgid "Link between stock moves and pack operations"
-#~ msgstr "Lien entre les mouvements et les colisages"
-
-#~ msgid "Lot is required"
-#~ msgstr "Le lot est requis"
-
-#~ msgid "Manage Multiple Locations and Warehouses"
-#~ msgstr "Gérer les emplacements multiples et les entrepôts"
-
-#~ msgid "Manage several locations per warehouse"
-#~ msgstr "Gérer plusieurs emplacements par entrepôt"
-
-#~ msgid "Messages"
-#~ msgstr "Messages"
-
-#~ msgid "Move Lines"
-#~ msgstr "Mouvements de stock"
-
-#~ msgid "Multi Locations"
-#~ msgstr "Multi-emplacements"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Nombre d'Actions"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Nombre de messages demandant une action"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Nombre de messages non lus"
-
-#~ msgid "Open Warehouse Menu"
-#~ msgstr "Ouvrir le menu \"Entrepôt\""
-
-#~ msgid "Packagings"
-#~ msgstr "Colisages"
-
-#~ msgid ""
-#~ "Periodical Inventories are used to count the number of products\n"
-#~ "                available per location. You can use it once a year when "
-#~ "you do\n"
-#~ "                the general inventory or whenever you need it, to adapt "
-#~ "the\n"
-#~ "                current inventory level of a product."
-#~ msgstr ""
-#~ "Les inventaires périodiques sont utilisés pour compter le nombre de "
-#~ "produits disponibles sur les emplacements de stock . Vous pouvez "
-#~ "l'utiliser une fois par an quand vous effectuez l'inventaire général ou "
-#~ "dès que vous en avez besoin, pour mettre à jour le niveau de produit "
-#~ "actuellement disponible."
-
-#~ msgid "Picking Types"
-#~ msgstr "Types de préparation"
-
-#~ msgid "Pushed Flows"
-#~ msgstr "Flux poussés"
-
-#~ msgid "Qty"
-#~ msgstr "Qté"
-
-#~ msgid ""
-#~ "Remaining quantity in default UoM according to moves matched with this "
-#~ "operation. "
-#~ msgstr ""
-#~ "Quantité restante dans l'UdM par défaut selon les mouvements "
-#~ "correspondant à cette opération. "
-
-#~ msgid "Reserve sale orders immediately on confirmation"
-#~ msgstr "Réserver les commandes dès la confirmation"
-
-#~ msgid "Reserve sale orders manually or by running the schedulers"
-#~ msgstr "Réserver les commandes manuellement ou grâce aux schedulers"
-
-#~ msgid "Resupply From Other Warehouses"
-#~ msgstr "Réapprovisionner depuis les autres entrepôts"
-
-#~ msgid ""
-#~ "Some products may be sold/purchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr ""
-#~ "Certains produits peuvent être vendus/achetés dans différentes unités de "
-#~ "mesure (avancé)"
-
-#~ msgid "Specifies lot/serial number for pack operations that need it"
-#~ msgstr ""
-#~ "Spécifie le lot/numéro de série pour les colisage qui le nécessitent"
-
-#~ msgid "Suppliers"
-#~ msgstr "Fournisseurs"
-
-#~ msgid "Technical field used to hide help tooltip if not needed"
-#~ msgstr ""
-#~ "Champ technique utilisé pour cacher ler infobulles si elles ne sont pas "
-#~ "nécessaires"
-
-#~ msgid ""
-#~ "The 'Automatic Move' / 'Manual Operation' value will create a stock move "
-#~ "after the current one.  With 'Automatic No Step Added', the location is "
-#~ "replaced in the original move."
-#~ msgstr ""
-#~ "Ceci est utilisé uniquement si vous sélectionnez un emplacement de type "
-#~ "chainé.\n"
-#~ "La valeur 'Mouvement automatique' va créer un mouvement de stock après le "
-#~ "mouvement actuel, qui sera validé automatiquement. La valeur 'Opération "
-#~ "manuelle', le mouvement de stock devra être validé par un opérateur. La "
-#~ "valeur 'Automatique sans étape supplémentaire', l'emplacement est "
-#~ "remplacé sur le mouvement d'origine."
-
-#~ msgid ""
-#~ "The chosen quantity for product %s is not compatible with the UoM "
-#~ "rounding. It will be automatically converted at confirmation"
-#~ msgstr ""
-#~ "La quantité choisie pour l'article %s n'est pas compatible avec les "
-#~ "règles d'arrondi de l'UdM. Elle sera automatiquement arrondie lors de la "
-#~ "confirmation."
-
-#~ msgid ""
-#~ "The procurement quantity will be rounded up to this multiple.  If it is "
-#~ "0, the exact quantity will be used.  "
-#~ msgstr ""
-#~ "La quantité d'approvisionnement sera arrondie à ce multiple. Si c'est 0, "
-#~ "la quantité exacte sera utilisée.  "
-
-#~ msgid ""
-#~ "The roundings of your Unit of Measures %s on the move vs. %s on the "
-#~ "product don't allow to do these operations or you are not transferring "
-#~ "the picking at once. "
-#~ msgstr ""
-#~ "Les arrondis de l'unité de mesure %s dans le mouvement contre %s dans "
-#~ "l'article ne permettent pas de faire ces opérations ou vous ne transférez "
-#~ "pas la préparation en une seule fois. "
-
-#~ msgid ""
-#~ "The selected UoM for product %s is not compatible with the UoM set on the "
-#~ "product form. \n"
-#~ "Please choose an UoM within the same UoM category."
-#~ msgstr ""
-#~ "L'UdM sélectionnée pour l'article %s n'est pas compatible avec l'UdM de "
-#~ "la fiche article. \n"
-#~ "Veuillez choisir une UdM de la même catégorie d'UdM."
-
-#~ msgid "The serial number %s is already in stock"
-#~ msgstr "Le numéro de série %s est déjà en stock"
-
-#~ msgid ""
-#~ "This is the list of all the production lots you recorded. When\n"
-#~ "                you select a lot, you can get the traceability of the "
-#~ "products contained in lot."
-#~ msgstr ""
-#~ "Ceci est la liste de tous les lots de production vous avez enregistré. "
-#~ "Quand\n"
-#~ "vous sélectionnez un lot, vous pouvez avoir la traçabilité des produits "
-#~ "contenus dans le lot."
-
-#~ msgid ""
-#~ "This will show you the locations and allows you to define multiple "
-#~ "picking types and warehouses."
-#~ msgstr ""
-#~ "Ceci affiche les emplacements et permet de définir des types d'opération "
-#~ "et des entrepôts multiples."
-
-#~ msgid ""
-#~ "To check the trajectory of a lot, find it back in <strong><i>Inventory "
-#~ "Control &gt; Serial Numbers / lots</i></strong>.\n"
-#~ "                       Choose a Lo t in the list and click on "
-#~ "<i>Traceability</i>i&gt;. You may also\n"
-#~ "                       filter the Quantitative Valuation of a product "
-#~ "with a certain lot."
-#~ msgstr ""
-#~ "Pour suivre le déplacement d'un lot, trouvez-le dans <strong><i>Contrôle "
-#~ "des stocks &gt; Lots / Numéros de série</i></strong>.\n"
-#~ "Choisissez un lot dans la liste et cliquez sur <i>Traçabilité</i>&gt;. "
-#~ "Vous pouvez également\n"
-#~ "filtrer la valeur quantitative d'un produit avec un certain lot."
-
-#~ msgid ""
-#~ "Track different dates on products and serial numbers.\n"
-#~ "                    The following dates can be tracked:\n"
-#~ "                    - end of life\n"
-#~ "                    - best before date\n"
-#~ "                    - removal date\n"
-#~ "                    - alert date.\n"
-#~ "                    This installs the module product_expiry."
-#~ msgstr ""
-#~ "Suivre des dates différentes sur les produits et les numéros de série.\n"
-#~ "Les dates suivantes peuvent être suivies :\n"
-#~ "- date d'expiration\n"
-#~ "- à consommer de préférence avant\n"
-#~ "- date de retrait\n"
-#~ "- date d'alerte.\n"
-#~ "Ceci installe le module product_expiry."
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Unité de mesure"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Messages non lus"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Compteur de messages non lus"
-
-#~ msgid "Unused field"
-#~ msgstr "Champ non-utilisé"
-
-#~ msgid ""
-#~ "Use this assistant to generate a procurement request for this\n"
-#~ "                        product. According to the product configuration, "
-#~ "this may\n"
-#~ "                        trigger a draft purchase order, a manufacturing "
-#~ "order or\n"
-#~ "                        a new task."
-#~ msgstr ""
-#~ "Remplissez ceci pour lancer une demande d'approvisionnement pour cet\n"
-#~ "                        article. Selon le paramétrage de l'article, cela "
-#~ "peut\n"
-#~ "                        déclencher une commande d'achat brouillon, un "
-#~ "ordre de fabrication ou\n"
-#~ "                        une nouvelle tâche."
-
-#~ msgid "Use your scanner to validate the transferred quantity quicker."
-#~ msgstr ""
-#~ "Utilisez votre svanner pour valider plus radipement les quantitiés "
-#~ "transférées."
-
-#~ msgid "Warning: wrong UoM!"
-#~ msgstr "Attention : UdM incorrecte !"
-
-#~ msgid "Warning: wrong quantity!"
-#~ msgstr "Attention : quantité incorrecte !"
-
-#~ msgid "Website Messages"
-#~ msgstr "Messages du site web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historique de communication du site web"
-
-#~ msgid ""
-#~ "You can either do it immediatly or mark it as Todo for future processing."
-#~ msgstr ""
-#~ "Vous pouvez soit le faire immédiatement ou le marquer comme À faire pour "
-#~ "une prochaine opération."
-
-#~ msgid ""
-#~ "You can either do it immediatly or mark it as Todo for future processing. "
-#~ "Use your scanner to validate the transferred quantity quicker."
-#~ msgstr ""
-#~ "Vous pouvez soit le faire immédiatement ou le marquer comme À faire pour "
-#~ "une prochaine opération. Utilisez votre lecteur code-barres pour valider "
-#~ "plus rapidement les quantités transférées."
-
-#~ msgid "You may only return one picking at a time!"
-#~ msgstr "Vous ne pouvez retourner qu'une seule préparation à la fois !"
-
-#~ msgid "You may only return pickings that are Done!"
-#~ msgstr "On ne faire de retours que pour les préparations terminées !"
-
-#~ msgid "move that created the return move"
-#~ msgstr "mouvement qui a créé le mouvement de retour"
-
-#~ msgid "preferred Packaging"
-#~ msgstr "Conditionnement préféré"
-
-#~ msgid "unknown"
-#~ msgstr "inconnu"
-
-#~ msgid "<span class=\"pull-left\">Lot/Serial Number</span>"
-#~ msgstr "<span class=\"pull-left\">Lot/numéros de série</span>"
-
-#~ msgid "<strong>Lot/Serial Number</strong>"
-#~ msgstr "<strong>Lot/numéros de série</strong>"
-
-#~ msgid "Attribute Values"
-#~ msgstr "Valeurs de caractéristique"
-
-#~ msgid "Attributes"
-#~ msgstr "Caractéristiques"
-
-#~ msgid "Click to add a lot/serial number."
-#~ msgstr "Ajouter un lot/numéro de série."
-
-#~ msgid "Click to scrap products."
-#~ msgstr "Détruire les produits."
-
-#~ msgid "Create Date"
-#~ msgstr "Date de création"
-
-#~ msgid "Create New Lots/Serial Numbers"
-#~ msgstr "Créer de nouveaux lots/numéros de série"
-
-#~ msgid "Extra Features"
-#~ msgstr "Fonctionnalités additionnelles"
-
-#~ msgid "Inventory Move"
-#~ msgstr "Mouvement de stock"
-
-#~ msgid "Locate"
-#~ msgstr "Localiser"
-
-#~ msgid "Manufacturing Operation"
-#~ msgstr "Opération de fabrication"
-
-#~ msgid "One product category"
-#~ msgstr "Une catégorie d'articles"
-
-#~ msgid "Quality"
-#~ msgstr "Qualité"
-
-#~ msgid "Scraps"
-#~ msgstr "Rebut"
-
-#~ msgid "Search Scrap"
-#~ msgstr "Recherche de rebuts"
-
-#~ msgid "to"
-#~ msgstr "au"

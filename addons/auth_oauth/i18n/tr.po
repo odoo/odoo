@@ -3,14 +3,14 @@
 # * auth_oauth
 #
 # Translators:
-# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-06-04 06:52+0000\n"
-"Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
+"PO-Revision-Date: 2016-11-21 14:21+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -48,7 +48,7 @@ msgstr "İzinVerildi"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Authentication"
-msgstr ""
+msgstr "Kimlik Doğrulama"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
@@ -125,7 +125,7 @@ msgstr "Oluşturuldu"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Kur"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
@@ -140,7 +140,7 @@ msgstr "Data URL"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
 msgid "Degree of trust you have in this debtor"
-msgstr ""
+msgstr "Bu borçlu için güven seviyesi"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
@@ -167,7 +167,7 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
 msgid "Has unreconciled entries"
-msgstr ""
+msgstr "Uzlaşmamış girişler var"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
@@ -177,7 +177,7 @@ msgstr "ID"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_ids
@@ -216,12 +216,12 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
-msgstr ""
+msgstr "Son Faturalar ve Ödemeler Eşleştirme Tarihi"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn_msg
 msgid "Message for Invoice"
-msgstr ""
+msgstr "Fatura Mesajı"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
@@ -312,6 +312,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"\"Uyarı\" seçeneğini seçmek kullanıcıyı mesajla uyaracaktır. \"Mesaj "
+"Engelleme\"yi seçmek mesajla ilgili bir kuraldışı durum oluşturacak ve akışı "
+"durduracaktır. Mesaj bir sonraki alana yazılmalıdır."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
@@ -321,7 +324,7 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Show Tutorial"
-msgstr ""
+msgstr "Eğitimi Görüntüle"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_tutorial_enabled
@@ -385,6 +388,8 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
 msgstr ""
+"Bu ödeme koşulu satınalma siparişleri ve satıcı faturaları için varsayılan "
+"fiyat yerine kullanılacaktır"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_payment_term_id
@@ -433,7 +438,7 @@ msgstr "Bu müşterinin size toplam borç tutarı"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_debit
 msgid "Total amount you have to pay to this vendor."
-msgstr ""
+msgstr "Bu tedarikçiye ödenmesi gereken toplam miktar."
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
@@ -443,7 +448,7 @@ msgstr "Kullanıcılar"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_currency_id
 msgid "Utility field to express amount currency"
-msgstr ""
+msgstr "Miktar bilgisini girmek için alan"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_validation_endpoint
@@ -485,7 +490,7 @@ msgstr "ör. 1234-xyz.apps.googleusercontent.com"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "https://console.developers.google.com/"
-msgstr ""
+msgstr "https://console.developers.google.com/"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
@@ -496,51 +501,3 @@ msgstr "ir.config_parameter"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
 msgid "unknown"
 msgstr "bilinmeyen"
-
-#~ msgid ""
-#~ "<br/>\n"
-#~ "                                    - Ceate a new project<br/>\n"
-#~ "                                    - Go to Api Access<br/>\n"
-#~ "                                    - Create an oauth client_id<br/>\n"
-#~ "                                    - Edit settings and set both "
-#~ "Authorized Redirect URIs and Authorized JavaScript Origins to your "
-#~ "hostname.<br/>\n"
-#~ "                                    <br/>\n"
-#~ "                                    Now copy paste the client_id here:"
-#~ msgstr ""
-#~ "<br/>\n"
-#~ "                                    - Yeni bir proje oluştur<br/>\n"
-#~ "                                    - Api Erişimine git<br/>\n"
-#~ "                                    - Bir oauth client_id oluştur<br/>\n"
-#~ "                                    - Ayarları düzenleyin ve makine "
-#~ "adınızı hem Authorized Redirect URIs hem de Authorized JavaScript Origins "
-#~ "olarak ayarlayın.<br/>\n"
-#~ "                                    <br/>\n"
-#~ "                                    Şimdi client_id'i buraya kopyalayıp "
-#~ "yapıştırın:"
-
-#~ msgid "Google APIs console"
-#~ msgstr "Google API konsolü"
-
-#, fuzzy
-#~ msgid ""
-#~ "<br/>\n"
-#~ "                                    - Create a new project<br/>\n"
-#~ "                                    - Go to Api Access<br/>\n"
-#~ "                                    - Create an oauth client_id<br/>\n"
-#~ "                                    - Edit settings and set both "
-#~ "Authorized Redirect URIs and Authorized JavaScript Origins to your "
-#~ "hostname.<br/>\n"
-#~ "                                    <br/>\n"
-#~ "                                    Now copy paste the client_id here:"
-#~ msgstr ""
-#~ "<br/>\n"
-#~ "                                    - Yeni bir proje oluştur<br/>\n"
-#~ "                                    - Api Erişimine git<br/>\n"
-#~ "                                    - Bir oauth client_id oluştur<br/>\n"
-#~ "                                    - Ayarları düzenleyin ve makine "
-#~ "adınızı hem Authorized Redirect URIs hem de Authorized JavaScript Origins "
-#~ "olarak ayarlayın.<br/>\n"
-#~ "                                    <br/>\n"
-#~ "                                    Şimdi client_id'i buraya kopyalayıp "
-#~ "yapıştırın:"

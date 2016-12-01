@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:15+0000\n"
+"POT-Creation-Date: 2016-12-01 11:53+0000\n"
 "PO-Revision-Date: 2016-03-17 10:29+0000\n"
 "Last-Translator: mohammed albasha <m.albasha.ma@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
@@ -90,7 +90,7 @@ msgid "Agreement Selection Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_11150
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10664
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
@@ -105,7 +105,7 @@ msgstr "الحساب التحليلي"
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "Bid Selection"
-msgstr ""
+msgstr "اختيار العطاء"
 
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
@@ -121,7 +121,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Cancel Call"
-msgstr ""
+msgstr "إلغاء المناقصة"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -129,7 +129,7 @@ msgid "Cancelled"
 msgstr "ملغي"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:98
+#: code:addons/purchase_requisition/purchase_requisition.py:99
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
@@ -148,7 +148,7 @@ msgstr "المؤسسة"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm"
-msgstr ""
+msgstr "تأكيد"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -291,7 +291,7 @@ msgstr "اخر طلب"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_line_copy
 msgid "Lines"
-msgstr ""
+msgstr "البنود"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -306,7 +306,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "New Quotation"
-msgstr ""
+msgstr "تسعيرة جديدة"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_qty_ordered
@@ -317,7 +317,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_ordering_date
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Ordering Date"
-msgstr ""
+msgstr "تاريخ الطلب"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_picking_type_id
@@ -396,6 +396,11 @@ msgid "Purchase Order"
 msgstr "أمر الشراء"
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "خط امر الشراء"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
 msgid "Purchase Orders"
 msgstr "اوامر الشراء"
@@ -403,7 +408,7 @@ msgstr "اوامر الشراء"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
 msgid "Purchase Orders with requisition"
-msgstr ""
+msgstr "أوامر شراء لها مناقصات"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
@@ -416,10 +421,10 @@ msgid "Purchase Requisition Line"
 msgstr "خط طلب المبيعات"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:323
+#: code:addons/purchase_requisition/purchase_requisition.py:342
 #, python-format
 msgid "Purchase Requisition created"
-msgstr ""
+msgstr "تم إنشاء المناقصة"
 
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_multi
@@ -434,7 +439,7 @@ msgstr "اوامر الشراء"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_quantity_copy
 msgid "Quantities"
-msgstr ""
+msgstr "كميات"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_qty
@@ -449,7 +454,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
 msgid "Request for Quotation"
-msgstr ""
+msgstr "طلب التسعير"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
@@ -459,7 +464,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Requests for Quotation Details"
-msgstr ""
+msgstr "تفاصيل طلب عرض السعر"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
@@ -490,12 +495,12 @@ msgstr ""
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,exclusive:0
 msgid "Select multiple RFQ"
-msgstr ""
+msgstr "اختيار عدة طلبات عروض سعر"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,exclusive:0
 msgid "Select only one RFQ (exclusive)"
-msgstr ""
+msgstr "اختر طلب عرض سعر واحد (حصري)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type_exclusive
@@ -510,7 +515,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "المسلسل"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
@@ -552,12 +557,12 @@ msgstr "غير مسند"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Unassigned  Requisition"
-msgstr ""
+msgstr "مناقصة غير مسندة"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "سعر الوحده "
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
@@ -572,7 +577,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Validate"
-msgstr ""
+msgstr "تحقق"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_vendor_id
@@ -585,13 +590,13 @@ msgid "Warehouse"
 msgstr "المخزون"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:103
+#: code:addons/purchase_requisition/purchase_requisition.py:104
 #, python-format
 msgid "You cannot confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:118
+#: code:addons/purchase_requisition/purchase_requisition.py:119
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
@@ -601,111 +606,9 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. PO0025"
-msgstr ""
+msgstr "مثال: PO0025"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "unknown"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "الاجراء المطلوب"
-
-#~ msgid "Cancel"
-#~ msgstr "إلغاء"
-
-#~ msgid "Cancel Choice"
-#~ msgstr "إلغاء الاختيار"
-
-#~ msgid "Cancel Purchase Order"
-#~ msgstr "إلغي امر الشراء"
-
-#~ msgid "Change Quantity"
-#~ msgstr "غير الكمية"
-
-#~ msgid "Confirm Order"
-#~ msgstr "تأكيد الأمر"
-
-#~ msgid "Confirm Purchase Order"
-#~ msgstr "أكد امر الشراء"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "تاريخ آخر رسالة في هذا السجل."
-
-#~ msgid "Followers"
-#~ msgstr "المتابعون"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "المتابعون (القنوات)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "المتابعون (الشرماء)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "عند التفعيل، توجد رسالة جديدة"
-
-#~ msgid "Is Follower"
-#~ msgstr "متابع"
-
-#~ msgid "Last Message Date"
-#~ msgstr "تاريخ آخر رسالة"
-
-#~ msgid "Messages"
-#~ msgstr "الرسائل"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "الرسائل و سجل التواصل"
-
-#~ msgid "New"
-#~ msgstr "جديد"
-
-#~ msgid "Number of Actions"
-#~ msgstr "عدد الاجراءات"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "عدد الرسائل الواجب اجراءها"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "عدد الرسائل غير المقروءة"
-
-#~ msgid "Order Date"
-#~ msgstr "تاريخ الأمر"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "خط امر الشراء"
-
-#~ msgid "Purchase Order Lines"
-#~ msgstr "خطوط امر الشراءيقبل المورد امر الشراء"
-
-#~ msgid "Purchase Requisition Partner"
-#~ msgstr "شريك طلب الشراء"
-
-#~ msgid "Reference"
-#~ msgstr "الإشارة"
-
-#~ msgid "Request a Quotation"
-#~ msgstr "طلب تسعيرة"
-
-#~ msgid "Requests for Quotation"
-#~ msgstr "طلبات التسعير"
-
-#~ msgid "Unread Messages"
-#~ msgstr "رسائل غير مقروءة"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "عداد الرسائل الغير مقروءة"
-
-#~ msgid "Vendors"
-#~ msgstr "المزودون"
-
-#~ msgid "Website Messages"
-#~ msgstr "رسائل الموقع"
-
-#~ msgid "Website communication history"
-#~ msgstr "سجل تواصل الموقع"
-
-#~ msgid "You have already generate the purchase order(s)."
-#~ msgstr "لقد قمت بانشاء أمر الشراء (أوامر الشراء) مسبقا."

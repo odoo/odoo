@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:15+0000\n"
-"PO-Revision-Date: 2016-06-17 16:42+0000\n"
+"POT-Creation-Date: 2016-12-01 11:53+0000\n"
+"PO-Revision-Date: 2016-10-28 14:27+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "Language: fi\n"
@@ -41,7 +41,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Qty</strong>"
-msgstr ""
+msgstr "<strong>Määrä</strong>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -89,7 +89,7 @@ msgid "Agreement Selection Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_11150
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10664
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
@@ -128,7 +128,7 @@ msgid "Cancelled"
 msgstr "Peruttu"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:98
+#: code:addons/purchase_requisition/purchase_requisition.py:99
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
@@ -147,7 +147,7 @@ msgstr "Yritys"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm"
-msgstr ""
+msgstr "Vahvista"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -290,7 +290,7 @@ msgstr "Viimeisin pyyntö"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_line_copy
 msgid "Lines"
-msgstr ""
+msgstr "Detalle"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -305,7 +305,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "New Quotation"
-msgstr ""
+msgstr "Uusi tarjous"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_qty_ordered
@@ -395,6 +395,11 @@ msgid "Purchase Order"
 msgstr "Ostotilaus"
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Ostotilausrivi"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
 msgid "Purchase Orders"
 msgstr "Ostotilaukset"
@@ -415,7 +420,7 @@ msgid "Purchase Requisition Line"
 msgstr "Ostopyynnön rivi"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:323
+#: code:addons/purchase_requisition/purchase_requisition.py:342
 #, python-format
 msgid "Purchase Requisition created"
 msgstr ""
@@ -433,7 +438,7 @@ msgstr "Ostotilaukset"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_quantity_copy
 msgid "Quantities"
-msgstr ""
+msgstr "Määrä"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_qty
@@ -448,7 +453,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
 msgid "Request for Quotation"
-msgstr ""
+msgstr "Ostoehdotus"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
@@ -509,7 +514,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Järjestys"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
@@ -556,7 +561,7 @@ msgstr "Kohdistamaton pyyntö"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "Yksikköhinta"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
@@ -571,7 +576,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Validate"
-msgstr ""
+msgstr "Vahvista"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_vendor_id
@@ -584,13 +589,13 @@ msgid "Warehouse"
 msgstr "Varasto"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:103
+#: code:addons/purchase_requisition/purchase_requisition.py:104
 #, python-format
 msgid "You cannot confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:118
+#: code:addons/purchase_requisition/purchase_requisition.py:119
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
@@ -606,118 +611,3 @@ msgstr "esim. PO0025"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "unknown"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Vaatii toimia"
-
-#~ msgid "Cancel"
-#~ msgstr "Peruuta"
-
-#~ msgid "Cancel Purchase Order"
-#~ msgstr "Peru ostotilaus"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Muuta määrää"
-
-#~ msgid "Choose product lines"
-#~ msgstr "Valitse tuotelinjat"
-
-#~ msgid "Confirm Order"
-#~ msgstr "Vahvista tilaus"
-
-#~ msgid "Confirm Purchase Order"
-#~ msgstr "Vahvista ostotilaus"
-
-#~ msgid "Create Request for Quotation"
-#~ msgstr "Luo tarjouspyyntö"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Viimeisen viestin päivämäärä"
-
-#~ msgid "Followers"
-#~ msgstr "Seuraajat"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seuraajat (kanavat)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seuraajat (kumppanit)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "Is Follower"
-#~ msgstr "On seuraaja"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Viimeinen viestipvm"
-
-#~ msgid "Messages"
-#~ msgstr "Viestit"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Viesti- ja kommunikointihistoria"
-
-#~ msgid "New"
-#~ msgstr "Uusi"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Toimenpiteiden määrä"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Toimenpiteitä vaativien viestien määrä"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Lukemattomien viestien määrä"
-
-#~ msgid "Order Date"
-#~ msgstr "Tilauksen päivämäärä"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Ostotilausrivi"
-
-#~ msgid "Purchase Order Lines"
-#~ msgstr "Ostotilausrivit"
-
-#~ msgid "Purchase Requisition Partner"
-#~ msgstr "Ostopyynnön kumppani"
-
-#~ msgid "RFQ created"
-#~ msgstr "Tarjouspyyntö luotu"
-
-#~ msgid "Reference"
-#~ msgstr "Viite"
-
-#~ msgid "Request a Quotation"
-#~ msgstr "Pyydä tarjousta"
-
-#~ msgid "Requests for Quotation"
-#~ msgstr "Tarjouspyynnöt"
-
-#~ msgid "Send RFQ by Email"
-#~ msgstr "Lähetä tarjouspyyntö"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Lukemattomia viestejä"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Lukemattomien viestien laskuri"
-
-#~ msgid "Vendors"
-#~ msgstr "Toimittajat"
-
-#~ msgid "Website Messages"
-#~ msgstr "Verkkosivun ilmoitukset"
-
-#~ msgid "Website communication history"
-#~ msgstr "Verkkosivun viestihistoria"
-
-#~ msgid ""
-#~ "You have already one %s purchase order for this partner, you must cancel "
-#~ "this purchase order to create a new quotation."
-#~ msgstr ""
-#~ "Tälle kumppanille on jo yksi ostotilaus \"%s. Peruuta ensin tämä "
-#~ "ostotilaus ennen uuden tarjouksen luontia."

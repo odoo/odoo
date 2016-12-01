@@ -4,13 +4,14 @@
 #
 # Translators:
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
+# RGB Consulting <odoo@rgbconsulting.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:15+0000\n"
-"PO-Revision-Date: 2016-05-02 14:46+0000\n"
-"Last-Translator: Marc Tormo i Bochaca <mtbochaca@gmail.com>\n"
+"PO-Revision-Date: 2016-09-19 09:46+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
@@ -122,7 +123,7 @@ msgstr ""
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Factura"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
@@ -141,6 +142,14 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"Indica l'estat de l'afiliació.\n"
+"- No membre: Una empresa que no ha sol·licitat cap afiliació.\n"
+"- Membre cancel·lat: Un membre que ha cancel·lat la seva afiliació.\n"
+"- Antic membre: Un membre que la seva afiliació ha expirat.\n"
+"- Membre en espera: Un membre que ha sol·licitat l'afiliació i que la seva "
+"factura va crear-se.\n"
+"- Membre facturat: Un membre que se li ha creat la seva factura.\n"
+"- Membre pagat: Un membre que ha pagat la seva quota d'afiliació."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
@@ -165,7 +174,7 @@ msgstr ""
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
-msgstr ""
+msgstr "Entra al xat des de cada oportunitat que generi la comanda"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
@@ -190,12 +199,12 @@ msgstr "Data d'inici d'Afiliació"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn_msg
 msgid "Message for Sales Order"
-msgstr ""
+msgstr "Missatge de comanda de vendes"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn_msg
 msgid "Message for Stock Picking"
-msgstr ""
+msgstr "Missatge per a empaquetat d'estoc"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -262,11 +271,15 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Si seleccioneu l'opció \"Avís\" es notificarà als usuaris amb el missatge, "
+"si seleccioneu \"Missatge de bloqueig\" es llançarà una excepció amb el "
+"missatge i es bloquejarà el flux. El missatge s'ha d'escriure en el següent "
+"camp."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn
 msgid "Stock Picking"
-msgstr ""
+msgstr "Empaquetat d'estoc"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total

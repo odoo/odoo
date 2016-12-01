@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-08-03 04:06+0000\n"
-"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2016-09-22 13:46+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
 "language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -137,6 +137,8 @@ msgid ""
 "support\n"
 "                hours.</i>"
 msgstr ""
+"<i>示例：预付费服务提供给那些不得不购买额外时间包的客户，由于他之前的所有支"
+"持。</i>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -965,6 +967,9 @@ msgid ""
 "Create a task and track hours: Create a task on the sale order validation "
 "and track the work hours."
 msgstr ""
+"手动设置订单数量：基于手动输入的数量发票，而无需创建一个帐户分析。\n"
+"合同工时表：基于跟踪小时的相关时间表发票。\n"
+"创建任务和跟踪时间：创建对销售订单验证任务，并跟踪工作时间。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_validity_date
@@ -1014,7 +1019,7 @@ msgstr "我的销售订单明细行"
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_name
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Name"
-msgstr "名称"
+msgstr "名字"
 
 #. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
@@ -1465,7 +1470,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.report_configuration_form_view
 #: model:ir.ui.view,arch_db:sale.report_configuration_tree_view
 msgid "Report Configuration"
-msgstr "设定报表"
+msgstr "报表配置"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.Report_configuration
@@ -1663,7 +1668,7 @@ msgstr "搜索销售订单"
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_layout_category_id
 msgid "Section"
-msgstr "部分"
+msgstr "小节"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_sale_line_warn
@@ -1674,8 +1679,8 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"选择此“警告“选项，将通知用户此消息。\r\n"
-"选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\r\n"
+"选择此“警告“选项，将通知用户此消息。\n"
+"选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\n"
 "消息写入下一个字段。"
 
 #. module: sale
@@ -1923,7 +1928,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Timesheets on project"
-msgstr "项目的工时单"
+msgstr "项目的工时表"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice

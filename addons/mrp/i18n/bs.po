@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-07-06 13:39+0000\n"
+"POT-Creation-Date: 2016-12-01 11:52+0000\n"
+"PO-Revision-Date: 2016-11-21 20:43+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Bosnian (http://www.transifex.com/odoo/odoo-9/language/bs/)\n"
 "Language: bs\n"
@@ -28,13 +28,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_product_product_bom_count
 #: model:ir.model.fields,field_description:mrp.field_product_template_bom_count
 msgid "# Bill of Material"
-msgstr ""
+msgstr "# Sastavnica"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product_mo_count
 #: model:ir.model.fields,field_description:mrp.field_product_template_mo_count
 msgid "# Manufacturing Orders"
-msgstr ""
+msgstr "# Proizvodni nalog"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:343
@@ -226,7 +226,7 @@ msgstr "Odobri"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
-msgstr ""
+msgstr "Arhivirano"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_product_product_produce_delay
@@ -362,12 +362,12 @@ msgstr "Tip sastavnice"
 #. module: mrp
 #: selection:mrp.product.produce,tracking:0
 msgid "By Lots"
-msgstr ""
+msgstr "Po lotovima"
 
 #. module: mrp
 #: selection:mrp.product.produce,tracking:0
 msgid "By Unique Serial Number"
-msgstr ""
+msgstr "Po jedinstvenom serijskom broju"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_byproduct
@@ -577,7 +577,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Cost Structure"
-msgstr ""
+msgstr "Struktura koštanja"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
@@ -885,6 +885,12 @@ msgid "Internal Reference"
 msgstr "Interna referenca"
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
@@ -1161,7 +1167,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.product.produce,tracking:0
 msgid "No Tracking"
-msgstr ""
+msgstr "Bez praćenja"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
@@ -1176,7 +1182,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr ""
+msgstr "Bez varijanti proizvoda"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1265,7 +1271,7 @@ msgstr "Nadređena sastavnica"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_routing_id
 msgid "Parent Routing"
-msgstr ""
+msgstr "Nadređeno rutiranje"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1296,7 +1302,7 @@ msgstr "Naručivanje"
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Pravilo naručivanja"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
@@ -1466,6 +1472,8 @@ msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
 msgstr ""
+"Proizvodi mogu imati nekoliko atributa, koji definišu varijante (Na primjer: "
+"veličina, boja, ...)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_lines
@@ -1513,7 +1521,7 @@ msgstr "Svojstva"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_10092
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9626
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1542,7 +1550,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Raw Materials"
-msgstr ""
+msgstr "Sirovine"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
@@ -1593,7 +1601,7 @@ msgstr "Povezano korisničko ime za resurs da upravlja njegovim pristupom."
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Reserve"
-msgstr ""
+msgstr "Rezerviši"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_resource_id
@@ -1640,7 +1648,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Routing"
-msgstr ""
+msgstr "Rutiranja"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -1689,7 +1697,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Zakazani mijesec"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1936,7 +1944,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Total Cost"
-msgstr ""
+msgstr "Ukupni trošak"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
@@ -1968,7 +1976,7 @@ msgstr "Vrsta"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Unit Cost"
-msgstr ""
+msgstr "Nabavna cijena"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2211,6 +2219,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "Dani"
@@ -2255,64 +2271,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "nepoznato"
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebna akcija"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Promjeni količinu"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum posljednje poruke ostavljene na unos."
-
-#~ msgid "Followers"
-#~ msgstr "Pratioci"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pratioci (kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pratioci (Partneri)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ako je označeno nove poruke će zahtjevati vašu pažnju."
-
-#~ msgid ""
-#~ "If the active field is set to False, it will allow you to hide the "
-#~ "resource record without removing it."
-#~ msgstr ""
-#~ "Ako je ovo polje postavljeno na neaktivno, moežte sakriti resurs bez da "
-#~ "ga uklonite."
-
-#~ msgid "Inactive"
-#~ msgstr "Neaktivan"
-
-#~ msgid "Is Follower"
-#~ msgstr "Je pratilac"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnje poruke"
-
-#~ msgid "Messages"
-#~ msgstr "Poruke"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Poruke i istorija komunikacije"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Broj akcija"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Broj nepročitanih poruka"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "Otvori meni proizvodnje"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Nepročitane poruke"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Brojač nepročitanih poruka"
-
-#~ msgid "Website Messages"
-#~ msgstr "Poruke na website-u"

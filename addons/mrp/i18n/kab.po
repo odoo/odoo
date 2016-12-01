@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-07-06 08:35+0000\n"
+"POT-Creation-Date: 2016-12-01 11:52+0000\n"
+"PO-Revision-Date: 2016-09-06 09:12+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-9/language/kab/)\n"
 "Language: kab\n"
@@ -573,7 +573,7 @@ msgstr " iţussuder i"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Cost Structure"
-msgstr ""
+msgstr "Taɣessa n tesqamt"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
@@ -868,6 +868,12 @@ msgstr "Deg ufares"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
 msgid "Internal Reference"
 msgstr "Tamsisɣelt tagensant"
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
@@ -1243,7 +1249,7 @@ msgstr "Tagrawalt Tamarawt"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_routing_id
 msgid "Parent Routing"
-msgstr ""
+msgstr "Taseddaṛt tamarawt"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1491,7 +1497,7 @@ msgstr "Tulmist"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_10092
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9626
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1520,7 +1526,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Raw Materials"
-msgstr ""
+msgstr "Isufar n ufares"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
@@ -1618,7 +1624,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Routing"
-msgstr ""
+msgstr "Taseddaṛt"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -1900,7 +1906,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Total Cost"
-msgstr ""
+msgstr "Tasqamt tasemdayt"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
@@ -1932,7 +1938,7 @@ msgstr "Tawsit"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Unit Cost"
-msgstr ""
+msgstr "Tasqamt n yiwen"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2175,6 +2181,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "Ussan"
@@ -2219,39 +2233,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "arussin"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Snifel tanecta"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Azemz n yizen anegaru iţunefken ɣef ukalas agi"
-
-#~ msgid "Followers"
-#~ msgstr "Imeltaɣen"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ma yeṛcem, iznan imaynuten suturen tamuɣli leqqayen."
-
-#~ msgid "Inactive"
-#~ msgstr "Arurmid"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Azemz n yizen aneggaru"
-
-#~ msgid "Messages"
-#~ msgstr "Iznan"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Amazray n iznan  d  teywalin"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "Lli umuɣ MRP"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Iznan ur neţwaɣer-ara"
-
-#~ msgid "Website Messages"
-#~ msgstr "Iznan n n usmel  Web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Amazray n Taywalt n usmel  Web"

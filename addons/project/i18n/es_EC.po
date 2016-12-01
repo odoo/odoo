@@ -832,12 +832,18 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
+#, fuzzy
 msgid ""
 "<strong>Follow only what you need</strong><br/>\n"
 "                                    The simplest way to use notifications is "
 "to follow a whole project: you will receive notifications for all the new "
 "and existing tasks or issues of a project."
 msgstr ""
+"<strong>Siga sólo lo que usted necesita</strong><br/>\n"
+"                                    La manera más simple de usar las "
+"notificaciones es seguir un Proyecto completo: usted recibirá todas las "
+"notificaciones seleccionadas para todas las Tareas e Incidencias nuevas y "
+"existentes del Proyecto."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2063,8 +2069,9 @@ msgstr "Alias de Correo"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
+#, fuzzy
 msgid "Email Template"
-msgstr ""
+msgstr "Alias de Correo"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -3176,6 +3183,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_contact
+#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -3183,6 +3191,11 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
+"Política para enviar un mensaje en el documento usando la pasarela de "
+"correo.\n"
+"- todos: todos pueden enviar\n"
+"- asociados: sólo asociados autenticados\n"
+"- seguidores: sólo los seguidores del documento relacionado\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3667,8 +3680,9 @@ msgstr "Estado"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_child_ids
+#, fuzzy
 msgid "Sub-tasks"
-msgstr ""
+msgstr "tareas"
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -4036,11 +4050,16 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
+#, fuzzy
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
+"Permite fijar la unidad de medida utilizada en proyectos y tareas.\n"
+"Si utiliza las hojas de tiempo relacionadas con proyectos (módulo "
+"project_timesheet), no olvide configurar la unidad de medida correcta en sus "
+"empleados."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -4418,8 +4437,9 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
+#, fuzzy
 msgid "You can save your reports to easily reuse it later"
-msgstr ""
+msgstr "Usted puede guardar sus reportes para reusarlos fácilmente luego"
 
 #. module: project
 #: code:addons/project/project.py:94

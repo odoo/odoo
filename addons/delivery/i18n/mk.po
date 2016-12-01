@@ -4,13 +4,14 @@
 #
 # Translators:
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
+# Anica Milanova, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-26 12:15+0000\n"
-"PO-Revision-Date: 2016-07-28 13:38+0000\n"
-"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
+"PO-Revision-Date: 2016-11-23 15:24+0000\n"
+"Last-Translator: Anica Milanova\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
 "mk/)\n"
 "Language: mk\n"
@@ -442,8 +443,9 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
+#, fuzzy
 msgid "Delivery Information"
-msgstr ""
+msgstr "Информации за курир"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -685,8 +687,9 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_height
+#, fuzzy
 msgid "Height"
-msgstr ""
+msgstr "Тежина"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -777,7 +780,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_income_id
 msgid "Income Account"
-msgstr "Сметка Побарува"
+msgstr "Конто за приход"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_incoming_qty
@@ -924,8 +927,9 @@ msgstr "Време за производство"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
+#, fuzzy
 msgid "Margin"
-msgstr ""
+msgstr "Вкупна маржа"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
@@ -944,8 +948,9 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
+#, fuzzy
 msgid "Max Weight"
-msgstr ""
+msgstr "Тежина"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -1011,8 +1016,9 @@ msgstr "Име"
 
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
+#, fuzzy
 msgid "No carrier integration"
-msgstr ""
+msgstr "Информации за курир"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:63
@@ -1090,20 +1096,22 @@ msgstr "Излезни"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
+#, fuzzy
 msgid "Package"
-msgstr ""
+msgstr "Пакети"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
+#, fuzzy
 msgid "Package Code"
-msgstr ""
+msgstr "Пакети"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
 #: code:addons/delivery/models/stock_picking.py:129
-#, python-format
+#, fuzzy, python-format
 msgid "Package Details"
-msgstr ""
+msgstr "Пакети"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1112,8 +1120,9 @@ msgstr "Пакети"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
+#, fuzzy
 msgid "Packaging"
-msgstr ""
+msgstr "Пакети"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_pack_operation
@@ -1610,6 +1619,8 @@ msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
 msgstr ""
+"Оваа сметка ќе се користи на фактурите наместо примарната за вреднување на "
+"трошоците за моменталниот производ."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_income_id
@@ -1617,6 +1628,8 @@ msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
 msgstr ""
+"Оваа сметка ќе се користи на фактурите наместо примарната за вреднување на "
+"продажбите за моменталниот производ."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_creditor_price_difference
@@ -1712,8 +1725,9 @@ msgstr "Следење"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
+#, fuzzy
 msgid "Tracking Reference"
-msgstr ""
+msgstr "Внатрешна референца"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1799,8 +1813,9 @@ msgstr "Даноци на добавувачи"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
+#, fuzzy
 msgid "Vendors"
-msgstr ""
+msgstr "Добавувачи"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1886,8 +1901,8 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
-"При вршење на вреднување на залихата во реално време, копиите на елементите "
-"од дневникот за движењето на влезната залиха ќе се запишуваат во таа сметка, "
+"При вршење на вреднување на залихата во реално време, копиите од ставките на "
+"налогот за движењето на влезната залиха ќе се запишуваат на оваа сметка, "
 "освен ако нема одредена сметка за вреднување на изворната локација. Кога не "
 "е назначена на производот, се користи таа од категоријата на производот."
 
@@ -1899,11 +1914,10 @@ msgid ""
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
 msgstr ""
-"При вршење на вреднување на залихата во реално време, копиите на елементите "
-"од записникот за движењето на излезната залиха ќе се запишуваат во таа "
-"сметка, освен ако нема одредена сметка за вреднување на целната локација. "
-"Кога не е назначена на производот, се користи таа од категоријата на "
-"производот."
+"При вршење на вреднување на залихата во реално време, копиите од ставките на "
+"налогот за движењето на излезната залиха ќе се запишуваат на оваа сметка, "
+"освен ако нема одредена сметка за вреднување на целната локација. Кога не е "
+"назначена на производот, се користи таа од категоријата на производот."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id

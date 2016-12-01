@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:15+0000\n"
+"POT-Creation-Date: 2016-12-01 11:53+0000\n"
 "PO-Revision-Date: 2016-07-28 05:24+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Bulgarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -89,7 +89,7 @@ msgid "Agreement Selection Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_11150
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10664
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
@@ -128,7 +128,7 @@ msgid "Cancelled"
 msgstr "Отказанa"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:98
+#: code:addons/purchase_requisition/purchase_requisition.py:99
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
@@ -147,7 +147,7 @@ msgstr "Фирма"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm"
-msgstr ""
+msgstr "Потвърждаване"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -290,7 +290,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_line_copy
 msgid "Lines"
-msgstr ""
+msgstr "Редове"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -305,7 +305,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "New Quotation"
-msgstr ""
+msgstr "Нова оферта"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_qty_ordered
@@ -395,6 +395,11 @@ msgid "Purchase Order"
 msgstr "Поръчка за покупка"
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Ред от поръчка за покупка"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
 msgid "Purchase Orders"
 msgstr "Поръчки за покупки"
@@ -415,7 +420,7 @@ msgid "Purchase Requisition Line"
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:323
+#: code:addons/purchase_requisition/purchase_requisition.py:342
 #, python-format
 msgid "Purchase Requisition created"
 msgstr ""
@@ -433,7 +438,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_quantity_copy
 msgid "Quantities"
-msgstr ""
+msgstr "Количества"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_qty
@@ -509,7 +514,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Последователност"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
@@ -556,7 +561,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "Единична цена"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
@@ -571,7 +576,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Validate"
-msgstr ""
+msgstr "Проверка"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_vendor_id
@@ -584,13 +589,13 @@ msgid "Warehouse"
 msgstr "Склад"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:103
+#: code:addons/purchase_requisition/purchase_requisition.py:104
 #, python-format
 msgid "You cannot confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:118
+#: code:addons/purchase_requisition/purchase_requisition.py:119
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
@@ -606,88 +611,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "unknown"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Нужно е действие"
-
-#~ msgid "Cancel"
-#~ msgstr "Откажи"
-
-#~ msgid "Cancel Purchase Order"
-#~ msgstr "Откажи поръчка"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Промяна на количеството"
-
-#~ msgid ""
-#~ "Check this box to generate Call for Tenders instead of generating "
-#~ "requests for quotation from procurement."
-#~ msgstr ""
-#~ "Избери за да се създаде запитване за Търг, вместо да се създаде запитване/"
-#~ "оферта за доставка."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата на последното съобщение, публикувано на записа."
-
-#~ msgid "Followers"
-#~ msgstr "Последователи"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Последователи (канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Последователи (партньори)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ако е отбелязано, новите съобщения ще изискват внимание."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ако е отбелязано, новите съобщения ще изискват внимание."
-
-#~ msgid "Is Follower"
-#~ msgstr "е последовател"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Дата на последното съобщение"
-
-#~ msgid "Messages"
-#~ msgstr "Съобщения"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "История на събщенията и комуникациите"
-
-#~ msgid "New"
-#~ msgstr "Nieuw"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Брой действия"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Брой съобщения, които изискват внимание"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Брой непрочетени съобщения"
-
-#~ msgid "Order Date"
-#~ msgstr "Дата на поръчка"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Ред от поръчка за покупка"
-
-#~ msgid "Reference"
-#~ msgstr "Означение"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочетени съобщения"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Брой непрочетени съобщения"
-
-#~ msgid "Vendors"
-#~ msgstr "Доставчици"
-
-#~ msgid "Website Messages"
-#~ msgstr "Съобщения от уебсайта"
-
-#~ msgid "Website communication history"
-#~ msgstr "История на комуникацията в уебсайта"

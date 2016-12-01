@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-08-11 03:54+0000\n"
-"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
+"POT-Creation-Date: 2016-12-01 11:52+0000\n"
+"PO-Revision-Date: 2016-09-23 08:58+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -251,7 +251,7 @@ msgid "%s (copy)"
 msgstr "(สำเนา) %s"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:241
+#: code:addons/mail/models/mail_thread.py:243
 #, python-format
 msgid "%s created"
 msgstr "สร้าง%sแล้ว"
@@ -468,7 +468,6 @@ msgstr "กลุ่มการเข้าถึง"
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_needaction
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_needaction
 #: model:ir.model.fields,field_description:mail.field_note_note_message_needaction
-#: model:ir.model.fields,field_description:mail.field_online_account_message_needaction
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_needaction
 #: model:ir.model.fields,field_description:mail.field_product_product_message_needaction
 #: model:ir.model.fields,field_description:mail.field_product_template_message_needaction
@@ -511,7 +510,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:80
 #, python-format
 msgid "Add"
-msgstr ""
+msgstr "เพิ่ม"
 
 #. module: mail
 #. openerp-web
@@ -639,7 +638,7 @@ msgstr "ข้อความทั้งหมด"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:191
+#: code:addons/mail/static/src/js/chat_manager.js:192
 #, python-format
 msgid "Anonymous"
 msgstr "ผู้ใช้นิรนาม"
@@ -913,13 +912,13 @@ msgid "Choose an example"
 msgstr "เลือกตัวอย่าง"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:347
+#: code:addons/mail/models/mail_thread.py:349
 #, python-format
 msgid "Click here to add new %(document)s or send an email to: %(email_link)s"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:363
+#: code:addons/mail/models/mail_thread.py:365
 #, python-format
 msgid "Click here to add new %s"
 msgstr ""
@@ -1049,7 +1048,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
 msgid "Create Date"
-msgstr ""
+msgstr "วันที่สร้าง"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_uid
@@ -1151,7 +1150,6 @@ msgstr "วันที่"
 #: model:ir.model.fields,help:mail.field_mrp_production_workcenter_line_message_last_post
 #: model:ir.model.fields,help:mail.field_mrp_repair_message_last_post
 #: model:ir.model.fields,help:mail.field_note_note_message_last_post
-#: model:ir.model.fields,help:mail.field_online_account_message_last_post
 #: model:ir.model.fields,help:mail.field_procurement_order_message_last_post
 #: model:ir.model.fields,help:mail.field_product_product_message_last_post
 #: model:ir.model.fields,help:mail.field_product_template_message_last_post
@@ -1470,7 +1468,7 @@ msgstr "ทุกคน"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Extended Filters..."
-msgstr ""
+msgstr "ตัวกรองเพิ่มเติม"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_config_settings_fail_counter
@@ -1540,6 +1538,8 @@ msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
 msgstr ""
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
 
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
@@ -1548,7 +1548,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:676
+#: code:addons/mail/models/mail_thread.py:689
 #: code:addons/mail/static/src/xml/followers.xml:20
 #, python-format
 msgid "Follow"
@@ -1595,7 +1595,6 @@ msgstr "ติดตาม"
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_note_note_message_follower_ids
-#: model:ir.model.fields,field_description:mail.field_online_account_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_product_product_message_follower_ids
 #: model:ir.model.fields,field_description:mail.field_product_template_message_follower_ids
@@ -1659,7 +1658,6 @@ msgstr "ผู้ติดตาม"
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_note_note_message_channel_ids
-#: model:ir.model.fields,field_description:mail.field_online_account_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_product_product_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_product_template_message_channel_ids
@@ -1721,7 +1719,6 @@ msgstr "ผู้ติดตาม (ช่องทาง)"
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_note_note_message_partner_ids
-#: model:ir.model.fields,field_description:mail.field_online_account_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_product_product_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_product_template_message_partner_ids
@@ -1902,7 +1899,6 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mrp_production_workcenter_line_message_unread
 #: model:ir.model.fields,help:mail.field_mrp_repair_message_unread
 #: model:ir.model.fields,help:mail.field_note_note_message_unread
-#: model:ir.model.fields,help:mail.field_online_account_message_unread
 #: model:ir.model.fields,help:mail.field_procurement_order_message_unread
 #: model:ir.model.fields,help:mail.field_product_product_message_unread
 #: model:ir.model.fields,help:mail.field_product_template_message_unread
@@ -1964,7 +1960,6 @@ msgstr "ถ้าเลือก ข้อความใหม่จะต้�
 #: model:ir.model.fields,help:mail.field_mrp_production_workcenter_line_message_needaction
 #: model:ir.model.fields,help:mail.field_mrp_repair_message_needaction
 #: model:ir.model.fields,help:mail.field_note_note_message_needaction
-#: model:ir.model.fields,help:mail.field_online_account_message_needaction
 #: model:ir.model.fields,help:mail.field_procurement_order_message_needaction
 #: model:ir.model.fields,help:mail.field_product_product_message_needaction
 #: model:ir.model.fields,help:mail.field_product_template_message_needaction
@@ -2040,7 +2035,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1007
+#: code:addons/mail/static/src/js/chat_manager.js:1024
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2069,7 +2064,7 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:1711
+#: code:addons/mail/models/mail_thread.py:1729
 #, python-format
 msgid ""
 "Invalid record set: should be called as model (without records) or on single-"
@@ -2077,8 +2072,14 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/controllers/main.py:43
+#, python-format
+msgid "Invalid token in route %s"
+msgstr ""
+
+#. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:600
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "Invitation"
 msgstr ""
@@ -2169,7 +2170,6 @@ msgstr "บุคคลที่ถูกเชิญชวน"
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_note_note_message_is_follower
-#: model:ir.model.fields,field_description:mail.field_online_account_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_product_product_message_is_follower
 #: model:ir.model.fields,field_description:mail.field_product_template_message_is_follower
@@ -2214,7 +2214,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Join"
-msgstr ""
+msgstr "เข้าร่วม"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_action_view
@@ -2267,7 +2267,6 @@ msgstr "ภาษา"
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_last_post
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_last_post
 #: model:ir.model.fields,field_description:mail.field_note_note_message_last_post
-#: model:ir.model.fields,field_description:mail.field_online_account_message_last_post
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_last_post
 #: model:ir.model.fields,field_description:mail.field_product_product_message_last_post
 #: model:ir.model.fields,field_description:mail.field_product_template_message_last_post
@@ -2357,7 +2356,7 @@ msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
 msgid "Leave"
-msgstr ""
+msgstr "ลา"
 
 #. module: mail
 #. openerp-web
@@ -2402,10 +2401,10 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:37
+#: code:addons/mail/static/src/js/chatter.js:38
 #, python-format
 msgid "Log"
-msgstr ""
+msgstr "Log"
 
 #. module: mail
 #. openerp-web
@@ -2490,7 +2489,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:100
 #, python-format
 msgid "Mark as Todo"
-msgstr ""
+msgstr "ตั้งเป็นสิงที่ต้องทำ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image_medium
@@ -2649,7 +2648,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_ids
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_ids
 #: model:ir.model.fields,field_description:mail.field_note_note_message_ids
-#: model:ir.model.fields,field_description:mail.field_online_account_message_ids
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_ids
 #: model:ir.model.fields,field_description:mail.field_product_product_message_ids
 #: model:ir.model.fields,field_description:mail.field_product_template_message_ids
@@ -2922,7 +2920,6 @@ msgstr "แจ้งเตือนผู้ที่ติดตามเอก
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_note_note_message_needaction_counter
-#: model:ir.model.fields,field_description:mail.field_online_account_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_product_product_message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_product_template_message_needaction_counter
@@ -2984,7 +2981,6 @@ msgstr "จำนวนกิจกรรม"
 #: model:ir.model.fields,help:mail.field_mrp_production_workcenter_line_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_mrp_repair_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_note_note_message_needaction_counter
-#: model:ir.model.fields,help:mail.field_online_account_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_procurement_order_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_product_product_message_needaction_counter
 #: model:ir.model.fields,help:mail.field_product_template_message_needaction_counter
@@ -3046,7 +3042,6 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mrp_production_workcenter_line_message_unread_counter
 #: model:ir.model.fields,help:mail.field_mrp_repair_message_unread_counter
 #: model:ir.model.fields,help:mail.field_note_note_message_unread_counter
-#: model:ir.model.fields,help:mail.field_online_account_message_unread_counter
 #: model:ir.model.fields,help:mail.field_procurement_order_message_unread_counter
 #: model:ir.model.fields,help:mail.field_product_product_message_unread_counter
 #: model:ir.model.fields,help:mail.field_product_template_message_unread_counter
@@ -3219,7 +3214,7 @@ msgstr "กล่องขาออก"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_mail_server_id
 #: model:ir.model.fields,field_description:mail.field_mail_template_mail_server_id
 msgid "Outgoing Mail Server"
-msgstr ""
+msgstr "Outgoing Mail Server"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_mail
@@ -3335,11 +3330,11 @@ msgstr "รูปภาพ"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_copyvalue
 #: model:ir.model.fields,field_description:mail.field_mail_template_copyvalue
 msgid "Placeholder Expression"
-msgstr ""
+msgstr "Placeholder Expression"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chatter.js:186
+#: code:addons/mail/static/src/js/chatter.js:187
 #, python-format
 msgid "Please complete partner's informations"
 msgstr ""
@@ -3354,11 +3349,11 @@ msgstr "กรุณากรอกข้อมูลของคู่ค้า
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Please set the Base Model before setting the action details."
-msgstr ""
+msgstr "Please set the Base Model before setting the action details."
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:640
+#: code:addons/mail/static/src/js/composer.js:645
 #, python-format
 msgid "Please, wait while the file is uploading."
 msgstr "กรุณารอสักครู่  จนกว่าการอัพโหลดไฟล์เสร็จสิ้น"
@@ -3595,7 +3590,7 @@ msgstr "พูดอะไรซักอย่าง"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_scheduled_date
 #: model:ir.model.fields,field_description:mail.field_mail_template_scheduled_date
 msgid "Scheduled Date"
-msgstr ""
+msgstr "วันที่ถูกกำหนด"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail_scheduled_date
@@ -3621,6 +3616,9 @@ msgid ""
 "If it is a relationship field you will be able to select a target field at "
 "the destination of the relationship."
 msgstr ""
+"Select target field from the related document model.\n"
+"If it is a relationship field you will be able to select a target field at "
+"the destination of the relationship."
 
 #. module: mail
 #: selection:mail.channel,public:0
@@ -3755,6 +3753,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"Small-sized image of this contact. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_image_small
@@ -3776,7 +3777,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:1013
+#: code:addons/mail/static/src/js/chat_manager.js:1030
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -3797,13 +3798,13 @@ msgstr "สถานะ"
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_sub_model_object_field
 #: model:ir.model.fields,field_description:mail.field_mail_template_sub_model_object_field
 msgid "Sub-field"
-msgstr ""
+msgstr "Sub-field"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_sub_object
 #: model:ir.model.fields,field_description:mail.field_mail_template_sub_object
 msgid "Sub-model"
-msgstr ""
+msgstr "Sub-model"
 
 #. module: mail
 #. openerp-web
@@ -4094,7 +4095,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/models/mail_thread.py:677
+#: code:addons/mail/models/mail_thread.py:690
 #: code:addons/mail/static/src/xml/followers.xml:22
 #, python-format
 msgid "Unfollow"
@@ -4146,7 +4147,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_unread
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_unread
 #: model:ir.model.fields,field_description:mail.field_note_note_message_unread
-#: model:ir.model.fields,field_description:mail.field_online_account_message_unread
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_unread
 #: model:ir.model.fields,field_description:mail.field_product_product_message_unread
 #: model:ir.model.fields,field_description:mail.field_product_template_message_unread
@@ -4208,7 +4208,6 @@ msgstr "ข้อความที่ยังไม่ได้อ่าน"
 #: model:ir.model.fields,field_description:mail.field_mrp_production_workcenter_line_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_mrp_repair_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_note_note_message_unread_counter
-#: model:ir.model.fields,field_description:mail.field_online_account_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_procurement_order_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_product_product_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_product_template_message_unread_counter
@@ -4272,7 +4271,7 @@ msgstr "กำลังอัพโหลด"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/composer.js:640
+#: code:addons/mail/static/src/js/composer.js:645
 #, python-format
 msgid "Uploading error"
 msgstr "การอัพโหลดไฟล์ล้มเหลว"
@@ -4313,8 +4312,8 @@ msgid "Users in this channel: %s %s and you."
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:664
-#: code:addons/mail/models/mail_thread.py:666
+#: code:addons/mail/models/mail_thread.py:677
+#: code:addons/mail/models/mail_thread.py:679
 #, python-format
 msgid "View"
 msgstr "มุมมอง"
@@ -4339,6 +4338,8 @@ msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
 msgstr ""
+"When a relationship field is selected as first field, this field lets you "
+"select the target field within the destination document model (sub-model)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_object
@@ -4347,6 +4348,8 @@ msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
 msgstr ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_is_log
@@ -4422,7 +4425,7 @@ msgid ""
 msgstr "คุณไม่สามารถลบกลุ่ม \"ทั้งบริษัท\" ได้ เนื่องจากมีการเรียกใช้งานจากโมดูลอื่น"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:354
+#: code:addons/mail/models/mail_thread.py:356
 #, python-format
 msgid ""
 "You could also add a new %(document)s by sending an email to: %(email_link)s."
@@ -4430,7 +4433,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:600
+#: code:addons/mail/static/src/js/chat_manager.js:617
 #, python-format
 msgid "You have been invited to: "
 msgstr "คุณถูกเชิญเข้าสู่:"
@@ -4445,14 +4448,14 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:496
+#: code:addons/mail/static/src/js/chat_manager.js:513
 #, python-format
 msgid "You unpinned your conversation with <b>%s</b>."
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:494
+#: code:addons/mail/static/src/js/chat_manager.js:511
 #, python-format
 msgid "You unsubscribed from <b>%s</b>."
 msgstr "คุณยกเลิกการเป็นสมาชิก<b>%s</b>."
@@ -4486,7 +4489,7 @@ msgid "by"
 msgstr "โดย"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:320
+#: code:addons/mail/models/mail_thread.py:322
 #, python-format
 msgid "document"
 msgstr "เอกสาร"
@@ -4579,7 +4582,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/thread.js:15
 #, python-format
 msgid "read more"
-msgstr ""
+msgstr "อ่านเพิ่ม"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form

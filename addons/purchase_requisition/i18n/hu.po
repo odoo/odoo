@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:15+0000\n"
+"POT-Creation-Date: 2016-12-01 11:53+0000\n"
 "PO-Revision-Date: 2016-06-06 19:55+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -91,7 +91,7 @@ msgid "Agreement Selection Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_11150
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10664
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
@@ -130,7 +130,7 @@ msgid "Cancelled"
 msgstr "Törölt"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:98
+#: code:addons/purchase_requisition/purchase_requisition.py:99
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
@@ -149,7 +149,7 @@ msgstr "Vállalat"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm"
-msgstr "Megerősít"
+msgstr "Megerősítés"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -397,6 +397,11 @@ msgid "Purchase Order"
 msgstr "Beszerzési rendelés"
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Szállítói megrendelés sor"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
 msgid "Purchase Orders"
 msgstr "Szállítói megrendelések"
@@ -417,7 +422,7 @@ msgid "Purchase Requisition Line"
 msgstr "Beszerzési igénylési sor"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:323
+#: code:addons/purchase_requisition/purchase_requisition.py:342
 #, python-format
 msgid "Purchase Requisition created"
 msgstr "Beszerzési igény létrehozva"
@@ -575,7 +580,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Validate"
-msgstr "Jóváhagyott"
+msgstr "Jóváhagyás"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_vendor_id
@@ -588,13 +593,13 @@ msgid "Warehouse"
 msgstr "Raktár"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:103
+#: code:addons/purchase_requisition/purchase_requisition.py:104
 #, python-format
 msgid "You cannot confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:118
+#: code:addons/purchase_requisition/purchase_requisition.py:119
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
@@ -610,266 +615,3 @@ msgstr "pl. PO0025"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "unknown"
 msgstr ""
-
-#~ msgid ""
-#~ "A Call for Tenders is a procedure for generating competing offers from\n"
-#~ "            different bidders. In the call for tenders, you can record "
-#~ "the\n"
-#~ "            products you need to buy and generate the creation of RfQs "
-#~ "to\n"
-#~ "            vendors. Once the tenders have been registered, you can "
-#~ "review and\n"
-#~ "            compare them and you can validate some and cancel others."
-#~ msgstr ""
-#~ "Egy tender kiírás egy olyan művelet, mely különböző ajánlók által "
-#~ "generált ajánlatokat \n"
-#~ "versenyeztet. A tender kiíráson, rögzítheti a vásárolni kívánt termékeket "
-#~ "és hozzá generálhatja az árajánlat kéréseket a beszállítók részére. "
-#~ "Miután a tender kiírást berögzítette, azokat átnézheti, \n"
-#~ "összehasonlíthatja valamint egyeseket jóvá is hagyhatja, másokat "
-#~ "érvénytelenítheti. "
-
-#~ msgid "Action Needed"
-#~ msgstr "Művelet szükséges"
-
-#~ msgid "Approved by Vendor"
-#~ msgstr "Beszállító által jóváhagyva"
-
-#~ msgid "Bid Line Qty"
-#~ msgstr "Árajánlat licit tételsor mennyisége"
-
-#~ msgid "Call for Tenders Reference"
-#~ msgstr "Tender felhívások hivatkozásai"
-
-#~ msgid "Call for Tenders in negotiation"
-#~ msgstr "Tender kiírás, tárgyalás alatt"
-
-#~ msgid "Call for Tenders where tenders are closed"
-#~ msgstr "Tender kiírások ahol a tenderek lezártak"
-
-#~ msgid "Cancel"
-#~ msgstr "Megszakítás"
-
-#~ msgid "Cancel Choice"
-#~ msgstr "Választás visszavonása"
-
-#~ msgid "Cancel Purchase Order"
-#~ msgstr "Szállítói megrendelés megszakítása"
-
-#~ msgid ""
-#~ "Cancelled by the call for tenders associated to this request for "
-#~ "quotation."
-#~ msgstr "Visszavonva ehhez az árajánlat kéréshez tartozó árajánlat tenderre."
-
-#~ msgid "Cancelled by the tender associated to this quotation."
-#~ msgstr "Visszavonva ehhez az árajánlathoz tartozó tenderre."
-
-#~ msgid "Change Bid line quantity"
-#~ msgstr "Árajánlat licit tételsor mennyiség változtatása"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Mennyiség változtatása"
-
-#~ msgid ""
-#~ "Check this box to generate Call for Tenders instead of generating "
-#~ "requests for quotation from procurement."
-#~ msgstr ""
-#~ "Jelölje be a négyzetet árajánlat tender generálásához az igények alapján "
-#~ "történő árajánlat kérések generálása helyett."
-
-#~ msgid "Choose Vendor"
-#~ msgstr "Beszállító kiválasztás"
-
-#~ msgid "Choose product lines"
-#~ msgstr "Válasszon termék tételsorokat"
-
-#~ msgid "Click to start a new Call for Tenders process."
-#~ msgstr "Kattintson egy új  tender kiírás folyamat elindításához."
-
-#~ msgid "Close Call for Tenders"
-#~ msgstr "Lezárja a tender kiírásokat"
-
-#~ msgid "Closed Tenders"
-#~ msgstr "Lezárt tenderek"
-
-#~ msgid "Confirm Call"
-#~ msgstr "Licit jóváhagyás"
-
-#~ msgid "Confirm Order"
-#~ msgstr "Rendelés visszaigazolása"
-
-#~ msgid "Confirm Purchase Order"
-#~ msgstr "Szállítói megrendelés megerősítése"
-
-#~ msgid "Create Request for Quotation"
-#~ msgstr "Árajánlat kérés létrehozása"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#~ msgid "Define product(s) you want to include in the call for tenders."
-#~ msgstr ""
-#~ "Határozzon meg termék(ek)et, melyeket hozzá akar fűzni az árajánlati "
-#~ "tenderekhez."
-
-#~ msgid "Followers"
-#~ msgstr "Követők"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Követők (Csatornák)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Követők (Partnerek)"
-
-#~ msgid "Generate PO"
-#~ msgstr "Beszerzési megrendelés létrehozás"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "Is Follower"
-#~ msgstr "Ő követő"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Utolsó üzenet dátuma"
-
-#~ msgid "Messages"
-#~ msgstr "Üzenetek"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Üzenetek és kommunikáció történet"
-
-#~ msgid "Multiple RFQ per vendor"
-#~ msgstr "Beszállítónkénti többszörös árajánlat kérés"
-
-#~ msgid "New"
-#~ msgstr "Új"
-
-#~ msgid "New Call for Tenders"
-#~ msgstr "Új tender kiírások"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Műveletek száma"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Olvasatlan üzenetek száma"
-
-#~ msgid "Order Date"
-#~ msgstr "Megrendelés dátuma"
-
-#~ msgid "PO Created"
-#~ msgstr "Beszerzési megrendelés létrehozva"
-
-#~ msgid "Product Lines"
-#~ msgstr "Termék tételsorok"
-
-#~ msgid "Products by vendor"
-#~ msgstr "Termék beszállítónként"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Szállítói megrendelés sor"
-
-#~ msgid "Purchase Order Lines"
-#~ msgstr "Szállítói megrendelési sorok"
-
-#~ msgid "Purchase Requisition Partner"
-#~ msgstr "Beszerzési igénylési partner"
-
-#~ msgid "Purchase Requisitions (exclusive)"
-#~ msgstr "Beszerzési igények (kizárólagos)"
-
-#~ msgid "Purchase Tenders"
-#~ msgstr "Beszerzési tenderek"
-
-#~ msgid "Quantity Tendered"
-#~ msgstr "Tenderezett mennyiség"
-
-#~ msgid "RFQ created"
-#~ msgstr "Árajánlat kérés létrehozva"
-
-#~ msgid "RFQs/Bids"
-#~ msgstr "Árajánlat kérések/Felhívások licitálásra"
-
-#~ msgid "Reference"
-#~ msgstr "Hivatkozás"
-
-#~ msgid "Request a Quotation"
-#~ msgstr "Árajánlat kérése"
-
-#~ msgid "Requests for Quotation"
-#~ msgstr "Ajánlatkérések"
-
-#~ msgid "Scheduled Ordering Date"
-#~ msgstr "Tervezett megrendelési dátum"
-
-#~ msgid "Search Call for Tenders"
-#~ msgstr "Tender kiírások keresése"
-
-#~ msgid ""
-#~ "Select only one RFQ (exclusive):  On the confirmation of a purchase "
-#~ "order, it cancels the remaining purchase order.\n"
-#~ "Select multiple RFQ:  It allows to have multiple purchase orders.On "
-#~ "confirmation of a purchase order it does not cancel the remaining orders"
-#~ msgstr ""
-#~ "Csak egy árajánlat kérés kiválasztása (kizárólag):  A beszerzési "
-#~ "megrendelés jóváhagyásán, az összes megmaradt beszerzési megrendelést "
-#~ "törölni fogja.\n"
-#~ "Többszörös árajánlat kérés kiválasztás:  Lehetővé teszi a többszörös "
-#~ "megrendelést. A beszerzési megrendelés jóváhagyásán, nem fogja törölni az "
-#~ "összes megmaradt beszerzési megrendelést."
-
-#~ msgid "Send RFQ by Email"
-#~ msgstr "Árajánlat kérés elküldve emailben"
-
-#~ msgid ""
-#~ "Technical field for not loosing the initial information about the "
-#~ "quantity proposed in the tender"
-#~ msgstr ""
-#~ "Technikai mező, hogy el ne veszítse a tender kiírásra vonatkozó "
-#~ "elsődleges mennyiségi adatokat"
-
-#~ msgid "Tender Closing Deadline"
-#~ msgstr "Tender kiírás lezárási dátuma"
-
-#~ msgid "Tender Lines"
-#~ msgstr "Tender kiírás tételsorok"
-
-#~ msgid "Tender Selection Type"
-#~ msgstr "Tender kiírás szakaszának típusa"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Olvasatlan üzenetek"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Olvasatlan üzenetek számlálója"
-
-#~ msgid "Vendors"
-#~ msgstr "Kereskedők"
-
-#~ msgid "Website Messages"
-#~ msgstr "Weboldal üzenetek"
-
-#~ msgid "Website communication history"
-#~ msgstr "Weboldal  kommunikáció történet"
-
-#~ msgid "You can not confirm call because there is no product line."
-#~ msgstr "Nem tudja a hívást megerősíteni mert nincs termék tételsor."
-
-#~ msgid "You have already generate the purchase order(s)."
-#~ msgstr "Már létrehozta a beszerzési megrendelés(eke)t."
-
-#~ msgid ""
-#~ "You have already one %s purchase order for this partner, you must cancel "
-#~ "this purchase order to create a new quotation."
-#~ msgstr ""
-#~ "Már van egy %s megrendelése erre a partnerre, egy új árajánlat "
-#~ "létrehozásához érvénytelenítenie kell ezt a megrendelést."
-
-#~ msgid "You have no line selected for buying."
-#~ msgstr "Nem választott ki tételsort beszerezéshez."

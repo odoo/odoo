@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:15+0000\n"
+"POT-Creation-Date: 2016-12-01 11:53+0000\n"
 "PO-Revision-Date: 2016-07-29 11:43+0000\n"
 "Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
@@ -89,7 +89,7 @@ msgid "Agreement Selection Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_11150
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10664
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
@@ -128,7 +128,7 @@ msgid "Cancelled"
 msgstr "ถูกยกเลิก"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:98
+#: code:addons/purchase_requisition/purchase_requisition.py:99
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
@@ -147,7 +147,7 @@ msgstr "บริษัท"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm"
-msgstr ""
+msgstr "ยืนยัน"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -290,7 +290,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_line_copy
 msgid "Lines"
-msgstr ""
+msgstr "เส้น"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -305,7 +305,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "New Quotation"
-msgstr ""
+msgstr "ใบเสนอราคาใหม่"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_qty_ordered
@@ -395,6 +395,11 @@ msgid "Purchase Order"
 msgstr "ใบสั่งซื้อ"
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "รายการสั่งซื้อ"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
 msgid "Purchase Orders"
 msgstr ""
@@ -415,7 +420,7 @@ msgid "Purchase Requisition Line"
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:323
+#: code:addons/purchase_requisition/purchase_requisition.py:342
 #, python-format
 msgid "Purchase Requisition created"
 msgstr ""
@@ -509,7 +514,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "ลำดับ"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
@@ -556,7 +561,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "หน่วยละ"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
@@ -571,7 +576,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Validate"
-msgstr ""
+msgstr "ตรวจสอบ"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_vendor_id
@@ -584,13 +589,13 @@ msgid "Warehouse"
 msgstr "คลังสินค้า"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:103
+#: code:addons/purchase_requisition/purchase_requisition.py:104
 #, python-format
 msgid "You cannot confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:118
+#: code:addons/purchase_requisition/purchase_requisition.py:119
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
@@ -606,72 +611,3 @@ msgstr "เช่น PO0025"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "unknown"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "ต้องดำเนินการ"
-
-#~ msgid "Cancel"
-#~ msgstr "ยกเลิก"
-
-#~ msgid "Confirm Order"
-#~ msgstr "ยืนยันการสั่งซื้อ"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "วันที่ข้อความล่าสุดโพสต์ในระเบียน"
-
-#~ msgid "Followers"
-#~ msgstr "ผู้ติดตาม"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "ผู้ติดตาม (ช่องทาง)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "ผู้ติดตาม (คู่ค้า)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
-
-#~ msgid "Is Follower"
-#~ msgstr "เป็นผู้ติดตาม"
-
-#~ msgid "Last Message Date"
-#~ msgstr "วันที่ข้อความล่าสุด"
-
-#~ msgid "Messages"
-#~ msgstr "ข้อความ"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "ข้อความและประวัติการติดต่อ"
-
-#~ msgid "New"
-#~ msgstr "ใหม่"
-
-#~ msgid "Number of Actions"
-#~ msgstr "จำนวนกิจกรรม"
-
-#~ msgid "Order Date"
-#~ msgstr "วันที่สั่งซื้อ"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "รายการสั่งซื้อ"
-
-#~ msgid "Reference"
-#~ msgstr "อ้างอิงถึง"
-
-#~ msgid "Unread Messages"
-#~ msgstr "ข้อความที่ยังไม่ได้อ่าน"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "จำนวนข้อความที่ยังไม่ได้อ่าน"
-
-#~ msgid "Vendors"
-#~ msgstr "ผู้ขาย"
-
-#~ msgid "Website Messages"
-#~ msgstr "ข้อความเว็บไซต์"
-
-#~ msgid "Website communication history"
-#~ msgstr "ประวัติการสื่อสารเว็บไซต์"

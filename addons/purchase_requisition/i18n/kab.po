@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:15+0000\n"
+"POT-Creation-Date: 2016-12-01 11:53+0000\n"
 "PO-Revision-Date: 2015-09-30 09:27+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-9/language/kab/)\n"
@@ -88,7 +88,7 @@ msgid "Agreement Selection Type"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_11150
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10664
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
@@ -127,7 +127,7 @@ msgid "Cancelled"
 msgstr "Ifsax"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:98
+#: code:addons/purchase_requisition/purchase_requisition.py:99
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
 msgstr ""
@@ -146,7 +146,7 @@ msgstr "Takebbwanit"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Confirm"
-msgstr ""
+msgstr "Sentem"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -289,7 +289,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_line_copy
 msgid "Lines"
-msgstr ""
+msgstr "Izirigen"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -394,6 +394,11 @@ msgid "Purchase Order"
 msgstr "Taladna n tiɣin"
 
 #. module: purchase_requisition
+#: model:ir.model,name:purchase_requisition.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Izirig n tladna n tiɣin"
+
+#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
 msgid "Purchase Orders"
 msgstr "Tiludna n tiɣin"
@@ -414,7 +419,7 @@ msgid "Purchase Requisition Line"
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:323
+#: code:addons/purchase_requisition/purchase_requisition.py:342
 #, python-format
 msgid "Purchase Requisition created"
 msgstr ""
@@ -432,7 +437,7 @@ msgstr "Tiludna n tiɣin"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_quantity_copy
 msgid "Quantities"
-msgstr ""
+msgstr "Tinectiwin"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_qty
@@ -447,7 +452,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
 msgid "Request for Quotation"
-msgstr ""
+msgstr "Asuter n ssuma"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
@@ -508,7 +513,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Agzum"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
@@ -555,7 +560,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "ssuma n yiwen"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
@@ -570,7 +575,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Validate"
-msgstr ""
+msgstr "Seɣbel"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_vendor_id
@@ -583,13 +588,13 @@ msgid "Warehouse"
 msgstr "Agadir"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:103
+#: code:addons/purchase_requisition/purchase_requisition.py:104
 #, python-format
 msgid "You cannot confirm call because there is no product line."
 msgstr ""
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:118
+#: code:addons/purchase_requisition/purchase_requisition.py:119
 #, python-format
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
@@ -605,90 +610,3 @@ msgstr "Amedya. PO0025"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "unknown"
 msgstr ""
-
-#~ msgid "Bid Line Qty"
-#~ msgstr "Tanecta n izirig n usiwel i wesumer"
-
-#~ msgid "Cancel"
-#~ msgstr "Sefsex"
-
-#~ msgid "Cancel Choice"
-#~ msgstr "Sefsex afran"
-
-#~ msgid "Cancel Purchase Order"
-#~ msgstr "Sefsex taladna n tiɣin"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Snifel tanecta"
-
-#~ msgid "Choose product lines"
-#~ msgstr "Feren izirigen n ufaris"
-
-#~ msgid "Confirm Call"
-#~ msgstr "Sentem asiwel n usumer"
-
-#~ msgid "Confirm Order"
-#~ msgstr "Sentem taladna"
-
-#~ msgid "Confirm Purchase Order"
-#~ msgstr "Sentem taladna n tiɣin"
-
-#~ msgid "Create Request for Quotation"
-#~ msgstr "Rnu Asuter n ssuma"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Azemz n yizen anegaru iţunefken ɣef ukalas agi"
-
-#~ msgid "Followers"
-#~ msgstr "Imeltaɣen"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ma yeṛcem, iznan imaynuten suturen tamuɣli leqqayen."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Azemz n yizen aneggaru"
-
-#~ msgid "Messages"
-#~ msgstr "Iznan"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Amazray n iznan  d  teywalin"
-
-#~ msgid "New"
-#~ msgstr "Amaynut"
-
-#~ msgid "Order Date"
-#~ msgstr "Azemz n tladna"
-
-#~ msgid "PO Created"
-#~ msgstr "Taladna n tiqin tlul-ed"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Izirig n tladna n tiɣin"
-
-#~ msgid "Purchase Order Lines"
-#~ msgstr "Izirigen n tladna n tiɣin"
-
-#~ msgid "Reference"
-#~ msgstr "Tamsisɣelt"
-
-#~ msgid "Request a Quotation"
-#~ msgstr "Suter ssuma"
-
-#~ msgid "Requests for Quotation"
-#~ msgstr "Asuter n ssuma"
-
-#~ msgid "Scheduled Ordering Date"
-#~ msgstr "Azemz n tladna iɣiwsen"
-
-#~ msgid "Send RFQ by Email"
-#~ msgstr "Azen asuter n ssuma s Imayl"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Iznan ur neţwaɣer-ara"
-
-#~ msgid "Website Messages"
-#~ msgstr "Iznan n n usmel  Web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Amazray n Taywalt n usmel  Web"

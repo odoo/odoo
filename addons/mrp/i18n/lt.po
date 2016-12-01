@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-07-06 08:35+0000\n"
+"POT-Creation-Date: 2016-12-01 11:52+0000\n"
+"PO-Revision-Date: 2016-09-22 14:04+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/"
 "lt/)\n"
@@ -229,7 +229,7 @@ msgstr "Patvirtinti"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
-msgstr ""
+msgstr "Archyvuojamas"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_product_product_produce_delay
@@ -581,7 +581,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Cost Structure"
-msgstr ""
+msgstr "Savikainos struktūra"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
@@ -886,6 +886,12 @@ msgstr "Gaminama"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
 msgid "Internal Reference"
 msgstr "Vidinis numeris"
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
@@ -1269,7 +1275,7 @@ msgstr "Tėvinė KS"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_routing_id
 msgid "Parent Routing"
-msgstr ""
+msgstr "Tėvinė techn. kortelė"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1517,7 +1523,7 @@ msgstr "Ypatybė"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_10092
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9626
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1546,7 +1552,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Raw Materials"
-msgstr ""
+msgstr "Žaliavos"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
@@ -1644,7 +1650,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Routing"
-msgstr ""
+msgstr "Technologinė kortelė"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -2214,6 +2220,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "dienos"
@@ -2258,54 +2272,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "nežinomas"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Pakeisti kiekį"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Paskutinė pranešimo publikavimo data šiame įraše."
-
-#~ msgid "Followers"
-#~ msgstr "Prenumeratoriai"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jeigu pažymėta, nauji pranešimai reikalaus jūsų dėmesio."
-
-#~ msgid ""
-#~ "If the active field is set to False, it will allow you to hide the "
-#~ "resource record without removing it."
-#~ msgstr ""
-#~ "Nebenaudojami resursai gali būti paslėpti, vietoj to, kad būtų pašalinti."
-
-#~ msgid "Inactive"
-#~ msgstr "Neaktyvus"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Paskutinio pranešimo data"
-
-#~ msgid "Messages"
-#~ msgstr "Pranešimai"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Pranešimų ir komunikacijos istorija"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Veiksmų skaičius"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Žinučių, kurių prireiks veiksmui skaičius"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Neperskaitytų žinučių skaičius"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "Atidarykite MRP meniu"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Neskaityti pranešimai"
-
-#~ msgid "Website Messages"
-#~ msgstr "Interneto svetainės pranešimai"
-
-#~ msgid "Website communication history"
-#~ msgstr "Interneto svetainės komunikacijos istorija"

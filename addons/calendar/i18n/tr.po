@@ -3,14 +3,15 @@
 # * calendar
 #
 # Translators:
-# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-04-24 18:26+0000\n"
-"Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
+"PO-Revision-Date: 2016-11-16 20:26+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -469,12 +470,12 @@ msgstr "${object.event_id.name} - Hatırlatma"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "${object.event_id.name} invitation"
-msgstr ""
+msgstr "${object.event_id.name} Daveti"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "${object.event_id.name}: Date updated"
-msgstr ""
+msgstr "${object.event_id.name}: Tarih güncellendi"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:776
@@ -483,30 +484,32 @@ msgid ""
 "%s at %s To\n"
 " %s at %s (%s)"
 msgstr ""
+"%s / %s -\n"
+" %s / %s (%s)"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:774
 #, python-format
 msgid "%s at (%s To %s) (%s)"
-msgstr ""
+msgstr "%s / (%s - %s) (%s)"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:263
 #, python-format
 msgid "%s has accepted invitation"
-msgstr ""
+msgstr "%s davetiyeyi kabul etti."
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:278
 #, python-format
 msgid "%s has declined invitation"
-msgstr ""
+msgstr "%s daveti kabul etmedi"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "<span> hours</span>"
-msgstr ""
+msgstr "<span> saat</span>"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -600,14 +603,14 @@ msgstr "Takvim"
 #: model:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
-msgstr ""
+msgstr "Takvim Alarmı"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:43
 #, python-format
 msgid "Calendar Invitation"
-msgstr ""
+msgstr "Takvim Daveti"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -619,12 +622,12 @@ msgstr ""
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "Click to schedule a new meeting."
-msgstr ""
+msgstr "Yeni bir toplantı planlamak için tıklayınız."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_color_partner_id
 msgid "Color index of creator"
-msgstr ""
+msgstr "Oluşturanın renk kodu"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_cn
@@ -752,12 +755,12 @@ msgstr "Eposta adresleri bulunamadı"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "Eposta yazma sihirbazı"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_survey_mail_compose_message
 msgid "Email composition wizard for Survey"
-msgstr ""
+msgstr "Anket için e-mail sihirbazını aç"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee_email
@@ -814,7 +817,7 @@ msgstr "Olay alarmı"
 #: code:addons/calendar/calendar.py:1239
 #, python-format
 msgid "Event recurrence interval cannot be negative."
-msgstr ""
+msgstr "Etkinlik tekrarlama aralığı negatif olamaz."
 
 #. module: calendar
 #. openerp-web
@@ -908,6 +911,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
+"Şayet aktif alanı etkin değil olarak ayarlanırsa, etkinlik alarmını "
+"etkinliği kaldırmanıza gerek kalmadan kapayabilirsiniz."
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -1042,7 +1047,7 @@ msgstr "Mesaj"
 #. module: calendar
 #: selection:calendar.alarm,interval:0
 msgid "Minute(s)"
-msgstr ""
+msgstr "Dakika"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1091,7 +1096,7 @@ msgstr "Eylem Gerektiriyor"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:36
 #, python-format
 msgid "No I'm not going."
-msgstr ""
+msgstr "Hayır ben gitmiyorum."
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
@@ -1113,12 +1118,12 @@ msgstr "Tamam"
 #. module: calendar
 #: selection:calendar.event,class:0
 msgid "Only internal users"
-msgstr ""
+msgstr "Sadece dahili kullanıcılar"
 
 #. module: calendar
 #: selection:calendar.event,class:0
 msgid "Only me"
-msgstr ""
+msgstr "Sadece ben"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_month_by
@@ -1144,7 +1149,7 @@ msgstr "İş Ortağı"
 #: code:addons/calendar/calendar.py:1252
 #, python-format
 msgid "Please select a proper day of the month."
-msgstr ""
+msgstr "Lütfen ayın uygun bir gününü seçiniz."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_class
@@ -1253,7 +1258,7 @@ msgstr "Saniye"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Select attendees..."
-msgstr ""
+msgstr "Katılımcıları seçiniz..."
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1291,7 +1296,7 @@ msgstr "Tarih Saat Başlangıçı"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_start
 msgid "Start date of an event, without time for full days events"
-msgstr ""
+msgstr "Etkinlik başlangıç günü, tüm gün etinlikleri için zaman olmadan"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1318,7 +1323,7 @@ msgstr "Durdur"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_stop
 msgid "Stop date of an event, without time for full days events"
-msgstr ""
+msgstr "Etkinlik bitiş günü, tüm gün etkinlikler için zaman olmadan"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -1358,6 +1363,9 @@ msgid ""
 "business\n"
 "            opportunities."
 msgstr ""
+"Takvim çalışanlar arasında paylaşılmaktadır ve çalışan izinleri veya\n"
+"            iş fırsatları gibi diğer tüm uygulamalar ile entegre şekilde \n"
+"            çalışmaktadır."
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1361
@@ -1373,7 +1381,7 @@ msgstr "Üçüncü"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "This event is linked to a recurrence...<br/>"
-msgstr ""
+msgstr "Bu etkinlik tekrarlayanlarla bağlantılı...<br/>"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_th
@@ -1483,7 +1491,7 @@ msgstr "Yıl(lar)"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:35
 #, python-format
 msgid "Yes I'm going."
-msgstr ""
+msgstr "Evet ben gidiyorum"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:106
@@ -1499,17 +1507,17 @@ msgstr "etkin"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
 msgid "calendar.alarm_manager"
-msgstr ""
+msgstr "calendar.alarm_manager"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_contacts
 msgid "calendar.contacts"
-msgstr ""
+msgstr "calendar.contacts"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
-msgstr ""
+msgstr "ör. İş Yemeği"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1237

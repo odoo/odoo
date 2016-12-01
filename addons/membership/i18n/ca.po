@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-04 07:19+0000\n"
+"PO-Revision-Date: 2016-10-21 09:32+0000\n"
 "Last-Translator: Marc Tormo i Bochaca <mtbochaca@gmail.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "Language: ca\n"
@@ -114,7 +114,7 @@ msgstr "Categoria"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_template_membership
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "Comproveu si el producte és elegible per a ser membre."
 
 #. module: membership
 #: model:ir.actions.act_window,help:membership.action_membership_members
@@ -323,6 +323,14 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"Indica l'estat de l'afiliació.\n"
+"- No membre: Una empresa que no ha sol·licitat cap afiliació.\n"
+"- Membre cancel·lat: Un membre que ha cancel·lat la seva afiliació.\n"
+"- Antic membre: Un membre que la seva afiliació ha expirat.\n"
+"- Membre en espera: Un membre que ha sol·licitat l'afiliació i que la seva "
+"factura va crear-se.\n"
+"- Membre facturat: Un membre que se li ha creat la seva factura.\n"
+"- Membre pagat: Un membre que ha pagat la seva quota d'afiliació."
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
@@ -634,9 +642,3 @@ msgstr "Soci en espera"
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "membership.membership_line"
 msgstr ""
-
-#~ msgid "Basic Membership"
-#~ msgstr "Soci bàsic"
-
-#~ msgid "Silver Membership"
-#~ msgstr "Soci plata"

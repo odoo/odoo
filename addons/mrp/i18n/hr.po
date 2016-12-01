@@ -3,6 +3,7 @@
 # * mrp
 #
 # Translators:
+# Bole <bole@dajmi5.com>, 2016
 # Bole <bole@dajmi5.com>, 2015
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2015
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2015
@@ -10,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 12:14+0000\n"
-"PO-Revision-Date: 2016-07-06 08:35+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"POT-Creation-Date: 2016-12-01 11:52+0000\n"
+"PO-Revision-Date: 2016-09-29 11:55+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
@@ -178,6 +179,8 @@ msgid ""
 "A manufacturing order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products."
 msgstr ""
+"Proizvodni nalog, bazirano na sastavnici, će\n"
+"utrošiti sirovine i proizvosti gotovi proizvod."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_active
@@ -227,7 +230,7 @@ msgstr "Odobri"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
-msgstr ""
+msgstr "Arhivirano"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_product_product_produce_delay
@@ -444,7 +447,7 @@ msgstr "Promijeni količine proizvoda"
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
 msgid "Click to add a work center."
-msgstr ""
+msgstr "Kliknite za dodavanje radnog centra."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -459,12 +462,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "Click to create a manufacturing order."
-msgstr ""
+msgstr "Kliknite za kreiranje novog proizvodnog naloga."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_action
 msgid "Click to create a new property."
-msgstr ""
+msgstr "Kliknite za kreiranje novog svojstva."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -574,7 +577,7 @@ msgstr "Utrošeno za"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Cost Structure"
-msgstr ""
+msgstr "Cost Structure"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
@@ -707,7 +710,7 @@ msgstr "Naziv za prikaz"
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_operations:0
 msgid "Do not use a planning for the work orders "
-msgstr ""
+msgstr "Ne koristi planiranje za radne naloge"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -798,7 +801,7 @@ msgstr "Definira poredak radnih naloga u popisu."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_sequence
 msgid "Gives the sequence order when displaying."
-msgstr ""
+msgstr "Određuje redosljed stavaka u prikazu."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
@@ -875,6 +878,12 @@ msgstr "U proizvodnji"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
 msgid "Internal Reference"
 msgstr "Interna oznaka"
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr "Problem sa količinama lot-a!"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
@@ -978,17 +987,17 @@ msgstr "Lot"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Work Order Operations"
-msgstr ""
+msgstr "Upravljanje operacijama radnih naloga"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_mrp_routings:0
 msgid "Manage production by manufacturing orders"
-msgstr ""
+msgstr "Upravljanje proizvodnjom po proizvodnim nalozima"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_mrp_routings:0
 msgid "Manage production by work orders"
-msgstr ""
+msgstr "Upravljanje proizvodnjom prema radnim nalozima"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_rounding_efficiency
@@ -1158,7 +1167,7 @@ msgstr "Nema praćenja"
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
 msgid "No by-products in bills of materials (A + B --> C)"
-msgstr ""
+msgstr "Nema nus proizvoda u sastavnici (A + B --> C)"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_rounding_efficiency:0
@@ -1433,7 +1442,7 @@ msgstr "Napredak proizvodnje"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Production started late"
-msgstr ""
+msgstr "Proizvodnja je kasno započeta"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_production_gantt
@@ -1493,7 +1502,7 @@ msgstr "Postavke"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_property_group_form_view
 msgid "Properties categories"
-msgstr "Properties categories"
+msgstr "Kategorije svojstava"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_composition
@@ -1507,7 +1516,7 @@ msgstr "Svojstvo"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_10092
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9626
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1536,7 +1545,7 @@ msgstr "Količina (u zadanoj JM)"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Raw Materials"
-msgstr ""
+msgstr "Sirovine"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
@@ -1587,7 +1596,7 @@ msgstr "Korisničko ime povezano je sa pristupom i upravljanjem modulima"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Reserve"
-msgstr ""
+msgstr "Rezerva"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_resource_id
@@ -1725,7 +1734,7 @@ msgstr "Traži proizvodnju"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Search for mrp workcenter"
-msgstr "Search for mrp workcenter"
+msgstr "Potraži proizvodni centar"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_res_company_manufacturing_lead
@@ -1755,7 +1764,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Ship this product as a set of components (kit)"
-msgstr ""
+msgstr "Isporuči ovaj proizvod kao set komponenata (kit)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_origin
@@ -1804,7 +1813,7 @@ msgstr "Varijacija vrijednosti Zalihe"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_consumed_for
 msgid "Technical field used to make the traceability of produced products"
-msgstr ""
+msgstr "Tehničko polje za praćenje proizvedenih proizvoda"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:353 code:addons/mrp/mrp.py:452
@@ -1928,12 +1937,12 @@ msgstr "Za potrošiti"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Total Cost"
-msgstr ""
+msgstr "Ukupni trošak"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Total Cost of Raw Materials"
-msgstr ""
+msgstr "Ukupni utrošak sirovina"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_cycle_total
@@ -1960,7 +1969,7 @@ msgstr "Tip"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Unit Cost"
-msgstr ""
+msgstr "Jedinični trošak"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2117,7 +2126,7 @@ msgstr "Proizvod radnog centra"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
 msgid "Work Center Usage"
-msgstr "Work Center Usage"
+msgstr "Korištenje radnog centra"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_workcenter_load_graph
@@ -2200,6 +2209,14 @@ msgstr ""
 msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
 msgstr ""
 
 #. module: mrp
