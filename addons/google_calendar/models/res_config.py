@@ -8,7 +8,6 @@ class CalendarSettings(models.TransientModel):
 
     _inherit = 'base.config.settings'
 
-    google_cal_sync = fields.Boolean("Show Tutorial")
     cal_client_id = fields.Char("Client_id")
     cal_client_secret = fields.Char("Client_key")
     server_uri = fields.Char('URI for tuto')
