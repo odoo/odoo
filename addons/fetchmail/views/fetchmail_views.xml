@@ -93,16 +93,21 @@
             <field name="search_view_id" ref="view_email_server_search"/>
         </record>
 
-        <record id="inherit_view_general_configuration" model="ir.ui.view">
-            <field name="name">General Settings</field>
+        <record id="base_config_settings_view_form_inherit_fetchmail" model="ir.ui.view">
+            <field name="name">base.config.settings.inherit.fetchmail</field>
             <field name="model">base.config.settings</field>
-            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="inherit_id" ref="mail.base_config_settings_view_form_inherit_mail"/>
             <field name="arch" type="xml">
-                <div name="email.outgoing_server" position="after">
-                    <div name="email.incoming_server">
+                <div id="mail_alias_domain" position="after">
+                    <div>
                         <button type="action"
-                                name="%(action_email_server_tree)d"
-                                string="Configure the incoming email gateway" class="oe_link"/>
+                        name="%(action_email_server_tree)d"
+                        string="Incoming Email Servers" icon="fa-arrow-right" class="btn-link"/>
+                    </div>
+                    <div>
+                        <button type="action"
+                        name="%(base.action_ir_mail_server_list)d"
+                        string="Outgoing Email Servers" icon="fa-arrow-right" class="btn-link"/>
                     </div>
                 </div>
             </field>
