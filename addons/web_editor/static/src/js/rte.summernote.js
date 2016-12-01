@@ -485,12 +485,27 @@ function prettify_html(html) {
     }
     return result;
 }
-$.summernote.pluginEvents.codeview = function (event, editor, layoutInfo) {
+
+/*
+ * This override when clicking on the 'Code View' button has two aims:
+ *
+ * - have our own code view implementation for FieldTextHtml
+ * - add an 'enable' paramater to call the function directly and allow us to
+ *   disable (false) or enable (true) the code view mode.
+ */
+$.summernote.pluginEvents.codeview = function (event, editor, layoutInfo, enable) {
     if (layoutInfo.toolbar) {
+        var is_activated = $.summernote.eventHandler.modules.codeview.isActivated(layoutInfo);
+        if (is_activated === enable) {
+            return;
+        }
         return eventHandler.modules.codeview.toggle(layoutInfo);
     } else {
         var $editor = layoutInfo.editor();
         var $textarea = $editor.prev('textarea');
+        if ($textarea.is('textarea') === enable) {
+            return;
+        }
 
         if (!$textarea.length) {
             // init and create texarea
