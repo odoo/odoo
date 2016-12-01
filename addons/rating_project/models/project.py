@@ -41,7 +41,7 @@ class Task(models.Model):
             rating_template = task.stage_id.rating_template_id
             if rating_template:
                 force_send = self.env.context.get('force_send', True)
-                task.rating_send_request(rating_template, reuse_rating=False, force_send=force_send)
+                task.rating_send_request(rating_template, partner=task.partner_id, reuse_rating=False, force_send=force_send)
 
     def rating_get_partner_id(self):
         res = super(Task, self).rating_get_partner_id()
