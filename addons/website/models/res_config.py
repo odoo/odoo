@@ -16,7 +16,7 @@ class WebsiteConfigSettings(models.TransientModel):
     website_name = fields.Char('Website Name', related='website_id.name')
 
     language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang')
-    default_lang_id = fields.Many2one(related='website_id.default_lang_id', relation='res.lang')
+    default_lang_id = fields.Many2one(related='website_id.default_lang_id', relation='res.lang', required=True)
     default_lang_code = fields.Char('Default language code', related='website_id.default_lang_code')
     google_analytics_key = fields.Char('Google Analytics Key', related='website_id.google_analytics_key')
 

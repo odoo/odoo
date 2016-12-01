@@ -8,6 +8,13 @@ class Invoice(models.Model):
     _inherit = 'account.invoice'
 
     @api.multi
+    def action_cancel_draft(self):
+        self.env['membership.membership_line'].search([
+            ('account_invoice_line', 'in', self.mapped('invoice_line_ids').ids)
+        ]).write({'date_cancel': False})
+        return super(Invoice, self).action_cancel_draft()
+
+    @api.multi
     def action_cancel(self):
         '''Create a 'date_cancel' on the membership_line object'''
         self.env['membership.membership_line'].search([
