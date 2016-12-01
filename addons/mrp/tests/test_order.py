@@ -332,3 +332,16 @@ class TestMrpOrder(TestMrpCommon):
         production_2.action_assign()
         # check sub product availability state is assigned
         self.assertEqual(production_2.availability, 'assigned', 'Production order should be availability for assigned state')
+
+    def test_empty_routing(self):
+        """ Check what happens when you work with an empty routing"""
+        routing = self.env['mrp.routing'].create({'name': 'Routing without operations',
+                                        'location_id': self.warehouse_1.wh_input_stock_loc_id.id,})
+        self.bom_3.routing_id = routing.id
+        production = self.env['mrp.production'].create({'name': 'MO test',
+                                           'product_id': self.product_6.id,
+                                           'product_qty': 3,
+                                           'bom_id': self.bom_3.id,
+                                           'product_uom_id': self.product_6.uom_id.id,})
+        self.assertEqual(production.routing_id.id, False, 'The routing field should be empty on the mo')
+        self.assertEqual(production.move_raw_ids[0].location_id.id, self.warehouse_1.wh_input_stock_loc_id.id, 'Raw moves start location should have altered.')
