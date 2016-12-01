@@ -23,7 +23,7 @@ class Event(models.Model):
         result = super(Event, self)._get_new_menu_pages()
         if self.show_tracks:
             result.append((_('Talks'), '/event/%s/track' % slug(self)))
-            result.append((_('Agenda'), '/event/%s/agenda' % slug(self)))
+            result.append((_('Schedule'), '/event/%s/schedule' % slug(self)))
         if self.show_track_proposal:
             result.append((_('Talk Proposals'), '/event/%s/track_proposal' % slug(self)))
         return result

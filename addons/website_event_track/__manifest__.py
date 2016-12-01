@@ -4,7 +4,7 @@
 {
     'name': 'Advanced Events',
     'category': 'Marketing',
-    'summary': 'Sponsors, Tracks, Agenda, Event News',
+    'summary': 'Sponsors, Tracks, Schedule, Event News',
     'website': 'https://www.odoo.com/page/events',
     'version': '1.0',
     'description': """
@@ -16,7 +16,7 @@ Adds support for:
 - dedicated menu per event
 - news per event
 - tracks
-- agenda
+- schedule
 - call for proposals
         """,
     'depends': ['website_event'],
