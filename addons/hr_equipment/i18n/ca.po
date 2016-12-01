@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 12:00+0000\n"
-"PO-Revision-Date: 2016-07-13 08:38+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-10-03 08:43+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "Language: ca\n"
@@ -45,6 +45,12 @@ msgid ""
 msgstr ""
 "Diccionari Python a avaluar per proporcionar valors per defecte quan es "
 "creïn nous registres per aquest pseudònim."
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer3
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer5
+msgid "Acer Laptop"
+msgstr ""
 
 #. module: hr_equipment
 #: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
@@ -399,6 +405,17 @@ msgid "Group by..."
 msgstr "Agrupa per..."
 
 #. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_printer1
+msgid "HP Inkjet printer"
+msgstr ""
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer11
+#: model:hr.equipment,name:hr_equipment.hr_equipment_computer9
+msgid "HP Laptop"
+msgstr ""
+
+#. module: hr_equipment
 #: selection:hr.equipment.request,priority:0
 msgid "High"
 msgstr "Alta"
@@ -538,6 +555,11 @@ msgid "Model"
 msgstr "Model"
 
 #. module: hr_equipment
+#: model:hr.equipment.category,name:hr_equipment.hr_equipment_monitor
+msgid "Monitors"
+msgstr ""
+
+#. module: hr_equipment
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
 msgid "My Equipments"
 msgstr ""
@@ -602,6 +624,14 @@ msgid ""
 "necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"El model pare conte el pseudònim. El model que conte la referència del "
+"pseudònim no és necessàriament el model que es dóna a través del camp "
+"alias_model_id (exemple: projecto (parent_model) i tasca (model))"
+
+#. module: hr_equipment
+#: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
+msgid "Phones"
+msgstr ""
 
 #. module: hr_equipment
 #: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
@@ -612,6 +642,12 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
+"Política per enviar un missatge en el document utilitzant la passarel·la del "
+"correu.\n"
+"-Tots: Tothom pot enviar.\n"
+"-Empreses: Només les empreses autenticades.\n"
+"-Seguidors: Només els seguidors del document relacionat o els membres dels "
+"canals següents.\n"
 
 #. module: hr_equipment
 #: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
@@ -683,6 +719,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
 msgid "Responsible"
 msgstr "Responsable"
+
+#. module: hr_equipment
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor1
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor4
+#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor6
+msgid "Samsung Monitor 15\""
+msgstr ""
 
 #. module: hr_equipment
 #: model:hr.equipment.stage,name:hr_equipment.stage_4
@@ -904,66 +947,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
 msgid "maintenance Request Search"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Cal fer alguna acció"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data de l'últim missatge enviat al registre."
-
-#~ msgid "Followers"
-#~ msgstr "Seguidors"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Followers (Canals)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidors (Socis)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si està marcat hi ha missatges nous pendents."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si està marcat, els nous missatges requereixen la vostra atenció"
-
-#~ msgid "Is Follower"
-#~ msgstr "És seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data Últim Missatge"
-
-#~ msgid "Messages"
-#~ msgstr "Missatges"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historial de missatges i comunicació"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Nombre d'accions"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Nombre de missatges que requereixen una atenció"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Nombre de missatges no llegits"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Política per enviar un missatge en el document utilitzant la passarel·la "
-#~ "del correu.\n"
-#~ "-Tots: Tothom pot enviar.\n"
-#~ "-Empreses: Només les empreses autenticades.\n"
-#~ "-Seguidors: Només els seguidors del document relacionat.\n"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Comptador de missatges no llegits"
-
-#~ msgid "Website Messages"
-#~ msgstr "Missatges de la pàgina web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historial de comunicacions de la pàgina web"

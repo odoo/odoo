@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-07-12 01:06+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-10-12 00:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
 "Language: sv\n"
@@ -20,13 +20,13 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.sitemap_index_xml
 #: model:ir.ui.view,arch_db:website.sitemap_xml
 msgid "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
-msgstr ""
+msgstr "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
 
 #. module: website
 #. openerp-web
@@ -823,17 +823,12 @@ msgstr "En underrubrik för en sektion"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_act_server_website_published
-#, fuzzy
 msgid ""
 "A code server action can be executed from the website, using a dedicated "
 "controller. The address is <base>/website/action/<website_path>. Set this "
 "field as True to allow users to run this action. If it is set to False the "
 "action cannot be run through the website."
 msgstr ""
-"A code server action can be executed from the website, using a "
-"dedicatedcontroller. The address is <base>/website/action/<website_path>.Set "
-"this field as True to allow users to run this action. If itset to is False "
-"the action cannot be run through the website."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1115,15 +1110,13 @@ msgstr "Tillbaka"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
-#, fuzzy
 msgid "Background Color"
-msgstr "Bakgrund"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
-#, fuzzy
 msgid "Background Image"
-msgstr "Bakgrund"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1324,6 +1317,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:49
 #: model:ir.ui.view,arch_db:website.s_banner
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #, python-format
 msgid "Click to customize this text"
 msgstr "Klicka för att anpassa texten"
@@ -1447,8 +1441,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.s_banner
 #: model:ir.ui.view,arch_db:website.s_big_message
 #: model:ir.ui.view,arch_db:website.s_comparisons
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #: model:ir.ui.view,arch_db:website.website_planner
 #: model:website.menu,name:website.menu_contactus
+#: model:website.menu,name:website.website2_menu_contactus
 msgid "Contact us"
 msgstr "Kontakta oss"
 
@@ -1464,9 +1460,8 @@ msgstr "Kontakta oss"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-#, fuzzy
 msgid "Content"
-msgstr "Fortsätt"
+msgstr "Innehåll"
 
 #. module: website
 #. openerp-web
@@ -1542,9 +1537,8 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-#, fuzzy
 msgid "Customize"
-msgstr "Anpassa banderollen"
+msgstr "Anpassa"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -1635,7 +1629,7 @@ msgstr "Beskrivning..."
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Design"
-msgstr ""
+msgstr "Design"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1648,6 +1642,11 @@ msgstr ""
 #, python-format
 msgid "Discard"
 msgstr "Ignorera"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Discuss and Comments"
+msgstr "Diskutera och kommentera"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1756,9 +1755,8 @@ msgstr "Ändra menyn"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-#, fuzzy
 msgid "Edit Top Menu"
-msgstr "Ändra menyn"
+msgstr "Ändra toppmenyn"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.publish_management
@@ -2145,6 +2143,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.footer_default
 #: model:website.menu,name:website.menu_homepage
+#: model:website.menu,name:website.website2_menu_homepage
 msgid "Home"
 msgstr "Hemma"
 
@@ -2153,6 +2152,11 @@ msgstr "Hemma"
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Homepage"
 msgstr "Hemsida"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website2_homepage
+msgid "Homepage 0.0.0.0"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2403,7 +2407,7 @@ msgstr "Senast uppdaterad"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Launch"
-msgstr ""
+msgstr "Starta"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2513,6 +2517,11 @@ msgstr "Meny"
 #, python-format
 msgid "Menu <b>%s</b> seems to have a link to this page !"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Message"
+msgstr "Meddelande"
 
 #. module: website
 #. openerp-web
@@ -2872,9 +2881,9 @@ msgstr "Sidrubrik"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:103
-#, fuzzy, python-format
+#, python-format
 msgid "Pages and menus"
-msgstr "Lägg till sidan i menyn"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_panel
@@ -2904,9 +2913,19 @@ msgid "Partner"
 msgstr "Företag"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Partner Detail"
+msgstr "Företagsuppgifter"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Partners"
+msgstr "Företag"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Plan"
-msgstr ""
+msgstr "Plan"
 
 #. module: website
 #: model:web.planner,tooltip_planner:website.planner_website
@@ -3058,6 +3077,11 @@ msgid "Real professional translators will translate all your contents"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Recipient"
+msgstr "Mottagare"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Reduce the time and resources spent on support."
 msgstr ""
@@ -3207,6 +3231,16 @@ msgstr "Sälj på nätetet. Utan besvär."
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Sell more online"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send <span class=\"fa fa-long-arrow-right\"/>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send a Message to our Partners"
+msgstr "Skicka ett meddelande till våra samarbetspartners"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3422,6 +3456,11 @@ msgstr ""
 #, python-format
 msgid "Test Your Mobile Version"
 msgstr "Testa din mobilversion"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Thank you for posting a message !"
+msgstr "Tack för ditt meddelande!"
 
 #. module: website
 #. openerp-web
@@ -3661,6 +3700,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/js/website.contentMenu.js:175
 #: model:website.menu,name:website.main_menu
+#: model:website.menu,name:website.website2_main_menu
 #, python-format
 msgid "Top Menu"
 msgstr "Toppmeny"
@@ -3672,7 +3712,7 @@ msgstr "Spåra tillbaka"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.snippets.editor.js:771
+#: code:addons/website/static/src/js/website.snippets.editor.js:772
 #, python-format
 msgid "Transform the picture (click twice to reset transformation)"
 msgstr ""
@@ -3960,6 +4000,16 @@ msgstr "Webbplatsens meny"
 #: model:ir.model.fields,field_description:website.field_website_name
 msgid "Website Name"
 msgstr "Webbplatsens namn"
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_post
+msgid "Website Partner Post and Thanks Demo"
+msgstr ""
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_comment
+msgid "Website Partners Comment Form"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
@@ -4633,71 +4683,3 @@ msgstr "ja"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "your Company details form"
 msgstr ""
-
-#~ msgid ".xml"
-#~ msgstr ".xml"
-
-#~ msgid ""
-#~ "A code server action can be executed from the website, using a "
-#~ "dedicatedcontroller. The address is <base>/website/action/<website_path>."
-#~ "Set this field as True to allow users to run this action. If itset to is "
-#~ "False the action cannot be run through the website."
-#~ msgstr ""
-#~ "A code server action can be executed from the website, using a "
-#~ "dedicatedcontroller. The address is <base>/website/action/<website_path>."
-#~ "Set this field as True to allow users to run this action. If itset to is "
-#~ "False the action cannot be run through the website."
-
-#~ msgid "Background"
-#~ msgstr "Bakgrund"
-
-#~ msgid "Color"
-#~ msgstr "Färg"
-
-#~ msgid "Discover more about Odoo"
-#~ msgstr "Upptäck med om Odoo"
-
-#~ msgid "Discuss and Comments"
-#~ msgstr "Diskutera och kommentera"
-
-#~ msgid "Edit Menu Entry"
-#~ msgstr "Ändra menyvalet"
-
-#~ msgid "Hide link"
-#~ msgstr "Göm link"
-
-#~ msgid "Menu Label"
-#~ msgstr "Menyetikett"
-
-#~ msgid "Message"
-#~ msgstr "Meddelande"
-
-#~ msgid "Partner Detail"
-#~ msgstr "Företagsuppgifter"
-
-#~ msgid "Partners"
-#~ msgstr "Företag"
-
-#~ msgid "Recipient"
-#~ msgstr "Mottagare"
-
-#~ msgid "Reset Transformation"
-#~ msgstr "Återställ omvandlingen"
-
-#~ msgid "Send a Message to our Partners"
-#~ msgstr "Skicka ett meddelande till våra samarbetspartners"
-
-#~ msgid "Thank you for posting a message !"
-#~ msgstr "Tack för ditt meddelande!"
-
-#~ msgid "Transform"
-#~ msgstr "Omvandla"
-
-#~ msgid "Yes."
-#~ msgstr "Ja."
-
-#~ msgid "or"
-#~ msgstr "eller"
-
-#~ msgid "sitemap-"
-#~ msgstr "sitekarta-"

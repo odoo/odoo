@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-05-23 20:53+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-23 08:50+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/"
 "language/sr@latin/)\n"
@@ -21,7 +21,7 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:348
+#: code:addons/account_asset/account_asset.py:347
 #, python-format
 msgid " (copy)"
 msgstr " (kopija)"
@@ -58,7 +58,7 @@ msgid "Active"
 msgstr "Aktivno"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #, python-format
 msgid "Amount"
 msgstr "Iznos"
@@ -147,7 +147,7 @@ msgid "Asset category"
 msgstr "Kategorija sredstva"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:236
+#: code:addons/account_asset/account_asset.py:235
 #, python-format
 msgid "Asset created"
 msgstr ""
@@ -158,7 +158,7 @@ msgid "Asset depreciation line"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:269
+#: code:addons/account_asset/account_asset.py:268
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr ""
@@ -339,7 +339,7 @@ msgid "Cumulative Depreciation"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -354,6 +354,11 @@ msgstr "Trenutno"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_amount
 msgid "Current Depreciation"
 msgstr ""
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
+msgid "Customer"
+msgstr "Mušterija"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_date
@@ -467,13 +472,13 @@ msgid "Depreciation Name"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/account_asset_change_duration.py:83
+#: code:addons/account_asset/wizard/account_asset_change_duration.py:82
 #, python-format
 msgid "Depreciation board modified"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:489
+#: code:addons/account_asset/account_asset.py:487
 #, python-format
 msgid "Depreciation line posted."
 msgstr ""
@@ -489,19 +494,19 @@ msgid "Display Name"
 msgstr "Ime za prikaz"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:272
+#: code:addons/account_asset/account_asset.py:271
 #, python-format
 msgid "Disposal Move"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:275
+#: code:addons/account_asset/account_asset.py:274
 #, python-format
 msgid "Disposal Moves"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:468
+#: code:addons/account_asset/account_asset.py:466
 #, python-format
 msgid "Document closed."
 msgstr ""
@@ -648,7 +653,7 @@ msgid "Journal"
 msgstr "Dnevnik"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:375
+#: code:addons/account_asset/account_asset.py:374
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
@@ -745,9 +750,10 @@ msgid "Number of Months in a Period"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:488
+#: code:addons/account_asset/account_asset.py:486
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #, python-format
 msgid "Partner"
 msgstr "Partner"
@@ -805,7 +811,7 @@ msgid "Prorata Temporis"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:314
+#: code:addons/account_asset/account_asset.py:313
 #, python-format
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
@@ -982,25 +988,25 @@ msgid "Year"
 msgstr "Godina"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:97
+#: code:addons/account_asset/account_asset.py:96
 #, python-format
 msgid "You cannot delete a document is in %s state."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:99
+#: code:addons/account_asset/account_asset.py:98
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:497
+#: code:addons/account_asset/account_asset.py:495
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:499
+#: code:addons/account_asset/account_asset.py:497
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr ""
@@ -1025,51 +1031,3 @@ msgstr "npr. Laptop ThinkPad"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "months"
 msgstr "mjeseci"
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebna akcija"
-
-#~ msgid "Customer"
-#~ msgstr "Mušterija"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum zadnje poslate poruke na slog."
-
-#~ msgid "Followers"
-#~ msgstr "Pratioci"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pratioci (kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pratioci (partneri)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ako je označeno, nove poruke zahtjevaju pažnju"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ako je označeno, nove poruke zahtjevaju pažnju"
-
-#~ msgid "Is Follower"
-#~ msgstr "Je pratioc"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnje poruke"
-
-#~ msgid "Messages"
-#~ msgstr "Poruke"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Broj akcija"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Broj poruka koje zahtjevaju akciju"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Broj nepročitanih poruka"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Nepročitane poruke"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Brojač nepročitanih poruka"

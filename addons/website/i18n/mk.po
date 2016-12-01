@@ -4,13 +4,14 @@
 #
 # Translators:
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
+# Anica Milanova, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-09 14:10+0000\n"
-"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-11-25 12:31+0000\n"
+"Last-Translator: Anica Milanova\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
 "mk/)\n"
 "Language: mk\n"
@@ -1344,6 +1345,7 @@ msgstr "Кликнете на иконката за да ја присвоите
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:49
 #: model:ir.ui.view,arch_db:website.s_banner
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #, python-format
 msgid "Click to customize this text"
 msgstr "Кликнете да го персонализирате овој текст"
@@ -1467,8 +1469,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.s_banner
 #: model:ir.ui.view,arch_db:website.s_big_message
 #: model:ir.ui.view,arch_db:website.s_comparisons
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #: model:ir.ui.view,arch_db:website.website_planner
 #: model:website.menu,name:website.menu_contactus
+#: model:website.menu,name:website.website2_menu_contactus
 msgid "Contact us"
 msgstr "Контактирајте не"
 
@@ -1670,6 +1674,11 @@ msgstr ""
 #, python-format
 msgid "Discard"
 msgstr "Отфрли"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Discuss and Comments"
+msgstr "Дискусии и коментари"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2178,6 +2187,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.footer_default
 #: model:website.menu,name:website.menu_homepage
+#: model:website.menu,name:website.website2_menu_homepage
 msgid "Home"
 msgstr "Дома"
 
@@ -2186,6 +2196,11 @@ msgstr "Дома"
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Homepage"
 msgstr "Почетна страна"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website2_homepage
+msgid "Homepage 0.0.0.0"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2551,6 +2566,11 @@ msgstr "Мени"
 #, python-format
 msgid "Menu <b>%s</b> seems to have a link to this page !"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Message"
+msgstr "Порака"
 
 #. module: website
 #. openerp-web
@@ -2945,6 +2965,16 @@ msgid "Partner"
 msgstr "Партнер"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Partner Detail"
+msgstr "Детали за партнер"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Partners"
+msgstr "Партнери"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Plan"
 msgstr ""
@@ -3099,6 +3129,11 @@ msgid "Real professional translators will translate all your contents"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Recipient"
+msgstr "Примач"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Reduce the time and resources spent on support."
 msgstr ""
@@ -3248,6 +3283,16 @@ msgstr "Продавајте преку интернет. Лесно."
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Sell more online"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send <span class=\"fa fa-long-arrow-right\"/>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send a Message to our Partners"
+msgstr "Испратете порака на нашите партнери"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3465,6 +3510,11 @@ msgstr ""
 #, python-format
 msgid "Test Your Mobile Version"
 msgstr "Тестирајте ја вашата верзија за мобилен"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Thank you for posting a message !"
+msgstr "Ви благодариме што пративте порака !"
 
 #. module: website
 #. openerp-web
@@ -3714,6 +3764,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/js/website.contentMenu.js:175
 #: model:website.menu,name:website.main_menu
+#: model:website.menu,name:website.website2_main_menu
 #, python-format
 msgid "Top Menu"
 msgstr "Главно мени"
@@ -3725,7 +3776,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.snippets.editor.js:771
+#: code:addons/website/static/src/js/website.snippets.editor.js:772
 #, python-format
 msgid "Transform the picture (click twice to reset transformation)"
 msgstr ""
@@ -4006,6 +4057,16 @@ msgstr "Мени на вебсајт"
 #: model:ir.model.fields,field_description:website.field_website_name
 msgid "Website Name"
 msgstr ""
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_post
+msgid "Website Partner Post and Thanks Demo"
+msgstr ""
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_comment
+msgid "Website Partners Comment Form"
+msgstr "Вебсајт формулар за коментари на партнери"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
@@ -4475,7 +4536,8 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "for a free evaluation of the usability of your homepage."
-msgstr "за бесплатна евалуација на користабилноста на Вашиот homepage."
+msgstr ""
+"за бесплатна евалуација на начинот на користење на Вашата почетна вебстрана."
 
 #. module: website
 #. openerp-web
@@ -4680,116 +4742,3 @@ msgstr "да"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "your Company details form"
 msgstr ""
-
-#~ msgid ".xml"
-#~ msgstr ".xml"
-
-#~ msgid ""
-#~ "<b>Great stories have personality.</b> Consider telling\n"
-#~ "                        a great story that provides personality. Writing "
-#~ "a story\n"
-#~ "                        with personality for potential clients will asist "
-#~ "with\n"
-#~ "                        making a relationship connection. This shows up "
-#~ "in small\n"
-#~ "                        quirks like word choices or phrases. Write from "
-#~ "your point\n"
-#~ "                        of view, not from someone else's experience."
-#~ msgstr ""
-#~ "<b>Одличните приказни имаат карактер.</b> Земете го ова во предвид кога "
-#~ "ја пишувате Вашата приказна. Пишувајќи приказна\n"
-#~ "со карактер за потенцијалните клиенти ќе ви помогне во \n"
-#~ "создавањето на подобрена односна врска.\n"
-#~ " Ова се однесува на малите делови како што се изборот на зборови или "
-#~ "фрази.\n"
-#~ "Пишувајте од Ваша сопствена гледна точка а не од нечие туѓо искуство."
-
-#~ msgid "<strong>Click Here</strong>"
-#~ msgstr "<strong>Кликни овде</strong>"
-
-#~ msgid ""
-#~ "A code server action can be executed from the website, using a "
-#~ "dedicatedcontroller. The address is <base>/website/action/<website_path>."
-#~ "Set this field as True to allow users to run this action. If itset to is "
-#~ "False the action cannot be run through the website."
-#~ msgstr ""
-#~ "Серверска код акција може да се изврши од вебсајтот, преку посветен "
-#~ "контролер. Адресата е <base>/website/action/<website_path>. Поставете го "
-#~ "ова поле како Вистинито да им дозволите на корисниците да ја стартуваат "
-#~ "оваа акција. Ако е подесено на Погрешно акцијата нема да може да се "
-#~ "стартува преку вебсајтот."
-
-#~ msgid "Add new pages and menus"
-#~ msgstr "Додадете нови страни и мениа"
-
-#~ msgid "Background"
-#~ msgstr "Позадина"
-
-#~ msgid "Color"
-#~ msgstr "Боја"
-
-#~ msgid "Discover more about Odoo"
-#~ msgstr "Откријте повеќе за Odoo"
-
-#~ msgid "Discuss and Comments"
-#~ msgstr "Дискусии и коментари"
-
-#~ msgid "Edit Menu Entry"
-#~ msgstr "Уреди внес во мени"
-
-#~ msgid "Hide link"
-#~ msgstr "Скриј линк"
-
-#~ msgid ""
-#~ "It might be possible to edit the relevant items\n"
-#~ "                                or fix the issue in"
-#~ msgstr ""
-#~ "Можно е да ги уредите релевантните објекти\n"
-#~ "                                или да го поправите проблемот во"
-
-#~ msgid "Menu Label"
-#~ msgstr "Наслов на мени"
-
-#~ msgid "Message"
-#~ msgstr "Порака"
-
-#~ msgid "Partner Detail"
-#~ msgstr "Детали за партнер"
-
-#~ msgid "Partners"
-#~ msgstr "Партнери"
-
-#~ msgid "Recipient"
-#~ msgstr "Примач"
-
-#~ msgid "Reset Transformation"
-#~ msgstr "Ресетирај трансформација"
-
-#~ msgid "Send a Message to our Partners"
-#~ msgstr "Испратете порака на нашите партнери"
-
-#~ msgid "Thank you for posting a message !"
-#~ msgstr "Ви благодариме што пративте порака !"
-
-#~ msgid "The 'Content' menu allows you to add pages or add the top menu."
-#~ msgstr ""
-#~ "Менито 'Содржина' ви дозволува да додавате страни или да го додадете "
-#~ "главното мени."
-
-#~ msgid "Transform"
-#~ msgstr "Трансформирај"
-
-#~ msgid "Website Partners Comment Form"
-#~ msgstr "Вебсајт формулар за коментари на партнери"
-
-#~ msgid "Yes."
-#~ msgstr "Да."
-
-#~ msgid "You should try others search criteria."
-#~ msgstr "Треба да пробате со други пребарувачки критериуми."
-
-#~ msgid "or"
-#~ msgstr "или"
-
-#~ msgid "sitemap-"
-#~ msgstr "sitemap-"

@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-06-13 15:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-10-19 09:19+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
@@ -32,6 +32,12 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Beste ${object.partner_name or 'applicant'},</p>\n"
+"<p>Bedankt voor je sollicitatie.<br />\n"
+"Helaas voldoet uw profiel niet aan onze eisen</p>\n"
+"<p>Indien u vragen heeft, laat het ons weten.</p>\n"
+"<p>Met vriendelijke groet,</p>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -45,6 +51,13 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Beste ${object.partner_name or 'applicant'},</p>\n"
+"<p>Bedankt voor je sollicitatie.<br />\n"
+"Uw profiel heeft onze interesse gewekt. Ik zal zo snel mogelijk contact "
+"opnemen om de volgende stappen in uw sollicitatie te plannen.</p>\n"
+"<p>Indien u vragen heeft, laat het ons weten.</p>\n"
+"<p>Met vriendelijke groet,</p>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_employee
@@ -60,6 +73,15 @@ msgid ""
 ".</p>\n"
 "<p>Please welcome him/her and help him/her finding his/her marks.</p>"
 msgstr ""
+"\n"
+"<p>Beste allen,</p>\n"
+"<p>Ik ben erg blij aan te kondigen dat<strong> ${object.name} </strong> ons "
+"zal versterken als ${object.job_id.name}\n"
+"%if object.department_id:\n"
+"in ${object.department_id.name}.\n"
+"%endif\n"
+".</p>\n"
+"<p>Geef hem/haar een warm welkom, en help hem/haar op weg in ons bedrijf.</p>"
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.recruitment_1_3_1
@@ -114,7 +136,7 @@ msgstr "<b>Graad:</b>"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<b>Departement:</b>"
-msgstr "<b>Departement:</b>"
+msgstr "<b>Afdeling:</b>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -507,6 +529,16 @@ msgid "Contract"
 msgstr "Contract"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
+msgid "Contract Proposal"
+msgstr "Contractvoorstel"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
+msgid "Contract Signed"
+msgstr "Contract getekend"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
 msgid "Create Date"
 msgstr "Aanmaakdatum"
@@ -526,6 +558,8 @@ msgstr "Maak alias"
 msgid ""
 "Create some aliases that will allow you to track where applicants come from."
 msgstr ""
+"Maak aliassen aan die u toestaan om te volgen waar sollicitanten vandaan "
+"komen."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
@@ -815,6 +849,11 @@ msgid "Filter and view on next actions and date"
 msgstr "Filter an weergave op volgende acties en datums"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Eerste gesprek"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr "Gevouwen in wervingsfases"
@@ -941,6 +980,11 @@ msgid "Important"
 msgstr "Belangrijk"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Initial Qualification"
+msgstr "Basiskwalificatie"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Interview Form"
@@ -991,7 +1035,7 @@ msgstr "Functies"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Job Specific"
-msgstr ""
+msgstr "Baan specifiek"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
@@ -1225,7 +1269,7 @@ msgid ""
 "etc."
 msgstr ""
 "Odoo helpt u bij het werven van sollicitanten en volgt\n"
-"alle handelingen op: vergaderingen, interviews, enz."
+"alle handelingen op: afspraken, interviews, enz."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -1234,7 +1278,7 @@ msgid ""
 "            process and follow up all operations: meetings, interviews, etc."
 msgstr ""
 "Odoo helpt u bij het werven van sollicitanten en volgt\n"
-"alle handelingen op: vergaderingen, interviews, enz."
+"alle handelingen op: afspraken, interviews, enz."
 
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_3
@@ -1405,12 +1449,12 @@ msgstr "Weigeren"
 #. module: hr_recruitment
 #: model:survey.label,value:hr_recruitment.rrow_2_1_12
 msgid "Regular meetings"
-msgstr "Regelmatig vergaderingen"
+msgstr "Regelmatig afspraken"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Reopen Application"
-msgstr ""
+msgstr "Heropen sollicitatie"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1497,6 +1541,11 @@ msgid "Search through resumes and motivation letters."
 msgstr "Zoek door CV's en motivatiebrieven."
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "Tweede gesprek"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_sequence
 msgid "Sequence"
@@ -1545,6 +1594,8 @@ msgstr "Specifiek e-mail adres"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Specific job that uses this stage. Other jobs will not use this stage."
 msgstr ""
+"Specifieke job die deze fase gebruikt. Andere jobs zullen deze fase niet "
+"gebruiken."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
@@ -1693,6 +1744,9 @@ msgid ""
 "These aliases can be emails or urls for every source. When the applicant "
 "arrives here through one of these you'll know where he came from."
 msgstr ""
+"Deze aliassen kunnen e-mails of links zij voor elke bron. Wanneer de "
+"sollicitant hier terecht komt via een van deze zult u weten waar de "
+"sollicitant vandaan gekomen is."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
@@ -1811,7 +1865,7 @@ msgstr "Emails toeschouwers"
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_employee
 msgid "Welcome ${object.name} "
-msgstr ""
+msgstr "Welkom ${object.name} "
 
 #. module: hr_recruitment
 #: model:survey.question,question:hr_recruitment.recruitment_1_3
@@ -1863,230 +1917,3 @@ msgstr "Sollicitanten"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
-
-#~ msgid ""
-#~ "\n"
-#~ "            <p>\n"
-#~ "                %if object.department_id:\n"
-#~ "                    I’m very pleased to announce that <strong> ${object."
-#~ "name} </strong> will be joining us as a ${object.job_id.name}\n"
-#~ "                    in ${object.department_id.name}.\n"
-#~ "                %else:\n"
-#~ "                    I’m very pleased to announce that <strong> ${object."
-#~ "name} </strong> will be joining us as a ${object.job_id.name}.\n"
-#~ "                %endif\n"
-#~ "            </p>\n"
-#~ "            <p>Please welcome him/her and help him/her finding his/her "
-#~ "marks.</p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "            <p>\n"
-#~ "                %if object.department_id:\n"
-#~ "                    Ik ben blij u te kunnen meedelen dat <strong> "
-#~ "${object.name} </strong> ons zal versterken als ${object.job_id.name}\n"
-#~ "                    in ${object.department_id.name}.\n"
-#~ "                %else:\n"
-#~ "                    Ik ben blij u te kunnen meedelen dat <strong> "
-#~ "${object.name} </strong> ons zal versterken als ${object.job_id.name}.\n"
-#~ "                %endif\n"
-#~ "            </p>\n"
-#~ "            <p>Geef hem/haar een warm welkom, en help hem/haar op weg in "
-#~ "ons bedrijf.</p>\n"
-#~ "            "
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>Congrats! Your resume's got our interest!\n"
-#~ "        I will call you as soon as possible to make a 10 minutes phone "
-#~ "interview and  plan a first meeting.</p>\n"
-#~ "        <p>If we can’t reach you or if you miss our call, feel free to "
-#~ "reach me back on the number 001 312 349 3030\n"
-#~ "        If I do not answer, please let me a message with some schedules "
-#~ "to call you back.</p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id.signature | safe}"
-#~ msgstr ""
-#~ "<p>Beste ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>Gefeliciteerd, uw CV heeft onze aandacht getrokken!\n"
-#~ "        Ik zal u zo spoedig mogelijk opbellen voor een 10 min. durend\"\n"
-#~ "        telefonisch sollicitatiegesprek en het plannen van een eerste "
-#~ "afspraak.</p>\n"
-#~ "        <p>Indien we u niet kunnen bereiken, of als u het gesprek heeft\n"
-#~ "         gemist, kunt u me bereiken op 001 312 349 3030\n"
-#~ "        Indien ik niet kan opnemen, laat dan a.u.b. een bericht achter "
-#~ "met \n"
-#~ "         tijden waarop ik u het beste kan bereiken.</p>\n"
-#~ "        <p>Met vriendelijke groet,</p>\n"
-#~ "        <br/>\n"
-#~ "          ${object.user_id.signature | safe}"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>We thank you for your interest in our company and for your "
-#~ "application.\n"
-#~ "        Unfortunately, your profile does not match with our needs or our "
-#~ "recruitment\n"
-#~ "        campaign has reached its term.</p>\n"
-#~ "        <p>If you want more details, feel free to contact us by phone.</"
-#~ "p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id and object.user_id.signature | safe or ''}"
-#~ msgstr ""
-#~ "<p>Beste ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>We willen u danken voor de interesse in ons bedrijf en voor uw "
-#~ "sollicitatie.\n"
-#~ "                Helaas komt u profiel niet overeen met de onze vereisten "
-#~ "of het termijn\n"
-#~ "                is reeds verstreken.</p>\n"
-#~ "        <p>Indien u meer details wilt, kunt u altijd contact opnemen met "
-#~ "ons.</p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "          ${object.user_id and object.user_id.signature | safe or ''}"
-
-#~ msgid "Action Needed"
-#~ msgstr "Vereist actie"
-
-#~ msgid "Campaign"
-#~ msgstr "Campagne"
-
-#~ msgid "Contract Proposal"
-#~ msgstr "Contractvoorstel"
-
-#~ msgid "Contract Signed"
-#~ msgstr "Contract getekend"
-
-#~ msgid ""
-#~ "Create email and url for each distinct source. <br>\n"
-#~ "                When the applicant will arrive, you will know from wich "
-#~ "source the Job position is coming."
-#~ msgstr ""
-#~ "Maak een emailadres en een url aan voor elke afzonderlijke bron. <br>\n"
-#~ "Wanneer de sollicitant zich aanbiedt, weet u onmiddellijk van waar de "
-#~ "vacature werd gevonden."
-
-#~ msgid ""
-#~ "Create here some alias...\n"
-#~ "                That will allow you to track from where the applicant is "
-#~ "coming from..."
-#~ msgstr ""
-#~ "Maak hier een alias...\n"
-#~ "Deze staat u toe om te traceren waar de sollicitant vandaan komt..."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
-
-#~ msgid "First Interview"
-#~ msgstr "Eerste gesprek"
-
-#~ msgid "Followers"
-#~ msgstr "Volgers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Volgers (Kanalen)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Volgers (Partners)"
-
-#~ msgid "HR Department"
-#~ msgstr "HR afdeling"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
-
-#~ msgid "If other, precise:"
-#~ msgstr "Indien andere, specifieer:"
-
-#~ msgid "Initial Qualification"
-#~ msgstr "Basiskwalificatie"
-
-#~ msgid "Is Follower"
-#~ msgstr "Is een volger"
-
-#~ msgid "Job Stages"
-#~ msgstr "Job fases"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Laatste bericht datum"
-
-#~ msgid "Messages"
-#~ msgstr "Berichten"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Berichten en communicatie historie"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Aantal acties"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Aantal berichten die actie vereisen"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Aantal ongelezen berichten"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Personeelsbeheer menu openen"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Beleid om een bericht te versturen bij een document door gebruik te maken "
-#~ "van de mail gateway.\n"
-#~ "-iedereen: iedereen mag versturen\n"
-#~ "-relaties: alleen geautoriseerde relaties\n"
-#~ "-volgers: allen volgers van een bijbehorend document\n"
-
-#~ msgid "Reset Application"
-#~ msgstr "Reset sollicitatie"
-
-#~ msgid "Second Interview"
-#~ msgstr "Tweede gesprek"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Dit is de naam welke u helpt om uw verschillende campagnes te volgen. "
-#~ "Zoals bijvoorbeeld: Fall_drive, Christmas_Special"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Teller ongelezen berichten"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website berichten"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website communicatie geschiedenis"
-
-#~ msgid "Welcoming ${object.name} "
-#~ msgstr "Verwelkoming ${object.name}"
-
-#~ msgid "Click to add a new tag."
-#~ msgstr "Klik om een nieuw label toe te voegen."
-
-#~ msgid "Content"
-#~ msgstr "Inhoud"
-
-#~ msgid "Create"
-#~ msgstr "Aanmaken"
-
-#~ msgid "Departments"
-#~ msgstr "Afdelingen"
-
-#~ msgid "Discard"
-#~ msgstr "Negeren"
-
-#~ msgid "Hr Department"
-#~ msgstr "HR afdeling"
-
-#~ msgid "Refused"
-#~ msgstr "Geweigerd"

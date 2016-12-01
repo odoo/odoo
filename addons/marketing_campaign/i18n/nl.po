@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-08-06 10:39+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
@@ -20,6 +20,49 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_3
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to let you know that you have entered the select circle "
+"of our Gold Partners!</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"\n"
+"<p>Hallo,</p>\n"
+"<p>We zijn verheugd om u te laten weten dat u tot onze Gold Partner cirkel "
+"bent toegelaten!</p>\n"
+"<p>Bedankt.</p>\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_2
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to welcome you among our Silver Partners as of today!</"
+"p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"\n"
+"<p>Hallo,</p>\n"
+"<p>We zijn verheugt om je te verwelkomen tot de groep van Silver partners "
+"sinds vandaag!</p>\n"
+"<p>Bedankt,</p>\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_1
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>You will receive your welcome pack via email shortly.</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+"\n"
+"<p>Hella,</p>\n"
+"<p>Hallo, uw ontvangt binnenkort een welkomstgeschenk per e-mail</p>\n"
+"<p>Bedankt,</p>\n"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -232,6 +275,16 @@ msgstr "Afsluiten"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_condition
 msgid "Condition"
 msgstr "Voorwaarde"
+
+#. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_2
+msgid "Congratulations! You are now a Silver Partner!"
+msgstr "Gefeliciteerd! U bent nu zilver partner!"
+
+#. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_3
+msgid "Congratulations! You are now one of our Gold Partners!"
+msgstr "Gefeliciteerd! U bent nu een van onze Gold Partners!"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:480
@@ -760,6 +813,9 @@ msgid ""
 "on\n"
 "            your leads and partners to fulfill the campaign."
 msgstr ""
+"Odoo's marketingcampagnes geven u de mogelijkheid om de interactie\n"
+"met uw prospects te automatiseren. U kunt een segment bepalen (een reeks "
+"voorwaarden) voor uw leads en relaties om de campagne uit te voeren."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -786,6 +842,11 @@ msgstr "Relatie"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid "Partner Field"
 msgstr "Relatie veld"
+
+#. module: marketing_campaign
+#: model:ir.filters,name:marketing_campaign.filter0
+msgid "Partners"
+msgstr "Relaties"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
@@ -1162,6 +1223,11 @@ msgid "Variable Cost"
 msgstr "Variabele kosten"
 
 #. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_1
+msgid "Welcome to the Odoo Partner Channel!"
+msgstr "Welkom op het Odoo partner kanaal!"
+
+#. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "With Manual Confirmation"
 msgstr "Met handmatige bevestiging"
@@ -1180,44 +1246,3 @@ msgstr "Jaar(en)"
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
-
-#~ msgid "Congratulations! You are now a Silver Partner!"
-#~ msgstr "Gefeliciteerd! U bent nu zilver partner!"
-
-#~ msgid "Congratulations! You are now one of our Gold Partners!"
-#~ msgstr "Gefeliciteerd! U bent nu een van onze Gold Partners!"
-
-#~ msgid "Hello, you will receive your welcome pack via email shortly."
-#~ msgstr "Hallo, uw ontvangt binnenkort een welkomgeschenk per e-mail"
-
-#~ msgid ""
-#~ "Hi, we are delighted to let you know that you have entered the select "
-#~ "circle of our Gold Partners"
-#~ msgstr ""
-#~ "Hallo, we zijn verheugt om je te kunnen melden dat je bent toegetreden "
-#~ "tot de selectie groep van Gold partners."
-
-#~ msgid ""
-#~ "Hi, we are delighted to welcome you among our Silver Partners as of today!"
-#~ msgstr ""
-#~ "Hallo, we zijn verheugt om je te kunnen melden dat je bent toegetreden "
-#~ "tot de groep van Silver partners."
-
-#~ msgid ""
-#~ "Odoo's marketing campaign allows you to automate communication\n"
-#~ "            to your prospects. You can define a segment (set of "
-#~ "conditions) on\n"
-#~ "            your leads and partners to fullfil the campaign."
-#~ msgstr ""
-#~ "Odoo's marketingcampagnes geven u de mogelijkheid om de interactie\n"
-#~ "met uw prospects te automatiseren. U kunt een segment bepalen (een reeks\n"
-#~ "voorwaarden) voor uw leads en relaties om de campagne uit te voeren."
-
-#~ msgid "Open Marketing Menu"
-#~ msgstr "Open Marketing menu"
-
-#~ msgid "Partners"
-#~ msgstr "Relaties"
-
-#~ msgid "Welcome to the Odoo Partner Channel!"
-#~ msgstr "Welkom op het Odoo partner kanaal!"

@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
 "PO-Revision-Date: 2016-08-03 18:13+0000\n"
 "Last-Translator: Fabien Pinckaers <fp@openerp.com>\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
@@ -243,7 +243,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "<i class=\"fa fa-envelope-o\"/> Email Our Website Expert"
 msgstr ""
-"<i class=\"fa fa-envelope-o\"/> Envoyez un courriel à nos experts du site web"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippets
@@ -1608,6 +1607,7 @@ msgstr "Cliquez sur l'icône pour l'adapter à vos besoins"
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:49
 #: model:ir.ui.view,arch_db:website.s_banner
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #, python-format
 msgid "Click to customize this text"
 msgstr "Cliquez ici pour personnaliser ce texte"
@@ -1733,8 +1733,10 @@ msgstr "Contact un Manager de Domaine dans votre pays pour en acheter un"
 #: model:ir.ui.view,arch_db:website.s_banner
 #: model:ir.ui.view,arch_db:website.s_big_message
 #: model:ir.ui.view,arch_db:website.s_comparisons
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #: model:ir.ui.view,arch_db:website.website_planner
 #: model:website.menu,name:website.menu_contactus
+#: model:website.menu,name:website.website2_menu_contactus
 msgid "Contact us"
 msgstr "Contactez-nous"
 
@@ -1951,6 +1953,11 @@ msgstr "Désactiver la lecture automatique"
 #, python-format
 msgid "Discard"
 msgstr "Annuler"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Discuss and Comments"
+msgstr "Discussions et commentaires"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2464,7 +2471,7 @@ msgstr "Titre ou description de produit,"
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Help"
-msgstr "Aide"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2482,6 +2489,7 @@ msgstr "Voici un guide des bases de l'A/B testing:"
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.footer_default
 #: model:website.menu,name:website.menu_homepage
+#: model:website.menu,name:website.website2_menu_homepage
 msgid "Home"
 msgstr "Accueil"
 
@@ -2490,6 +2498,11 @@ msgstr "Accueil"
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Homepage"
 msgstr "Page d'accueil"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website2_homepage
+msgid "Homepage 0.0.0.0"
+msgstr "Page d'accueil 0.0.0.0"
 
 #. module: website
 #. openerp-web
@@ -2896,6 +2909,11 @@ msgid "Menu <b>%s</b> seems to have a link to this page !"
 msgstr "Menu <b>%s</b> semble avoir un lien vers cette page !"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Message"
+msgstr "Message"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/website.mobile.js:42
 #, python-format
@@ -3300,6 +3318,16 @@ msgid "Partner"
 msgstr "Partenaire"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Partner Detail"
+msgstr "Détail du partenaire"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Partners"
+msgstr "Partenaires"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Plan"
 msgstr "Plan"
@@ -3460,6 +3488,11 @@ msgid "Real professional translators will translate all your contents"
 msgstr "De vrais traducteurs professionels traduiront tout votre contenu. "
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Recipient"
+msgstr "Destinataire"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Reduce the time and resources spent on support."
 msgstr "Réduisez le temps et les ressources dépensé sur le support."
@@ -3611,6 +3644,16 @@ msgstr "Vendez en ligne. Facilement."
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Sell more online"
 msgstr "vendez plus en ligne. "
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send <span class=\"fa fa-long-arrow-right\"/>"
+msgstr "Envoyer <span class=\"fa fa-long-arrow-right\"/>"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send a Message to our Partners"
+msgstr "Envoyer un message à vos partenaires"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3840,6 +3883,11 @@ msgstr "Modèle de repli"
 #, python-format
 msgid "Test Your Mobile Version"
 msgstr "Testez votre version mobile"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Thank you for posting a message !"
+msgstr "Merci d'avoir poster un message!"
 
 #. module: website
 #. openerp-web
@@ -4116,6 +4164,7 @@ msgstr "Pour en apprendre d'avantage, jettez un coup d'oeil à leur"
 #. openerp-web
 #: code:addons/website/static/src/js/website.contentMenu.js:175
 #: model:website.menu,name:website.main_menu
+#: model:website.menu,name:website.website2_main_menu
 #, python-format
 msgid "Top Menu"
 msgstr "Menu du haut"
@@ -4127,7 +4176,7 @@ msgstr "Retraçage"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.snippets.editor.js:771
+#: code:addons/website/static/src/js/website.snippets.editor.js:772
 #, python-format
 msgid "Transform the picture (click twice to reset transformation)"
 msgstr ""
@@ -4450,6 +4499,16 @@ msgstr "Menu du site web"
 #: model:ir.model.fields,field_description:website.field_website_name
 msgid "Website Name"
 msgstr "Nom du site web"
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_post
+msgid "Website Partner Post and Thanks Demo"
+msgstr "Post d'une site web partenaire et Démo de remerciement"
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_comment
+msgid "Website Partners Comment Form"
+msgstr "Formulaire de commentaire de sites web partenaires"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
@@ -5194,385 +5253,3 @@ msgstr "oui"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "your Company details form"
 msgstr "le formulaire contenant les détails de votre société"
-
-#~ msgid "&lt;!DOCTYPE html&gt;"
-#~ msgstr "&lt;!DOCTYPE html&gt;"
-
-#~ msgid ".xml"
-#~ msgstr ".xml"
-
-#~ msgid ""
-#~ "<b>Great stories have personality.</b> Consider telling\n"
-#~ "                        a great story that provides personality. Writing "
-#~ "a story\n"
-#~ "                        with personality for potential clients will asist "
-#~ "with\n"
-#~ "                        making a relationship connection. This shows up "
-#~ "in small\n"
-#~ "                        quirks like word choices or phrases. Write from "
-#~ "your point\n"
-#~ "                        of view, not from someone else's experience."
-#~ msgstr ""
-#~ "<b>Les meilleures histoires ont une personnalité.</b> Considérez la "
-#~ "rédaction\n"
-#~ "                        d'une super histoire qui donne de la "
-#~ "personnalité. Ecrire une histoire\n"
-#~ "                        avec de la personnalité pour des clients "
-#~ "potentiels vous aidera\n"
-#~ "                        à créer une connexion relationnelle. Cela se "
-#~ "manifeste dans de petites\n"
-#~ "                        bizarreries comme le choix des mots ou des "
-#~ "phrases. Ecrivez depuis votre point\n"
-#~ "                        de vue, pas depuis l'expérience de quelqu'un "
-#~ "d'autre."
-
-#~ msgid "<i class=\"fa fa-th-large\"/> Website<b class=\"caret\"/>"
-#~ msgstr "<i class=\"fa fa-th-large\"/> Site web<b class=\"caret\"/>"
-
-#~ msgid "<span class=\"fa fa-envelope-o\"/> Email Our Website Expert"
-#~ msgstr ""
-#~ "<span class=\"fa fa-envelope-o\"/> Envoyez un mail à nos experts du site "
-#~ "web"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-align-justify fa-stack-1x\"/>\n"
-#~ "        </span> Content"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-align-justify fa-stack-1x\"/>\n"
-#~ "        </span> Contenu"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-paper-plane fa-stack-1x\"/>\n"
-#~ "        </span> Effect"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-paper-plane fa-stack-1x\"/>\n"
-#~ "        </span> Effet"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-pie-chart fa-stack-1x\"/>\n"
-#~ "        </span> Feature"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-pie-chart fa-stack-1x\"/>\n"
-#~ "        </span> Fonctionnalité"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-th-large fa-stack-1x\"/>\n"
-#~ "        </span> Structure"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-th-large fa-stack-1x\"/>\n"
-#~ "        </span> Structure"
-
-#~ msgid "<span title=\"Edit Top Menu\">Edit Menu</span>"
-#~ msgstr "<span title=\"Edit Top Menu\">Modifier le menu</span>"
-
-#~ msgid ""
-#~ "<span title=\"Optimize your AdWords account\">Optimize AdWords Campaign</"
-#~ "span>"
-#~ msgstr ""
-#~ "<span title=\"Optimiser votre compte AdWords\">Optimiser votre campagne "
-#~ "AdWords</span>"
-
-#~ msgid "<span title=\"Promote page on the web\">Optimize SEO</span>"
-#~ msgstr ""
-#~ "<span title=\"Promouvoir votre page sur Internet\">Optimiser le SEO</span>"
-
-#~ msgid "<strong>Click Here</strong>"
-#~ msgstr "<strong>Cliquer ici</strong>"
-
-#~ msgid ""
-#~ "A code server action can be executed from the website, using a "
-#~ "dedicatedcontroller. The address is <base>/website/action/<website_path>."
-#~ "Set this field as True to allow users to run this action. If itset to is "
-#~ "False the action cannot be run through the website."
-#~ msgstr ""
-#~ "Une action code serveur peut être exécutée depuis le site web, utilisant "
-#~ "un contrôleur dédié. L'adresse est <base>/website/action/<website_path>. "
-#~ "Configurez ce champ comme Vrai pour permettre aux utilisateur de faire "
-#~ "cette action. S'il est mis sur Faux, l'action ne peut être exécuté via le "
-#~ "site web."
-
-#~ msgid "Add new pages and menus"
-#~ msgstr "Ajouter de nouvelles pages et menus"
-
-#~ msgid ""
-#~ "As you add more pages to your website, you main menu will begin to feel "
-#~ "overcrowded.\n"
-#~ "                            You can regroup similar pages into a sub-"
-#~ "menu, so they will appear under a unique drop-down menu."
-#~ msgstr ""
-#~ "Comme vous ajoutez plus de pages à votre site web, votre menu principal "
-#~ "commencera à être surchargé.\n"
-#~ "Vous pouvez regrouper des pages similaires en sous-menus, afin qu'elles "
-#~ "apparaissent sous un unique menu déroulant."
-
-#~ msgid "Background"
-#~ msgstr "Arrière-plan"
-
-#~ msgid "Check now and discover more today!"
-#~ msgstr "Essayez maintenant et découvrez-en plus dès aujourd'hui !"
-
-#~ msgid "Color"
-#~ msgstr "Couleur"
-
-#~ msgid "Content <span class=\"caret\"/>"
-#~ msgstr "Contenu <span class=\"caret\"/>"
-
-#~ msgid "Customize <span class=\"caret\"/>"
-#~ msgstr "Personnaliser <span class=\"caret\"/>"
-
-#~ msgid ""
-#~ "Deploy new stores with just an internet connection: no\n"
-#~ "                installation, no specific hardware required. It works "
-#~ "with any\n"
-#~ "                iPad, Tablet PC, laptop or industrial POS machine."
-#~ msgstr ""
-#~ "Déployez de nouveaux magasins avec juste une connexion internet: ni "
-#~ "d'installation ou d'hardware spécifique ne sont nécessaires. Cela "
-#~ "fonctionne avec n'importe quel\n"
-#~ "iPad, tablette PC, ordinateur portable ou machine industrielle POS."
-
-#~ msgid "Discover more about Odoo"
-#~ msgstr "En savoir plus sur Odoo"
-
-#~ msgid "Discuss and Comments"
-#~ msgstr "Discussions et commentaires"
-
-#~ msgid "Edit Menu Entry"
-#~ msgstr "Editer un élément dans le menu"
-
-#~ msgid "Help <span class=\"caret\"/>"
-#~ msgstr "Aide <span class=\"caret\"/>"
-
-#~ msgid "Hide link"
-#~ msgstr "Cacher le(s) lien(s)"
-
-#~ msgid "Homepage 0.0.0.0"
-#~ msgstr "Page d'accueil 0.0.0.0"
-
-#~ msgid ""
-#~ "In case you still feel a bit puzzled about all\n"
-#~ "                        of our yesterday's announcements, here is a "
-#~ "little\n"
-#~ "                        summary for you. <br/>\n"
-#~ "                        We have decided to change the\n"
-#~ "                        name because <b>\"OpenERP\"</b> didn't reflect "
-#~ "the offering\n"
-#~ "                        of the company anymore. With our newest apps, "
-#~ "such\n"
-#~ "                        as Website Builder, PoS or eCommerce, we have\n"
-#~ "                        moved beyond the ERP territory. <br/>\n"
-#~ "                        But <u>don't worry</u>, <b>Odoo</b> is and always "
-#~ "will be\n"
-#~ "                        fully open source. You can read more about the "
-#~ "new name here.\n"
-#~ "                        We have also prepared a short FAQ to explain all "
-#~ "these changes\n"
-#~ "                        to all of you. <br/>"
-#~ msgstr ""
-#~ "Dans le cas où vous vous sentez un peu perplexe au sujet de\n"
-#~ "nos annoncements d'hier, voici un petit\n"
-#~ "résumé pour vous. <br/>\n"
-#~ "Nous avons décidé de changer de \n"
-#~ "nom car <b>\"OpenERP\"</b> ne reflétait plus l'offre\n"
-#~ "de la société. Avec nos nouvelles applications, telles\n"
-#~ "que Création de site Web, PoS, ou eCommerce, nous allons\n"
-#~ "au-delà du territoire des progiciels (ERP). <br/>\n"
-#~ "Mais <u>pas d'inquiétudes</u>, <b>Odoo</b> est toujours et restera\n"
-#~ "complètement libre. Vous pouvez en savoir plus en lisant au sujet du "
-#~ "nouveau nom ici.\n"
-#~ "Nous vous avons aussi préparé un court FAQ pour expliquer tous ces "
-#~ "changements\n"
-#~ "à vous tous. <br/>"
-
-#~ msgid ""
-#~ "It might be possible to edit the relevant items\n"
-#~ "                                or fix the issue in"
-#~ msgstr ""
-#~ "Il est possible de modifier les articles pertinents\n"
-#~ "ou de fixer l'incident dans"
-
-#~ msgid "Menu Label"
-#~ msgstr "Menu Libellé"
-
-#~ msgid "Message"
-#~ msgstr "Message"
-
-#~ msgid "Odoo Members"
-#~ msgstr "Membres Odoo"
-
-#~ msgid ""
-#~ "Odoo's POS is a web application that can run on any device that\n"
-#~ "                can display websites with little to no setup required."
-#~ msgstr ""
-#~ "Le Point de Vente Odoo est une application web qui fonctionne sur "
-#~ "n'importe quel support qui\n"
-#~ "peut afficher des sites internet avec peu ou pas d'installation requise"
-
-#~ msgid "Our products &amp; Services"
-#~ msgstr "Nos produits &amp; services"
-
-#~ msgid "Partner Detail"
-#~ msgstr "Détail du partenaire"
-
-#~ msgid "Partners"
-#~ msgstr "Partenaires"
-
-#~ msgid "Press The Top-Left Edit Button"
-#~ msgstr "Cliquez sur le bouton \"Modifier\" en haut à gauche"
-
-#~ msgid "Project Management Questions <small>v7</small>"
-#~ msgstr "Questions sur le Project Management <small>v7</small>"
-
-#~ msgid "Promote <span class=\"caret\"/>"
-#~ msgstr "Promouvoir <span class=\"caret\"/>"
-
-#~ msgid "Recipient"
-#~ msgstr "Destinataire"
-
-#~ msgid "Reset Transformation"
-#~ msgstr "Réinitialiser la Transformation"
-
-#~ msgid "Send <span class=\"fa fa-long-arrow-right\"/>"
-#~ msgstr "Envoyer <span class=\"fa fa-long-arrow-right\"/>"
-
-#~ msgid "Send a Message to our Partners"
-#~ msgstr "Envoyer un message à vos partenaires"
-
-#~ msgid "Thank you for posting a message !"
-#~ msgstr "Merci d'avoir poster un message!"
-
-#~ msgid "The 'Content' menu allows you to add pages or add the top menu."
-#~ msgstr ""
-#~ "Le menu 'Contenu' vous permet d'ajouter des pages ou des top menus.  "
-
-#~ msgid ""
-#~ "The Point of Sale works perfectly on any kind of touch enabled\n"
-#~ "                device, whether it's multi-touch tablets like an iPad or\n"
-#~ "                keyboardless resistive touchscreen terminals."
-#~ msgstr ""
-#~ "Le Point de Vente fonctionne parfaitement sur tout type d'appareil\n"
-#~ "tactile, que ce soit des tablettes multi-touch comme iPad ou\n"
-#~ "des terminaux tactiles sans clavier."
-
-#~ msgid "Transform"
-#~ msgstr "Transformer"
-
-#~ msgid "Use Google Adword"
-#~ msgstr "Utiliser Google Adword"
-
-#~ msgid "Website Partner Post and Thanks Demo"
-#~ msgstr "Post d'une site web partenaire et Démo de remerciement"
-
-#~ msgid "Website Partners Comment Form"
-#~ msgstr "Formulaire de commentaire de sites web partenaires"
-
-#~ msgid "What a day it was yesterday - such a big day for us!"
-#~ msgstr "Quel jour c'était hier - une grosse journée pour nous!"
-
-#~ msgid ""
-#~ "While an internet connection is required to start the Point of\n"
-#~ "                Sale, it will stay operational even after a complete "
-#~ "disconnection."
-#~ msgstr ""
-#~ "Bien qu'une connexion internet est nécessaire pour démarrer le Point de\n"
-#~ "Vente, il restera opérationnel même après une déconnexion complète."
-
-#~ msgid ""
-#~ "With Odoo's fully integrated software, you can easily manage your\n"
-#~ "                        meetings, schedule business calls, create "
-#~ "recurring meetings,\n"
-#~ "                        synchronize your agenda and easily keep in touch "
-#~ "with your colleagues,\n"
-#~ "                        partners and other people involved in projects or "
-#~ "business discussions.\n"
-#~ "                        <br/><br/>"
-#~ msgstr ""
-#~ "Avec le logiciel Odoo complètement intégré, vous pouvez facilement gérer "
-#~ "vos\n"
-#~ "réunions, planifier vos appels, créer des réunions récurrentes, \n"
-#~ "synchroniser votre agenda et rester en contact facilement avec vos "
-#~ "collègues, \n"
-#~ "partenaires et autres personnes impliquées dans des projets ou "
-#~ "discussions d'affaires.\n"
-#~ "<br/><br/>"
-
-#~ msgid "Yes."
-#~ msgstr "Oui."
-
-#~ msgid "You should try others search criteria."
-#~ msgstr "Essayer d'autres critères de recherche."
-
-#~ msgid "ex: Contact us, Our Customers, Privacy Policy, Events, Bolg, Jobs"
-#~ msgstr ""
-#~ "ex: Contactez-nous, Nos clients, Politique de Confidentialité , "
-#~ "Evénements, Blogs, Offres d'emploi"
-
-#~ msgid "or"
-#~ msgstr "ou"
-
-#~ msgid "sitemap-"
-#~ msgstr "sitemap-"
-
-#~ msgid ""
-#~ ",\n"
-#~ "                                                      the #1"
-#~ msgstr ""
-#~ ",\n"
-#~ "le #1"
-
-#~ msgid "API Key"
-#~ msgstr "Clé API"
-
-#~ msgid "Confirmation"
-#~ msgstr "Confirmation"
-
-#~ msgid "Dashboard"
-#~ msgstr "Tableau de bord"
-
-#~ msgid "Favicon"
-#~ msgstr "Icône favorite"
-
-#~ msgid "Follow"
-#~ msgstr "Suivre"
-
-#~ msgid "Google Analytics"
-#~ msgstr "Google Analytics"
-
-#~ msgid "Month"
-#~ msgstr "Mois"
-
-#~ msgid "More Info"
-#~ msgstr "Plus d'infos"
-
-#~ msgid "Partner-related data of the user"
-#~ msgstr "Données du partenaire lié à l'utilisateur"
-
-#~ msgid "Settings"
-#~ msgstr "Configuration"
-
-#~ msgid "Speed"
-#~ msgstr "Vitesse"
-
-#~ msgid "This field is used to set/get locales for user"
-#~ msgstr ""
-#~ "Ce champ est utilisé pour mettre/recupérer la locale de l'utilisateur"
-
-#~ msgid "Warning!"
-#~ msgstr "Avertissement!"
-
-#~ msgid "Week"
-#~ msgstr "Semaine"
-
-#~ msgid "Year"
-#~ msgstr "Année"
-
-#~ msgid "base.config.settings"
-#~ msgstr "base.config.settings"

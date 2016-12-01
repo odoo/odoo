@@ -3,22 +3,18 @@
 # * mrp
 #
 # Translators:
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-06 08:35+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-09-20 10:02+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  cs.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"#-#-#-#-#  cs.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: mrp
@@ -575,7 +571,7 @@ msgstr "Spotřebováno na"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Cost Structure"
-msgstr ""
+msgstr "Struktura ceny"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
@@ -897,6 +893,12 @@ msgstr "Neaktivní"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
 msgid "Internal Reference"
 msgstr "Vnitropodniková značka"
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
@@ -1279,7 +1281,7 @@ msgstr "Nadřazený kusovník"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_routing_id
 msgid "Parent Routing"
-msgstr ""
+msgstr "Nadřazený pracovní postup"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1397,7 +1399,7 @@ msgstr "Varianta výrobku"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_product_variant
 msgid "Product Variants"
-msgstr ""
+msgstr "Varianty výrobku"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -1527,7 +1529,7 @@ msgstr "Vlastnost"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9667
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1556,7 +1558,7 @@ msgstr "Množství (zákl. MJ)"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Raw Materials"
-msgstr ""
+msgstr "Surový materiál"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
@@ -1607,7 +1609,7 @@ msgstr "Vztažené uživatelské jméno pro zdroj ke spravování jeho přístup
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Reserve"
-msgstr ""
+msgstr "Vyjímka"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_resource_id
@@ -1654,7 +1656,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Routing"
-msgstr ""
+msgstr "Pracovní postup"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -1952,7 +1954,7 @@ msgstr "Ke spotřebě"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Total Cost"
-msgstr ""
+msgstr "Celkové náklady"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
@@ -2236,6 +2238,14 @@ msgstr ""
 "nebo zrušte."
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "dnů"
@@ -2280,42 +2290,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "neznámé"
-
-#~ msgid "Action Needed"
-#~ msgstr "Vyžadována akce"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Změnit množství"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum posledního vzkazu u tohoto záznamu."
-
-#~ msgid "Followers"
-#~ msgstr "Sledující"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum posledního vzkazu"
-
-#~ msgid "Messages"
-#~ msgstr "Zprávy"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Zprávy a historie komunikace"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "Otevřít menu MRP"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Nepřečtené zprávy"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Počítadlo nepřečtených zpráv"
-
-#~ msgid "Website Messages"
-#~ msgstr "Zprávy Webové stránky"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historie komunikace Webové stránky"

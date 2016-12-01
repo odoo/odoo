@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-06 08:35+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-09-19 09:01+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
 "Language: ko\n"
@@ -882,6 +882,12 @@ msgid "Internal Reference"
 msgstr "내부 참조"
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
@@ -1508,7 +1514,7 @@ msgstr "속성"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9667
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -2210,6 +2216,14 @@ msgstr ""
 "먼저 닫거나 취소하십시오."
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "일"
@@ -2254,36 +2268,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "알 수 없음"
-
-#~ msgid "Change Quantity"
-#~ msgstr "변경 수량"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "레코드에 게시된 최근 메시지의 날짜."
-
-#~ msgid "Followers"
-#~ msgstr "팔로워"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
-
-#~ msgid "Last Message Date"
-#~ msgstr "최근 메시지 날짜"
-
-#~ msgid "Messages"
-#~ msgstr "메시지"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "메시지 및 대화 기록"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "자재소요계획 메뉴 열기"
-
-#~ msgid "Unread Messages"
-#~ msgstr "읽지 않은 메시지"
-
-#~ msgid "Website Messages"
-#~ msgstr "웹사이트 메시지"
-
-#~ msgid "Website communication history"
-#~ msgstr "웹사이트 대화 이력"

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-02-11 10:34+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-10-31 14:46+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
 "Language: ko\n"
@@ -132,7 +132,7 @@ msgstr "무료 배송 혜택을 받는 주문 금액을 회사가 사용하는 �
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr ""
+msgstr "보관"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
@@ -561,7 +561,7 @@ msgstr "비용 계정"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
 msgid "Expense Invoice Policy"
-msgstr ""
+msgstr "경비 송장 정책"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
@@ -582,12 +582,12 @@ msgstr "팔로워"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "팔로워"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "팔로워(파트너)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_virtual_available
@@ -969,6 +969,12 @@ msgstr "기본 원가"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_gap
 msgid "Normal Cost - Total Cost"
 msgstr "기본 원가 - 총 원가"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.normal_delivery_carrier_product_product
+msgid "Normal Delivery Charges"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
@@ -1453,6 +1459,12 @@ msgid "Template Name"
 msgstr "서식 이름"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.delivery_carrier_product_product
+msgid "The Poste"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
 msgid ""
 "The average delay in days between the confirmation of the customer order and "
@@ -1665,7 +1677,7 @@ msgstr "읽지 않은 메시지"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "읽지 않은 메시지"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
@@ -1862,18 +1874,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "unknown"
 msgstr "알 수 없음"
-
-#~ msgid "Carrier Information"
-#~ msgstr "운송회사 정보"
-
-#~ msgid "Carrier Tracking Ref"
-#~ msgstr "운송회사 추적 참조"
-
-#~ msgid "Gross Weight"
-#~ msgstr "총중량"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "메시지 및 대화 기록"
-
-#~ msgid "Status"
-#~ msgstr "상태"

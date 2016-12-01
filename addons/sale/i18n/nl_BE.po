@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-03-10 09:16+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-22 13:46+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Dutch (Belgium) (http://www.transifex.com/odoo/odoo-9/"
 "language/nl_BE/)\n"
@@ -106,13 +106,10 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
-#, fuzzy
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-"'Offerte' or 'Verkooporder'} (Referentie ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -456,6 +453,12 @@ msgid "Delivery address for current sales order."
 msgstr "Afleveradres voor de huidige verkooporder"
 
 #. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr "Aanbetaling"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
 msgstr "Product aanbetaling"
@@ -473,9 +476,8 @@ msgstr "Verschillende prijzen per klantsegment"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "Disc.(%)"
-msgstr "Krt. (%)"
+msgstr "Korting(%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
@@ -1976,102 +1978,3 @@ msgstr "sale.config.settings"
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "onbekend"
-
-#~ msgid ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-#~ msgstr ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Offerte' or 'Verkooporder'} (Referentie ${object.name or 'n/a' })"
-
-#~ msgid "<span groups=\"sale.group_discount_per_so_line\">Disc.(%)</span>"
-#~ msgstr "<span groups=\"sale.group_discount_per_so_line\">Kort.(%)</span>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Vereist actie"
-
-#~ msgid "Allows you to specify an analytic account on sales orders."
-#~ msgstr ""
-#~ "Geeft u de mogelijkheid om kostenplaatsen te koppelen aan verkooporders"
-
-#~ msgid "Analytic Line"
-#~ msgstr "Kostenplaatsboeking"
-
-#~ msgid "Analytic accounting for sales"
-#~ msgstr "Kostenplaatsen voor verkopen"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
-
-#~ msgid "Deposit"
-#~ msgstr "Aanbetaling"
-
-#~ msgid "Followers"
-#~ msgstr "Volgers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Volgers (Kanalen)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Volgers (Partners)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
-
-#~ msgid "Invoice based on time and material"
-#~ msgstr "Factuur gebaseerd op tijd en materiaal"
-
-#~ msgid "Is Follower"
-#~ msgstr "Is een volger"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Laatste bericht datum"
-
-#~ msgid "Messages"
-#~ msgstr "Berichten"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Berichten en communicatie historie"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Aantal acties"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Aantal berichten die actie vereisen"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Aantal ongelezen berichten"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "Open verkoop menu"
-
-#~ msgid ""
-#~ "Some products may be sold/purchased in different unit of measures "
-#~ "(advanced)"
-#~ msgstr ""
-#~ "Sommige producten kunnen verkocht/aangekocht worden met verschillende "
-#~ "maateenheden (geavanceerd)"
-
-#~ msgid "Timesheets on contract"
-#~ msgstr "Urenstaten op contract"
-
-#~ msgid "Unit of Measures"
-#~ msgstr "Maateenheden"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Teller ongelezen berichten"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website berichten"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website communicatie geschiedenis"
-
-#~ msgid "You can only delete draft quotations!"
-#~ msgstr "U kan enkel concept offertes verwijderen! "
-
-#~ msgid "account.config.settings"
-#~ msgstr "account.config.settings"

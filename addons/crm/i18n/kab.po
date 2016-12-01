@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-07-04 17:32+0000\n"
-"Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-23 09:39+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-9/language/kab/)\n"
 "Language: kab\n"
 "MIME-Version: 1.0\n"
@@ -227,6 +227,19 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
+msgid ""
+"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
+"since at least 5 days.</p>\n"
+"%if object.description:\n"
+"<p>Here is the description about the opportunity : </p><p><i>${object."
+"description}</i>\n"
+"%endif\n"
+"</p><p>Thank you!</p>\n"
 msgstr ""
 
 #. module: crm
@@ -843,15 +856,14 @@ msgstr "Armud"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_activity_log.py:75
-#, fuzzy, python-format
+#, python-format
 msgid "Activity Done"
-msgstr "Armud"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_kanban_state
-#, fuzzy
 msgid "Activity State"
-msgstr "Armud"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -970,9 +982,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
-#, fuzzy
 msgid "Assign this opportunity to"
-msgstr "Selket ɣer tegwniţ"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_opening_date
@@ -1077,6 +1088,18 @@ msgstr "Asefrek n tegwnatin n CRM"
 #: model:crm.activity,name:crm.crm_activity_data_call
 #: model:mail.message.subtype,name:crm.crm_activity_data_call_mail_message_subtype
 msgid "Call"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for Demo"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for a demo"
 msgstr ""
 
 #. module: crm
@@ -1257,7 +1280,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Contact Information"
-msgstr ""
+msgstr "Talɣut n unermes"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_contact_name
@@ -1487,9 +1510,8 @@ msgstr "Imsaɣen"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Customizations"
-msgstr "Imsaɣen"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_date
@@ -1508,9 +1530,8 @@ msgstr "Ussan i wemdal"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_deduplicate
-#, fuzzy
 msgid "Deduplicate Contacts"
-msgstr "Sleg inermisen nniḍen"
+msgstr "Sleg inermisen"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1639,6 +1660,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Download the"
 msgstr ""
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_draft_lead
+msgid "Draft Leads"
+msgstr "Tifuɣalin tirewwayin"
 
 #. module: crm
 #: selection:sale.config.settings,group_use_lead:0
@@ -1826,6 +1852,18 @@ msgstr "Ifuk"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up Quote"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up quote"
 msgstr ""
 
 #. module: crm
@@ -2093,9 +2131,8 @@ msgstr "Ţakebbwanit"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_function
-#, fuzzy
 msgid "Job Position"
-msgstr "Asumer"
+msgstr "Tadekkwant n Umahil"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_exclude_journal_item
@@ -2284,6 +2321,11 @@ msgid "Leads by Source"
 msgstr ""
 
 #. module: crm
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr "Tifuɣalin si Marikan"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr ""
@@ -2344,9 +2386,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-#, fuzzy
 msgid "Log Activity"
-msgstr "Armud"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
@@ -2362,9 +2403,8 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm.crm_activity_log_action
 #: model:ir.model,name:crm.model_crm_activity_log
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
-#, fuzzy
 msgid "Log an Activity"
-msgstr "Armud"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2396,6 +2436,12 @@ msgid "Low"
 msgstr ""
 
 #. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Make Quote"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Lost"
 msgstr ""
@@ -2407,9 +2453,8 @@ msgstr "Creḍ iţulummeẓ"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
-#, fuzzy
 msgid "Mark as lost"
-msgstr "Creḍ iţulummeẓ"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2606,7 +2651,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "My Leads"
-msgstr ""
+msgstr "Tifuɣalin-iw"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -2667,9 +2712,9 @@ msgstr ""
 
 #. module: crm
 #: code:addons/crm/wizard/crm_activity_log.py:56
-#, fuzzy, python-format
+#, python-format
 msgid "Next activity"
-msgstr "Armud d iteddun"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:966
@@ -2679,9 +2724,8 @@ msgstr "Ulac taɣawsa"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "No activity"
-msgstr "Armud d iteddun"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2702,9 +2746,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_note
-#, fuzzy
 msgid "Note"
-msgstr "Iwenniten"
+msgstr "Awennit"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3106,15 +3149,13 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_preceding_activity_ids
-#, fuzzy
 msgid "Preceding Activities"
-msgstr "Irmuden d iteddun"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_last_activity_id
-#, fuzzy
 msgid "Previous Activity"
-msgstr "Armud d iteddun"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3153,7 +3194,7 @@ msgstr "Tiseqqaṛ (%)"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Products"
-msgstr ""
+msgstr "Ifarisen"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3192,15 +3233,13 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_recommended_activity_id
-#, fuzzy
 msgid "Recommended Activities"
-msgstr "Irmuden d iteddun"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_recommended_activity_ids
-#, fuzzy
 msgid "Recommended Next Activities"
-msgstr "Irmuden d iteddun"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_force_thread_id
@@ -3226,6 +3265,12 @@ msgid "Relation field"
 msgstr ""
 
 #. module: crm
+#: model:ir.actions.server,name:crm.action_email_reminder_lead
+msgid "Reminder to User"
+msgstr ""
+
+#. module: crm
+#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
 msgid ""
 "Reminder: Lead ${object.name} from ${object.partner_id != False and object."
@@ -3235,7 +3280,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Reporting"
-msgstr ""
+msgstr "Assaɣen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_requirements
@@ -3326,15 +3371,13 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "Schedule Activity"
-msgstr "Armud d iteddun"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "Schedule Next Activity"
-msgstr "Armud d iteddun"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3387,6 +3430,12 @@ msgid "Selection"
 msgstr "Afren"
 
 #. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Send a quotation"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -3398,6 +3447,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "Agzum"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_set_team_sales_department
+msgid "Set team to Sales Department"
+msgstr "Sebded tarbaɛt i wegezdu n uznuzu"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3586,7 +3640,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_title_action
 msgid "Summary"
-msgstr ""
+msgstr "Agzul"
 
 #. module: crm
 #: model:web.tip,description:crm.crm_tip_5
@@ -3629,7 +3683,7 @@ msgstr "Tawuri"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_team_id
 msgid "Team"
-msgstr ""
+msgstr "Tarbaɛt"
 
 #. module: crm
 #: model:ir.filters,name:crm.ir_filters_crm_opportunity_report_next_action
@@ -4385,85 +4439,3 @@ msgstr "arussin"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "with your work above"
 msgstr ""
-
-#~ msgid "Both"
-#~ msgstr "I ssin"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Azemz n yizen anegaru iţunefken ɣef ukalas agi"
-
-#~ msgid "Done"
-#~ msgstr "Immed"
-
-#~ msgid "Draft Leads"
-#~ msgstr "Tifuɣalin tirewwayin"
-
-#~ msgid "Follow-up"
-#~ msgstr "Tulsa"
-
-#~ msgid "Followers"
-#~ msgstr "Imeltaɣen"
-
-#~ msgid "Function"
-#~ msgstr "Tawuri"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ma yeṛcem, iznan imaynuten suturen tamuɣli leqqayen."
-
-#~ msgid "Incoming"
-#~ msgstr "Armas"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Azemz n yizen aneggaru"
-
-#~ msgid "Leads from USA"
-#~ msgstr "Tifuɣalin si Marikan"
-
-#~ msgid "Messages"
-#~ msgstr "Iznan"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Amazray n iznan  d  teywalin"
-
-#~ msgid "Negotiation"
-#~ msgstr "Tastag"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "Llid Umuɣ \"Aznuzu\""
-
-#~ msgid "Sales Tags"
-#~ msgstr "Tibzimin n uznuzu"
-
-#~ msgid "Select Stages for this Sales Team"
-#~ msgstr "Fren Imecwaṛen i tarbaɛt agi n uzenzi"
-
-#~ msgid "Set team to Sales Department"
-#~ msgstr "Sebded tarbaɛt i wegezdu n uznuzu"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "C'est le nom qui vous permet de conserver la trace de vos campagnes. Par "
-#~ "exemple : Commercialisation_Automne, Spécial_Noël"
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr ""
-#~ "Ceci est le mode de transmission. Ex: carte postale, courriel, bannière "
-#~ "publicitaire"
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr ""
-#~ "Wagi d aɣbalu n useɣwen. Amedya: Amsedday n unadi, aḥric nniḍen, neɣ "
-#~ "isem  n tebdart n yimayl."
-
-#~ msgid "Website Messages"
-#~ msgstr "Iznan n n usmel  Web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Amazray n Taywalt n usmel  Web"
-
-#~ msgid "oe_kanban_text_red"
-#~ msgstr "oe_kanban_text_red"

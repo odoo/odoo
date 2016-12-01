@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-06 08:35+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-09-06 09:12+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Basque (http://www.transifex.com/odoo/odoo-9/language/eu/)\n"
 "Language: eu\n"
@@ -869,6 +869,12 @@ msgid "Internal Reference"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
@@ -1490,7 +1496,7 @@ msgstr "Jabetza"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9667
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -2172,6 +2178,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr ""
@@ -2216,39 +2230,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "ezezaguna"
-
-#~ msgid "Action Needed"
-#~ msgstr "Beharrezko ekintza"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Kopurua aldatu"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Date of the last message posted on the record."
-
-#~ msgid "Followers"
-#~ msgstr "Followers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Jarraitzaileak(kanalak)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "If checked new messages require your attention."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Last Message Date"
-
-#~ msgid "Messages"
-#~ msgstr "Mezuak"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Messages and communication history"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Akzioen zenbakia"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "Ireki MRP menua"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Irakurri gabeko mezuak"

@@ -5,12 +5,13 @@
 # Translators:
 # Hamid Darabi, 2015
 # Morovat Guivi <tarjomac@gmail.com>, 2015
+# Zahed Alfak <tamass4116@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-07-22 23:03+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-22 13:46+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Persian (http://www.transifex.com/odoo/odoo-9/language/fa/)\n"
 "Language: fa\n"
@@ -447,6 +448,12 @@ msgid "Delivery address for current sales order."
 msgstr "نشانی تحویل برای سفارش فروش جاری."
 
 #. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr "سپرده"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
 msgstr "حاصل سپرده"
@@ -464,7 +471,6 @@ msgstr "قیمت‌گذاری برای گروه مشتریان"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "Disc.(%)"
 msgstr "تخفیف(٪)"
 
@@ -509,9 +515,8 @@ msgstr "نمایش مابه تفاوت سفارش های قیمت گذاری و 
 
 #. module: sale
 #: selection:sale.config.settings,module_sale_layout:0
-#, fuzzy
 msgid "Do not personalize sale orders and invoice reports"
-msgstr "نمایش قواعد بین المللی نافذ بر سفارشات خرید و فاکتورهای مربوطه"
+msgstr ""
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -562,9 +567,8 @@ msgstr "ویزارد ایجاد ایمیل"
 
 #. module: sale
 #: model:ir.model,name:sale.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "ویزارد ایجاد ایمیل"
+msgstr "ویزارد ایجاد ایمیل برای نظرسنجی"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
@@ -619,7 +623,7 @@ msgstr "به‌طور کامل فاکتور شده"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "وزن ناخالص"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -911,7 +915,7 @@ msgstr "امکان تغییر سفارش‌فروش تاییدشده وجود ن
 #: code:addons/sale/sale.py:101
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "جدید"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
@@ -953,7 +957,7 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Nothing to Invoice"
-msgstr ""
+msgstr "هیچ چیز برای فاکتور وجود ندارد"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_customer_lead
@@ -1061,7 +1065,7 @@ msgstr "تعداد سفارش داده شده"
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr ""
+msgstr "دستور به تشویق برای خرید بیشتر"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
@@ -1086,12 +1090,12 @@ msgstr "همکار"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_country_id
 msgid "Partner Country"
-msgstr ""
+msgstr "کشور همکار"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Partner's Country"
-msgstr ""
+msgstr "کشورهای همکار"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
@@ -1127,7 +1131,7 @@ msgstr "قیمت"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce
 msgid "Price Reduce"
-msgstr ""
+msgstr "کاهش قیمت"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_pricelist_id
@@ -1310,9 +1314,8 @@ msgstr "تحلیل پیش فاکتورها"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#, fuzzy
 msgid "Quotations Sent"
-msgstr "پیش فاکتور ارسال شد"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1326,9 +1329,8 @@ msgstr ""
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
-#, fuzzy
 msgid "Reinvoice Costs"
-msgstr "وضعیت فاکتور"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1486,7 +1488,7 @@ msgstr "تیم فروش"
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Sales to Invoice"
-msgstr ""
+msgstr "فروش برای فاکتور"
 
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
@@ -1560,19 +1562,18 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_pricelist
 msgid "Show pricelists On Products"
-msgstr ""
+msgstr "نمایش لیست قیمت در محصولات"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_pricelist_item
 msgid "Show pricelists to customers"
-msgstr ""
+msgstr "نمایش لیست قیمت برای مشتری"
 
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
-#, fuzzy
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
-msgstr "کالاها فقط یک واحد اندازه‌گیری دارند(ساده‌تر)"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -1589,7 +1590,7 @@ msgstr "وضعیت"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Subscriptions"
-msgstr ""
+msgstr "اشتراک ها"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_subtotal
@@ -1614,7 +1615,7 @@ msgstr "مالیات ها"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Taxes used for deposits"
-msgstr ""
+msgstr "مالیات مورد استفاده برای سپرده"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_note
@@ -1727,9 +1728,8 @@ msgstr ""
 
 #. module: sale
 #: selection:product.template,track_service:0
-#, fuzzy
 msgid "Timesheets on project"
-msgstr "جدول زمانبندی قرارداد"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -1779,9 +1779,8 @@ msgstr "واحد اندازه گیری"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
-#, fuzzy
 msgid "Units of Measure"
-msgstr "واحد اندازه گیری"
+msgstr "واحدهای اندازه گیری"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1796,7 +1795,7 @@ msgstr "مبلغ بدون مالیات"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
 msgid "Untaxed Total Price"
-msgstr ""
+msgstr "مبلغ کل بدون مالیات"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -1830,7 +1829,7 @@ msgstr "مالیات ارزش‌افزوده:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "حجم"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
@@ -1900,9 +1899,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "سطرتحلیلی"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1918,77 +1916,3 @@ msgstr "sale.config.settings"
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "ناشناخته"
-
-#~ msgid "Action Needed"
-#~ msgstr "اقدام مورد نیاز است"
-
-#~ msgid "Allows you to specify an analytic account on sales orders."
-#~ msgstr "به شما اجازه میدهد تا حساب تحلیلی برای سفارشات فروش را مشخص کنید."
-
-#~ msgid "Analytic Line"
-#~ msgstr "سطرتحلیلی"
-
-#~ msgid "Analytic accounting for sales"
-#~ msgstr "حسابداری تحلیلی برای فروش"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "تاریخ آخرین پیغام پست شده از این رکورد"
-
-#~ msgid "Deposit"
-#~ msgstr "سپرده"
-
-#~ msgid "Followers"
-#~ msgstr "دنبال‌کنندگان"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "پیروان (کانال ها)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "پیروان (شرکاء)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr ""
-#~ "اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
-
-#~ msgid "Invoice based on time and material"
-#~ msgstr "فاکتور بر اساس زمان و مواد‌مصرفی"
-
-#~ msgid "Is Follower"
-#~ msgstr "دنبال می کند"
-
-#~ msgid "Last Message Date"
-#~ msgstr "تاریخ آخرین پیام"
-
-#~ msgid "Messages"
-#~ msgstr "پیام‌ها"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "پیام‌ها و تاریخچه ارتباط"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "تعداد پیام‌های خوانده نشده"
-
-#~ msgid "Timesheets on contract"
-#~ msgstr "جدول زمانبندی قرارداد"
-
-#~ msgid "Unit of Measures"
-#~ msgstr "واحد اندازه گیری"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "شمارنده پیام‌های خوانده‌نشده"
-
-#~ msgid "Website Messages"
-#~ msgstr "پیام‌های وب‌سایت"
-
-#~ msgid "Website communication history"
-#~ msgstr "تاریخچه ارتباط با وبسایت"
-
-#~ msgid "You can only delete draft quotations!"
-#~ msgstr "شما می‌توانید فقط پیش‌نویس پیش‌فاکتورها را حذف کنید!"
-
-#~ msgid "account.config.settings"
-#~ msgstr "حساب.پیکربندی.تنظیمات"

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-06-07 13:11+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-11-03 16:13+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "Language: it\n"
@@ -486,6 +486,16 @@ msgid "Contract"
 msgstr "Contratto"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
+msgid "Contract Proposal"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
+msgid "Contract Signed"
+msgstr "Contratto firmato"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
 msgid "Create Date"
 msgstr "Data creazione"
@@ -781,6 +791,11 @@ msgid "Filter and view on next actions and date"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Primo colloquio"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr ""
@@ -844,7 +859,7 @@ msgstr "Raggruppa per"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
-msgstr ""
+msgstr "Impiegati assunti"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
@@ -903,6 +918,11 @@ msgstr ""
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
 msgstr "Importante"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Initial Qualification"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
@@ -1170,7 +1190,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_attachment_number
 msgid "Number of Attachments"
-msgstr ""
+msgstr "Numero di allegati"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_delay_close
@@ -1256,7 +1276,6 @@ msgstr "Telefono"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1264,11 +1283,6 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
-"Politica per pubblicare un messaggio sul documento utilizzando il "
-"mailGateway .\n"
-"- Tutti: chiunque può postare\n"
-"- Partner: solo autenticati\n"
-"- Follower : solo i follower del relativo documento\n"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -1364,9 +1378,8 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
-#, fuzzy
 msgid "Reopen Application"
-msgstr "Funzionalità"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1451,6 +1464,11 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid "Search through resumes and motivation letters."
 msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "Secondo colloquio"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
@@ -1806,91 +1824,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
-
-#~ msgid "Action Needed"
-#~ msgstr "Azione Necessaria"
-
-#~ msgid "Campaign"
-#~ msgstr "Campagna"
-
-#~ msgid "Contract Signed"
-#~ msgstr "Contratto firmato"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data dell'ultimo messaggio postato per questo record"
-
-#~ msgid "First Interview"
-#~ msgstr "Primo colloquio"
-
-#~ msgid "Followers"
-#~ msgstr "Followers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Followers (Canali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Followers (Partner)"
-
-#~ msgid "HR Department"
-#~ msgstr "Dipartimento di Risorse Umane"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Se selezionato, nuovi messaggi richiedono la tua attenzione"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Se selezionato, i nuovi messaggi richiedono la tua attenzione"
-
-#~ msgid "Is Follower"
-#~ msgstr "E' Follower"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data Ultimo Messaggio"
-
-#~ msgid "Messages"
-#~ msgstr "Messaggi"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Storico messaggi e comunicazioni"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Numero di Azioni"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Numero di messaggi che richiedono un'azione"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Numero di messaggi non letti"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Apre Menù HR"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Politica per pubblicare un messaggio sul documento utilizzando il "
-#~ "mailGateway .\n"
-#~ "- Tutti: chiunque può postare\n"
-#~ "- Partner: solo autenticati\n"
-#~ "- Follower : solo i follower del relativo documento\n"
-
-#~ msgid "Second Interview"
-#~ msgstr "Secondo colloquio"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Questo nome puo' aiutarti a tenere traccia di differenti campagne di "
-#~ "vendita. Es. Sconti natalizi, saldi autunnali, ecc.."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contatore di messsaggi non letti"
-
-#~ msgid "Website Messages"
-#~ msgstr "Messaggi sito web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Storico comunicazione sito"

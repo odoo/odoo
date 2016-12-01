@@ -4,13 +4,14 @@
 #
 # Translators:
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
+# Anica Milanova, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-07-28 13:38+0000\n"
-"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-11-23 15:24+0000\n"
+"Last-Translator: Anica Milanova\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
 "mk/)\n"
 "Language: mk\n"
@@ -744,7 +745,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_income_id
 msgid "Income Account"
-msgstr "Сметка Побарува"
+msgstr "Конто за приход"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_incoming_qty
@@ -985,6 +986,12 @@ msgstr "Нормален трошок"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_gap
 msgid "Normal Cost - Total Cost"
 msgstr "Нормален трошок - Вкупен трошок"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.normal_delivery_carrier_product_product
+msgid "Normal Delivery Charges"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
@@ -1466,6 +1473,12 @@ msgid "Template Name"
 msgstr "Име на урнек"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.delivery_carrier_product_product
+msgid "The Poste"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
 msgid ""
 "The average delay in days between the confirmation of the customer order and "
@@ -1514,6 +1527,8 @@ msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
 msgstr ""
+"Оваа сметка ќе се користи на фактурите наместо примарната за вреднување на "
+"трошоците за моменталниот производ."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_income_id
@@ -1521,6 +1536,8 @@ msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
 msgstr ""
+"Оваа сметка ќе се користи на фактурите наместо примарната за вреднување на "
+"продажбите за моменталниот производ."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_creditor_price_difference
@@ -1815,8 +1832,8 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
-"При вршење на вреднување на залихата во реално време, копиите на елементите "
-"од дневникот за движењето на влезната залиха ќе се запишуваат во таа сметка, "
+"При вршење на вреднување на залихата во реално време, копиите од ставките на "
+"налогот за движењето на влезната залиха ќе се запишуваат на оваа сметка, "
 "освен ако нема одредена сметка за вреднување на изворната локација. Кога не "
 "е назначена на производот, се користи таа од категоријата на производот."
 
@@ -1828,11 +1845,10 @@ msgid ""
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
 msgstr ""
-"При вршење на вреднување на залихата во реално време, копиите на елементите "
-"од записникот за движењето на излезната залиха ќе се запишуваат во таа "
-"сметка, освен ако нема одредена сметка за вреднување на целната локација. "
-"Кога не е назначена на производот, се користи таа од категоријата на "
-"производот."
+"При вршење на вреднување на залихата во реално време, копиите од ставките на "
+"налогот за движењето на излезната залиха ќе се запишуваат на оваа сметка, "
+"освен ако нема одредена сметка за вреднување на целната локација. Кога не е "
+"назначена на производот, се користи таа од категоријата на производот."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id
@@ -1890,21 +1906,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "unknown"
 msgstr "непознато"
-
-#~ msgid "Carrier Information"
-#~ msgstr "Информации за курир"
-
-#~ msgid "Carrier Tracking Ref"
-#~ msgstr "Референца за следење на курир"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Бруто тежина"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Пораки и историја на комуникација"
-
-#~ msgid "Status"
-#~ msgstr "Статус"
-
-#~ msgid "Vendor"
-#~ msgstr "Добавувачи"

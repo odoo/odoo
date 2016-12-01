@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-08-25 10:55+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-10-17 08:53+0000\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -33,9 +33,8 @@ msgstr "Zastosuj"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
-#, fuzzy
 msgid "Asset Type"
-msgstr "Typ wydarzenia"
+msgstr "Typ elementu"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -76,6 +75,12 @@ msgstr ""
 "bilet na wydarzenie"
 
 #. module: event_sale
+#: model:product.product,name:event_sale.event_2_product
+#: model:product.template,name:event_sale.event_2_product_product_template
+msgid "Conference on Business Applications"
+msgstr "Konferencja o aplikacjach biznesowych"
+
+#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_create_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_create_uid
@@ -92,7 +97,7 @@ msgstr "Utworzono"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
 msgid "Deferred Revenue Type"
-msgstr ""
+msgstr "Typ odroczonego przychodu"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
@@ -170,6 +175,12 @@ msgid "Event Type"
 msgstr "Typ wydarzenia"
 
 #. module: event_sale
+#: model:product.product,name:event_sale.event_1_product
+#: model:product.template,name:event_sale.event_1_product_product_template
+msgid "Functional Webinar"
+msgstr "Seminarium o funkcjonalnościach"
+
+#. module: event_sale
 #: model:event.type,name:event_sale.event_type
 msgid "Generic Events"
 msgstr "standardowe wydarzenia"
@@ -234,6 +245,12 @@ msgstr "Brak tych biletów"
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "Brak tych biletów"
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_0_product
+#: model:product.template,name:event_sale.event_0_product_product_template
+msgid "Open Days in Los Angeles"
+msgstr "Dni otwarte w Los Angeles"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
@@ -343,10 +360,24 @@ msgid "Source Sale Order"
 msgstr ""
 
 #. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_1
+#: model:event.event.ticket,name:event_sale.event_1_ticket_1
+#: model:event.event.ticket,name:event_sale.event_2_ticket_1
+#: model:event.event.ticket,name:event_sale.event_3_ticket_1
+msgid "Standard"
+msgstr "Standard"
+
+#. module: event_sale
 #: code:addons/event_sale/models/event.py:21
 #, python-format
 msgid "Subscription"
 msgstr "Subskrypcja"
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_3_product
+#: model:product.template,name:event_sale.event_3_product_product_template
+msgid "Technical Training"
+msgstr "Szkolenie techniczne"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:168
@@ -384,6 +415,13 @@ msgid "Unlimited"
 msgstr "Bez ograniczeń"
 
 #. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_2
+#: model:event.event.ticket,name:event_sale.event_2_ticket_2
+#: model:event.event.ticket,name:event_sale.event_3_ticket_2
+msgid "VIP"
+msgstr "VIP"
+
+#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
 msgid "event_ok"
 msgstr "event_ok"
@@ -402,21 +440,3 @@ msgstr "registration.editor"
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "registration.editor.line"
 msgstr "registration.editor.line"
-
-#~ msgid "Conference on Business Applications"
-#~ msgstr "Konferencja o aplikacjach biznesowych"
-
-#~ msgid "Functional Webinar"
-#~ msgstr "Seminarium o funkcjonalnościach"
-
-#~ msgid "Open Days in Los Angeles"
-#~ msgstr "Dni otwarte w Los Angeles"
-
-#~ msgid "Standard"
-#~ msgstr "Standard"
-
-#~ msgid "Technical Training"
-#~ msgstr "Szkolenie techniczne"
-
-#~ msgid "VIP"
-#~ msgstr "VIP"

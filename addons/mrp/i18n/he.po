@@ -4,22 +4,18 @@
 #
 # Translators:
 # yizhaq agronov <yizhaq@gmail.com>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-23 18:10+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-09-06 09:12+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  he.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  he.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: mrp
@@ -873,6 +869,12 @@ msgid "Internal Reference"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
@@ -1494,7 +1496,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9667
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -2176,6 +2178,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "ימים"
@@ -2220,42 +2230,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "לא ידוע"
-
-#~ msgid "Action Needed"
-#~ msgstr "נדרשת פעולה"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "תאריך הודעה אחרונה שפורסמה ברשומה."
-
-#~ msgid "Followers"
-#~ msgstr "עוקבים"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "אם מסומן אז הודעה חדשה דורשת התייחסותכם."
-
-#~ msgid "Last Message Date"
-#~ msgstr "תאריך הודעה אחרונה"
-
-#~ msgid "Messages"
-#~ msgstr "הודעות"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "היסטוריית הודעות ותקשורת"
-
-#~ msgid "Number of Actions"
-#~ msgstr "מספר הפעולות"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "מספר ההודעות שדורשות פעולה"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "מספר ההודעות שלא נקראו"
-
-#~ msgid "Unread Messages"
-#~ msgstr "הודעות שלא נקראו"
-
-#~ msgid "Website Messages"
-#~ msgstr "הודעות מהאתר אינטרנט"
-
-#~ msgid "Website communication history"
-#~ msgstr "היסטוריית תקשורת מהאתר"

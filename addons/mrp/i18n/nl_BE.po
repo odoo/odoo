@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-06 08:35+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-09-06 09:12+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Dutch (Belgium) (http://www.transifex.com/odoo/odoo-9/"
 "language/nl_BE/)\n"
@@ -869,6 +869,12 @@ msgid "Internal Reference"
 msgstr "Interne referentie"
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
@@ -1495,7 +1501,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9667
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -2180,6 +2186,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "dagen"
@@ -2224,58 +2238,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "onbekend"
-
-#~ msgid "Action Needed"
-#~ msgstr "Vereist actie"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum laatste bericht voor dit record."
-
-#~ msgid "Followers"
-#~ msgstr "Volgers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Volgers (Kanalen)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Volgers (Partners)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr ""
-#~ "Als dit is ingeschakeld, zijn er nieuwe berichten die uw aandacht vragen."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
-
-#~ msgid "Is Follower"
-#~ msgstr "Is Volger"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum laatste bericht"
-
-#~ msgid "Messages"
-#~ msgstr "Berichten"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Berichten en communicatiehistoriek"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Aantal acties"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Aantal berichten die actie vereisen"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Aantal ongelezen berichten"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Ongelezen berichten"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Teller ongelezen berichten"
-
-#~ msgid "Website Messages"
-#~ msgstr "Websiteberichten"
-
-#~ msgid "Website communication history"
-#~ msgstr "Websitecommunicatiehistoriek"

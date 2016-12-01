@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-02 14:08+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-10-19 20:28+0000\n"
 "Last-Translator: aymen rahmani <aymen.isims@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "Language: ar\n"
@@ -201,7 +201,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_sign_in
 msgid "<b>Sign in</b>"
-msgstr ""
+msgstr "<b>تسجيل دخول</b>"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_button
@@ -307,7 +307,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.s_quotes_slider
 #: model:ir.ui.view,arch_db:website.s_references
 msgid "<small>Author of this quote</small>"
-msgstr ""
+msgstr "كاتب هذا الاقتباس"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_parallax_slider
@@ -935,7 +935,7 @@ msgstr "إضافة"
 #: model:ir.ui.view,arch_db:website.s_image_gallery
 #, python-format
 msgid "Add Images from the 'Customize' menu"
-msgstr ""
+msgstr "أضف صور من قائمة التخصيص"
 
 #. module: website
 #. openerp-web
@@ -960,7 +960,7 @@ msgstr "أضف شعاراً خلاباً"
 #: model:ir.ui.view,arch_db:website.snippet_options
 #, python-format
 msgid "Add images"
-msgstr ""
+msgstr "أضف صور"
 
 #. module: website
 #. openerp-web
@@ -972,9 +972,9 @@ msgstr "أضف كلمة دلالية:"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:111
-#, fuzzy, python-format
+#, python-format
 msgid "Add new pages"
-msgstr "إضافة صفحات وقوائم جديدة"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -1110,15 +1110,13 @@ msgstr "عودة"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
-#, fuzzy
 msgid "Background Color"
-msgstr "الخلفية"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
-#, fuzzy
 msgid "Background Image"
-msgstr "الخلفية"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1181,7 +1179,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Big"
-msgstr ""
+msgstr "كبير"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1319,6 +1317,7 @@ msgstr "انقر على الأيقونة لتعديلها بما يناسبك."
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:49
 #: model:ir.ui.view,arch_db:website.s_banner
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #, python-format
 msgid "Click to customize this text"
 msgstr "انقر لتخصيص هذا النص"
@@ -1442,8 +1441,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.s_banner
 #: model:ir.ui.view,arch_db:website.s_big_message
 #: model:ir.ui.view,arch_db:website.s_comparisons
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #: model:ir.ui.view,arch_db:website.website_planner
 #: model:website.menu,name:website.menu_contactus
+#: model:website.menu,name:website.website2_menu_contactus
 msgid "Contact us"
 msgstr "اتصل بنا"
 
@@ -1459,9 +1460,8 @@ msgstr "اتصل بنا «"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-#, fuzzy
 msgid "Content"
-msgstr "متابعة"
+msgstr "المحتوى"
 
 #. module: website
 #. openerp-web
@@ -1538,7 +1538,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Customize"
-msgstr ""
+msgstr "تخصيص"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -1629,7 +1629,7 @@ msgstr "الوصف..."
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Design"
-msgstr ""
+msgstr "تصميم"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1642,6 +1642,11 @@ msgstr ""
 #, python-format
 msgid "Discard"
 msgstr "تجاهل"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Discuss and Comments"
+msgstr "النقاش والتعليقات"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1750,9 +1755,8 @@ msgstr "تحرير القائمة"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-#, fuzzy
 msgid "Edit Top Menu"
-msgstr "تحرير القائمة"
+msgstr "تحرير القائمة العليا"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.publish_management
@@ -2141,6 +2145,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.footer_default
 #: model:website.menu,name:website.menu_homepage
+#: model:website.menu,name:website.website2_menu_homepage
 msgid "Home"
 msgstr "الرئيسية"
 
@@ -2149,6 +2154,11 @@ msgstr "الرئيسية"
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Homepage"
 msgstr "الصفحة الرئيسية"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website2_homepage
+msgid "Homepage 0.0.0.0"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2395,7 +2405,7 @@ msgstr "آخر تحديث في"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Launch"
-msgstr ""
+msgstr "تشغيل"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2505,6 +2515,11 @@ msgstr "القائمة"
 #, python-format
 msgid "Menu <b>%s</b> seems to have a link to this page !"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Message"
+msgstr "الرسالة"
 
 #. module: website
 #. openerp-web
@@ -2862,9 +2877,9 @@ msgstr "عنوان الصفحة"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:103
-#, fuzzy, python-format
+#, python-format
 msgid "Pages and menus"
-msgstr "إضافة صفحات وقوائم جديدة"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_panel
@@ -2894,9 +2909,19 @@ msgid "Partner"
 msgstr "الشريك"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Partner Detail"
+msgstr "تفاصيل الشريك"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Partners"
+msgstr "الشركاء"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Plan"
-msgstr ""
+msgstr "خطّة"
 
 #. module: website
 #: model:web.planner,tooltip_planner:website.planner_website
@@ -3048,6 +3073,11 @@ msgid "Real professional translators will translate all your contents"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Recipient"
+msgstr "المستلم"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Reduce the time and resources spent on support."
 msgstr ""
@@ -3196,6 +3226,16 @@ msgstr "بيع على الانترنت. بسهولة."
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Sell more online"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send <span class=\"fa fa-long-arrow-right\"/>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send a Message to our Partners"
 msgstr ""
 
 #. module: website
@@ -3411,6 +3451,11 @@ msgstr ""
 #: code:addons/website/static/src/js/website.tour.banner.js:89
 #, python-format
 msgid "Test Your Mobile Version"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Thank you for posting a message !"
 msgstr ""
 
 #. module: website
@@ -3651,6 +3696,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/js/website.contentMenu.js:175
 #: model:website.menu,name:website.main_menu
+#: model:website.menu,name:website.website2_main_menu
 #, python-format
 msgid "Top Menu"
 msgstr ""
@@ -3662,7 +3708,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.snippets.editor.js:771
+#: code:addons/website/static/src/js/website.snippets.editor.js:772
 #, python-format
 msgid "Transform the picture (click twice to reset transformation)"
 msgstr ""
@@ -3942,6 +3988,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_config_settings_website_name
 #: model:ir.model.fields,field_description:website.field_website_name
 msgid "Website Name"
+msgstr ""
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_post
+msgid "Website Partner Post and Thanks Demo"
+msgstr ""
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_comment
+msgid "Website Partners Comment Form"
 msgstr ""
 
 #. module: website
@@ -4616,51 +4672,3 @@ msgstr "نعم"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "your Company details form"
 msgstr ""
-
-#~ msgid ".xml"
-#~ msgstr ".xml"
-
-#~ msgid "Add new pages and menus"
-#~ msgstr "إضافة صفحات وقوائم جديدة"
-
-#~ msgid "Background"
-#~ msgstr "الخلفية"
-
-#~ msgid "Check now and discover more today!"
-#~ msgstr "تفقد الأمر الآن واكتشف المزيد اليوم!"
-
-#~ msgid "Color"
-#~ msgstr "اللون"
-
-#~ msgid "Discover more about Odoo"
-#~ msgstr "اكتشف المزيد عن أودو"
-
-#~ msgid "Discuss and Comments"
-#~ msgstr "النقاش والتعليقات"
-
-#~ msgid "Edit Menu Entry"
-#~ msgstr "تحرير عنصر القائمة"
-
-#~ msgid "Hide link"
-#~ msgstr "إخفاء الرابط"
-
-#~ msgid "Menu Label"
-#~ msgstr "عنوان القائمة"
-
-#~ msgid "Message"
-#~ msgstr "الرسالة"
-
-#~ msgid "Partner Detail"
-#~ msgstr "تفاصيل الشريك"
-
-#~ msgid "Partners"
-#~ msgstr "الشركاء"
-
-#~ msgid "Recipient"
-#~ msgstr "المستلم"
-
-#~ msgid "Reset Transformation"
-#~ msgstr "اعادة ضبط التحويل"
-
-#~ msgid "or"
-#~ msgstr "أو"

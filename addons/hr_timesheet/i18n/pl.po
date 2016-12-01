@@ -3,14 +3,15 @@
 # * hr_timesheet
 #
 # Translators:
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-06-27 10:16+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-10-13 07:51+0000\n"
+"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +29,7 @@ msgstr "Działania"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_delay
 msgid "Avg. Plan.-Eff."
-msgstr ""
+msgstr "Śred. Efekt. Plan."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project_subtask_project_id
@@ -60,16 +61,18 @@ msgid ""
 "Computed as difference between planned hours by the project manager and the "
 "total hours of the task."
 msgstr ""
+"Obliczone jako różnica pomiędzy czasem szacowanym przez menedżera, a "
+"rzeczywistym czasem do zamknięcia zadania."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_total_hours
 msgid "Computed as: Time Spent + Remaining Time."
-msgstr ""
+msgstr "Obliczone jako: Czas spędzony + Czas pozostały"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_effective_hours
 msgid "Computed using the sum of the task work done."
-msgstr ""
+msgstr "Obliczone według sum czasów wykonanych zadań."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_cost
@@ -89,13 +92,12 @@ msgstr "Zdefiniuj swoją strukturę analityczną"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_delay_hours
 msgid "Delay Hours"
-msgstr ""
+msgstr "Opóźnienie"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
-#, fuzzy
 msgid "Detailed Activities"
-msgstr "Działania"
+msgstr "Szczegóły aktywności"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_display_name
@@ -111,7 +113,7 @@ msgstr "Czas trwania"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_effective
 msgid "Effective Hours"
-msgstr ""
+msgstr "Efektywne godziny"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
@@ -132,7 +134,7 @@ msgstr "Grupuj według miesiąca"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_effective_hours
 msgid "Hours Spent"
-msgstr ""
+msgstr "Przepracowane godziny"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_id
@@ -158,19 +160,18 @@ msgstr "Miesiąc"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
-#, fuzzy
 msgid "My Timesheet"
-msgstr "Karta czasu pracy"
+msgstr "Moja karta czasu pracy"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_parent_id
 msgid "Parent Task"
-msgstr ""
+msgstr "Zadanie nadrzędne"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_planned
 msgid "Planned Hours"
-msgstr ""
+msgstr "Planowane godziny"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_product_id
@@ -181,7 +182,7 @@ msgstr "Produkt"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_progress
 msgid "Progress"
-msgstr ""
+msgstr "Postęp"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_project
@@ -189,18 +190,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_project_id
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_remaining_hours
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Remaining Hours"
-msgstr ""
+msgstr "Pozostałe godziny"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_kanban_inherited_progress
 msgid "Remaining hours"
-msgstr ""
+msgstr "Godziny pozostałe"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
@@ -210,29 +211,29 @@ msgstr "Raporty"
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Spent Hours"
-msgstr ""
+msgstr "Przepracowane godziny"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project_subtask_project_id
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_subtask_project_id
 msgid "Sub-task Project"
-msgstr ""
+msgstr "Projekt dla podzadań"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_subtask_count
 msgid "Sub-task count"
-msgstr ""
+msgstr "Liczba podzadań"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_project_task_sub_task
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Sub-tasks"
-msgstr ""
+msgstr "Podzadania"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_children_hours
 msgid "Sub-tasks Hours"
-msgstr ""
+msgstr "Godziny podzadań"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_children_hours
@@ -246,12 +247,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_task_id
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Task"
-msgstr ""
+msgstr "Zadanie"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_report_project_task_user
 msgid "Tasks by user and project"
-msgstr ""
+msgstr "Zadania wg użytkownika i projektu"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
@@ -307,14 +308,13 @@ msgstr "Karty czasu pracy"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_total_hours
-#, fuzzy
 msgid "Total"
-msgstr "Całkowity czas"
+msgstr "Suma"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_total_hours
 msgid "Total Hours"
-msgstr ""
+msgstr "Suma godzin"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
@@ -360,41 +360,10 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "Pozycja analityczna"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
 msgid "month"
 msgstr "miesiąc"
-
-#~ msgid "Accounting"
-#~ msgstr "Księgowość"
-
-#~ msgid "Analytic Account"
-#~ msgstr "Konto analityczne"
-
-#~ msgid "Analytic Line"
-#~ msgstr "Pozycja analityczna"
-
-#~ msgid "Analytic account"
-#~ msgstr "Konto analityczne"
-
-#~ msgid "Check this field if this project manages timesheets"
-#~ msgstr "Zaznacz jeśli chcesz stosować karty pracy w tym projekcie"
-
-#~ msgid "Companies"
-#~ msgstr "Firmy"
-
-#~ msgid "Configuration"
-#~ msgstr "Konfiguracja"
-
-#~ msgid "Information"
-#~ msgstr "Informacja"
-
-#~ msgid "Is a Timesheet"
-#~ msgstr "to jest lista obecności"
-
-#~ msgid "Timesheet Accounts"
-#~ msgstr "Konta karty pracy"

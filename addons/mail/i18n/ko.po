@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-07-23 09:04+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-23 08:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
 "Language: ko\n"
@@ -704,7 +704,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_author_avatar
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_author_avatar
 msgid "Author's avatar"
-msgstr ""
+msgstr "작성자의 아바타"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_group_public_id
@@ -1029,9 +1029,8 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
-#, fuzzy
 msgid "Create Date"
-msgstr "작성자"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_uid
@@ -1402,6 +1401,8 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
+"보낸 사람의 이메일 주소. 이 필드는 수신 메일에서 일치하는 파트너를 찾을 수 없"
+"을 때 설정합니다."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -1500,7 +1501,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_message_starred_partner_ids
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_starred_partner_ids
 msgid "Favorited By"
-msgstr ""
+msgstr "즐겨찾기"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_model_object_field
@@ -1674,7 +1675,7 @@ msgstr "팔로워"
 #: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_survey_survey_message_channel_ids
 msgid "Followers (Channels)"
-msgstr ""
+msgstr "팔로워"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_partner_ids
@@ -1735,7 +1736,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_survey_survey_message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "팔로워(파트너)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_subscription_form
@@ -2039,7 +2040,7 @@ msgstr "미사용 별칭"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:974
+#: code:addons/mail/static/src/js/chat_manager.js:958
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2079,7 +2080,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:593
+#: code:addons/mail/static/src/js/chat_manager.js:577
 #, python-format
 msgid "Invitation"
 msgstr ""
@@ -3797,7 +3798,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:980
+#: code:addons/mail/static/src/js/chat_manager.js:964
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4263,7 +4264,7 @@ msgstr "읽지 않은 메시지"
 #: model:ir.model.fields,field_description:mail.field_stock_production_lot_message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_survey_survey_message_unread_counter
 msgid "Unread Messages Counter"
-msgstr ""
+msgstr "읽지 않은 메시지"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
@@ -4451,7 +4452,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:593
+#: code:addons/mail/static/src/js/chat_manager.js:577
 #, python-format
 msgid "You have been invited to: "
 msgstr ""
@@ -4489,6 +4490,11 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_base_config_settings
 msgid "base.config.settings"
+msgstr ""
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
 msgstr ""
 
 #. module: mail
@@ -4574,6 +4580,11 @@ msgid "publisher_warranty.contract"
 msgstr ""
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:16
 #, fuzzy, python-format
@@ -4593,22 +4604,13 @@ msgid "record:"
 msgstr "레코드 :"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:35
 #, python-format
 msgid "this document"
 msgstr ""
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "HTML 내용 중 불건전한 내용을 자동으로 제거함"
-
-#~ msgid "Join Group"
-#~ msgstr "그룹 가입"
-
-#~ msgid ""
-#~ "Rich-text/HTML version of the message (placeholders may be used here)"
-#~ msgstr ""
-#~ "메시지의 Rich-text/HTML 버전 (사전 표시 문자를 여기에 사용할 수 있습니다)"
-
-#~ msgid "The kind of document with with this template can be used"
-#~ msgstr "이 서식에 사용할 수 있는 문서의 종류"

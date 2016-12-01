@@ -6,6 +6,7 @@
 # Ana Juaristi <ajuaristio@gmail.com>, 2015
 # Antonio Trueba, 2016
 # Daniel Santibáñez Polanco <dansanti@gmail.com>, 2016
+# Ignacio Garbizu <ig@landoo.es>, 2016
 # Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2015
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2015
@@ -13,9 +14,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-07-30 07:49+0000\n"
-"Last-Translator: Inigo Zuluaga <inigo_zuluaga@yahoo.es>\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-11-14 13:42+0000\n"
+"Last-Translator: Ignacio Garbizu <ig@landoo.es>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -2063,7 +2064,7 @@ msgstr "Seudónimo inactivo"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:974
+#: code:addons/mail/static/src/js/chat_manager.js:958
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2103,7 +2104,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:593
+#: code:addons/mail/static/src/js/chat_manager.js:577
 #, python-format
 msgid "Invitation"
 msgstr "Invitación"
@@ -3847,7 +3848,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:980
+#: code:addons/mail/static/src/js/chat_manager.js:964
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4512,7 +4513,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:593
+#: code:addons/mail/static/src/js/chat_manager.js:577
 #, python-format
 msgid "You have been invited to: "
 msgstr ""
@@ -4551,6 +4552,11 @@ msgstr ""
 #: model:ir.model,name:mail.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr ""
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -4635,6 +4641,11 @@ msgid "publisher_warranty.contract"
 msgstr "Contrato de garantía del publicador"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:16
 #, python-format
@@ -4654,33 +4665,13 @@ msgid "record:"
 msgstr "registro:"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:35
 #, python-format
 msgid "this document"
 msgstr "este documento"
-
-#~ msgid ""
-#~ "Attachments are linked to a document through model / res_id and to the "
-#~ "messagethrough this field."
-#~ msgstr ""
-#~ "Los adjuntos se asocian a un documento mediante el modelo / res_id y al "
-#~ "mensaje mediante este campo."
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "Sanear automáticamente los contenidos HTML"
-
-#~ msgid "Join Group"
-#~ msgstr "Unirse al grupo"
-
-#~ msgid ""
-#~ "Rich-text/HTML version of the message (placeholders may be used here)"
-#~ msgstr ""
-#~ "Versión de texto enriquecido/HTML del mensaje (se pueden utilizar aquí "
-#~ "expresiones de campo)"
-
-#~ msgid "Send mail"
-#~ msgstr "Enviar correo"
-
-#~ msgid "The kind of document with with this template can be used"
-#~ msgstr "La clase de documento con el que esta plantilla puede ser usada"

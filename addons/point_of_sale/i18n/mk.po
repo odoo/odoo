@@ -4,13 +4,14 @@
 #
 # Translators:
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
+# Anica Milanova, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-12 14:50+0000\n"
-"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-11-22 16:26+0000\n"
+"Last-Translator: Anica Milanova\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
 "mk/)\n"
 "Language: mk\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:642
+#: code:addons/point_of_sale/models/pos_order.py:643
 #, python-format
 msgid " REFUND"
 msgstr ""
@@ -42,15 +43,15 @@ msgstr "бр. на налог за набавка"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1283
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1399
 #, python-format
 msgid "% discount"
 msgstr "% попуст"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1410
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1450
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1526
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1566
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
@@ -67,7 +68,7 @@ msgstr "+ Трансакции"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:279
+#: code:addons/point_of_sale/static/src/xml/pos.xml:287
 #, python-format
 msgid "123.14 €"
 msgstr "123.14 €"
@@ -253,7 +254,7 @@ msgstr "Краток текст што ќе биде вметнат на врв�
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1449
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1565
 #, python-format
 msgid "ABC"
 msgstr "ABC"
@@ -267,7 +268,13 @@ msgstr "Сметководствени информации"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_journal_id
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_sale_journal
 msgid "Accounting journal used to post sales entries."
-msgstr "Дневник на сметка што се користи за објавување на внесови од продажба."
+msgstr "Дневник на сметка што се користи за книжење на внесови од продажба."
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.partner_product_5
+#: model:product.template,name:point_of_sale.partner_product_5_product_template
+msgid "Acsone.eu"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
@@ -294,8 +301,8 @@ msgstr "Додади глобален попуст"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:374
-#: code:addons/point_of_sale/static/src/xml/pos.xml:452
+#: code:addons/point_of_sale/static/src/xml/pos.xml:382
+#: code:addons/point_of_sale/static/src/xml/pos.xml:460
 #, python-format
 msgid "Address"
 msgstr "Адреса"
@@ -414,8 +421,8 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:267
-#: code:addons/point_of_sale/static/src/xml/pos.xml:587
+#: code:addons/point_of_sale/static/src/xml/pos.xml:275
+#: code:addons/point_of_sale/static/src/xml/pos.xml:595
 #, python-format
 msgid "Back"
 msgstr "Назад"
@@ -439,8 +446,8 @@ msgstr "Ставка од Банкарски извод"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:351
-#: code:addons/point_of_sale/static/src/xml/pos.xml:393
+#: code:addons/point_of_sale/static/src/xml/pos.xml:359
+#: code:addons/point_of_sale/static/src/xml/pos.xml:401
 #, python-format
 msgid "Barcode"
 msgstr "Баркод"
@@ -452,7 +459,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1157
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1273
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 #, python-format
 msgid "Barcode Scanner"
@@ -475,10 +482,22 @@ msgid "Beverages"
 msgstr "Пијалоци"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.raisins_noir
+#: model:product.template,name:point_of_sale.raisins_noir_product_template
+msgid "Black Grapes"
+msgstr "Црно грозје"
+
+#. module: point_of_sale
 #: model:product.product,name:point_of_sale.bloody_mary
 #: model:product.template,name:point_of_sale.bloody_mary_product_template
 msgid "Bloody Mary"
 msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.boni_orange
+#: model:product.template,name:point_of_sale.boni_orange_product_template
+msgid "Boni Oranges"
+msgstr "Boni Портокали"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.budweiser
@@ -500,7 +519,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:781
+#: code:addons/point_of_sale/static/src/xml/pos.xml:789
 #, python-format
 msgid "CHANGE"
 msgstr "КУСУР"
@@ -513,12 +532,12 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:420
-#: code:addons/point_of_sale/static/src/xml/pos.xml:909
-#: code:addons/point_of_sale/static/src/xml/pos.xml:926
-#: code:addons/point_of_sale/static/src/xml/pos.xml:943
-#: code:addons/point_of_sale/static/src/xml/pos.xml:963
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1015
+#: code:addons/point_of_sale/static/src/xml/pos.xml:428
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1025
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1042
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1059
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1079
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1131
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_discount
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_payment
@@ -556,6 +575,12 @@ msgstr ""
 #: model:product.template,name:point_of_sale.carlsberg_product_template
 msgid "Carlsberg"
 msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.carotte
+#: model:product.template,name:point_of_sale.carotte_product_template
+msgid "Carrots"
+msgstr "Моркови"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_cash_control
@@ -600,7 +625,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:493
+#: code:addons/point_of_sale/static/src/xml/pos.xml:501
 #, python-format
 msgid "Change"
 msgstr "Промени"
@@ -628,8 +653,8 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:649
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1339
+#: code:addons/point_of_sale/static/src/xml/pos.xml:657
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1455
 #, python-format
 msgid "Change:"
 msgstr "Промени:"
@@ -666,8 +691,8 @@ msgid ""
 "Check this if you want to group the Journal Items by Product while closing a "
 "Session"
 msgstr ""
-"Означете го ова ако сакате да групирате ставки од дневникот по производ "
-"додека ја затварате сесијата"
+"Означете го ова ако сакате да групирате ставки на налогот по производ додека "
+"ја затворате сесијата"
 
 #. module: point_of_sale
 #. openerp-web
@@ -683,8 +708,8 @@ msgstr "Категории Подредени"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:322
-#: code:addons/point_of_sale/static/src/xml/pos.xml:323
+#: code:addons/point_of_sale/static/src/xml/pos.xml:330
+#: code:addons/point_of_sale/static/src/xml/pos.xml:331
 #, python-format
 msgid "City"
 msgstr "Град"
@@ -727,8 +752,8 @@ msgstr "ID на клиент"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:679
-#: code:addons/point_of_sale/static/src/js/chrome.js:687
+#: code:addons/point_of_sale/static/src/js/chrome.js:701
+#: code:addons/point_of_sale/static/src/js/chrome.js:709
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #, python-format
 msgid "Close"
@@ -783,6 +808,12 @@ msgid "Company"
 msgstr "Компанија"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.poire_conference
+#: model:product.template,name:point_of_sale.poire_conference_product_template
+msgid "Conference pears"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
 msgid "Configuration"
 msgstr "Конфигурација"
@@ -801,8 +832,8 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/chrome.js:684
-#: code:addons/point_of_sale/static/src/xml/pos.xml:906
+#: code:addons/point_of_sale/static/src/js/chrome.js:706
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1022
 #, python-format
 msgid "Confirm"
 msgstr "Потврди"
@@ -840,7 +871,7 @@ msgstr "Сликата не може да се прочита"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:330
+#: code:addons/point_of_sale/static/src/xml/pos.xml:338
 #, python-format
 msgid "Country"
 msgstr "Земја"
@@ -906,8 +937,8 @@ msgstr "Датум на креирање"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:1740
-#: code:addons/point_of_sale/static/src/xml/pos.xml:116
-#: code:addons/point_of_sale/static/src/xml/pos.xml:617
+#: code:addons/point_of_sale/static/src/xml/pos.xml:124
+#: code:addons/point_of_sale/static/src/xml/pos.xml:625
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_partner_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #, python-format
@@ -915,7 +946,7 @@ msgid "Customer"
 msgstr "Купувач"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:459
+#: code:addons/point_of_sale/models/pos_order.py:460
 #, python-format
 msgid "Customer Invoice"
 msgstr "Фактура на клиент"
@@ -932,13 +963,19 @@ msgid "Dashboard"
 msgstr "Командна табла"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.partner_product_7
+#: model:product.template,name:point_of_sale.partner_product_7_product_template
+msgid "Datalp.com"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_date
 msgid "Date Order"
 msgstr "Датум на налогот"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1147
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1263
 #, python-format
 msgid "Debug Window"
 msgstr "Прозорец за дебагирање"
@@ -968,7 +1005,7 @@ msgstr "Одложи валидација"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1167
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1283
 #, python-format
 msgid "Delete Paid Orders"
 msgstr "Избриши платени налози"
@@ -982,7 +1019,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1168
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1284
 #, python-format
 msgid "Delete Unpaid Orders"
 msgstr "Избришете неплатени налози"
@@ -1038,10 +1075,15 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:139
+#: code:addons/point_of_sale/static/src/xml/pos.xml:147
 #, python-format
 msgid "Disc"
 msgstr "Попуст"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
+msgid "Disc:"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_pos_discount
@@ -1061,8 +1103,9 @@ msgstr "Известување за попуст"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:724
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1312
+#: code:addons/point_of_sale/static/src/xml/pos.xml:732
+#: code:addons/point_of_sale/static/src/xml/pos.xml:871
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1428
 #, python-format
 msgid "Discount:"
 msgstr "Попуст:"
@@ -1075,7 +1118,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:790
+#: code:addons/point_of_sale/static/src/xml/pos.xml:798
 #, python-format
 msgid "Discounts"
 msgstr "Попусти"
@@ -1096,6 +1139,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_invoice_display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_statement_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_usersproduct_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_display_name
@@ -1124,10 +1168,22 @@ msgstr "Завршено"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:491
+#: code:addons/point_of_sale/static/src/xml/pos.xml:499
 #, python-format
 msgid "Due"
 msgstr "До"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.partner_product_9
+#: model:product.template,name:point_of_sale.partner_product_9_product_template
+msgid "EGGS-solutions.fr"
+msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.partner_product_3
+#: model:product.template,name:point_of_sale.partner_product_3_product_template
+msgid "Eezee-It"
+msgstr ""
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.efes
@@ -1136,8 +1192,14 @@ msgid "Efes"
 msgstr ""
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.partner_product_4
+#: model:product.template,name:point_of_sale.partner_product_4_product_template
+msgid "Ekomurz.nl"
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1150
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1266
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_electronic_scale
 #, python-format
 msgid "Electronic Scale"
@@ -1145,8 +1207,8 @@ msgstr "Електронска вага"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:343
-#: code:addons/point_of_sale/static/src/xml/pos.xml:378
+#: code:addons/point_of_sale/static/src/xml/pos.xml:351
+#: code:addons/point_of_sale/static/src/xml/pos.xml:386
 #, python-format
 msgid "Email"
 msgstr "Емаил"
@@ -1229,17 +1291,23 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1169
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1285
 #, python-format
 msgid "Export Paid Orders"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1170
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1286
 #, python-format
 msgid "Export Unpaid Orders"
 msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.chicon_flandria_extra
+#: model:product.template,name:point_of_sale.chicon_flandria_extra_product_template
+msgid "Extra Flandria chicory"
+msgstr "Extra Flandria chicory"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -1259,7 +1327,7 @@ msgstr "Можности"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1029
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1145
 #, python-format
 msgid "Finished Importing Orders"
 msgstr ""
@@ -1291,9 +1359,21 @@ msgid "Foster's"
 msgstr ""
 
 #. module: point_of_sale
+#: model:pos.category,name:point_of_sale.fruits_vegetables
+msgid "Fruits and Vegetables"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "General Information"
 msgstr "Општи информации"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:939
+#, python-format
+msgid "Generate report"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_sequence
@@ -1303,10 +1383,28 @@ msgstr ""
 "производи."
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.pomme_golden_perlim
+#: model:product.template,name:point_of_sale.pomme_golden_perlim_product_template
+msgid "Golden Apples Perlim"
+msgstr "Golden Apples Perlim"
+
+#. module: point_of_sale
 #: model:product.product,name:point_of_sale.gordon
 #: model:product.template,name:point_of_sale.gordon_product_template
 msgid "Gordon"
 msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.pomme_granny_smith
+#: model:product.template,name:point_of_sale.pomme_granny_smith_product_template
+msgid "Granny Smith apples"
+msgstr "Granny Smith јаболки"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.poivron_verts
+#: model:product.template,name:point_of_sale.poivron_verts_product_template
+msgid "Green Peppers"
+msgstr "Зелени пиперки"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.green_tea
@@ -1325,7 +1423,7 @@ msgstr "Групирај по"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_by
 msgid "Group Journal Items"
-msgstr "Групирај ставки од дневник"
+msgstr "Групирај ставки на налог"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.guinness
@@ -1335,7 +1433,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1181
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1297
 #, python-format
 msgid "Hardware Events"
 msgstr "Хардверски настани"
@@ -1347,7 +1445,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1177
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1293
 #, python-format
 msgid "Hardware Status"
 msgstr "Хардверски статус"
@@ -1378,6 +1476,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_invoice_id
+#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_statement_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_usersproduct_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_id
@@ -1424,7 +1523,7 @@ msgstr "Импортирај налози"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1171
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1287
 #, python-format
 msgid "Import Orders"
 msgstr "Импортирај налози"
@@ -1441,12 +1540,18 @@ msgid "Importable Point of Sales Data"
 msgstr "Стартувај точка на продажба"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.tomate_en_grappe
+#: model:product.template,name:point_of_sale.tomate_en_grappe_product_template
+msgid "In Cluster Tomatoes"
+msgstr ""
+
+#. module: point_of_sale
 #: selection:pos.session,state:0
 msgid "In Progress"
 msgstr "Во тек"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:406
+#: code:addons/point_of_sale/models/pos_order.py:407
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
 msgstr "Со цел да избришете продажба, мора да има ново или откажано."
@@ -1476,7 +1581,7 @@ msgstr "Внатрешни белешки"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:625
+#: code:addons/point_of_sale/static/src/xml/pos.xml:633
 #: model:ir.actions.report.xml,name:point_of_sale.pos_invoice_report
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_invoice_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -1521,6 +1626,12 @@ msgid "Jim Beam"
 msgstr ""
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.pomme_jonagold
+#: model:product.template,name:point_of_sale.pomme_jonagold_product_template
+msgid "Jonagold apples"
+msgstr "Jonagold јаболки"
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_journal
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_journal_id
 msgid "Journal"
@@ -1529,7 +1640,7 @@ msgstr "Дневник"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_account_move
 msgid "Journal Entry"
-msgstr "Внес во дневник"
+msgstr "Внес во налог"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
@@ -1552,6 +1663,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_invoice___last_update
+#: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_statement___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_usersproduct___last_update
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order___last_update
@@ -1593,6 +1705,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_date
 msgid "Last session closing date"
 msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.poireaux_poireaux
+#: model:product.template,name:point_of_sale.poireaux_poireaux_product_template
+msgid "Leeks"
+msgstr "Праз"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.citron
+#: model:product.template,name:point_of_sale.citron_product_template
+msgid "Lemon"
+msgstr "Лимон"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_name
@@ -1700,7 +1824,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:494
+#: code:addons/point_of_sale/static/src/xml/pos.xml:502
 #, python-format
 msgid "Method"
 msgstr "Метод"
@@ -1781,18 +1905,19 @@ msgstr "Мои продажби"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:387
-#: code:addons/point_of_sale/static/src/xml/pos.xml:398
-#: code:addons/point_of_sale/static/src/xml/pos.xml:407
+#: code:addons/point_of_sale/static/src/xml/pos.xml:395
+#: code:addons/point_of_sale/static/src/xml/pos.xml:406
+#: code:addons/point_of_sale/static/src/xml/pos.xml:415
 #, python-format
 msgid "N/A"
 msgstr "N/A"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:310
-#: code:addons/point_of_sale/static/src/xml/pos.xml:451
+#: code:addons/point_of_sale/static/src/xml/pos.xml:318
+#: code:addons/point_of_sale/static/src/xml/pos.xml:459
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_name
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 #, python-format
 msgid "Name"
@@ -1824,13 +1949,13 @@ msgstr "Нова сесија"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:650
+#: code:addons/point_of_sale/static/src/xml/pos.xml:658
 #, python-format
 msgid "Next Order"
 msgstr "Следна нарачка"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:134
+#: code:addons/point_of_sale/models/pos_order.py:135
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
@@ -1863,7 +1988,7 @@ msgstr ""
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:1962
-#: code:addons/point_of_sale/static/src/xml/pos.xml:332
+#: code:addons/point_of_sale/static/src/xml/pos.xml:340
 #, python-format
 msgid "None"
 msgstr "Ништо"
@@ -1911,17 +2036,23 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:838
-#: code:addons/point_of_sale/static/src/xml/pos.xml:852
-#: code:addons/point_of_sale/static/src/xml/pos.xml:866
-#: code:addons/point_of_sale/static/src/xml/pos.xml:892
-#: code:addons/point_of_sale/static/src/xml/pos.xml:923
-#: code:addons/point_of_sale/static/src/xml/pos.xml:940
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1018
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1054
+#: code:addons/point_of_sale/static/src/xml/pos.xml:954
+#: code:addons/point_of_sale/static/src/xml/pos.xml:968
+#: code:addons/point_of_sale/static/src/xml/pos.xml:982
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1008
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1039
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1056
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1134
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1170
 #, python-format
 msgid "Ok"
 msgstr "Во ред"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.Onions
+#: model:product.template,name:point_of_sale.Onions_product_template
+msgid "Onions"
+msgstr "Кромид"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1943,8 +2074,8 @@ msgstr "Отвори каса"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:636
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1183
+#: code:addons/point_of_sale/static/src/xml/pos.xml:644
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1299
 #, python-format
 msgid "Open Cashbox"
 msgstr "Отвори каса"
@@ -1988,16 +2119,22 @@ msgid "Opening Date"
 msgstr "Датум на отварање"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.papillon_orange
+#: model:product.template,name:point_of_sale.papillon_orange_product_template
+msgid "Orange Butterfly"
+msgstr "Orange Butterfly"
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:282
+#: code:addons/point_of_sale/static/src/xml/pos.xml:290
 #, python-format
 msgid "Order"
 msgstr "Нарачка"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/models.js:1515
-#: code:addons/point_of_sale/static/src/js/models.js:1546
+#: code:addons/point_of_sale/static/src/js/models.js:1520
+#: code:addons/point_of_sale/static/src/js/models.js:1551
 #, python-format
 msgid "Order "
 msgstr "Нарачка "
@@ -2041,7 +2178,7 @@ msgstr "Ставки на нарачка"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1164
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1280
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_session_orders
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_filtered
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_pos_form
@@ -2121,6 +2258,11 @@ msgid "Partner"
 msgstr "Партнер"
 
 #. module: point_of_sale
+#: model:pos.category,name:point_of_sale.partner_services
+msgid "Partner Services"
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/gui.js:263
 #, python-format
@@ -2134,8 +2276,8 @@ msgstr "Плати налог"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:121
-#: code:addons/point_of_sale/static/src/xml/pos.xml:590
+#: code:addons/point_of_sale/static/src/xml/pos.xml:129
+#: code:addons/point_of_sale/static/src/xml/pos.xml:598
 #: code:addons/point_of_sale/wizard/pos_payment.py:51
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -2182,9 +2324,23 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_statement_ids
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Payments"
 msgstr "Плаќања"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:881
+#, python-format
+msgid "Payments:"
+msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.peche
+#: model:product.template,name:point_of_sale.peche_product_template
+msgid "Peaches"
+msgstr "Праски"
 
 #. module: point_of_sale
 #: model:ir.filters,name:point_of_sale.filter_orders_per_session
@@ -2201,16 +2357,16 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:347
-#: code:addons/point_of_sale/static/src/xml/pos.xml:382
-#: code:addons/point_of_sale/static/src/xml/pos.xml:453
+#: code:addons/point_of_sale/static/src/xml/pos.xml:355
+#: code:addons/point_of_sale/static/src/xml/pos.xml:390
+#: code:addons/point_of_sale/static/src/xml/pos.xml:461
 #, python-format
 msgid "Phone"
 msgstr "Телефон"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1261
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1377
 #, python-format
 msgid "Phone:"
 msgstr "Телефон"
@@ -2240,20 +2396,20 @@ msgid "Please Confirm Large Amount"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:272
+#: code:addons/point_of_sale/models/pos_order.py:273
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr "Дефинирајте приходно конто за овој производ: \"%s\" (id:%d)."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:437
+#: code:addons/point_of_sale/models/pos_order.py:438
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "Обезбедете партнер за продажбата."
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:474
+#: code:addons/point_of_sale/static/src/xml/pos.xml:482
 #, python-format
 msgid "Please select a payment method."
 msgstr ""
@@ -2372,7 +2528,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:326
+#: code:addons/point_of_sale/static/src/xml/pos.xml:334
 #, python-format
 msgid "Postcode"
 msgstr "Поштенски број"
@@ -2384,16 +2540,27 @@ msgid "Posted"
 msgstr "Книжено"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.pomme_de_terre
+#: model:product.template,name:point_of_sale.pomme_de_terre_product_template
+msgid "Potatoes"
+msgstr "Компири"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_precompute_cash
 msgid "Prefill Cash Payment"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:144
+#: code:addons/point_of_sale/static/src/xml/pos.xml:152
 #, python-format
 msgid "Price"
 msgstr "Цена"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
+msgid "Price Unit"
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:16
@@ -2410,8 +2577,8 @@ msgstr "Ценовник"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:657
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1184
+#: code:addons/point_of_sale/static/src/xml/pos.xml:665
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1300
 #, python-format
 msgid "Print Receipt"
 msgstr "Печати приемница"
@@ -2430,7 +2597,7 @@ msgstr "Печатач"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/devices.js:425
+#: code:addons/point_of_sale/static/src/js/devices.js:427
 #, python-format
 msgid "Printing Error: "
 msgstr ""
@@ -2438,6 +2605,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_product_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_product_id
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.report_usersproduct
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Product"
@@ -2468,6 +2636,7 @@ msgstr "Урнек на производ"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_template_action
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_products
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Products"
 msgstr "Производи"
@@ -2485,7 +2654,7 @@ msgstr "Стави пари во"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:134
+#: code:addons/point_of_sale/static/src/xml/pos.xml:142
 #: model:ir.ui.view,arch_db:point_of_sale.report_usersproduct
 #, python-format
 msgid "Qty"
@@ -2493,6 +2662,7 @@ msgstr "Количина"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_qty
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Quantity"
 msgstr "Количина"
 
@@ -2503,7 +2673,7 @@ msgstr "Испечати повторно"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1185
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1301
 #, python-format
 msgid "Read Weighting Scale"
 msgstr "Читање на вагата"
@@ -2546,10 +2716,22 @@ msgid "Red Label"
 msgstr "Кориснички ознаки"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.poivron_rouges
+#: model:product.template,name:point_of_sale.poivron_rouges_product_template
+msgid "Red Pepper"
+msgstr "Црвена пиперка"
+
+#. module: point_of_sale
 #: model:product.product,name:point_of_sale.red_wine
 #: model:product.template,name:point_of_sale.red_wine_product_template
 msgid "Red Wine"
 msgstr ""
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.pamplemousse_rouge_pamplemousse
+#: model:product.template,name:point_of_sale.pamplemousse_rouge_pamplemousse_product_template
+msgid "Red grapefruit"
+msgstr "Црвен грејпфрут"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.redbull
@@ -2569,7 +2751,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1154
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1270
 #, python-format
 msgid "Reset"
 msgstr "Ресетирај"
@@ -2595,7 +2777,7 @@ msgid "Resume"
 msgstr "Продолжи"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:652
+#: code:addons/point_of_sale/models/pos_order.py:653
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Return Products"
@@ -2617,6 +2799,14 @@ msgstr ""
 #: model:product.template,name:point_of_sale.safari_product_template
 msgid "Safari"
 msgstr ""
+
+#. module: point_of_sale
+#: model:ir.actions.client,name:point_of_sale.action_report_pos_details
+#: model:ir.actions.report.xml,name:point_of_sale.sale_details_report
+#: model:ir.ui.menu,name:point_of_sale.menu_report_order_details
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
+msgid "Sale Details"
+msgstr "Детали за продажба"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_journal_id
@@ -2657,14 +2847,14 @@ msgstr "Вага"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1160
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1276
 #, python-format
 msgid "Scan"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1161
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1277
 #, python-format
 msgid "Scan EAN-13"
 msgstr ""
@@ -2689,14 +2879,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:424
+#: code:addons/point_of_sale/static/src/xml/pos.xml:432
 #, python-format
 msgid "Search Customers"
 msgstr "Пребарај клиенти"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:191
+#: code:addons/point_of_sale/static/src/xml/pos.xml:199
 #, python-format
 msgid "Search Products"
 msgstr "Барај производ"
@@ -2719,10 +2909,17 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:432
+#: code:addons/point_of_sale/static/src/xml/pos.xml:440
 #, python-format
 msgid "Select Customer"
 msgstr "Избери клиент"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:927
+#, python-format
+msgid "Select Dates for the report"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -2739,7 +2936,7 @@ msgid "Select tax"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:202
+#: code:addons/point_of_sale/models/pos_order.py:203
 #, python-format
 msgid "Selected orders do not have the same session!"
 msgstr "Селектираните налози немаат иста сесија!"
@@ -2756,7 +2953,7 @@ msgstr "Број на секвенца"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:704
+#: code:addons/point_of_sale/static/src/xml/pos.xml:712
 #, python-format
 msgid "Served by"
 msgstr "Услужен од"
@@ -2785,7 +2982,7 @@ msgstr "ID на сесија"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1043
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1159
 #, python-format
 msgid "Session ids:"
 msgstr ""
@@ -2814,7 +3011,7 @@ msgstr "Подеси клиент"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1153
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1269
 #, python-format
 msgid "Set Weight"
 msgstr "Постави тежина"
@@ -2842,7 +3039,7 @@ msgstr "Подесувања"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1263
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1379
 #, python-format
 msgid "Shop:"
 msgstr "Продавница:"
@@ -2905,6 +3102,13 @@ msgid "Start Category"
 msgstr ""
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:930
+#, python-format
+msgid "Start date"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_start
 msgid "Starting Balance"
 msgstr "Почетно салдо"
@@ -2948,15 +3152,28 @@ msgstr "Локација на залиха"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:318
-#: code:addons/point_of_sale/static/src/xml/pos.xml:319
+#: code:addons/point_of_sale/static/src/xml/pos.xml:934
+#, python-format
+msgid "Stop date"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:326
+#: code:addons/point_of_sale/static/src/xml/pos.xml:327
 #, python-format
 msgid "Street"
 msgstr "Улица"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.limon
+#: model:product.template,name:point_of_sale.limon_product_template
+msgid "Stringers"
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:752
+#: code:addons/point_of_sale/static/src/xml/pos.xml:760
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_subtotal_incl
 #, python-format
 msgid "Subtotal"
@@ -2974,21 +3191,21 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1298
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1414
 #, python-format
 msgid "Subtotal:"
 msgstr "Вкупно:"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1035
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1151
 #, python-format
 msgid "Successfully  imported"
 msgstr "Успешно импортирано"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1034
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1150
 #, python-format
 msgid "Successfully imported"
 msgstr "Успешно импортирано"
@@ -3015,7 +3232,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:765
+#: code:addons/point_of_sale/static/src/xml/pos.xml:773
 #, python-format
 msgid "TOTAL"
 msgstr "ВКУПНО"
@@ -3027,7 +3244,7 @@ msgstr "Извади пари"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/models/pos_order.py:300
+#: code:addons/point_of_sale/models/pos_order.py:301
 #: code:addons/point_of_sale/static/src/js/screens.js:1983
 #, python-format
 msgid "Tax"
@@ -3035,8 +3252,8 @@ msgstr "Данок"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:355
-#: code:addons/point_of_sale/static/src/xml/pos.xml:402
+#: code:addons/point_of_sale/static/src/xml/pos.xml:363
+#: code:addons/point_of_sale/static/src/xml/pos.xml:410
 #, python-format
 msgid "Tax ID"
 msgstr "ID на Данок"
@@ -3045,26 +3262,28 @@ msgstr "ID на Данок"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_tax
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_tax_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_tax_ids_after_fiscal_position
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Taxes"
 msgstr "Даноци"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1133
+#: code:addons/point_of_sale/static/src/xml/pos.xml:895
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1249
 #, python-format
 msgid "Taxes:"
 msgstr "Даноци:"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:684
+#: code:addons/point_of_sale/static/src/xml/pos.xml:692
 #, python-format
 msgid "Tel:"
 msgstr "Тел:"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:492
+#: code:addons/point_of_sale/static/src/xml/pos.xml:500
 #, python-format
 msgid "Tendered"
 msgstr ""
@@ -3076,7 +3295,7 @@ msgid "Tequila"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:260
+#: code:addons/point_of_sale/models/pos_order.py:261
 #, python-format
 msgid "The POS order must have lines when calling this method"
 msgstr ""
@@ -3085,7 +3304,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:887
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1003
 #, python-format
 msgid ""
 "The Point of Sale could not find any product, client, employee\n"
@@ -3208,7 +3427,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_print_auto
-msgid "The receipt will automatically be p-rinted at the end of each order"
+msgid "The receipt will automatically be printed at the end of each order"
 msgstr ""
 
 #. module: point_of_sale
@@ -3239,6 +3458,8 @@ msgstr ""
 #, python-format
 msgid "The type of the journal for your payment method should be bank or cash "
 msgstr ""
+"Типот на налогот за вашиот метод за плаќање треба да биде банковен или "
+"готовински"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_end
@@ -3247,7 +3468,7 @@ msgstr "Теоретски завршен баланс"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:94
+#: code:addons/point_of_sale/static/src/xml/pos.xml:102
 #, python-format
 msgid ""
 "There are pending operations that could not be saved into the database, are "
@@ -3280,7 +3501,7 @@ msgid "There is no cash register for this PoS Session"
 msgstr "Нема каса за оваа сесија на точка на продажба"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:607
+#: code:addons/point_of_sale/models/pos_order.py:608
 #, python-format
 msgid ""
 "There is no receivable account defined to make payment for the partner: \"%s"
@@ -3290,7 +3511,7 @@ msgstr ""
 "\"%s\" (id:%d)."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:605
+#: code:addons/point_of_sale/models/pos_order.py:606
 #, python-format
 msgid "There is no receivable account defined to make payment."
 msgstr "Нема дефинирано сметка на побарувања за да се направи плаќање."
@@ -3397,7 +3618,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:631
+#: code:addons/point_of_sale/static/src/xml/pos.xml:639
 #, python-format
 msgid "Tip"
 msgstr "Совет"
@@ -3413,7 +3634,7 @@ msgid "To Weigh With Scale"
 msgstr "Да измери со вага"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:638
+#: code:addons/point_of_sale/models/pos_order.py:639
 #, python-format
 msgid ""
 "To return product(s), you need to open a session that will be used to "
@@ -3429,6 +3650,7 @@ msgstr "Денес"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_total
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Total"
 msgstr "Вкупно"
 
@@ -3449,7 +3671,7 @@ msgstr "Вкупна цена"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:802
+#: code:addons/point_of_sale/static/src/xml/pos.xml:810
 #, python-format
 msgid "Total Taxes"
 msgstr ""
@@ -3476,14 +3698,16 @@ msgstr "Вкупна количина"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1132
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1318
+#: code:addons/point_of_sale/static/src/xml/pos.xml:909
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1248
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1434
+#: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #, python-format
 msgid "Total:"
 msgstr "Вкупно:"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:312
+#: code:addons/point_of_sale/models/pos_order.py:313
 #, python-format
 msgid "Trade Receivables"
 msgstr "Побарувања од трговија"
@@ -3511,7 +3735,7 @@ msgstr "Единечна цена"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:883
+#: code:addons/point_of_sale/static/src/xml/pos.xml:999
 #, python-format
 msgid "Unknown Barcode"
 msgstr "Непознат баркод"
@@ -3557,7 +3781,7 @@ msgstr "Производ на корисникот"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1262
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1378
 #, python-format
 msgid "User:"
 msgstr "Корисник:"
@@ -3574,14 +3798,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:687
+#: code:addons/point_of_sale/static/src/xml/pos.xml:695
 #, python-format
 msgid "VAT:"
 msgstr "ДДВ:"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:591
+#: code:addons/point_of_sale/static/src/xml/pos.xml:599
 #, python-format
 msgid "Validate"
 msgstr "Потврди"
@@ -3590,6 +3814,12 @@ msgstr "Потврди"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Validate Closing & Post Entries"
 msgstr "Валидирај Затварање & Објавување на внесови"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.partner_product_6
+#: model:product.template,name:point_of_sale.partner_product_6_product_template
+msgid "Vauxoo.com"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_vkeyboard
@@ -3615,7 +3845,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1179
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1295
 #, python-format
 msgid "Weighting"
 msgstr "Тежина"
@@ -3639,8 +3869,8 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1105
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1282
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1221
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1398
 #, python-format
 msgid "With a"
 msgstr "Со"
@@ -3649,6 +3879,12 @@ msgstr "Со"
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Year"
 msgstr "Година"
+
+#. module: point_of_sale
+#: model:product.product,name:point_of_sale.poivron_jaunes
+#: model:product.template,name:point_of_sale.poivron_jaunes_product_template
+msgid "Yellow Peppers"
+msgstr "Жолти пиперки"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.tea
@@ -3665,7 +3901,7 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:396
+#: code:addons/point_of_sale/models/pos_order.py:397
 #, python-format
 msgid ""
 "You cannot change the partner of a POS order for which an invoice has "
@@ -3745,19 +3981,19 @@ msgstr ""
 "од менито \"PoS Backend / Конфигурација / Методи на плаќање\"."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:621
+#: code:addons/point_of_sale/models/pos_order.py:622
 #, python-format
 msgid "You have to open at least one cashbox."
 msgstr "Треба да отворите барем една каса."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:724
+#: code:addons/point_of_sale/models/pos_order.py:725
 #, python-format
 msgid "You have to select a pricelist in the sale form !"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:712
+#: code:addons/point_of_sale/models/pos_order.py:713
 #, python-format
 msgid ""
 "You have to select a pricelist in the sale form !\n"
@@ -3814,21 +4050,27 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1124
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1240
 #, python-format
 msgid "Your shopping cart is empty"
 msgstr "Вашата потрошувачка кошничка е празна"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:327
+#: code:addons/point_of_sale/static/src/xml/pos.xml:335
 #, python-format
 msgid "ZIP"
 msgstr "Пош. број"
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.courgette
+#: model:product.template,name:point_of_sale.courgette_product_template
+msgid "Zucchini"
+msgstr "Zucchini"
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1097
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1213
 #, python-format
 msgid "at"
 msgstr "на"
@@ -3840,14 +4082,20 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1040
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1156
 #, python-format
 msgid "belong to another session:"
 msgstr ""
 
 #. module: point_of_sale
+#: model:product.product,name:point_of_sale.partner_product_8
+#: model:product.template,name:point_of_sale.partner_product_8_product_template
+msgid "camptocamp.com"
+msgstr ""
+
+#. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1385
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1501
 #, python-format
 msgid "caps lock"
 msgstr "големи букви"
@@ -3864,23 +4112,23 @@ msgstr "cash.box.out"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1412
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1454
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1528
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1570
 #, python-format
 msgid "close"
 msgstr "затвори"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1370
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1447
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1486
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1563
 #, python-format
 msgid "delete"
 msgstr "избриши"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1107
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1223
 #, python-format
 msgid "discount"
 msgstr "попуст"
@@ -3900,7 +4148,7 @@ msgstr "неупотребено"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1034
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1150
 #, python-format
 msgid "paid orders"
 msgstr ""
@@ -3932,6 +4180,11 @@ msgid "report.point_of_sale.report_invoice"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_saledetails
+msgid "report.point_of_sale.report_saledetails"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_statement
 msgid "report.point_of_sale.report_statement"
 msgstr ""
@@ -3943,577 +4196,45 @@ msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/models/pos_order.py:139
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1397
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1452
+#: code:addons/point_of_sale/models/pos_order.py:140
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1513
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1568
 #, python-format
 msgid "return"
 msgstr "врати"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1398
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1409
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1514
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1525
 #, python-format
 msgid "shift"
 msgstr "Премести"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1371
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1487
 #, python-format
 msgid "tab"
 msgstr "јазиче"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1035
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1151
 #, python-format
 msgid "unpaid orders"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1037
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1153
 #, python-format
 msgid "unpaid orders could not be imported"
 msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1039
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1155
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr ""
-
-#~ msgid "2L Evian"
-#~ msgstr "2Л Evian"
-
-#~ msgid "50cl Perrier"
-#~ msgstr "50cl Perrier"
-
-#~ msgid ""
-#~ "<br/>\n"
-#~ "                        Date:"
-#~ msgstr ""
-#~ "<br/>\n"
-#~ "Датум:"
-
-#~ msgid ""
-#~ "<strong>Company</strong>:\n"
-#~ "                            <br/>"
-#~ msgstr ""
-#~ "<strong>Компанија</strong>:\n"
-#~ "                            <br/>"
-
-#~ msgid "<strong>Currency</strong>"
-#~ msgstr "<strong>Валута</strong>"
-
-#~ msgid "<strong>Date</strong>"
-#~ msgstr "<strong>Датум</strong>"
-
-#~ msgid "<strong>Description</strong>"
-#~ msgstr "<strong>Опис</strong>"
-
-#~ msgid "<strong>Difference</strong>"
-#~ msgstr "<strong>Разлика</strong>"
-
-#~ msgid "<strong>End Period</strong>:<br/>"
-#~ msgstr "<strong>Краен период</strong>:<br/>"
-
-#~ msgid "<strong>Invoiced</strong>"
-#~ msgstr "<strong>Фактурирано</strong>"
-
-#~ msgid "<strong>Journal</strong>"
-#~ msgstr "<strong>Дневник</strong>"
-
-#~ msgid "<strong>Net Total</strong>"
-#~ msgstr "<strong>Вкупно Нето</strong>"
-
-#~ msgid "<strong>Payment</strong>"
-#~ msgstr "<strong>Плаќање</strong>"
-
-#~ msgid ""
-#~ "<strong>Print date</strong>:\n"
-#~ "                            <br/>"
-#~ msgstr ""
-#~ "<strong>Датум на печатење</strong>:\n"
-#~ "                            <br/>"
-
-#~ msgid "<strong>Print date</strong>:<br/>"
-#~ msgstr "<strong>Датум на печатење</strong>:<br/>"
-
-#~ msgid "<strong>Product</strong>"
-#~ msgstr "<strong>Производ</strong>"
-
-#~ msgid "<strong>Quantity</strong>"
-#~ msgstr "<strong>Квантитет</strong>"
-
-#~ msgid "<strong>Reference</strong>"
-#~ msgstr "<strong>Референца</strong>"
-
-#~ msgid "<strong>Responsible</strong>:<br/>"
-#~ msgstr "<strong>Одговорен</strong>:<br/>"
-
-#~ msgid "<strong>Starting Balance</strong>"
-#~ msgstr "<strong>Почетно салдо</strong>"
-
-#~ msgid "<strong>Summary</strong>"
-#~ msgstr "<strong>Опис</strong>"
-
-#~ msgid "<strong>Tax</strong>"
-#~ msgstr "<strong>Данок</strong>"
-
-#~ msgid "<strong>Taxes</strong>"
-#~ msgstr "<strong> Даноци </strong>"
-
-#~ msgid "<strong>Total Without Taxes</strong>"
-#~ msgstr "<strong>Вкупно без данок</strong>"
-
-#~ msgid "<strong>Unit Price</strong>"
-#~ msgstr "<strong>Цена на единица</strong>"
-
-#~ msgid "<strong>Users</strong>:<br/>"
-#~ msgstr "<strong>Корисници</strong>:<br/>"
-
-#~ msgid "Account"
-#~ msgstr "Сметка"
-
-#~ msgid "Activate the customer portal"
-#~ msgstr "Активирај го порталот на клиентот"
-
-#~ msgid "Activation"
-#~ msgstr "Активација"
-
-#~ msgid "Alias Domain"
-#~ msgstr "Домеин на алијас"
-
-#~ msgid "Allow documents sharing"
-#~ msgstr "Дозволи споделување на документи"
-
-#~ msgid "Allow external users to sign up"
-#~ msgstr "Дозволи регистрација на надворешни корисници"
-
-#~ msgid "Allow the users to synchronize their calendar  with Google Calendar"
-#~ msgstr ""
-#~ "Дозволи корисниците да го синхронизираат нивниот календар со Гугл "
-#~ "календарот"
-
-#~ msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
-#~ msgstr ""
-#~ "Дозволи на корисниците да импортираат податоци од CSV/XLS/XLSX/ODS "
-#~ "датотеки"
-
-#~ msgid "Allow users to sign in with Google"
-#~ msgstr "Дозволи корисниците да се најавуваат со Google"
-
-#~ msgid "Attach Google documents to any record"
-#~ msgstr "Прикачете Google документи до било кој запис"
-
-#~ msgid "Authorization Code"
-#~ msgstr "Код за авторизација"
-
-#~ msgid "Belle-Vue Kriek 25cl"
-#~ msgstr "Belle-Vue Kriek 25cl"
-
-#~ msgid "Black Grapes"
-#~ msgstr "Црно грозје"
-
-#~ msgid "Boni Oranges"
-#~ msgstr "Boni Портокали"
-
-#~ msgid "Carrots"
-#~ msgstr "Моркови"
-
-#~ msgid "Cash Journals"
-#~ msgstr "Дневници готовина"
-
-#~ msgid "Chaudfontaine Petillante 1.5l"
-#~ msgstr "Chaudfontaine Petillante 1.5л"
-
-#~ msgid "Chimay Red 33cl"
-#~ msgstr "Chimay Red 33cl"
-
-#~ msgid "Client ID"
-#~ msgstr "ID на клиент"
-
-#~ msgid "Client_id"
-#~ msgstr "Client_id"
-
-#~ msgid "Client_key"
-#~ msgstr "Client_key"
-
-#~ msgid "Coca-Cola Light 33cl"
-#~ msgstr "Кока-Кола Light 33cl"
-
-#~ msgid "Coca-Cola Light 50cl"
-#~ msgstr "Coca-Cola Light 50cl"
-
-#~ msgid "Coca-Cola Light Lemon 2L"
-#~ msgstr "Coca-Cola Light Lemon 2Л"
-
-#~ msgid "Coca-Cola Regular 33cl"
-#~ msgstr "Кока-Кола Регулар 33cl"
-
-#~ msgid "Coca-Cola Regular 50cl"
-#~ msgstr "Кока-Кола Регулар 50cl"
-
-#~ msgid "Date"
-#~ msgstr "Датум"
-
-#~ msgid "Date End"
-#~ msgstr "Краен датум"
-
-#~ msgid "Date Start"
-#~ msgstr "Почетен датум"
-
-#~ msgid "Dates"
-#~ msgstr "Датуми"
-
-#~ msgid "Default Point of Sale"
-#~ msgstr "Стандардна точка на продажба"
-
-#~ msgid "Description"
-#~ msgstr "Опис"
-
-#~ msgid "Details of Sales"
-#~ msgstr "Детали за продажби"
-
-#~ msgid "Disc."
-#~ msgstr "Попуст"
-
-#~ msgid "Enable password reset from Login page"
-#~ msgstr "Дозволи ресетирање на лозинка од страница за најавување"
-
-#~ msgid "Error!"
-#~ msgstr "Грешка!"
-
-#~ msgid "Evian 50cl"
-#~ msgstr "Evian 50cl"
-
-#~ msgid "Extra Flandria chicory"
-#~ msgstr "Extra Flandria chicory"
-
-#~ msgid "Fanta Orange 25cl"
-#~ msgstr "Фанта Портокал 25cl"
-
-#~ msgid "Fanta Orange 33cl"
-#~ msgstr "Фанта Портокал 33cl"
-
-#~ msgid "Fanta Orange 50cl"
-#~ msgstr "Фанта Портокал 50cl"
-
-#~ msgid "Fanta Orange Zero 1.5L"
-#~ msgstr "Fanta Orange Zero 1.5Л"
-
-#~ msgid "Fanta Zero Orange 33cl"
-#~ msgstr "Fanta Zero Orange 33cl"
-
-#~ msgid "Generate Entries"
-#~ msgstr "Генерирај записи"
-
-#~ msgid "Generate Journal Entries"
-#~ msgstr "Генерирај внесови во дневник"
-
-#~ msgid ""
-#~ "Generate all sale journal entries for non invoiced orders linked to a "
-#~ "closed cash register or statement."
-#~ msgstr ""
-#~ "Генерирај ги сите записи од дневникот за продажба за нефактурираните "
-#~ "налози поврзани со затворена каса или извод."
-
-#~ msgid "Give your customers access to their documents."
-#~ msgstr "Овозможете им на клиентите пристап до нивните документи."
-
-#~ msgid ""
-#~ "Gives the probability to assign a lead to this partner. (0 means no "
-#~ "assignation.)"
-#~ msgstr ""
-#~ "Ја дава можноста да назначите трага на овој партнер. (0 значи нема "
-#~ "назначување.)"
-
-#~ msgid "Golden Apples Perlim"
-#~ msgstr "Golden Apples Perlim"
-
-#~ msgid "Granny Smith apples"
-#~ msgstr "Granny Smith јаболки"
-
-#~ msgid "Green Peppers"
-#~ msgstr "Зелени пиперки"
-
-#~ msgid "Grisette Cherry 25cl"
-#~ msgstr "Grisette Cherry 25cl"
-
-#~ msgid "If unchecked, only invited users may sign up."
-#~ msgstr ""
-#~ "Доколку е одштиклирано, само поканети корисници можат да се регистрираат."
-
-#~ msgid ""
-#~ "If you have setup a catch-all email domain redirected to the Odoo server, "
-#~ "enter the domain name here."
-#~ msgstr ""
-#~ "Ако сте подесиле домен што ќе ги прима сите е-маил пораки пренасочен кон "
-#~ "Odoo серверот, внесете го тука името на доменот."
-
-#~ msgid "Implementation References"
-#~ msgstr "Референци на имплементација"
-
-#~ msgid "Implemented by"
-#~ msgstr "Имплементирано од"
-
-#~ msgid "Invoice Amount"
-#~ msgstr "Износ на фактура"
-
-#~ msgid "Invoices"
-#~ msgstr "Фактури"
-
-#~ msgid "Jonagold apples"
-#~ msgstr "Jonagold јаболки"
-
-#~ msgid "Latest Partner Review"
-#~ msgstr "Преглед на последен партнер"
-
-#~ msgid "Leeks"
-#~ msgstr "Праз"
-
-#~ msgid "Leffe Blonde 33cl"
-#~ msgstr "Leffe Blonde 33cl"
-
-#~ msgid "Leffe Brune 33cl"
-#~ msgstr "Leffe Brune 33cl"
-
-#~ msgid "Lemon"
-#~ msgstr "Лимон"
-
-#~ msgid "Level"
-#~ msgstr "Ниво"
-
-#~ msgid "Level Weight"
-#~ msgstr "Тежина на ниво"
-
-#~ msgid "Lindemans Kriek 37.5cl"
-#~ msgstr "Lindemans Kriek 37.5cl"
-
-#~ msgid "Manage Inter Company"
-#~ msgstr "Менаџирај внатрешна компанија"
-
-#~ msgid "Manage multiple companies"
-#~ msgstr "Управување со повеќе компании"
-
-#~ msgid "Nbr Invoice"
-#~ msgstr "Број на фактура"
-
-#~ msgid "Next Partner Review"
-#~ msgstr "Преглед на следен партнер"
-
-#~ msgid "Number of Transaction"
-#~ msgstr "Број на трансакција"
-
-#~ msgid "Onions"
-#~ msgstr "Кромид"
-
-#~ msgid "Orange Butterfly"
-#~ msgstr "Orange Butterfly"
-
-#~ msgid "Orval 33cl"
-#~ msgstr "Orval 33cl"
-
-#~ msgid "POS"
-#~ msgstr "Место на продажба"
-
-#~ msgid "POS Details"
-#~ msgstr "Детали за точка на продажба"
-
-#~ msgid "POS Lines"
-#~ msgstr "Ставки на POS"
-
-#~ msgid "POS Report"
-#~ msgstr "Извештај за места на продажба"
-
-#~ msgid "Partnership Date"
-#~ msgstr "Датум на партнерство"
-
-#~ msgid "Peaches"
-#~ msgstr "Праски"
-
-#~ msgid "Post All Orders"
-#~ msgstr "Објави ги сите налози"
-
-#~ msgid "Post POS Journal Entries"
-#~ msgstr "Обрави внесови во дневник за точка на продажба"
-
-#~ msgid "Potatoes"
-#~ msgstr "Компири"
-
-#~ msgid "Print Report"
-#~ msgstr "Печати извештај"
-
-#~ msgid "Product Nb."
-#~ msgstr "Број на поизвод"
-
-#~ msgid "Red Pepper"
-#~ msgstr "Црвена пиперка"
-
-#~ msgid "Red grapefruit"
-#~ msgstr "Црвен грејпфрут"
-
-#~ msgid "Reference"
-#~ msgstr "Референца"
-
-#~ msgid "Reprint"
-#~ msgstr "Испечати повторно"
-
-#~ msgid "Rochefort \"8\" 33cl"
-#~ msgstr "Rochefort \"8\" 33cl"
-
-#~ msgid "Sale Details"
-#~ msgstr "Детали за продажба"
-
-#~ msgid "Sales Details"
-#~ msgstr "Детали за продажба"
-
-#~ msgid "Sales Journal"
-#~ msgstr "Дневник Продажба"
-
-#~ msgid "Sales Lines"
-#~ msgstr "Ставки за продажба"
-
-#~ msgid "Sales by User"
-#~ msgstr "Продажби по корисник"
-
-#~ msgid "Sales by User Monthly"
-#~ msgstr "Продажби по корисник месечно"
-
-#~ msgid "Sales by day"
-#~ msgstr "Продажби по ден"
-
-#~ msgid "Sales by month"
-#~ msgstr "Продажби по месец"
-
-#~ msgid "Sales by user"
-#~ msgstr "Продажби по корисник"
-
-#~ msgid "Sales by user monthly"
-#~ msgstr "Продажби по корисник месечно"
-
-#~ msgid "Salespeople"
-#~ msgstr "Продавачи"
-
-#~ msgid "San Pellegrino 1L"
-#~ msgstr "San Pellegrino 1L"
-
-#~ msgid "Session Summary"
-#~ msgstr "Резиме на сесија"
-
-#~ msgid "Session Summary:"
-#~ msgstr "Резиме на сесија:"
-
-#~ msgid "Share or embbed any screen of Odoo."
-#~ msgstr "Сподели или вметни било кој екран од Odoo."
-
-#~ msgid "Share partners to all companies"
-#~ msgstr "Сподели партнери со сите компании"
-
-#~ msgid ""
-#~ "Share your partners to all companies defined in your instance.\n"
-#~ " * Checked : Partners are visible for every companies, even if a company "
-#~ "is defined on the partner.\n"
-#~ " * Unchecked : Each company can see only its partner (partners where "
-#~ "company is defined). Partners not related to a company are visible for "
-#~ "all companies."
-#~ msgstr ""
-#~ "Сподели ги своите партнери со сите компании дефинирани во својот случај.\n"
-#~ "* Чекирано : Партнерите се видливи за секоја компанија, дури и ако "
-#~ "компанија е дефинирана на партнер.\n"
-#~ "* Нечекирано : Секоја компанија ќе може да го види само својот партнер "
-#~ "(партнери каде што компанија е дефинирана). Партнери што не се поврзани "
-#~ "со компанија се видни за сите компании."
-
-#~ msgid "Start Point of Sale"
-#~ msgstr "Стартувај точка на продажба"
-
-#~ msgid "Statement Details:"
-#~ msgstr "Детали од извод:"
-
-#~ msgid "Statement Summary"
-#~ msgstr "Резиме на извод"
-
-#~ msgid "Stella Artois 33cl"
-#~ msgstr "Stella Artois 33cl"
-
-#~ msgid "Stella Artois 50cl"
-#~ msgstr "Stella Artois 50cl"
-
-#~ msgid "Template user for new users created through signup"
-#~ msgstr "Урнек корисник за новите корисници креирани преку регистрација"
-
-#~ msgid "The URL to generate the authorization code from Google"
-#~ msgstr "Адреса за генерирање на авторизациски код од Google"
-
-#~ msgid "This allows users to trigger a password reset from the Login page."
-#~ msgstr ""
-#~ "Ова дозволува корисниците да активираат ресетирање на лозинката од "
-#~ "страницата за најавување."
-
-#~ msgid "This installs the module google_calendar."
-#~ msgstr "Ова го инсталира модулот google_calendar."
-
-#~ msgid "This installs the module google_docs."
-#~ msgstr "Ова го инсталира модулот google_docs."
-
-#~ msgid ""
-#~ "This installs the module inter_company_rules.\n"
-#~ " Configure company rules to automatically create SO/PO when one of your "
-#~ "company sells/buys to another of your company."
-#~ msgstr ""
-#~ "Ова го инсталира модулот inter_company_rules.\n"
-#~ "Конфигурирај ги компанииските правила автоматски да креираат Налог за "
-#~ "продажба/Налог за набавка, кога една од вашите компании ќе направи "
-#~ "продажба/набавка со некоја друга компанија."
-
-#~ msgid "Timmermans Kriek 37.5cl"
-#~ msgstr "Timmermans Kriek 37.5cl"
-
-#~ msgid "Today's Payment"
-#~ msgstr "Денешна уплата"
-
-#~ msgid "Today's Payments"
-#~ msgstr "Денешни уплати"
-
-#~ msgid "Total Transaction"
-#~ msgstr "Вкупна трансакција"
-
-#~ msgid "URI"
-#~ msgstr "Адреса"
-
-#~ msgid "URI for tuto"
-#~ msgstr "Адреса за tuto"
-
-#~ msgid "Unable to cancel the picking."
-#~ msgstr "Не може да се откаже требување."
-
-#~ msgid "Use external authentication providers, sign in with Google..."
-#~ msgstr ""
-#~ "Користи надворешни снабдувачи на автентичност, најави се преку Google..."
-
-#~ msgid ""
-#~ "Work in multi-company environments, with appropriate security access "
-#~ "between companies."
-#~ msgstr ""
-#~ "Работи во повеќе-компанииски пространства, со соодветен безбедносен "
-#~ "пристап помеѓу компании."
-
-#~ msgid "Yellow Peppers"
-#~ msgstr "Жолти пиперки"
-
-#~ msgid "Your internet connection is probably down."
-#~ msgstr "Вашата интернет конекција е веројатно падната."
-
-#~ msgid "Zucchini"
-#~ msgstr "Zucchini"
-
-#~ msgid "transaction for the pos"
-#~ msgstr "Трансакција за место на продажба"
-
-#~ msgid "unknown"
-#~ msgstr "непознато"

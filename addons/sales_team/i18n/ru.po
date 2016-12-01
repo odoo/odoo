@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-02-10 19:08+0000\n"
 "Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
@@ -193,6 +193,11 @@ msgstr ""
 "отдел продаж, не удаляя его."
 
 #. module: sales_team
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "Indirect Sales"
+msgstr "Непрямые продажи"
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:140
 #, python-format
@@ -243,9 +248,9 @@ msgstr "Больше Информации"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:42
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:44
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:216
-#, fuzzy, python-format
+#, python-format
 msgid "My Pipeline"
-msgstr "Ваша Воронка продаж"
+msgstr "Моя воронка"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -312,6 +317,8 @@ msgid ""
 "Sales Team the user is member of. Used to compute the members of a sales "
 "team through the inverse one2many"
 msgstr ""
+"Команда продаж, членом которой является пользователь. Используется для "
+"подсчёта членов команды с помощью инверсивного один-ко-многим"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_act
@@ -366,7 +373,7 @@ msgstr "Код отдела продаж должен быть уникальн�
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
 msgid "The color of the team"
-msgstr ""
+msgstr "Цвет команды"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_reply_to
@@ -500,60 +507,3 @@ msgstr "Ожид. закрытие"
 #, python-format
 msgid "overdue"
 msgstr "просроченный"
-
-#~ msgid "Action Needed"
-#~ msgstr "Требуется реакция"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата последнего сообщения"
-
-#~ msgid "Followers"
-#~ msgstr "Подписчики"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Подписчики (Каналы)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Подписчики (Партнеры)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Если отмечено, новые сообщения требуют вашего внимания."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Если отмечено - новые сообщения требуют Вашего внимания !"
-
-#~ msgid "Indirect Sales"
-#~ msgstr "Непрямые продажи"
-
-#~ msgid "Is Follower"
-#~ msgstr "Подписчик"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Последнее сообщение по дате"
-
-#~ msgid "Messages"
-#~ msgstr "Сообщения"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Сообщения и история общения"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Количество действий"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Количество сообщений, требующих реакции"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Количество непрочтённых сообщений"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитанные"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Счетчик непрочтённых сообщений"
-
-#~ msgid "Working Hours"
-#~ msgstr "Рабочие часы"
-
-#~ msgid "Your Pipeline"
-#~ msgstr "Ваша Воронка продаж"

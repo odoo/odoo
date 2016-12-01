@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 12:00+0000\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
 "PO-Revision-Date: 2016-07-12 00:48+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
@@ -229,6 +229,11 @@ msgid "A problem has occured"
 msgstr "已发生的问题"
 
 #. module: survey
+#: model:survey.label,value:survey.frow_2_2_4
+msgid "A process is defined for all enterprise flows"
+msgstr "一种作业被定义为所有企业流程"
+
+#. module: survey
 #: constraint:survey.user_input_line:0
 msgid "A question cannot be unanswered and skipped"
 msgstr "不能够被取消答案和跳过的问题"
@@ -237,6 +242,11 @@ msgstr "不能够被取消答案和跳过的问题"
 #: sql_constraint:survey.user_input:0
 msgid "A token must be unique!"
 msgstr "标记必须唯一！"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_1
+msgid "About your Odoo usage"
+msgstr "关于您使用Odoo的一些情况"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_active
@@ -254,6 +264,14 @@ msgstr "增加收件人列表（不会转化为业务伙伴），由逗号、封
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Add list of existing contacts..."
 msgstr "新增现有联系人 ..."
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_3
+#: model:survey.label,value:survey.fcol_2_2_3
+#: model:survey.label,value:survey.fcol_2_5_3
+#: model:survey.label,value:survey.fcol_2_7_3
+msgid "Agree"
+msgstr "同意"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -296,6 +314,11 @@ msgid "Answers"
 msgstr "答案"
 
 #. module: survey
+#: model:survey.question,question:survey.feedback_1_1
+msgid "Are you using Odoo on a daily basis?"
+msgstr "你现在每天使用Odoo吗?"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_attachment_ids
 msgid "Attachments"
 msgstr "附件"
@@ -304,6 +327,11 @@ msgstr "附件"
 #: model:ir.ui.view,arch_db:survey.back
 msgid "Back to Survey"
 msgstr "回到调查"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_4
+msgid "CRM"
+msgstr "CRM"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -371,6 +399,11 @@ msgid "Comment Message"
 msgstr "评论消息"
 
 #. module: survey
+#: model:survey.page,title:survey.feedback_3
+msgid "Community and contributors"
+msgstr "社区和贡献者"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 #: selection:survey.user_input,state:0
@@ -386,6 +419,11 @@ msgstr "撰写电子邮件"
 #: model:ir.ui.menu,name:survey.menu_surveys_configuration
 msgid "Configuration"
 msgstr "配置"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_2
+msgid "Configuration wizard exists for each important setting"
+msgstr "为每个重要的设置配置向导"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -486,6 +524,11 @@ msgid "Description"
 msgstr "说明"
 
 #. module: survey
+#: model:survey.label,value:survey.frow_2_7_1
+msgid "Descriptions and help tooltips are clear enough"
+msgstr "描述和帮助工具提示是否足够明显"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Design"
 msgstr "设计"
@@ -501,6 +544,14 @@ msgid ""
 "Design easily your survey, send invitations to answer by email and analyse "
 "answers."
 msgstr "便捷的设计你的调查，然后通过邮件发送给被调查者，最后分析调查的回答"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_2
+#: model:survey.label,value:survey.fcol_2_2_2
+#: model:survey.label,value:survey.fcol_2_5_2
+#: model:survey.label,value:survey.fcol_2_7_2
+msgid "Disagree"
+msgstr "反对"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_display_name
@@ -519,6 +570,21 @@ msgstr "显示名称"
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Display mode"
 msgstr "显示模式"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_3
+msgid "Do you have a proposition to attract new contributors?"
+msgstr "你有一个方案来吸引新的参与者?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_2
+msgid "Do you have a proposition to help people to contribute?"
+msgstr "你是否有一个构想来吸引新的贡献者?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_3
+msgid "Do you have suggestions on how to improve the process view ?"
+msgstr "你是否有新的建议来如何改善流程视图?"
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_draft
@@ -556,6 +622,11 @@ msgid "Email composition wizard for Survey"
 msgstr "调查功能电子邮件撰写向导"
 
 #. module: survey
+#: model:survey.page,title:survey.feedback_2
+msgid "Ergonomy and ease of use"
+msgstr "模块化和易用性"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_error_msg
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
 msgid "Error message"
@@ -565,6 +636,16 @@ msgstr "错误消息"
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_partner_ids
 msgid "Existing contacts"
 msgstr "现有联系人"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_3
+msgid "Extra modules proposed are relevant"
+msgstr "提出额外的模块是相关"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_3
+msgid "Financial Management"
+msgstr "财务管理"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage_fold
@@ -595,6 +676,66 @@ msgid "Group By"
 msgstr "分组"
 
 #. module: survey
+#: model:survey.question,question:survey.feedback_3_1
+msgid "How do you contribute or plan to contribute to Odoo?"
+msgstr "你如何为Odoo贡献或计划贡献?"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_6
+msgid "Human Resources"
+msgstr "人力资源"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_3
+msgid "I develop new features"
+msgstr "我开发新功能"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_4
+msgid "I do not publish my developments"
+msgstr "本人不愿公开。"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_4
+msgid "I help to translate"
+msgstr "我帮忙翻译"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_3
+msgid "I host them on my own website"
+msgstr "我在自己的网站上推广Odoo"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_1
+msgid "I participate to discussion and forums"
+msgstr "我参与论坛讨论"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_1
+msgid "I use Github, like all official Odoo projects"
+msgstr "就像官方odoo的项目一样，我用Github"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_2
+msgid "I use another repository system (SourceForge...)"
+msgstr "我使用另外一个托管系统(如 sourceforge...)"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_3
+msgid "I use the contextual help in Odoo"
+msgstr "我在Odoo使用上下文相关的帮助"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_5
+msgid "I write documentations"
+msgstr "我写文档"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_2
+msgid "I'd like to contribute but I don't know how?"
+msgstr "我想贡献但我不知道该如何做?"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_id
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_id
 #: model:ir.model.fields,field_description:survey.field_survey_page_id
@@ -623,9 +764,27 @@ msgstr "如果关闭，参与者将不能回答这一栏调查中的问题。"
 
 #. module: survey
 #: code:addons/survey/survey.py:624
+#: model:survey.question,comments_message:survey.feedback_1_1
+#: model:survey.question,comments_message:survey.feedback_1_2
+#: model:survey.question,comments_message:survey.feedback_2_1
+#: model:survey.question,comments_message:survey.feedback_2_2
+#: model:survey.question,comments_message:survey.feedback_2_3
+#: model:survey.question,comments_message:survey.feedback_2_4
+#: model:survey.question,comments_message:survey.feedback_2_5
+#: model:survey.question,comments_message:survey.feedback_2_6
+#: model:survey.question,comments_message:survey.feedback_2_7
+#: model:survey.question,comments_message:survey.feedback_3_1
+#: model:survey.question,comments_message:survey.feedback_3_2
+#: model:survey.question,comments_message:survey.feedback_3_3
+#: model:survey.question,comments_message:survey.feedback_4_1
 #, python-format
 msgid "If other, please specify:"
-msgstr ""
+msgstr "如果是其它，请指定"
+
+#. module: survey
+#: model:survey.page,description:survey.feedback_4
+msgid "If you do not contribute or develop in Odoo, skip this page."
+msgstr "如果你不打算贡献并开发Odoo，可以跳过这一页"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
@@ -651,6 +810,36 @@ msgstr "已发送邀请"
 #: model:ir.model.fields,field_description:survey.field_survey_survey_designed
 msgid "Is designed?"
 msgstr "是故意的？"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_2
+msgid "It can be improved"
+msgstr "它可以用来改善"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_2
+msgid "It helps in the beginning"
+msgstr "它有助于在开始时"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_5
+msgid "It is clear"
+msgstr "无隐藏"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_4
+msgid "It is complete"
+msgstr "它是完整的"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_1
+msgid "It is up-to-date"
+msgstr "这是最新的"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_5
+msgid "It's easy to find the process you need"
+msgstr "很容易找到你所需要的流程"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_sequence
@@ -827,6 +1016,11 @@ msgid "Next page"
 msgstr "下一页"
 
 #. module: survey
+#: model:survey.label,value:survey.choice_1_1_4
+msgid "No, I just tested it"
+msgstr "不,我只是测试它"
+
+#. module: survey
 #: model:ir.actions.act_window,help:survey.action_selected_survey_user_input
 msgid "Nobody has replied to your survey yet."
 msgstr "还没有人回答你的调查"
@@ -992,6 +1186,11 @@ msgid "Print link"
 msgstr "打印链接"
 
 #. module: survey
+#: model:survey.label,value:survey.choice_1_2_5
+msgid "Project Management"
+msgstr "项目管理"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_public_url_html
 msgid "Public HTML web link"
 msgstr "公开HTML web链接"
@@ -1022,6 +1221,11 @@ msgid "Public url"
 msgstr "公开网址"
 
 #. module: survey
+#: model:survey.label,value:survey.choice_1_2_2
+msgid "Purchases Management"
+msgstr "采购管理"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_question_id
@@ -1049,6 +1253,11 @@ msgstr "问题名称"
 #: model:ir.ui.menu,name:survey.menu_survey_question_form1
 msgid "Questions"
 msgstr "问题"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_4
+msgid "Questions for developers"
+msgstr "开发人员的问题"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_quizz_mode
@@ -1094,6 +1303,16 @@ msgstr "行"
 #: model:ir.model.fields,field_description:survey.field_survey_question_labels_ids_2
 msgid "Rows of the Matrix"
 msgstr "表格行数"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_4
+msgid "Running the configuration wizards is a good way to spare time"
+msgstr "运行配置向导是一个消遣时间的好方法"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_1
+msgid "Sales Management"
+msgstr "销售管理"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -1406,12 +1625,35 @@ msgid "Thank you!"
 msgstr "谢谢！"
 
 #. module: survey
+#: model:survey.label,value:survey.frow_2_5_3
+msgid "The 'Usability/Extended View' group helps in daily work"
+msgstr "\"可用性/扩展视图\"的构架在日常工作中很有帮助"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_4
+msgid "The 'Usability/Extended View' group hides only optional fields"
+msgstr "“可用性/扩展视图'架构隐藏可选字段"
+
+#. module: survey
 #: constraint:survey.user_input_line:0
 msgid "The answer must be in the right type"
 msgstr "答案必须是正确的类别"
 
 #. module: survey
 #: code:addons/survey/survey.py:622
+#: model:survey.question,validation_error_msg:survey.feedback_1_1
+#: model:survey.question,validation_error_msg:survey.feedback_1_2
+#: model:survey.question,validation_error_msg:survey.feedback_2_1
+#: model:survey.question,validation_error_msg:survey.feedback_2_2
+#: model:survey.question,validation_error_msg:survey.feedback_2_3
+#: model:survey.question,validation_error_msg:survey.feedback_2_4
+#: model:survey.question,validation_error_msg:survey.feedback_2_5
+#: model:survey.question,validation_error_msg:survey.feedback_2_6
+#: model:survey.question,validation_error_msg:survey.feedback_2_7
+#: model:survey.question,validation_error_msg:survey.feedback_3_1
+#: model:survey.question,validation_error_msg:survey.feedback_3_2
+#: model:survey.question,validation_error_msg:survey.feedback_3_3
+#: model:survey.question,validation_error_msg:survey.feedback_4_1
 #, python-format
 msgid "The answer you entered has an invalid format."
 msgstr "您输入的答案格式不正确。"
@@ -1427,9 +1669,67 @@ msgstr ""
 "调查URL。"
 
 #. module: survey
+#: model:survey.label,value:survey.choice_2_4_1
+msgid "The current menu structure is good"
+msgstr "当前的菜单结构很好"
+
+#. module: survey
 #: sql_constraint:survey.user_input:0
 msgid "The deadline cannot be in the past"
 msgstr "截止日期不能是过去的时间。"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_5
+msgid "The groups set on menu items are relevant"
+msgstr "在菜单上设置分组是相关的"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_3
+msgid "The number of groups is good"
+msgstr "组的数量是恰当的"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_1
+msgid "The security rules defined on groups are useful"
+msgstr "基于群组定义安全规则有很有的。"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_2
+msgid "There are too few groups defined, security isn't accurate enough"
+msgstr "定义太少组，安全性不够全面"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_1
+msgid "There are too many groups defined, security is too complex to set"
+msgstr "定义太多组，安全设置起来太复杂"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_3
+msgid "There are too much menus, it's complex to understand"
+msgstr "有太多的菜单,理解起来比较复杂"
+
+#. module: survey
+#: model:survey.page,description:survey.feedback_2
+msgid ""
+"These questions relate to the ergonomy and ease of use of Odoo. Try to "
+"remind your firsts days on Odoo and\n"
+"what have been your difficulties."
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_2
+msgid "They are clean and correct"
+msgstr "他们是简洁的和正确的"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_3
+msgid "They are useful on a daily usage"
+msgstr "他们是在日常中使用"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_1
+msgid "They help new users to understand Odoo"
+msgstr "他们帮助新用户了解Odoo"
 
 #. module: survey
 #: code:addons/survey/survey.py:671 code:addons/survey/tests/test_survey.py:94
@@ -1463,6 +1763,19 @@ msgstr "此邮件将会在调查结束后显示。"
 
 #. module: survey
 #: code:addons/survey/survey.py:621
+#: model:survey.question,constr_error_msg:survey.feedback_1_1
+#: model:survey.question,constr_error_msg:survey.feedback_1_2
+#: model:survey.question,constr_error_msg:survey.feedback_2_1
+#: model:survey.question,constr_error_msg:survey.feedback_2_2
+#: model:survey.question,constr_error_msg:survey.feedback_2_3
+#: model:survey.question,constr_error_msg:survey.feedback_2_4
+#: model:survey.question,constr_error_msg:survey.feedback_2_5
+#: model:survey.question,constr_error_msg:survey.feedback_2_6
+#: model:survey.question,constr_error_msg:survey.feedback_2_7
+#: model:survey.question,constr_error_msg:survey.feedback_3_1
+#: model:survey.question,constr_error_msg:survey.feedback_3_2
+#: model:survey.question,constr_error_msg:survey.feedback_3_3
+#: model:survey.question,constr_error_msg:survey.feedback_4_1
 #, python-format
 msgid "This question requires an answer."
 msgstr "此问题需要答案。"
@@ -1483,9 +1796,37 @@ msgid "This survey is open only to registered people. Please"
 msgstr "此调查只针对已注册用户，请"
 
 #. module: survey
+#: model:survey.survey,description:survey.feedback_form
+msgid "This survey should take less than five minutes."
+msgstr "本调查应少于5分钟"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_2
+msgid ""
+"Those security rules are standard and can be used out-of-the-box in most "
+"cases"
+msgstr "这些安全规则是标准化，在大多数情况下能够开箱即用"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_title
 msgid "Title"
 msgstr "标题"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_4
+#: model:survey.label,value:survey.fcol_2_2_4
+#: model:survey.label,value:survey.fcol_2_5_4
+#: model:survey.label,value:survey.fcol_2_7_4
+msgid "Totally agree"
+msgstr "完全同意"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_1
+#: model:survey.label,value:survey.fcol_2_2_1
+#: model:survey.label,value:survey.fcol_2_5_1
+#: model:survey.label,value:survey.fcol_2_7_1
+msgid "Totally disagree"
+msgstr "完全不同意"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_search
@@ -1517,6 +1858,11 @@ msgstr "使用模版"
 msgid ""
 "Use this field to add             additional explanations about your question"
 msgstr "使用此字段增加             关于问题的额外解释"
+
+#. module: survey
+#: model:survey.survey,title:survey.feedback_form
+msgid "User Feedback Form"
+msgstr "用户反馈"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_user_input_id
@@ -1584,6 +1930,44 @@ msgid "Vote"
 msgstr "投票"
 
 #. module: survey
+#: model:survey.question,question:survey.feedback_2_7
+msgid "What do you think about configuration wizards?"
+msgstr "你怎么看配置向导?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_1
+msgid "What do you think about the documentation available on doc.odoo.com?"
+msgstr "你觉得在doc.odoo.com的文档怎么样？"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_5
+msgid "What do you think about the groups of users?"
+msgstr "你怎么看待用户组?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_2
+msgid ""
+"What do you think about the process views of Odoo, available in the web "
+"client ?"
+msgstr "你怎么看待Odoo的流程视图,在web客户端是否匹配?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_4
+#: model:survey.question,question:survey.feedback_2_6
+msgid "What do you think about the structure of the menus?"
+msgstr "你怎么看菜单的结构?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_4_1
+msgid "Where do you develop your new features?"
+msgstr "你开发新功能在哪里?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_1_2
+msgid "Which modules are you using/testing?"
+msgstr "哪个模块你现在在使用或测试?"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.datetime
 msgid "YYYY-MM-DD hh:mm:ss"
 msgstr "YYYY-MM-DD hh:mm:ss"
@@ -1598,6 +1982,21 @@ msgstr ""
 "YYYY-MM-DD hh:mm:ss\n"
 "                                            <i class=\"fa fa-calendar fa-2x"
 "\"/>"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_1
+msgid "Yes, I use a version < 7.0"
+msgstr "是的,我使用低于7.0的版本"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_2
+msgid "Yes, I use the 7.0 version, installed locally"
+msgstr "是的,我使用7.0版本,在本地安装"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_3
+msgid "Yes, I use the online version of Odoo"
+msgstr "是的,我使用Odoo的在线版本"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form
@@ -1668,447 +2067,3 @@ msgstr "查看你的回答"
 #, python-format
 msgid "try to create and fill survey"
 msgstr "试着创建并填写调查"
-
-#~ msgid ""
-#~ "\n"
-#~ "                \n"
-#~ "                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, "
-#~ "Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
-#~ "                    <p>Hello,</p>\n"
-#~ "                    <p>We are conducting a survey, and your response "
-#~ "would be appreciated.</p>\n"
-#~ "                    <p><a href=\"__URL__\">Please, click here to start "
-#~ "survey</a></p>\n"
-#~ "                    <p>Thanks for your participation!</p>\n"
-#~ "                </div>\n"
-#~ "                \n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "                \n"
-#~ "                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, "
-#~ "Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
-#~ "                    <p>Hello,</p>\n"
-#~ "                    <p>我们正在开展一项调查，非常期望得到您的意见反馈。</"
-#~ "p>\n"
-#~ "                    <p><a href=\"__URL__\">请点击此处开始调查</a></p>\n"
-#~ "                    <p>谢谢您的热情参与!</p>\n"
-#~ "                </div>\n"
-#~ "                \n"
-#~ "            "
-
-#~ msgid "A process is defined for all enterprise flows"
-#~ msgstr "一种作业被定义为所有企业流程"
-
-#~ msgid "About your Odoo usage"
-#~ msgstr "关于您使用Odoo的一些情况"
-
-#~ msgid "Action Needed"
-#~ msgstr "所需行动"
-
-#~ msgid "Active domain"
-#~ msgstr "活动域"
-
-#~ msgid "Agree"
-#~ msgstr "同意"
-
-#~ msgid ""
-#~ "Answers do not go in the original document discussion thread. This has an "
-#~ "impact on the generated message-id."
-#~ msgstr "答案不在原来的讨论区中，会对生成的message-id中有影响"
-
-#~ msgid "Are you using Odoo on a daily basis?"
-#~ msgstr "你现在每天使用Odoo吗?"
-
-#~ msgid "Author"
-#~ msgstr "作者"
-
-#~ msgid ""
-#~ "Author of the message. If not set, email_from may hold an email address "
-#~ "that did not match any partner."
-#~ msgstr ""
-#~ "消息的作者。如果没设置，email_from 可能保存一个不匹配任何合作伙伴的 email"
-#~ "地址，"
-
-#~ msgid "Author's avatar"
-#~ msgstr "作者头像"
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "自动整理HTML内容"
-
-#~ msgid "CRM"
-#~ msgstr "CRM"
-
-#~ msgid "Channels"
-#~ msgstr "渠道"
-
-#~ msgid "Child Messages"
-#~ msgstr "子信息"
-
-#~ msgid "Community and contributors"
-#~ msgstr "社区和贡献者"
-
-#~ msgid "Composition mode"
-#~ msgstr "写作模式"
-
-#~ msgid "Configuration wizard exists for each important setting"
-#~ msgstr "为每个重要的设置配置向导"
-
-#~ msgid "Contents"
-#~ msgstr "内容"
-
-#~ msgid "Current user has a starred notification linked to this message"
-#~ msgstr "当前用户用 星号 提醒关联到这条消息"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid "Descriptions and help tooltips are clear enough"
-#~ msgstr "描述和帮助工具提示是否足够明显"
-
-#~ msgid "Disagree"
-#~ msgstr "反对"
-
-#~ msgid "Do you have a proposition to attract new contributors?"
-#~ msgstr "你有一个方案来吸引新的参与者?"
-
-#~ msgid "Do you have a proposition to help people to contribute?"
-#~ msgstr "你是否有一个构想来吸引新的贡献者?"
-
-#~ msgid "Do you have suggestions on how to improve the process view ?"
-#~ msgstr "你是否有新的建议来如何改善流程视图?"
-
-#~ msgid ""
-#~ "Email address of the sender. This field is set when no matching partner "
-#~ "is found and replaces the author_id field in the chatter."
-#~ msgstr ""
-#~ "发送者的电子邮件地址。当找不到业务伙伴的匹配的邮件时候，这个字段就被设置。"
-#~ "并且Chatter中的作者id被替换掉"
-
-#~ msgid "Ergonomy and ease of use"
-#~ msgstr "模块化和易用性"
-
-#~ msgid "Extra modules proposed are relevant"
-#~ msgstr "提出额外的模块是相关"
-
-#~ msgid "Favorited By"
-#~ msgstr "收藏夹"
-
-#~ msgid "Financial Management"
-#~ msgstr "财务管理"
-
-#~ msgid "Followers"
-#~ msgstr "关注者"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者(频道)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者（业务伙伴）"
-
-#~ msgid "From"
-#~ msgstr "从"
-
-#~ msgid "How do you contribute or plan to contribute to Odoo?"
-#~ msgstr "你如何为Odoo贡献或计划贡献?"
-
-#~ msgid "Human Ressources"
-#~ msgstr "人力资源"
-
-#~ msgid "I develop new features"
-#~ msgstr "我开发新功能"
-
-#~ msgid "I do not publish my developments"
-#~ msgstr "本人不愿公开。"
-
-#~ msgid "I help to translate"
-#~ msgstr "我帮忙翻译"
-
-#~ msgid "I host them on my own website"
-#~ msgstr "我在自己的网站上推广Odoo"
-
-#~ msgid "I participate to discussion and forums"
-#~ msgstr "我参与论坛讨论"
-
-#~ msgid "I use Github, like all official Odoo projects"
-#~ msgstr "就像官方odoo的项目一样，我用Github"
-
-#~ msgid "I use another repository system (SourceForge...)"
-#~ msgstr "我使用另外一个托管系统(如 sourceforge...)"
-
-#~ msgid "I use the contextual help in Odoo"
-#~ msgstr "我在Odoo使用上下文相关的帮助"
-
-#~ msgid "I write documentations"
-#~ msgstr "我写文档"
-
-#~ msgid "I'd like to contribute but I don't know how?"
-#~ msgstr "我想贡献但我不知道该如何做?"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "确认后, 会出现新消息."
-
-#~ msgid "If other, precise:"
-#~ msgstr "如其他的，精确的："
-
-#~ msgid "If you do not contribute or develop in Odoo, skip this page."
-#~ msgstr "如果你不打算贡献并开发Odoo，可以跳过这一页"
-
-#~ msgid "Initial thread message."
-#~ msgstr "初始化线索消息"
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid "It can be improved"
-#~ msgstr "它可以用来改善"
-
-#~ msgid "It helps in the beginning"
-#~ msgstr "它有助于在开始时"
-
-#~ msgid "It is clear"
-#~ msgstr "无隐藏"
-
-#~ msgid "It is complete"
-#~ msgstr "它是完整的"
-
-#~ msgid "It is up-to-date"
-#~ msgstr "这是最新的"
-
-#~ msgid "It's easy to find the process you need"
-#~ msgstr "很容易找到你所需要的流程"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid "Log an Internal Note"
-#~ msgstr "记录内部日志"
-
-#~ msgid "Message Record Name"
-#~ msgstr "消息记录名称"
-
-#~ msgid ""
-#~ "Message type: email for email message, notification for system message, "
-#~ "comment for other messages such as user replies"
-#~ msgstr ""
-#~ "消息类型：Email 用于 邮件消息， 通知用户系统消息，评论用于其他消息，例如用"
-#~ "户回复。"
-
-#~ msgid "Message unique identifier"
-#~ msgstr "消息唯一编号"
-
-#~ msgid "Message-Id"
-#~ msgstr "Message-Id"
-
-#~ msgid "Messages"
-#~ msgstr "消息"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "消息和通信历史"
-
-#~ msgid "Name get of the related document."
-#~ msgstr "获得相关文档的名称"
-
-#~ msgid "Need Action"
-#~ msgstr "待处理"
-
-#~ msgid "No threading for answers"
-#~ msgstr "没有响应的线程"
-
-#~ msgid "No, I just tested it"
-#~ msgstr "不,我只是测试它"
-
-#~ msgid "Notify followers"
-#~ msgstr "通知关注者"
-
-#~ msgid "Notify followers of the document (mass post only)"
-#~ msgstr "通知此文档的追随者（只用于批量发送）"
-
-#~ msgid "Number of Actions"
-#~ msgstr "动作的序列号"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要动作的消息编号"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读的消息数量"
-
-#~ msgid "Open Survey Menu"
-#~ msgstr "打开调查菜单"
-
-#~ msgid "Outgoing mail server"
-#~ msgstr "发出邮件服务器"
-
-#~ msgid "Parent Message"
-#~ msgstr "父消息"
-
-#~ msgid "Project Management"
-#~ msgstr "项目管理"
-
-#~ msgid "Purchases Management"
-#~ msgstr "采购管理"
-
-#~ msgid "Questions for developers"
-#~ msgstr "开发人员的问题"
-
-#~ msgid "Related Document ID"
-#~ msgstr "相关单据编号"
-
-#~ msgid "Related Document Model"
-#~ msgstr "相关单据模型"
-
-#~ msgid ""
-#~ "Reply email address. Setting the reply_to bypasses the automatic thread "
-#~ "creation."
-#~ msgstr "回复邮件地址。设定“回复到”避免自动创建线索。"
-
-#~ msgid "Reply-To"
-#~ msgstr "回复到"
-
-#~ msgid "Running the configuration wizards is a good way to spare time"
-#~ msgstr "运行配置向导是一个消遣时间的好方法"
-
-#~ msgid "Sales Management"
-#~ msgstr "销售管理"
-
-#~ msgid ""
-#~ "Small-sized image of this contact. It is automatically resized as a "
-#~ "64x64px image, with aspect ratio preserved. Use this field anywhere a "
-#~ "small image is required."
-#~ msgstr ""
-#~ "联系人小尺寸图像。自动缩放为64x64px ，保留纵横比。此字段用于任何需要小图像"
-#~ "的场合"
-
-#~ msgid "Starred"
-#~ msgstr "加星的邮件"
-
-#~ msgid "Subject"
-#~ msgstr "主题"
-
-#~ msgid "Subtype"
-#~ msgstr "子类型"
-
-#~ msgid "System notification"
-#~ msgstr "系统通知"
-
-#~ msgid "The 'Usability/Extended View' group helps in daily work"
-#~ msgstr "\"可用性/扩展视图\"的构架在日常工作中很有帮助"
-
-#~ msgid "The 'Usability/Extended View' group hides only optional fields"
-#~ msgstr "“可用性/扩展视图'架构隐藏可选字段"
-
-#~ msgid "The current menu structure is good"
-#~ msgstr "当前的菜单结构很好"
-
-#~ msgid "The groups set on menu items are relevant"
-#~ msgstr "在菜单上设置分组是相关的"
-
-#~ msgid "The number of groups is good"
-#~ msgstr "组的数量是恰当的"
-
-#~ msgid "The security rules defined on groups are useful"
-#~ msgstr "基于群组定义安全规则有很有的。"
-
-#~ msgid "There are too few groups defined, security isn't accurate enough"
-#~ msgstr "定义太少组，安全性不够全面"
-
-#~ msgid "There are too many groups defined, security is too complex to set"
-#~ msgstr "定义太多组，安全设置起来太复杂"
-
-#~ msgid "There are too much menus, it's complex to understand"
-#~ msgstr "有太多的菜单,理解起来比较复杂"
-
-#~ msgid "They are clean and correct"
-#~ msgstr "他们是简洁的和正确的"
-
-#~ msgid "They are useful on a daily usage"
-#~ msgstr "他们是在日常中使用"
-
-#~ msgid "They help new users to understand Odoo"
-#~ msgstr "他们帮助新用户了解Odoo"
-
-#~ msgid "This survey should take less than five minutes."
-#~ msgstr "本调查应少于5分钟"
-
-#~ msgid ""
-#~ "Those security rules are standard and can be used out-of-the-box in most "
-#~ "cases"
-#~ msgstr "这些安全规则是标准化，在大多数情况下能够开箱即用"
-
-#~ msgid "Totally agree"
-#~ msgstr "完全同意"
-
-#~ msgid "Totally disagree"
-#~ msgstr "完全不同意"
-
-#~ msgid ""
-#~ "Tracked values are stored in a separate model. This field allow to "
-#~ "reconstructthe tracking and to generate statistics on the model."
-#~ msgstr ""
-#~ "追踪值被保存在一个单一的模型中。这个字段允许重新构建追踪值并且在模型上生成"
-#~ "统计分析"
-
-#~ msgid "Tracking values"
-#~ msgstr "追踪值"
-
-#~ msgid "Unread Messages"
-#~ msgstr "未读消息"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"
-
-#~ msgid "Use active domain"
-#~ msgstr "使用活动域"
-
-#~ msgid "User Feedback Form"
-#~ msgstr "用户反馈"
-
-#~ msgid "What do you think about configuration wizards?"
-#~ msgstr "你怎么看配置向导?"
-
-#~ msgid "What do you think about the documentation available on doc.odoo.com?"
-#~ msgstr "你觉得在doc.odoo.com的文档怎么样？"
-
-#~ msgid "What do you think about the groups of users?"
-#~ msgstr "你怎么看待用户组?"
-
-#~ msgid ""
-#~ "What do you think about the process views of Odoo, available in the web "
-#~ "client ?"
-#~ msgstr "你怎么看待Odoo的流程视图,在web客户端是否匹配?"
-
-#~ msgid "What do you think about the structure of the menus?"
-#~ msgstr "你怎么看菜单的结构?"
-
-#~ msgid "Where do you develop your new features?"
-#~ msgstr "你开发新功能在哪里?"
-
-#~ msgid "Whether the message is an internal note (comment mode only)"
-#~ msgstr "无论消息是内部记录（只适用评论模式）"
-
-#~ msgid "Which modules are you using/testing?"
-#~ msgstr "哪个模块你现在在使用或测试?"
-
-#~ msgid "Yes, I use a version < 7.0"
-#~ msgstr "是的,我使用低于7.0的版本"
-
-#~ msgid "Yes, I use the 7.0 version, installed locally"
-#~ msgstr "是的,我使用7.0版本,在本地安装"
-
-#~ msgid "Yes, I use the online version of Odoo"
-#~ msgstr "是的,我使用Odoo的在线版本"
-
-#~ msgid "on"
-#~ msgstr "在"
-
-#~ msgid "Archived"
-#~ msgstr "已归档"
-
-#~ msgid "Thanks Message"
-#~ msgstr "感谢留言"
-
-#~ msgid "ir.autovacuum"
-#~ msgstr "ir.autovacuum"

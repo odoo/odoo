@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-06 08:35+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-09-06 09:12+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
 "id/)\n"
@@ -572,7 +572,7 @@ msgstr "Dikonsumsi untuk"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Cost Structure"
-msgstr ""
+msgstr "Struktur biaya"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
@@ -893,6 +893,12 @@ msgstr "Tidak aktif"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
 msgid "Internal Reference"
 msgstr "Referensi internal"
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
@@ -1525,7 +1531,7 @@ msgstr "Properti"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9667
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1554,7 +1560,7 @@ msgstr "Kuantitas (wanprestasi UoM)"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Raw Materials"
-msgstr ""
+msgstr "Bahan Baku"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
@@ -1957,7 +1963,7 @@ msgstr "Untuk Mengkonsumsi"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Total Cost"
-msgstr ""
+msgstr "Total biaya"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
@@ -1989,7 +1995,7 @@ msgstr "Jenis"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Unit Cost"
-msgstr ""
+msgstr "Unit Cost"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2243,6 +2249,14 @@ msgstr ""
 "manufaktur. Silakan tutup atau membatalkannya pertama."
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "hari"
@@ -2287,63 +2301,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "tidak diketahui"
-
-#~ msgid "Action Needed"
-#~ msgstr "Tindakan diperlukan"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Perubahan Kuantitas"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Tanggal pesan terakhir diposting pada catatan."
-
-#~ msgid "Followers"
-#~ msgstr "Pengikut"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pengikut (saluran)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pengikut (mitra)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
-
-#~ msgid "Is Follower"
-#~ msgstr "Adalah pengikut"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Tanggal pesan terakhir"
-
-#~ msgid "Messages"
-#~ msgstr "Pesan"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Pesan dan riwayat komunikasi"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Jumlah tindakan"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Jumlah pesan yang memerlukan tindakan"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Jumlah pesan yang belum dibaca"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "Terbuka MRP menu"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Pesan Belum Dibaca"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Pesan yang belum dibaca Counter"
-
-#~ msgid "Website Messages"
-#~ msgstr "Pesan situs"
-
-#~ msgid "Website communication history"
-#~ msgstr "Sejarah komunikasi situs"

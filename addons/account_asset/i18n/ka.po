@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-06-27 15:58+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-23 08:50+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Georgian (http://www.transifex.com/odoo/odoo-9/language/ka/)\n"
 "Language: ka\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:348
+#: code:addons/account_asset/account_asset.py:347
 #, python-format
 msgid " (copy)"
 msgstr " (ასლი)"
@@ -55,7 +55,7 @@ msgid "Active"
 msgstr "აქტიური"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #, python-format
 msgid "Amount"
 msgstr "იმპორტი"
@@ -144,7 +144,7 @@ msgid "Asset category"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:236
+#: code:addons/account_asset/account_asset.py:235
 #, python-format
 msgid "Asset created"
 msgstr ""
@@ -155,7 +155,7 @@ msgid "Asset depreciation line"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:269
+#: code:addons/account_asset/account_asset.py:268
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr ""
@@ -336,7 +336,7 @@ msgid "Cumulative Depreciation"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -351,6 +351,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_amount
 msgid "Current Depreciation"
 msgstr ""
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
+msgid "Customer"
+msgstr "კლიენტი"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_date
@@ -464,13 +469,13 @@ msgid "Depreciation Name"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/account_asset_change_duration.py:83
+#: code:addons/account_asset/wizard/account_asset_change_duration.py:82
 #, python-format
 msgid "Depreciation board modified"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:489
+#: code:addons/account_asset/account_asset.py:487
 #, python-format
 msgid "Depreciation line posted."
 msgstr ""
@@ -486,19 +491,19 @@ msgid "Display Name"
 msgstr "სახელი"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:272
+#: code:addons/account_asset/account_asset.py:271
 #, python-format
 msgid "Disposal Move"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:275
+#: code:addons/account_asset/account_asset.py:274
 #, python-format
 msgid "Disposal Moves"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:468
+#: code:addons/account_asset/account_asset.py:466
 #, python-format
 msgid "Document closed."
 msgstr ""
@@ -644,7 +649,7 @@ msgid "Journal"
 msgstr "ჟურნალი"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:375
+#: code:addons/account_asset/account_asset.py:374
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
@@ -741,9 +746,10 @@ msgid "Number of Months in a Period"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:488
+#: code:addons/account_asset/account_asset.py:486
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #, python-format
 msgid "Partner"
 msgstr "პარტნიორი"
@@ -801,7 +807,7 @@ msgid "Prorata Temporis"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:314
+#: code:addons/account_asset/account_asset.py:313
 #, python-format
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
@@ -978,25 +984,25 @@ msgid "Year"
 msgstr "წელი"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:97
+#: code:addons/account_asset/account_asset.py:96
 #, python-format
 msgid "You cannot delete a document is in %s state."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:99
+#: code:addons/account_asset/account_asset.py:98
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:497
+#: code:addons/account_asset/account_asset.py:495
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:499
+#: code:addons/account_asset/account_asset.py:497
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr ""
@@ -1021,18 +1027,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "months"
 msgstr ""
-
-#~ msgid "Customer"
-#~ msgstr "კლიენტი"
-
-#~ msgid "Followers"
-#~ msgstr "მიმდევრები"
-
-#~ msgid "Last Message Date"
-#~ msgstr "ბოლო შეტყობინების თარიღი"
-
-#~ msgid "Messages"
-#~ msgstr "მესიჯები"
-
-#~ msgid "Unread Messages"
-#~ msgstr "წაუკითხავი შეტყობინებები"

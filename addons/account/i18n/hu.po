@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-24 12:31+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-09-23 12:42+0000\n"
 "Last-Translator: krnkris\n"
 "Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-9/language/"
 "hu/)\n"
@@ -91,7 +91,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1524
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1528
 #, python-format
 msgid " seconds"
 msgstr "másodpercek"
@@ -173,6 +173,11 @@ msgstr "15 nap"
 #: model:account.payment.term,name:account.account_payment_term_net
 msgid "30 Net Days"
 msgstr "30 nap nettó"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term_advance
+msgid "30% Advance End of Following Month"
+msgstr "30% előleg a következő hónap végéig"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -895,13 +900,13 @@ msgstr ""
 "                a pénzmozgásokat."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1315
+#: code:addons/account/models/account_invoice.py:1317
 #, python-format
 msgid "A Payment Term should have its last line of type Balance."
 msgstr "A Fizetési feltétel utolsó sorának egyenleg típusúnak kell lennie"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1318
+#: code:addons/account/models/account_invoice.py:1320
 #, python-format
 msgid "A Payment Term should have only one line of type Balance."
 msgstr ""
@@ -1021,8 +1026,8 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:100
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:105
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:99
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:104
 #: code:addons/account/static/src/xml/account_reconciliation.xml:141
 #: code:addons/account/static/src/xml/account_reconciliation.xml:267
 #: model:ir.model,name:account.model_account_account
@@ -1498,6 +1503,7 @@ msgstr "Utólagos adókat befolyásol"
 #: model:ir.actions.report.xml,name:account.action_report_aged_partner_balance
 #: model:ir.ui.menu,name:account.menu_aged_trial_balance
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
+#: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "Aged Partner Balance"
 msgstr "Több időszakos partner folyószámla számlaegyenleg"
 
@@ -1514,11 +1520,6 @@ msgstr ""
 "Követelés egyenleg táblát. Ezért, ha 30 napos intervallumot adott meg, akkor "
 "az Odoo rendszer átfogó képet ad a hitelezőkre vonatkozóan az elmúlt "
 "hónapról, elmúlt két hónapról, és így tovább."
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
-msgid "Aged Trial Balance"
-msgstr "Többidőszakos próba egyenleg"
 
 #. module: account
 #. openerp-web
@@ -1682,8 +1683,8 @@ msgstr "Analitikus számla használatának engedélyezése."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:140
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:144
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:139
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:143
 #: code:addons/account/static/src/xml/account_reconciliation.xml:150
 #: code:addons/account/static/src/xml/account_reconciliation.xml:266
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
@@ -1803,8 +1804,8 @@ msgstr "Anaitikus gyűjtőnaplók"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:152
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:158
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:151
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:157
 #, python-format
 msgid "Analytic Acc."
 msgstr "Elemző szla."
@@ -2100,7 +2101,7 @@ msgstr "Banki műveletek"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1118
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1122
 #, python-format
 msgid "Bank Reconciliation"
 msgstr "Banki egyeztetés"
@@ -2407,7 +2408,7 @@ msgid "Cannot create unbalanced journal entry."
 msgstr "Nem tud kiegyenlítetlen napló tételeket létrehozni."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:464
+#: code:addons/account/models/account_invoice.py:465
 #, python-format
 msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
@@ -2669,7 +2670,7 @@ msgstr "Főkönyvi számla sablon választás"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1889
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1897
 #, python-format
 msgid "Choose counterpart"
 msgstr "Ellenoldal kiválasztása"
@@ -2885,7 +2886,7 @@ msgid "Complete set of taxes"
 msgstr "Adók teljes csomagja"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:397
+#: code:addons/account/models/account_invoice.py:398
 #, python-format
 msgid "Compose Email"
 msgstr "Email írás"
@@ -2918,7 +2919,7 @@ msgid "Configuration Error !"
 msgstr "Beállítási hiba!"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:338
+#: code:addons/account/models/account_invoice.py:339
 #, python-format
 msgid ""
 "Configuration error!\n"
@@ -3013,7 +3014,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1528
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1532
 #, python-format
 msgid "Congrats, you're all done !"
 msgstr "Gratulálok, szép munka !"
@@ -3091,7 +3092,7 @@ msgstr "Beszállítók létrhozása"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1886
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1894
 #, python-format
 msgid "Create Write-off"
 msgstr "Veszteség leírás létrehozás"
@@ -3115,7 +3116,7 @@ msgstr "Számla létrehozás"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2488
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2500
 #, python-format
 msgid "Create writeoff"
 msgstr "Különbözet leírás létrehozás"
@@ -3325,8 +3326,8 @@ msgid "Currency as per company's country."
 msgstr "Pénznem a vállalat országának megfelelően."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1345
-#: code:addons/account/models/account_move.py:1355
+#: code:addons/account/models/account_move.py:1348
+#: code:addons/account/models/account_move.py:1358
 #, python-format
 msgid "Currency exchange rate difference"
 msgstr "Deviza árfolyam különbség"
@@ -3796,7 +3797,7 @@ msgstr "Ne habozzon"
 #. module: account
 #. openerp-web
 #: selection:account.invoice.report,state:0
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2475
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2487
 #, python-format
 msgid "Done"
 msgstr "Kész"
@@ -3889,7 +3890,7 @@ msgid "Due date"
 msgstr "Fizetési határidő"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:821
+#: code:addons/account/models/account_invoice.py:822
 #, python-format
 msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
@@ -3914,7 +3915,7 @@ msgstr "ÁRF"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1532
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1536
 #, python-format
 msgid "Efficiency at its finest"
 msgstr "Legjobb hatékonyságon"
@@ -3964,6 +3965,11 @@ msgstr "Vége"
 #: model:ir.model.fields,field_description:account.field_accounting_report_date_to_cmp
 msgid "End Date"
 msgstr "Befejezés dátuma"
+
+#. module: account
+#: model:account.payment.term,name:account.account_payment_term
+msgid "End of Following Month"
+msgstr "Következő hónap vége"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_end_real
@@ -4111,7 +4117,7 @@ msgstr "Extra jellemzők..."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1539
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1543
 #, python-format
 msgid "Fast reconciler"
 msgstr "Gyors kivonat egyeztető"
@@ -4336,7 +4342,7 @@ msgstr ""
 "A számla minden bizonylatának ebben a másodlagos pénznemben kell végbemennie."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:77
+#: code:addons/account/models/account_invoice.py:78
 #, python-format
 msgid "Free Reference"
 msgstr "Szabad hivatkozás"
@@ -4512,7 +4518,7 @@ msgid "Go to bank statements"
 msgstr "Menjen a bankkivonatokhoz"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:465
+#: code:addons/account/models/account_invoice.py:466
 #: code:addons/account/models/account_move.py:325
 #, python-format
 msgid "Go to the configuration panel"
@@ -5011,7 +5017,7 @@ msgstr "Árbevétel főkönyvi számla a terméksablonban"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1812
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1816
 #, python-format
 msgid "Incorrect Operation"
 msgstr "Hibás művelet"
@@ -5096,7 +5102,7 @@ msgid "Invite Users"
 msgstr "Hívjon meg felhasználókat"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:870
+#: code:addons/account/models/account_invoice.py:871
 #: model:ir.model,name:account.model_account_invoice
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_invoice_id
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5178,7 +5184,7 @@ msgid "Invoice refund"
 msgstr "Visszatérítési számla"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1404
+#: code:addons/account/models/account_invoice.py:1406
 #, python-format
 msgid "Invoice sent"
 msgstr "Elküldött számla"
@@ -5221,7 +5227,7 @@ msgstr "Számlák"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2121
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2133
 #, python-format
 msgid "Invoices & Payments Matching"
 msgstr "Számlák & Fizetések könyvelői párosítása"
@@ -5367,8 +5373,8 @@ msgstr "Január"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2157
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2162
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2169
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2174
 #: code:addons/account/static/src/xml/account_reconciliation.xml:142
 #: model:ir.model,name:account.model_account_journal
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_journal_id
@@ -5467,7 +5473,7 @@ msgstr "Könyvelési napló tételsorok"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2120
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2132
 #: model:ir.actions.client,name:account.action_manual_reconcile
 #, python-format
 msgid "Journal Items to Reconcile"
@@ -5546,8 +5552,8 @@ msgstr "Tartsa nyitva"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:114
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:118
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:113
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:117
 #: model:ir.model.fields,field_description:account.field_account_move_line_name
 #: model:ir.ui.view,arch_db:account.report_journal
 #, python-format
@@ -5814,7 +5820,7 @@ msgid "Legal mentions that have to be printed on the invoices."
 msgstr "Számviteli megjegyzések mejeket a számlára kell nyomtatni."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:145
+#: code:addons/account/models/account_invoice.py:146
 #, python-format
 msgid "Less Payment"
 msgstr "Befizetésekkel csökkentet"
@@ -6152,7 +6158,7 @@ msgid "Move line ids"
 msgstr "Bizonylat tételsor id azonosítók"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1180
+#: code:addons/account/models/account_move.py:1183
 #, python-format
 msgid "Move name (id): %s (%s)"
 msgstr "Bizonylat neve (Azonosító id): %s (%s)"
@@ -6231,7 +6237,7 @@ msgid "New Transactions"
 msgstr "Új tranzakciók"
 
 #. module: account
-#: code:addons/account/models/account_move.py:1157
+#: code:addons/account/models/account_move.py:1160
 #, python-format
 msgid "New expected payment date: "
 msgstr "Új elvárt fizetési dátum:"
@@ -6259,7 +6265,7 @@ msgid "No Follow-up"
 msgstr "Nincs nyomon követés"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:988
+#: code:addons/account/models/account_invoice.py:989
 #, python-format
 msgid "No appropriate payment method enabled on journal %s"
 msgstr "Nincs helyesen megadott fizetési mód bekapcsolva ezen a naplón %s"
@@ -6563,7 +6569,7 @@ msgstr "Kizárólag a rendszergazda tudja megváltoztatni a beállításokat"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1533
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1537
 #, python-format
 msgid "Only use the ctrl-enter shortcut to validate reconciliations."
 msgstr "Csak a ctrl-enter rövidítéssel érvényesítheti az egyeztetéseket."
@@ -6594,9 +6600,9 @@ msgstr "Nyitott Bifizetés"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1892
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1924
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2059
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1900
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1932
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2067
 #, python-format
 msgid "Open balance"
 msgstr "Nyitott egyenleg"
@@ -6693,7 +6699,7 @@ msgid "Outstanding Transactions"
 msgstr "Kifizetetlen tételek"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:112
+#: code:addons/account/models/account_invoice.py:113
 #, python-format
 msgid "Outstanding credits"
 msgstr "Vásárlók felé fennmaradt követelések"
@@ -6704,7 +6710,7 @@ msgid "Outstanding credits debits widget"
 msgstr "Fennmaradt követelés tartozás grafikus vezérlőelem"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:115
+#: code:addons/account/models/account_invoice.py:116
 #, python-format
 msgid "Outstanding debits"
 msgstr "Beszállítók felé fennmaradt tartozások"
@@ -6789,7 +6795,7 @@ msgstr "Részleges egyeztetés"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1753
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1757
 #: code:addons/account/static/src/xml/account_reconciliation.xml:263
 #: model:ir.model,name:account.model_res_partner
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_partner_id
@@ -7005,6 +7011,16 @@ msgid "Payment term: 30 Net Days"
 msgstr "Fizetési feltétel: 30 napos nettó"
 
 #. module: account
+#: model:account.payment.term,note:account.account_payment_term_advance
+msgid "Payment term: 30% Advance End of Following Month"
+msgstr "Fizetési feltétel:  30% előleg a következő hónap végéig"
+
+#. module: account
+#: model:account.payment.term,note:account.account_payment_term
+msgid "Payment term: End of Following Month"
+msgstr "Fizetési feltétel: Következő hónap végéig"
+
+#. module: account
 #: model:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment term: Immediate Payment"
 msgstr "Fizetési feltétel: Azonnali, készpénzes fizetés"
@@ -7131,7 +7147,7 @@ msgid "Percentage of balance"
 msgstr "Egyenleg százaléka"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1386
+#: code:addons/account/models/account_invoice.py:1388
 #, python-format
 msgid "Percentages for Payment Term Line must be between 0 and 100."
 msgstr ""
@@ -7172,7 +7188,7 @@ msgstr ""
 "vállalthoz."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:725
+#: code:addons/account/models/account_invoice.py:726
 #, python-format
 msgid "Please create some invoice lines."
 msgstr "Kérem, hozzon létre egy pár számla tátelsort."
@@ -7184,7 +7200,7 @@ msgid "Please define a sequence on the journal."
 msgstr "Kérem egy sorrend meghatározását a naplón."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:723
+#: code:addons/account/models/account_invoice.py:724
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
 msgstr "Képezzen sorrendet a naplón ehhez a számlához."
@@ -7520,8 +7536,8 @@ msgstr "Pénz beérkeztetés"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1874
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2472
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1878
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2484
 #: code:addons/account/static/src/xml/account_reconciliation.xml:323
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.account_move_line_reconcile_writeoff
@@ -7595,7 +7611,7 @@ msgstr "A banki kivonatok egyeztetése"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2185
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:2197
 #, python-format
 msgid "Reconciling "
 msgstr "Egyeztetés"
@@ -7665,7 +7681,7 @@ msgid "Reference/Description"
 msgstr "Hivatkozó referencia/Leírás"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:872
+#: code:addons/account/models/account_invoice.py:873
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -8018,7 +8034,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1781
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1785
 #, python-format
 msgid "Select Partner"
 msgstr "Partner kiválasztása"
@@ -8322,7 +8338,7 @@ msgstr "Készpénz kifizetése"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1540
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1544
 #, python-format
 msgid "Take on average less than 5 seconds to reconcile a transaction."
 msgstr "Általában kevesebb mint 5 másodpercig tart egy tranzakció egyeztetése."
@@ -8343,8 +8359,8 @@ msgstr "Figyelembe vett bizonylat tételek"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:126
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:131
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:125
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:130
 #: model:ir.model,name:account.model_account_tax
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_tax
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_tax_id
@@ -8958,7 +8974,7 @@ msgstr ""
 "számláról."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1248
+#: code:addons/account/models/account_invoice.py:1249
 #, python-format
 msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
@@ -9006,7 +9022,7 @@ msgstr "Nincs egyeztetendő."
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1516
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1520
 #, python-format
 msgid "There you go, it's all done !"
 msgstr "Ez az, minden kész!"
@@ -9820,7 +9836,7 @@ msgstr "Szükséges az ÁFA"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1891
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1899
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 #: model:ir.ui.view,arch_db:account.view_account_payment_from_invoices
@@ -9866,7 +9882,7 @@ msgstr "Beszállító"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
-#: code:addons/account/models/account_invoice.py:871
+#: code:addons/account/models/account_invoice.py:872
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
@@ -9906,7 +9922,7 @@ msgstr "Beszállítói hivatkozás"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
-#: code:addons/account/models/account_invoice.py:873
+#: code:addons/account/models/account_invoice.py:874
 #: code:addons/account/models/account_payment.py:486
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
@@ -9947,8 +9963,8 @@ msgid "Volume"
 msgstr "Térfogat"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1186
-#: code:addons/account/models/account_invoice.py:1247
+#: code:addons/account/models/account_invoice.py:1187
+#: code:addons/account/models/account_invoice.py:1248
 #, python-format
 msgid "Warning!"
 msgstr "Figyelem!"
@@ -10018,7 +10034,7 @@ msgstr "Ez a napló megjelenítésre kerüljön a műszerfalon vagy nem"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1527
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1531
 #, python-format
 msgid "Whew, that was fast !"
 msgstr "Hú, ez gyors volt!"
@@ -10179,7 +10195,7 @@ msgstr ""
 "'Rendszergazda' jogosultsággal rendelkezők közül"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:852
+#: code:addons/account/models/account_invoice.py:853
 #, python-format
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
@@ -10209,7 +10225,7 @@ msgstr ""
 "és 'pénznem mennyiség' mező kitöltése nélkül."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:438
+#: code:addons/account/models/account_invoice.py:439
 #, python-format
 msgid ""
 "You cannot delete an invoice after it has been validated (and received a "
@@ -10221,7 +10237,7 @@ msgstr ""
 "újra-jóváhagyhatja."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:436
+#: code:addons/account/models/account_invoice.py:437
 #, python-format
 msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
@@ -10237,7 +10253,7 @@ msgid "You cannot do that on an account that contains journal items."
 msgstr "Nem teheti ezt olyan főkönyvi számlát, mely napló tételeket tartalmaz."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1182
+#: code:addons/account/models/account_move.py:1185
 #, python-format
 msgid ""
 "You cannot do this modification on a posted journal entry, you can just "
@@ -10251,7 +10267,7 @@ msgstr ""
 "%s."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1184
+#: code:addons/account/models/account_move.py:1187
 #, python-format
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change "
@@ -10293,7 +10309,7 @@ msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1813
+#: code:addons/account/static/src/js/account_reconciliation_widgets.js:1817
 #, python-format
 msgid "You cannot mix items from receivable and payable accounts."
 msgstr ""
@@ -10327,13 +10343,13 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:1023
-#: code:addons/account/models/account_move.py:1148
+#: code:addons/account/models/account_move.py:1151
 #, python-format
 msgid "You cannot use deprecated account."
 msgstr "Nem használhat elavult számlát sem."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1079
+#: code:addons/account/models/account_move.py:1082
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -10355,7 +10371,7 @@ msgid "You must define a Start Date"
 msgstr "Meg kell határoznia ez Indító dátumot."
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1187
+#: code:addons/account/models/account_invoice.py:1188
 #, python-format
 msgid "You must first select a partner!"
 msgstr "Először egy partnert kell kiválasztania!"
@@ -10373,7 +10389,7 @@ msgid "You must set a start date."
 msgstr "Induló dátumot kell beállítania."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1329
+#: code:addons/account/models/account_move.py:1332
 #, python-format
 msgid ""
 "You should configure the 'Exchange Rate Journal' in the accounting settings, "
@@ -10385,7 +10401,7 @@ msgstr ""
 "a számla tételeknek, melyek az átváltási arányok különbségéből adódhatnak."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1331
+#: code:addons/account/models/account_move.py:1334
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -10397,7 +10413,7 @@ msgstr ""
 "a számla tételeknek, melyek az átváltási arányok különbségéből adódhatnak."
 
 #. module: account
-#: code:addons/account/models/account_move.py:1333
+#: code:addons/account/models/account_move.py:1336
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -10756,986 +10772,3 @@ msgstr "wizard.multi.charts.accounts"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ Számlál"
-
-#~ msgid ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
-#~ "\">\n"
-#~ "    <p>Hello ${object.partner_id.name},</p>\n"
-#~ "    <p>A new invoice is available for you: </p>\n"
-#~ "    \n"
-#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
-#~ "       &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br /"
-#~ ">\n"
-#~ "       &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} ${object."
-#~ "currency_id.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />\n"
-#~ "       % if object.origin:\n"
-#~ "       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.user_id:\n"
-#~ "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email "
-#~ "or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</a>\n"
-#~ "       % endif\n"
-#~ "    </p>  \n"
-#~ "    \n"
-#~ "    % if object.paypal_url:\n"
-#~ "    <br/>\n"
-#~ "    <p>It is also possible to directly pay with Paypal:</p>\n"
-#~ "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-#~ "            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/"
-#~ "img/btn_paynowcc_lg.gif\"/>\n"
-#~ "        </a>\n"
-#~ "    % endif\n"
-#~ "    \n"
-#~ "    <br/>\n"
-#~ "    <p>If you have any question, do not hesitate to contact us.</p>\n"
-#~ "    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
-#~ "    <br/>\n"
-#~ "    <br/>\n"
-#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
-#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
-#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
-#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
-#~ "color: #DDD;\">\n"
-#~ "            <strong style=\"text-transform:uppercase;\">${object."
-#~ "company_id.name}</strong></h3>\n"
-#~ "    </div>\n"
-#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
-#~ "height: 16px; background-color: #F2F2F2;\">\n"
-#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
-#~ "\">\n"
-#~ "            ${object.company_id.partner_id.sudo()."
-#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
-#~ "safe}\n"
-#~ "        </span>\n"
-#~ "        % if object.company_id.phone:\n"
-#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
-#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
-#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
-#~ "                Phone:&nbsp; ${object.company_id.phone}\n"
-#~ "            </div>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.website:\n"
-#~ "            <div>\n"
-#~ "                Web :&nbsp;<a href=\"${object.company_id.website}\">"
-#~ "${object.company_id.website}</a>\n"
-#~ "            </div>\n"
-#~ "        %endif\n"
-#~ "        <p></p>\n"
-#~ "    </div>\n"
-#~ "</div>\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-"
-#~ "serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; "
-#~ "\">\n"
-#~ "    <p>Tisztelt ${object.partner_id.name},</p>\n"
-#~ "    <p>Egy új számla érhető el az Ön részére: </p>\n"
-#~ "    \n"
-#~ "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
-#~ "       &nbsp;&nbsp;<strong>HIVATKOZÁSOK</strong><br />\n"
-#~ "       &nbsp;&nbsp;Számla száma: <strong>${object.number}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Számlázott összesen: <strong>${object.amount_total} "
-#~ "${object.currency_id.name}</strong><br />\n"
-#~ "       &nbsp;&nbsp;Számlázás dátuma: ${object.date_invoice}<br />\n"
-#~ "       % if object.origin:\n"
-#~ "       &nbsp;&nbsp;Megrendelés hivatkozása: ${object.origin}<br />\n"
-#~ "       % endif\n"
-#~ "       % if object.user_id:\n"
-#~ "       &nbsp;&nbsp;Kapcsolattartója: <a href=\"mailto:${object.user_id."
-#~ "email or ''}?subject=Invoice%20${object.number}\">${object.user_id.name}</"
-#~ "a>\n"
-#~ "       % endif\n"
-#~ "    </p>  \n"
-#~ "    \n"
-#~ "    % if object.paypal_url:\n"
-#~ "    <br/>\n"
-#~ "    <p>Fizethet közvetlenül Paypal rendszeren:</p>\n"
-#~ "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-#~ "            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/"
-#~ "img/btn_paynowcc_lg.gif\"/>\n"
-#~ "        </a>\n"
-#~ "    % endif\n"
-#~ "    \n"
-#~ "    <br/>\n"
-#~ "    <p>További felmerülő kérdésekkel kapcsolatban keressen meg bennünket."
-#~ "</p>\n"
-#~ "    <p>Köszönjük, hogy a ${object.company_id.name or 'bennünke'}-t "
-#~ "választotta!</p>\n"
-#~ "    <br/>\n"
-#~ "    <br/>\n"
-#~ "    <div style=\"width: 375px; margin: 0px; padding: 0px; background-"
-#~ "color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: "
-#~ "5px 5px; background-repeat: repeat no-repeat;\">\n"
-#~ "        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; "
-#~ "color: #DDD;\">\n"
-#~ "            <strong style=\"text-transform:uppercase;\">${object."
-#~ "company_id.name}</strong></h3>\n"
-#~ "    </div>\n"
-#~ "    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-"
-#~ "height: 16px; background-color: #F2F2F2;\">\n"
-#~ "        <span style=\"color: #222; margin-bottom: 5px; display: block; "
-#~ "\">\n"
-#~ "            ${object.company_id.partner_id.sudo()."
-#~ "with_context(show_address=True, html_format=True).name_get()[0][1] | "
-#~ "safe}\n"
-#~ "        </span>\n"
-#~ "        % if object.company_id.phone:\n"
-#~ "            <div style=\"margin-top: 0px; margin-right: 0px; margin-"
-#~ "bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; "
-#~ "padding-bottom: 0px; padding-left: 0px; \">\n"
-#~ "                Telefon:&nbsp; ${object.company_id.phone}\n"
-#~ "            </div>\n"
-#~ "        % endif\n"
-#~ "        % if object.company_id.website:\n"
-#~ "            <div>\n"
-#~ "                Weboldal :&nbsp;<a href=\"${object.company_id.website}\">"
-#~ "${object.company_id.website}</a>\n"
-#~ "            </div>\n"
-#~ "        %endif\n"
-#~ "        <p></p>\n"
-#~ "    </div>\n"
-#~ "</div>\n"
-#~ "            "
-
-#~ msgid ""
-#~ " * The 'Draft' status is used when a user is encoding a new and "
-#~ "unconfirmed Invoice.\n"
-#~ " * The 'Pro-forma' status is used the invoice does not have an invoice "
-#~ "number.\n"
-#~ " * The 'Open' status is used when user create invoice, an invoice number "
-#~ "is generated. Its in open status till user does not pay invoice.\n"
-#~ " * The 'Paid' status is set automatically when the invoice is paid. Its "
-#~ "related journal entries may or may not be reconciled.\n"
-#~ " * The 'Cancelled' status is used when user cancel invoice."
-#~ msgstr ""
-#~ " * A 'Vázlat' állapotot akkor használja, ha a felhasználó kódol egy új, "
-#~ "még nem igazolt számlát.\n"
-#~ " * Akkor 'Pro-forma' ha a számla Pro-forma állapotú, a számlának még "
-#~ "nincs számlaszáma.\n"
-#~ " * A 'Nyitott' állapotot akkor használja, ha a felhasználó számlát állít "
-#~ "ki, egy számlaszámot hoz létre. Addig nyitott állapotú, míg az ki nem "
-#~ "lesz egyenlítve.\n"
-#~ " * A 'Fizetve' állapotot akkor kapja meg automatikusan, ha a számlát "
-#~ "kiegyenlítették, kifizették. Az ide vonatkozó napló bejegyzések vagy "
-#~ "egyeztetésre kerülnek vagy nem.\n"
-#~ " * A 'Érvénytelenítés' állapotot használ, ha a felhasználó visszavonja a "
-#~ "számlát."
-
-#~ msgid "-> View reconciled entries"
-#~ msgstr "-> Fökönyvön egyeztetett tételek megtekintése"
-
-#~ msgid "30% Advance End of Following Month"
-#~ msgstr "30% előleg a következő hónap végéig"
-
-#~ msgid "A bank account can anly belong to one journal."
-#~ msgstr "Egy banszámla csak egy naplóhoz kapcsolható."
-
-#~ msgid "A list of your customer and suppler payment terms."
-#~ msgstr "Lista a vásárlók és beszállítók fizetési feltételeiről."
-
-#~ msgid "Action Needed"
-#~ msgstr "Művelet szükséges"
-
-#~ msgid ""
-#~ "Aged Partner Balance is a more detailed report of your receivables by "
-#~ "intervals. When opening that report, Odoo asks for the name of the "
-#~ "company, the Start Date and the size of the interval to be analyzed (in "
-#~ "days). Odoo then calculates a table of credit balance by start Date. So "
-#~ "if you request an interval of 30 days Odoo generates an analysis of "
-#~ "creditors for the past month, past two months, and so on."
-#~ msgstr ""
-#~ "Korosított ügyfél egyenleg egy sokkal részletesebb intervallumok szerinti "
-#~ "Kintlévőség jelentés. Ha megnyitja ezt a jelentést, Odoo rendszer a "
-#~ "vállalat nevére fog rákérdezni, a pénzügyi időszakra és a kiértékelni "
-#~ "kívánt időszak nagyságára (napokban). Odoo rendszer ezután egy jóváírás/"
-#~ "bevétel egyenleg táblázatot számol ki az időszakra vonatkozóan. Tehát, ha "
-#~ "30 napos intervallumot adott meg, akkor az Odoo rendszer átfogó képet ad "
-#~ "a hitelezőkre vonatkozóan az elmúlt hónapról, elmúlt két hónapról, és így "
-#~ "tovább."
-
-#~ msgid "Allows you multi currency environment"
-#~ msgstr "Több pénznemes környezetet tesz elérhetővé"
-
-#~ msgid "Analytic Line"
-#~ msgstr "Gyűjtőkód tétel"
-
-#~ msgid ""
-#~ "Asset management: This allows you to manage the assets owned by a company "
-#~ "or a person. It keeps track of the depreciation occurred on those assets, "
-#~ "and creates account move for those depreciation lines.\n"
-#~ "\n"
-#~ "-This installs the module account_asset. If you do not check this box, "
-#~ "you will be able to do invoicing & payments, but not accounting (Journal "
-#~ "Items, Chart of Accounts, ...)"
-#~ msgstr ""
-#~ "Tárgyi eszközök ketelése: Ez lehetővé teszi a vállalat vagy személy által "
-#~ "birtokolt vagyoni eszközök kezelését. Nyomon követi a vagyoni eszközökön "
-#~ "történt értékcsökkenést, és számla mozgásokat hoz létre ezekre az érték "
-#~ "csökkent tétel sorokra.\n"
-#~ "\n"
-#~ " -Ez a account_asset modult telepíti. Ha nem jelöli be ezt a négyzetet, "
-#~ "akkor lehetősége lesz számlázásra & kifizetésekre, de könyvelésre nem "
-#~ "(Napló tételek, Számlatükör, ...)"
-
-#~ msgid "Bank Synchronization"
-#~ msgstr "Bank szinkronizálás"
-
-#~ msgid ""
-#~ "Chart of Accounts has been\n"
-#~ "                            installed. You should review it and create "
-#~ "any additionnal accounts."
-#~ msgstr ""
-#~ "Számlatükrök telepítve.\n"
-#~ "                            Át kell néznie és további főkönyvi számlákat "
-#~ "létrehoznia."
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "A feljegyzésen történt utolsó levelezés dátuma."
-
-#~ msgid "Direct Costs"
-#~ msgstr "Közvetlen költségek"
-
-#~ msgid "End of Following Month"
-#~ msgstr "Következő hónap vége"
-
-#~ msgid "Exchange Rate Entry of"
-#~ msgstr "Ezek az Árváltási árfolyam tételek"
-
-#~ msgid "Followers"
-#~ msgstr "Követők"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Követők (Csatornák)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Követők (Partnerek)"
-
-#~ msgid ""
-#~ "Get your bank statements from you bank and import them through plaid."
-#~ "com.\n"
-#~ "-that installs the module account_plaid."
-#~ msgstr ""
-#~ "Megkapja a bank kivonatait a banktól és azokat importálja a plaid.com "
-#~ "felületen keresztül.\n"
-#~ "-Ez a account_plaid modult telepíti."
-
-#~ msgid ""
-#~ "Get your bank statements from your bank and import them in Odoo in the ."
-#~ "OFX format.\n"
-#~ "This installs the module account_bank_statement_import_ofx."
-#~ msgstr ""
-#~ "Megkapja a bank kivonatait a banktól és azokat importálja az Odoo "
-#~ "rendszerbe .OXF rormátumban.\n"
-#~ "-Ez az account_bank_statement_import_ofx modult telepíti."
-
-#~ msgid ""
-#~ "Get your bank statements from your bank and import them in Odoo in the ."
-#~ "QIF format.\n"
-#~ "This installs the module account_bank_statement_import_qif."
-#~ msgstr ""
-#~ "Megkapja a bank kivonatait a banktól és azokat importálja az Odoo "
-#~ "rendszerbe .QIF rormátumban.\n"
-#~ "-Ez a account_bank_statement_import_qif  modult telepíti."
-
-#~ msgid ""
-#~ "Get your bank statements from your bank and import them through yodlee."
-#~ "com.\n"
-#~ "-that installs the module account_yodlee."
-#~ msgstr ""
-#~ "Megkapja a bank kivonatait a banktól és azokat importálja a yodlee.com "
-#~ "felületen keresztül.\n"
-#~ "-Ez a account_yodlee modult telepíti."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
-
-#~ msgid "Invoices &amp; Refunds"
-#~ msgstr "Számlák &amp; visszatérítések"
-
-#~ msgid "Is Follower"
-#~ msgstr "Ő követő"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Utolsó üzenet dátuma"
-
-#~ msgid "Less Cost of Revenue"
-#~ msgstr "Árbevételek önköltségével csökkentve"
-
-#~ msgid "Less Current Liabilities"
-#~ msgstr "Rövid lejáratú kötelezettségekkel csökkentett"
-
-#~ msgid "Less Expenses"
-#~ msgstr "Költségekkel, ráfordításokkal csökkentet"
-
-#~ msgid "Less Non-Current Liabilities"
-#~ msgstr "Nem-Rövid lejáratú kötelezettségekkel csökkentett"
-
-#~ msgid "Less Payable Accounts"
-#~ msgstr "Kötelezettség számlákkal csökkentett"
-
-#~ msgid "Messages"
-#~ msgstr "Üzenetek"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Műveletek száma"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Üzenetek száma, melyek közbenjárást igényelnek"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Olvasatlan üzenetek száma"
-
-#~ msgid "Open account dashboard menu"
-#~ msgstr "Könyvelési műszerfal menü megnyitása"
-
-#~ msgid "Payment term: 30% Advance End of Following Month"
-#~ msgstr "Fizetési feltétel:  30% előleg a következő hónap végéig"
-
-#~ msgid "Payment term: End of Following Month"
-#~ msgstr "Fizetési feltétel: Következő hónap végéig"
-
-#~ msgid ""
-#~ "Programmation error : domain_maker_move_line_amount requires comparator "
-#~ "'=' or '<'"
-#~ msgstr ""
-#~ "Programolvasási hiba  : domain_maker_move_line_amount requires comparator "
-#~ "'=' or '<'"
-
-#~ msgid "Sales Team"
-#~ msgstr "Értékesítési csapat"
-
-#~ msgid ""
-#~ "Select 'Sale' for customer invoices journals. Select 'Purchase' for "
-#~ "vendor bills journals. Select 'Cash' or 'Bank' for journals that are used "
-#~ "in customer or vendor payments. Select 'General' for miscellaneous "
-#~ "operations journals. Select 'Opening/Closing Situation' for entries "
-#~ "generated for new fiscal years."
-#~ msgstr ""
-#~ "Válassza az 'Értékesítés'-t a a vásárlói számlák naplóihoz. Válassza a "
-#~ "'Beszerzés'-t a beszállítói számlák naplóihoz. Válassza a 'Készpénz'-t "
-#~ "vagy a 'Bank'-ot olyan naplókhoz melyek a vásárlói vagy beszerzési "
-#~ "fizetéseket rögzítik. Válassza az 'Általános'-t az egyéb műveletek "
-#~ "naplózásához. Válassza 'Nyitó/Záró' helyzetet olyan tételekhez amit új "
-#~ "üzleti év generálásához használ."
-
-#~ msgid ""
-#~ "Technical field used to keep track of the origin of journal entries "
-#~ "created in case of fluctuation of the currency exchange rate. This is "
-#~ "needed when cancelling the source: it will post the inverse journal entry "
-#~ "to cancel that part too."
-#~ msgstr ""
-#~ "Technikai mező a pénznemek átváltási árfolyam változása miatt, a főkönyvi "
-#~ "napló eredeti tételének nyomon követéséhez. Erre akkor van szükség ha a "
-#~ "forrást törlik: ez az ellen oldali főkönyvi bejegyzést is könyvelésre "
-#~ "küldi, hogy az az oldal is törlésre kerüljön."
-
-#~ msgid "The bank statement line was already reconciled."
-#~ msgstr "A banki kivonat tételsora már egyeztetésre került."
-
-#~ msgid ""
-#~ "The selected account of your Journal Entry forces to provide a secondary "
-#~ "currency. You should remove the secondary currency on the account or "
-#~ "select a multi-currency view on the journal."
-#~ msgstr ""
-#~ "A napló tétel kiválasztott könyvelési tételei másik pénznem használatát "
-#~ "kényszerítik. El kell távolítania a másodlagos pénznemet a tétel "
-#~ "számláról vagy válasszon több-pénznemes nézetet a naplón."
-
-#~ msgid ""
-#~ "Tip : Hit ctrl-enter to reconcile all the balanced items in the sheet."
-#~ msgstr ""
-#~ "Tipp : Nyomja meg ctrl-enter a költségtábla  összes "
-#~ "számlaegyenlegesített  tételek főkönyvi egyeztetéséhez."
-
-#~ msgid "Unread Messages"
-#~ msgstr "Olvasatlan üzenetek"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Olvasatlan üzenetek számlálója"
-
-#~ msgid "Website Messages"
-#~ msgstr "Weboldal üzenetek"
-
-#~ msgid "Website communication history"
-#~ msgstr "Weboldal  kommunikáció történet"
-
-#~ msgid "You cannot change the tax, you should remove and recreate lines."
-#~ msgstr ""
-#~ "Nem tudja megváltoztatni az adót, el kell távolítania és létre kell "
-#~ "hoznia tételeket."
-
-#~ msgid ""
-#~ "\n"
-#~ "% set access_action = object.get_access_action()\n"
-#~ "% set access_url = access_action['type'] == 'ir.actions.act_url' and "
-#~ "access_action['url'] or '/report/pdf/account.report_invoice/' + "
-#~ "str(object.id)\n"
-#~ "\n"
-#~ "<p>Dear ${object.partner_id.name} \n"
-#~ "% if object.partner_id.parent_id:\n"
-#~ "    (<i>${object.partner_id.parent_id.name}</i>)\n"
-#~ "% endif\n"
-#~ ",</p>\n"
-#~ "<p>Here is your invoice <strong>${object.number}</strong>\n"
-#~ "% if object.origin:\n"
-#~ "(with reference: ${object.origin} )\n"
-#~ "% endif\n"
-#~ "amounting in <strong>${object.amount_total} ${object.currency_id.name}</"
-#~ "strong>\n"
-#~ "from ${object.company_id.name}.\n"
-#~ "</p>\n"
-#~ "\n"
-#~ "    <br/><br/>\n"
-#~ "    <center>\n"
-#~ "      <a href=\"${access_url}\" style=\"background-color: #1abc9c; "
-#~ "padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; "
-#~ "font-size: 16px;\" class=\"o_default_snippet_text\">View Invoice</a>\n"
-#~ "    </center>\n"
-#~ "    <br/><br/>\n"
-#~ "\n"
-#~ "% if object.state=='paid':\n"
-#~ "    <p>This invoice is already paid.</p>\n"
-#~ "% else:\n"
-#~ "    <p>Please remit payment at your earliest convenience.</p>\n"
-#~ "% endif\n"
-#~ "\n"
-#~ "<p>Thank you,</p>\n"
-#~ "% if object.user_id and object.user_id.signature:\n"
-#~ "    ${object.user_id.signature | safe}\n"
-#~ "% endif\n"
-#~ msgstr ""
-#~ "\n"
-#~ "% set access_action = object.get_access_action()\n"
-#~ "% set access_url = access_action['type'] == 'ir.actions.act_url' and "
-#~ "access_action['url'] or '/report/pdf/account.report_invoice/' + "
-#~ "str(object.id)\n"
-#~ "\n"
-#~ "<p>Tisztelt ${object.partner_id.name} \n"
-#~ "% if object.partner_id.parent_id:\n"
-#~ "    (<i>${object.partner_id.parent_id.name}</i>)\n"
-#~ "% endif\n"
-#~ ",</p>\n"
-#~ "<p>Itt találja a számláját <strong>${object.number}</strong>\n"
-#~ "% if object.origin:\n"
-#~ "(with reference: ${object.origin} )\n"
-#~ "% endif\n"
-#~ "amounting in <strong>${object.amount_total} ${object.currency_id.name}</"
-#~ "strong>\n"
-#~ "from ${object.company_id.name}.\n"
-#~ "</p>\n"
-#~ "\n"
-#~ "    <br/><br/>\n"
-#~ "    <center>\n"
-#~ "      <a href=\"${access_url}\" style=\"background-color: #1abc9c; "
-#~ "padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; "
-#~ "font-size: 16px;\" class=\"o_default_snippet_text\">View Invoice</a>\n"
-#~ "    </center>\n"
-#~ "    <br/><br/>\n"
-#~ "\n"
-#~ "% if object.state=='paid':\n"
-#~ "    <p>Ezt a számlát már kiegyenlítette.</p>\n"
-#~ "% else:\n"
-#~ "    <p>Fizetésével kapcsolatban állunk rendelkezésére.</p>\n"
-#~ "% endif\n"
-#~ "\n"
-#~ "<p>Köszönjük,</p>\n"
-#~ "% if object.user_id and object.user_id.signature:\n"
-#~ "    ${object.user_id.signature | safe}\n"
-#~ "% endif\n"
-
-#~ msgid "${object.subject}"
-#~ msgstr "${object.subject}"
-
-#~ msgid ""
-#~ "<html>\n"
-#~ "                <head></head>\n"
-#~ "                <body style=\"margin: 0; padding: 0;\">\n"
-#~ "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" "
-#~ "bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" "
-#~ "class=\"o_mail_notification\">\n"
-#~ "                    <tbody>\n"
-#~ "\n"
-#~ "                      <!-- HEADER -->\n"
-#~ "                      <tr>\n"
-#~ "                        <td align=\"center\" style=\"min-width: 590px;"
-#~ "\">\n"
-#~ "                          <table width=\"590\" border=\"0\" cellpadding="
-#~ "\"0\" bgcolor=\"#a24689\" style=\"min-width: 590px; background-color: "
-#~ "rgb(162, 70, 137); padding: 20px;\">\n"
-#~ "                            <tr>\n"
-#~ "                              <td valign=\"middle\">\n"
-#~ "                                  <span style=\"font-size:20px; color:"
-#~ "white; font-weight: bold;\">\n"
-#~ "                                      Invoice ${object.record_name}\n"
-#~ "                                  </span>\n"
-#~ "                              </td>\n"
-#~ "                              <td valign=\"middle\" align=\"right\">\n"
-#~ "                                  <img src=\"/logo.png\" style=\"padding: "
-#~ "0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id."
-#~ "name}\">\n"
-#~ "                              </td>\n"
-#~ "                            </tr>\n"
-#~ "                          </table>\n"
-#~ "                        </td>\n"
-#~ "                      </tr>\n"
-#~ "\n"
-#~ "                      <!-- CONTENT -->\n"
-#~ "                      <tr>\n"
-#~ "                        <td align=\"center\" style=\"min-width: 590px;"
-#~ "\">\n"
-#~ "                          <table width=\"590\" border=\"0\" cellpadding="
-#~ "\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: "
-#~ "rgb(255, 255, 255); padding: 20px;\">\n"
-#~ "                            <tbody>\n"
-#~ "                              <td valign=\"top\" style=\"font-family:"
-#~ "Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
-#~ "                                ${object.body | safe}\n"
-#~ "                              </td>\n"
-#~ "                            </tbody>\n"
-#~ "                          </table>\n"
-#~ "                        </td>\n"
-#~ "                      </tr>\n"
-#~ "\n"
-#~ "                      <!-- FOOTER -->\n"
-#~ "                      <tr>\n"
-#~ "                        <td align=\"center\" style=\"min-width: 590px;"
-#~ "\">\n"
-#~ "                          <table width=\"590\" border=\"0\" cellpadding="
-#~ "\"0\" bgcolor=\"#a24689\" style=\"min-width: 590px; background-color: "
-#~ "rgb(162, 70, 137); padding: 20px;\">\n"
-#~ "                            <tr>\n"
-#~ "                              <td valign=\"middle\" align=\"left\" style="
-#~ "\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;"
-#~ "\">\n"
-#~ "                                ${user.company_id.name}<br/>\n"
-#~ "                                ${user.company_id.phone or ''}\n"
-#~ "                              </td>\n"
-#~ "                              <td valign=\"middle\" align=\"right\" style="
-#~ "\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;"
-#~ "\">\n"
-#~ "                                % if user.company_id.email:\n"
-#~ "                                <a href=\"mailto:${user.company_id."
-#~ "email}\" style=\"text-decoration:none; color: white;\">${user.company_id."
-#~ "email}</a><br/>\n"
-#~ "                                % endif\n"
-#~ "                                % if user.company_id.website:\n"
-#~ "                                    <a href=\"${user.company_id."
-#~ "website}\" style=\"text-decoration:none; color: white;\">\n"
-#~ "                                        ${user.company_id.website}\n"
-#~ "                                    </a>\n"
-#~ "                                % endif\n"
-#~ "                              </td>\n"
-#~ "                            </tr>\n"
-#~ "                          </table>\n"
-#~ "                        </td>\n"
-#~ "                      </tr>\n"
-#~ "                      <tr>\n"
-#~ "                        <td align=\"center\">\n"
-#~ "                            Powered by <a href=\"https://www.odoo.com"
-#~ "\">Odoo</a>.\n"
-#~ "                        </td>\n"
-#~ "                      </tr>\n"
-#~ "                    </tbody>\n"
-#~ "                </table>\n"
-#~ "                </body>\n"
-#~ "                </html>\n"
-#~ "            "
-#~ msgstr ""
-#~ "<html>\n"
-#~ "                <head></head>\n"
-#~ "                <body style=\"margin: 0; padding: 0;\">\n"
-#~ "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" "
-#~ "bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" "
-#~ "class=\"o_mail_notification\">\n"
-#~ "                    <tbody>\n"
-#~ "\n"
-#~ "                      <!-- HEADER -->\n"
-#~ "                      <tr>\n"
-#~ "                        <td align=\"center\" style=\"min-width: 590px;"
-#~ "\">\n"
-#~ "                          <table width=\"590\" border=\"0\" cellpadding="
-#~ "\"0\" bgcolor=\"#a24689\" style=\"min-width: 590px; background-color: "
-#~ "rgb(162, 70, 137); padding: 20px;\">\n"
-#~ "                            <tr>\n"
-#~ "                              <td valign=\"middle\">\n"
-#~ "                                  <span style=\"font-size:20px; color:"
-#~ "white; font-weight: bold;\">\n"
-#~ "                                      Invoice ${object.record_name}\n"
-#~ "                                  </span>\n"
-#~ "                              </td>\n"
-#~ "                              <td valign=\"middle\" align=\"right\">\n"
-#~ "                                  <img src=\"/logo.png\" style=\"padding: "
-#~ "0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id."
-#~ "name}\">\n"
-#~ "                              </td>\n"
-#~ "                            </tr>\n"
-#~ "                          </table>\n"
-#~ "                        </td>\n"
-#~ "                      </tr>\n"
-#~ "\n"
-#~ "                      <!-- CONTENT -->\n"
-#~ "                      <tr>\n"
-#~ "                        <td align=\"center\" style=\"min-width: 590px;"
-#~ "\">\n"
-#~ "                          <table width=\"590\" border=\"0\" cellpadding="
-#~ "\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: "
-#~ "rgb(255, 255, 255); padding: 20px;\">\n"
-#~ "                            <tbody>\n"
-#~ "                              <td valign=\"top\" style=\"font-family:"
-#~ "Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
-#~ "                                ${object.body | safe}\n"
-#~ "                              </td>\n"
-#~ "                            </tbody>\n"
-#~ "                          </table>\n"
-#~ "                        </td>\n"
-#~ "                      </tr>\n"
-#~ "\n"
-#~ "                      <!-- FOOTER -->\n"
-#~ "                      <tr>\n"
-#~ "                        <td align=\"center\" style=\"min-width: 590px;"
-#~ "\">\n"
-#~ "                          <table width=\"590\" border=\"0\" cellpadding="
-#~ "\"0\" bgcolor=\"#a24689\" style=\"min-width: 590px; background-color: "
-#~ "rgb(162, 70, 137); padding: 20px;\">\n"
-#~ "                            <tr>\n"
-#~ "                              <td valign=\"middle\" align=\"left\" style="
-#~ "\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;"
-#~ "\">\n"
-#~ "                                ${user.company_id.name}<br/>\n"
-#~ "                                ${user.company_id.phone or ''}\n"
-#~ "                              </td>\n"
-#~ "                              <td valign=\"middle\" align=\"right\" style="
-#~ "\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;"
-#~ "\">\n"
-#~ "                                % if user.company_id.email:\n"
-#~ "                                <a href=\"mailto:${user.company_id."
-#~ "email}\" style=\"text-decoration:none; color: white;\">${user.company_id."
-#~ "email}</a><br/>\n"
-#~ "                                % endif\n"
-#~ "                                % if user.company_id.website:\n"
-#~ "                                    <a href=\"${user.company_id."
-#~ "website}\" style=\"text-decoration:none; color: white;\">\n"
-#~ "                                        ${user.company_id.website}\n"
-#~ "                                    </a>\n"
-#~ "                                % endif\n"
-#~ "                              </td>\n"
-#~ "                            </tr>\n"
-#~ "                          </table>\n"
-#~ "                        </td>\n"
-#~ "                      </tr>\n"
-#~ "                      <tr>\n"
-#~ "                        <td align=\"center\">\n"
-#~ "                            Támogatja <a href=\"https://www.odoo.com"
-#~ "\">Odoo</a>.\n"
-#~ "                        </td>\n"
-#~ "                      </tr>\n"
-#~ "                    </tbody>\n"
-#~ "                </table>\n"
-#~ "                </body>\n"
-#~ "                </html>\n"
-#~ "            "
-
-#~ msgid ""
-#~ "<strong>Banking interface:</strong> with live bank feed synchronization "
-#~ "and bank statement import."
-#~ msgstr ""
-#~ "<strong>Bank interfész:</strong> élő banki tételek szinkronizációjával és "
-#~ "banki kivonat importtal."
-
-#~ msgid "<strong>Subtotal :</strong>"
-#~ msgstr "<strong>Részösszeg :</strong>"
-
-#~ msgid "A warning can be set on a partner (Account)"
-#~ msgstr "Figyelmeztetés beállítható partnerenként (Könyvelés)"
-
-#~ msgid "Accounts Tags"
-#~ msgstr "Főkönyvi számla címkék"
-
-#~ msgid "Adjustment Tax"
-#~ msgstr "Adó kikerekítés"
-
-#~ msgid "All the partners can be used in invoices"
-#~ msgstr "Az összes partner használható a számlákhoz"
-
-#~ msgid "Amount Due in Company Currency"
-#~ msgstr "Esedékes összeg a vállalat pénznemében"
-
-#~ msgid "Amount Due in Invoice Currency"
-#~ msgstr "Esedékes összeg a számlázás pénznemében"
-
-#~ msgid "An informative or blocking warning can be set on a partner"
-#~ msgstr ""
-#~ "Egy információs vagy blokkoló figyelmeztetés állítható be az egyes "
-#~ "partnerekre"
-
-#~ msgid "Analytic Accounts Tags"
-#~ msgstr "Analitikus gyűjtőkódok címkéi"
-
-#~ msgid "Analytic Tags"
-#~ msgstr "Gyűjtő/Elemző címkék"
-
-#~ msgid "Analytic tags"
-#~ msgstr "Gyűjtő/Elemző címkék"
-
-#~ msgid "Appears in VAT report"
-#~ msgstr "Az ADÓ jelentésben jelenik meg"
-
-#~ msgid "Blocking Message"
-#~ msgstr "Blokkoló üzenet"
-
-#~ msgid "Click to add a new tag."
-#~ msgstr "Kattintson egy új címke hozzáadásához."
-
-#~ msgid "Company Currency"
-#~ msgstr "Vállalat pénzneme"
-
-#~ msgid "Company currency id"
-#~ msgstr "Vállalat pénznemének id azonosítója"
-
-#~ msgid "Create and post move"
-#~ msgstr "Főkönyvi tételt mozgat és bizonylatol"
-
-#~ msgid "Create model"
-#~ msgstr "Modell létrehozása"
-
-#~ msgid "Credit Card"
-#~ msgstr "Hitel kártya"
-
-#~ msgid "Credit account"
-#~ msgstr "Jóváíró, követel folyószámla"
-
-#~ msgid "Debit account"
-#~ msgstr "Terhelendő, tartozás számla"
-
-#~ msgid "Electronically receive money"
-#~ msgstr "Elektronikus úton kapott pénz"
-
-#~ msgid ""
-#~ "Get your bank statements from your bank and import them in Odoo in the ."
-#~ "CSV format.\n"
-#~ "-This installs the module account_bank_statement_import_csv."
-#~ msgstr ""
-#~ "Megkapja a bank kivonatait a banktól és azokat importálja az Odoo "
-#~ "rendszerbe .CVS rormátumban.\n"
-#~ "-Ez a account_bank_statement_import_csv modult telepíti."
-
-#~ msgid "Import in .csv format"
-#~ msgstr "Import .cvs fájl formátumban"
-
-#~ msgid "Internal Type"
-#~ msgstr "Belső típus"
-
-#~ msgid "Invoice for which this invoice is the refund"
-#~ msgstr "A szálához tartozó jováíró számla"
-
-#~ msgid ""
-#~ "It is not allowed to delete a bank statement line that already created a "
-#~ "journal entry since it would create a gap in the numbering. You should "
-#~ "create the journal entry again and cancel it thanks to a regular revert."
-#~ msgstr ""
-#~ "Nem megengedett egy napló tétellel rendelkező banki kivonat törlése, "
-#~ "mivel ez egy különbözetet képez a számításban. Egy napló ellen tételt "
-#~ "kell létrehoznia és ezzel visszavonni, általános visszavezetésként."
-
-#~ msgid ""
-#~ "It is not allowed to delete a payment that already created a journal "
-#~ "entry since it would create a gap in the numbering. You should create the "
-#~ "journal entry again and cancel it thanks to a regular revert."
-#~ msgstr ""
-#~ "Nem megengedett egy fizetési tétel törlése, mivel ez egy különbözetet "
-#~ "képez a számításban. Egy napló ellen tételt kell létrehoznia és ezzel "
-#~ "visszavonni, általános visszavezetésként."
-
-#~ msgid "Journal Entry Name"
-#~ msgstr "Könyvelési naplótétel neve"
-
-#~ msgid "Justification"
-#~ msgstr "Indoklás"
-
-#~ msgid "Message for Invoice"
-#~ msgstr "Üzenet a számláról"
-
-#~ msgid "Minus Credit Card Accounts"
-#~ msgstr "Negatív Hitel kártya számlák"
-
-#~ msgid "Modify models"
-#~ msgstr "Modellek módosítása"
-
-#~ msgid "More Info"
-#~ msgstr "További információ"
-
-#~ msgid "Multi Currencies"
-#~ msgstr "Többféle pénznem"
-
-#~ msgid "Narration"
-#~ msgstr "Magyarázat"
-
-#~ msgid "No Message"
-#~ msgstr "Nincs üzenet"
-
-#~ msgid ""
-#~ "Operation not allowed. Since your statement line already received a "
-#~ "number, you cannot reconcile it entirely with existing journal entries "
-#~ "otherwise it would make a gap in the numbering. You should book an entry "
-#~ "and make a regular revert of it in case you want to cancel it."
-#~ msgstr ""
-#~ "Nem megengedett művelet. Mivel a kivonat sora már kapott egy számot, nem "
-#~ "tudja egyeztetni azt teljesen a meglévő napló tételekkel mivel az egy "
-#~ "számszaki eltéréshez vezet. Könyveljen le egy tételt és végezzen el egy "
-#~ "általános visszavezetéssel, ha törölni szeretné azt."
-
-#~ msgid "Payment Journal"
-#~ msgstr "Fizetendő napló"
-
-#~ msgid "Payment Method Type"
-#~ msgstr "Fizetési módszer típus"
-
-#~ msgid "Payment Move Lines"
-#~ msgstr "Fizetendő bizonylatolás tételsorok"
-
-#~ msgid "Reconciled entries"
-#~ msgstr "Párosított tételek"
-
-#~ msgid "Revenue Recognition"
-#~ msgstr "Bevétel elismerés"
-
-#~ msgid "Save and New"
-#~ msgstr "Mentés és Új"
-
-#~ msgid "Second Account"
-#~ msgstr "Második Főkönyvi számla"
-
-#~ msgid "Second Amount"
-#~ msgstr "Második összeg"
-
-#~ msgid "Second Amount type"
-#~ msgstr "Második összeg típus"
-
-#~ msgid "Second Analytic Account"
-#~ msgstr "Második gyűjtő/elemző főkönyvi számla"
-
-#~ msgid "Second Journal"
-#~ msgstr "Második napló"
-
-#~ msgid "Second Journal Item Label"
-#~ msgstr "Második könyvelési tételsor felirat"
-
-#~ msgid "Second Tax"
-#~ msgstr "Második adó"
-
-#~ msgid ""
-#~ "Selecting the \"Warning\" option will notify user with the message, "
-#~ "Selecting \"Blocking Message\" will throw an exception with the message "
-#~ "and block the flow. The Message has to be written in the next field."
-#~ msgstr ""
-#~ "A \"Figyelmeztetés\" lehetőség kiválasztása a felhasználót egy üzenettel "
-#~ "értesíti, az \"Üzenet blokkolása\" lehetőség egy kivételt küld az "
-#~ "üzenethez és leblokkolja a folyamatot. Az üzenetet a következő mezőbe "
-#~ "kell beírni."
-
-#~ msgid "Sellable Products"
-#~ msgstr "Értékesíthető termékek"
-
-#~ msgid ""
-#~ "Set this field to true if this tax can be used in the tax adjustment "
-#~ "wizard, used to manually fill some data in the tax declaration"
-#~ msgstr ""
-#~ "Állítsa ezt a mezőt igazra, amennyiben ez az adó az adó kikerekítés "
-#~ "varázslóban használható, általában kézzel töltött ki egy pár adatot az "
-#~ "adó bevallásban"
-
-#~ msgid "Skip"
-#~ msgstr "Kihagy"
-
-#~ msgid "Tax Adjustments"
-#~ msgstr "Adó kikerekítések"
-
-#~ msgid "Tax Excluded Price"
-#~ msgstr "Adó nélküli ár"
-
-#~ msgid "Tax adjustment"
-#~ msgstr "Adó kikerekítése"
-
-#~ msgid ""
-#~ "Technical field holding the number given to the journal entry, "
-#~ "automatically set when the statement line is reconciled then stored to "
-#~ "set the same number again if the line is cancelled, set to draft and re-"
-#~ "processed again."
-#~ msgstr ""
-#~ "Technikai mező a napló tételhez adott számok megtartására, automatikusan "
-#~ "beállított, miután a kivonat tételsor főkönyvi egyeztetésre került, "
-#~ "ezután eltárolásra kerül, hogy még egyszer be lehessen állítani egy "
-#~ "esetleges stornózáskor, újra tervezetnek állítja és újra-feldolgozza."
-
-#~ msgid ""
-#~ "Technical field used to mark a tax line as exigible in the vat report or "
-#~ "not (only exigible journal items are displayed). By default all new "
-#~ "journal items are directly exigible, but with the module "
-#~ "account_tax_cash_basis, some will become exigible only when the payment "
-#~ "is recorded."
-#~ msgstr ""
-#~ "Műszaki mező egy adó sor jelölésére, hogy az érvényesíthető vagy nem az "
-#~ "adó bevallásban (kizárólag az érvényesíthető napló tételeket jeleníti "
-#~ "meg). Alapértelmezetten az összes új napló tétel közvetlenül "
-#~ "érvényesíthető, de az account_tax_cash_basis modullal, egyesek kizárólag "
-#~ "akkor lesznek érvényesíthetőek, ha a fizetés beérkezett."
-
-#~ msgid ""
-#~ "This %s has been created from: <a href=# data-oe-model=account.invoice "
-#~ "data-oe-id=%d>%s</a>"
-#~ msgstr ""
-#~ "Ezt %s ebből hozta létre: <a href=# data-oe-model=account.invoice data-oe-"
-#~ "id=%d>%s</a>"
-
-#~ msgid ""
-#~ "This allows you to manage the revenue recognition on selling products. It "
-#~ "keeps track of the installments occurred on those revenue recognitions, "
-#~ "and creates account moves for those installment lines\n"
-#~ "-This installs the module account_deferred_revenue."
-#~ msgstr ""
-#~ "Ez lehetővé teszi a bevétel aktiválás kezelését az értékesített "
-#~ "termékeken. Nyomon követi az ezeken a bevétel aktiválásokon keletkezett "
-#~ "részleteket, és létrehoz könyvelési számla bizonylatokat ezekre a tétel "
-#~ "részletekre\n"
-#~ "-Ez a account_deferred_revenue modult telepíti."
-
-#~ msgid "Total in Company Currency"
-#~ msgstr "Összesen a vállalat pénznemében"
-
-#~ msgid "Total in Invoice Currency"
-#~ msgstr "Összesen a Számla pénznemében"
-
-#~ msgid "Unknown Partner Ledger"
-#~ msgstr "Ismeretlen Partner folyószámla karton"
-
-#~ msgid "Untaxed Amount in Company Currency"
-#~ msgstr "Adó nélküli összeg a Vállalat pénznemében"
-
-#~ msgid "Warning"
-#~ msgstr "Figyelmeztetés"
-
-#~ msgid "Warning for %s"
-#~ msgstr "Figyelmeztetés erre %s"
-
-#~ msgid "Warning on the Invoice"
-#~ msgstr "Figyelmeztetés a számlán"
-
-#~ msgid "Wizard for Tax Adjustments"
-#~ msgstr "Adó kikerekítések varázslója"
-
-#~ msgid "days"
-#~ msgstr "napok"
-
-#~ msgid "report.account.report_journal"
-#~ msgstr "report.account.report_journal"
-
-#~ msgid "report.account.report_partnerledger"
-#~ msgstr "report.account.report_partnerledger"

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-22 13:28+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-10-06 20:48+0000\n"
 "Last-Translator: Morten Schou <ms@msteknik.dk>\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
 "Language: da\n"
@@ -105,13 +105,10 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
-#, fuzzy
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -448,6 +445,12 @@ msgid "Delivery address for current sales order."
 msgstr "Den aktuelle salgsordres leveringsadresse"
 
 #. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
 msgstr ""
@@ -465,9 +468,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "Disc.(%)"
-msgstr "Rabat (%)"
+msgstr "Rabat %"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
@@ -562,9 +564,8 @@ msgstr "Wizard til at skrive Email"
 
 #. module: sale
 #: model:ir.model,name:sale.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "Wizard til at skrive Email"
+msgstr "Guide til email oprettelse ved undersøgelser"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
@@ -612,7 +613,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Bruttovægt"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -895,7 +896,7 @@ msgstr ""
 #: code:addons/sale/sale.py:101
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "Opret"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
@@ -1295,9 +1296,8 @@ msgstr "Tilbuds analyse"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#, fuzzy
 msgid "Quotations Sent"
-msgstr "Tilbud afsendt"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1311,9 +1311,8 @@ msgstr "Reference, der genererede denne salgsordre."
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
-#, fuzzy
 msgid "Reinvoice Costs"
-msgstr "Faktura status"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1573,7 +1572,7 @@ msgstr "Status"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Subscriptions"
-msgstr ""
+msgstr "Abonnementer"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_subtotal
@@ -1762,9 +1761,8 @@ msgstr "Enhed"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
-#, fuzzy
 msgid "Units of Measure"
-msgstr "Enhed"
+msgstr "Måleenheder"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1813,7 +1811,7 @@ msgstr "Moms"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Volumen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
@@ -1859,9 +1857,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
-#, fuzzy
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr "Salgsordrelinier klar til fakturering"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1882,9 +1879,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "Analytisk linie"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1900,74 +1896,3 @@ msgstr "Salgskonfigurations opsætninger"
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "ukendt"
-
-#~ msgid ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-#~ msgstr ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-
-#~ msgid "Action Needed"
-#~ msgstr "Aktion påkrævet"
-
-#~ msgid "Allows you to specify an analytic account on sales orders."
-#~ msgstr ""
-#~ "Giver dig mulighed for at angive en analytic account på salgsordrer."
-
-#~ msgid "Analytic Line"
-#~ msgstr "Analytisk linie"
-
-#~ msgid "Analytic accounting for sales"
-#~ msgstr "Analytisk bogføring ved salg"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Dato for sidste besked på denne post."
-
-#~ msgid "Expense Account"
-#~ msgstr "Vareforbrug konto"
-
-#~ msgid "Followers"
-#~ msgstr "Followers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Følgere (kanaler)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Følgere (partnere)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Hvis afmærket, kræver nye beskeder din attention"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Hvis afmærket kræver nye beskeder din opmærksomhed "
-
-#~ msgid "Is Follower"
-#~ msgstr "Følger"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Sidste dato for besked"
-
-#~ msgid "Messages"
-#~ msgstr "Beskeder"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Besked- og kommunikations historik"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Antal aktioner"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Antal meddelser der kræver handling"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Antal ulæste beskeder"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "Åbn Salgs menuen"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Ulæste besked tæller"
-
-#~ msgid "account.config.settings"
-#~ msgstr "Konto konfigurations opsætninger"

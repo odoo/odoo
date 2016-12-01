@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-03-19 12:02+0000\n"
-"Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-10-17 17:38+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -36,9 +36,8 @@ msgstr "Правило действия"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_line_test
-#, fuzzy
 msgid "Action Rule Line Test"
-msgstr "Проверка правил действий"
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -301,7 +300,7 @@ msgstr "Последний раз обновлено"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
 msgid "Lead id"
-msgstr ""
+msgstr "ID инициативы"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -320,9 +319,8 @@ msgstr "Месяцы"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_name
-#, fuzzy
 msgid "Name"
-msgstr "Название правила"
+msgstr "Имя"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -425,6 +423,21 @@ msgid "Subject"
 msgstr "Тема"
 
 #. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_done
+msgid "Test lead in state 'done'"
+msgstr "Тестовый лид в состоянии \"выполнено\""
+
+#. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_draft
+msgid "Test lead in state 'draft'"
+msgstr "Тестовый лид в состоянии \"черновик\""
+
+#. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_open
+msgid "Test lead in state 'open'"
+msgstr "Тестовый лид в состоянии \"открыто\""
+
+#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_id
 msgid "Trigger Date"
 msgstr "Дата активации"
@@ -499,12 +512,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
 msgid "unknown"
 msgstr ""
-
-#~ msgid "Test lead in state 'done'"
-#~ msgstr "Тестовый лид в состоянии \"выполнено\""
-
-#~ msgid "Test lead in state 'draft'"
-#~ msgstr "Тестовый лид в состоянии \"черновик\""
-
-#~ msgid "Test lead in state 'open'"
-#~ msgstr "Тестовый лид в состоянии \"открыто\""

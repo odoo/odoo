@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-12 13:25+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-10-20 09:47+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
@@ -714,6 +714,8 @@ msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
+"Bijlages zijn gelinkt aan het document via het model / res_id en aan het "
+"bericht via dit veld."
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -1057,7 +1059,7 @@ msgstr "Conversatie gevouwen"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_minimized
 msgid "Conversation is minimized"
-msgstr ""
+msgstr "Conversatie is verkleind"
 
 #. module: mail
 #. openerp-web
@@ -1248,19 +1250,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete
 msgid "Delete Emails"
-msgstr ""
+msgstr "Verwijderen emails"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_auto_delete_message
 #: model:ir.model.fields,field_description:mail.field_survey_mail_compose_message_auto_delete_message
 msgid "Delete Message Copy"
-msgstr ""
+msgstr "Verwijder bericht kopie"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_auto_delete
 msgid "Delete sent emails (mass mailing only)"
-msgstr ""
+msgstr "Verwijder verzonden e-mails (alleen bulk mailingen)"
 
 #. module: mail
 #. openerp-web
@@ -1349,6 +1351,8 @@ msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
 msgstr ""
+"Bewaar geen kopie van de e-mail in de document communicatie geschiedenis "
+"(alleen bij mass-mailing)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
@@ -2079,6 +2083,8 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible."
 msgstr ""
+"Indien ingesteld, zal de wachtrij de e-mail te sturen na de datum. Indien "
+"niet ingesteld, zal de e-mail zo snel mogelijk worden verstuurd."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_scheduled_date
@@ -2087,6 +2093,9 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. Jinja2 placeholders may be used."
 msgstr ""
+"Indien ingesteld, zal de wachtrij managerde e-mail sturen na de datum. "
+"Indien niet ingesteld, zal de e-mail zo snel mogelijk worden verstuurd. "
+"Jinja2 placeholders kunnen worden gebruikt."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_base_config_settings_alias_domain
@@ -2105,7 +2114,7 @@ msgstr "Inactieve alias"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:974
+#: code:addons/mail/static/src/js/chat_manager.js:958
 #: code:addons/mail/static/src/xml/client_action.xml:22
 #: code:addons/mail/static/src/xml/systray.xml:6
 #, python-format
@@ -2147,7 +2156,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:593
+#: code:addons/mail/static/src/js/chat_manager.js:577
 #, python-format
 msgid "Invitation"
 msgstr "Uitnodiging"
@@ -2267,7 +2276,7 @@ msgstr "Is melding"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
 msgid "Is Subscribed"
-msgstr ""
+msgstr "Is ingeschreven"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
@@ -2438,8 +2447,7 @@ msgstr "Verlaat dit kanaal"
 msgid ""
 "List of channels that will be added as listeners of the current document."
 msgstr ""
-"Lijst van kanalen die worden toegevoegd als luisteraars van het huidige "
-"document."
+"Lijst van kanalen die worden toegevoegd als leden van het huidige document."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite_partner_ids
@@ -2456,7 +2464,7 @@ msgstr "Luisteraar"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_partner_ids
 msgid "Listeners"
-msgstr "Luisteraars"
+msgstr "Leden"
 
 #. module: mail
 #: selection:mail.channel,channel_type:0
@@ -3542,7 +3550,7 @@ msgstr "Privé kanalen"
 #: code:addons/mail/static/src/js/client_action.js:138
 #, python-format
 msgid "Public Channels"
-msgstr ""
+msgstr "Openbare kanalen"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180
@@ -3720,7 +3728,7 @@ msgstr "Geplande datum"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_scheduled_date
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr ""
+msgstr "Geplande verstuurdatum"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -3903,7 +3911,7 @@ msgstr "Smiley"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:980
+#: code:addons/mail/static/src/js/chat_manager.js:964
 #: code:addons/mail/static/src/xml/client_action.xml:28
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_starred
 #: model:ir.model.fields,field_description:mail.field_mail_mail_starred
@@ -4020,7 +4028,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
 msgid "The escaped html code replacing the shortcut"
-msgstr ""
+msgstr "De espaced html code ter vervanging van de snelkoppeling"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_model_id
@@ -4089,7 +4097,7 @@ msgstr "De shortcode die moet vervangen worden in de chat berichten"
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,help:mail.field_mail_template_model_id
 msgid "The type of document this template can be used with"
-msgstr ""
+msgstr "Het soort document waarvoor dit sjabloon kan worden gebruikt"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4187,6 +4195,9 @@ msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
+"Traceringswaardes worden bewaard in een apart model. Dit veld staat de "
+"reconstructie van traceringen toe en staat toe statistieken te genereren op "
+"het model."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
@@ -4573,7 +4584,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/chat_manager.js:593
+#: code:addons/mail/static/src/js/chat_manager.js:577
 #, python-format
 msgid "You have been invited to: "
 msgstr "U bent uitgenodigd om:"
@@ -4614,6 +4625,11 @@ msgstr "Uw sjabloon moet email_from definiëren"
 #: model:ir.model,name:mail.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
+
+#. module: mail
+#: model:mail.channel,name:mail.channel_2
+msgid "board-meetings"
+msgstr "Bestuursvergaderingen"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -4658,7 +4674,7 @@ msgstr "ir.autovacuum"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "mail.alias.mixin"
-msgstr ""
+msgstr "mail.alias.mixin"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -4698,6 +4714,11 @@ msgid "publisher_warranty.contract"
 msgstr "publisher_warranty.contract"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_3
+msgid "rd"
+msgstr "rd"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread.js:16
 #, python-format
@@ -4717,77 +4738,13 @@ msgid "record:"
 msgstr "regel:"
 
 #. module: mail
+#: model:mail.channel,name:mail.channel_1
+msgid "sales"
+msgstr "verkoop"
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:35
 #, python-format
 msgid "this document"
 msgstr "dit document"
-
-#~ msgid ""
-#~ "Attachments are linked to a document through model / res_id and to the "
-#~ "messagethrough this field."
-#~ msgstr ""
-#~ "Bijlages zijn gelinkt aan het document via het model / res_id en aan het "
-#~ "bericht via dit veld."
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "Automatisch opgeschoonde HTML-inhoud"
-
-#~ msgid "Automatically set needaction as Read"
-#~ msgstr "Zet automatisch vereist actie naar gelezen"
-
-#~ msgid "Compose a new message"
-#~ msgstr "Nieuw bericht"
-
-#~ msgid "Conversation is minimied"
-#~ msgstr "Conversatie is verkleind"
-
-#~ msgid "Join Group"
-#~ msgstr "Toetreden tot groep"
-
-#~ msgid ""
-#~ "Odoo helps you easily track all activities related to\n"
-#~ "            a customer; discussions, history of business opportunities,\n"
-#~ "            documents, etc."
-#~ msgstr ""
-#~ "Odoo helpt u gemakkelijk alle activiteiten te volgen gerelateerd met\n"
-#~ "een klant; discussies, geschiedenis van prospects,\n"
-#~ "documenten, etc."
-
-#~ msgid ""
-#~ "Rich-text/HTML version of the message (placeholders may be used here)"
-#~ msgstr ""
-#~ "Rich-text/HTML versie van het bericht (tijdelijke aanduidingen kunnen "
-#~ "hier worden gebruikt)"
-
-#~ msgid "Send mail"
-#~ msgstr "Verstuur e-mail"
-
-#~ msgid "The excaped html code replacing the shortcut"
-#~ msgstr "De geëncodeerde HTML code die de shortcut vervangt"
-
-#~ msgid "The kind of document with with this template can be used"
-#~ msgstr "Het soort document waarvoor dit sjabloon kan worden gebruikt"
-
-#~ msgid ""
-#~ "Tracked values are stored in a separate model. This field allow to "
-#~ "reconstructthe tracking and to generate statistics on the model."
-#~ msgstr ""
-#~ "Traceringswaardes worden bewaard in een apart model. Dit veld staat de "
-#~ "reconstructie van traceringen toe en staat toe statistieken te genereren "
-#~ "op het model."
-
-#~ msgid "board-meetings"
-#~ msgstr "Bestuursvergaderingen"
-
-#~ msgid "rd"
-#~ msgstr "rd"
-
-#~ msgid "sales"
-#~ msgstr "verkoop"
-
-#~ msgid "You are alone in this channel."
-#~ msgstr "U bent alleen in dit kanaal."
-
-#~ msgid "You are in a private conversation with <b>@%s</b>."
-#~ msgstr "U zit in een privé conversatie met <b>@%s</b>."

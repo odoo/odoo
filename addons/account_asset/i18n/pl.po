@@ -3,15 +3,17 @@
 # * account_asset
 #
 # Translators:
+# zbik2607 <darek@krokus.com.pl>, 2016
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
 # Jakobus Buntownikus <buntownix@gmail.com>, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-06-03 10:44+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-10-16 12:03+0000\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +23,7 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2);\n"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:348
+#: code:addons/account_asset/account_asset.py:347
 #, python-format
 msgid " (copy)"
 msgstr " (kopia)"
@@ -29,7 +31,7 @@ msgstr " (kopia)"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_entry_count
 msgid "# Asset Entries"
-msgstr "# Wpisy środków trwałych"
+msgstr "# Zapisy środków trwałych"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_depreciation_nbr
@@ -58,7 +60,7 @@ msgid "Active"
 msgstr "Aktywne"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #, python-format
 msgid "Amount"
 msgstr "Kwota"
@@ -147,7 +149,7 @@ msgid "Asset category"
 msgstr "Kategoria środka"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:236
+#: code:addons/account_asset/account_asset.py:235
 #, python-format
 msgid "Asset created"
 msgstr "Utworzone aktywa"
@@ -158,7 +160,7 @@ msgid "Asset depreciation line"
 msgstr "Pozycja amortyzacji aktywu"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:269
+#: code:addons/account_asset/account_asset.py:268
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr ""
@@ -167,7 +169,7 @@ msgstr ""
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_asset
 msgid "Asset/Revenue Recognition"
-msgstr "Rozpoznawanie aktyw/dochodów"
+msgstr "Rozpoznawanie aktywów/przychodów"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
@@ -190,7 +192,7 @@ msgstr "Analiza środków"
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
 msgid "Assets and Revenues"
-msgstr "Aktywa i dochody"
+msgstr "Aktywa i przychody"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -327,7 +329,7 @@ msgstr "Utworzono przesunięcia aktywów"
 #: code:addons/account_asset/wizard/wizard_asset_compute.py:20
 #, python-format
 msgid "Created Revenue Moves"
-msgstr "Utwórz przesunięcie dochodu"
+msgstr "Utworzone przesunięcia przychodu"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_create_uid
@@ -353,7 +355,7 @@ msgid "Cumulative Depreciation"
 msgstr "Łączna amortyzacja"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:486
+#: code:addons/account_asset/account_asset.py:484
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -368,6 +370,11 @@ msgstr "Bieżące"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_amount
 msgid "Current Depreciation"
 msgstr "Bieżąca amortyzacja"
+
+#. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
+msgid "Customer"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_date
@@ -393,18 +400,18 @@ msgstr "Data amortyzacji"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Account"
-msgstr "Odroczony dochód konta"
+msgstr "Konto odroczonych przychodów"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_product_template_deferred_revenue_category_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Type"
-msgstr "Typ odroczonego dochodu"
+msgstr "Typ odroczonego przychodu"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
 msgid "Deferred Revenues"
-msgstr "Odroczone dochody"
+msgstr "Odroczone przychody"
 
 #. module: account_asset
 #: selection:account.asset.asset,method:0
@@ -481,13 +488,13 @@ msgid "Depreciation Name"
 msgstr "Nazwa amortyzacji"
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/account_asset_change_duration.py:83
+#: code:addons/account_asset/wizard/account_asset_change_duration.py:82
 #, python-format
 msgid "Depreciation board modified"
 msgstr "Zmodyfikowany panel amortyzacji"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:489
+#: code:addons/account_asset/account_asset.py:487
 #, python-format
 msgid "Depreciation line posted."
 msgstr "Zaksięgowana pozycja amortyzacji"
@@ -503,19 +510,19 @@ msgid "Display Name"
 msgstr "Wyświetlana nazwa "
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:272
+#: code:addons/account_asset/account_asset.py:271
 #, python-format
 msgid "Disposal Move"
 msgstr "Usuwanie przeniesienia"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:275
+#: code:addons/account_asset/account_asset.py:274
 #, python-format
 msgid "Disposal Moves"
 msgstr "Usuwanie przeniesień"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:468
+#: code:addons/account_asset/account_asset.py:466
 #, python-format
 msgid "Document closed."
 msgstr "Dokument zamknięty."
@@ -551,9 +558,8 @@ msgstr "Każdy"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_asset_id
-#, fuzzy
 msgid "Expense Account"
-msgstr "Konto środków trwałych"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -670,7 +676,7 @@ msgid "Journal"
 msgstr "Dziennik"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:375
+#: code:addons/account_asset/account_asset.py:374
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
@@ -767,9 +773,10 @@ msgid "Number of Months in a Period"
 msgstr "Liczba miesięcy w okresie"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:488
+#: code:addons/account_asset/account_asset.py:486
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #, python-format
 msgid "Partner"
 msgstr "Partner"
@@ -827,7 +834,7 @@ msgid "Prorata Temporis"
 msgstr "Dzielone proporcjonalnie"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:314
+#: code:addons/account_asset/account_asset.py:313
 #, python-format
 msgid ""
 "Prorata temporis can be applied only for time method \"number of "
@@ -1016,25 +1023,25 @@ msgid "Year"
 msgstr "Rok"
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:97
+#: code:addons/account_asset/account_asset.py:96
 #, python-format
 msgid "You cannot delete a document is in %s state."
 msgstr "Nie możesz usunąć dokumentu, który jest w stanie %s."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:99
+#: code:addons/account_asset/account_asset.py:98
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
 msgstr "Nie możesz usunąć dokumentu ponieważ zawiera zaksięgowane wpisy."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:497
+#: code:addons/account_asset/account_asset.py:495
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr "Nie możesz usunąć zaksięgowanej pozycji amortyzacji."
 
 #. module: account_asset
-#: code:addons/account_asset/account_asset.py:499
+#: code:addons/account_asset/account_asset.py:497
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr "Nie możesz usunąć zaksięgowanych pozycji rat."
@@ -1059,58 +1066,3 @@ msgstr "np. Laptop iBook"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "months"
 msgstr "miesięcy"
-
-#~ msgid "Action Needed"
-#~ msgstr "Wymagana akcja"
-
-#~ msgid "Customer"
-#~ msgstr "Klient"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data ostatniej wiadomości w rekordzie."
-
-#~ msgid "Followers"
-#~ msgstr "Obserwatorzy"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Obserwatorzy (kanały)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Obserwatorzy (partnerzy)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jeśli zaznaczone, to nowa wiadomość wymaga twojej uwagi."
-
-#~ msgid "Is Follower"
-#~ msgstr "Jest obserwatorem"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data ostatniej wiadomości"
-
-#~ msgid "Messages"
-#~ msgstr "Wiadomosći"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Liczba akcji"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Liczba wiadomości wymagających akcji"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Liczba nieprzeczytanych wiadomości"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Nieprzeczytane wiadomości"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Licznik nieprzeczytanych wiadomości"
-
-#~ msgid ""
-#~ "You already have assets with the reference %s.\n"
-#~ "Please delete these assets before creating new ones for this invoice."
-#~ msgstr ""
-#~ "Posiadasz aktualnie środek trwały odnoszący się do %s.\n"
-#~ "Usuń te środki trwałe zanim stworzysz nowy dla tej faktury."

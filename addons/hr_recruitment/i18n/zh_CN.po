@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-07-12 00:57+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-09-20 07:47+0000\n"
 "Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
 "language/zh_CN/)\n"
@@ -501,6 +501,16 @@ msgid "Contract"
 msgstr "合同"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
+msgid "Contract Proposal"
+msgstr "合同建议"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
+msgid "Contract Signed"
+msgstr "合同已签署"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
 msgid "Create Date"
 msgstr "创建日期"
@@ -803,6 +813,11 @@ msgid "Filter and view on next actions and date"
 msgstr "筛选并查看下一步行动和日期"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "初次面试"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr "在招聘渠道中收起"
@@ -921,6 +936,11 @@ msgstr "重要性"
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
 msgstr "重要"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Initial Qualification"
+msgstr "初步评价"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
@@ -1063,7 +1083,7 @@ msgstr "硕士"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_medium_id
 msgid "Medium"
-msgstr "普通"
+msgstr "媒介"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_mobile
@@ -1469,6 +1489,11 @@ msgid "Search through resumes and motivation letters."
 msgstr "通过搜索简历和求职信"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "第二次面谈"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_sequence
 msgid "Sequence"
@@ -1817,209 +1842,3 @@ msgstr "应聘者"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
-
-#~ msgid ""
-#~ "\n"
-#~ "            <p>\n"
-#~ "                %if object.department_id:\n"
-#~ "                    I’m very pleased to announce that <strong> ${object."
-#~ "name} </strong> will be joining us as a ${object.job_id.name}\n"
-#~ "                    in ${object.department_id.name}.\n"
-#~ "                %else:\n"
-#~ "                    I’m very pleased to announce that <strong> ${object."
-#~ "name} </strong> will be joining us as a ${object.job_id.name}.\n"
-#~ "                %endif\n"
-#~ "            </p>\n"
-#~ "            <p>Please welcome him/her and help him/her finding his/her "
-#~ "marks.</p>\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "<p>\n"
-#~ "%if object.department_id:\n"
-#~ "非常高兴地宣布 <strong> ${object.name} </strong> 会加入我们 ${object."
-#~ "job_id.name}\n"
-#~ "在${object.department_id.name}.\n"
-#~ "%else:\n"
-#~ "我非常高兴地宣布<strong> ${object.name} </strong> 会加入我们 ${object."
-#~ "job_id.name}.\n"
-#~ "%endif\n"
-#~ "</p>\n"
-#~ "<p>请欢迎并帮助他/她适应他/她的工作.</p>"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>Congrats! Your resume's got our interest!\n"
-#~ "        I will call you as soon as possible to make a 10 minutes phone "
-#~ "interview and  plan a first meeting.</p>\n"
-#~ "        <p>If we can’t reach you or if you miss our call, feel free to "
-#~ "reach me back on the number 001 312 349 3030\n"
-#~ "        If I do not answer, please let me a message with some schedules "
-#~ "to call you back.</p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id.signature | safe}"
-#~ msgstr ""
-#~ "<p>${object.partner_name or 'applicant'} 您好,</p>        <p> 非常高兴收到"
-#~ "您的简历!        我们将尽快和您电话沟通并预约初试时间.</p>        <p>如果"
-#~ "我们无法联系到您或者您错过接听电话,请在方便的时间联系我 XXX-XXXX(公司电话"
-#~ "或者个人电话,译者注)         如果我没有接听到您的电话,请短信或者邮件告诉我"
-#~ "一个合适的时间,我再与您联系</p>        <p>致敬,</p>        <br>         "
-#~ "${object.user_id.signature}"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>We thank you for your interest in our company and for your "
-#~ "application.\n"
-#~ "        Unfortunately, your profile does not match with our needs or our "
-#~ "recruitment\n"
-#~ "        campaign has reached its term.</p>\n"
-#~ "        <p>If you want more details, feel free to contact us by phone.</"
-#~ "p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id and object.user_id.signature | safe or ''}"
-#~ msgstr ""
-#~ "<p>${object.partner_name or 'applicant'} 你好,</p>\n"
-#~ "<p>谢谢您申请我们公司的职位.\n"
-#~ "很抱歉, 您的简历不符合我们的招聘要求\n"
-#~ "此职位的招聘已结束.</p>\n"
-#~ "<p>如果您有其他想法,请在方便的时间电话联系我们.</p>\n"
-#~ "<p>此致,</p>\n"
-#~ "<br>\n"
-#~ "${object.user_id and object.user_id.signature or ''}"
-
-#~ msgid "Action Needed"
-#~ msgstr "所需行动"
-
-#~ msgid "Campaign"
-#~ msgstr "营销活动"
-
-#~ msgid "Contract Proposal"
-#~ msgstr "合同建议"
-
-#~ msgid "Contract Signed"
-#~ msgstr "合同已签署"
-
-#~ msgid ""
-#~ "Create here some alias...\n"
-#~ "                That will allow you to track from where the applicant is "
-#~ "coming from..."
-#~ msgstr "在这里生产一些别名...这会允许你申请来自哪里"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "发布到记录上的最后消息的日期"
-
-#~ msgid "First Interview"
-#~ msgstr "初次面试"
-
-#~ msgid "Followers"
-#~ msgstr "关注者"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "关注者(频道)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "关注者（业务伙伴）"
-
-#~ msgid "HR Department"
-#~ msgstr "HR 部门"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "查看是否有需要留意的新信息。"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "确认后, 会出现新消息."
-
-#~ msgid "If other, precise:"
-#~ msgstr "如其他的，精确的："
-
-#~ msgid "Initial Qualification"
-#~ msgstr "初步评价"
-
-#~ msgid "Is Follower"
-#~ msgstr "是关注者"
-
-#~ msgid "Job Stages"
-#~ msgstr "招聘阶段"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最后消息日期"
-
-#~ msgid "Messages"
-#~ msgstr "消息"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "消息和通信历史"
-
-#~ msgid "Number of Actions"
-#~ msgstr "动作的序列号"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "需要动作的消息编号"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未读的消息数量"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "打开 人力资源 菜单"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "文档信息发送使用邮件服务器规则。\n"
-#~ "- 所有人：所有人都允许\n"
-#~ "- 业务伙伴：仅认证的业务伙伴\n"
-#~ "- 关注者：仅关注相关文档者\n"
-
-#~ msgid "Reset Application"
-#~ msgstr "重置申请"
-
-#~ msgid "Second Interview"
-#~ msgstr "第二次面谈"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "这里是一个帮助跟踪您不同市场活动尝试的名称。例如：Fall_Drive，"
-#~ "Christmas_Special"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未读消息计数器"
-
-#~ msgid "Website Messages"
-#~ msgstr "网站消息"
-
-#~ msgid "Website communication history"
-#~ msgstr "网站沟通记录"
-
-#~ msgid "Welcoming ${object.name} "
-#~ msgstr "欢迎 ${object.name}"
-
-#~ msgid "Click to add a new tag."
-#~ msgstr "点击来创建一个新的标签"
-
-#~ msgid "Content"
-#~ msgstr "内容"
-
-#~ msgid "Create"
-#~ msgstr "创建"
-
-#~ msgid "Departments"
-#~ msgstr "部门"
-
-#~ msgid "Discard"
-#~ msgstr "舍弃"
-
-#~ msgid "Hr Department"
-#~ msgstr "部门"
-
-#~ msgid "Refused"
-#~ msgstr "已拒绝"
-
-#~ msgid "e.g. Sales Manager"
-#~ msgstr "例如：销售经理"

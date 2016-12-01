@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-03-03 14:18+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
@@ -17,6 +17,35 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_3
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to let you know that you have entered the select circle "
+"of our Gold Partners!</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_2
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to welcome you among our Silver Partners as of today!</"
+"p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_1
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>You will receive your welcome pack via email shortly.</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -226,6 +255,16 @@ msgid "Condition"
 msgstr "Συνθήκη"
 
 #. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_2
+msgid "Congratulations! You are now a Silver Partner!"
+msgstr "Συγχαρητήρια! Είστε τώρα ένας Αργυρός Συνεργάτης! "
+
+#. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_3
+msgid "Congratulations! You are now one of our Gold Partners!"
+msgstr "Συγχαρητήρια! Είστε τώρα ένας Χρυσός Συνεργάτης! "
+
+#. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:480
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
@@ -363,9 +402,8 @@ msgstr "Πρότυπο email"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template_preview
-#, fuzzy
 msgid "Email Template Preview"
-msgstr "Πρότυπο email"
+msgstr "Προεπισκόπηση πρότυπου email"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_mail_template
@@ -615,7 +653,7 @@ msgstr ""
 #. module: marketing_campaign
 #: model:res.groups,name:marketing_campaign.group_lead_automation_manager
 msgid "Manager"
-msgstr ""
+msgstr "Διευθυντής"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
@@ -788,6 +826,11 @@ msgstr "Συνεργάτης"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid "Partner Field"
 msgstr "Πεδίο Συνεργάτη"
+
+#. module: marketing_campaign
+#: model:ir.filters,name:marketing_campaign.filter0
+msgid "Partners"
+msgstr "Συνεργάτες"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
@@ -1176,12 +1219,17 @@ msgstr "Μοναδικό Πεδίο"
 #. module: marketing_campaign
 #: model:res.groups,name:marketing_campaign.group_lead_automation_user
 msgid "User"
-msgstr ""
+msgstr "Χρήστης"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_variable_cost
 msgid "Variable Cost"
 msgstr "Μεταβλητό Κόστος"
+
+#. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_1
+msgid "Welcome to the Odoo Partner Channel!"
+msgstr "Καλώς ήρθατε στο Κανάλι Συνεργάτων του Odoo !"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1202,64 +1250,3 @@ msgstr "Έτος(η)"
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
-
-#~ msgid "Congratulations! You are now a Silver Partner!"
-#~ msgstr "Συγχαρητήρια! Είστε τώρα ένας Αργυρός Συνεργάτης! "
-
-#~ msgid "Congratulations! You are now one of our Gold Partners!"
-#~ msgstr "Συγχαρητήρια! Είστε τώρα ένας Χρυσός Συνεργάτης! "
-
-#~ msgid "Hello, you will receive your welcome pack via email shortly."
-#~ msgstr "Γεια σας, θα λάβετε σύντομα μέσω email το πακέτο καλωσορίσματος."
-
-#~ msgid ""
-#~ "Hi, we are delighted to let you know that you have entered the select "
-#~ "circle of our Gold Partners"
-#~ msgstr ""
-#~ "Γεια σας, είμαστε στην ευχάριστη θέση να σας πληροφορήσουμε ότι έχετε "
-#~ "ενταχθεί στον επιλεγμένο κύκλο των Χρυσών μας Συνεργατών"
-
-#~ msgid ""
-#~ "Hi, we are delighted to welcome you among our Silver Partners as of today!"
-#~ msgstr ""
-#~ "Γεια σας, είμαστε στην ευχάριστη θέση να σας καλωσορίσουμε στους Αργυρούς "
-#~ "μας Συνεργάτες απο σήμερα!"
-
-#~ msgid "Open Marketing Menu"
-#~ msgstr "Άνοιγμα Μενού Marketing"
-
-#~ msgid "Partners"
-#~ msgstr "Συνεργάτες"
-
-#~ msgid "Welcome to the Odoo Partner Channel!"
-#~ msgstr "Καλώς ήρθατε στο Κανάλι Συνεργάτων του Odoo !"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "<p>Hello,</p>\n"
-#~ "<p>We are delighted to let you know that you have entered the select "
-#~ "circle of our Gold Partners!</p>\n"
-#~ "<p>Thank you,</p>\n"
-#~ msgstr ""
-#~ "Γεια σας, είμαστε στην ευχάριστη θέση να σας πληροφορήσουμε ότι έχετε "
-#~ "ενταχθεί στον επιλεγμένο κύκλο των Χρυσών μας Συνεργατών"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "<p>Hello,</p>\n"
-#~ "<p>We are delighted to welcome you among our Silver Partners as of today!"
-#~ "</p>\n"
-#~ "<p>Thank you,</p>\n"
-#~ msgstr ""
-#~ "Γεια σας, είμαστε στην ευχάριστη θέση να σας καλωσορίσουμε στους Αργυρούς "
-#~ "μας Συνεργάτες απο σήμερα!"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "<p>Hello,</p>\n"
-#~ "<p>You will receive your welcome pack via email shortly.</p>\n"
-#~ "<p>Thank you,</p>\n"
-#~ msgstr "Γεια σας, θα λάβετε σύντομα μέσω email το πακέτο καλωσορίσματος."

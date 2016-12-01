@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-06 08:35+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-09-06 09:12+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
 "Language: it\n"
@@ -577,7 +577,7 @@ msgstr "Utilizzato per"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Cost Structure"
-msgstr ""
+msgstr "Struttura dei costi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
@@ -901,6 +901,12 @@ msgstr "Inattivo"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
 msgid "Internal Reference"
 msgstr "Riferimento interno"
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
@@ -1286,7 +1292,7 @@ msgstr "Distinta base Padre"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_routing_id
 msgid "Parent Routing"
-msgstr ""
+msgstr "Routing Superiore"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1536,7 +1542,7 @@ msgstr "Proprietà"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9667
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1565,7 +1571,7 @@ msgstr "Quantità (UdM predefinita)"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Raw Materials"
-msgstr ""
+msgstr "Materiali grezzi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
@@ -1663,7 +1669,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Routing"
-msgstr ""
+msgstr "Routing"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -1961,7 +1967,7 @@ msgstr "Da utilizzare"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
 msgid "Total Cost"
-msgstr ""
+msgstr "Costo totale"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost
@@ -2245,6 +2251,14 @@ msgstr ""
 "Prima terminare o annullare questi."
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "giorni"
@@ -2289,63 +2303,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "Sconosciuto"
-
-#~ msgid "Action Needed"
-#~ msgstr "Azione Necessaria"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Cambia quantità"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data dell'ultimo messaggio postato per questo record"
-
-#~ msgid "Followers"
-#~ msgstr "Followers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Followers (Canali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Followers (Partner)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Se selezionato, nuovi messaggi richiedono la tua attenzione"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Se selezionato, i nuovi messaggi richiedono la tua attenzione"
-
-#~ msgid "Is Follower"
-#~ msgstr "E' Follower"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data Ultimo Messaggio"
-
-#~ msgid "Messages"
-#~ msgstr "Messaggi"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Storico messaggi e comunicazioni"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Numero di Azioni"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Numero di messaggi che richiedono un'azione"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Numero di messaggi non letti"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "Apre Menu MRP"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Messaggi Non Letti"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contatore di messsaggi non letti"
-
-#~ msgid "Website Messages"
-#~ msgstr "Messaggi sito web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Storico comunicazione sito"

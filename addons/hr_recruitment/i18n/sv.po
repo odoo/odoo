@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-06-20 03:28+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-09-09 08:51+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
 "Language: sv\n"
@@ -193,7 +193,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_name
 msgid "Alias Name"
-msgstr ""
+msgstr "Aliasnamn"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_domain
@@ -487,6 +487,16 @@ msgstr "Kontaktpersonens e-postadress"
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 msgid "Contract"
 msgstr "Avtal"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
+msgid "Contract Proposal"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
+msgid "Contract Signed"
+msgstr "Kontraktskrivning"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
@@ -786,6 +796,11 @@ msgid "Filter and view on next actions and date"
 msgstr "Filter och vyer på följande åtgärder och datum"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Första intervjuen"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr ""
@@ -906,6 +921,11 @@ msgstr "Viktighetsgrad"
 #: model:survey.label,value:hr_recruitment.rcol_3_1_3
 msgid "Important"
 msgstr "Viktigt"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Initial Qualification"
+msgstr "Grundläggande Kompetens"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_survey_id
@@ -1362,9 +1382,8 @@ msgstr "Regelbundna möten"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
-#, fuzzy
 msgid "Reopen Application"
-msgstr "Applikation"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
@@ -1449,6 +1468,11 @@ msgstr "Sök bland Sökande"
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
 msgid "Search through resumes and motivation letters."
 msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "Andra intervjuen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
@@ -1576,7 +1600,7 @@ msgstr "Undersökning"
 #. module: hr_recruitment
 #: sql_constraint:hr.applicant.category:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Namntaggen existerar redan !"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_categ_ids
@@ -1607,6 +1631,9 @@ msgid ""
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
+"Klassen (Odoo-dokumenttyp) som detta alias är knutet till. All inkommande e-"
+"post som inte ingår i en pågående diskussion skapar en ny post av denna "
+"klass (t ex Aktivitet)"
 
 #. module: hr_recruitment
 #: sql_constraint:hr.recruitment.degree:0
@@ -1619,6 +1646,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Namnet på e-post-alias, eg 'jobb' om du vill fånga e-post för <jobb@example."
+"se>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_user_id
@@ -1798,120 +1827,3 @@ msgstr "Jobbsökande"
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "oe_kanban_text_red"
 msgstr "oe_kanban_text_red"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>Congrats! Your resume's got our interest!\n"
-#~ "        I will call you as soon as possible to make a 10 minutes phone "
-#~ "interview and  plan a first meeting.</p>\n"
-#~ "        <p>If we can’t reach you or if you miss our call, feel free to "
-#~ "reach me back on the number 001 312 349 3030\n"
-#~ "        If I do not answer, please let me a message with some schedules "
-#~ "to call you back.</p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id.signature | safe}"
-#~ msgstr ""
-#~ "<p>Hej ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>Grattis! Din meritförteckning gjorde oss nyfikna!\n"
-#~ "        Jag kommer ringar dig inom kort för ett 10 minuters samtal och "
-#~ "planering av den fortsatta processen.</p>\n"
-#~ "        <p>Om vi inte kan nås, finns det inget hinder att du ringer mig "
-#~ "på 001 312 349 3030\n"
-#~ "Om jag inte har möjlighet att svara, kan du alltid lämna ett meddelade.</"
-#~ "p>\n"
-#~ "        <p>Vänliga hälsningar,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id.signature | safe}"
-
-#~ msgid ""
-#~ "<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>We thank you for your interest in our company and for your "
-#~ "application.\n"
-#~ "        Unfortunately, your profile does not match with our needs or our "
-#~ "recruitment\n"
-#~ "        campaign has reached its term.</p>\n"
-#~ "        <p>If you want more details, feel free to contact us by phone.</"
-#~ "p>\n"
-#~ "        <p>Kind regards,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id and object.user_id.signature | safe or ''}"
-#~ msgstr ""
-#~ "<p>Hej ${object.partner_name or 'applicant'},</p>\n"
-#~ "        <p>Vi tackar för ditt intresse för vårt företag och din "
-#~ "ansökan. \n"
-#~ "Tyvärr uppfyller du inte vårt behov just nu.</p>\n"
-#~ "        <p>Vill du veta mer, vänligen kontakta mig per telefon.</p>\n"
-#~ "        <p>Vänliga hälsningar,</p>\n"
-#~ "        <br/>\n"
-#~ "         ${object.user_id and object.user_id.signature | safe or ''}"
-
-#~ msgid "Action Needed"
-#~ msgstr "Åtgärd krävs"
-
-#~ msgid "Campaign"
-#~ msgstr "Kampanj"
-
-#~ msgid "Contract Signed"
-#~ msgstr "Kontraktskrivning"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum för senast publicerade meddelandet i loggen."
-
-#~ msgid "First Interview"
-#~ msgstr "Första intervjuen"
-
-#~ msgid "Followers"
-#~ msgstr "Följare"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Följare (Kanaler)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Följare (Partners)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Om ikryssad nya meddelanden som kräver din uppmärksamhet"
-
-#~ msgid "Initial Qualification"
-#~ msgstr "Grundläggande Kompetens"
-
-#~ msgid "Is Follower"
-#~ msgstr "Är följare"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Senast meddelandedatum"
-
-#~ msgid "Messages"
-#~ msgstr "Meddelanden"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Meddelande- och kommunikationshistorik"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Antalet åtgärder"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Antal meddelanden som kräver en åtgärd"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Antalet olästa meddelanden"
-
-#~ msgid "Open HR Menu"
-#~ msgstr "Öppna personalmenyn"
-
-#~ msgid "Second Interview"
-#~ msgstr "Andra intervjuen"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Det här är ett namn som hjälper dig hålla ordning på olika kampanjer. Ex. "
-#~ "Höst_körning, Jul_Special"
-
-#~ msgid "Website Messages"
-#~ msgstr "Webbplatsmeddelanden"
-
-#~ msgid "Website communication history"
-#~ msgstr "Webbplatsens kommunikationshistorik"

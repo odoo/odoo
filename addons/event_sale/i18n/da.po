@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-08-22 13:22+0000\n"
-"Last-Translator: Morten Schou <ms@msteknik.dk>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-09-23 08:55+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
@@ -30,9 +30,8 @@ msgstr "Anvend"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
-#, fuzzy
 msgid "Asset Type"
-msgstr "Hændelsestype"
+msgstr "Anlæg type"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -69,6 +68,12 @@ msgid ""
 msgstr ""
 
 #. module: event_sale
+#: model:product.product,name:event_sale.event_2_product
+#: model:product.template,name:event_sale.event_2_product_product_template
+msgid "Conference on Business Applications"
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_create_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_create_uid
@@ -85,7 +90,7 @@ msgstr "Oprettet den"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
 msgid "Deferred Revenue Type"
-msgstr ""
+msgstr "Type for udskudt indtægt"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
@@ -161,6 +166,12 @@ msgid "Event Type"
 msgstr "Hændelsestype"
 
 #. module: event_sale
+#: model:product.product,name:event_sale.event_1_product
+#: model:product.template,name:event_sale.event_1_product_product_template
+msgid "Functional Webinar"
+msgstr ""
+
+#. module: event_sale
 #: model:event.type,name:event_sale.event_type
 msgid "Generic Events"
 msgstr ""
@@ -224,6 +235,12 @@ msgstr ""
 #: code:addons/event_sale/models/event.py:153
 #, python-format
 msgid "No more available seats for this ticket"
+msgstr ""
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_0_product
+#: model:product.template,name:event_sale.event_0_product_product_template
+msgid "Open Days in Los Angeles"
 msgstr ""
 
 #. module: event_sale
@@ -296,7 +313,7 @@ msgstr "Salg ordre linie"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_deadline
 msgid "Sales End"
-msgstr ""
+msgstr "Salg afslut"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
@@ -332,10 +349,24 @@ msgid "Source Sale Order"
 msgstr "Ordre kilde"
 
 #. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_1
+#: model:event.event.ticket,name:event_sale.event_1_ticket_1
+#: model:event.event.ticket,name:event_sale.event_2_ticket_1
+#: model:event.event.ticket,name:event_sale.event_3_ticket_1
+msgid "Standard"
+msgstr "Standard"
+
+#. module: event_sale
 #: code:addons/event_sale/models/event.py:21
 #, python-format
 msgid "Subscription"
 msgstr "Abonnement"
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_3_product
+#: model:product.template,name:event_sale.event_3_product_product_template
+msgid "Technical Training"
+msgstr "Teknisk træning"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:168
@@ -373,6 +404,13 @@ msgid "Unlimited"
 msgstr "Ubegrænset"
 
 #. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_2
+#: model:event.event.ticket,name:event_sale.event_2_ticket_2
+#: model:event.event.ticket,name:event_sale.event_3_ticket_2
+msgid "VIP"
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
 msgid "event_ok"
 msgstr "Begivenhed ok"
@@ -391,9 +429,3 @@ msgstr ""
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "registration.editor.line"
 msgstr ""
-
-#~ msgid "Standard"
-#~ msgstr "Standard"
-
-#~ msgid "Technical Training"
-#~ msgstr "Teknisk træning"

@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-03-31 08:39+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-11-12 18:17+0000\n"
 "Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
 "Language: el\n"
@@ -345,6 +345,15 @@ msgstr ""
 msgid ""
 "\n"
 "    Display delivery orders (picking) infos on the website\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_account_tax_exigible
+msgid ""
+"\n"
+"    This is a bugfix-module backporting 39d68ac and adding the concept of "
+"tax exigibility on journal items.\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -686,6 +695,17 @@ msgid ""
 "then select the test \n"
 "and print the report from Print button in header area.\n"
 msgstr ""
+"\n"
+"Επιβεβαιώσεις στην Λογιστική.\n"
+"======================\n"
+"With this module you can manually check consistencies and inconsistencies of "
+"accounting module from menu Reporting/Accounting/Accounting Tests.\n"
+"\n"
+"You can write a query in order to create Consistency Test and you will get "
+"the result of the test \n"
+"in PDF format which can be accessed by Menu Reporting -> Accounting Tests, "
+"then select the test \n"
+"and print the report from Print button in header area.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_asset
@@ -743,6 +763,21 @@ msgid ""
 "requested it.\n"
 "    "
 msgstr ""
+"\n"
+"Αυτόματες Μεταφράσεις μέσω του Gengo API\n"
+"========================================\n"
+"\n"
+"This module will install passive scheduler job for automated translations \n"
+"using the Gengo API. To activate it, you must\n"
+"1) Configure your Gengo authentication parameters under `Settings > "
+"Companies > Gengo Parameters`\n"
+"2) Launch the wizard under `Settings > Application Terms > Gengo: Manual "
+"Request of Translation` and follow the wizard.\n"
+"\n"
+"This wizard will activate the CRON job and the Scheduler and will start the "
+"automatic translation via Gengo Services for all the terms where you "
+"requested it.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_service
@@ -790,6 +825,15 @@ msgid ""
 "point of sale module. \n"
 "\n"
 msgstr ""
+"\n"
+"Οδηγός Barcode Scanner Hardware\n"
+"================================\n"
+"\n"
+"This module allows the web client to access a remotely installed barcode\n"
+"scanner, and is used by the posbox to provide barcode scanner support to "
+"the\n"
+"point of sale module. \n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
@@ -1073,7 +1117,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_subscription
-#, fuzzy
 msgid ""
 "\n"
 "Create recurring documents.\n"
@@ -1090,21 +1133,6 @@ msgid ""
 "      above. Specify the interval information and partner to be invoiced.\n"
 "    "
 msgstr ""
-"\n"
-"Δημιουργήστε επαναλαμβανόμενα παραστατικά ή έγγραφα.\n"
-"===========================\n"
-"\n"
-"Αυτό το άρθρωμα επιτρέπει να δημιουργηθούν νέα έγγραφα και να μπουν "
-"συνδρομές σε αυτά .\n"
-"\n"
-"π.χ. Να έχεις ένα τιμολόγιο να δημιουργείται αυτόματα, περιοδικά:\n"
-"-------------------------------------------------------------\n"
-"    * Καθορίστε ένα τύπο εγγράφου βασισμένο στο αντικείμενο του Τιμολογίου\n"
-"    * Καθορίστε μια συνδρομή της οποίας πηγαίο έγγραφο είναι το έγγραφο που "
-"καθορίστηκε ως\n"
-"      παραπάνω. Καθορίστε την πληροφορία του διαστήματος και το συνεργάτη "
-"που πρέπει να τιμολογηθεί.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_link_tracker
@@ -1138,6 +1166,24 @@ msgid ""
 "for\n"
 "this event.\n"
 msgstr ""
+"\n"
+"Δημιουργία Εγγραφής με Εντολές Πώλησης.\n"
+"=======================================\n"
+"\n"
+"This module allows you to automate and connect your registration creation "
+"with\n"
+"your main sale flow and therefore, to enable the invoicing feature of "
+"registrations.\n"
+"\n"
+"It defines a new kind of service products that offers you the possibility "
+"to\n"
+"choose an event category associated with it. When you encode a sale order "
+"for\n"
+"that product, you will be able to choose an existing event of that category "
+"and\n"
+"when you confirm your sale order it will automatically create a registration "
+"for\n"
+"this event.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hr
@@ -1174,7 +1220,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
-#, fuzzy
 msgid ""
 "\n"
 "Customize access to your Odoo database to external users by creating "
@@ -1193,21 +1238,6 @@ msgid ""
 "very handy when used in combination with the module 'share'.\n"
 "    "
 msgstr ""
-"\n"
-"Παραμετροποίηση της πρόσβασης στη βάση δεδομένων του OpenERP των εξωτερικών "
-"χρηστών με τη δημιουργία Πύλης.\n"
-"================================================================================\n"
-"Η Πύλη καθορίζει ένα συγκεκριμένο μενού χρήστη και δικαιώματα πρόσβασης για "
-"τα μέλη του. \n"
-"Αυτό το μενού είναι ορατό από τα μέλη της Πύλης, δημόσιους χρήστες και "
-"άλλους χρήστες που έχουν πρόσβαση σε τεχνικά χαρακτηριστικά (π.χ. ο "
-"διαχειριστής).\n"
-"Επίσης, το κάθε μέλος της πύλης συνδέεται με έναν συγκεκριμένο συνεργάτη.\n"
-"\n"
-"Η εφαρμογή επίσης συσχετίζει τις ομάδες χρηστών με τους χρήστες της Πύλης "
-"(προσθέτοντας μία ομάδα στην Πύλη αυτοματοποιημένα προστίθενται σε αυτό και "
-"οι χρήστες, κ.τ.λ.).  Αυτό το χαρακτηριστικό είναι πολύ χρήσιμο όταν "
-"συνδυάζεται με την εφαρμογή 'share'."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_delivery
@@ -1231,6 +1261,13 @@ msgid ""
 "marketing_campaign.\n"
 "    "
 msgstr ""
+"\n"
+"Demo data για το άρθρωμα marketing_campaign.\n"
+"============================================\n"
+"\n"
+"Creates demo data like leads, campaigns and segments for the module "
+"marketing_campaign.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de
@@ -1302,6 +1339,15 @@ msgid ""
 "that would need such functionality.\n"
 "\n"
 msgstr ""
+"\n"
+"Οδηγός ESC/POS Hardware \n"
+"=======================\n"
+"\n"
+"This module allows openerp to print with ESC/POS compatible printers and\n"
+"to open ESC/POS controlled cashdrawers in the point of sale and other "
+"modules\n"
+"that would need such functionality.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eu_service
@@ -1456,10 +1502,32 @@ msgid ""
 "      payslip interface, but not in the payslip report\n"
 "    "
 msgstr ""
+"\n"
+"Γαλλικοί Κανόνες Μισθοδοσίας\n"
+"=====================\n"
+"\n"
+"    - Configuration of hr_payroll for French localization\n"
+"    - All main contributions rules for French payslip, for 'cadre' and 'non-"
+"cadre'\n"
+"    - New payslip report\n"
+"\n"
+"TODO:\n"
+"-----\n"
+"    - Integration with holidays module for deduction and allowance\n"
+"    - Integration with hr_payroll_account for the automatic "
+"account_move_line\n"
+"      creation from the payslip\n"
+"    - Continue to integrate the contribution. Only the main contribution "
+"are\n"
+"      currently implemented\n"
+"    - Remake the report under webkit\n"
+"    - The payslip.line with appears_in_payslip = False should appears in "
+"the\n"
+"      payslip interface, but not in the payslip report\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
-#, fuzzy
 msgid ""
 "\n"
 "Gamification process\n"
@@ -1479,26 +1547,6 @@ msgid ""
 "modules and actions. When installed, this module creates easy goals to help "
 "new users to discover Odoo and configure their user profile.\n"
 msgstr ""
-"\n"
-"Διαδικασία Gamification \n"
-"====================\n"
-"Το άρθρωμα Gamification δίνει τρόπους να αξιολογήσετε και να κινητοποιήσετε "
-"τους χρήστε του OpenERP.\n"
-"\n"
-"Οι  χρήστες μπορούν να αξιολογηθούν χρησιμοποιώντας στόχους και αριθμητικά "
-"δεδομένα που πρέπει να επιτευχθούν.\n"
-"οι **Στόχοι** ανατίθονται μέσω των **προκλήσεων** για να αξιολογηθούν και να "
-"συγκριθούν μέλη μιας ομάδας με τον καθένα και σε διάρκεια χρόνου.\n"
-"\n"
-"Για μη αριθμητικά επιτεύγματα, **Σήματα** μπορούν να δοθούν σε χρήστες.  Από "
-"ένα απλό \"Ευχαριστούμε\"σε ένα εξαιρετικό επίτευγμα, το σήμα είναι ένας "
-"εύκολος τρόπος έκφρασης ευγνωμοσύνης σε ένα χρήστη για την καλή του "
-"δουλειά.\n"
-"\n"
-"Και τα δύο είναι ευλέλικτα και μπορούν να προσαρμοστούν σε ένα μεγάλο πεδίο "
-"αρθρωμάτων και ενεργειών. Όταν εγκατασταθεί, αυτό το άρθρωμα δημιουργεί "
-"εύκολους στόχους για να βοηθήσει νέους χρήστες να ανακαλύψουν το OpenERP να "
-"διαμορφώσουν το δικό τους προφιλ χρήστη.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy
@@ -1610,6 +1658,17 @@ msgid ""
 "are found in other modules that must be installed separately. \n"
 "\n"
 msgstr ""
+"\n"
+"Άρθρωμα Hardware Poxy\n"
+"=============\n"
+"\n"
+"This module allows you to remotely use peripherals connected to this "
+"server.\n"
+"\n"
+"This modules only contains the enabling framework. The actual devices "
+"drivers\n"
+"are found in other modules that must be installed separately. \n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr
@@ -1658,10 +1717,16 @@ msgid ""
 "files and static assests)\n"
 "for customization purpose.\n"
 msgstr ""
+"\n"
+"Άρθρωμα Εισαγωγής custom data\n"
+"===========================\n"
+"\n"
+"This module allows authorized users to import a custom data module (.xml "
+"files and static assests)\n"
+"for customization purpose.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
-#, fuzzy
 msgid ""
 "\n"
 "Indian Accounting: Chart of Account.\n"
@@ -1681,23 +1746,6 @@ msgid ""
 "Odoo.\n"
 "  "
 msgstr ""
-"\n"
-"Λογιστικό Σχέδιο Ινδίας.\n"
-"====================================\n"
-"\n"
-"Indian accounting chart and localization.\n"
-"\n"
-"OpenERP allows to manage Indian Accounting by providing Two Formats Of Chart "
-"of Accounts i.e Indian Chart Of Accounts - Standard and Indian Chart Of "
-"Accounts - Schedule VI.\n"
-"\n"
-"Note: The Schedule VI has been revised by MCA and is applicable for all "
-"Balance Sheet made after\n"
-"31st March, 2011. The Format has done away with earlier two options of "
-"format of Balance\n"
-"Sheet, now only Vertical format has been permitted Which is Supported By "
-"OpenERP.\n"
-"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_hr_payroll
@@ -2040,6 +2088,26 @@ msgid ""
 "* *Before Delivery*: A Draft invoice is created and must be paid before "
 "delivery\n"
 msgstr ""
+"\n"
+"Διαχείριση προσφορών πωλήσεων και εντολών πώλησης με την διαχείριση "
+"αποθηκών\n"
+"==================================\n"
+"\n"
+"This module makes the link between the sales and warehouses management "
+"applications.\n"
+"\n"
+"Preferences\n"
+"-----------\n"
+"* Shipping: Choice of delivery at once or partial delivery\n"
+"* Invoicing: choose how invoices will be paid\n"
+"* Incoterms: International Commercial terms\n"
+"\n"
+"You can choose flexible invoicing methods:\n"
+"\n"
+"* *On Demand*: Invoices are created manually from Sales Orders when needed\n"
+"* *On Delivery Order*: Invoices are generated from picking (delivery)\n"
+"* *Before Delivery*: A Draft invoice is created and must be paid before "
+"delivery\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_uos
@@ -2135,7 +2203,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_analytic
-#, fuzzy
 msgid ""
 "\n"
 "Module for defining analytic accounting object.\n"
@@ -2147,16 +2214,6 @@ msgid ""
 "that have no counterpart in the general financial accounts.\n"
 "    "
 msgstr ""
-"\n"
-"Άρθρωμα για να καθορίσετε ένα αντικείμενο αναλυτικής λογιστικής.\n"
-"===============================================\n"
-"\n"
-"Στο OpenERP, οι αναλυτικοί λογαριασμοί είναι συνδεμένοι με τους γενικούς "
-"λογαριασμούς αλλά αντιμετωπίζονται \n"
-"απολύτως ανεξάρτητα. Έτσι, μπορείτε να καταχωρήσετε διάφορες αναλυτικές "
-"λειτουργίες\n"
-"που δεν θα έχουν καμία ανάμιξη με τους γενικούς οικονομικούς λογαριασμούς.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_resource
@@ -2186,7 +2243,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_warning
-#, fuzzy
 msgid ""
 "\n"
 "Module to trigger warnings in Odoo objects.\n"
@@ -2197,14 +2253,6 @@ msgid ""
 "picking and invoice. The message is triggered by the form's onchange event.\n"
 "    "
 msgstr ""
-"\n"
-"Άρθρωμα για να δώσει έναυσμα προειδοποιήσεων σε  OpenERP αντικείμενα.\n"
-"==============================================\n"
-"\n"
-"Μηνύματα προειδοποίησης μπορούν να εμφανιστούν για αντικείμενα όπως η "
-"παραγγελία, εντολή αγοράς,\n"
-"συλλογή και τιμολόγηση. Το μήνυμα πυροδοτείται από το γεγονός onchange της "
-"φόρμας"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_expense
@@ -2271,7 +2319,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_blog
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Blog\n"
@@ -2279,17 +2326,11 @@ msgid ""
 "\n"
 "        "
 msgstr ""
-"\n"
-"OpenERP Blog-ημερολόγιο\n"
-"============\n"
-"\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm
 #: model:ir.module.module,description:base.module_website_hr_recruitment
 #: model:ir.module.module,description:base.module_website_issue
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Contact Form\n"
@@ -2297,28 +2338,18 @@ msgid ""
 "\n"
 "        "
 msgstr ""
-"\n"
-"OpenERP Φόρμα Επαφών\n"
-"====================\n"
-"\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_customer
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Customer References\n"
 "===========================\n"
 msgstr ""
-"\n"
-"OpenERP Παραπομπές Πελατών\n"
-"===========================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale
 #: model:ir.module.module,description:base.module_website_sale_options
-#, fuzzy
 msgid ""
 "\n"
 "Odoo E-Commerce\n"
@@ -2326,11 +2357,6 @@ msgid ""
 "\n"
 "        "
 msgstr ""
-"\n"
-"Άρθρωμα OpenERP E-Commerce\n"
-"==================\n"
-"\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_im_odoo_support
@@ -2347,7 +2373,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mail_channel
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Mail Group : Mailing List Archives\n"
@@ -2355,15 +2380,9 @@ msgid ""
 "\n"
 "        "
 msgstr ""
-"\n"
-"άρθρωμα OpenERP Mail Group : Mailing List Archives\n"
-"==========================================\n"
-"\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_quote
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Sale Quote Roller\n"
@@ -2371,25 +2390,15 @@ msgid ""
 "\n"
 "        "
 msgstr ""
-"\n"
-"OpenERP Προσφορές Πωλήσεων\n"
-"=========================\n"
-"\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_calendar
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Web Calendar view.\n"
 "==========================\n"
 "\n"
 msgstr ""
-"\n"
-"OpenERP Web Οθόνη Ημερολογίου.\n"
-"==========================\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_editor
@@ -2402,7 +2411,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_web
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Web core module.\n"
@@ -2411,44 +2419,27 @@ msgid ""
 "This module provides the core of the Odoo Web Client.\n"
 "        "
 msgstr ""
-"\n"
-"OpenERP πυρήνας Web άρθρωμα.\n"
-"========================\n"
-"\n"
-"Αυτό το άρθρωμα παρέχει τον πυρήνα του OpenERP Web Client.\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Web kanban view.\n"
 "========================\n"
 "\n"
 msgstr ""
-"\n"
-"Άρθρωμα OpenERP Web kanban view.\n"
-"========================\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_tip
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Web tips.\n"
 "========================\n"
 "\n"
 msgstr ""
-"\n"
-"Άρθρωμα OpenERP Web kanban view.\n"
-"========================\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Website CMS\n"
@@ -2456,15 +2447,9 @@ msgid ""
 "\n"
 "        "
 msgstr ""
-"\n"
-"Άρθρωμα OpenERP Website CMS\n"
-"===================\n"
-"\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_google_map
-#, fuzzy
 msgid ""
 "\n"
 "Odoo Website Google Map\n"
@@ -2472,11 +2457,6 @@ msgid ""
 "\n"
 "        "
 msgstr ""
-"\n"
-"Άρθρωμα OpenERP Website Google Map\n"
-"==========================\n"
-"\n"
-"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_livechat
@@ -2507,16 +2487,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_tip
-#, fuzzy
 msgid ""
 "\n"
 "Odoo link module for web tips.\n"
 "=================================\n"
 "\n"
 msgstr ""
-"\n"
-"Το πρόσθετο αυτό προσθέτει έναν χρήστη των υπηρεσιών της google στους "
-"χρήστες συστήματος.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track
@@ -2534,6 +2510,18 @@ msgid ""
 "- call for proposals\n"
 "        "
 msgstr ""
+"\n"
+"Online Προηγμένες Εκδηλώσεις\n"
+"======================\n"
+"\n"
+"Adds support for:\n"
+"- sponsors\n"
+"- dedicated menu per event\n"
+"- news per event\n"
+"- tracks\n"
+"- agenda\n"
+"- call for proposals\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_sale
@@ -2622,17 +2610,12 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_geolocalize
-#, fuzzy
 msgid ""
 "\n"
 "Partners Geolocation\n"
 "========================\n"
 "    "
 msgstr ""
-"\n"
-"Γεωχωρικός εντοπισμός συνεργατών\n"
-"========================\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe
@@ -2687,6 +2670,17 @@ msgid ""
 "regular openerp interface anymore. \n"
 "\n"
 msgstr ""
+"\n"
+"Άρθρωμα PosBox Homepage\n"
+"===============\n"
+"\n"
+"This module overrides openerp web interface to display a simple\n"
+"Homepage that explains what's the posbox and show the status,\n"
+"and where to find documentation.\n"
+"\n"
+"If you activate this module, you won't be able to access the \n"
+"regular openerp interface anymore. \n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_posbox_upgrade
@@ -2700,6 +2694,14 @@ msgid ""
 "and should not be installed on regular openerp servers.\n"
 "\n"
 msgstr ""
+"\n"
+"Άρθρωμα PosBox Software Upgrader\n"
+"========================\n"
+"\n"
+"This module allows to remotely upgrade the PosBox software to a\n"
+"new version. This module is specific to the PosBox setup and environment\n"
+"and should not be installed on regular openerp servers.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_extended
@@ -2816,7 +2818,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_fetchmail
-#, fuzzy
 msgid ""
 "\n"
 "Retrieve incoming email on POP/IMAP servers.\n"
@@ -2855,43 +2856,6 @@ msgid ""
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 "    "
 msgstr ""
-"\n"
-"Ανάσυρση εισερχόμενων email σε POP/IMAP servers.\n"
-"============================================\n"
-"\n"
-"Enter the parameters of your POP/IMAP account(s), and any incoming emails "
-"on\n"
-"these accounts will be automatically downloaded into your OpenERP system. "
-"All\n"
-"POP3/IMAP-compatible servers are supported, included those that require an\n"
-"encrypted SSL/TLS connection.\n"
-"\n"
-"This can be used to easily create email-based workflows for many email-"
-"enabled OpenERP documents, such as:\n"
-"----------------------------------------------------------------------------------------------------------\n"
-"    * CRM Leads/Opportunities\n"
-"    * CRM Claims\n"
-"    * Project Issues\n"
-"    * Project Tasks\n"
-"    * Human Resource Recruitments (Applicants)\n"
-"\n"
-"Just install the relevant application, and you can assign any of these "
-"document\n"
-"types (Leads, Project Issues) to your incoming email accounts. New emails "
-"will\n"
-"automatically spawn new documents of the chosen type, so it's a snap to "
-"create a\n"
-"mailbox-to-OpenERP integration. Even better: these documents directly act as "
-"mini\n"
-"conversations synchronized by email. You can reply from within OpenERP, and "
-"the\n"
-"answers will automatically be collected when they come back, and attached to "
-"the\n"
-"same *conversation* document.\n"
-"\n"
-"For more specific needs, you may also assign custom-defined actions\n"
-"(technically: Server Actions) to be triggered for each incoming mail.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_digital
@@ -2972,6 +2936,29 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Σινγκαπούρη - Λογιστική και λογιστικό σχέδιο.\n"
+"=======================================================\n"
+"\n"
+"After installing this module, the Configuration wizard for accounting is "
+"launched.\n"
+"    * The Chart of Accounts consists of the list of all the general ledger "
+"accounts\n"
+"      required to maintain the transactions of Singapore.\n"
+"    * On that particular wizard, you will be asked to pass the name of the "
+"company,\n"
+"      the chart template to follow, the no. of digits to generate, the code "
+"for your\n"
+"      account and bank account, currency to create journals.\n"
+"\n"
+"    * The Chart of Taxes would display the different types/groups of taxes "
+"such as\n"
+"      Standard Rates, Zeroed, Exempted, MES and Out of Scope.\n"
+"    * The tax codes are specified considering the Tax Group and for easy "
+"accessibility of\n"
+"      submission of GST Tax Report.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es
@@ -3142,15 +3129,11 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
-#, fuzzy
 msgid ""
 "\n"
 "The kernel of Odoo, needed for all installation.\n"
 "===================================================\n"
 msgstr ""
-"\n"
-"Το kernel του OpenERP, χρειάζεται για όλες τις εγκαταστάσεις.\n"
-"===================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_account
@@ -3165,30 +3148,20 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_spreadsheet
-#, fuzzy
 msgid ""
 "\n"
 "The module adds the possibility to display data from Odoo in Google "
 "Spreadsheets in real time.\n"
 "=================================================================================================\n"
 msgstr ""
-"\n"
-"Το άρθρωμα προσθέτει την δυνατότητα να εμφανιστούν δεδομένα από το OpenERP  "
-"στα Google Spreadsheets σε πραγματικό χρόνο.\n"
-"=================================================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_calendar
-#, fuzzy
 msgid ""
 "\n"
 "The module adds the possibility to synchronize Google Calendar with Odoo\n"
 "===========================================================================\n"
 msgstr ""
-"\n"
-"Το άρθρωμα προσθέτει την δυνατότητα να συγχρονίσουμε Google Calendar με το "
-"OpenERP\n"
-"===========================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_cache
@@ -3214,6 +3187,17 @@ msgid ""
 "If you need to manage your meetings, you should install the CRM module.\n"
 "    "
 msgstr ""
+"\n"
+"Αυτό είναι ένα πλήρες σύστημα Ημερολογίου.\n"
+"========================================\n"
+"\n"
+"It supports:\n"
+"------------\n"
+"    - Calendar of events\n"
+"    - Recurring events\n"
+"\n"
+"If you need to manage your meetings, you should install the CRM module.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_product
@@ -3301,7 +3285,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
-#, fuzzy
 msgid ""
 "\n"
 "This is the base module to manage the accounting chart for Ecuador in Odoo.\n"
@@ -3310,13 +3293,6 @@ msgid ""
 "Accounting chart and localization for Ecuador.\n"
 "    "
 msgstr ""
-"\n"
-"Ελλάδα - Λογιστικό Σχέδιο και Λογαριασμοί.\n"
-"==================================================================\n"
-"\n"
-"Ελληνικοποίηση και λογιστικό σχέδιο σύμφωνα με τα Ελληνικά Λογιστικά "
-"Πρότυπα.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -3348,6 +3324,14 @@ msgid ""
 "includes\n"
 "taxes and the Quetzal currency."
 msgstr ""
+"\n"
+"Γουατεμάλα - Λογιστικό Σχέδιο και Λογαριασμοί.\n"
+"=====================================================================\n"
+"\n"
+"Agrega una nomenclatura contable para Guatemala. También icluye impuestos y\n"
+"la moneda del Quetzal. -- Adds accounting chart for Guatemala. It also "
+"includes\n"
+"taxes and the Quetzal currency."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hn
@@ -3362,6 +3346,15 @@ msgid ""
 "taxes\n"
 "and the Lempira currency."
 msgstr ""
+"\n"
+"Ονδούρα - Λογιστικό Σχέδιο και Λογαριασμοί\n"
+"====================================================================\n"
+"    \n"
+"Agrega una nomenclatura contable para Honduras. También incluye impuestos y "
+"la\n"
+"moneda Lempira. -- Adds accounting chart for Honduras. It also includes "
+"taxes\n"
+"and the Lempira currency."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -3399,6 +3392,18 @@ msgid ""
 "comptable\n"
 "Seddik au cours du troisième trimestre 2010."
 msgstr ""
+"\n"
+"Μαρόκο - Λογιστικό Σχέδιο και Λογαριασμοί.\n"
+"=================================================================\n"
+"\n"
+"Ce Module charge le modèle du plan de comptes standard Marocain et permet "
+"de\n"
+"générer les états comptables aux normes marocaines (Bilan, CPC (comptes de\n"
+"produits et charges), balance générale à 6 colonnes, Grand livre "
+"cumulatif...).\n"
+"L'intégration comptable a été validé avec l'aide du Cabinet d'expertise "
+"comptable\n"
+"Seddik au cours du troisième trimestre 2010."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_generic_coa
@@ -3413,7 +3418,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
-#, fuzzy
 msgid ""
 "\n"
 "This is the latest UK Odoo localisation necessary to run Odoo accounting for "
@@ -3424,14 +3428,6 @@ msgid ""
 "    - InfoLogic UK counties listing\n"
 "    - a few other adaptations"
 msgstr ""
-"\n"
-"Ηνωμένο Βασίλειο- η τελευταία τοπικοποίηση του OpenERP αναγκαία στην OpenERP "
-"λογιστική για τις μικρομεσαίες εταιρίες με:\n"
-"=================================================================================================\n"
-"    - a CT600-ready chart of accounts\n"
-"    - VAT100-ready tax structure\n"
-"    - InfoLogic UK counties listing\n"
-"    - a few other adaptations"
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement
@@ -3470,7 +3466,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro
-#, fuzzy
 msgid ""
 "\n"
 "This is the module to manage the Accounting Chart, VAT structure, Fiscal "
@@ -3481,13 +3476,6 @@ msgid ""
 "Romanian accounting chart and localization.\n"
 "    "
 msgstr ""
-"\n"
-"Ελλάδα - Λογιστικό Σχέδιο και Λογαριασμοί.\n"
-"==================================================================\n"
-"\n"
-"Ελληνικοποίηση και λογιστικό σχέδιο σύμφωνα με τα Ελληνικά Λογιστικά "
-"Πρότυπα.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca
@@ -3608,7 +3596,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
-#, fuzzy
 msgid ""
 "\n"
 "This is the module to manage the accounting chart for Vietnam in Odoo.\n"
@@ -3619,13 +3606,6 @@ msgid ""
 "\n"
 "**Credits:** General Solutions.\n"
 msgstr ""
-"\n"
-"Ελλάδα - Λογιστικό Σχέδιο και Λογαριασμοί.\n"
-"==================================================================\n"
-"\n"
-"Ελληνικοποίηση και λογιστικό σχέδιο σύμφωνα με τα Ελληνικά Λογιστικά "
-"Πρότυπα.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_partner_assign
@@ -3688,6 +3668,29 @@ msgid ""
 "Invoicing settings.\n"
 "    "
 msgstr ""
+"\n"
+"Αυτό το άρθρωμα προσθέτει το μενού Πωλήσεις στην Πύλη σας όταν οι πωλήσεις "
+"και η πύλη έχουν εγκατασταθεί.\n"
+"======================================================================================\n"
+"\n"
+"After installing this module, portal users will be able to access their own "
+"documents\n"
+"via the following menus:\n"
+"\n"
+"  - Quotations\n"
+"  - Sale Orders\n"
+"  - Delivery Orders\n"
+"  - Products (public ones)\n"
+"  - Invoices\n"
+"  - Payments/Refunds\n"
+"\n"
+"If online payment acquirers are configured, portal users will also be given "
+"the opportunity to\n"
+"pay online on their Sale Orders and Invoices that are not paid yet. Paypal "
+"is included\n"
+"by default, you simply need to configure a Paypal account in the Accounting/"
+"Invoicing settings.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_report_webkit
@@ -3765,6 +3768,20 @@ msgid ""
 "modules.\n"
 "    "
 msgstr ""
+"\n"
+"Αυτό το άρθρωμα προσθέτει μια συντόμευση σε μία ή περισσότερες ευκαιρίες "
+"πώλησης στο CRM.\n"
+"===========================================================================\n"
+"\n"
+"This shortcut allows you to generate a sales order based on the selected "
+"case.\n"
+"If different cases are open (a list), it generates one sale order by case.\n"
+"The case is then closed and linked to the generated sales order.\n"
+"\n"
+"We suggest you to install this module, if you installed both the sale and "
+"the crm\n"
+"modules.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal_stock
@@ -3884,6 +3901,13 @@ msgid ""
 "Price and Cost Price.\n"
 "    "
 msgstr ""
+"\n"
+"Αυτό το άρθρωμα προσθέτει το MarkUp στις εντολές πώλησης.\n"
+"=============================================\n"
+"\n"
+"This gives the profitability by calculating the difference between the Unit\n"
+"Price and Cost Price.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_issue_sheet
@@ -3897,6 +3921,14 @@ msgid ""
 "handle an issue.\n"
 "                "
 msgstr ""
+"\n"
+"Αυτό το άρθρωμα προσθέτει υποστήριξη Καρτών Χρόνου  για τα  Issues/Bugs "
+"Management στα Έργα.\n"
+"=================================================================================\n"
+"\n"
+"Worklogs can be maintained to signify number of hours spent by users to "
+"handle an issue.\n"
+"                "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_picking_wave
@@ -3988,6 +4020,19 @@ msgid ""
 "trigger an automatic reminder email.\n"
 "    "
 msgstr ""
+"\n"
+"Αυτό το άρθρωμα επιτρέπει να εφαρμοστούν κανόνες ενέργειας για οποιδήποτε "
+"αντικείμενο.\n"
+"============================================================\n"
+"\n"
+"Use automated actions to automatically trigger actions for various screens.\n"
+"\n"
+"**Example:** A lead created by a specific user may be automatically set to a "
+"specific\n"
+"sales team, or an opportunity which still has status pending after 14 days "
+"might\n"
+"trigger an automatic reminder email.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_note
@@ -4028,6 +4073,23 @@ msgid ""
 "anonymization process to recover your previous data.\n"
 "    "
 msgstr ""
+"\n"
+"This module allows you to anonymize a database.\n"
+"===============================================\n"
+"\n"
+"This module allows you to keep your data confidential for a given database.\n"
+"This process is useful, if you want to use the migration process and "
+"protect\n"
+"your own or your customer’s confidential data. The principle is that you "
+"run\n"
+"an anonymization tool which will hide your confidential data(they are "
+"replaced\n"
+"by ‘XXX’ characters). Then you can send the anonymized database to the "
+"migration\n"
+"team. Once you get back your migrated database, you restore it and reverse "
+"the\n"
+"anonymization process to recover your previous data.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_membership
@@ -4048,6 +4110,22 @@ msgid ""
 "invoice and send propositions for membership renewal.\n"
 "    "
 msgstr ""
+"\n"
+"Αυτό το άρθρωμα σας επιτρέπει να διαχειριστείτε όλες τις λειτουργίες για "
+"διαχείριση συνδρομών - μελών.\n"
+"=========================================================================\n"
+"\n"
+"It supports different kind of members:\n"
+"--------------------------------------\n"
+"    * Free member\n"
+"    * Associated member (e.g.: a group subscribes to a membership for all "
+"subsidiaries)\n"
+"    * Paid members\n"
+"    * Special member prices\n"
+"\n"
+"It is integrated with sales and accounting to allow you to automatically\n"
+"invoice and send propositions for membership renewal.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_requisition
@@ -4061,6 +4139,14 @@ msgid ""
 "easily\n"
 "keep track and order all your purchase orders.\n"
 msgstr ""
+"\n"
+"Αυτό το άρθρωμα σας επιτρέπει να διαχειριστείτε τις Απαιτήσεις Αγορών σας.\n"
+"===========================================================\n"
+"\n"
+"When a purchase order is created, you now have the opportunity to save the\n"
+"related requisition. This new object will regroup and will allow you to "
+"easily\n"
+"keep track and order all your purchase orders.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_byproduct
@@ -4081,6 +4167,21 @@ msgid ""
 "    A + B + C -> D + E\n"
 "    "
 msgstr ""
+"\n"
+"Αυτό το άρθρωμα σας επιτρέπει να παράξετε διαφορετικά προιόντα από μια "
+"εντολή παραγωγής.\n"
+"=============================================================================\n"
+"\n"
+"You can configure by-products in the bill of material.\n"
+"\n"
+"Without this module:\n"
+"--------------------\n"
+"    A + B + C -> D\n"
+"\n"
+"With this module:\n"
+"-----------------\n"
+"    A + B + C -> D + E\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_rating_project_issue
@@ -4103,6 +4204,14 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Αυτό το άρθρωμα βοηθά στην διαμόρφωση του συστήματος την στιγμή της "
+"εγκατάστασης των νέων βάσεων δεδομένων.\n"
+"================================================================================\n"
+"\n"
+"Shows you a list of applications features to install from.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet
@@ -4142,6 +4251,22 @@ msgid ""
 "    Replica of Democratic Congo, Senegal, Chad, Togo.\n"
 "    "
 msgstr ""
+"\n"
+"Λογιστική - Λογαριασμοί για την  OHADA περιοχή.\n"
+"===========================================================\n"
+"    \n"
+"It allows any company or association to manage its financial accounting.\n"
+"\n"
+"Countries that use OHADA are the following:\n"
+"-------------------------------------------\n"
+"    Benin, Burkina Faso, Cameroon, Central African Republic, Comoros, "
+"Congo,\n"
+"    \n"
+"    Ivory Coast, Gabon, Guinea, Guinea Bissau, Equatorial Guinea, Mali, "
+"Niger,\n"
+"    \n"
+"    Replica of Democratic Congo, Senegal, Chad, Togo.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_iban
@@ -4169,6 +4294,15 @@ msgid ""
 "membership products (schemes).\n"
 "    "
 msgstr ""
+"\n"
+"Αυτό το άρθρωμα είναι για να διαμορφώσουμε αρθρώματα που είναι σχετικα με "
+"κάποια ένωση προσώπων.\n"
+"==============================================================\n"
+"\n"
+"It installs the profile for associations to manage events, registrations, "
+"memberships, \n"
+"membership products (schemes).\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_visible_discount
@@ -4221,6 +4355,16 @@ msgid ""
 "order.\n"
 "    "
 msgstr ""
+"\n"
+"Αυτό το άρθρωμα δίνει την δυνατότητα στον χρήστη να εγκαταστήσει τα "
+"αρθρώματα MRP&SALES στον ίδιο χρόνο\n"
+"====================================================================================\n"
+"\n"
+"It is basically used when we want to keep track of production orders "
+"generated\n"
+"from sales order. It adds sales name and sales Reference on production "
+"order.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_marketing_campaign
@@ -4269,10 +4413,14 @@ msgid ""
 "Please keep in mind that you should review and adapt it with your "
 "Accountant, before using it in a live Environment.\n"
 msgstr ""
+"\n"
+"Αυστρία - Λογιστικό Σχέδιο, Template from BMF.gv.at.\n"
+"============================================================================================================= \n"
+"Please keep in mind that you should review and adapt it with your "
+"Accountant, before using it in a live Environment.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_note_pad
-#, fuzzy
 msgid ""
 "\n"
 "This module update memos inside Odoo for using an external pad\n"
@@ -4282,13 +4430,6 @@ msgid ""
 "invite.\n"
 "\n"
 msgstr ""
-"\n"
-"Ελλάδα - Λογιστικό Σχέδιο και Λογαριασμοί.\n"
-"==================================================================\n"
-"\n"
-"Ελληνικοποίηση και λογιστικό σχέδιο σύμφωνα με τα Ελληνικά Λογιστικά "
-"Πρότυπα.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement_jit
@@ -4406,7 +4547,6 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr
-#, fuzzy
 msgid ""
 "\n"
 "Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.\n"
@@ -4418,15 +4558,6 @@ msgid ""
 "      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
 "    "
 msgstr ""
-"\n"
-"Τουρκία- Λογιστικό Σχέδιο και άρθρωμα για το OpenERP.\n"
-"==========================================================\n"
-"\n"
-"Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
-"    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka "
-"hesap\n"
-"      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae
@@ -4555,6 +4686,21 @@ msgid ""
 "* Stock Inventory Value at given date (support dates in the past)\n"
 "    "
 msgstr ""
+"\n"
+"Άρθρωμα λογιστικής για το WMS module\n"
+"======================\n"
+"This module makes the link between the 'stock' and 'account' modules and "
+"allows you to create accounting entries to value your stock movements\n"
+"\n"
+"Key Features\n"
+"------------\n"
+"* Stock Valuation (periodical or automatic)\n"
+"* Invoice from Picking\n"
+"\n"
+"Dashboard / Reports for Warehouse Management includes:\n"
+"------------------------------------------------------\n"
+"* Stock Inventory Value at given date (support dates in the past)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_gengo
@@ -4630,39 +4776,33 @@ msgstr "%A - Πλήρες όνομα ημέρας εβδομάδας"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%B - Full month name.\""
-msgstr "%B - Πλήρες όνομα μήνα."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%H - Hour (24-hour clock) [00,23].\""
-msgstr "%H - Ώρα (24-ωρών ρολόι) [00,23]."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%I - Hour (12-hour clock) [01,12].\""
-msgstr "%I - Ώρα (12-ωρών ρολόι) [01,12]."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%M - Minute [00,59].\""
-msgstr "%M - Λεπτά [00,59]."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%S - Seconds [00,61].\""
-msgstr "%S - Δευτερόλεπτα [00,61]."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%Y - Year with century.\""
-msgstr "%Y - Έτος με τον αιώνα."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -4676,27 +4816,23 @@ msgstr "%b - Σύντομο όνομα μήνα."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%d - Day of the month [01,31].\""
-msgstr "%d - Ημέρα του μήνα [01,31]."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%j - Day of the year [001,366].\""
-msgstr "%j - Ημέρα του έτους [001,366]."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%m - Month number [01,12].\""
-msgstr "%m - Μήνας - αριθμός [01,12]."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%p - Equivalent of either AM or PM.\""
-msgstr "%p - Αντίστοιχο με το π.μ ή το μ.μ."
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:18 code:addons/base/res/res_partner.py:287
@@ -4716,15 +4852,13 @@ msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%w - Weekday number [0(Sunday),6].\""
-msgstr "%w - Εβδομάδα - αριθμός [0(Κυριακή),6]."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "%y - Year without century [00,99].\""
-msgstr "%y - Έτος χωρίς τον αιώνα [00,99]."
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:1083
@@ -4870,9 +5004,8 @@ msgstr "-Αυτό το άρθρωμα δεν εξαρτάται από οποι�
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "1. %b, %B         ==&gt; Dec, December"
-msgstr "1.  %b, %B         ==> Δεκ, Δεκέμβριος"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -4885,9 +5018,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "2. %a ,%A         ==&gt; Fri, Friday"
-msgstr "2.  %a ,%A         ==> Παρ, Παρασκευή"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -4898,9 +5030,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "3. %y, %Y         ==&gt; 08, 2008"
-msgstr "3.  %y, %Y         ==> 08, 2008"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
@@ -4913,39 +5044,33 @@ msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "4. %d, %m         ==&gt; 05, 12"
-msgstr "4.  %d, %m         ==> 05, 12"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "5. %H:%M:%S      ==&gt; 18:25:20"
-msgstr "5.  %H:%M:%S      ==> 18:25:20"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "6. %I:%M:%S %p  ==&gt; 06:25:20 PM"
-msgstr "6.  %I:%M:%S %p  ==> 06:25:20 μ.μ."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "7. %j              ==&gt; 340"
-msgstr "7.  %j              ==> 340"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "8. %S              ==&gt; 20"
-msgstr "8. %S              ==> 20"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
-#, fuzzy
 msgid "9. %w              ==&gt; 5 ( Friday is the 6th day)"
-msgstr "9. %w              ==> 5 (Η Παρασκευή είναι η 6η ημέρα)"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
@@ -5156,9 +5281,8 @@ msgstr "Ένα άρθρωμα για να δοκιμάσετε την λειτο
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_assetsbundle
-#, fuzzy
 msgid "A module to verify the Assets Bundle mechanism."
-msgstr "Ένα άρθρωμα για να πιστοποιήσετε την κληρονόμηση"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits
@@ -5317,9 +5441,8 @@ msgstr "Έλεγχοι Συνέχειας Λογιατικής"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_adjustments
-#, fuzzy
 msgid "Accounting Tax Adjustments"
-msgstr "Αναφορές Λογιστικής"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_accountant
@@ -5537,9 +5660,8 @@ msgstr "Τύπος Διεύθυνσης"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_address_format
-#, fuzzy
 msgid "Address format"
-msgstr "Μορφή Διεύθυνσης"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_country_form
@@ -5990,9 +6112,9 @@ msgstr "Συνεργασίες: Μέλη"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:52
-#, fuzzy, python-format
+#, python-format
 msgid "At least one language must be active."
-msgstr "Ο κωδικός της γλώσσας θα πρέπει να είναι μοναδικός!"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_link_new_record
@@ -6001,9 +6123,8 @@ msgstr "Σύνοψη μιας νέας εγγραφής"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_search
-#, fuzzy
 msgid "Attached Document Name"
-msgstr "Όνομα Συνημμένου"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
@@ -6069,12 +6190,12 @@ msgstr "Αυθεντικοποίηση μέσω LDAP"
 #: model:ir.model.fields,field_description:base.field_ir_module_module_author
 #: model:ir.ui.view,arch_db:base.view_module_filter
 msgid "Author"
-msgstr "Δημιουργός"
+msgstr "Συντάκτης"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
 msgid "Author Name"
-msgstr "Όνομα Συγγραφέα"
+msgstr "Όνομα Συντάκτη"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_authorize
@@ -6183,7 +6304,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_bank_ids
 msgid "Bank accounts related to this company"
-msgstr ""
+msgstr "Τραπεζικοί λογαριασμοί σχετιζόμενοι με αυτή την εταιρία"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_bank_form
@@ -6367,9 +6488,8 @@ msgstr "Ημερομηνία γέννησης"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_blackbox_be
-#, fuzzy
 msgid "Blackbox Hardware Driver"
-msgstr "Οδηγοί υλικού"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
@@ -6435,6 +6555,11 @@ msgstr "Εφαρμογή γέφυρα για αγοραστές και website."
 #: model:res.country,name:base.io
 msgid "British Indian Ocean Territory"
 msgstr "British Indian Ocean Territory"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_6
+msgid "Bronze"
+msgstr "Χάλκινο"
 
 #. module: base
 #: model:res.country,name:base.bn
@@ -6784,13 +6909,10 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_custom_footer
-#, fuzzy
 msgid ""
 "Check this to define the report footer manually. Otherwise it will be filled "
 "in automatically."
 msgstr ""
-"Επιλέξτε για να καθορίσετε χειροκίνητα το υποσέλιδο της αναφοράς. Αλλιώς θα "
-"συμπληρωθεί αυτόματα."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -6833,9 +6955,8 @@ msgstr "Child IDs"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category_child_ids
-#, fuzzy
 msgid "Child Tags"
-msgstr "Child IDs"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_child_ids
@@ -7096,9 +7217,8 @@ msgstr "Εταιρείες"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
-#, fuzzy
 msgid "Companies count"
-msgstr "Εταιρείες"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_company_id
@@ -7118,6 +7238,11 @@ msgstr "Εταιρείες"
 #: selection:res.partner,company_type:0
 msgid "Company"
 msgstr "Εταιρεία"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_17
+msgid "Company Contact"
+msgstr "Επαφή Εταιρείας"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_name
@@ -7143,9 +7268,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_company_registry
-#, fuzzy
 msgid "Company registry"
-msgstr "Μητρώο Εταιρίας"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_contact_address
@@ -7162,6 +7286,11 @@ msgstr "Πλήρες ID"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_complete_name
 msgid "Complete Name"
 msgstr "Πλήρες Όνομα"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_9
+msgid "Components Buyer"
+msgstr "Εξαρτήματα Αγοραστή"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_compute
@@ -7299,6 +7428,11 @@ msgid "Constraints with the same name are unique per module."
 msgstr "Περιορισμοί με το ίδιο όνομα είναι μοναδικοί ανά άρθρωμα"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_8
+msgid "Consultancy Services"
+msgstr "Υπηρεσίες Συμβούλων Επιχειρήσεων"
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_simple_form
 #: selection:res.partner,type:0
 msgid "Contact"
@@ -7326,17 +7460,15 @@ msgstr "Όνομα Επαφής"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_category_form
-#, fuzzy
 msgid "Contact Tag"
-msgstr "Όνομα Επαφής"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_category_form
 #: model:ir.ui.menu,name:base.menu_partner_category_form
 #: model:ir.ui.view,arch_db:base.view_partner_category_list
-#, fuzzy
 msgid "Contact Tags"
-msgstr "Επαφές"
+msgstr "Ετικέτες Επαφών"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
@@ -7666,7 +7798,7 @@ msgstr "Δημιουργημένες Προβολές"
 #: model:ir.model.fields,field_description:base.field_wkf_create_uid
 #: model:ir.model.fields,field_description:base.field_wkf_transition_create_uid
 msgid "Created by"
-msgstr "Δημιουργήθηκε στις"
+msgstr "Δημιουργήθηκε από"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export_create_date
@@ -7734,7 +7866,7 @@ msgstr "Δημιουργήθηκε στις"
 #: model:ir.model.fields,field_description:base.field_wkf_create_date
 #: model:ir.model.fields,field_description:base.field_wkf_transition_create_date
 msgid "Created on"
-msgstr "Δημιουργήθηκε από"
+msgstr "Δημιουργήθηκε στις"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
@@ -7884,9 +8016,8 @@ msgstr "Τα ειδικά πεδία πρέπει να έχουν όνομα π�
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_custom_footer
-#, fuzzy
 msgid "Custom footer"
-msgstr "Προσωποποιημένο Υποσέλιδο"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_rating
@@ -8092,9 +8223,8 @@ msgstr "Διαχωριστικό Δεκαδικών"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_decimal_places
-#, fuzzy
 msgid "Decimal places"
-msgstr "Διαχωριστικό Δεκαδικών"
+msgstr ""
 
 #. module: base
 #: selection:ir.values,key:0
@@ -8439,6 +8569,11 @@ msgstr ""
 "διατηρηθούν."
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_13
+msgid "Distributor"
+msgstr "Διανομέας"
+
+#. module: base
 #: model:res.country,name:base.dj
 msgid "Djibouti"
 msgstr "Djibouti"
@@ -8450,9 +8585,8 @@ msgstr "Γιατρός"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_document_management
-#, fuzzy
 msgid "Document Management"
-msgstr "Διαχείριση Έργων"
+msgstr "Διαχείριση Εγγράφου"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:849 code:addons/base/ir/ir_model.py:852
@@ -8594,7 +8728,7 @@ msgid "El Salvador"
 msgstr "El Salvador"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:590
+#: code:addons/base/ir/ir_ui_view.py:597
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
 msgstr "Στοιχείο '%s' δεν μπορεί να τοποθετηθεί σε μια μητρική οθόνη"
@@ -8630,6 +8764,7 @@ msgstr "Προτιμήσεις Email"
 #: model:ir.model.fields,field_description:base.field_res_partner_employee
 #: model:ir.model.fields,field_description:base.field_res_users_employee
 #: model:res.groups,name:base.group_user
+#: model:res.partner.category,name:base.res_partner_category_3
 msgid "Employee"
 msgstr "Υπάλληλος"
 
@@ -8701,12 +8836,12 @@ msgstr "Σφάλμα ! Δεν μπορείτε να δημιουργήσετε �
 
 #. module: base
 #: code:addons/base/res/res_company.py:353
-#, fuzzy, python-format
+#, python-format
 msgid "Error ! You cannot create recursive companies."
-msgstr "Σφάλμα! Υπάρχει εταιρεία με την ίδια περιγραφή"
+msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:451
+#: code:addons/base/ir/ir_ui_view.py:458
 #, python-format
 msgid ""
 "Error context:\n"
@@ -8933,9 +9068,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra_tools
-#, fuzzy
 msgid "Extra Tools"
-msgstr "Επιπλέον"
+msgstr "Επιπλέον Εργαλεία"
 
 #. module: base
 #: model:res.country,name:base.fk
@@ -9095,7 +9229,7 @@ msgid "Field Type"
 msgstr "Τύπος Πεδίου"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:921
+#: code:addons/base/ir/ir_ui_view.py:928
 #, python-format
 msgid "Field `%(field_name)s` does not exist"
 msgstr "Το πεδίο `%(field_name)s` δεν υπάρχει"
@@ -9385,9 +9519,8 @@ msgstr "Γαλλία - Λογιστική"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
-#, fuzzy
 msgid "France - FEC"
-msgstr "France"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -9565,6 +9698,11 @@ msgstr ""
 #, python-format
 msgid "Go to the configuration panel"
 msgstr "Μετάβαση στον πίνακα ελέγχου"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_4
+msgid "Gold"
+msgstr "Or"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_analytics
@@ -10136,6 +10274,11 @@ msgid "ISO code"
 msgstr "Κωδικός ISO"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_7
+msgid "IT Services"
+msgstr "Υπηρεσίες Πληροφορικής"
+
+#. module: base
 #: model:res.country,name:base.is
 msgid "Iceland"
 msgstr "Iceland"
@@ -10318,27 +10461,19 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_access_active
-#, fuzzy
 msgid ""
 "If you uncheck the active field, it will disable the ACL without deleting it "
 "(if you delete a native ACL, it will be re-created when you reload the "
 "module)."
 msgstr ""
-"Εάν αποεπιλέξετε το ενεργό πεδίο, θα απενεργοποιηθεί το ACL χωρίς να "
-"διαγραφεί (εάν διαγράψετε ένα τοπικό ACL, θα ξαναδημιουργηθεί όταν "
-"επαναφορτώσετε την εφαρμογή."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule_active
-#, fuzzy
 msgid ""
 "If you uncheck the active field, it will disable the record rule without "
 "deleting it (if you delete a native record rule, it may be re-created when "
 "you reload the module)."
 msgstr ""
-"Εάν αποεπιλέξετε αυτό το ενεργό πεδίο, θα απενεργοποιηθεί ο κανόνας εγγραφών "
-"χωρίς να διαγραφεί (εάν διαγράψετε έναν τοπικό κανόνα εγγραφών, μπορεί να "
-"επαναδημιουργηθεί όταν επαναφορτώσετε την εφαρμογή)."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -10684,9 +10819,9 @@ msgstr ""
 
 #. module: base
 #: code:addons/base/res/res_users.py:318
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid groupby"
-msgstr "Μη έγκυρες παράμετροι"
+msgstr ""
 
 #. module: base
 #: sql_constraint:ir.ui.view:0
@@ -10702,7 +10837,7 @@ msgid "Invalid model name in the action definition."
 msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:582
+#: code:addons/base/ir/ir_ui_view.py:589
 #, python-format
 msgid "Invalid position attribute: '%s'"
 msgstr ""
@@ -10715,9 +10850,9 @@ msgstr "Μη έγκυρο πρόθεμα ή κατάληξη για την ακ�
 
 #. module: base
 #: code:addons/base/res/res_users.py:326
-#, fuzzy, python-format
+#, python-format
 msgid "Invalid search criterion"
-msgstr "Μη έγκυρη διαμόρφωση οθόνης"
+msgstr ""
 
 #. module: base
 #: code:addons/base/res/ir_property.py:68
@@ -10998,9 +11133,9 @@ msgstr "Πακέτο Γλώσσας"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:223
-#, fuzzy, python-format
+#, python-format
 msgid "Language code cannot be modified."
-msgstr "Η Βασική Γλώσσα 'en_US' δεν μπορεί να διαγραφεί!"
+msgstr ""
 
 #. module: base
 #: sql_constraint:ir.translation:0
@@ -11492,9 +11627,8 @@ msgstr "Σύνδεση"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_logo_web
-#, fuzzy
 msgid "Logo web"
-msgstr "Λογότυπο Web"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_logging_search_view
@@ -11684,6 +11818,11 @@ msgstr ""
 "Αυτοματοποιημένα: Τρέχει όταν το σύστημα ρυθμίζεται εκ νέου.\n"
 "Εκκίνηση Χειροκίνητα για μία φορά: μετά την χειροκίνητη εκκίνηση, ορίζεται "
 "αυτοματοποιημένα σε Ολοκληρώθηκε."
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_14
+msgid "Manufacturer"
+msgstr "Κατασκευαστής"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_manufacturing
@@ -12054,7 +12193,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:695 code:addons/base/ir/ir_ui_view.py:873
+#: code:addons/base/ir/ir_ui_view.py:702 code:addons/base/ir/ir_ui_view.py:880
 #, python-format
 msgid "Model not found: %(model)s"
 msgstr "Δεν βρέθηκε το Υπόδειγμα: %(model)s"
@@ -12359,9 +12498,8 @@ msgstr "New Zealand"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nz
-#, fuzzy
 msgid "New Zealand - Accounting"
-msgstr "Ολλανδία _ Λογιστική"
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:547
@@ -12533,9 +12671,8 @@ msgstr "Αριθμός Κλήσεων"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_companies_count
-#, fuzzy
 msgid "Number of Companies"
-msgstr "Αριθμός Κλήσεων"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_update_added
@@ -12606,9 +12743,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_diagram
-#, fuzzy
 msgid "Odoo Web Diagram"
-msgstr "Διάγραμμα OpenERP Web"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_customer_form
@@ -12635,6 +12771,11 @@ msgid ""
 msgstr ""
 "Το Odoo θα προσθέσει αυτόματα μερικά '0' στην δεξιά μερά του πεδίου  "
 "'Επόμενος Αριθμός' για το απαιτούενο μέγεθος συμπλήρωσης."
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_12
+msgid "Office Supplies"
+msgstr "Γραφική Ύλη"
 
 #. module: base
 #: model:res.groups,name:base.group_hr_user
@@ -12868,7 +13009,7 @@ msgstr "Άλλοι Συνεργάτες"
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "Other Proprietary"
-msgstr ""
+msgstr "Άλλος Ιδιοκτήτης"
 
 #. module: base
 #: selection:res.partner,type:0
@@ -13011,9 +13152,8 @@ msgstr "Μητρική Εφαρμογή"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category_parent_id
-#, fuzzy
 msgid "Parent Category"
-msgstr "Κατηγορία"
+msgstr "Μητρική Κατηγορία"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_parent_id
@@ -13051,6 +13191,7 @@ msgstr ""
 #: model:ir.model,name:base.model_res_partner
 #: model:ir.model.fields,field_description:base.field_res_company_partner_id
 #: model:ir.ui.view,arch_db:base.view_partner_address_form
+#: model:res.partner.category,name:base.res_partner_category_0
 #: model:res.request.link,name:base.req_link_partner
 msgid "Partner"
 msgstr "Συνεργάτης"
@@ -13094,9 +13235,8 @@ msgstr "Συνεργάτες"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_geolocalize
-#, fuzzy
 msgid "Partners Geolocation"
-msgstr "Γεω-εντοπισμός Συνεργατών"
+msgstr ""
 
 #. module: base
 #: code:addons/base/res/res_partner.py:703
@@ -13232,7 +13372,7 @@ msgstr "Pitcairn Island"
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0 selection:ir.ui.view,type:0
 msgid "Pivot"
-msgstr ""
+msgstr "Συγκεντρωτικό"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_copyvalue
@@ -13314,9 +13454,8 @@ msgstr "Εντατική Λιανική"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_data_drinks
-#, fuzzy
 msgid "Point of Sale Common Data Drinks"
-msgstr "Εκπτώσεις Εντατικής Λιανικής"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -13476,9 +13615,8 @@ msgstr "Επέκταση προιόντος για να παρακολουθού
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity
 #: model:ir.module.module,shortdesc:base.module_note
-#, fuzzy
 msgid "Productivity"
-msgstr "Δραστηριότητα"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product
@@ -13540,6 +13678,11 @@ msgstr ""
 #: model:ir.module.module,description:base.module_website_theme_install
 msgid "Propose to install a theme on website installation"
 msgstr ""
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_2
+msgid "Prospect"
+msgstr "Πιθανός Συνεργάτης"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_write_expression
@@ -14079,6 +14222,11 @@ msgid "Restrict to lists"
 msgstr "Περιορισμός σε λίστες"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_16
+msgid "Retailer"
+msgstr "Λιανοπωλητής"
+
+#. module: base
 #: model:res.country,name:base.re
 msgid "Reunion (French)"
 msgstr "Reunion (French)"
@@ -14095,9 +14243,8 @@ msgstr "Right-to-Left"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_rml_header
-#, fuzzy
 msgid "Rml header"
-msgstr "RML Κεφαλίδα"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ro
@@ -14599,6 +14746,11 @@ msgid "Server Actions"
 msgstr "Server Actions"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_11
+msgid "Services"
+msgstr "Υπηρεσίες"
+
+#. module: base
 #: selection:ir.model.fields,on_delete:0
 msgid "Set NULL"
 msgstr "Set NULL"
@@ -14707,6 +14859,11 @@ msgstr "Υπογραφή"
 #: model:ir.module.module,shortdesc:base.module_auth_signup
 msgid "Signup"
 msgstr "Εγγραφή"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_5
+msgid "Silver"
+msgstr "Ασημί"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_discount
@@ -14831,7 +14988,7 @@ msgstr "Λυπούμαστε, δεν σας επιτρέπεται να τροπ
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters_sort
 msgid "Sort"
-msgstr ""
+msgstr "Ταξινόμηση"
 
 #. module: base
 #: code:addons/models.py:4837
@@ -14871,7 +15028,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_translation_source
 msgid "Source term"
-msgstr ""
+msgstr "Πηγαίος Όρος"
 
 #. module: base
 #: model:res.country,name:base.za
@@ -15005,13 +15162,13 @@ msgstr "Κατάσταση"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_number_increment
 msgid "Step"
-msgstr ""
+msgstr "Βήμα"
 
 #. module: base
 #: code:addons/base/ir/ir_sequence.py:20 code:addons/base/ir/ir_sequence.py:43
 #, python-format
 msgid "Step must not be zero."
-msgstr ""
+msgstr "Το βήμα δεν μπορεί να είναι μηδέν"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_note_pad
@@ -15026,7 +15183,7 @@ msgstr "Αυτοκόλλητες σημειώσεις, Συνεργατικά, �
 #. module: base
 #: model:ir.module.category,name:base.module_category_stock
 msgid "Stock"
-msgstr ""
+msgstr "Απόθεμα"
 
 #. module: base
 #: selection:workflow.activity,kind:0
@@ -15036,7 +15193,7 @@ msgstr "Όλα Stop"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_store
 msgid "Stored"
-msgstr ""
+msgstr "Αποθηκευμένο"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_store_fname
@@ -15332,6 +15489,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_tax_exigible
+msgid "Tax exigible"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_website_hr
 msgid "Team Page"
 msgstr "Σελίδα Ομάδας"
@@ -15365,9 +15527,9 @@ msgstr "Τεχνικές Ρυθμίσεις"
 
 #. module: base
 #: code:addons/base/ir/ir_translation.py:759
-#, fuzzy, python-format
+#, python-format
 msgid "Technical Translation"
-msgstr "Συγχρονισμός Μετάφρασης"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
@@ -15422,13 +15584,10 @@ msgstr "Ταιλάνδη _ Λογιστική"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
-#, fuzzy
 msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"Κωδικός Χώρας (Διψήφιος ISO).\n"
-"Χρησιμοποιήστε το για γρήγορη αναζήτηση."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:117
@@ -15460,31 +15619,22 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang_grouping
-#, fuzzy
 msgid ""
 "The Separator Format should be like [,n] where 0 < n :starting from Unit "
 "digit. -1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
 "1,06,500; [1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
 "106,500. Provided ',' as the thousand separator in each case."
 msgstr ""
-"The Separator Format should be like [,n] where 0 < n :starting from Unit "
-"digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
-"1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
-"106,500. Provided ',' as the thousand separator in each case."
 
 #. module: base
 #: code:addons/base/res/res_lang.py:66
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "The Separator Format should be like [,n] where 0 < n :starting from Unit "
 "digit. -1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
 "1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
 "106,500. Provided as the thousand separator in each case."
 msgstr ""
-"The Separator Format should be like [,n] where 0 < n :starting from Unit "
-"digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be "
-"1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
-"106,500. Provided ',' as the thousand separator in each case."
 
 #. module: base
 #: code:addons/base/module/module.py:708
@@ -16025,7 +16175,7 @@ msgstr "Τίτλος"
 #. module: base
 #: sql_constraint:res.partner.title:0
 msgid "Title name already exists !"
-msgstr ""
+msgstr "Το όνομα τίτλου υπάρχει ήδη !"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range_date_to
@@ -16198,11 +16348,11 @@ msgstr "Μετάφραση σε Εξέλιξη"
 
 #. module: base
 #: code:addons/base/ir/ir_translation.py:569
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Translation is not valid:\n"
 "%s"
-msgstr "Μετάφραση σε Εξέλιξη"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation
@@ -16509,9 +16659,8 @@ msgstr "Ημερομηνία Ενημέρωσης"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_tree
-#, fuzzy
 msgid "Update Language Terms"
-msgstr "Ενημέρωση Όρων Γλώσσας"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_update
@@ -16766,11 +16915,16 @@ msgid "Vehicle, leasing, insurances, costs"
 msgstr "Έξοδα οχήματος, leasing, ασφάλειες"
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_1
+msgid "Vendor"
+msgstr "Προμηθευτής"
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
 #: model:ir.ui.menu,name:base.menu_procurement_management_supplier_name
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Vendors"
-msgstr ""
+msgstr "Προμηθευτές"
 
 #. module: base
 #: model:res.country,name:base.ve
@@ -16918,7 +17072,7 @@ msgstr "Wallis and Futuna Islands"
 #. module: base
 #: model:ir.module.category,name:base.module_category_warehouse
 msgid "Warehouse"
-msgstr ""
+msgstr "Αποθήκη"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_picking_wave
@@ -17097,9 +17251,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_theme_install
-#, fuzzy
 msgid "Website Theme Install"
-msgstr "Website Mail"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_website
@@ -17204,9 +17357,8 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_store
-#, fuzzy
 msgid "Whether the value is stored in the database."
-msgstr "ID της εγγραφής στόχου στην βάση δεδομένων"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_translate
@@ -17216,6 +17368,11 @@ msgid ""
 msgstr ""
 "Αν οι τιμές του πεδίου μπορούν να μεταφραστούν (ενεργοποιεί τον μηχανισμό "
 "μετάφρασης γι' αυτό το πεδίο)"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_15
+msgid "Wholesaler"
+msgstr "Χονδρέμπορος"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_window
@@ -17464,9 +17621,9 @@ msgstr "Δεν μπορείτε να δημιουργήσετε διαδοχικ
 
 #. module: base
 #: code:addons/base/res/res_users.py:343
-#, fuzzy, python-format
+#, python-format
 msgid "You cannot deactivate the admin user."
-msgstr "Δεν μπορείτε να δημιουργήσετε διαδοχικές ιεραρχίες Συνεργάτη."
+msgstr ""
 
 #. module: base
 #: code:addons/base/res/res_users.py:345
@@ -17617,9 +17774,8 @@ msgstr "στις"
 
 #. module: base
 #: model:ir.model,name:base.model_base
-#, fuzzy
 msgid "base"
-msgstr "Βάση Δεδομένων"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -17904,12 +18060,12 @@ msgstr "ir.property"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb
 msgid "ir.qweb"
-msgstr ""
+msgstr "ir.qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field
 msgid "ir.qweb.field"
-msgstr ""
+msgstr "ir.qweb.field"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_contact
@@ -17919,17 +18075,17 @@ msgstr "ir.qweb.field.contact"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_date
 msgid "ir.qweb.field.date"
-msgstr ""
+msgstr "ir.qweb.field.date"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_datetime
 msgid "ir.qweb.field.datetime"
-msgstr ""
+msgstr "ir.qweb.field.datetime"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_duration
 msgid "ir.qweb.field.duration"
-msgstr ""
+msgstr "ir.qweb.field.duration"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_float
@@ -17939,47 +18095,47 @@ msgstr "ir.qweb.field.float"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_html
 msgid "ir.qweb.field.html"
-msgstr ""
+msgstr "ir.qweb.field.html"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_image
 msgid "ir.qweb.field.image"
-msgstr ""
+msgstr "ir.qweb.field.image"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_integer
 msgid "ir.qweb.field.integer"
-msgstr ""
+msgstr "ir.qweb.field.integer"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_many2one
 msgid "ir.qweb.field.many2one"
-msgstr ""
+msgstr "ir.qweb.field.many2one"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_monetary
 msgid "ir.qweb.field.monetary"
-msgstr ""
+msgstr "ir.qweb.field.monetary"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_qweb
 msgid "ir.qweb.field.qweb"
-msgstr ""
+msgstr "ir.qweb.field.qweb"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_relative
 msgid "ir.qweb.field.relative"
-msgstr ""
+msgstr "ir.qweb.field.relative"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_selection
 msgid "ir.qweb.field.selection"
-msgstr ""
+msgstr "ir.qweb.field.selection"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_text
 msgid "ir.qweb.field.text"
-msgstr ""
+msgstr "ir.qweb.field.text"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_widget
@@ -18038,7 +18194,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:449
+#: code:addons/base/ir/ir_ui_view.py:456
 #, python-format
 msgid "n/a"
 msgstr ""
@@ -18074,7 +18230,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
 msgid "on"
-msgstr ""
+msgstr "στις"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -18237,7 +18393,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "time: Python time module"
-msgstr ""
+msgstr "time: Python time module"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_installer
@@ -18317,1080 +18473,3 @@ msgstr "ναι"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "[object with reference: %s - %s]"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "[object with reference: %s - %s]"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Automate calls transfers, logs and emails"
-#~ msgstr ""
-#~ "\n"
-#~ "Αυτοματοποιήστε τις μεταφορές κλήσης, τα αρχεία καταγραφής και τα "
-#~ "ηλεκτρονικά ταχυδρομεία"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Long description of module's purpose\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Εκτενής περιγραφή του σκοπού του αρθρώματος"
-
-#~ msgid ""
-#~ "\n"
-#~ "        Technical core for all the modules using the VOIP system."
-#~ msgstr ""
-#~ "\n"
-#~ "Βασικός πυρήνας για όλες τις μονάδες που χρησιμοποιούν το σύστημα VOIP."
-
-#~ msgid ""
-#~ "\n"
-#~ "        This module adds support for barcodes scanning to the warehouse "
-#~ "management system.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Αυτό το άρθρωμα προσθέτει την υποστήριξη για τη σάρωση barcodes με το "
-#~ "σύστημα διαχείρισης της αποθήκης."
-
-#~ msgid ""
-#~ "\n"
-#~ "  Publish your products on eBay"
-#~ msgstr ""
-#~ "\n"
-#~ "Δημοσιεύστε τα προϊόντα σας στο eBay"
-
-#~ msgid ""
-#~ "\n"
-#~ "Accounting reports for Greece\n"
-#~ "=============================\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Οι λογιστικές εκθέσεις για την Ελλάδα\n"
-#~ "=================================="
-
-#~ msgid ""
-#~ "\n"
-#~ "Create a claim from a delivery order.\n"
-#~ "=====================================\n"
-#~ "\n"
-#~ "Adds a Claim link to the delivery order.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Δημιουργείστε μία απαίτηση από μια εντολή παράδοσης.\n"
-#~ "=====================================\n"
-#~ "\n"
-#~ "Προσθέτει ένα σύνδεσμο Απαίτησης στην εντολή παράδοσης.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Create recurring documents.\n"
-#~ "===========================\n"
-#~ "\n"
-#~ "This module allows to create new documents and add subscriptions on that "
-#~ "document.\n"
-#~ "\n"
-#~ "e.g. To have an invoice generated automatically periodically:\n"
-#~ "-------------------------------------------------------------\n"
-#~ "    * Define a document type based on Invoice object\n"
-#~ "    * Define a subscription whose source document is the document defined "
-#~ "as\n"
-#~ "      above. Specify the interval information and partner to be invoice.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Δημιουργήστε επαναλαμβανόμενα παραστατικά ή έγγραφα.\n"
-#~ "===========================\n"
-#~ "\n"
-#~ "Αυτό το άρθρωμα επιτρέπει να δημιουργηθούν νέα έγγραφα και να μπουν "
-#~ "συνδρομές σε αυτά .\n"
-#~ "\n"
-#~ "π.χ. Να έχεις ένα τιμολόγιο να δημιουργείται αυτόματα, περιοδικά:\n"
-#~ "-------------------------------------------------------------\n"
-#~ "    * Καθορίστε ένα τύπο εγγράφου βασισμένο στο αντικείμενο του "
-#~ "Τιμολογίου\n"
-#~ "    * Καθορίστε μια συνδρομή της οποίας πηγαίο έγγραφο είναι το έγγραφο "
-#~ "που καθορίστηκε ως\n"
-#~ "      παραπάνω. Καθορίστε την πληροφορία του διαστήματος και το συνεργάτη "
-#~ "που πρέπει να τιμολογηθεί.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Customize access to your OpenERP database to external users by creating "
-#~ "portals.\n"
-#~ "================================================================================\n"
-#~ "A portal defines a specific user menu and access rights for its members.  "
-#~ "This\n"
-#~ "menu can be seen by portal members, public users and any other user that\n"
-#~ "have the access to technical features (e.g. the administrator).\n"
-#~ "Also, each portal member is linked to a specific partner.\n"
-#~ "\n"
-#~ "The module also associates user groups to the portal users (adding a "
-#~ "group in\n"
-#~ "the portal automatically adds it to the portal users, etc).  That feature "
-#~ "is\n"
-#~ "very handy when used in combination with the module 'share'.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Παραμετροποίηση της πρόσβασης στη βάση δεδομένων του OpenERP των "
-#~ "εξωτερικών χρηστών με τη δημιουργία Πύλης.\n"
-#~ "================================================================================\n"
-#~ "Η Πύλη καθορίζει ένα συγκεκριμένο μενού χρήστη και δικαιώματα πρόσβασης "
-#~ "για τα μέλη του. \n"
-#~ "Αυτό το μενού είναι ορατό από τα μέλη της Πύλης, δημόσιους χρήστες και "
-#~ "άλλους χρήστες που έχουν πρόσβαση σε τεχνικά χαρακτηριστικά (π.χ. ο "
-#~ "διαχειριστής).\n"
-#~ "Επίσης, το κάθε μέλος της πύλης συνδέεται με έναν συγκεκριμένο "
-#~ "συνεργάτη.\n"
-#~ "\n"
-#~ "Η εφαρμογή επίσης συσχετίζει τις ομάδες χρηστών με τους χρήστες της Πύλης "
-#~ "(προσθέτοντας μία ομάδα στην Πύλη αυτοματοποιημένα προστίθενται σε αυτό "
-#~ "και οι χρήστες, κ.τ.λ.).  Αυτό το χαρακτηριστικό είναι πολύ χρήσιμο όταν "
-#~ "συνδυάζεται με την εφαρμογή 'share'."
-
-#~ msgid ""
-#~ "\n"
-#~ "Gamification process\n"
-#~ "====================\n"
-#~ "The Gamification module provides ways to evaluate and motivate the users "
-#~ "of OpenERP.\n"
-#~ "\n"
-#~ "The users can be evaluated using goals and numerical objectives to "
-#~ "reach.\n"
-#~ "**Goals** are assigned through **challenges** to evaluate and compare "
-#~ "members of a team with each others and through time.\n"
-#~ "\n"
-#~ "For non-numerical achievements, **badges** can be granted to users. From "
-#~ "a simple \"thank you\" to an exceptional achievement, a badge is an easy "
-#~ "way to exprimate gratitude to a user for their good work.\n"
-#~ "\n"
-#~ "Both goals and badges are flexibles and can be adapted to a large range "
-#~ "of modules and actions. When installed, this module creates easy goals to "
-#~ "help new users to discover OpenERP and configure their user profile.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Διαδικασία Gamification \n"
-#~ "====================\n"
-#~ "Το άρθρωμα Gamification δίνει τρόπους να αξιολογήσετε και να "
-#~ "κινητοποιήσετε τους χρήστε του OpenERP.\n"
-#~ "\n"
-#~ "Οι  χρήστες μπορούν να αξιολογηθούν χρησιμοποιώντας στόχους και "
-#~ "αριθμητικά δεδομένα που πρέπει να επιτευχθούν.\n"
-#~ "οι **Στόχοι** ανατίθονται μέσω των **προκλήσεων** για να αξιολογηθούν και "
-#~ "να συγκριθούν μέλη μιας ομάδας με τον καθένα και σε διάρκεια χρόνου.\n"
-#~ "\n"
-#~ "Για μη αριθμητικά επιτεύγματα, **Σήματα** μπορούν να δοθούν σε χρήστες.  "
-#~ "Από ένα απλό \"Ευχαριστούμε\"σε ένα εξαιρετικό επίτευγμα, το σήμα είναι "
-#~ "ένας εύκολος τρόπος έκφρασης ευγνωμοσύνης σε ένα χρήστη για την καλή του "
-#~ "δουλειά.\n"
-#~ "\n"
-#~ "Και τα δύο είναι ευλέλικτα και μπορούν να προσαρμοστούν σε ένα μεγάλο "
-#~ "πεδίο αρθρωμάτων και ενεργειών. Όταν εγκατασταθεί, αυτό το άρθρωμα "
-#~ "δημιουργεί εύκολους στόχους για να βοηθήσει νέους χρήστες να ανακαλύψουν "
-#~ "το OpenERP να διαμορφώσουν το δικό τους προφιλ χρήστη.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Indian Accounting: Chart of Account.\n"
-#~ "====================================\n"
-#~ "\n"
-#~ "Indian accounting chart and localization.\n"
-#~ "\n"
-#~ "OpenERP allows to manage Indian Accounting by providing Two Formats Of "
-#~ "Chart of Accounts i.e Indian Chart Of Accounts - Standard and Indian "
-#~ "Chart Of Accounts - Schedule VI.\n"
-#~ "\n"
-#~ "Note: The Schedule VI has been revised by MCA and is applicable for all "
-#~ "Balance Sheet made after\n"
-#~ "31st March, 2011. The Format has done away with earlier two options of "
-#~ "format of Balance\n"
-#~ "Sheet, now only Vertical format has been permitted Which is Supported By "
-#~ "OpenERP.\n"
-#~ "  "
-#~ msgstr ""
-#~ "\n"
-#~ "Λογιστικό Σχέδιο Ινδίας.\n"
-#~ "====================================\n"
-#~ "\n"
-#~ "Indian accounting chart and localization.\n"
-#~ "\n"
-#~ "OpenERP allows to manage Indian Accounting by providing Two Formats Of "
-#~ "Chart of Accounts i.e Indian Chart Of Accounts - Standard and Indian "
-#~ "Chart Of Accounts - Schedule VI.\n"
-#~ "\n"
-#~ "Note: The Schedule VI has been revised by MCA and is applicable for all "
-#~ "Balance Sheet made after\n"
-#~ "31st March, 2011. The Format has done away with earlier two options of "
-#~ "format of Balance\n"
-#~ "Sheet, now only Vertical format has been permitted Which is Supported By "
-#~ "OpenERP.\n"
-#~ "  "
-
-#~ msgid ""
-#~ "\n"
-#~ "Menu for Marketing.\n"
-#~ "===================\n"
-#~ "\n"
-#~ "Contains the installer for marketing-related modules.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Menu για το Marketing.\n"
-#~ "===================\n"
-#~ "\n"
-#~ "Περιέχει τον installer για τα σχετικά με το marketing αρθρώματα.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Module for defining analytic accounting object.\n"
-#~ "===============================================\n"
-#~ "\n"
-#~ "In OpenERP, analytic accounts are linked to general accounts but are "
-#~ "treated\n"
-#~ "totally independently. So, you can enter various different analytic "
-#~ "operations\n"
-#~ "that have no counterpart in the general financial accounts.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Άρθρωμα για να καθορίσετε ένα αντικείμενο αναλυτικής λογιστικής.\n"
-#~ "===============================================\n"
-#~ "\n"
-#~ "Στο OpenERP, οι αναλυτικοί λογαριασμοί είναι συνδεμένοι με τους γενικούς "
-#~ "λογαριασμούς αλλά αντιμετωπίζονται \n"
-#~ "απολύτως ανεξάρτητα. Έτσι, μπορείτε να καταχωρήσετε διάφορες αναλυτικές "
-#~ "λειτουργίες\n"
-#~ "που δεν θα έχουν καμία ανάμιξη με τους γενικούς οικονομικούς "
-#~ "λογαριασμούς.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Module to trigger warnings in OpenERP objects.\n"
-#~ "==============================================\n"
-#~ "\n"
-#~ "Warning messages can be displayed for objects like sale order, purchase "
-#~ "order,\n"
-#~ "picking and invoice. The message is triggered by the form's onchange "
-#~ "event.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Άρθρωμα για να δώσει έναυσμα προειδοποιήσεων σε  OpenERP αντικείμενα.\n"
-#~ "==============================================\n"
-#~ "\n"
-#~ "Μηνύματα προειδοποίησης μπορούν να εμφανιστούν για αντικείμενα όπως η "
-#~ "παραγγελία, εντολή αγοράς,\n"
-#~ "συλλογή και τιμολόγηση. Το μήνυμα πυροδοτείται από το γεγονός onchange "
-#~ "της φόρμας"
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Blog\n"
-#~ "============\n"
-#~ "\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "OpenERP Blog-ημερολόγιο\n"
-#~ "============\n"
-#~ "\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Contact Form\n"
-#~ "====================\n"
-#~ "\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "OpenERP Φόρμα Επαφών\n"
-#~ "====================\n"
-#~ "\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Customer References\n"
-#~ "===========================\n"
-#~ msgstr ""
-#~ "\n"
-#~ "OpenERP Παραπομπές Πελατών\n"
-#~ "===========================\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP E-Commerce\n"
-#~ "==================\n"
-#~ "\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "Άρθρωμα OpenERP E-Commerce\n"
-#~ "==================\n"
-#~ "\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Mail Group : Mailing List Archives\n"
-#~ "==========================================\n"
-#~ "\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "άρθρωμα OpenERP Mail Group : Mailing List Archives\n"
-#~ "==========================================\n"
-#~ "\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Sale Quote Roller\n"
-#~ "=========================\n"
-#~ "\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "OpenERP Προσφορές Πωλήσεων\n"
-#~ "=========================\n"
-#~ "\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Web Calendar view.\n"
-#~ "==========================\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "OpenERP Web Οθόνη Ημερολογίου.\n"
-#~ "==========================\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Web Gantt chart view.\n"
-#~ "=============================\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "OpenERP Web οθόνη διαγράμματος Gantt.\n"
-#~ "=============================\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Web core module.\n"
-#~ "========================\n"
-#~ "\n"
-#~ "This module provides the core of the OpenERP Web Client.\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "OpenERP πυρήνας Web άρθρωμα.\n"
-#~ "========================\n"
-#~ "\n"
-#~ "Αυτό το άρθρωμα παρέχει τον πυρήνα του OpenERP Web Client.\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Web kanban view.\n"
-#~ "========================\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Άρθρωμα OpenERP Web kanban view.\n"
-#~ "========================\n"
-#~ "\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Web to edit views.\n"
-#~ "==========================\n"
-#~ "\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "OpenERP Web για επεξεργασία οθονών.\n"
-#~ "==========================\n"
-#~ "\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Website CMS\n"
-#~ "===================\n"
-#~ "\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "Άρθρωμα OpenERP Website CMS\n"
-#~ "===================\n"
-#~ "\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "OpenERP Website Google Map\n"
-#~ "==========================\n"
-#~ "\n"
-#~ "        "
-#~ msgstr ""
-#~ "\n"
-#~ "Άρθρωμα OpenERP Website Google Map\n"
-#~ "==========================\n"
-#~ "\n"
-#~ "        "
-
-#~ msgid ""
-#~ "\n"
-#~ "Partners geolocalization\n"
-#~ "========================\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Γεωχωρικός εντοπισμός συνεργατών\n"
-#~ "========================\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Retrieve incoming email on POP/IMAP servers.\n"
-#~ "============================================\n"
-#~ "\n"
-#~ "Enter the parameters of your POP/IMAP account(s), and any incoming emails "
-#~ "on\n"
-#~ "these accounts will be automatically downloaded into your OpenERP system. "
-#~ "All\n"
-#~ "POP3/IMAP-compatible servers are supported, included those that require "
-#~ "an\n"
-#~ "encrypted SSL/TLS connection.\n"
-#~ "\n"
-#~ "This can be used to easily create email-based workflows for many email-"
-#~ "enabled OpenERP documents, such as:\n"
-#~ "----------------------------------------------------------------------------------------------------------\n"
-#~ "    * CRM Leads/Opportunities\n"
-#~ "    * CRM Claims\n"
-#~ "    * Project Issues\n"
-#~ "    * Project Tasks\n"
-#~ "    * Human Resource Recruitments (Applicants)\n"
-#~ "\n"
-#~ "Just install the relevant application, and you can assign any of these "
-#~ "document\n"
-#~ "types (Leads, Project Issues) to your incoming email accounts. New emails "
-#~ "will\n"
-#~ "automatically spawn new documents of the chosen type, so it's a snap to "
-#~ "create a\n"
-#~ "mailbox-to-OpenERP integration. Even better: these documents directly act "
-#~ "as mini\n"
-#~ "conversations synchronized by email. You can reply from within OpenERP, "
-#~ "and the\n"
-#~ "answers will automatically be collected when they come back, and attached "
-#~ "to the\n"
-#~ "same *conversation* document.\n"
-#~ "\n"
-#~ "For more specific needs, you may also assign custom-defined actions\n"
-#~ "(technically: Server Actions) to be triggered for each incoming mail.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Ανάσυρση εισερχόμενων email σε POP/IMAP servers.\n"
-#~ "============================================\n"
-#~ "\n"
-#~ "Enter the parameters of your POP/IMAP account(s), and any incoming emails "
-#~ "on\n"
-#~ "these accounts will be automatically downloaded into your OpenERP system. "
-#~ "All\n"
-#~ "POP3/IMAP-compatible servers are supported, included those that require "
-#~ "an\n"
-#~ "encrypted SSL/TLS connection.\n"
-#~ "\n"
-#~ "This can be used to easily create email-based workflows for many email-"
-#~ "enabled OpenERP documents, such as:\n"
-#~ "----------------------------------------------------------------------------------------------------------\n"
-#~ "    * CRM Leads/Opportunities\n"
-#~ "    * CRM Claims\n"
-#~ "    * Project Issues\n"
-#~ "    * Project Tasks\n"
-#~ "    * Human Resource Recruitments (Applicants)\n"
-#~ "\n"
-#~ "Just install the relevant application, and you can assign any of these "
-#~ "document\n"
-#~ "types (Leads, Project Issues) to your incoming email accounts. New emails "
-#~ "will\n"
-#~ "automatically spawn new documents of the chosen type, so it's a snap to "
-#~ "create a\n"
-#~ "mailbox-to-OpenERP integration. Even better: these documents directly act "
-#~ "as mini\n"
-#~ "conversations synchronized by email. You can reply from within OpenERP, "
-#~ "and the\n"
-#~ "answers will automatically be collected when they come back, and attached "
-#~ "to the\n"
-#~ "same *conversation* document.\n"
-#~ "\n"
-#~ "For more specific needs, you may also assign custom-defined actions\n"
-#~ "(technically: Server Actions) to be triggered for each incoming mail.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "The kernel of OpenERP, needed for all installation.\n"
-#~ "===================================================\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Το kernel του OpenERP, χρειάζεται για όλες τις εγκαταστάσεις.\n"
-#~ "===================================================\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "The module adds the possibility to display data from OpenERP in Google "
-#~ "Spreadsheets in real time.\n"
-#~ "=================================================================================================\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Το άρθρωμα προσθέτει την δυνατότητα να εμφανιστούν δεδομένα από το "
-#~ "OpenERP  στα Google Spreadsheets σε πραγματικό χρόνο.\n"
-#~ "=================================================================================================\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "The module adds the possibility to synchronize Google Calendar with "
-#~ "OpenERP\n"
-#~ "===========================================================================\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Το άρθρωμα προσθέτει την δυνατότητα να συγχρονίσουμε Google Calendar με "
-#~ "το OpenERP\n"
-#~ "===========================================================================\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "This is the latest UK OpenERP localisation necessary to run OpenERP "
-#~ "accounting for UK SME's with:\n"
-#~ "=================================================================================================\n"
-#~ "    - a CT600-ready chart of accounts\n"
-#~ "    - VAT100-ready tax structure\n"
-#~ "    - InfoLogic UK counties listing\n"
-#~ "    - a few other adaptations"
-#~ msgstr ""
-#~ "\n"
-#~ "Ηνωμένο Βασίλειο- η τελευταία τοπικοποίηση του OpenERP αναγκαία στην "
-#~ "OpenERP λογιστική για τις μικρομεσαίες εταιρίες με:\n"
-#~ "=================================================================================================\n"
-#~ "    - a CT600-ready chart of accounts\n"
-#~ "    - VAT100-ready tax structure\n"
-#~ "    - InfoLogic UK counties listing\n"
-#~ "    - a few other adaptations"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module adds claim menu and features to your portal if claim and "
-#~ "portal are installed.\n"
-#~ "==========================================================================================\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Αυτό το άρθρωμα προσθέτει μενού απαιτήσεων και λειτιτουργίες στην πύλη "
-#~ "σας εάν οι απαιτήσεις και η πύλη έχουν εγκατασταθεί.\n"
-#~ "==========================================================================================\n"
-#~ "    "
-
-#~ msgid ""
-#~ "\n"
-#~ "Türkiye için Tek düzen hesap planı şablonu OpenERP Modülü.\n"
-#~ "==========================================================\n"
-#~ "\n"
-#~ "Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
-#~ "    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, "
-#~ "banka hesap\n"
-#~ "      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Τουρκία- Λογιστικό Σχέδιο και άρθρωμα για το OpenERP.\n"
-#~ "==========================================================\n"
-#~ "\n"
-#~ "Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
-#~ "    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, "
-#~ "banka hesap\n"
-#~ "      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
-#~ "    "
-
-#~ msgid "%B - Full month name."
-#~ msgstr "%B - Πλήρες όνομα μήνα."
-
-#~ msgid "%H - Hour (24-hour clock) [00,23]."
-#~ msgstr "%H - Ώρα (24-ωρών ρολόι) [00,23]."
-
-#~ msgid "%I - Hour (12-hour clock) [01,12]."
-#~ msgstr "%I - Ώρα (12-ωρών ρολόι) [01,12]."
-
-#~ msgid "%M - Minute [00,59]."
-#~ msgstr "%M - Λεπτά [00,59]."
-
-#~ msgid "%S - Seconds [00,61]."
-#~ msgstr "%S - Δευτερόλεπτα [00,61]."
-
-#~ msgid "%Y - Year with century."
-#~ msgstr "%Y - Έτος με τον αιώνα."
-
-#~ msgid "%d - Day of the month [01,31]."
-#~ msgstr "%d - Ημέρα του μήνα [01,31]."
-
-#~ msgid "%j - Day of the year [001,366]."
-#~ msgstr "%j - Ημέρα του έτους [001,366]."
-
-#~ msgid "%m - Month number [01,12]."
-#~ msgstr "%m - Μήνας - αριθμός [01,12]."
-
-#~ msgid "%p - Equivalent of either AM or PM."
-#~ msgstr "%p - Αντίστοιχο με το π.μ ή το μ.μ."
-
-#~ msgid "%w - Weekday number [0(Sunday),6]."
-#~ msgstr "%w - Εβδομάδα - αριθμός [0(Κυριακή),6]."
-
-#~ msgid "%y - Year without century [00,99]."
-#~ msgstr "%y - Έτος χωρίς τον αιώνα [00,99]."
-
-#~ msgid "1.  %b, %B         ==> Dec, December"
-#~ msgstr "1.  %b, %B         ==> Δεκ, Δεκέμβριος"
-
-#~ msgid "2.  %a ,%A         ==> Fri, Friday"
-#~ msgstr "2.  %a ,%A         ==> Παρ, Παρασκευή"
-
-#~ msgid "3.  %y, %Y         ==> 08, 2008"
-#~ msgstr "3.  %y, %Y         ==> 08, 2008"
-
-#~ msgid "4.  %d, %m         ==> 05, 12"
-#~ msgstr "4.  %d, %m         ==> 05, 12"
-
-#~ msgid "5.  %H:%M:%S      ==> 18:25:20"
-#~ msgstr "5.  %H:%M:%S      ==> 18:25:20"
-
-#~ msgid "6.  %I:%M:%S %p  ==> 06:25:20 PM"
-#~ msgstr "6.  %I:%M:%S %p  ==> 06:25:20 μ.μ."
-
-#~ msgid "7.  %j              ==> 340"
-#~ msgstr "7.  %j              ==> 340"
-
-#~ msgid "8. %S              ==> 20"
-#~ msgstr "8. %S              ==> 20"
-
-#~ msgid "9. %w              ==> 5 ( Friday is the 6th day)"
-#~ msgstr "9. %w              ==> 5 (Η Παρασκευή είναι η 6η ημέρα)"
-
-#~ msgid "Account Contract Dashboard"
-#~ msgstr "Ταμπλό Λογαριασμού Σύμβασης"
-
-#~ msgid "Account Extension"
-#~ msgstr "Επέκταση λογαριασμού"
-
-#~ msgid "Account Report"
-#~ msgstr "Αναφορά Λογιστικής"
-
-#~ msgid "Account Reports"
-#~ msgstr "Αναφορές Λογιστικής"
-
-#~ msgid "Accounting &amp; Finance"
-#~ msgstr "Λογιστική &amp; Χρηματοοικονομικά"
-
-#~ msgid "Accounting Reports"
-#~ msgstr "Αναφορές Λογιστικής"
-
-#~ msgid "Add barcode scanning facilities to Warehouse Management."
-#~ msgstr "Προσθέστε την δυαντότητα σάρωσης barcode στην Διαχείριση Αποθήκης."
-
-#~ msgid "Address Format"
-#~ msgstr "Μορφή Διεύθυνσης"
-
-#~ msgid "Albanian / Shqip"
-#~ msgstr "Αλβανικά / Shqip"
-
-#~ msgid "Amharic / አምሃርኛ"
-#~ msgstr "Αμαρικά / አምሃርኛ"
-
-#~ msgid "Arabic / الْعَرَبيّة"
-#~ msgstr "Arabic / الْعَرَبيّة"
-
-#~ msgid "Association"
-#~ msgstr "Σύνδεσμος"
-
-#~ msgid "Authentication"
-#~ msgstr "Έλεγχος ταυτότητας"
-
-#~ msgid "Base Language 'en_US' can not be deactivated!"
-#~ msgstr "Η βασική γλώσσα 'en_US' δεν μπορεί να απενεργοποιηθεί!"
-
-#~ msgid "Belgium - Import Bank CODA Statements"
-#~ msgstr "Βέλγιο - Εισαγωγή CODA Bank Statements"
-
-#~ msgid "Bill Time on Tasks"
-#~ msgstr "Χρέωση Χρόνου σε Εργασίες"
-
-#~ msgid "Bosnian / bosanski jezik"
-#~ msgstr "Bosnian / bosanski jezik"
-
-#~ msgid "Bridge"
-#~ msgstr "Γέφυρα"
-
-#~ msgid "Bronze"
-#~ msgstr "Χάλκινο"
-
-#~ msgid "Bulgarian / български език"
-#~ msgstr "Bulgarian / Βουλγαρικά"
-
-#~ msgid "Catalan / Català"
-#~ msgstr "Catalan / Català"
-
-#~ msgid ""
-#~ "Check this to define the report footer manually.  Otherwise it will be "
-#~ "filled in automatically."
-#~ msgstr ""
-#~ "Επιλέξτε για να καθορίσετε χειροκίνητα το υποσέλιδο της αναφοράς. Αλλιώς "
-#~ "θα συμπληρωθεί αυτόματα."
-
-#~ msgid "Chinese (CN) / 简体中文"
-#~ msgstr "Chinese (CN) / 简体中文"
-
-#~ msgid "Chinese (HK)"
-#~ msgstr "Κινέζικα(ΗΚ)"
-
-#~ msgid "Chinese (TW) / 正體字"
-#~ msgstr "Chinese (TW) / 正體字"
-
-#~ msgid "Claim on Deliveries"
-#~ msgstr "Απαιτήσεις σε Παραδόσεις"
-
-#~ msgid "Claims Management"
-#~ msgstr "Διαχείριση Απαιτήσεων"
-
-#~ msgid "Company Contact"
-#~ msgstr "Επαφή Εταιρείας"
-
-#~ msgid "Company Registry"
-#~ msgstr "Μητρώο Εταιρίας"
-
-#~ msgid "Components Buyer"
-#~ msgstr "Εξαρτήματα Αγοραστή"
-
-#~ msgid "Consultancy Services"
-#~ msgstr "Υπηρεσίες Συμβούλων Επιχειρήσεων"
-
-#~ msgid "Croatian / hrvatski jezik"
-#~ msgstr "Croatian / hrvatski jezik"
-
-#~ msgid "Custom Footer"
-#~ msgstr "Προσωποποιημένο Υποσέλιδο"
-
-#~ msgid "Customer Relationship Management"
-#~ msgstr "Διαχείριση Πελατειακών Σχέσεων (CRM)"
-
-#~ msgid "Czech / Čeština"
-#~ msgstr "Czech / Čeština"
-
-#~ msgid "Danish / Dansk"
-#~ msgstr "Δανέζικα / Dansk"
-
-#~ msgid "Digital Signatures"
-#~ msgstr "Ψηφιακές Υπογραφές"
-
-#~ msgid "Distributor"
-#~ msgstr "Διανομέας"
-
-#~ msgid "Dutch / Nederlands"
-#~ msgstr "Dutch / Nederlands"
-
-#~ msgid "Employee Appraisals"
-#~ msgstr "Αξιολογήσεις Εργαζομένων"
-
-#~ msgid "English (UK)"
-#~ msgstr "Αγγλικά (Ηνωμένο Βασίλειο)"
-
-#~ msgid "English (US)"
-#~ msgstr "Αγγλικά (Η.Π.Α.)"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Σφάλμα! Υπάρχει εταιρεία με την ίδια περιγραφή"
-
-#~ msgid "Estonian / Eesti keel"
-#~ msgstr "Estonian / Eesti keel"
-
-#~ msgid "Finnish / Suomi"
-#~ msgstr "Φιλανδικά / Suomi"
-
-#~ msgid "French (BE) / Français (BE)"
-#~ msgstr "Γαλλικά (BE) / Français (BE)"
-
-#~ msgid "French (CH) / Français (CH)"
-#~ msgstr "Γαλλικά (CH) / Français (CH)"
-
-#~ msgid "French / Français"
-#~ msgstr "French / Français"
-
-#~ msgid "Full Name"
-#~ msgstr "Πλήρες Όνομα"
-
-#~ msgid "Generic Modules"
-#~ msgstr "Γενικά Αρθρώματα"
-
-#~ msgid "German / Deutsch"
-#~ msgstr "German / Γερμανικά"
-
-#~ msgid "Greece - Accounting Reports"
-#~ msgstr "Ελλάδα - Αναφορές Λογιστικής"
-
-#~ msgid "Greek / Ελληνικά"
-#~ msgstr "Greek / Ελληνικά"
-
-#~ msgid "Gujarati / ગુજરાતી"
-#~ msgstr "Gujarati / ગુજરાતી"
-
-#~ msgid "Hardware Drivers"
-#~ msgstr "Οδηγοί υλικού"
-
-#~ msgid "Hindi / हिंदी"
-#~ msgstr "Ινδικά / हिंदी"
-
-#~ msgid "Hungarian / Magyar"
-#~ msgstr "Hungarian / Magyar"
-
-#~ msgid "IT Services"
-#~ msgstr "Υπηρεσίες Πληροφορικής"
-
-#~ msgid ""
-#~ "If you uncheck the active field, it will disable the ACL without deleting "
-#~ "it (if you delete a native ACL, it will be re-created when you reload the "
-#~ "module."
-#~ msgstr ""
-#~ "Εάν αποεπιλέξετε το ενεργό πεδίο, θα απενεργοποιηθεί το ACL χωρίς να "
-#~ "διαγραφεί (εάν διαγράψετε ένα τοπικό ACL, θα ξαναδημιουργηθεί όταν "
-#~ "επαναφορτώσετε την εφαρμογή."
-
-#~ msgid ""
-#~ "If you uncheck the active field, it will disable the record rule without "
-#~ "deleting it (if you delete a native record rule, it may be re-created "
-#~ "when you reload the module."
-#~ msgstr ""
-#~ "Εάν αποεπιλέξετε αυτό το ενεργό πεδίο, θα απενεργοποιηθεί ο κανόνας "
-#~ "εγγραφών χωρίς να διαγραφεί (εάν διαγράψετε έναν τοπικό κανόνα εγγραφών, "
-#~ "μπορεί να επαναδημιουργηθεί όταν επαναφορτώσετε την εφαρμογή)."
-
-#~ msgid "Indonesian / Bahasa Indonesia"
-#~ msgstr "Ινδονησιακά / Bahasa Indonesia"
-
-#~ msgid "Inventory Control"
-#~ msgstr "Έλεγχος Αποθέματος"
-
-#~ msgid "Italian / Italiano"
-#~ msgstr "Italian / Italiano"
-
-#~ msgid "Japanese / 日本語"
-#~ msgstr "Ιαπωνικά / 日本語"
-
-#~ msgid "Knowledge Management"
-#~ msgstr "Διαχείρισης Γνωσιακής Βάσης"
-
-#~ msgid "Korean (KP) / 한국어 (KP)"
-#~ msgstr "Κορεάτικη (ΚΡ) / 한국어 (KP)"
-
-#~ msgid "Korean (KR) / 한국어 (KR)"
-#~ msgstr "Κορεάτικη (KR) / 한국어 (KR)"
-
-#~ msgid "Latvian / latviešu valoda"
-#~ msgstr "Λετονικά / latviešu valoda"
-
-#~ msgid "Lithuanian / Lietuvių kalba"
-#~ msgstr "Lithuanian / Lietuvių kalba"
-
-#~ msgid "Logo"
-#~ msgstr "Λογότυπο"
-
-#~ msgid "Logo Web"
-#~ msgstr "Λογότυπο Web"
-
-#~ msgid "Managing vehicles and contracts"
-#~ msgstr "Διαχειριστείτε οχήματα και συμβόλαια"
-
-#~ msgid "Manufacturer"
-#~ msgstr "Κατασκευαστής"
-
-#~ msgid "Office Supplies"
-#~ msgstr "Γραφική Ύλη"
-
-#~ msgid "OpenERP Web Diagram"
-#~ msgstr "Διάγραμμα OpenERP Web"
-
-#~ msgid "Partner Tag"
-#~ msgstr "Ετικέτα Συνεργάτη"
-
-#~ msgid "Partners Geo-Localization"
-#~ msgstr "Γεω-εντοπισμός Συνεργατών"
-
-#~ msgid "Payment Follow-up Management"
-#~ msgstr "Διαχείριση Παρακολούθησης Πληρωμής"
-
-#~ msgid "Polish / Język polski"
-#~ msgstr "Polish / Język polski"
-
-#~ msgid "Print Invoice"
-#~ msgstr "Εκτύπωση Τιμολογίου"
-
-#~ msgid "Project Management"
-#~ msgstr "Διαχείριση Έργων"
-
-#~ msgid "Prospect"
-#~ msgstr "Πιθανός Συνεργάτης"
-
-#~ msgid "RML Header"
-#~ msgstr "RML Κεφαλίδα"
-
-#~ msgid "Reporting"
-#~ msgstr "Αναφορές"
-
-#~ msgid "Resource management for Project"
-#~ msgstr "Διαχείριση Πόρων για το Έργο"
-
-#~ msgid "Retailer"
-#~ msgstr "Λιανοπωλητής"
-
-#~ msgid "Russian / русский язык"
-#~ msgstr "Ρώσσικα / русский язык"
-
-#~ msgid ""
-#~ "Select this if you want to set company's address information  for this "
-#~ "contact"
-#~ msgstr ""
-#~ "Επιλέξτε αυτό αν θέλετε να ορίσετε τις πληροφορίες διεύθυνσης της "
-#~ "εταιρείας για αυτήν την επαφή"
-
-#~ msgid "Send Professional Quotations"
-#~ msgstr "Στείλτε Επαγγελματικές Προσφορές"
-
-#~ msgid "Serbian (Latin) / srpski"
-#~ msgstr "Σερβικά (Λατινική) / srpski"
-
-#~ msgid "Services"
-#~ msgstr "Υπηρεσίες"
-
-#~ msgid "Slovenian / slovenščina"
-#~ msgstr "Slovenian / slovenščina"
-
-#~ msgid "Spanish (AR) / Español (AR)"
-#~ msgstr "Spanish (AR) / Español (AR)"
-
-#~ msgid "Spanish (BO) / Español (BO)"
-#~ msgstr "Ισπανικά (BO) / Español (BO)"
-
-#~ msgid "Spanish (CL) / Español (CL)"
-#~ msgstr "Ισπανική (CL) / Español (CL)"
-
-#~ msgid "Spanish (DO) / Español (DO)"
-#~ msgstr "Ισπανικά (DO) / Español (DO)"
-
-#~ msgid "Spanish (GT) / Español (GT)"
-#~ msgstr "Ισπανικά(GT)/Español (GT)"
-
-#~ msgid "Spanish (MX) / Español (MX)"
-#~ msgstr "Ισπανικά (MX) / Español (MX)"
-
-#~ msgid "Spanish (PA) / Español (PA)"
-#~ msgstr "Ισπανικά (PA) / Español (PA)"
-
-#~ msgid "Spanish (PY) / Español (PY)"
-#~ msgstr "Ισπανικά (PY) / Español (PY)"
-
-#~ msgid "Spanish (UY) / Español (UY)"
-#~ msgstr "Ισπανικά (UY) / Español (UY)"
-
-#~ msgid "Spanish (VE) / Español (VE)"
-#~ msgstr "Ισπανικά (VE) / Español (VE)"
-
-#~ msgid "Spanish / Español"
-#~ msgstr "Spanish / Español"
-
-#~ msgid "Stock Management"
-#~ msgstr "Διαχείριση Αποθέματος"
-
-#~ msgid "Subscription Management"
-#~ msgstr "Διαχείριση συνδρομών"
-
-#~ msgid "Swedish / svenska"
-#~ msgstr "Swedish / svenska"
-
-#~ msgid "Thai / ภาษาไทย"
-#~ msgstr "Ταϋλανδικά / ภาษาไทย"
-
-#~ msgid ""
-#~ "The ISO country code in two chars.\n"
-#~ "You can use this field for quick search."
-#~ msgstr ""
-#~ "Κωδικός Χώρας (Διψήφιος ISO).\n"
-#~ "Χρησιμοποιήστε το για γρήγορη αναζήτηση."
-
-#~ msgid ""
-#~ "The Separator Format should be like [,n] where 0 < n :starting from Unit "
-#~ "digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to "
-#~ "be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent "
-#~ "it as 106,500. Provided ',' as the thousand separator in each case."
-#~ msgstr ""
-#~ "The Separator Format should be like [,n] where 0 < n :starting from Unit "
-#~ "digit.-1 will end the separation. e.g. [3,2,-1] will represent 106500 to "
-#~ "be 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent "
-#~ "it as 106,500. Provided ',' as the thousand separator in each case."
-
-#~ msgid ""
-#~ "The second argument of the many2many field %s must be a SQL table !You "
-#~ "used %s, which is not a valid SQL table name."
-#~ msgstr ""
-#~ "Το δεύτερο όρισμα, του \"πολλά προς πολλά\" πεδίου %s πρέπει να είναι  "
-#~ "ένα \"SQL table\" ! Χρησιμοποιήσατε %s, το οποίο δεν είναι έγκυρο όνομα "
-#~ "κάποιου SQL table."
-
-#~ msgid ""
-#~ "The sum of the data (2nd field) is null.\n"
-#~ "We can't draw a pie chart !"
-#~ msgstr ""
-#~ "Το άθροισμα των δεδομένων στο 2ο πεδίο είναι μηδενικό.\n"
-#~ "Αδύνατη η δημιουργία κυκλικού διαγράμματος !"
-
-#~ msgid "Turkish / Türkçe"
-#~ msgstr "Turkish / Türkçe"
-
-#~ msgid "Ukrainian / українська"
-#~ msgstr "Ουκρανικά / українська"
-
-#~ msgid "Unknown report type: %s"
-#~ msgstr "Άγνωστος τύπος έκθεσης:  %s"
-
-#~ msgid "Update Languague Terms"
-#~ msgstr "Ενημέρωση Όρων Γλώσσας"
-
-#~ msgid "Use Company Address"
-#~ msgstr "Χρησιμοποιήστε Διεύθυνση Εταιρείας"
-
-#~ msgid "Wholesaler"
-#~ msgstr "Χονδρέμπορος"
-
-#~ msgid "created."
-#~ msgstr "δημιουργήθηκε."
-
-#~ msgid "ir.actions.wizard"
-#~ msgstr "ir.actions.wizard"
-
-#~ msgid "undefined get method !"
-#~ msgstr "undefined get method !"

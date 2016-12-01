@@ -4,23 +4,19 @@
 #
 # Translators:
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-12 10:39+0000\n"
-"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-09-06 09:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
 "mk/)\n"
 "Language: mk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  mk.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
-"#-#-#-#-#  mk.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
 
 #. module: mrp
@@ -96,7 +92,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Printing date:</strong><br/>"
-msgstr ""
+msgstr "<strong>Датум на печатење:</strong><br/>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -901,6 +897,12 @@ msgid "Internal Reference"
 msgstr "Внатрешна референца"
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
@@ -1531,7 +1533,7 @@ msgstr "Својство"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9667
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -2234,6 +2236,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "денови"
@@ -2278,63 +2288,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "непознато"
-
-#~ msgid "Action Needed"
-#~ msgstr "Потребна е акција"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Измени количина"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Датум на испраќање на последната порака"
-
-#~ msgid "Followers"
-#~ msgstr "Пратители"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Пратители (Канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Пратители (Партнери)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето внимание."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
-
-#~ msgid "Is Follower"
-#~ msgstr "е следач"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Датум на последна порака"
-
-#~ msgid "Messages"
-#~ msgstr "Пораки"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Пораки и историја на комуникација"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Број на акции"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Број на пораки за кои ѝм е потребна акција"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Број на непрочитани пораки"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "Отвори го менито за производство"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитани Пораки"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Тезга на непрочитаните пораки"
-
-#~ msgid "Website Messages"
-#~ msgstr "Пораки на веб сајт"
-
-#~ msgid "Website communication history"
-#~ msgstr "Историја на веб комуникација"

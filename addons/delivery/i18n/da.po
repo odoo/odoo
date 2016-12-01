@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-04-11 13:13+0000\n"
-"Last-Translator: Morten Schou <ms@msteknik.dk>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-09-23 10:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
@@ -413,9 +413,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
-#, fuzzy
 msgid "Delivery Information"
-msgstr "Transportør information"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -479,7 +478,7 @@ msgstr "Afgør visnings rækkefølge"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Discard"
-msgstr ""
+msgstr "Kasser"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
@@ -627,7 +626,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
-msgstr ""
+msgstr "Gruppér efter"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_hs_code
@@ -637,9 +636,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_height
-#, fuzzy
 msgid "Height"
-msgstr "Vægt"
+msgstr "Højde"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -821,7 +819,7 @@ msgstr "Sidst opdateret den"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_length
 msgid "Length"
-msgstr ""
+msgstr "Længde"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -861,9 +859,8 @@ msgstr "Produktions gennemløbstid"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
-#, fuzzy
 msgid "Margin"
-msgstr "Total avance"
+msgstr "Margen"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
@@ -882,9 +879,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
-#, fuzzy
 msgid "Max Weight"
-msgstr "Vægt"
+msgstr ""
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -940,9 +936,8 @@ msgstr "Navn"
 
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
-#, fuzzy
 msgid "No carrier integration"
-msgstr "Transportør information"
+msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:63
@@ -965,6 +960,12 @@ msgstr "Normal kost"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_gap
 msgid "Normal Cost - Total Cost"
 msgstr "Normal kost - total kost"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.normal_delivery_carrier_product_product
+msgid "Normal Delivery Charges"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
@@ -1014,22 +1015,20 @@ msgstr "Udgående"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
-#, fuzzy
 msgid "Package"
-msgstr "Pakker"
+msgstr "Pakke"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
-#, fuzzy
 msgid "Package Code"
-msgstr "Pakker"
+msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
 #: code:addons/delivery/models/stock_picking.py:128
-#, fuzzy, python-format
+#, python-format
 msgid "Package Details"
-msgstr "Pakker"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1038,14 +1037,13 @@ msgstr "Pakker"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
-#, fuzzy
 msgid "Packaging"
-msgstr "Pakker"
+msgstr "Pakning"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_pack_operation
 msgid "Packing Operation"
-msgstr ""
+msgstr "Pakke lokation"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -1282,7 +1280,7 @@ msgstr "Salgsordrelinie"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Save"
-msgstr ""
+msgstr "Gem"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_categ_id
@@ -1448,6 +1446,12 @@ msgid "Template Name"
 msgstr "Skabelonnavn"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.delivery_carrier_product_product
+msgid "The Poste"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
 msgid ""
 "The average delay in days between the confirmation of the customer order and "
@@ -1585,9 +1589,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
-#, fuzzy
 msgid "Tracking Reference"
-msgstr "Intern reference"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1684,9 +1687,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
-#, fuzzy
 msgid "Vendors"
-msgstr "Leverandør"
+msgstr "Leverandører"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1708,15 +1710,13 @@ msgstr "Garanti"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_website_message_ids
-#, fuzzy
 msgid "Website Messages"
-msgstr "Beskeder"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_website_message_ids
-#, fuzzy
 msgid "Website communication history"
-msgstr "Besked- og kommunikations historik"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1808,7 +1808,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_width
 msgid "Width"
-msgstr ""
+msgstr "Bredde"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -1853,18 +1853,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "unknown"
 msgstr "ukendt"
-
-#~ msgid "Carrier Information"
-#~ msgstr "Transportør information"
-
-#~ msgid "Carrier Tracking Ref"
-#~ msgstr "Transportør sporings reference"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Bruttovægt"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Besked- og kommunikations historik"
-
-#~ msgid "Vendor"
-#~ msgstr "Leverandør"

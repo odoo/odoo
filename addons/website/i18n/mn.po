@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
 "PO-Revision-Date: 2016-02-11 10:41+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -1332,6 +1332,7 @@ msgstr "Өөрийн боломжиндоо нийцүүлэхдээ тэмдэ�
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:49
 #: model:ir.ui.view,arch_db:website.s_banner
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #, python-format
 msgid "Click to customize this text"
 msgstr "Энэ текстийг өөриймшүүлэхдээ дарна уу"
@@ -1455,8 +1456,10 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.s_banner
 #: model:ir.ui.view,arch_db:website.s_big_message
 #: model:ir.ui.view,arch_db:website.s_comparisons
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #: model:ir.ui.view,arch_db:website.website_planner
 #: model:website.menu,name:website.menu_contactus
+#: model:website.menu,name:website.website2_menu_contactus
 msgid "Contact us"
 msgstr "Бидэнтэй холбогдох"
 
@@ -1660,6 +1663,11 @@ msgstr ""
 #, python-format
 msgid "Discard"
 msgstr "Хэрэгсэхгүй"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Discuss and Comments"
+msgstr "Хэлэлцэх болон сэтгэгдэл бичих"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2162,6 +2170,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.footer_default
 #: model:website.menu,name:website.menu_homepage
+#: model:website.menu,name:website.website2_menu_homepage
 msgid "Home"
 msgstr "Гэр"
 
@@ -2170,6 +2179,11 @@ msgstr "Гэр"
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Homepage"
 msgstr "Нүүр хуудас"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website2_homepage
+msgid "Homepage 0.0.0.0"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2533,6 +2547,11 @@ msgstr "Цэс"
 #, python-format
 msgid "Menu <b>%s</b> seems to have a link to this page !"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Message"
+msgstr "Мессеж"
 
 #. module: website
 #. openerp-web
@@ -2930,6 +2949,16 @@ msgid "Partner"
 msgstr "Харилцагч"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Partner Detail"
+msgstr "Харилцагчийн Дэлгэрэнгүй"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Partners"
+msgstr "Харилцагч"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Plan"
 msgstr ""
@@ -3084,6 +3113,11 @@ msgid "Real professional translators will translate all your contents"
 msgstr ""
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Recipient"
+msgstr "Хүлээн авагч"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Reduce the time and resources spent on support."
 msgstr ""
@@ -3234,6 +3268,16 @@ msgstr "Онлайн зарах. Маш хялбар."
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Sell more online"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send <span class=\"fa fa-long-arrow-right\"/>"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send a Message to our Partners"
+msgstr "Харилцагчдад зурвас илгээх"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3451,6 +3495,11 @@ msgstr ""
 #, python-format
 msgid "Test Your Mobile Version"
 msgstr "Өөрийн мобайл хувилбарыг шалгах"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Thank you for posting a message !"
+msgstr "Зурвас илгээсэнд баярлалаа !"
 
 #. module: website
 #. openerp-web
@@ -3698,6 +3747,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/website/static/src/js/website.contentMenu.js:175
 #: model:website.menu,name:website.main_menu
+#: model:website.menu,name:website.website2_main_menu
 #, python-format
 msgid "Top Menu"
 msgstr "Оройн цэс"
@@ -3709,7 +3759,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.snippets.editor.js:771
+#: code:addons/website/static/src/js/website.snippets.editor.js:772
 #, python-format
 msgid "Transform the picture (click twice to reset transformation)"
 msgstr ""
@@ -4000,6 +4050,16 @@ msgstr "Вебсайтын цэс"
 #: model:ir.model.fields,field_description:website.field_website_name
 msgid "Website Name"
 msgstr "Вебсайтын нэр"
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_post
+msgid "Website Partner Post and Thanks Demo"
+msgstr "Вебсайтын харилцагчийн бичлэг болог Талархлын жишээ"
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_comment
+msgid "Website Partners Comment Form"
+msgstr "Вебсайтын харилцагчийн сэтгэгдлийн маягт"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
@@ -4673,94 +4733,3 @@ msgstr "тийм"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "your Company details form"
 msgstr ""
-
-#~ msgid ".xml"
-#~ msgstr ".xml"
-
-#~ msgid "<span class=\"fa fa-envelope-o\"/> Email Our Website Expert"
-#~ msgstr ""
-#~ "<span class=\"fa fa-envelope-o\"/> Манай вебийн мэргэжилтэнд имэйл илгээх"
-
-#~ msgid ""
-#~ "A code server action can be executed from the website, using a "
-#~ "dedicatedcontroller. The address is <base>/website/action/<website_path>."
-#~ "Set this field as True to allow users to run this action. If itset to is "
-#~ "False the action cannot be run through the website."
-#~ msgstr ""
-#~ "A code server action can be executed from the website, using a "
-#~ "dedicatedcontroller. The address is <base>/website/action/<website_path>."
-#~ "Set this field as True to allow users to run this action. If itset to is "
-#~ "False the action cannot be run through the website."
-
-#~ msgid "Add new pages and menus"
-#~ msgstr "Шинэ хуудаснууд болон цэс нэмэх"
-
-#~ msgid "Background"
-#~ msgstr "Дэвсгэр"
-
-#~ msgid "Check now and discover more today!"
-#~ msgstr "Одоо шалгаад илүү ихийг өнөөдөр нээж мэдэх!"
-
-#~ msgid "Color"
-#~ msgstr "Өнгө"
-
-#~ msgid "Discover more about Odoo"
-#~ msgstr "Odoo-н тухай илүү ихийг мэдэх"
-
-#~ msgid "Discuss and Comments"
-#~ msgstr "Хэлэлцэх болон сэтгэгдэл бичих"
-
-#~ msgid "Edit Menu Entry"
-#~ msgstr "Цэсний зүйлийг засах"
-
-#~ msgid "Hide link"
-#~ msgstr "Холбоосыг нуух"
-
-#~ msgid ""
-#~ "It might be possible to edit the relevant items\n"
-#~ "                                or fix the issue in"
-#~ msgstr ""
-#~ "Холбогдох зүйлсийг засах боломжтай байж магадгүй.\n"
-#~ "                                Эсвэл асуудлыг дараахыг харна уу"
-
-#~ msgid "Menu Label"
-#~ msgstr "Цэсний шошго"
-
-#~ msgid "Message"
-#~ msgstr "Мессеж"
-
-#~ msgid "Partner Detail"
-#~ msgstr "Харилцагчийн Дэлгэрэнгүй"
-
-#~ msgid "Partners"
-#~ msgstr "Харилцагч"
-
-#~ msgid "Recipient"
-#~ msgstr "Хүлээн авагч"
-
-#~ msgid "Reset Transformation"
-#~ msgstr "Хувиргалтыг арилгах"
-
-#~ msgid "Send a Message to our Partners"
-#~ msgstr "Харилцагчдад зурвас илгээх"
-
-#~ msgid "Thank you for posting a message !"
-#~ msgstr "Зурвас илгээсэнд баярлалаа !"
-
-#~ msgid "The 'Content' menu allows you to add pages or add the top menu."
-#~ msgstr "'Агуулга' цэс нь хуудас нэмэх, оройн цэсийг нэмэх боломжийг олгоно."
-
-#~ msgid "Transform"
-#~ msgstr "Хувиргах"
-
-#~ msgid "Website Partner Post and Thanks Demo"
-#~ msgstr "Вебсайтын харилцагчийн бичлэг болог Талархлын жишээ"
-
-#~ msgid "Website Partners Comment Form"
-#~ msgstr "Вебсайтын харилцагчийн сэтгэгдлийн маягт"
-
-#~ msgid "Yes."
-#~ msgstr "Тийм."
-
-#~ msgid "or"
-#~ msgstr "эсвэл"

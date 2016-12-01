@@ -5,12 +5,13 @@
 # Translators:
 # deeman <da.jkpg@gmail.com>, 2016
 # Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2015
+# Stephen Schmidt <stephen.schmidt@linserv.se>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-07-12 01:06+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-23 09:39+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
 "Language: sv\n"
@@ -229,6 +230,19 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
 msgstr "<i class=\"fa fa-question-circle\"> visa exempel</i>"
+
+#. module: crm
+#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
+msgid ""
+"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
+"since at least 5 days.</p>\n"
+"%if object.description:\n"
+"<p>Here is the description about the opportunity : </p><p><i>${object."
+"description}</i>\n"
+"%endif\n"
+"</p><p>Thank you!</p>\n"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -874,15 +888,14 @@ msgstr "Aktivitet"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_activity_log.py:75
-#, fuzzy, python-format
+#, python-format
 msgid "Activity Done"
-msgstr "Aktivitet"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_kanban_state
-#, fuzzy
 msgid "Activity State"
-msgstr "Aktivitet"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -913,7 +926,7 @@ msgstr "Domänvärde"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_name
 msgid "Alias Name"
-msgstr ""
+msgstr "Aliasnamn"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_domain
@@ -1005,9 +1018,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
-#, fuzzy
 msgid "Assign this opportunity to"
-msgstr "Tilldela kundämnen till"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_opening_date
@@ -1112,6 +1124,18 @@ msgstr "CRM affärsmöjlighetsanalys"
 #: model:crm.activity,name:crm.crm_activity_data_call
 #: model:mail.message.subtype,name:crm.crm_activity_data_call_mail_message_subtype
 msgid "Call"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for Demo"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for a demo"
 msgstr ""
 
 #. module: crm
@@ -1294,7 +1318,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Contact Information"
-msgstr ""
+msgstr "Kontaktinformation"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_contact_name
@@ -1524,9 +1548,8 @@ msgstr "Kunder"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Customizations"
-msgstr "Kunder"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_date
@@ -1545,9 +1568,8 @@ msgstr "Dagar i behandling"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_deduplicate
-#, fuzzy
 msgid "Deduplicate Contacts"
-msgstr "Sammanfoga den andra kontakten"
+msgstr "Sammanfoga kontakter"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1678,6 +1700,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Download the"
 msgstr "Ladda ner"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_draft_lead
+msgid "Draft Leads"
+msgstr "Kundämnen i utkast"
 
 #. module: crm
 #: selection:sale.config.settings,group_use_lead:0
@@ -1865,6 +1892,18 @@ msgstr "Klart"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up Quote"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up quote"
 msgstr ""
 
 #. module: crm
@@ -2132,9 +2171,8 @@ msgstr "Är företag"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_function
-#, fuzzy
 msgid "Job Position"
-msgstr "Offert"
+msgstr "Tjänst"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_exclude_journal_item
@@ -2326,6 +2364,11 @@ msgid "Leads by Source"
 msgstr ""
 
 #. module: crm
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr "Kundämnen från USA"
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr "Kundämnen tilldelade till mig"
@@ -2386,9 +2429,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
-#, fuzzy
 msgid "Log Activity"
-msgstr "Aktivitet"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
@@ -2404,9 +2446,8 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm.crm_activity_log_action
 #: model:ir.model,name:crm.model_crm_activity_log
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form
-#, fuzzy
 msgid "Log an Activity"
-msgstr "Aktivitet"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2438,6 +2479,12 @@ msgid "Low"
 msgstr "Låg"
 
 #. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Make Quote"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Mark Lost"
 msgstr "Märk förlorad"
@@ -2449,9 +2496,8 @@ msgstr "Märk vinst"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
-#, fuzzy
 msgid "Mark as lost"
-msgstr "Märk förlorad"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2649,7 +2695,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "My Leads"
-msgstr ""
+msgstr "Mina kundämnen"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -2689,7 +2735,7 @@ msgstr "Nästa åtgärd"
 #: model:ir.actions.act_window,name:crm.crm_lead_action_activities
 #: model:ir.ui.menu,name:crm.crm_lead_menu_activities
 msgid "Next Activities"
-msgstr ""
+msgstr "Nästa aktivitet"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_next_activity_id
@@ -2710,9 +2756,9 @@ msgstr ""
 
 #. module: crm
 #: code:addons/crm/wizard/crm_activity_log.py:56
-#, fuzzy, python-format
+#, python-format
 msgid "Next activity"
-msgstr "Nästa aktivitet"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:966
@@ -2722,9 +2768,8 @@ msgstr "Inget ämne"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "No activity"
-msgstr "Nästa aktivitet"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2745,9 +2790,8 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_note
-#, fuzzy
 msgid "Note"
-msgstr "Anteckningar"
+msgstr "Anteckning"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3157,15 +3201,13 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_preceding_activity_ids
-#, fuzzy
 msgid "Preceding Activities"
-msgstr "Aktiviteter"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_last_activity_id
-#, fuzzy
 msgid "Previous Activity"
-msgstr "Nästa aktivitet"
+msgstr "Föregående aktivitet"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3203,9 +3245,8 @@ msgstr "Sannolikhet (%)"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-#, fuzzy
 msgid "Products"
-msgstr "Dina produkter"
+msgstr "Produkter"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3244,15 +3285,13 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_recommended_activity_id
-#, fuzzy
 msgid "Recommended Activities"
-msgstr "# av aktiviteter"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_recommended_activity_ids
-#, fuzzy
 msgid "Recommended Next Activities"
-msgstr "Nästa aktivitet"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_force_thread_id
@@ -3278,6 +3317,12 @@ msgid "Relation field"
 msgstr "Relationsfält"
 
 #. module: crm
+#: model:ir.actions.server,name:crm.action_email_reminder_lead
+msgid "Reminder to User"
+msgstr "Påminnelse till användare"
+
+#. module: crm
+#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
 msgid ""
 "Reminder: Lead ${object.name} from ${object.partner_id != False and object."
@@ -3378,15 +3423,13 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "Schedule Activity"
-msgstr "Nästa aktivitet"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
-#, fuzzy
 msgid "Schedule Next Activity"
-msgstr "Nästa aktivitet"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3439,6 +3482,12 @@ msgid "Selection"
 msgstr "Urval"
 
 #. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Send a quotation"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -3450,6 +3499,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "Nummerserie"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_set_team_sales_department
+msgid "Set team to Sales Department"
+msgstr "Ställ in säljlaget till försäljningsavdelningen"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3640,7 +3694,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_title_action
 msgid "Summary"
-msgstr ""
+msgstr "Sammandrag"
 
 #. module: crm
 #: model:web.tip,description:crm.crm_tip_5
@@ -3667,7 +3721,7 @@ msgstr "Etikett"
 #. module: crm
 #: sql_constraint:crm.lead.tag:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Namntaggen existerar redan !"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_tag_ids
@@ -3683,7 +3737,7 @@ msgstr "Aktivitet"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_team_id
 msgid "Team"
-msgstr ""
+msgstr "Lag"
 
 #. module: crm
 #: model:ir.filters,name:crm.ir_filters_crm_opportunity_report_next_action
@@ -3727,6 +3781,9 @@ msgid ""
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
+"Klassen (Odoo-dokumenttyp) som detta alias är knutet till. All inkommande e-"
+"post som inte ingår i en pågående diskussion skapar en ny post av denna "
+"klass (t ex Aktivitet)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_name
@@ -3734,6 +3791,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Namnet på e-post-alias, eg 'jobb' om du vill fånga e-post för <jobb@example."
+"se>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_partner_name
@@ -4446,123 +4505,3 @@ msgstr "okänd"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "with your work above"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Åtgärd krävs"
-
-#~ msgid "Both"
-#~ msgstr "Båda"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum för senast publicerade meddelandet i loggen."
-
-#~ msgid "Done"
-#~ msgstr "Klar"
-
-#~ msgid "Draft Leads"
-#~ msgstr "Kundämnen i utkast"
-
-#~ msgid "Follow-up"
-#~ msgstr "Uppföljning"
-
-#~ msgid "Followers"
-#~ msgstr "Följare"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Följare (Kanaler)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Följare (Partners)"
-
-#~ msgid "Function"
-#~ msgstr "Funktion"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Om ikryssad nya meddelanden som kräver din uppmärksamhet"
-
-#~ msgid "Incoming"
-#~ msgstr "Inkommande"
-
-#~ msgid "Is Follower"
-#~ msgstr "Är följare"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Senast meddelandedatum"
-
-#~ msgid "Leads from USA"
-#~ msgstr "Kundämnen från USA"
-
-#~ msgid ""
-#~ "Link between stages and sales teams. When set, this limitate the current "
-#~ "stage to the selected sales teams."
-#~ msgstr ""
-#~ "Länk mellan etapperna och säljlag. När den är inställd, begränsas aktuell "
-#~ "etapp till det valda säljlaget."
-
-#~ msgid "Mark As Lost"
-#~ msgstr "Märk förlorad"
-
-#~ msgid "Messages"
-#~ msgstr "Meddelanden"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Meddelande- och kommunikationshistorik"
-
-#~ msgid "Negotiation"
-#~ msgstr "Förhandling"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Antalet åtgärder"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Antal meddelanden som kräver en åtgärd"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Antalet olästa meddelanden"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "Öppna kundordermenyn"
-
-#~ msgid "Qualification"
-#~ msgstr "Kvalificering"
-
-#~ msgid "Reminder to User"
-#~ msgstr "Påminnelse till användare"
-
-#~ msgid "Sales Tags"
-#~ msgstr "Försäljningsetiketter"
-
-#~ msgid "Set team to Sales Department"
-#~ msgstr "Ställ in säljlaget till försäljningsavdelningen"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Det här är ett namn som hjälper dig hålla ordning på olika kampanjer. Ex. "
-#~ "Höst_körning, Jul_Special"
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr "Det här är leverensmetoden. Ex. Vykort, Epost eller Banner"
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr ""
-#~ "Det här är källan till länken. Ex: Sökmotor, en annan domän eller namn på "
-#~ "mailinglista"
-
-#~ msgid "Website Messages"
-#~ msgstr "Webbplatsmeddelanden"
-
-#~ msgid "Website communication history"
-#~ msgstr "Webbplatsens kommunikationshistorik"
-
-#~ msgid "Your Customers"
-#~ msgstr "Dina kunder"
-
-#~ msgid "Your Products"
-#~ msgstr "Dina produkter"
-
-#~ msgid "oe_kanban_text_red"
-#~ msgstr "oe_kanban_text_red"

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-07-29 06:56+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-11-15 11:47+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
@@ -157,7 +157,7 @@ msgstr "<strong>Werkorders</strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>WorkCenter</strong>"
-msgstr "<strong>Werkcenter</strong>"
+msgstr "<strong>Bewerking</strong>"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_product_efficiency
@@ -462,7 +462,7 @@ msgstr "Wijzig de hoeveelheid van producten"
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
 msgid "Click to add a work center."
-msgstr "Klik om een werkcentrum toe te voegen."
+msgstr "Klik om een bewerking toe te voegen."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -597,7 +597,7 @@ msgstr "Kosten structuur"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_cycle
 msgid "Cost per cycle"
-msgstr "Kosten per cyclus"
+msgstr "Extra kosten per cyclus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_costs_hour
@@ -696,8 +696,7 @@ msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
 msgstr ""
-"Omschrijving van de productieplaats. Leg uit wat een cyclus is voor deze "
-"productieplaats."
+"Omschrijving van de bewerking. Leg uit wat een cyclus is voor deze bewerking."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -820,8 +819,8 @@ msgstr "Geeft de volgorde weer, bij het weergeven van een materiaallijst."
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
 msgstr ""
-"Geeft de volgorde weer bij het weergeven van een lijst van productieplaatsen "
-"in een productie route"
+"Geeft de volgorde weer bij het weergeven van een lijst van bewerkingen in "
+"een productie routing."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_workcenter_line_sequence
@@ -925,6 +924,12 @@ msgstr "Inactief"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_position
 msgid "Internal Reference"
 msgstr "Interne referentie"
+
+#. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr "Probleem met de hoeveelheid van de partij"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
@@ -1180,7 +1185,7 @@ msgstr "Modus"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Mrp Workcenter"
-msgstr "Productieplaats"
+msgstr "Bewerking"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_product_line_name
@@ -1263,8 +1268,8 @@ msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
 msgstr ""
-"Aantal herhalingen die deze productieplaats heeft te doen in de specifieke "
-"verwerking van de productie route."
+"Aantal herhalingen die deze bewerking moet worden uitgevoerd in de "
+"specifieke verwerking van de productie routing."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity_per_cycle
@@ -1272,9 +1277,9 @@ msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
-"Het aantal bewerkingen dat deze productieplaats parallel kan uitvoeren. "
-"Indien de productieplaats een aantal van 5 werknemers vertegenwoordigd, dan "
-"is de capaciteit per cyclus 5."
+"Het aantal bewerkingen dat parallel kan worden uitgevoerd. Indien de "
+"bewerking een aantal van 5 werknemers vertegenwoordigd, dan is de capaciteit "
+"per cyclus 5."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1313,7 +1318,7 @@ msgstr "Bovenliggende materiaallijst"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_routing_id
 msgid "Parent Routing"
-msgstr "Bovenliggende productieplaats"
+msgstr "Bovenliggende routing"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1479,7 +1484,7 @@ msgstr "Productie gestart"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Production Work Centers"
-msgstr "Productieplaatsen"
+msgstr "Bewerkingen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_progress
@@ -1563,7 +1568,7 @@ msgstr "Eigenschap"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9666
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9667
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -1693,13 +1698,13 @@ msgstr "Afronding efficiëntie"
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_tree_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Routing"
-msgstr "Productieroute"
+msgstr "Routing"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Routing Work Centers"
-msgstr "Productieroute"
+msgstr "Routing bewerkingen"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
@@ -1709,7 +1714,7 @@ msgstr "Productieroute"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Routings"
-msgstr "Productieroutes"
+msgstr "Routings"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -1720,8 +1725,8 @@ msgid ""
 "                order to produce a product.  They are attached to bills of\n"
 "                materials that will define the required raw materials."
 msgstr ""
-"Productieroutes staan u toe om productie bewerkingen aan te maken\n"
-"en te beheren die moeten gevolgd worden in productieplaatsen om\n"
+"Productieroutings staan u toe om productie bewerkingen aan te maken\n"
+"en te beheren die moeten gevolgd worden om\n"
 "een product te produceren. Ze zijn gekoppeld aan materiaallijsten\n"
 "die de rauwe materialen aangeven."
 
@@ -1732,8 +1737,8 @@ msgid ""
 "Routings is set then,the third tab of a production order (Work Centers) will "
 "be automatically pre-completed."
 msgstr ""
-"Productieroutes geven alle werkcenters weer die gebruikt worden en voor hoe "
-"lang en/of hoeveel cyclussen ze gebruikt worden. Als productieroutes "
+"Productieroutings geven alle bewerkingen weer die gebruikt worden en voor "
+"hoe lang en/of hoeveel cyclussen ze gebruikt worden. Als productieroutings "
 "ingesteld zijn wordt het derde tabblad van de productie order (werkcentrum) "
 "automatisch ingevuld."
 
@@ -1792,7 +1797,7 @@ msgstr "Zoek productie"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Search for mrp workcenter"
-msgstr "Zoek naar een productieplaats"
+msgstr "Zoek naar een bewerking"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_res_company_manufacturing_lead
@@ -1835,12 +1840,12 @@ msgstr "Bron document"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_cycle
 msgid "Specify Cost of Work Center per cycle."
-msgstr "Specificeer de kosten van de productieplaats per cyclus."
+msgstr "Specificeer de extra kosten van de bewerking per cyclus."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_costs_hour
 msgid "Specify Cost of Work Center per hour."
-msgstr "Specificeer de kosten per productieplaats per uur."
+msgstr "Specificeer de kosten per bewerking per uur."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_start
@@ -1922,10 +1927,10 @@ msgid ""
 "operations and to plan future loads on work centers based on production "
 "plannification."
 msgstr ""
-"De lijst van de bewerkingen (lijst van de productieplaatsen) om het "
-"eindproduct te vervaardigen. De productie route wordt vooral gebruikt om de "
-"kosten van werkplaats te berekenen tijdens bewerkingen en de toekomstige "
-"belastingen op de productieplaatsen door middel van planningssystemen."
+"De lijst van de bewerkingen om het eindproduct te vervaardigen. De productie "
+"routing wordt vooral gebruikt om de kosten van werkplaats te berekenen "
+"tijdens bewerkingen en de toekomstige belastingen op de productieplaatsen "
+"door middel van planningssystemen."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_routing_id
@@ -1936,10 +1941,9 @@ msgid ""
 "operations and to plan future loads on work centers based on production "
 "planning."
 msgstr ""
-"De lijst van bewerkingen (productieplaats) om een gereed product te "
-"produceren. De productie route worden voornamelijk gebruikt om "
-"productieplaatskosten gedurende de bewerkingen en toekomstige werkbelasting "
-"van de productieplaatsen te berekenen gebaseerd op de planning."
+"De lijst van bewerkingen om een gereed product te produceren. De routings "
+"worden voornamelijk gebruikt om bewerkingen en toekomstige werkbelasting van "
+"de bewerkingen te berekenen gebaseerd op de planning."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_config_settings_module_mrp_operations
@@ -1949,7 +1953,7 @@ msgid ""
 "-This installs the module mrp_operations."
 msgstr ""
 "Dit geeft u de mogelijkheid om start, startdatum, stopdatum toe te voegen "
-"aan de productieorder regels (op het tabblad productieplaatsen).\n"
+"aan de productieorder regels (op het tabblad bewerkingen).\n"
 "-Dit installeert de module mrp_operations."
 
 #. module: mrp
@@ -1978,7 +1982,7 @@ msgstr "Tijd voor productie"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_cycle
 msgid "Time for 1 cycle (hour)"
-msgstr "Tijd voor 1 cyclus"
+msgstr "Tijd van 1 cyclus (uren)"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_cycle
@@ -2001,8 +2005,8 @@ msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified "
 "routing."
 msgstr ""
-"Tijd in uren voor deze productieplaats om de bewerking uit te voeren in de "
-"gespecificeerde productie route."
+"Tijd in uren voor deze bewerking om de bewerking uit te voeren in de "
+"gespecificeerde routing."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
@@ -2192,50 +2196,50 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_tree_view
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Work Center"
-msgstr "Productieplaats"
+msgstr "Bewerking"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_workcenter_load
 msgid "Work Center Load"
-msgstr "Belasting van de productieplaats"
+msgstr "Bewerking work load"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_workcenter_load_tree
 msgid "Work Center Loads"
-msgstr "Belastingen van de productieplaats"
+msgstr "Bewerkingen work load"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 msgid "Work Center Operations"
-msgstr "Productieplaats bewerkingen"
+msgstr "Bewerkingen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_product_id
 msgid "Work Center Product"
-msgstr "Productieplaats product"
+msgstr "Bewerkingsproduct"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
 msgid "Work Center Usage"
-msgstr "Productieplaats gebruik"
+msgstr "Gebruik van bewerking"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_workcenter_load_graph
 #: model:ir.ui.view,arch_db:mrp.view_workcenter_load_search
 msgid "Work Center load"
-msgstr "Belasting van de productieplaats"
+msgstr "Bewerking work load"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_lines
 #: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 msgid "Work Centers"
-msgstr "Productieplaats"
+msgstr "Bewerkingen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workcenter_lines
 msgid "Work Centers Utilisation"
-msgstr "Productieplaats gebruik"
+msgstr "Gebruik van bewerking"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -2246,7 +2250,7 @@ msgid ""
 "capacity\n"
 "                and planning forecast."
 msgstr ""
-"Productieplaatsen staan u toe om productie eenheden\n"
+"Bewerkingen staan u toe om productie eenheden\n"
 "aan te maken. Deze bestaan uit mensen en/of machines, welke beschouwd\n"
 "worden als eenheden voor taaktoewijzing en ook als capaciteit\n"
 "en planning prognose."
@@ -2266,7 +2270,7 @@ msgid ""
 "the required raw materials."
 msgstr ""
 "Werkorder bewerkingen staan u toe om productie bewerkingen aan te maken en "
-"te beheren die gevolgd moeten worden in productieplaatsen om\n"
+"te beheren die gevolgd moeten worden in bewerkingen om\n"
 "het product te produceren. Ze zijn gekoppeld aan de materiaallijst die de "
 "vereiste ruwe materialen definieert."
 
@@ -2321,6 +2325,16 @@ msgstr ""
 "Sluit of annuleer deze eerst."
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+"U bent van plan om meer dan 1.00 van product %s te verbruiken, met een uniek "
+"partijnummer %s"
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "dagen"
@@ -2365,451 +2379,3 @@ msgstr "report.mrp_bom_cost"
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "onbekend"
-
-#~ msgid "Action Needed"
-#~ msgstr "Vereist actie"
-
-#~ msgid "Change Quantity"
-#~ msgstr "Wijzig hoeveelheid"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum van het laatste bericht verstuurt op deze regel."
-
-#~ msgid "Followers"
-#~ msgstr "Volgers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Volgers (Kanalen)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Volgers (Partners)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
-
-#~ msgid "Is Follower"
-#~ msgstr "Is een volger"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Laatste bericht datum"
-
-#~ msgid "Messages"
-#~ msgstr "Berichten"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Berichten en communicatie historie"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Aantal acties"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Aantal berichten die actie vereisen"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Aantal ongelezen berichten"
-
-#~ msgid "Open MRP Menu"
-#~ msgstr "Productie menu openen"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Ongelezen berichten"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Teller ongelezen berichten"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website berichten"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website communicatie geschiedenis"
-
-#~ msgid "# Done Work Orders"
-#~ msgstr "# Werkorders gered"
-
-#~ msgid "# Read Work Orders"
-#~ msgstr "# Lees werkorders"
-
-#~ msgid "# Work Orders"
-#~ msgstr "# Werkorders"
-
-#~ msgid ""
-#~ "<span class=\"label label-danger\" attrs=\"{'invisible': ['|', "
-#~ "('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
-#~ "('confirmed','progress'))]}\">Raw materials not available!</span>"
-#~ msgstr ""
-#~ "<span class=\"label label-danger\" attrs=\"{'invisible': ['|', "
-#~ "('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
-#~ "('confirmed','progress'))]}\">Grondstoffen niet beschikbaar!</span>"
-
-#~ msgid "<span class=\"o_stat_text\">Lost</span>"
-#~ msgstr "<span class=\"o_stat_text\">Verloren</span>"
-
-#~ msgid "<span class=\"o_stat_text\">Performance</span>"
-#~ msgstr "<span class=\"o_stat_text\">Performantie</span>"
-
-#~ msgid "<span class=\"o_stat_text\">Scraps</span>"
-#~ msgstr "<span class=\"o_stat_text\">Rest</span>"
-
-#~ msgid "<span class=\"o_stat_text\">Time<br/> Analysis</span>"
-#~ msgstr "<span class=\"o_stat_text\">Tijd<br/> analyse</span>"
-
-#~ msgid "<span>Actions</span>"
-#~ msgstr "<span>Acties</span>"
-
-#~ msgid "<span>New</span>"
-#~ msgstr "<span>Nieuw</span>"
-
-#~ msgid "<span>Plan Orders</span>"
-#~ msgstr "<span>Plan Orders</span>"
-
-#~ msgid "<span>Reports</span>"
-#~ msgstr "<span>Rapporten</span>"
-
-#~ msgid "<span>View</span>"
-#~ msgstr "<span>Bekijk</span>"
-
-#~ msgid "<span>Work Orders</span>"
-#~ msgstr "<span>Werk orders</span>"
-
-#~ msgid "<strong>No. Of Minutes</strong>"
-#~ msgstr "<strong>Aantal minuten</strong>"
-
-#~ msgid "Add a description..."
-#~ msgstr "Voeg een omschrijving toe..."
-
-#~ msgid "All"
-#~ msgstr "Alle"
-
-#~ msgid "Archived"
-#~ msgstr "Gearchiveerd"
-
-#~ msgid "Attachments"
-#~ msgstr "Bijlagen"
-
-#~ msgid "Author"
-#~ msgstr "Auteur"
-
-#~ msgid "Availability"
-#~ msgstr "Beschikbaarheid"
-
-#~ msgid "Available"
-#~ msgstr "Beschikbaar"
-
-#~ msgid "Based on"
-#~ msgstr "Gebaseerd op"
-
-#~ msgid "Block"
-#~ msgstr "Blokkeer"
-
-#~ msgid "Blocked"
-#~ msgstr "Geblokkeerd"
-
-#~ msgid "Can be Expensed"
-#~ msgstr "Declaratie product"
-
-#~ msgid "Capacity"
-#~ msgstr "Capaciteit"
-
-#~ msgid "Check availability"
-#~ msgstr "Controleer beschikbaarheid"
-
-#~ msgid "Click to create a new message."
-#~ msgstr "Klik om een nieuw bericht aan te maken."
-
-#~ msgid "Click to start a new work order."
-#~ msgstr "Klik om een nieuw werkorder aan te maken."
-
-#~ msgid "Color"
-#~ msgstr "Kleur"
-
-#~ msgid "Confirmed"
-#~ msgstr "Bevestigd"
-
-#~ msgid "Continue Production"
-#~ msgstr "Productie hervatten"
-
-#~ msgid "Current Production"
-#~ msgstr "Huidige productie"
-
-#~ msgid "Dashboard"
-#~ msgstr "Dashboard"
-
-#~ msgid "Date"
-#~ msgstr "Datum"
-
-#~ msgid "Destination Location"
-#~ msgstr "Bestemming"
-
-#~ msgid "Discard"
-#~ msgstr "Negeren"
-
-#~ msgid "Draft"
-#~ msgstr "Concept"
-
-#~ msgid "Duration"
-#~ msgstr "Tijdsduur"
-
-#~ msgid "Effective Date"
-#~ msgstr "Boek datum"
-
-#~ msgid "Expected Date"
-#~ msgstr "Datum verwacht"
-
-#~ msgid "Extra Features"
-#~ msgstr "Extra opties"
-
-#~ msgid "Filters"
-#~ msgstr "Filters"
-
-#~ msgid "Finish Order"
-#~ msgstr "Order afronden"
-
-#~ msgid "Finished"
-#~ msgstr "Klaar"
-
-#~ msgid "Gives the sequence order when displaying a list of tasks."
-#~ msgstr ""
-#~ "Geeft de volgorde weer wanneer de lijst van taken wordt weergegeven."
-
-#~ msgid "Group by..."
-#~ msgstr "Groepeer op..."
-
-#~ msgid "High"
-#~ msgstr "Hoog"
-
-#~ msgid ""
-#~ "If checked, when the previous move of the move (which was generated by a "
-#~ "next procurement) is cancelled or split, the move generated by this move "
-#~ "will too"
-#~ msgstr ""
-#~ "Indien aangevinkt en de vorige mutatie wordt geannuleerd of gesplitst, "
-#~ "dan wordt de mutatie gegenereerd door deze mutatie ook geannuleerd of "
-#~ "gesplitst"
-
-#~ msgid "In Progress"
-#~ msgstr "In Behandeling"
-
-#~ msgid "Lots"
-#~ msgstr "Partijen"
-
-#~ msgid "Low"
-#~ msgstr "Laag"
-
-#~ msgid "Maintenance"
-#~ msgstr "Onderhoud"
-
-#~ msgid "Message"
-#~ msgstr "Bericht"
-
-#~ msgid "Miscellaneous"
-#~ msgstr "Diversen"
-
-#~ msgid "More <i class=\"fa fa-caret-down\"/>"
-#~ msgstr "Meer <i class=\"fa fa-caret-down\"/>"
-
-#~ msgid "Move"
-#~ msgstr "Mutatie"
-
-#~ msgid "Moves"
-#~ msgstr "Mutaties"
-
-#~ msgid "None"
-#~ msgstr "Geen"
-
-#~ msgid "Operations"
-#~ msgstr "Bewerkingen"
-
-#~ msgid "Orders"
-#~ msgstr "Orders"
-
-#~ msgid "Partially Available"
-#~ msgstr "Gedeeltelijk beschikbaar"
-
-#~ msgid "Pause"
-#~ msgstr "Pauze"
-
-#~ msgid "Performance"
-#~ msgstr "Prestaties"
-
-#~ msgid "Picking Type"
-#~ msgstr "Type levering"
-
-#~ msgid "Planned Date"
-#~ msgstr "Datum gepland"
-
-#~ msgid "Procurement Group"
-#~ msgstr "Verwervingsgroep"
-
-#~ msgid "Production Workcenter"
-#~ msgstr "Productie werkplaats"
-
-#~ msgid "Propagate cancel and split"
-#~ msgstr "Annuleren en splitsen doorgeven"
-
-#~ msgid "Quality"
-#~ msgstr "Kwaliteit"
-
-#~ msgid "Quantity Available"
-#~ msgstr "Virtuele voorraad"
-
-#~ msgid "Quantity Produced"
-#~ msgstr "Hoeveelheid geproduceerd"
-
-#~ msgid "Quants"
-#~ msgstr "Aantallen"
-
-#~ msgid "Reason"
-#~ msgstr "Reden"
-
-#~ msgid "Reporting"
-#~ msgstr "Rapportering"
-
-#~ msgid "Save"
-#~ msgstr "Opslaan"
-
-#~ msgid "Scrap"
-#~ msgstr "Afgekeurd"
-
-#~ msgid "Scrap Move"
-#~ msgstr "Afkeur mutatie"
-
-#~ msgid "Scraps"
-#~ msgstr "Afgekeurd"
-
-#~ msgid "Search Work Orders"
-#~ msgstr "Zoek werkopdrachten"
-
-#~ msgid "Settings"
-#~ msgstr "Instellingen"
-
-#~ msgid "Source"
-#~ msgstr "Bron"
-
-#~ msgid "Specify whether the product can be selected in an HR expense."
-#~ msgstr "Specificeer of het product kan worden gebruikt als declaratie."
-
-#~ msgid "Start Working"
-#~ msgstr "Start met werken"
-
-#~ msgid "State"
-#~ msgstr "Status"
-
-#~ msgid "Stock Moves"
-#~ msgstr "Voorraadmutaties"
-
-#~ msgid "The picking type determines the picking view"
-#~ msgstr "De verzamelsoort bepaald de weergave van de levering"
-
-#~ msgid "This Month"
-#~ msgstr "Deze maand"
-
-#~ msgid "This Year"
-#~ msgstr "Dit jaar"
-
-#~ msgid "Time Tracking"
-#~ msgstr "Tijdregistratie"
-
-#~ msgid "To Do"
-#~ msgstr "Te doen"
-
-#~ msgid "To Produce"
-#~ msgstr "Te produceren"
-
-#~ msgid ""
-#~ "To manufacture or assemble products, and use raw materials and\n"
-#~ "            finished products you must also handle manufacturing "
-#~ "operations.\n"
-#~ "            Manufacturing operations are often called Work Orders. The "
-#~ "various\n"
-#~ "            operations will have different impacts on the costs of\n"
-#~ "            manufacturing and planning depending on the available "
-#~ "workload."
-#~ msgstr ""
-#~ "Om producten te produceren of te assembleren, en om gebruik te maken van\n"
-#~ "grondstoffen en afgewerkte producten,  moet u werken met productie-\n"
-#~ "activiteiten. Productie-activiteiten worden veelal werkopdrachten "
-#~ "genoemd.\n"
-#~ "Die werkopdrachten hebben een verschillende uitwerking op de kosten\n"
-#~ "van productie en planning, en zijn afhankelijk van de hoeveelheid werk. "
-
-#~ msgid "Today"
-#~ msgstr "Vandaag"
-
-#~ msgid "Tracking"
-#~ msgstr "Volgen"
-
-#~ msgid "Unreserve"
-#~ msgstr "Reservering ongedaan maken"
-
-#~ msgid "Variant"
-#~ msgstr "Variant"
-
-#~ msgid "Very High"
-#~ msgstr "Zeer hoog"
-
-#~ msgid "Waiting"
-#~ msgstr "Wachten"
-
-#~ msgid "Waiting Availability"
-#~ msgstr "Wachten op beschikbaarheid"
-
-#~ msgid ""
-#~ "When processing a sales order for this product, the delivery order\n"
-#~ "                                will contain the raw materials, instead "
-#~ "of the finished product."
-#~ msgstr ""
-#~ "Wanneer een verkooporder voor dit product wordt verwerkt, zal de "
-#~ "uitgaande levering\n"
-#~ "                                de grondstoffen (componenten) bevatten, "
-#~ "in plaats van het eindproduct."
-
-#~ msgid "Work Orders Planning"
-#~ msgstr "Werkopdrachten planning"
-
-#~ msgid ""
-#~ "Work Orders is the list of operations to be performed for each\n"
-#~ "            manufacturing order. Once you start the first work order of "
-#~ "a\n"
-#~ "            manufacturing order, the manufacturing order is "
-#~ "automatically\n"
-#~ "            marked as started. Once you finish the latest operation of a\n"
-#~ "            manufacturing order, the MO is automatically done and the "
-#~ "related\n"
-#~ "            products are produced."
-#~ msgstr ""
-#~ "Een werkopdracht is de lijst van verwerkingen welke moeten worden "
-#~ "uitgevoerd\n"
-#~ "voor elke productieorder. Wanneer de eerste werkopdracht wordt gestart, "
-#~ "dan\n"
-#~ "wordt de productieorder automatisch gemarkeerd als gestart. Wanneer je de "
-#~ "laatste\n"
-#~ "verwerking van een productieorder afrondt, dan is de productieorder "
-#~ "automatisch\n"
-#~ "gereed en zijn de gerelateerde producten geproduceerd."
-
-#~ msgid "Workorder Messages"
-#~ msgstr "Werkopdracht berichten"
-
-#~ msgid "from"
-#~ msgstr "van"
-
-#~ msgid "ir.attachment"
-#~ msgstr "ir.attachment"
-
-#~ msgid "last"
-#~ msgstr "laatste"
-
-#~ msgid "minutes"
-#~ msgstr "minuten"
-
-#~ msgid "stock.scrap"
-#~ msgstr "stock.scrap"
-
-#~ msgid "to"
-#~ msgstr "tot"
-
-#~ msgid "work orders"
-#~ msgstr "werkorders"

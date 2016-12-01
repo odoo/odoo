@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-07-24 08:38+0000\n"
-"Last-Translator: fishfurbanter <fishfurbanter@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-09-23 09:39+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
@@ -229,6 +229,19 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-question-circle\"> view examples</i>"
 msgstr "<i class=\"fa fa-question-circle\"> הצג דוגמאות</i>"
+
+#. module: crm
+#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
+msgid ""
+"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>The opportunity <strong>${object.name}</strong> did not have any activity "
+"since at least 5 days.</p>\n"
+"%if object.description:\n"
+"<p>Here is the description about the opportunity : </p><p><i>${object."
+"description}</i>\n"
+"%endif\n"
+"</p><p>Thank you!</p>\n"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1095,6 +1108,18 @@ msgid "Call"
 msgstr "התקשר"
 
 #. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for Demo"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_call_demo
+#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
+msgid "Call for a demo"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -1524,9 +1549,8 @@ msgstr "ימים לסגירה"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_deduplicate
-#, fuzzy
 msgid "Deduplicate Contacts"
-msgstr "העתק אנשי קשר נוספים"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1655,6 +1679,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Download the"
 msgstr "הורד את"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_draft_lead
+msgid "Draft Leads"
+msgstr "טיוטת לידים"
 
 #. module: crm
 #: selection:sale.config.settings,group_use_lead:0
@@ -1842,6 +1871,18 @@ msgstr "סיים"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_fold
 msgid "Folded in Pipeline"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up Quote"
+msgstr ""
+
+#. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
+msgid "Follow-up quote"
 msgstr ""
 
 #. module: crm
@@ -2299,6 +2340,11 @@ msgid "Leads by Source"
 msgstr ""
 
 #. module: crm
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr ""
@@ -2410,6 +2456,12 @@ msgstr ""
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Low"
 msgstr "נמוך"
+
+#. module: crm
+#: model:crm.activity,name:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Make Quote"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -3243,6 +3295,12 @@ msgid "Relation field"
 msgstr ""
 
 #. module: crm
+#: model:ir.actions.server,name:crm.action_email_reminder_lead
+msgid "Reminder to User"
+msgstr "תזכורת למשתמש"
+
+#. module: crm
+#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
 msgid ""
 "Reminder: Lead ${object.name} from ${object.partner_id != False and object."
@@ -3404,6 +3462,12 @@ msgid "Selection"
 msgstr "בחירה"
 
 #. module: crm
+#: model:crm.activity,description:crm.crm_activity_demo_make_quote
+#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
+msgid "Send a quotation"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Send an email to all opportunities in the \"Qualified\" stage for more than "
@@ -3415,6 +3479,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
 msgstr "רצף"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_set_team_sales_department
+msgid "Set team to Sales Department"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4402,78 +4471,3 @@ msgstr "לא ידוע"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "with your work above"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "נדרשת פעולה"
-
-#~ msgid "Both"
-#~ msgstr "שניהם"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "תאריך הודעה אחרונה שפורסמה ברשומה."
-
-#~ msgid "Done"
-#~ msgstr "בוצע"
-
-#~ msgid "Draft Leads"
-#~ msgstr "טיוטת לידים"
-
-#~ msgid "Followers"
-#~ msgstr "עוקבים"
-
-#~ msgid "Function"
-#~ msgstr "תפקוד"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "אם מסומן אז הודעה חדשה דורשת התייחסותכם."
-
-#~ msgid "Last Message Date"
-#~ msgstr "תאריך הודעה אחרונה"
-
-#~ msgid "Messages"
-#~ msgstr "הודעות"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "היסטוריית הודעות ותקשורת"
-
-#~ msgid "Number of Actions"
-#~ msgstr "מספר הפעולות"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "מספר ההודעות שדורשות פעולה"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "מספר ההודעות שלא נקראו"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "פתיחת תפריט מכירות"
-
-#~ msgid "Reminder to User"
-#~ msgstr "תזכורת למשתמש"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "השם הזה יעזור לך לעקוב אחר הישגי הקמפיינים השונים. לדוגמה: ראש השנה, מבצע "
-#~ "חורף"
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr "שם אמצעי השיווק. לדוגמה: גלויה, דוא\"ל, מודעת באנר וכו'"
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr "מקור הקישור. לדוגמה: מנוע חיפוש, דומיין אחר, או שם של רשימת תפוצה."
-
-#~ msgid "Website Messages"
-#~ msgstr "הודעות מהאתר אינטרנט"
-
-#~ msgid "Website communication history"
-#~ msgstr "היסטוריית תקשורת מהאתר"
-
-#~ msgid "Your Customers"
-#~ msgstr "הלקוחות שלך"
-
-#~ msgid "Your Products"
-#~ msgstr "המוצרים שלך"

@@ -3,14 +3,15 @@
 # * event_sale
 #
 # Translators:
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2015-09-19 09:14+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-09-26 13:01+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -71,6 +72,12 @@ msgid ""
 msgstr ""
 "Kies een evenement ticket en het zal automatisch een registratie aanmaken "
 "voor dit evenement ticket."
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_2_product
+#: model:product.template,name:event_sale.event_2_product_product_template
+msgid "Conference on Business Applications"
+msgstr "Conferentie over bedrijfsapplicaties"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_uid
@@ -170,6 +177,12 @@ msgid "Event Type"
 msgstr "Soort evenement"
 
 #. module: event_sale
+#: model:product.product,name:event_sale.event_1_product
+#: model:product.template,name:event_sale.event_1_product_product_template
+msgid "Functional Webinar"
+msgstr "Functioneel webinar"
+
+#. module: event_sale
 #: model:event.type,name:event_sale.event_type
 msgid "Generic Events"
 msgstr "Generiek evenement"
@@ -234,6 +247,12 @@ msgstr "Geen beschikbare plaatsen meer voor het ticket"
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr "Geen beschikbare plaatsen meer voor dit ticket"
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_0_product
+#: model:product.template,name:event_sale.event_0_product_product_template
+msgid "Open Days in Los Angeles"
+msgstr "Open dagen in Los Angeles"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
@@ -343,10 +362,24 @@ msgid "Source Sale Order"
 msgstr "Bron verkooporder"
 
 #. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_1
+#: model:event.event.ticket,name:event_sale.event_1_ticket_1
+#: model:event.event.ticket,name:event_sale.event_2_ticket_1
+#: model:event.event.ticket,name:event_sale.event_3_ticket_1
+msgid "Standard"
+msgstr "Standaard"
+
+#. module: event_sale
 #: code:addons/event_sale/models/event.py:21
 #, python-format
 msgid "Subscription"
 msgstr "Abonnement"
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_3_product
+#: model:product.template,name:event_sale.event_3_product_product_template
+msgid "Technical Training"
+msgstr "Technische training"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:168
@@ -386,6 +419,13 @@ msgid "Unlimited"
 msgstr "Onbeperkt"
 
 #. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_2
+#: model:event.event.ticket,name:event_sale.event_2_ticket_2
+#: model:event.event.ticket,name:event_sale.event_3_ticket_2
+msgid "VIP"
+msgstr "VIP"
+
+#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
 msgid "event_ok"
 msgstr "event_ok"
@@ -404,30 +444,3 @@ msgstr "registration.editor"
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "registration.editor.line"
 msgstr "registration.editor.line"
-
-#~ msgid "Conference on Business Applications"
-#~ msgstr "Conferentie over bedrijfsapplicaties"
-
-#~ msgid "Functional Webinar"
-#~ msgstr "Functioneel webinar"
-
-#~ msgid "Open Days in Los Angeles"
-#~ msgstr "Open dagen in Los Angeles"
-
-#~ msgid "Standard"
-#~ msgstr "Standaard"
-
-#~ msgid "Technical Training"
-#~ msgstr "Technische training"
-
-#~ msgid "VIP"
-#~ msgstr "VIP"
-
-#~ msgid "Event Name"
-#~ msgstr "Naam evenement"
-
-#~ msgid "Event Registration"
-#~ msgstr "Evenementregistratie"
-
-#~ msgid "Event's Ticket"
-#~ msgstr "Evenement tickets"

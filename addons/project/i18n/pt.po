@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-05-25 18:22+0000\n"
 "Last-Translator: Maria Manuela Silva\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -183,6 +183,16 @@ msgid ""
 "\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
+msgstr ""
+
+#. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
 msgstr ""
 
 #. module: project
@@ -1247,7 +1257,7 @@ msgstr "Balanço"
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_1
 msgid "Basic"
-msgstr ""
+msgstr "Básico"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1289,6 +1299,11 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr "Avisar ou marcar como concluído"
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "Por Responsável"
@@ -1304,6 +1319,7 @@ msgstr "Cancelar"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "Cancelado"
@@ -1802,6 +1818,7 @@ msgstr "Não hesite em selecionar apenas os eventos em que esteja interessado!"
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Concluído"
@@ -1834,9 +1851,8 @@ msgstr "E-mail do Apelido"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
-#, fuzzy
 msgid "Email Template"
-msgstr "E-mail do Apelido"
+msgstr "Template de email"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2265,6 +2281,7 @@ msgstr "Melhore a colaboração com clientes"
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
+#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "Em Progresso"
@@ -2573,7 +2590,7 @@ msgstr "Departamento de Marketing"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "Membros"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2606,6 +2623,11 @@ msgstr "As Minhas Tarefas"
 #: model:ir.model.fields,field_description:project.field_project_tags_name
 msgid "Name"
 msgstr "Nome"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr "Precisa de ajuda técnica ou funcional"
 
 #. module: project
 #. openerp-web
@@ -2649,6 +2671,11 @@ msgstr "Sem avaliação de cliente"
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
 msgstr "Normal"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr "Não validado"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -2859,7 +2886,6 @@ msgstr "Por favor, excluir o projeto ligado a esta conta primeiro."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_contact
-#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -2870,7 +2896,8 @@ msgstr ""
 "Política para enviar uma mensagem sobre o documento usando o MailGateway .\n"
 "- Todos : todos podem postar\n"
 "- Parceiros: parceiros apenas autenticados\n"
-"- Seguidores: apenas os seguidores do documento relacionado\n"
+"- Seguidores: apenas os seguidores do documento relacionado ou membros dos "
+"seguintes canais\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3050,12 +3077,22 @@ msgid "Ready to be displayed, published or sent"
 msgstr "Pronto a ser mostrado, publicado ou enviado"
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr "Pronto a reabrir"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
 msgstr "Razão do cancelamento foi registada"
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
@@ -3235,7 +3272,7 @@ msgstr "Partilhe ficheiros e gira versões"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_is_favorite
 msgid "Show Project on dashboard"
-msgstr ""
+msgstr "Mostrar Projeto no painel"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3342,9 +3379,8 @@ msgstr "Estado"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_child_ids
-#, fuzzy
 msgid "Sub-tasks"
-msgstr "tarefas"
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3697,12 +3733,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
-#, fuzzy
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
-msgstr "Isto define a unidade de medida usada nos projetos e tarefas."
+msgstr ""
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -3768,6 +3803,7 @@ msgstr "Horário de trabalho para ajustar o relatório de diagrama de Gantt"
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
+#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "A Fazer"
@@ -3841,6 +3877,11 @@ msgid ""
 msgstr ""
 "Use reuniões separadas para resolver problemas grandes ou problemas que não "
 "são importantes para a equipa inteira."
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the priority for tasks related to gold customers"
+msgstr "Utilize a prioridade das tarefas relacionas a clientes Gold"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -4052,10 +4093,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
-#, fuzzy
 msgid "You can save your reports to easily reuse it later"
 msgstr ""
-"Pode gravar os seus relatórios para facilmente os reutilizar mais tarde"
 
 #. module: project
 #: code:addons/project/project.py:94
@@ -4184,136 +4223,3 @@ msgstr "com Folhas de Horas"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr "listou no passou anterior"
-
-#~ msgid "&times;"
-#~ msgstr "&times;"
-
-#~ msgid "Action Needed"
-#~ msgstr "Ação Necessária"
-
-#~ msgid "Buzz or set as done"
-#~ msgstr "Avisar ou marcar como concluído"
-
-#~ msgid "Check this field if this project manages timesheets"
-#~ msgstr "Dê o visto se este projeto gerir folhas de horas"
-
-#~ msgid "Close"
-#~ msgstr "Fechar"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data da Ultmia Mensagem Inserida no Registo"
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "Tarefas Delegadas"
-
-#~ msgid "Do not record timesheets on tasks"
-#~ msgstr "Não gravar folhas de horas nas tarefas"
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canais)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Parceiros)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
-
-#~ msgid "Is Follower"
-#~ msgstr "É um seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data da Última Mensagem"
-
-#~ msgid "Messages"
-#~ msgstr "Mensagens"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Histórico de mensagens e comunicação"
-
-#~ msgid "Need functional or technical help"
-#~ msgstr "Precisa de ajuda técnica ou funcional"
-
-#~ msgid "Not validated"
-#~ msgstr "Não validado"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de Ações"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensagens que requerem uma ação"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensagens por ler"
-
-#~ msgid "Open Project Menu"
-#~ msgstr "Abrir menu de projeto"
-
-#~ msgid ""
-#~ "Policy to post a message on the document using the mailgateway.\n"
-#~ "- everyone: everyone can post\n"
-#~ "- partners: only authenticated partners\n"
-#~ "- followers: only followers of the related document\n"
-#~ msgstr ""
-#~ "Política para enviar uma mensagem sobre o documento usando o "
-#~ "MailGateway .\n"
-#~ "- Todos : todos podem postar\n"
-#~ "- Parceiros: parceiros apenas autenticados\n"
-#~ "- Seguidores: apenas os seguidores do documento relacionado\n"
-
-#~ msgid "Ready to reopen"
-#~ msgstr "Pronto a reabrir"
-
-#~ msgid "Record timesheet lines per tasks"
-#~ msgstr "Registe as linhas da folha de horas por tarefas"
-
-#~ msgid "Subscriptions"
-#~ msgstr "Subscrições"
-
-#~ msgid "Task's Work on Tasks"
-#~ msgstr "Trabalhos na Tarefa"
-
-#~ msgid ""
-#~ "This allows you to transfer the entries under tasks defined for Project "
-#~ "Management to the timesheet line entries for particular date and user, "
-#~ "with the effect of creating, editing and deleting either ways.\n"
-#~ "-This installs the module project_timesheet."
-#~ msgstr ""
-#~ "Isto permite-lhe transferir os movimentos sob as tarefas definidas para a "
-#~ "Gestão do Projeto para os movimentos da linha da folha de horas  para uma "
-#~ "data e utilizador em particular, com o efeito de criar, editar e "
-#~ "eliminar. \n"
-#~ "- Isto instala o módulo project_timesheet."
-
-#~ msgid ""
-#~ "This will set the unit of measure used in projects and tasks.\n"
-#~ "If you use the timesheet linked to projects (project_timesheet module), "
-#~ "don't forget to setup the right unit of measure in your employees."
-#~ msgstr "Isto define a unidade de medida usada nos projetos e tarefas."
-
-#~ msgid "Timesheets on Project"
-#~ msgstr "Folha de Horas em Projetos"
-
-#~ msgid "Type of Account"
-#~ msgstr "Tipo de conta"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de Mensagens por Ler"
-
-#~ msgid "Use the priority for tasks related to gold customers"
-#~ msgstr "Utilize a prioridade das tarefas relacionas a clientes Gold"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensagens do Website"
-
-#~ msgid "Website communication history"
-#~ msgstr "Histórico de Comunicação do Website"
-
-#~ msgid "You can save your reports to for easy reuse later"
-#~ msgstr ""
-#~ "Pode gravar os seus relatórios para facilmente os reutilizar mais tarde"

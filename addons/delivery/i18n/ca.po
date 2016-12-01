@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-08-11 06:45+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-10-21 09:35+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "Language: ca\n"
@@ -60,7 +60,7 @@ msgstr "# de Variants de Producte"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "<span>kg</span>"
-msgstr ""
+msgstr "<span>kg</span>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -81,6 +81,8 @@ msgid ""
 "A consumable is a product for which you don't manage stock, a service is a "
 "non-material product provided by a company or an individual."
 msgstr ""
+"Un consumible és un producte per el qual no es gestiona estoc, un servei és "
+"un producte immaterial subministrat per una companyia o un individu."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_sale
@@ -100,6 +102,9 @@ msgid ""
 "This description will be copied to every Purchase Order, Receipt and Vendor "
 "Bill/Refund."
 msgstr ""
+"Una descripció del producte que vostè vol comunicar als seus proveïdors. "
+"Aquesta descripció es copiarà en totes les ordres de venda i factures de "
+"proveïdor o rectificatives."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description
@@ -137,7 +142,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr ""
+msgstr "Arxivat"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
@@ -263,7 +268,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "Comproveu si el producte és elegible per a ser membre."
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -295,7 +300,7 @@ msgstr "Condició"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_method
 msgid "Control Purchase Bills"
-msgstr ""
+msgstr "Control de factures de compra"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_standard_price
@@ -314,6 +319,9 @@ msgid ""
 "and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
 msgstr ""
+"Cost per la plantilla de producte utilitzat per la valoració d'existències "
+"estàndard en comptabilitat, i utilitzada com preu de referència en ordres de "
+"compra. S'expressa en la unitat de mesura per defecte del producte."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_cost_method
@@ -427,9 +435,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
-#, fuzzy
 msgid "Delivery Information"
-msgstr "Informació del transportista"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -493,7 +500,7 @@ msgstr "Determini l'ordre de visualització"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Discard"
-msgstr ""
+msgstr "Rebutgi"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
@@ -649,7 +656,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
-msgstr ""
+msgstr "Agrupar per"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_hs_code
@@ -659,9 +666,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_height
-#, fuzzy
 msgid "Height"
-msgstr "Pes"
+msgstr "Altura"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -815,7 +821,7 @@ msgstr "És un enviament"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_is_product_variant
 msgid "Is a product variant"
-msgstr ""
+msgstr "És una variant de producte"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_fixed_price
@@ -849,7 +855,7 @@ msgstr "Actualitzat per última vegada el dia"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_length
 msgid "Length"
-msgstr ""
+msgstr "Longitud"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -889,9 +895,8 @@ msgstr "Termini de lliurament de fabricació"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
-#, fuzzy
 msgid "Margin"
-msgstr "Marge total"
+msgstr "Marge"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
@@ -910,9 +915,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
-#, fuzzy
 msgid "Max Weight"
-msgstr "Pes"
+msgstr ""
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -968,9 +972,8 @@ msgstr "Nom"
 
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
-#, fuzzy
 msgid "No carrier integration"
-msgstr "Informació del transportista"
+msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:63
@@ -993,6 +996,12 @@ msgstr "Cost normal"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_gap
 msgid "Normal Cost - Total Cost"
 msgstr "Cost normal - Cost total"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.normal_delivery_carrier_product_product
+msgid "Normal Delivery Charges"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
@@ -1042,22 +1051,20 @@ msgstr "Sortida"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
-#, fuzzy
 msgid "Package"
-msgstr "Paquets"
+msgstr "Paquet"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
-#, fuzzy
 msgid "Package Code"
-msgstr "Paquets"
+msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
 #: code:addons/delivery/models/stock_picking.py:128
-#, fuzzy, python-format
+#, python-format
 msgid "Package Details"
-msgstr "Paquets"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1066,14 +1073,13 @@ msgstr "Paquets"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
-#, fuzzy
 msgid "Packaging"
-msgstr "Paquets"
+msgstr "Empaquetament"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_pack_operation
 msgid "Packing Operation"
-msgstr ""
+msgstr "Operació d'empaquetatge"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -1118,12 +1124,12 @@ msgstr "Tarifa"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_item_ids
 msgid "Pricelist Items"
-msgstr ""
+msgstr "Element de tarifa"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
-msgstr ""
+msgstr "Fixar preu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_rule_ids
@@ -1268,7 +1274,7 @@ msgstr "Regles d'abastiment"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "Retorna albarà"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
@@ -1312,7 +1318,7 @@ msgstr "Línia comanda de venda"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Save"
-msgstr ""
+msgstr "Desar"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_categ_id
@@ -1446,6 +1452,7 @@ msgstr "Compte sortida estoc"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
 msgstr ""
+"Suma de la multiplicació del preu de Cost i qualitat de factures de Venedor."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_turnover
@@ -1459,6 +1466,8 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
 msgstr ""
+"Suma de la multiplicació del preu de la factura i la quantitat de factures "
+"de venedors"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_expected
@@ -1475,12 +1484,18 @@ msgstr "Suma de quantitat en factures de client"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_num_invoiced
 msgid "Sum of Quantity in Vendor Bills"
-msgstr ""
+msgstr "Suma de la quantitat en factures de Venedor"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name_template
 msgid "Template Name"
 msgstr "Nom de plantilla"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.delivery_carrier_product_product
+msgid "The Poste"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
@@ -1512,7 +1527,7 @@ msgstr "El volum en m3."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr ""
+msgstr "El pes del contingut en Kg, sense incloure empaquetatge, etc..."
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -1638,9 +1653,8 @@ msgstr "Seguiment"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
-#, fuzzy
 msgid "Tracking Reference"
-msgstr "Referència interna"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1737,9 +1751,8 @@ msgstr "Impostos de Proveïdor"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
-#, fuzzy
 msgid "Vendors"
-msgstr "Proveïdor "
+msgstr "Proveïdors "
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1761,15 +1774,13 @@ msgstr "Garantia"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_website_message_ids
-#, fuzzy
 msgid "Website Messages"
-msgstr "Missatges"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_website_message_ids
-#, fuzzy
 msgid "Website communication history"
-msgstr "Historial de missatges i comunicació"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1846,11 +1857,14 @@ msgid ""
 "this template. The customer will receive an email for each product linked to "
 "an email template."
 msgstr ""
+"En validar una factura, s'enviarà un correu electrònic al client basat en "
+"aquesta plantilla. El client rebrà un correu electrònic per cada producte "
+"vinculat a una plantilla de correu electrònic."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_width
 msgid "Width"
-msgstr ""
+msgstr "Amplada"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -1895,21 +1909,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "unknown"
 msgstr "desconegut"
-
-#~ msgid "Carrier Information"
-#~ msgstr "Informació del transportista"
-
-#~ msgid "Carrier Tracking Ref"
-#~ msgstr "Ref. seguiment transportista"
-
-#~ msgid "Gross Weight"
-#~ msgstr "Pes brut"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historial de missatges i comunicació"
-
-#~ msgid "Status"
-#~ msgstr "Estat"
-
-#~ msgid "Vendor"
-#~ msgstr "Proveïdor "

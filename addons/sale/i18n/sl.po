@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-03-27 18:35+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-11-03 18:55+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
 "sl/)\n"
@@ -105,13 +105,10 @@ msgstr ""
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
-#, fuzzy
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-"'Predračun' or 'Naročilo'} (Sklic ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -140,17 +137,17 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong>"
-msgstr ""
+msgstr "<strong>Prodajalec:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping address:</strong>"
-msgstr ""
+msgstr "<strong>Naslov za dostavo:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Total Without Taxes</strong>"
-msgstr ""
+msgstr "<strong>Skupaj brez DDV:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -175,7 +172,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_delivery_address
 msgid "Addresses"
-msgstr ""
+msgstr "Naslovi"
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
@@ -196,14 +193,14 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow discounts on sales order lines"
-msgstr ""
+msgstr "Dovoli popuste na posameznih postavkah naročila"
 
 #. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
 msgid ""
 "Allow to edit sales order from the 'Sales Order' menu (not from the "
 "Quotation menu)"
-msgstr ""
+msgstr "Dovoli urejanje naročila iz menija naročila (ne iz menija ponudbe)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
@@ -222,7 +219,7 @@ msgstr "Omogoča izbiro in vzdrževanje različnih enot mere za produkte."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_amount
 msgid "Amount of sales to invoice"
-msgstr ""
+msgstr "Količina prodaj za fakturiranje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_project_id
@@ -279,7 +276,7 @@ msgstr "Označite to polje za upravljanje predračunov v tej prodajni ekipi."
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Click to define a team target"
-msgstr ""
+msgstr "S klikom lahko definirate prodajni cilj ekipe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_commercial_partner_id
@@ -321,7 +318,7 @@ msgstr "Ustvari račune"
 #: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid "Create a Quotation, the first step of a new sale."
-msgstr ""
+msgstr "Ustvarite Ponudbo, prvi korak nove prodaje."
 
 #. module: sale
 #: selection:product.template,track_service:0
@@ -424,12 +421,12 @@ msgstr "Dostavljeno"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivered Quantity"
-msgstr ""
+msgstr "Dostavljena Količina"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Delivered quantities"
-msgstr ""
+msgstr "Dostavljene Količine"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_shipping_id
@@ -445,6 +442,12 @@ msgstr "Čas do Dobave"
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
 msgid "Delivery address for current sales order."
 msgstr "Dobavni naslov za trenutni prodajni nalog."
+
+#. module: sale
+#: model:product.product,name:sale.advance_product_0
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Deposit"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
@@ -464,9 +467,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "Disc.(%)"
-msgstr "Popust (%)"
+msgstr "Pop. (%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
@@ -561,9 +563,8 @@ msgstr "Čarovnik za sestavljanje e-pošte"
 
 #. module: sale
 #: model:ir.model,name:sale.model_survey_mail_compose_message
-#, fuzzy
 msgid "Email composition wizard for Survey"
-msgstr "Čarovnik za sestavljanje e-pošte"
+msgstr "Čarovnik za sestavljanje e-pošte za ankete"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
@@ -611,7 +612,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Bruto masa"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -848,7 +849,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Manually set quantities on order"
-msgstr ""
+msgstr "Količine na naročilu nastavi ročno"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_track_service
@@ -894,7 +895,7 @@ msgstr ""
 #: code:addons/sale/sale.py:101
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "Novo"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
@@ -1293,9 +1294,8 @@ msgstr "Analiza predračunov"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#, fuzzy
 msgid "Quotations Sent"
-msgstr "Ponudba poslana"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1309,9 +1309,8 @@ msgstr "Sklic na dokument, ki je ustvaril zahtevo za prodajni nalog."
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
-#, fuzzy
 msgid "Reinvoice Costs"
-msgstr "Status računa"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1571,7 +1570,7 @@ msgstr "Status"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Subscriptions"
-msgstr ""
+msgstr "Naročnine"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_subtotal
@@ -1775,9 +1774,8 @@ msgstr "Enota mere"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
-#, fuzzy
 msgid "Units of Measure"
-msgstr "Enota mere"
+msgstr "Merske enote"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1826,7 +1824,7 @@ msgstr "DDV:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Prostornina"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
@@ -1872,9 +1870,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
-#, fuzzy
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr "Postavke prodajnega naloga pripravljene za fakturiranje"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1895,9 +1892,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
-#, fuzzy
 msgid "account analytic line"
-msgstr "Analitična postavka"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1913,70 +1909,3 @@ msgstr "sale.config.settings"
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
 msgid "unknown"
 msgstr "neznano"
-
-#~ msgid ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-#~ msgstr ""
-#~ "${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
-#~ "'Predračun' or 'Naročilo'} (Sklic ${object.name or 'n/a' })"
-
-#~ msgid "Action Needed"
-#~ msgstr "Potreben je ukrep"
-
-#~ msgid "Allows you to specify an analytic account on sales orders."
-#~ msgstr "Omogoča analitične konte na prodajnih nalogih."
-
-#~ msgid "Analytic Line"
-#~ msgstr "Analitična postavka"
-
-#~ msgid "Analytic accounting for sales"
-#~ msgstr "Analitični konti prodaje"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum zadnjega sporočila vpisanega pod to vknjižbo."
-
-#~ msgid "Followers"
-#~ msgstr "Sledilci"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Sledilci (kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Sledilci (partnerji)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#~ msgid "Is Follower"
-#~ msgstr "Je sledilec"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnjega sporočila"
-
-#~ msgid "Messages"
-#~ msgstr "Sporočila"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Komunikacije in kronologija"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Število aktivnosti"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Število sporočil, ki zahtevajo dejavnost"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Število neprebranih sporočil"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "Odpri meni prodaje"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Števec neprebranih sporočil"
-
-#~ msgid "account.config.settings"
-#~ msgstr "account.config.settings"

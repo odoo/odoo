@@ -7,14 +7,15 @@
 # Jeffery Chenn <jeffery9@gmail.com>, 2016
 # Joray <13637815@qq.com>, 2016
 # Joray <13637815@qq.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016
 # liyes <bodetools@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-07-07 14:36+0000\n"
-"Last-Translator: Eddie Lim <bhweelim@yahoo.com>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-09-03 15:55+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/"
 "language/zh_CN/)\n"
 "Language: zh_CN\n"
@@ -22,6 +23,35 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_3
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to let you know that you have entered the select circle "
+"of our Gold Partners!</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_2
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>We are delighted to welcome you among our Silver Partners as of today!</"
+"p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:mail.template,body_html:marketing_campaign.email_template_1
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>You will receive your welcome pack via email shortly.</p>\n"
+"<p>Thank you,</p>\n"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -47,8 +77,8 @@ msgid ""
 "            contact, if a lead is not closed yet, etc."
 msgstr ""
 "一个活动可以有许多小的活动，例如发送邮件，打印信件，分配给一个团队等等\n"
-"这些晓得活动在一些特定情景中被触发；在第一个合同完成１０天后，如果线索还没有"
-"被关闭的话合同生成"
+"这些晓得活动在一些特定情景中被触发；在第一个合同完成10天后，如果线索还没有被"
+"关闭的话合同生成,等等。"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -231,6 +261,16 @@ msgstr "关闭"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_condition
 msgid "Condition"
 msgstr "条件"
+
+#. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_2
+msgid "Congratulations! You are now a Silver Partner!"
+msgstr "祝贺！你现在已经是我们的银牌业务伙伴了！"
+
+#. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_3
+msgid "Congratulations! You are now one of our Gold Partners!"
+msgstr "祝贺！你现在已经是我们的金牌业务伙伴了！"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:480
@@ -603,7 +643,7 @@ msgstr "线索自动化"
 #. module: marketing_campaign
 #: model:res.groups,name:marketing_campaign.group_lead_automation_manager
 msgid "Manager"
-msgstr "经理"
+msgstr "管理员"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
@@ -770,6 +810,11 @@ msgstr "业务伙伴"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid "Partner Field"
 msgstr "业务伙伴字段"
+
+#. module: marketing_campaign
+#: model:ir.filters,name:marketing_campaign.filter0
+msgid "Partners"
+msgstr "业务伙伴"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
@@ -1128,6 +1173,11 @@ msgid "Variable Cost"
 msgstr "可变成本"
 
 #. module: marketing_campaign
+#: model:mail.template,subject:marketing_campaign.email_template_1
+msgid "Welcome to the Odoo Partner Channel!"
+msgstr "欢迎来到Odoo的业务伙伴频道！"
+
+#. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "With Manual Confirmation"
 msgstr "通过手工确认"
@@ -1146,39 +1196,3 @@ msgstr "年"
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
-
-#~ msgid "Congratulations! You are now a Silver Partner!"
-#~ msgstr "祝贺！你现在已经是我们的银牌业务伙伴了！"
-
-#~ msgid "Congratulations! You are now one of our Gold Partners!"
-#~ msgstr "祝贺！你现在已经是我们的金牌业务伙伴了！"
-
-#~ msgid "Hello, you will receive your welcome pack via email shortly."
-#~ msgstr "你好，片刻之后将会通过电子邮件发送欢迎来到包给你。"
-
-#~ msgid ""
-#~ "Hi, we are delighted to let you know that you have entered the select "
-#~ "circle of our Gold Partners"
-#~ msgstr "你好！很荣幸通知你，你已进入我们的金牌业务伙伴圈子"
-
-#~ msgid ""
-#~ "Hi, we are delighted to welcome you among our Silver Partners as of today!"
-#~ msgstr "你好！欢迎你从今天开始成为我们的银牌业务伙伴！"
-
-#~ msgid ""
-#~ "Odoo's marketing campaign allows you to automate communication\n"
-#~ "            to your prospects. You can define a segment (set of "
-#~ "conditions) on\n"
-#~ "            your leads and partners to fullfil the campaign."
-#~ msgstr ""
-#~ "Odoo的市场营销能让你自动的和潜在客户进行沟通，你可以在线索和业务伙伴上定义"
-#~ "一个环节（条件设定）来实现营销"
-
-#~ msgid "Open Marketing Menu"
-#~ msgstr "打开市场营销菜单"
-
-#~ msgid "Partners"
-#~ msgstr "业务伙伴"
-
-#~ msgid "Welcome to the Odoo Partner Channel!"
-#~ msgstr "欢迎来到Odoo的业务伙伴频道！"

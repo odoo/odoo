@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-06 10:39+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-10-09 11:40+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "Language: nl\n"
@@ -233,12 +233,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "<i class=\"fa fa-envelope-o\"/> Email Our Website Expert"
-msgstr "<i class=\"fa fa-envelope-o\"/> Email onze website experts"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippets
 msgid "<i class=\"fa fa-indent\"/> Content"
-msgstr "<i class=\"fa fa-indent\"/> Inhoud"
+msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippets
@@ -1021,6 +1021,11 @@ msgid ""
 "field as True to allow users to run this action. If it is set to False the "
 "action cannot be run through the website."
 msgstr ""
+"Een code server actie kan worden uitgevoerd vanaf de website, met behulp van "
+"een speciale controller. Het adres is <base>/website/action/<website_path>. "
+"Stel dit veld in als Waar om gebruikers in staat te stellen om deze actie "
+"uit te voeren. Als deze is ingesteld op Onwaar kan de de actie niet worden "
+"uitgevoerd via de website."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1562,6 +1567,7 @@ msgstr "Klik op het icoon om het aan te passen aan uw functie"
 #. openerp-web
 #: code:addons/website/static/src/js/website.tour.banner.js:49
 #: model:ir.ui.view,arch_db:website.s_banner
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #, python-format
 msgid "Click to customize this text"
 msgstr "Klik om deze tekst aan te passen"
@@ -1687,8 +1693,10 @@ msgstr "Neem contact op met een domeinbeheerder in uw land om het te kopen"
 #: model:ir.ui.view,arch_db:website.s_banner
 #: model:ir.ui.view,arch_db:website.s_big_message
 #: model:ir.ui.view,arch_db:website.s_comparisons
+#: model:ir.ui.view,arch_db:website.website2_homepage
 #: model:ir.ui.view,arch_db:website.website_planner
 #: model:website.menu,name:website.menu_contactus
+#: model:website.menu,name:website.website2_menu_contactus
 msgid "Contact us"
 msgstr "Contact"
 
@@ -1904,6 +1912,11 @@ msgstr "Autoplay uitschakelen"
 #, python-format
 msgid "Discard"
 msgstr "Negeren"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Discuss and Comments"
+msgstr "Discussiseren en commentaar"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2413,7 +2426,7 @@ msgstr "Kop of productomschrijving,"
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Help"
-msgstr "Help"
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2433,6 +2446,7 @@ msgstr "Hier is een basis handleiding voor uw eerste A/B testing:"
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.footer_default
 #: model:website.menu,name:website.menu_homepage
+#: model:website.menu,name:website.website2_menu_homepage
 msgid "Home"
 msgstr "Home"
 
@@ -2441,6 +2455,11 @@ msgstr "Home"
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Homepage"
 msgstr "Startpagina"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.website2_homepage
+msgid "Homepage 0.0.0.0"
+msgstr "Startpagina 0.0.0.0"
 
 #. module: website
 #. openerp-web
@@ -2850,6 +2869,11 @@ msgid "Menu <b>%s</b> seems to have a link to this page !"
 msgstr "Menu <b>%s</b> lijkt een link te hebben naar deze pagina!"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Message"
+msgstr "Bericht"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/website.mobile.js:42
 #, python-format
@@ -2988,7 +3012,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Note: To use those features, you need to install the"
-msgstr "Opmerking: Om deze toepassingen te gebruiken, installeert u de"
+msgstr "Opmerking: Om deze functionaliteiten te gebruiken, installeert u de"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.layout_footer_copyright
@@ -3256,6 +3280,16 @@ msgid "Partner"
 msgstr "Relatie"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Partner Detail"
+msgstr "Relatie details"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Partners"
+msgstr "Relaties"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Plan"
 msgstr "Plan"
@@ -3415,6 +3449,11 @@ msgid "Real professional translators will translate all your contents"
 msgstr "Echte professionele vertalers vertalen al uw inhoud"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Recipient"
+msgstr "Ontvanger"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Reduce the time and resources spent on support."
 msgstr "Reduceer de tijd en middelen gespendeerd aan ondersteuning."
@@ -3566,6 +3605,16 @@ msgstr "Verkoop online. Gemakkelijk."
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Sell more online"
 msgstr "Verkoop meer online"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send <span class=\"fa fa-long-arrow-right\"/>"
+msgstr "Verzend <span class=\"fa fa-long-arrow-right\"/>"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_comment
+msgid "Send a Message to our Partners"
+msgstr "Verzend een bericht naar onze partners"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3792,6 +3841,11 @@ msgstr "Sjabloon fallback"
 #, python-format
 msgid "Test Your Mobile Version"
 msgstr "Test uw mobiele versie"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.template_partner_post
+msgid "Thank you for posting a message !"
+msgstr "Dank u voor het plaatsen van een bericht!"
 
 #. module: website
 #. openerp-web
@@ -4067,6 +4121,7 @@ msgstr "Om meer te leren, neem een kijkje bij hun"
 #. openerp-web
 #: code:addons/website/static/src/js/website.contentMenu.js:175
 #: model:website.menu,name:website.main_menu
+#: model:website.menu,name:website.website2_main_menu
 #, python-format
 msgid "Top Menu"
 msgstr "Hoofdmenu"
@@ -4078,10 +4133,11 @@ msgstr "Fout herleiden"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.snippets.editor.js:771
+#: code:addons/website/static/src/js/website.snippets.editor.js:772
 #, python-format
 msgid "Transform the picture (click twice to reset transformation)"
 msgstr ""
+"Transformeer de afbeelding (klik tweemaal om de transformatie te annuleren)"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4204,7 +4260,7 @@ msgstr "Url"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Use Google Adwords"
-msgstr "Gebruik Google Adwords"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_cdn_activated
@@ -4399,6 +4455,16 @@ msgstr "Website menu"
 #: model:ir.model.fields,field_description:website.field_website_name
 msgid "Website Name"
 msgstr "Website naam"
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_post
+msgid "Website Partner Post and Thanks Demo"
+msgstr "Website partners reactie en bedankt demo"
+
+#. module: website
+#: model:ir.actions.server,name:website.action_partner_comment
+msgid "Website Partners Comment Form"
+msgstr "Website partners reactie formulier"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
@@ -4916,6 +4982,7 @@ msgstr "bijv: blog, succesverhalen, referenties, evenementen, jobs"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "ex: Contact us, Our Customers, Privacy Policy, Events, Blog, Jobs"
 msgstr ""
+"bijv: Neem contact op, Onze klanten, Privacybeleid, Evenementen, Blog, Banen"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -5136,474 +5203,3 @@ msgstr "Ja"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "your Company details form"
 msgstr "uw bedrijfsgegevens formulier"
-
-#~ msgid "&lt;!DOCTYPE html&gt;"
-#~ msgstr "&lt;!DOCTYPE html&gt;"
-
-#~ msgid ".xml"
-#~ msgstr ".xml"
-
-#~ msgid ""
-#~ "<b>Great stories have personality.</b> Consider telling\n"
-#~ "                        a great story that provides personality. Writing "
-#~ "a story\n"
-#~ "                        with personality for potential clients will asist "
-#~ "with\n"
-#~ "                        making a relationship connection. This shows up "
-#~ "in small\n"
-#~ "                        quirks like word choices or phrases. Write from "
-#~ "your point\n"
-#~ "                        of view, not from someone else's experience."
-#~ msgstr ""
-#~ "<b>Geweldige verhalen hebben personaliteit.</b> Overweeg het vertellen "
-#~ "van een geweldig verhaal dat persoonlijkheid geeft. Het schrijven van een "
-#~ "verhaal met persoonlijkheid voor potentiële klanten zullen u helpen met "
-#~ "het maken van een band met uw relatie. Dit blijkt uit kleine "
-#~ "eigenaardigheden zoals woordkeuze of zinnen. Schrijven vanuit uw "
-#~ "standpunt gezien, niet uit ervaring van iemand anders."
-
-#~ msgid "<i class=\"fa fa-th-large\"/> Website<b class=\"caret\"/>"
-#~ msgstr "<i class=\"fa fa-th-large\"/> Website<b class=\"caret\"/>"
-
-#~ msgid "<span class=\"fa fa-envelope-o\"/> Email Our Website Expert"
-#~ msgstr "<span class=\"fa fa-envelope-o\"/> Email onze website expert"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-align-justify fa-stack-1x\"/>\n"
-#~ "        </span> Content"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-align-justify fa-stack-1x\"/>\n"
-#~ "        </span> Inhoud"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-paper-plane fa-stack-1x\"/>\n"
-#~ "        </span> Effect"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-paper-plane fa-stack-1x\"/>\n"
-#~ "        </span> Effect"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-pie-chart fa-stack-1x\"/>\n"
-#~ "        </span> Feature"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-pie-chart fa-stack-1x\"/>\n"
-#~ "        </span> Functie"
-
-#~ msgid ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-th-large fa-stack-1x\"/>\n"
-#~ "        </span> Structure"
-#~ msgstr ""
-#~ "<span class=\"fa-stack\">\n"
-#~ "            <i class=\"fa fa-th-large fa-stack-1x\"/>\n"
-#~ "        </span> Structuur"
-
-#~ msgid "<span title=\"Edit Top Menu\">Edit Menu</span>"
-#~ msgstr "<span title=\"Edit Top Menu\">Wijzig menu</span>"
-
-#~ msgid ""
-#~ "<span title=\"Optimize your AdWords account\">Optimize AdWords Campaign</"
-#~ "span>"
-#~ msgstr ""
-#~ "<span title=\"Optimize your AdWords account\">Optimaliseer AdWords "
-#~ "campagne</span>"
-
-#~ msgid "<span title=\"Promote page on the web\">Optimize SEO</span>"
-#~ msgstr "<span title=\"Promote page on the web\">Optimaliseer SEO</span>"
-
-#~ msgid "<strong>Click Here</strong>"
-#~ msgstr "<strong>Klik hier</strong>"
-
-#~ msgid ""
-#~ "A code server action can be executed from the website, using a "
-#~ "dedicatedcontroller. The address is <base>/website/action/<website_path>."
-#~ "Set this field as True to allow users to run this action. If itset to is "
-#~ "False the action cannot be run through the website."
-#~ msgstr ""
-#~ "Een code server actie kan worden uitgevoerd vanaf de website, met behulp "
-#~ "van een speciale controller. Het adres is <base>/website/action/"
-#~ "<website_path>. Stel dit veld in als waar om gebruikers in staat te "
-#~ "stellen om deze actie uit te voeren. Als deze is ingesteld op onwaar kan "
-#~ "de de actie niet worden uitgevoerd via de website."
-
-#~ msgid "Add new pages and menus"
-#~ msgstr "Nieuwe pagina's en menu's toevoegen"
-
-#~ msgid ""
-#~ "As you add more pages to your website, you main menu will begin to feel "
-#~ "overcrowded.\n"
-#~ "                            You can regroup similar pages into a sub-"
-#~ "menu, so they will appear under a unique drop-down menu."
-#~ msgstr ""
-#~ "Naar mate dat u meer pagina's toevoegen, zal uw hoofdmenu overdruk "
-#~ "beginnen te lijken.\n"
-#~ "U kan gelijkende pagina's hergroepen in sub-menu's, zodat ze getoond "
-#~ "worden in een unieke drop-down menu."
-
-#~ msgid "Background"
-#~ msgstr "Achtergrond"
-
-#~ msgid "Check now and discover more today!"
-#~ msgstr "Kijk nu en ontdek nog meer vandaag!"
-
-#~ msgid "Color"
-#~ msgstr "Kleur"
-
-#~ msgid "Content <span class=\"caret\"/>"
-#~ msgstr "Inhoud <span class=\"caret\"/>"
-
-#~ msgid "Customize <span class=\"caret\"/>"
-#~ msgstr "Personaliseer <span class=\"caret\"/>"
-
-#~ msgid ""
-#~ "Deploy new stores with just an internet connection: no\n"
-#~ "                installation, no specific hardware required. It works "
-#~ "with any\n"
-#~ "                iPad, Tablet PC, laptop or industrial POS machine."
-#~ msgstr ""
-#~ "Implementeer nieuwe winkels met slechts een internetverbinding: geen \n"
-#~ "installatie geen specifieke hardware vereist. Het werkt met elke \n"
-#~ "iPad, Tablet PC, laptop of industriële POS-machine."
-
-#~ msgid "Discover more about Odoo"
-#~ msgstr "Ontdek meer over Odoo"
-
-#~ msgid "Discuss and Comments"
-#~ msgstr "Discussiseren en commentaar"
-
-#~ msgid "Edit Menu Entry"
-#~ msgstr "Wijzig menu item"
-
-#~ msgid "Help <span class=\"caret\"/>"
-#~ msgstr "Help <span class=\"caret\"/>"
-
-#~ msgid "Hide link"
-#~ msgstr "Verberg link"
-
-#~ msgid "Homepage 0.0.0.0"
-#~ msgstr "Startpagina 0.0.0.0"
-
-#~ msgid ""
-#~ "In case you still feel a bit puzzled about all\n"
-#~ "                        of our yesterday's announcements, here is a "
-#~ "little\n"
-#~ "                        summary for you. <br/>\n"
-#~ "                        We have decided to change the\n"
-#~ "                        name because <b>\"OpenERP\"</b> didn't reflect "
-#~ "the offering\n"
-#~ "                        of the company anymore. With our newest apps, "
-#~ "such\n"
-#~ "                        as Website Builder, PoS or eCommerce, we have\n"
-#~ "                        moved beyond the ERP territory. <br/>\n"
-#~ "                        But <u>don't worry</u>, <b>Odoo</b> is and always "
-#~ "will be\n"
-#~ "                        fully open source. You can read more about the "
-#~ "new name here.\n"
-#~ "                        We have also prepared a short FAQ to explain all "
-#~ "these changes\n"
-#~ "                        to all of you. <br/>"
-#~ msgstr ""
-#~ "Indien u zich een beetje verbaasd voelt over alle\n"
-#~ "meldingen van gisteren, is hier een kleine\n"
-#~ "samenvatting voor u. <br/>\n"
-#~ "We hebben beslist om de naam te\n"
-#~ "wijzigen omdat <b>\"OpenERP\"</b> niet meer het aanbod\n"
-#~ "van ons bedrijf reflecteerde. Met onze nieuwste apps, zoals\n"
-#~ "de Website Bouwer, PoS of eCommerce, hebben we ons\n"
-#~ "verplaatst voorbij het ERP terrein. <br/>\n"
-#~ "Maar <u>geen zorgen</u>, <b>Odoo</b> is en zal altijd\n"
-#~ "volledig open source zijn. U kan hier meer lezen over de nieuwe naam.\n"
-#~ "We hebben ook een korte FAQ gemaakt om alle wijzigingen\n"
-#~ "aan u uit te leggen. <br/>"
-
-#~ msgid ""
-#~ "It might be possible to edit the relevant items\n"
-#~ "                                or fix the issue in"
-#~ msgstr ""
-#~ "Het is wellicht mogelijk om de relevante items te bewerken\n"
-#~ "                                of het probleem te verhelpen in"
-
-#~ msgid "Menu Label"
-#~ msgstr "Menulabel"
-
-#~ msgid "Message"
-#~ msgstr "Bericht"
-
-#~ msgid "Odoo Members"
-#~ msgstr "Odoo Members"
-
-#~ msgid ""
-#~ "Odoo's POS is a web application that can run on any device that\n"
-#~ "                can display websites with little to no setup required."
-#~ msgstr ""
-#~ "Odoo's Kassa is een web-applicatie die kan draaien op elk apparaat dat \n"
-#~ "websites kan weergeven met weinig  tot geen installatie."
-
-#~ msgid "Our products &amp; Services"
-#~ msgstr "Onze producten &amp; diensten"
-
-#~ msgid "Partner Detail"
-#~ msgstr "Relatie details"
-
-#~ msgid "Partners"
-#~ msgstr "Relaties"
-
-#~ msgid "Press The Top-Left Edit Button"
-#~ msgstr "Druk op de wijzig knop in de linkerbovenhoek"
-
-#~ msgid "Project Management Questions <small>v7</small>"
-#~ msgstr "Projectbeheer vragen <small>v7</small>"
-
-#~ msgid "Promote <span class=\"caret\"/>"
-#~ msgstr "Promoten <span class=\"caret\"/>"
-
-#~ msgid "Recipient"
-#~ msgstr "Ontvanger"
-
-#~ msgid "Reset Transformation"
-#~ msgstr "Reset transformatie"
-
-#~ msgid "Send <span class=\"fa fa-long-arrow-right\"/>"
-#~ msgstr "Verzend <span class=\"fa fa-long-arrow-right\"/>"
-
-#~ msgid "Send a Message to our Partners"
-#~ msgstr "Verzend een bericht naar onze partners"
-
-#~ msgid "Thank you for posting a message !"
-#~ msgstr "Dank u voor het plaatsen van een bericht!"
-
-#~ msgid "The 'Content' menu allows you to add pages or add the top menu."
-#~ msgstr ""
-#~ "Het 'Inhoud' menu geeft u de mogelijkheid om pagina's, of een boven menu "
-#~ "toe te voegen."
-
-#~ msgid ""
-#~ "The Point of Sale works perfectly on any kind of touch enabled\n"
-#~ "                device, whether it's multi-touch tablets like an iPad or\n"
-#~ "                keyboardless resistive touchscreen terminals."
-#~ msgstr ""
-#~ "De kassa werkt perfect op elke vorm touch screen apparaat, \n"
-#~ "of het nu multi-touch tablets zijn zoals een iPad of \n"
-#~ "draadloze resistieve touchscreen terminals."
-
-#~ msgid "Transform"
-#~ msgstr "Transformeren"
-
-#~ msgid "Use Google Adword"
-#~ msgstr "Gebruik Google Adwords"
-
-#~ msgid "Website Partner Post and Thanks Demo"
-#~ msgstr "Website partners reactie en bedankt demo"
-
-#~ msgid "Website Partners Comment Form"
-#~ msgstr "Website partners reactie formulier"
-
-#~ msgid "What a day it was yesterday - such a big day for us!"
-#~ msgstr "Wat een dag was het gisteren - zo een grote dag voor ons!"
-
-#~ msgid ""
-#~ "While an internet connection is required to start the Point of\n"
-#~ "                Sale, it will stay operational even after a complete "
-#~ "disconnection."
-#~ msgstr ""
-#~ "Hoewel er een internetverbinding nodig is om de kassa te starten\n"
-#~ "zal deze operationeel blijven, zelfs na een volledige internet "
-#~ "uitschakeling."
-
-#~ msgid ""
-#~ "With Odoo's fully integrated software, you can easily manage your\n"
-#~ "                        meetings, schedule business calls, create "
-#~ "recurring meetings,\n"
-#~ "                        synchronize your agenda and easily keep in touch "
-#~ "with your colleagues,\n"
-#~ "                        partners and other people involved in projects or "
-#~ "business discussions.\n"
-#~ "                        <br/><br/>"
-#~ msgstr ""
-#~ "Met Odoo's volledige gedesintegreerde software, kunt eenvoudig\n"
-#~ "afspraken beheren, telefoongesprekken plannen, herhalende afspraken "
-#~ "maken,\n"
-#~ "synchroniseer uw agenda en eenvoudig in contact blijven met uw "
-#~ "collega's,\n"
-#~ "relaties en andere mensen die zijn betrokken bij uw projecten of "
-#~ "overleggen.\n"
-#~ "<br/><br/>"
-
-#~ msgid "Yes."
-#~ msgstr "Ja."
-
-#~ msgid "You should try others search criteria."
-#~ msgstr "U zou andere hun zoekcriteria moeten proberen."
-
-#~ msgid "ex: Contact us, Our Customers, Privacy Policy, Events, Bolg, Jobs"
-#~ msgstr ""
-#~ "bijv: Neem contact op, Onze klanten, Privacybeleid, Evenementen, Blog, "
-#~ "Jobs"
-
-#~ msgid "or"
-#~ msgstr "of"
-
-#~ msgid "sitemap-"
-#~ msgstr "sitemap-"
-
-#~ msgid ""
-#~ ",\n"
-#~ "                                                      the #1"
-#~ msgstr ""
-#~ ",\n"
-#~ "                                                      de #1"
-
-#~ msgid ":&nbsp;"
-#~ msgstr ":&nbsp;"
-
-#~ msgid "<b>Set Custom Image...</b>"
-#~ msgstr "<b>Kies een afbeelding...</b>"
-
-#~ msgid "<i class=\"fa fa-book\"/>Style"
-#~ msgstr "<i class=\"fa fa-book\"/>Stijl"
-
-#~ msgid "<i class=\"fa fa-picture-o\"/>Background Image"
-#~ msgstr "<i class=\"fa fa-picture-o\"/>Achtergrondafbeelding"
-
-#~ msgid "<i class=\"fa fa-plus-circle\"/>Add Slide"
-#~ msgstr "<i class=\"fa fa-plus-circle\"/>Slide toevoegen"
-
-#~ msgid "<i class=\"fa fa-trash-o\"/>Remove Slide"
-#~ msgstr "<i class=\"fa fa-trash-o\"/>Slide verwijderen"
-
-#~ msgid "API Key"
-#~ msgstr "API-code"
-
-#~ msgid "Confirmation"
-#~ msgstr "Bevestiging"
-
-#~ msgid "Dashboard"
-#~ msgstr "Dashboard"
-
-#~ msgid "Favicon"
-#~ msgstr "Favicon"
-
-#~ msgid "Follow"
-#~ msgstr "Volgen"
-
-#~ msgid "Follow the"
-#~ msgstr "Volg de"
-
-#~ msgid "Girl"
-#~ msgstr "Meisje"
-
-#~ msgid "Go to our"
-#~ msgstr "Ga naar onze"
-
-#~ msgid "Google Analytics"
-#~ msgstr "Google Analytics"
-
-#~ msgid "Incorrect Client ID"
-#~ msgstr "Foutieve cliënt ID"
-
-#~ msgid "Install a language"
-#~ msgstr "Installeer een taal"
-
-#~ msgid "Let's start designing."
-#~ msgstr "Laten we starten met ontwerpen."
-
-#~ msgid "Link my Analytics Account"
-#~ msgstr "Link mijn analytisch account"
-
-#~ msgid "Month"
-#~ msgstr "Maand"
-
-#~ msgid "More Info"
-#~ msgstr "Meer info"
-
-#~ msgid "New Language"
-#~ msgstr "Nieuwe taal"
-
-#~ msgid "Parent Rigth"
-#~ msgstr "Rechts bovenliggende"
-
-#~ msgid "Partner-related data of the user"
-#~ msgstr "Relatie gerelateerde gegevens van de gebruiker"
-
-#~ msgid "Performance Optimization"
-#~ msgstr "Performantie optimalisatie"
-
-#~ msgid "Rename Page To:"
-#~ msgstr "Hernoem pagina naar:"
-
-#~ msgid "Rename This Page"
-#~ msgstr "Hernoem deze pagina"
-
-#~ msgid "Settings"
-#~ msgstr "Instellingen"
-
-#~ msgid "Speed"
-#~ msgstr "Snelheid"
-
-#~ msgid "This field is used to set/get locales for user"
-#~ msgstr ""
-#~ "Dit veld wordt gebruikt om de landvoorkeuren van de gebruiker in te "
-#~ "stellen"
-
-#~ msgid "Unpublished"
-#~ msgstr "Niet gepubliceerd"
-
-#~ msgid "User Documentation"
-#~ msgstr "Gebruikersdocumentatie"
-
-#~ msgid "Visits"
-#~ msgstr "Bezoeken"
-
-#~ msgid "Warning!"
-#~ msgstr "Waarschuwing!"
-
-#~ msgid "Website Dashboard"
-#~ msgstr "Website dashboard"
-
-#~ msgid "Website Favicon"
-#~ msgstr "Website favicon"
-
-#~ msgid "Website Url"
-#~ msgstr "Website url"
-
-#~ msgid "Week"
-#~ msgstr "Week"
-
-#~ msgid "Welcome to your"
-#~ msgstr "Welkom op uw"
-
-#~ msgid "With a great subtitle"
-#~ msgstr "Met een geweldige subtitel"
-
-#~ msgid "Year"
-#~ msgstr "Jaar"
-
-#~ msgid "You do not seem to have access to this Analytics Account."
-#~ msgstr "U lijkt geen toegang te hebben tot deze analytische rekening."
-
-#~ msgid "You need to log in to your Google Account before:"
-#~ msgstr "U moet uw eigen eerst aanmelden op uw Google account voor:"
-
-#~ msgid "Your Google Analytic Client ID:"
-#~ msgstr "Uw Google Analytic cliënt ID:"
-
-#~ msgid "base.config.settings"
-#~ msgstr "base.config.settings"
-
-#~ msgid "e.g. About Us"
-#~ msgstr "bijvoorbeeld Over ons"
-
-#~ msgid "found(s)"
-#~ msgstr "gevonden"
-
-#~ msgid "signs to start."
-#~ msgstr "tekenen om te starten."
-
-#~ msgid "to get more information."
-#~ msgstr "om meer informatie te krijgen."

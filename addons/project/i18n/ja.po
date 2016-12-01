@@ -4,14 +4,15 @@
 #
 # Translators:
 # Manami Hashi <manami@roomsfor.hk>, 2016
-# takuan_osho <shimizu.taku@gmail.com>, 2015
+# Masayuki Takesue <m_takesue@nifty.com>, 2016
+# SHIMIZU Taku <shimizu.taku@gmail.com>, 2015
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
-"PO-Revision-Date: 2016-08-29 01:40+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-10-30 23:33+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "Language: ja\n"
@@ -184,6 +185,16 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
 msgid "# Tasks"
 msgstr "タスク数"
@@ -289,7 +300,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"o_label\">Documents</span>"
-msgstr ""
+msgstr "<span class=\"o_label\">ドキュメント</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1188,6 +1199,11 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr ""
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr ""
@@ -1203,6 +1219,7 @@ msgstr "取消"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "取消済"
@@ -1270,7 +1287,7 @@ msgstr "タスクの説明に共同リッチテキストを使用"
 #: model:ir.model.fields,field_description:project.field_project_tags_color
 #: model:ir.model.fields,field_description:project.field_project_task_color
 msgid "Color Index"
-msgstr "カラーインデックス"
+msgstr "カラーインデクス"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1295,7 +1312,7 @@ msgstr "会社"
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_company_uom_id
 #: model:ir.model.fields,field_description:project.field_project_project_company_uom_id
 msgid "Company UOM"
-msgstr ""
+msgstr "会社単位"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
@@ -1692,6 +1709,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "完了"
@@ -1713,7 +1731,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit Task"
-msgstr ""
+msgstr "タスクを編集"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1722,9 +1740,8 @@ msgstr "Eメールエイリアス"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
-#, fuzzy
 msgid "Email Template"
-msgstr "Eメールエイリアス"
+msgstr "Eメールテンプレート"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2134,6 +2151,7 @@ msgstr ""
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
+#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "進行中"
@@ -2427,7 +2445,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "会員"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2460,6 +2478,11 @@ msgstr "自分のタスク"
 #: model:ir.model.fields,field_description:project.field_project_tags_name
 msgid "Name"
 msgstr "名称"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -2503,6 +2526,11 @@ msgstr "顧客評価を使用しない"
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
 msgstr "通常"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
@@ -2723,7 +2751,7 @@ msgstr "優先度"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
 msgid "Priority Management Explanation"
-msgstr ""
+msgstr "優先度管理用説明"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_privacy_visibility
@@ -2884,11 +2912,21 @@ msgid "Ready to be displayed, published or sent"
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
+msgstr ""
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
 msgstr ""
 
 #. module: project
@@ -2929,7 +2967,7 @@ msgstr "残時間"
 #: code:addons/project/static/src/js/project.js:48
 #, python-format
 msgid "Remove Cover Image"
-msgstr ""
+msgstr "カバーイメージを削除"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3008,7 +3046,7 @@ msgstr "プロジェクトの検索"
 #: code:addons/project/static/src/js/project.js:46
 #, python-format
 msgid "Select"
-msgstr ""
+msgstr "選択"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3037,14 +3075,14 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr ""
+msgstr "カバーイメージを設定"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project.js:45
 #, python-format
 msgid "Set a Cover Image"
-msgstr ""
+msgstr "カバーイメージを設定"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -3172,9 +3210,8 @@ msgstr "ステータス"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_child_ids
-#, fuzzy
 msgid "Sub-tasks"
-msgstr "タスク"
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3442,6 +3479,8 @@ msgid ""
 "There is no available image to be set as cover. Send a message on the task "
 "with an attached image."
 msgstr ""
+"カバーイメージとして設定するイメージがありません。タスクの編集で、イメージを"
+"添付したメッセージを送信してください。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_rating_project
@@ -3504,15 +3543,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
-#, fuzzy
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
-"これはプロジェクトとタスクの中で使われる単位をセットします。\n"
-"プロジェクトにリンクする勤務表（プロジェクトタイムシートモジュール）を使用す"
-"る場合は、従業員の中に正しい単位を設定することを忘れないで下さい。"
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -3533,7 +3568,7 @@ msgstr "タスクの所要時間"
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
 msgid "Timesheet UoM"
-msgstr ""
+msgstr "タイムシート単位"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_timesheet_synchro
@@ -3578,6 +3613,7 @@ msgstr "ガントチャートレポートを調整するための時刻表労働
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
+#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "ToDo"
@@ -3644,6 +3680,11 @@ msgstr ""
 msgid ""
 "Use separate meetings to solve big issues or issues that aren’t important "
 "for the entire team."
+msgstr ""
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the priority for tasks related to gold customers"
 msgstr ""
 
 #. module: project
@@ -3899,7 +3940,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_config_settings
 msgid "project.config.settings"
-msgstr ""
+msgstr "project.config.settings"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_history_cumulative
@@ -3960,77 +4001,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "必要なアクション"
-
-#~ msgid "Check this field if this project manages timesheets"
-#~ msgstr ""
-#~ "このプロジェクトでタイムシートを使用する場合は、この項目を選択してくださ"
-#~ "い。"
-
-#~ msgid "Close"
-#~ msgstr "閉じる"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "記録上の最後のメッセージが投稿された日"
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "委任されたタスク"
-
-#~ msgid "Followers"
-#~ msgstr "フォロワー"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "フォロワー(チャンネル)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "フォロワー(取引先)"
-
-#~ msgid "Is Follower"
-#~ msgstr "フォロー中"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最終メッセージ日"
-
-#~ msgid "Messages"
-#~ msgstr "メッセージ"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "メッセージと通信履歴"
-
-#~ msgid "Number of Actions"
-#~ msgstr "アクションの数"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未読メッセージの件数"
-
-#~ msgid "Record timesheet lines per tasks"
-#~ msgstr "タスクに紐付けてタイムシート入力"
-
-#~ msgid "Subscriptions"
-#~ msgstr "サブスクリプション"
-
-#~ msgid "Task's Work on Tasks"
-#~ msgstr "タスクでのタイムシート"
-
-#~ msgid ""
-#~ "This will set the unit of measure used in projects and tasks.\n"
-#~ "If you use the timesheet linked to projects (project_timesheet module), "
-#~ "don't forget to setup the right unit of measure in your employees."
-#~ msgstr ""
-#~ "これはプロジェクトとタスクの中で使われる単位をセットします。\n"
-#~ "プロジェクトにリンクする勤務表（プロジェクトタイムシートモジュール）を使用"
-#~ "する場合は、従業員の中に正しい単位を設定することを忘れないで下さい。"
-
-#~ msgid "Type of Account"
-#~ msgstr "勘定タイプ"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未読メッセージカウンター"
-
-#~ msgid "Website Messages"
-#~ msgstr "ウェブサイトメッセージ"
-
-#~ msgid "Website communication history"
-#~ msgstr "ウェブサイトコミュニケーション履歴"

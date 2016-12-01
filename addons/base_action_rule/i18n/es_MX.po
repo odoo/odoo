@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-01-28 16:21+0000\n"
-"Last-Translator: David Hernandez <davidhernandez.ctam@gmail.com>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-09-23 09:57+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/"
 "language/es_MX/)\n"
 "Language: es_MX\n"
@@ -34,9 +34,8 @@ msgstr "Regla acción"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_line_test
-#, fuzzy
 msgid "Action Rule Line Test"
-msgstr "Acción de la regla de prueba"
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -321,9 +320,8 @@ msgstr "Meses"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_name
-#, fuzzy
 msgid "Name"
-msgstr "Nombre de regla"
+msgstr ""
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -426,6 +424,21 @@ msgid "Subject"
 msgstr "Asunto"
 
 #. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_done
+msgid "Test lead in state 'done'"
+msgstr "Cable de prueba en el estado de 'hacer'"
+
+#. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_draft
+msgid "Test lead in state 'draft'"
+msgstr "Cable de prueba en el estado de 'proyecto'"
+
+#. module: base_action_rule
+#: model:ir.filters,name:base_action_rule.test_filter_open
+msgid "Test lead in state 'open'"
+msgstr "Cable de prueba en el estado \"abierto\""
+
+#. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_id
 msgid "Trigger Date"
 msgstr "Fecha activación"
@@ -499,12 +512,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_line_ids
 msgid "unknown"
 msgstr ""
-
-#~ msgid "Test lead in state 'done'"
-#~ msgstr "Cable de prueba en el estado de 'hacer'"
-
-#~ msgid "Test lead in state 'draft'"
-#~ msgstr "Cable de prueba en el estado de 'proyecto'"
-
-#~ msgid "Test lead in state 'open'"
-#~ msgstr "Cable de prueba en el estado \"abierto\""

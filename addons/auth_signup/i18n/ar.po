@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-01-06 08:54+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-10-22 07:01+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "Language: ar\n"
@@ -150,7 +150,7 @@ msgstr "تم إرسالة بريد بالبيانات اللازمة لإعاد�
 #: code:addons/auth_signup/controllers/main.py:38
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr ""
+msgstr "هذا البريد الالكتروني مستخدم بالفعل."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:111
@@ -184,7 +184,7 @@ msgstr "أكّد كلمة المرور"
 #: code:addons/auth_signup/controllers/main.py:41
 #, python-format
 msgid "Could not create a new account."
-msgstr ""
+msgstr "لا يمكن انشاء حساب جديد."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:63
@@ -281,16 +281,14 @@ msgstr "رابط التسجيل"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
-#, fuzzy
 msgid "Signup expiration"
-msgstr "انتهاء صلاحية التسجيل"
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
-#, fuzzy
 msgid "Signup token"
-msgstr "رمز التسجيل"
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
@@ -305,7 +303,7 @@ msgstr "قالب المستخدم عندما يقوم أحدهم بالتسجي�
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_res_users_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "الرابط الكامل للوصول إلى المستند من خلال الموقع."
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
@@ -320,37 +318,37 @@ msgstr "المستخدمون"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
 msgid "Visible in Website"
-msgstr ""
+msgstr "مرئي في الموقع"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
 msgid "Website Partner Full Description"
-msgstr ""
+msgstr "وصف الشريك الكامل بالموقع"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
 msgid "Website Partner Short Description"
-msgstr ""
+msgstr "وصف موجز للشريك بالموقع"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
 msgid "Website URL"
-msgstr ""
+msgstr "رابط الموقع"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
 msgid "Website meta description"
-msgstr ""
+msgstr "الوصف الدلالي في الموقع"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
 msgid "Website meta keywords"
-msgstr ""
+msgstr "الكلمات الدلالية بالموقع"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
 msgid "Website meta title"
-msgstr ""
+msgstr "العنوان الدلالي بالموقع"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -366,71 +364,9 @@ msgstr "اسمك"
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
 msgid "base.config.settings"
-msgstr ""
+msgstr "base.config.settings"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
 msgstr "مثل: محمد محمود"
-
-#~ msgid ""
-#~ "\n"
-#~ "                \n"
-#~ "                    <p>\n"
-#~ "                        ${object.name},\n"
-#~ "                    </p>\n"
-#~ "                    <p>\n"
-#~ "                        You have been invited to connect to \"${object."
-#~ "company_id.name}\" in order to get access to your documents in Odoo.\n"
-#~ "                    </p>\n"
-#~ "                    <p>\n"
-#~ "                        To accept the invitation, click on the following "
-#~ "link:\n"
-#~ "                    </p>\n"
-#~ "                    <ul>\n"
-#~ "                        <li><a href=\"${object.signup_url}\">Accept "
-#~ "invitation to \"${object.company_id.name}\"</a></li>\n"
-#~ "                    </ul>\n"
-#~ "                    <p>\n"
-#~ "                        Thanks,\n"
-#~ "                    </p>\n"
-#~ "                    <pre>\n"
-#~ "--\n"
-#~ "${object.company_id.name or ''}\n"
-#~ "${object.company_id.email or ''}\n"
-#~ "${object.company_id.phone or ''}\n"
-#~ "                    </pre>\n"
-#~ "                \n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "<p>\n"
-#~ "${object.name}\n"
-#~ "</p>\n"
-#~ "<p>\n"
-#~ "تمت دعوتك للتواصل على \"${object.company_id.name}\" لتتمكن من الوصول إلى "
-#~ "مستنداتك في أودو.\n"
-#~ "</p>\n"
-#~ "<p>\n"
-#~ "لقبول الدعوة، انقر الرابط التالي\n"
-#~ "</p>\n"
-#~ "<ul>\n"
-#~ "<li><a href=\"${object.signup_url}\">قبول دعوة  \"${object.company_id."
-#~ "name}\"</a></li>\n"
-#~ "</ul>\n"
-#~ "<p>\n"
-#~ "شكراً،\n"
-#~ "</p>\n"
-#~ "<pre>\n"
-#~ "--\n"
-#~ "${object.company_id.name or ''}\n"
-#~ "${object.company_id.email or ''}\n"
-#~ "${object.company_id.phone or ''}\n"
-#~ "</pre>"
-
-#~ msgid "Signup Expiration"
-#~ msgstr "انتهاء صلاحية التسجيل"
-
-#~ msgid "Signup Token"
-#~ msgstr "رمز التسجيل"

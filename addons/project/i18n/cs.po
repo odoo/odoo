@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-08-27 09:51+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
@@ -178,6 +178,16 @@ msgid ""
 "\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
+msgstr ""
+
+#. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
 msgstr ""
 
 #. module: project
@@ -1187,6 +1197,11 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr ""
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "podle zodpovědné osoby"
@@ -1202,6 +1217,7 @@ msgstr "Zrušit"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "Zrušeno"
@@ -1601,7 +1617,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project.js:50
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "Zrušit"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
@@ -1691,6 +1707,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Provedeno"
@@ -1721,9 +1738,8 @@ msgstr "Označení emailu"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
-#, fuzzy
 msgid "Email Template"
-msgstr "Označení emailu"
+msgstr "Šablona e-mailu"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2133,6 +2149,7 @@ msgstr ""
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
+#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "Probíhá"
@@ -2429,7 +2446,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "Členové"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2462,6 +2479,11 @@ msgstr "Mé úkoly"
 #: model:ir.model.fields,field_description:project.field_project_tags_name
 msgid "Name"
 msgstr "Název"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -2507,6 +2529,11 @@ msgid "Normal"
 msgstr "Normální"
 
 #. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
 msgid "Notes"
 msgstr "Poznámky"
@@ -2514,7 +2541,7 @@ msgstr "Poznámky"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Notifications"
-msgstr ""
+msgstr "Upozornění"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_opening_days
@@ -2890,11 +2917,21 @@ msgid "Ready to be displayed, published or sent"
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
+msgstr ""
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
 msgstr ""
 
 #. module: project
@@ -2959,7 +2996,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Reporting"
-msgstr ""
+msgstr "Sestavy"
 
 #. module: project
 #. openerp-web
@@ -3014,7 +3051,7 @@ msgstr "Hledat projekt"
 #: code:addons/project/static/src/js/project.js:46
 #, python-format
 msgid "Select"
-msgstr ""
+msgstr "Vybrat"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3178,9 +3215,8 @@ msgstr "Stav"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_child_ids
-#, fuzzy
 msgid "Sub-tasks"
-msgstr "úkoly"
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3513,16 +3549,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
-#, fuzzy
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
 msgstr ""
-"Toto nastaví jednotku měření pro projekty a úkoly.\n"
-"Pokud při svých projektech používáte sledování pracovní doby (modul "
-"project_timesheet), nezapomeňte nastavit správnou jednotku měření u svých "
-"zaměstnanců."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -3588,6 +3619,7 @@ msgstr "Soupis pracovní doby, pro přizpůsobení Gantova diagramu"
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
+#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "Úkoly"
@@ -3655,6 +3687,11 @@ msgstr ""
 msgid ""
 "Use separate meetings to solve big issues or issues that aren’t important "
 "for the entire team."
+msgstr ""
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the priority for tasks related to gold customers"
 msgstr ""
 
 #. module: project
@@ -3748,7 +3785,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Welcome"
-msgstr ""
+msgstr "Vítejte"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3974,69 +4011,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Vyžadována akce"
-
-#~ msgid "Close"
-#~ msgstr "Zavřít"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum posledního vzkazu u tohoto záznamu."
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "Delegované ůkoly"
-
-#~ msgid "Followers"
-#~ msgstr "Sledující"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum posledního vzkazu"
-
-#~ msgid "Messages"
-#~ msgstr "Zprávy"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Zprávy a historie komunikace"
-
-#~ msgid "Open Project Menu"
-#~ msgstr "Otevřít menu projektu"
-
-#~ msgid "Record timesheet lines per tasks"
-#~ msgstr "Soupis stráveného času na úkolech"
-
-#~ msgid "Task's Work on Tasks"
-#~ msgstr "Práce na úkolech"
-
-#~ msgid ""
-#~ "This allows you to transfer the entries under tasks defined for Project "
-#~ "Management to the timesheet line entries for particular date and user, "
-#~ "with the effect of creating, editing and deleting either ways.\n"
-#~ "-This installs the module project_timesheet."
-#~ msgstr ""
-#~ "Umožňuje vám převést záznamy z úkolů v rámci managementu projektů na "
-#~ "záznamy pracovní doby či stráveného času pro příslušný den či uživatele, "
-#~ "s možností vytváření, úpravou či mazání těchto záznamů. \n"
-#~ "- Toto nainstaluje modul project_timesheet."
-
-#~ msgid ""
-#~ "This will set the unit of measure used in projects and tasks.\n"
-#~ "If you use the timesheet linked to projects (project_timesheet module), "
-#~ "don't forget to setup the right unit of measure in your employees."
-#~ msgstr ""
-#~ "Toto nastaví jednotku měření pro projekty a úkoly.\n"
-#~ "Pokud při svých projektech používáte sledování pracovní doby (modul "
-#~ "project_timesheet), nezapomeňte nastavit správnou jednotku měření u svých "
-#~ "zaměstnanců."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Počítadlo nepřečtených zpráv"
-
-#~ msgid "Website Messages"
-#~ msgstr "Zprávy Webové stránky"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historie komunikace Webové stránky"

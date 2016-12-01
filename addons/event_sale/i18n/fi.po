@@ -4,13 +4,15 @@
 #
 # Translators:
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+# Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2016
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-02-24 23:01+0000\n"
-"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-09-23 08:55+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +24,7 @@ msgstr ""
 #: code:addons/event_sale/models/event.py:170
 #, python-format
 msgid " with ticket %s"
-msgstr ""
+msgstr "%s lipulla"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -31,9 +33,8 @@ msgstr "Käytä"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
-#, fuzzy
 msgid "Asset Type"
-msgstr "Tapahtumatyyppi"
+msgstr "Käyttöomaisuus tyyppi"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -43,7 +44,7 @@ msgstr "Osallistuja"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_availability
 msgid "Available Seat"
-msgstr ""
+msgstr "Vapaa paikka"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_available
@@ -53,7 +54,7 @@ msgstr "Saatavilla olevat paikat"
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Before confirming"
-msgstr ""
+msgstr "Ennen vahvistamista"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line_event_id
@@ -70,6 +71,13 @@ msgid ""
 "Choose an event ticket and it will automatically create a registration for "
 "this event ticket."
 msgstr ""
+"Valitsemalla tapahtuman lipun rekisteröityminen luodaan automaattisesti."
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_2_product
+#: model:product.template,name:event_sale.event_2_product_product_template
+msgid "Conference on Business Applications"
+msgstr "Konferenssi yritysohjelmistoista"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_uid
@@ -88,7 +96,7 @@ msgstr "Luotu"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_deferred_revenue_category_id
 msgid "Deferred Revenue Type"
-msgstr ""
+msgstr "Tuloennakon tyyppi"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_event_event_ticket_seats_max
@@ -97,6 +105,8 @@ msgid ""
 "you will not be able to sell tickets anymore. Set 0 to ignore this rule set "
 "as unlimited."
 msgstr ""
+"Määritä lippujen määrä. Jos ilmoittautumisia on liikaa, et voi enää myydä "
+"lippuja. Aseta 0, jos et halua määrärajoitusta."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_ok
@@ -105,6 +115,8 @@ msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
 msgstr ""
+"Luoko tuote tapahtumarekisteröinnin automaattisesti myyntitilauksen "
+"hyväksymisestä."
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_display_name
@@ -116,7 +128,7 @@ msgstr "Näytä nimi"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_editor_id
 msgid "Editor id"
-msgstr ""
+msgstr "Muokkaajan id"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_email
@@ -134,7 +146,7 @@ msgstr "Tapahtuma"
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
 msgid "Event Registrations"
-msgstr ""
+msgstr "Tapahtuman rekisteröinnit"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_event_ok
@@ -164,9 +176,15 @@ msgid "Event Type"
 msgstr "Tapahtumatyyppi"
 
 #. module: event_sale
+#: model:product.product,name:event_sale.event_1_product
+#: model:product.template,name:event_sale.event_1_product_product_template
+msgid "Functional Webinar"
+msgstr "Toiminnallinen webinaari"
+
+#. module: event_sale
 #: model:event.type,name:event_sale.event_type
 msgid "Generic Events"
-msgstr ""
+msgstr "Yleiset tapahtumat"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_id
@@ -204,7 +222,7 @@ msgstr "Viimeksi päivitetty"
 #. module: event_sale
 #: selection:event.event.ticket,seats_availability:0
 msgid "Limited"
-msgstr ""
+msgstr "Rajattu"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_max
@@ -221,13 +239,19 @@ msgstr "Nimi"
 #: code:addons/event_sale/models/event.py:131
 #, python-format
 msgid "No more available seats for the ticket"
-msgstr ""
+msgstr "Ei vapaita paikkoja lipulla"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:153
 #, python-format
 msgid "No more available seats for this ticket"
-msgstr ""
+msgstr "Ei vapaita paikkoja tälle lipulle"
+
+#. module: event_sale
+#: model:product.product,name:event_sale.event_0_product
+#: model:product.template,name:event_sale.event_0_product_product_template
+msgid "Open Days in Los Angeles"
+msgstr "Open Days Los Angelesissa"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
@@ -237,7 +261,7 @@ msgstr "Lähde"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_registration_id
 msgid "Original Registration"
-msgstr ""
+msgstr "Alkuperäinen rekisteröinti"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_phone
@@ -278,7 +302,7 @@ msgstr "Rekisteröinnit"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_event_registration_ids
 msgid "Registrations to Edit"
-msgstr ""
+msgstr "Muokattavat rekisteröinnit"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_reserved
@@ -314,7 +338,7 @@ msgstr "Myyntitilauksen Rivi"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_used
 msgid "Seats used"
-msgstr ""
+msgstr "Varatut paikat"
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
@@ -334,7 +358,15 @@ msgstr "Ohita"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration_sale_order_id
 msgid "Source Sale Order"
-msgstr ""
+msgstr "Lähde myyntitilaus"
+
+#. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_1
+#: model:event.event.ticket,name:event_sale.event_1_ticket_1
+#: model:event.event.ticket,name:event_sale.event_2_ticket_1
+#: model:event.event.ticket,name:event_sale.event_3_ticket_1
+msgid "Standard"
+msgstr "Normaali"
 
 #. module: event_sale
 #: code:addons/event_sale/models/event.py:21
@@ -343,12 +375,20 @@ msgid "Subscription"
 msgstr "Tilaus"
 
 #. module: event_sale
+#: model:product.product,name:event_sale.event_3_product
+#: model:product.template,name:event_sale.event_3_product_product_template
+msgid "Technical Training"
+msgstr "Tekninen koulutus"
+
+#. module: event_sale
 #: code:addons/event_sale/models/event.py:168
 #, python-format
 msgid ""
 "The registration has been created for event %(event_name)s%(ticket)s from "
 "sale order %(order)s"
 msgstr ""
+"Rekisteröinti on luotu tapahtumalle %(event_name)s%(ticket)s "
+"myyntitilaukselta %(order)s"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.event_event_report_template_badge
@@ -359,7 +399,7 @@ msgstr "Lipputyyppi"
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Tickets"
-msgstr ""
+msgstr "Liput"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_event_type_id
@@ -378,6 +418,13 @@ msgid "Unlimited"
 msgstr "Rajoittamaton"
 
 #. module: event_sale
+#: model:event.event.ticket,name:event_sale.event_0_ticket_2
+#: model:event.event.ticket,name:event_sale.event_2_ticket_2
+#: model:event.event.ticket,name:event_sale.event_3_ticket_2
+msgid "VIP"
+msgstr "VIP"
+
+#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
 msgid "event_ok"
 msgstr "event_ok"
@@ -385,7 +432,7 @@ msgstr "event_ok"
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "please give details about the registrations"
-msgstr ""
+msgstr "anna lisätietoja rekisteröitymisistä"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor
@@ -396,21 +443,3 @@ msgstr ""
 #: model:ir.model,name:event_sale.model_registration_editor_line
 msgid "registration.editor.line"
 msgstr ""
-
-#~ msgid "Conference on Business Applications"
-#~ msgstr "Konferenssi yritysohjelmistoista"
-
-#~ msgid "Functional Webinar"
-#~ msgstr "Toiminnallinen webinaari"
-
-#~ msgid "Open Days in Los Angeles"
-#~ msgstr "Open Days Los Angelesissa"
-
-#~ msgid "Standard"
-#~ msgstr "Normaali"
-
-#~ msgid "Technical Training"
-#~ msgstr "Tekninen koulutus"
-
-#~ msgid "VIP"
-#~ msgstr "VIP"

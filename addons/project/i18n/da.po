@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:58+0000\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
 "PO-Revision-Date: 2016-04-12 10:21+0000\n"
 "Last-Translator: Morten Schou <ms@msteknik.dk>\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
@@ -179,6 +179,16 @@ msgid ""
 "\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
+msgstr ""
+
+#. module: project
+#: model:mail.template,body_html:project.mail_template_data_project_task
+msgid ""
+"\n"
+"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Thank you for your enquiry.<br /></p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
 msgstr ""
 
 #. module: project
@@ -1181,6 +1191,11 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_1
+msgid "Buzz or set as done"
+msgstr ""
+
+#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "Af ansvarlige"
@@ -1196,6 +1211,7 @@ msgstr "Annuller"
 #: code:addons/project/static/src/js/web_planner_project.js:84
 #: code:addons/project/static/src/js/web_planner_project.js:98
 #: selection:project.project,state:0
+#: model:project.task.type,name:project.project_stage_3
 #, python-format
 msgid "Cancelled"
 msgstr "Annulleret"
@@ -1595,7 +1611,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project.js:50
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "Kasser"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
@@ -1685,6 +1701,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:68
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #: code:addons/project/static/src/js/web_planner_project.js:97
+#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Udført"
@@ -1715,9 +1732,8 @@ msgstr "E-mail alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
-#, fuzzy
 msgid "Email Template"
-msgstr "E-mail alias"
+msgstr "Email skabelon"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2126,6 +2142,7 @@ msgstr ""
 
 #. module: project
 #: selection:project.project,state:0 selection:project.task,kanban_state:0
+#: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "I gang"
@@ -2419,7 +2436,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "Medlemmer"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
@@ -2452,6 +2469,11 @@ msgstr "Mine opgaver"
 #: model:ir.model.fields,field_description:project.field_project_tags_name
 msgid "Name"
 msgstr "Navn"
+
+#. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_1
+msgid "Need functional or technical help"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -2497,6 +2519,11 @@ msgid "Normal"
 msgstr "Normal"
 
 #. module: project
+#: model:project.task.type,legend_blocked:project.project_stage_0
+msgid "Not validated"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
 msgid "Notes"
 msgstr "Noter"
@@ -2504,7 +2531,7 @@ msgstr "Noter"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Notifications"
-msgstr ""
+msgstr "Notifikationer"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_opening_days
@@ -2629,7 +2656,7 @@ msgstr "Ejer"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
 msgid "Pads"
-msgstr ""
+msgstr "Pads"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_model_id
@@ -2874,11 +2901,21 @@ msgid "Ready to be displayed, published or sent"
 msgstr ""
 
 #. module: project
+#: model:project.task.type,legend_done:project.project_stage_3
+msgid "Ready to reopen"
+msgstr ""
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:76
 #: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Reason for cancellation has been documented"
+msgstr ""
+
+#. module: project
+#: model:mail.template,subject:project.mail_template_data_project_task
+msgid "Reception of ${object.name}"
 msgstr ""
 
 #. module: project
@@ -2943,7 +2980,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Reporting"
-msgstr ""
+msgstr "Rapportering"
 
 #. module: project
 #. openerp-web
@@ -2998,7 +3035,7 @@ msgstr "Søg projekt"
 #: code:addons/project/static/src/js/project.js:46
 #, python-format
 msgid "Select"
-msgstr ""
+msgstr "Markér"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3162,9 +3199,8 @@ msgstr "Status"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_child_ids
-#, fuzzy
 msgid "Sub-tasks"
-msgstr "opgaver"
+msgstr ""
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3494,12 +3530,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
-#, fuzzy
 msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right "
 "unit of measure in your employees."
-msgstr "Dette styrer den enhed, der bruges på projektet og dets opgaver."
+msgstr ""
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -3566,6 +3601,7 @@ msgstr ""
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:96
+#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
 msgstr "To Do"
@@ -3634,6 +3670,11 @@ msgstr ""
 msgid ""
 "Use separate meetings to solve big issues or issues that aren’t important "
 "for the entire team."
+msgstr ""
+
+#. module: project
+#: model:project.task.type,legend_priority:project.project_stage_0
+msgid "Use the priority for tasks related to gold customers"
 msgstr ""
 
 #. module: project
@@ -3952,81 +3993,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "you listed on the previous step"
 msgstr ""
-
-#~ msgid "&times;"
-#~ msgstr "&timer;"
-
-#~ msgid "Action Needed"
-#~ msgstr "Aktion påkrævet"
-
-#~ msgid "Close"
-#~ msgstr "Luk"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Dato for sidste besked på denne post."
-
-#~ msgid "Delegated Tasks"
-#~ msgstr "Uddelegerede opgaver"
-
-#~ msgid "Followers"
-#~ msgstr "Followers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Følgere (kanaler)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Følgere (partnere)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Hvis afmærket, kræver nye beskeder din attention"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Hvis afmærket kræver nye beskeder din opmærksomhed "
-
-#~ msgid "Is Follower"
-#~ msgstr "Følger"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Sidste dato for besked"
-
-#~ msgid "Messages"
-#~ msgstr "Beskeder"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Besked- og kommunikations historik"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Antal aktioner"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Antal meddelser der kræver handling"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Antal ulæste beskeder"
-
-#~ msgid "Open Project Menu"
-#~ msgstr "Åbn projekt menuen"
-
-#~ msgid "Record timesheet lines per tasks"
-#~ msgstr "Registrér tidsskema-linier pr. opgave"
-
-#~ msgid "Task's Work on Tasks"
-#~ msgstr "Opgave arbejde på opgaver"
-
-#~ msgid ""
-#~ "This will set the unit of measure used in projects and tasks.\n"
-#~ "If you use the timesheet linked to projects (project_timesheet module), "
-#~ "don't forget to setup the right unit of measure in your employees."
-#~ msgstr "Dette styrer den enhed, der bruges på projektet og dets opgaver."
-
-#~ msgid "Type of Account"
-#~ msgstr "Kontotype"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Ulæste besked tæller"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website beskeder"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website kommunikations historik"

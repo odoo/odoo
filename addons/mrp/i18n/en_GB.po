@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-07-06 08:35+0000\n"
+"POT-Creation-Date: 2016-12-01 09:56+0000\n"
+"PO-Revision-Date: 2016-09-06 09:12+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/odoo/"
 "odoo-9/language/en_GB/)\n"
@@ -870,6 +870,12 @@ msgid "Internal Reference"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:127
+#, python-format
+msgid "Issue with lot quantity!"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
@@ -1502,7 +1508,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9665
+#: model:ir.model.fields,field_description:mrp.field_mrp_property_group_id_9667
 #: model:ir.model.fields,field_description:mrp.field_mrp_property_group_name
 #: model:ir.ui.view,arch_db:mrp.view_mrp_property_search
 msgid "Property Group"
@@ -2207,6 +2213,14 @@ msgstr ""
 "Please close or cancel it first."
 
 #. module: mrp
+#: code:addons/mrp/wizard/mrp_product_produce.py:128
+#, python-format
+msgid ""
+"You plan to consume more than 1.00 unit of product %s with unique lot number "
+"%s"
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_product_template_form_inherited
 msgid "days"
 msgstr "days"
@@ -2251,57 +2265,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_tracking
 msgid "unknown"
 msgstr "unknown"
-
-#~ msgid "Action Needed"
-#~ msgstr "Action Needed"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Date of the last message posted on the record."
-
-#~ msgid "Followers"
-#~ msgstr "Followers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Followers (Channels)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Followers (Partners)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "If checked new messages require your attention."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "If checked, new messages require your attention."
-
-#~ msgid "Is Follower"
-#~ msgstr "Is Follower"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Last Message Date"
-
-#~ msgid "Messages"
-#~ msgstr "Messages"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Messages and communication history"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Number of Actions"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Number of messages which requires an action"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Number of unread messages"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Unread Messages"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Unread Messages Counter"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website Messages"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website communication history"

@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-29 11:59+0000\n"
-"PO-Revision-Date: 2016-07-29 11:43+0000\n"
-"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-09-23 10:12+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -131,7 +131,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr ""
+msgstr "ถูกเก็บ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_asset_category_id
@@ -407,9 +407,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
-#, fuzzy
 msgid "Delivery Information"
-msgstr "วิธีการจัดส่งสินค้า"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -471,7 +470,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Discard"
-msgstr ""
+msgstr "ยกเลิก"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_display_name
@@ -617,7 +616,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
-msgstr ""
+msgstr "จัดกลุ่มตาม"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_hs_code
@@ -627,9 +626,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_height
-#, fuzzy
 msgid "Height"
-msgstr "น้ำหนัก"
+msgstr ""
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -845,7 +843,7 @@ msgstr "เวลานำการผลิต"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_margin
 msgid "Margin"
-msgstr ""
+msgstr "อัตรากำไรขั้นต้น"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_date_from
@@ -864,9 +862,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
-#, fuzzy
 msgid "Max Weight"
-msgstr "น้ำหนัก"
+msgstr ""
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
@@ -948,6 +945,12 @@ msgid "Normal Cost - Total Cost"
 msgstr ""
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.normal_delivery_carrier_product_product
+msgid "Normal Delivery Charges"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction_counter
 msgid "Number of Actions"
 msgstr "จำนวนกิจกรรม"
@@ -995,22 +998,20 @@ msgstr "กำลังออก"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
-#, fuzzy
 msgid "Package"
 msgstr "หีบห่อ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
-#, fuzzy
 msgid "Package Code"
-msgstr "หีบห่อ"
+msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
 #: code:addons/delivery/models/stock_picking.py:128
-#, fuzzy, python-format
+#, python-format
 msgid "Package Details"
-msgstr "หีบห่อ"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1019,14 +1020,13 @@ msgstr "หีบห่อ"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
-#, fuzzy
 msgid "Packaging"
-msgstr "หีบห่อ"
+msgstr "การบรรจุหีบห่อ"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_pack_operation
 msgid "Packing Operation"
-msgstr ""
+msgstr "การดำเนินการการรับสินค้า"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -1101,7 +1101,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_email_template_id
 msgid "Product Email Template"
-msgstr ""
+msgstr "Product Email Template"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_life_time
@@ -1209,7 +1209,7 @@ msgstr "กฎการสั่งซื้อซ้ำ"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "ส่งคืนการหยิบ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_ids
@@ -1253,7 +1253,7 @@ msgstr "รายการคำสั่งขาย"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "Save"
-msgstr ""
+msgstr "บันทึก"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_categ_id
@@ -1311,9 +1311,8 @@ msgstr "ค่าใช้จ่ายในการจัดส่ง"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
-#, fuzzy
 msgid "Shipping Weight"
-msgstr "ค่าใช้จ่ายในการจัดส่ง"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_shipping_enabled
@@ -1416,6 +1415,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_name_template
 msgid "Template Name"
 msgstr "ชื่อแม่แบบ"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.delivery_carrier_product_product
+msgid "The Poste"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
@@ -1552,9 +1557,8 @@ msgstr "ติดตาม"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
-#, fuzzy
 msgid "Tracking Reference"
-msgstr "อ้างอิงภายใน"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1651,9 +1655,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
-#, fuzzy
 msgid "Vendors"
-msgstr "ผู้จำหน่าย"
+msgstr "ผู้ขาย"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1675,15 +1678,13 @@ msgstr "การรับประกัน"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_website_message_ids
-#, fuzzy
 msgid "Website Messages"
-msgstr "ข้อความ"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_website_message_ids
-#, fuzzy
 msgid "Website communication history"
-msgstr "ข้อความและประวัติการติดต่อ"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1809,12 +1810,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "unknown"
 msgstr "ไม่ทราบ"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "ข้อความและประวัติการติดต่อ"
-
-#~ msgid "Status"
-#~ msgstr "สถานะ"
-
-#~ msgid "Vendor"
-#~ msgstr "ผู้จำหน่าย"
