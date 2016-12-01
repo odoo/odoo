@@ -33,8 +33,10 @@ class PaymentAcquirerStripe(models.Model):
         self.ensure_one()
         stripe_tx_values = dict(tx_values)
         temp_stripe_tx_values = {
+            'company': self.company_id.name,
             'amount': tx_values.get('amount'),
             'currency': tx_values.get('currency') and tx_values.get('currency').name or '',
+            'currency_id': tx_values.get('currency') and tx_values.get('currency').id or '',
             'address_line1': tx_values['partner_address'],
             'address_city': tx_values['partner_city'],
             'address_country': tx_values['partner_country'] and tx_values['partner_country'].name or '',

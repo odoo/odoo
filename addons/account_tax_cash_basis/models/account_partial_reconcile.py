@@ -89,6 +89,8 @@ class AccountPartialReconcileCashBasis(models.Model):
                     newly_created_move.write({'date': move_date})
                 # post move
                 newly_created_move.post()
+            # Only entries with cash flow must be created
+            if not self.company_id.currency_id.is_zero(v):
 
     def _create_tax_basis_move(self):
         # Check if company_journal for cash basis is set if not, raise exception

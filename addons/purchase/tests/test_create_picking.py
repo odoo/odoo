@@ -76,7 +76,7 @@ class TestCreatePicking(common.TestProductCommon):
     def test_01_check_double_validation(self):
 
         # make double validation two step
-        self.env.user.company_id.write({'po_double_validation': 'two_step'})
+        self.env.user.company_id.write({'po_double_validation': 'two_step','po_double_validation_amount':2000.00})
 
         # Draft purchase order created
         self.po = self.env['purchase.order'].sudo(self.user_purchase_user).create(self.po_vals)
