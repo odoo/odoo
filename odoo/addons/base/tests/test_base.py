@@ -4,6 +4,8 @@
 import ast
 import unittest
 
+import psycopg2
+
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
@@ -508,6 +510,154 @@ class TestParentStore(TransactionCase):
         self.cat0.write({'parent_id': self.root.id})
         self.assertEqual(descendants(self.root), self.root + self.cat0 + self.cat1 + self.cat2 + self.cat21)
         self.assertEqual(descendants(new_root), new_root)
+
+
+class TestParentStoreRaceCondition(TransactionCase):
+    """ Verify that parent_store computation is done without race condition """
+
+    def setUp(self):
+        super(TestParentStoreRaceCondition, self).setUp()
+        # pretend the pool has finished loading to avoid deferring parent_store computation
+        self.patch(self.registry, '_init', False)
+
+    def closing_cursor(self):
+        """ Return a new cursor that is automatically closed at cleanup. """
+        cr = self.cursor()
+        self.addCleanup(cr.close)
+        return cr
+
+    def commit_and_cleanup(self, record):
+        """ Commit the newly created record, and remove it at cleanup. """
+        record.env.cr.commit()
+        self.addCleanup(lambda: (record.unlink(), record.env.cr.commit()))
+
+    @mute_logger('odoo.sql_db')
+    def test_race_condition_01(self):
+        """ Race condition between two transactions creating sibling entries. """
+        self.assertTrue(self.env['ir.ui.menu']._parent_store)
+        # at least one transaction must fail:
+        #
+        #       X(0,1)                  ||      Y(0,1)
+        #
+        # create two independent cursors
+        menu1 = self.env(cr=self.closing_cursor())['ir.ui.menu'].search([])
+        menu2 = self.env(cr=self.closing_cursor())['ir.ui.menu'].search([])
+        # in transaction #1, create a menu entry
+        menu1 = menu1.create({'name': 'X'})
+        parent_left1 = menu1.parent_left
+        self.commit_and_cleanup(menu1)
+        # in transaction #2, create a menu entry at the same position
+        with self.assertRaisesRegexp(psycopg2.Error, 'concurrent update'):
+            menu2 = menu2.create({'name': 'Y'})
+            self.assertEqual(menu1.parent_left, parent_left1)
+            self.commit_and_cleanup(menu2)
+
+    @mute_logger('odoo.sql_db')
+    def test_race_condition_02(self):
+        """ Race condition between two transactions creating non-sibling entries. """
+        self.assertTrue(self.env['ir.ui.menu']._parent_store)
+        # initial state:
+        #
+        #       X(0,1)
+        #
+        # at least one transaction must fail:
+        #
+        #       X(0,3)                  ||      X(0,1)      Z(2,3)
+        #         |
+        #       Y(1,2)
+        #
+        # create a top-level menu entry, and commit it
+        menu0 = self.env(cr=self.closing_cursor())['ir.ui.menu'].create({'name': 'X'})
+        parent_left0 = menu0.parent_left
+        self.commit_and_cleanup(menu0)
+        # create two independent cursors
+        menu1 = self.env(cr=self.closing_cursor())['ir.ui.menu'].search([])
+        menu2 = self.env(cr=self.closing_cursor())['ir.ui.menu'].search([])
+        # in transaction #1, create a menu entry below menu0
+        menu1 = menu1.create({'name': 'Y', 'parent_id': menu0.id})
+        self.assertEqual(menu1.parent_id.parent_left, parent_left0)
+        self.assertEqual(menu1.parent_left, parent_left0 + 1)
+        self.assertEqual(menu1.parent_right, parent_left0 + 2)
+        self.assertEqual(menu1.parent_id.parent_right, parent_left0 + 3)
+        self.commit_and_cleanup(menu1)
+        # in transaction #2, create a menu entry next to menu0
+        with self.assertRaisesRegexp(psycopg2.Error, 'concurrent update'):
+            menu2 = menu2.create({'name': 'Z'})
+            self.assertEqual(menu2.parent_left, parent_left0 + 2)
+            self.assertEqual(menu2.parent_right, parent_left0 + 3)
+            self.commit_and_cleanup(menu2)
+
+    @mute_logger('odoo.sql_db')
+    def test_race_condition_03(self):
+        """ Race condition between two transactions creating non-sibling entries. """
+        self.assertTrue(self.env['ir.ui.menu']._parent_store)
+        # initial state:
+        #
+        #       X(0,5)
+        #
+        # at least one transaction must fail:
+        #
+        #       X(0,9)                  ||      X(0,5)      Z(6,7)
+        #       /    \
+        #   Y(1,2)  Y(3,4)
+        #
+        # create a top-level menu entry with a large gap between parent_left and
+        # parent_right, and commit it
+        menu0 = self.env(cr=self.closing_cursor())['ir.ui.menu'].create({'name': 'X'})
+        children0 = menu0.create({'name': 'X', 'parent_id': menu0.id}) + \
+                    menu0.create({'name': 'X', 'parent_id': menu0.id})
+        children0.unlink()
+        parent_left0 = menu0.parent_left
+        self.assertEqual(menu0.parent_right, parent_left0 + 5)
+        self.commit_and_cleanup(menu0)
+        # create two independent cursors
+        menu1 = self.env(cr=self.closing_cursor())['ir.ui.menu'].search([])
+        menu2 = self.env(cr=self.closing_cursor())['ir.ui.menu'].search([])
+        # in transaction #1, create two menu entries below menu0
+        menu1 = menu1.create({'name': 'Y', 'parent_id': menu0.id}) + \
+                menu1.create({'name': 'Y', 'parent_id': menu0.id})
+        self.assertEqual(menu1[0].parent_id.parent_left, parent_left0)
+        self.assertEqual(menu1[0].parent_left, parent_left0 + 1)
+        self.assertEqual(menu1[0].parent_right, parent_left0 + 2)
+        self.assertEqual(menu1[1].parent_left, parent_left0 + 3)
+        self.assertEqual(menu1[1].parent_right, parent_left0 + 4)
+        self.assertEqual(menu1[0].parent_id.parent_right, parent_left0 + 9)
+        self.commit_and_cleanup(menu1)
+        # in transaction #2, create a menu entry next to menu0
+        with self.assertRaisesRegexp(psycopg2.Error, 'concurrent update'):
+            menu2 = menu2.create({'name': 'Z'})
+            self.assertEqual(menu2.parent_left, parent_left0 + 6)
+            self.assertEqual(menu2.parent_right, parent_left0 + 7)
+            self.commit_and_cleanup(menu2)
+
+    @mute_logger('odoo.sql_db')
+    def test_race_condition_04(self):
+        """ Race condition between two transactions creating and modifying entries. """
+        self.assertTrue(self.env['ir.ui.menu']._parent_store)
+        # initial state:
+        #
+        #       X(0,1)      Y(2,3)
+        #
+        # at least one transaction must fail:
+        #
+        #       X(0,3)                  ||      X(0,3)      Y(4,5)
+        #         |                               |
+        #       Y(1,2)                          Z(1,2)
+        #
+        # create a top-level menu entry, and commit it
+        menu0 = self.env(cr=self.closing_cursor())['ir.ui.menu']
+        menu0 = menu0.create({'name': 'X'}) + menu0.create({'name': 'Y'})
+        self.commit_and_cleanup(menu0)
+        # create two independent cursors
+        menu1 = self.env(cr=self.closing_cursor())['ir.ui.menu'].search([])
+        menu2 = self.env(cr=self.closing_cursor())['ir.ui.menu'].search([])
+        # in transaction #1, move menu0[1] under menu0[0]
+        menu1.browse(menu0[1].id).write({'parent_id': menu0[0].id})
+        menu1.env.cr.commit()
+        # in transaction #2, create another menu entry under menu0[0]
+        with self.assertRaisesRegexp(psycopg2.Error, 'concurrent update'):
+            menu2 = menu2.create({'name': 'Z', 'parent_id': menu0[0].id})
+            self.commit_and_cleanup(menu2)
 
 
 class TestGroups(TransactionCase):
