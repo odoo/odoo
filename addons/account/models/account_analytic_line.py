@@ -25,7 +25,8 @@ class AccountAnalyticLine(models.Model):
     partner_id = fields.Many2one('res.partner', related='account_id.partner_id', string='Partner', store=True, readonly=True)
 
     def _get_analytic_amount_currency(self):
-        self.analytic_amount_currency = abs(self.amount_currency) * copysign(1, self.amount)
+        for line in self:
+            line.analytic_amount_currency = abs(line.amount_currency) * copysign(1, line.amount)
 
     @api.v8
     @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')

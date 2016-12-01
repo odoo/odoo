@@ -211,6 +211,8 @@ class Website(models.Model):
 
         if not pricelists:  # no pricelist for this country, or no GeoIP
             pricelists |= all_pl.filtered(lambda pl: not show_visible or pl.selectable or pl.id in (current_pl, order_pl))
+        else:
+            pricelists |= all_pl.filtered(lambda pl: not show_visible and pl.code)
 
         # This method is cached, must not return records! See also #8795
         return pricelists.ids

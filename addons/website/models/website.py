@@ -164,7 +164,7 @@ class Website(models.Model):
     domain = fields.Char('Website Domain')
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.ref('base.main_company').id)
     language_ids = fields.Many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages', default=_active_languages)
-    default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language)
+    default_lang_id = fields.Many2one('res.lang', string="Default Language", default=_default_language, required=True)
     default_lang_code = fields.Char(related='default_lang_id.code', string="Default language code", store=True)
 
     social_twitter = fields.Char('Twitter Account')
