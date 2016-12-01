@@ -55,6 +55,29 @@ account_budget_post()
 class crossovered_budget(osv.osv):
     _name = "crossovered.budget"
     _description = "Budget"
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        """
+        Invoke the copy method to prevent the lines are copied when a budget is duplicated, this may alter the outcome
+        of budgets and even closed.
+        :param cr: Cursor standard PostgreSQL
+        :param uid: Current user ID
+        :param id: ID of the object being duplicated
+        :param default: Dictionary with initial values to give the duplicate record
+        :param context: Dictionary with additional context values
+        """
+        default = default or {}
+        context = context or {}
+        crossovered_budget_lines_obj = self.pool.get('crossovered.budget.lines')
+        #The new budget is created
+        new_id = super(crossovered_budget, self).copy(cr, uid, id, default, context=context)
+        name_budget = self.browse(cr, uid,new_id, context=context).name
+        self.write(cr, uid, new_id, {'name': name_budget + ' (Copia)'}, context=context)
+        #Ids new budget lines are obtained
+        crossovered_budget_lines_ids = crossovered_budget_lines_obj.search(cr, uid, [('crossovered_budget_id','=',new_id)], context=context)
+        #New budget lines removed
+        crossovered_budget_lines_obj.unlink(cr, uid, crossovered_budget_lines_ids, context=context)
+        return new_id
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, states={'done':[('readonly',True)]}),
