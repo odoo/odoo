@@ -1,8 +1,4 @@
 -
-  !python {model: ir.values}: |
-    whr = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock.warehouse0'), context=context)
-    self.set_default(cr, uid, 'purchase.order', 'picking_type_id', whr.in_type_id.id, for_all_users=True, company_id=True, condition=False)
--
   !python {model: stock.warehouse}: |
     #enable purchase on main warehouse
     main_warehouse = self.browse(cr, uid, ref('stock.warehouse0'), context=context)
