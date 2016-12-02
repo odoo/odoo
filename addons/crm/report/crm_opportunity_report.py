@@ -99,6 +99,11 @@ class OpportunityReport(models.Model):
             LEFT JOIN "crm_stage" stage ON stage.id = c.stage_id
         """
         return join_str
+
+    def _where(self):
+        where_str = """
+        """
+        return where_str
     
     def _group_by(self):
         group_by_str = """
@@ -114,5 +119,5 @@ class OpportunityReport(models.Model):
             %s
             %s
             %s
-        )""" % (self._table, self._select(), self._from(), self._join(), self._group_by()))
+        )""" % (self._table, self._select(), self._from(), self._join(), self._where(), self._group_by()))
         
