@@ -494,6 +494,21 @@ class TestParentStore(TransactionCase):
         self.assertEqual(len(old_struct), 4, "After duplication, previous record must have old childs records only")
         self.assertFalse(new_struct & old_struct, "After duplication, nodes should not be mixed")
 
+    def test_move(self):
+        """ Move a category under another node. """
+        def descendants(cat):
+            return cat.search([('id', 'child_of', cat.ids)])
+        int_root = self.root.create({'name': 'Intermediate root category'})
+        new_root = self.root.create({'name': 'New root category'})
+        self.assertEqual(descendants(self.root), self.root + self.cat0 + self.cat1 + self.cat2 + self.cat21)
+        self.assertEqual(descendants(new_root), new_root)
+        self.cat0.write({'parent_id': new_root.id})
+        self.assertEqual(descendants(self.root), self.root)
+        self.assertEqual(descendants(new_root), new_root + self.cat0 + self.cat1 + self.cat2 + self.cat21)
+        self.cat0.write({'parent_id': self.root.id})
+        self.assertEqual(descendants(self.root), self.root + self.cat0 + self.cat1 + self.cat2 + self.cat21)
+        self.assertEqual(descendants(new_root), new_root)
+
 
 class TestGroups(TransactionCase):
 
