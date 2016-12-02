@@ -1,0 +1,41 @@
+.o_noboxed_footer, .o_noboxed_header, .o_noboxed_body {
+    font-family: 'Lato';
+    color: @gray;
+}
+.o_noboxed_header {
+    img {
+        max-height: 80px;
+        max-width: 160px;
+    }
+    h4 {
+        color: @o-we-color-text-normal;
+        font-weight: 700;
+    }
+    > .col-xs-12 {
+        border-top: 1px solid @gray-lighter;
+        border-bottom: 1px solid @gray-lighter;
+
+        ul {
+            margin: 4px 0;
+        }
+    }
+}
+.o_noboxed_footer {
+    border-top: 1px solid @gray-lighter;
+}
+.o_noboxed_body {
+    tbody {
+        color: @gray;
+        tr:nth-child(odd) {
+            background-color: @gray-lighter;
+        }
+        tr td {
+            border-top: none;
+        }
+    }
+    #total {
+        table tr:last-child td {
+            border-bottom: 1px solid black;
+        }
+    }
+}

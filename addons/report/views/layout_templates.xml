@@ -13,12 +13,14 @@
     <link href="/website/static/src/less/website.snippets.less" rel="stylesheet" type="text/less"/>
 
     <link href="/report/static/src/less/report.less" rel="stylesheet" type="text/less"/>
-</template>
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
+    <!-- FONTS -->
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:thin,light,regular,medium,bold,semi-bold" rel="stylesheet"/>
 
-<!-- Load different less according to template -->
-<!-- <template id="report.assets_layout_boxed">
-    <xpath expr="." position="before"></xpath>
-</template> -->
+    <!-- Noboxed styles -->
+    <link href="/report/static/src/less/report_noboxed_layout.less" rel="stylesheet" type="text/less"/>
+</template>
 
 <template id="report.assets_pdf">
     <link href="/report/static/src/css/reset.min.css" rel="stylesheet"/>
@@ -79,8 +81,6 @@
     </t>
 </template>
 
-<!-- Here create 3 other layouts for different templates. -->
-
 <template id="external_layout">
     <!-- Multicompany -->
     <t t-if="not o and doc">
@@ -93,14 +93,12 @@
         <t t-set="company" t-value="res_company"></t>
     </t>
 
-    <t t-call="report.external_layout_header" />
+    <t t-call="report.o_noboxed_template_header" />
     <t t-raw="0" />
-    <t t-call="report.external_layout_footer" />
+    <t t-call="report.o_noboxed_template_footer" />
 </template>
 
-<!-- Here create 3 other headers and footers for new layouts. -->
-<!-- Inject external less files [Check in odoo experts how it is done] -->
-
+<!-- DEFAULT HEADER -->
 <template id="external_layout_header">
     <div class="header">
         <div class="row">
@@ -123,7 +121,7 @@
         </div>
     </div>
 </template>
-
+<!-- DEFAULT FOOTER -->
 <template id="external_layout_footer">
     <div class="footer">
         <div class="text-center" style="border-top: 1px solid black;">
