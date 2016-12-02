@@ -536,8 +536,12 @@ class pos_session(osv.osv):
             }
             statements.append(create_statement(st_values, context=context))
 
+        unique_name = self.pool['ir.sequence'].next_by_code(cr, uid, 'pos.session', context=context)
+        if values.get('name'):
+            unique_name += ' ' + values['name']
+
         values.update({
-            'name': self.pool['ir.sequence'].next_by_code(cr, uid, 'pos.session', context=context),
+            'name': unique_name,
             'statement_ids': [(6, 0, statements)],
             'config_id': config_id
         })
@@ -681,41 +685,30 @@ class pos_order(osv.osv):
         }
 
     # This deals with orders that belong to a closed session. In order
-    # to recover from this we:
-    # - assign the order to another compatible open session
-    # - if that doesn't exist, create a new one
+    # to recover from this situation we create a new rescue session,
+    # making it obvious that something went wrong.
+    # A new, separate, rescue session is preferred for every such recovery,
+    # to avoid adding unrelated orders to live sessions.
     def _get_valid_session(self, cr, uid, order, context=None):
         session = self.pool.get('pos.session')
         closed_session = session.browse(cr, uid, order['pos_session_id'], context=context)
-        open_sessions = session.search(cr, uid, [('state', '=', 'opened'),
-                                                 ('config_id', '=', closed_session.config_id.id),
-                                                 ('user_id', '=', closed_session.user_id.id)],
-                                       limit=1, order="start_at DESC", context=context)
-
         _logger.warning('session %s (ID: %s) was closed but received order %s (total: %s) belonging to it',
                         closed_session.name,
                         closed_session.id,
                         order['name'],
                         order['amount_total'])
+        _logger.warning('attempting to create recovery session for saving order %s', order['name'])
+        new_session_id = session.create(cr, uid, {
+            'config_id': closed_session.config_id.id,
+            'name': _('(RESCUE FOR %(session)s)') % {'session': closed_session.name},
+            'rescue': True, # avoid conflict with live sessions
+        }, context=context)
+        new_session = session.browse(cr, uid, new_session_id, context=context)
 
-        if open_sessions:
-            open_session = session.browse(cr, uid, open_sessions[0], context=context)
-            _logger.warning('using session %s (ID: %s) for order %s instead',
-                            open_session.name,
-                            open_session.id,
-                            order['name'])
-            return open_session.id
-        else:
-            _logger.warning('attempting to create new session for order %s', order['name'])
-            new_session_id = session.create(cr, uid, {
-                'config_id': closed_session.config_id.id,
-            }, context=context)
-            new_session = session.browse(cr, uid, new_session_id, context=context)
+        # bypass opening_control (necessary when using cash control)
+        new_session.signal_workflow('open')
 
-            # bypass opening_control (necessary when using cash control)
-            new_session.signal_workflow('open')
-
-            return new_session_id
+        return new_session_id
 
     def _match_payment_to_invoice(self, cr, uid, order, context=None):
         account_precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
