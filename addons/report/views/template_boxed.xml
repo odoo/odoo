@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- NOBOXED HEADER -->
+    <template id="o_boxed_template_header">
+        <div class="header">
+            <div class="row o_boxed_header">
+                <div class="col-xs-3">
+                    <img src="/report/static/src/img/logo.jpg"/>
+                    <!-- <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"/> -->
+                </div>
+                <div class="col-xs-9 text-right">
+                    <div class="row">
+                        <div class="col-xs-12"><h4 class="mt0 mb8" t-field="company.rml_header1"/></div>
+                        <div class="col-xs-12" name="company_address">
+                            <span class="company_address" t-field="company.partner_id"
+                                t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <!-- NOBOXED FOOTER -->
+    <template id="o_boxed_template_footer">
+        <div class="footer o_boxed_footer">
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <ul t-if="not company.custom_footer" class="list-inline mb0 mt8">
+                        <li t-if="company.phone">Tel <span t-field="company.phone"/></li>
+                        <li t-if="company.fax">Fax <span t-field="company.fax"/></li>
+                        <li t-if="company.email"><span t-field="company.email"/></li>
+                        <li t-if="company.website"><span t-field="company.website"/></li>
+                    </ul>
+
+                    <ul t-if="not company.custom_footer" class="list-inline mt0 mb0" name="financial_infos">
+                        <li t-if="company.vat"><small>TIN: <span t-field="company.vat"/></small></li>
+                    </ul>
+
+                    <t t-if="company.custom_footer">
+                        <span t-raw="company.rml_footer"/>
+                    </t>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <ul class="list-inline mb0 mt0">
+                        <li><small>Page:</small></li>
+                        <li><small><span class="page"/></small></li>
+                        <li><small>of</small></li>
+                        <li><small><span class="topage"/></small></li>
+                    </ul>
+                </div>
+            </div>
+        </div>      
+    </template>
+</odoo>

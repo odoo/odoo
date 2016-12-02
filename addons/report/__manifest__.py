@@ -19,6 +19,7 @@ Report
         'views/ir_actions_report_views.xml',
         #Layouts
         'views/template_not_boxed.xml',
+        'views/template_boxed.xml',
     ],
     'qweb' : [
         'static/src/xml/*.xml',
