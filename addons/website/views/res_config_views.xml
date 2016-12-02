@@ -7,7 +7,7 @@
             <field name="model">website.config.settings</field>
             <field name="arch" type="xml">
                 <form string="Configure Website" class="oe_form_configuration">
-                    <header>
+                    <header class="o_header_sticky">
                         <button string="Save" type="object" name="execute" class="oe_highlight"/>
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
@@ -190,7 +190,10 @@
                                             <div class="text-muted">
                                                 Display a Twitter wall on your website
                                             </div>
-                                            <div class="content-group"></div>
+                                            <div class="content-group">
+                                                <hr class="mt8 mb8" />
+                                                <div class="text-warning">Save this page and come back here to set up the feature.</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

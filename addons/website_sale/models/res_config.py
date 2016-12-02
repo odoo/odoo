@@ -20,7 +20,7 @@ class WebsiteConfigSettings(models.TransientModel):
     salesperson_id = fields.Many2one('res.users', related='website_id.salesperson_id', string='Salesperson')
     salesteam_id = fields.Many2one('crm.team', related='website_id.salesteam_id', string='Sales Team')
     module_delivery = fields.Boolean("Manage shipping internally")
-    module_website_sale_delivery = fields.Boolean("Add Delivery Costs to Online Sales")
+    module_website_sale_delivery = fields.Boolean("Shipping Costs")
     # field used to have a nice radio in form view, resuming the 2 fields above
     sale_delivery_settings = fields.Selection([
         ('none', 'No shipping management on website'),
