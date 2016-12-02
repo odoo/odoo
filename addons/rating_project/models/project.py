@@ -41,7 +41,7 @@ class Task(models.Model):
             rating_template = task.stage_id.rating_template_id
             if rating_template:
                 force_send = self.env.context.get('force_send', True)
-                task.rating_send_request(rating_template, reuse_rating=False, force_send=force_send)
+                task.rating_send_request(rating_template, partner=task.partner_id, reuse_rating=False, force_send=force_send)
 
     def rating_get_partner_id(self):
         res = super(Task, self).rating_get_partner_id()
@@ -106,7 +106,9 @@ class Project(models.Model):
         """ return the action to see all the rating about the tasks of the project """
         action = self.env['ir.actions.act_window'].for_xml_id('rating', 'action_view_rating')
         action_domain = safe_eval(action['domain']) if action['domain'] else []
-        domain = action_domain + [('res_id', 'in', self.tasks.ids), ('res_model', '=', 'project.task')]
+        domain = ['&', ('res_id', 'in', self.tasks.ids), ('res_model', '=', 'project.task')]
+        if action_domain:
+            domain = ['&'] + domain + action_domain
         return dict(action, domain=domain)
 
     @api.multi

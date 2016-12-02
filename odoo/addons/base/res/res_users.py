@@ -566,6 +566,11 @@ class Users(models.Model):
     has_group.clear_cache = _has_group.clear_cache
 
     @api.multi
+    def _is_system(self):
+        self.ensure_one()
+        return self.has_group('base.group_system')
+
+    @api.multi
     def _is_admin(self):
         self.ensure_one()
         return self._is_superuser() or self.has_group('base.group_erp_manager')

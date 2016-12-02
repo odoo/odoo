@@ -72,6 +72,9 @@ odoo.define('website_sale.website_sale', function (require) {
 
     var base = require('web_editor.base');
     var ajax = require('web.ajax');
+    var utils = require('web.utils');
+    var core = require('web.core');
+    var _t = core._t;
 
     if(!$('.oe_website_sale').length) {
         return $.Deferred().reject("DOM doesn't contain '.oe_website_sale'");
@@ -121,7 +124,7 @@ odoo.define('website_sale.website_sale', function (require) {
             if ($input.data('update_change')) {
                 return;
             }
-          var value = parseInt($input.val(), 10);
+          var value = parseInt($input.val() || 0, 10);
           var $dom = $(this).closest('tr');
           //var default_price = parseFloat($dom.find('.text-danger > span.oe_currency_value').text());
           var $dom_optional = $dom.nextUntil(':not(.optional_product.info)');
@@ -140,7 +143,7 @@ odoo.define('website_sale.website_sale', function (require) {
                 'set_qty': value
             }).then(function (data) {
                 $input.data('update_change', false);
-                if (value !== parseInt($input.val(), 10)) {
+                if (value !== parseInt($input.val() || 0, 10)) {
                     $input.trigger('change');
                     return;
                 }
@@ -186,7 +189,7 @@ odoo.define('website_sale.website_sale', function (require) {
             var product_id = +$input.closest('*:has(input[name="product_id"])').find('input[name="product_id"]').val();
             var min = parseFloat($input.data("min") || 0);
             var max = parseFloat($input.data("max") || Infinity);
-            var quantity = ($link.has(".fa-minus").length ? -1 : 1) + parseFloat($input.val(),10);
+            var quantity = ($link.has(".fa-minus").length ? -1 : 1) + parseFloat($input.val() || 0, 10);
             // if they are more of one input for this product (eg: option modal)
             $('input[name="'+$input.attr("name")+'"]').add($input).filter(function () {
                 var $prod = $(this).closest('*:has(input[name="product_id"])');
@@ -226,9 +229,15 @@ odoo.define('website_sale.website_sale', function (require) {
         });
 
         function price_to_str(price) {
-            price = Math.round(price * 100) / 100;
-            var dec = Math.round((price % 1) * 100);
-            return price + (dec ? '' : '.0') + (dec%10 ? '' : '0');
+            var l10n = _t.database.parameters;
+            var precision = 2;
+
+            if ($(".decimal_precision").length) {
+                precision = parseInt($(".decimal_precision").first().data('precision'));
+            }
+            var formatted = _.str.sprintf('%.' + precision + 'f', price).split('.');
+            formatted[0] = utils.insert_thousand_seps(formatted[0]);
+            return formatted.join(l10n.decimal_point);
         }
 
         function update_product_image(event_source, product_id) {

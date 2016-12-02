@@ -22,7 +22,7 @@ class ProjectIssue(models.Model):
         for issue in self:
             rating_template = issue.stage_id.rating_template_id
             if rating_template:
-                issue.rating_send_request(rating_template, reuse_rating=False)
+                issue.rating_send_request(rating_template, partner=issue.partner_id, reuse_rating=False)
 
     @api.multi
     def rating_apply(self, rate, token=None, feedback=None, subtype=None):
@@ -78,7 +78,9 @@ class Project(models.Model):
         action = self.env['ir.actions.act_window'].for_xml_id('rating', 'action_view_rating')
         issues = self.env['project.issue'].search([('project_id', 'in', self.ids)])
         action_domain = safe_eval(action['domain']) if action['domain'] else []
-        domain = action_domain + [('res_id', 'in', issues.ids), ('res_model', '=', 'project.issue')]
+        domain = ['&', ('res_id', 'in', issues.ids), ('res_model', '=', 'project.issue')]
+        if action_domain:
+            domain = ['&'] + domain + action_domain
         return dict(action, domain=domain)
 
     @api.multi
@@ -87,10 +89,10 @@ class Project(models.Model):
         task_domain = action['domain']
         domain = []
         if self.use_tasks: # add task domain, if neeeded
-            domain = ['&'] + task_domain
+            domain = task_domain
         if self.use_issues: # add issue domain if needed
-            issues = self.env['project.issue'].search([('project_id', 'in', self.ids)])
-            domain = domain + ['&', ('res_id', 'in', issues.ids), ('res_model', '=', 'project.issue')]
+            issue_domain = self.action_view_issue_rating()['domain']
+            domain = domain + issue_domain
         if self.use_tasks and self.use_issues:
             domain = ['|'] + domain
         return dict(action, domain=domain)

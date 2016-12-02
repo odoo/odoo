@@ -5,6 +5,7 @@ var core = require('web.core');
 var Model = require('web.Model');
 var SystrayMenu = require('web.SystrayMenu');
 var planner = require('web.planner.common');
+var session = require('web.session');
 
 var PlannerLauncher = planner.PlannerLauncher.extend({
     start: function() {
@@ -33,7 +34,9 @@ var PlannerLauncher = planner.PlannerLauncher.extend({
     },
 });
 
-SystrayMenu.Items.push(PlannerLauncher);
+if (session.is_system) {
+    SystrayMenu.Items.push(PlannerLauncher);
+}
 
 return {
     PlannerLauncher: PlannerLauncher,

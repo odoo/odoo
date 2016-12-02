@@ -5,6 +5,7 @@ var ajax = require('web.ajax');
 var core = require('web.core');
 var Model = require('web.Model');
 var planner = require('web.planner.common');
+var session = require('web.session');
 var website = require('website.website');
 
 var qweb = core.qweb;
@@ -20,13 +21,16 @@ var WebsitePlannerLauncher = planner.PlannerLauncher.extend({
     },
 });
 
-website.TopBar.include({
-    start: function () {
-        var websitePlannerLauncher = new WebsitePlannerLauncher();
-        var def = ajax.loadXML('/web_planner/static/src/xml/web_planner.xml', qweb).then((function() {
-            return websitePlannerLauncher.prependTo(this.$(".o_menu_systray"));
-        }).bind(this));
-        return $.when(this._super.apply(this, arguments), def);
-    },
-});
+if (session.is_system) {
+    website.TopBar.include({
+        start: function () {
+            var websitePlannerLauncher = new WebsitePlannerLauncher();
+            var def = ajax.loadXML('/web_planner/static/src/xml/web_planner.xml', qweb).then((function() {
+                return websitePlannerLauncher.prependTo(this.$(".o_menu_systray"));
+            }).bind(this));
+            return $.when(this._super.apply(this, arguments), def);
+        },
+    });
+}
+    
 });

@@ -124,6 +124,7 @@
             <script type="text/javascript">
                 odoo.session_info = {
                     is_superuser: <t t-esc="json.dumps(request.env.user._is_superuser())"/>,
+                    is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
                     is_frontend: true,
                 };
             </script>

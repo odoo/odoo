@@ -55,19 +55,19 @@ class _Cleaner(clean.Cleaner):
 
     def __call__(self, doc):
         # perform quote detection before cleaning and class removal
-        for el in doc.iter():
+        for el in doc.iter(tag=etree.Element):
             self.tag_quote(el)
 
         super(_Cleaner, self).__call__(doc)
 
         # if we keep attributes but still remove classes
         if not getattr(self, 'safe_attrs_only', False) and self.strip_classes:
-            for el in doc.iter():
+            for el in doc.iter(tag=etree.Element):
                 self.strip_class(el)
 
         # if we keep style attribute, sanitize them
         if not self.style and self.sanitize_style:
-            for el in doc.iter():
+            for el in doc.iter(tag=etree.Element):
                 self.parse_style(el)
 
     def tag_quote(self, el):

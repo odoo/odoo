@@ -26,7 +26,7 @@ class MrpBomCost(models.AbstractModel):
                                 'attributes': attributes}
                 total = 0.0
                 for bom_line, line_data in result2:
-                    price_uom = bom_line.product_uom_id._compute_quantity(bom_line.product_id.standard_price, bom_line.product_uom_id)
+                    price_uom = bom_line.product_id.uom_id._compute_price(bom_line.product_id.standard_price, bom_line.product_uom_id)
                     line = {
                         'product_id': bom_line.product_id,
                         'product_uom_qty': line_data['qty'], #line_data needed for phantom bom explosion
