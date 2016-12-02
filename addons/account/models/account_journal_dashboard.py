@@ -264,11 +264,11 @@ class account_journal(models.Model):
             return {
                 'type': 'ir.actions.client',
                 'tag': 'bank_statement_reconciliation_view',
-                'context': {'statement_ids': bank_stmt.ids},
+                'context': {'statement_ids': bank_stmt.ids, 'company_ids': self.mapped('company_id').ids},
             }
         else:
             # Open reconciliation view for customers/suppliers
-            action_context = {'show_mode_selector': False}
+            action_context = {'show_mode_selector': False, 'company_ids': self.mapped('company_id').ids}
             if self.type == 'sale':
                 action_context.update({'mode': 'customers'})
             elif self.type == 'purchase':
