@@ -1,0 +1,33 @@
+# Config file .travis.yml
+
+language: python
+
+python:
+#  - "pypy" # not supported by odoo 7
+#  - "3.4"  # not supported by odoo 7
+#  - "3.3"  # not supported by odoo 7
+  - "2.7"
+#  - "2.6"  # reportlab requires Python 2.7+
+
+# Need coveralls for coverage reports
+# Need flake8 for pep8 testing
+# Manually get PyChart
+install:
+    - pip install coveralls flake8
+    - pip install lxml pyyaml python-dateutil babel pillow simplejson unittest2 psutil werkzeug reportlab mako Jinja2 docutils mock psycopg2
+    - pip install http://download.gna.org/pychart/PyChart-1.39.tar.gz
+
+# Create databae
+# Pre-install modules and dependencies
+before_script:
+    - createdb test
+
+# Test with flake, ignore F401 for __init__.py files, use a max length of 120 only report changed lines
+# Run tests with coverage
+script:
+    - git diff $TRAVIS_BRANCH | flake8 . --diff --max-line-length=120 --filename=__init__.py --ignore=F401
+    - git diff $TRAVIS_BRANCH | flake8 . --diff --max-line-length=120 --exclude=__init__.py
+    - coverage run ./openerp-server -d test --test-enable --log-level=test --stop-after-init --init=all
+
+after_success:
+  coveralls

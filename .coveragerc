@@ -1,0 +1,18 @@
+# Config file .coveragerc
+
+[report]
+omit =
+    /usr/*
+    /tmp/*
+    */bin/*
+    */lib/*
+    */tests/*
+    *__init__.py
+
+# Regexes for lines to exclude from consideration
+exclude_lines =
+    # Have to re-enable the standard pragma
+    pragma: no cover
+
+    # Don't complain about null context checking
+    if context is None:
