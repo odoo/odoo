@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class WebsiteConfigSettings(models.TransientModel):
@@ -16,7 +16,7 @@ class WebsiteConfigSettings(models.TransientModel):
     website_name = fields.Char('Website Name', related='website_id.name')
 
     language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang')
-    default_lang_id = fields.Many2one(string='Language', related='website_id.default_lang_id', relation='res.lang')
+    default_lang_id = fields.Many2one(string='Default', related='website_id.default_lang_id', relation='res.lang')
     default_lang_code = fields.Char('Default language code', related='website_id.default_lang_code')
     google_analytics_key = fields.Char('Analytics Key', related='website_id.google_analytics_key')
     google_management_client_id = fields.Char('Client ID', related='website_id.google_management_client_id')
@@ -32,7 +32,7 @@ class WebsiteConfigSettings(models.TransientModel):
     cdn_url = fields.Char(related='website_id.cdn_url')
     cdn_filters = fields.Text(related='website_id.cdn_filters')
 
-    module_website_form_editor = fields.Boolean("Form Builder")
+    module_website_form_editor = fields.Boolean("Custom Forms")
     module_website_version = fields.Boolean("A/B Testing")
     module_website_twitter = fields.Boolean("Twitter Roller")
     module_website_blog = fields.Boolean("Blogs")
@@ -51,6 +51,24 @@ class WebsiteConfigSettings(models.TransientModel):
     # when multi-website is implemented
     google_maps_api_key = fields.Char(string='API Key')
 
+    has_google_analytics = fields.Boolean(
+        "Google Analytics",
+        compute='_compute_has_google_analytics',
+        readonly=False,
+        required=True)
+
+    has_google_analytics_dashboard = fields.Boolean(
+        "Google Analytics in Dashboard",
+        compute='_compute_has_google_analytics_dashboard',
+        readonly=False,
+        required=True)
+
+    has_google_maps = fields.Boolean(
+        "Google Maps",
+        compute='_compute_has_google_maps',
+        readonly=False,
+        required=True)
+
     def set_google_maps_api_key(self):
         self.env['ir.config_parameter'].set_param(
             'google_maps_api_key', (self.google_maps_api_key or '').strip(), groups=['base.group_system'])
@@ -58,3 +76,16 @@ class WebsiteConfigSettings(models.TransientModel):
     def get_default_google_maps_api_key(self, fields):
         google_maps_api_key = self.env['ir.config_parameter'].get_param('google_maps_api_key', default='')
         return dict(google_maps_api_key=google_maps_api_key)
+
+    @api.depends('google_analytics_key')
+    def _compute_has_google_analytics(self):
+        self.has_google_analytics = bool(self.google_analytics_key)
+
+    @api.depends('google_management_client_id')
+    @api.depends('google_management_client_secret')
+    def _compute_has_google_analytics_dashboard(self):
+        self.has_google_analytics_dashboard = self.google_management_client_id or self.google_management_client_secret
+
+    @api.depends('google_maps_api_key')
+    def _compute_has_google_maps(self):
+        self.has_google_maps = bool(self.google_maps_api_key)
