@@ -2668,8 +2668,26 @@ class BaseModel(object):
             if not getattr(cls, 'pool', None)
             for constraint in getattr(cls, '_local_sql_constraints', ())
         }
+        sql_constraints = list(self._sql_constraints)
 
-        for (key, definition, _) in self._sql_constraints:
+        if self._parent_store:
+            # we need the extension 'btree_gist' for constraint 'parent_range'
+            with cr.savepoint():
+                try:
+                    cr.execute('CREATE EXTENSION IF NOT EXISTS btree_gist')
+                except Exception:
+                    _schema.warning("Could not activate extension 'btree_gist'")
+            # Add constraint on the values of parent_left and parent_right to
+            # prevent race conditions during MPTT updates in record creation.
+            # /!\ Do not change the constraint name, as it is matched to retry
+            # transactions that failed because of them.
+            definition = 'EXCLUDE USING gist (' \
+                         'COALESCE("%s", 0) WITH =,' \
+                         '(CASE WHEN parent_left<parent_right THEN int4range(parent_left, parent_right+1) ELSE NULL END) WITH &&' \
+                         ') INITIALLY DEFERRED' % self._parent_name
+            sql_constraints.append(('parent_range', definition, ""))
+
+        for (key, definition, _) in sql_constraints:
             conname = '%s_%s' % (self._table, key)
 
             # using 1 to get result if no imc but one pgc

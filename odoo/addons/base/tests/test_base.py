@@ -547,7 +547,7 @@ class TestParentStoreRaceCondition(TransactionCase):
         parent_left1 = menu1.parent_left
         self.commit_and_cleanup(menu1)
         # in transaction #2, create a menu entry at the same position
-        with self.assertRaisesRegexp(psycopg2.Error, 'concurrent update'):
+        with self.assertRaisesRegexp(psycopg2.Error, 'concurrent update|ir_ui_menu_parent_range'):
             menu2 = menu2.create({'name': 'Y'})
             self.assertEqual(menu1.parent_left, parent_left1)
             self.commit_and_cleanup(menu2)
@@ -581,7 +581,7 @@ class TestParentStoreRaceCondition(TransactionCase):
         self.assertEqual(menu1.parent_id.parent_right, parent_left0 + 3)
         self.commit_and_cleanup(menu1)
         # in transaction #2, create a menu entry next to menu0
-        with self.assertRaisesRegexp(psycopg2.Error, 'concurrent update'):
+        with self.assertRaisesRegexp(psycopg2.Error, 'concurrent update|ir_ui_menu_parent_range'):
             menu2 = menu2.create({'name': 'Z'})
             self.assertEqual(menu2.parent_left, parent_left0 + 2)
             self.assertEqual(menu2.parent_right, parent_left0 + 3)
@@ -624,7 +624,7 @@ class TestParentStoreRaceCondition(TransactionCase):
         self.assertEqual(menu1[0].parent_id.parent_right, parent_left0 + 9)
         self.commit_and_cleanup(menu1)
         # in transaction #2, create a menu entry next to menu0
-        with self.assertRaisesRegexp(psycopg2.Error, 'concurrent update'):
+        with self.assertRaisesRegexp(psycopg2.Error, 'concurrent update|ir_ui_menu_parent_range'):
             menu2 = menu2.create({'name': 'Z'})
             self.assertEqual(menu2.parent_left, parent_left0 + 6)
             self.assertEqual(menu2.parent_right, parent_left0 + 7)
@@ -655,7 +655,7 @@ class TestParentStoreRaceCondition(TransactionCase):
         menu1.browse(menu0[1].id).write({'parent_id': menu0[0].id})
         menu1.env.cr.commit()
         # in transaction #2, create another menu entry under menu0[0]
-        with self.assertRaisesRegexp(psycopg2.Error, 'concurrent update'):
+        with self.assertRaisesRegexp(psycopg2.Error, 'concurrent update|ir_ui_menu_parent_range'):
             menu2 = menu2.create({'name': 'Z', 'parent_id': menu0[0].id})
             self.commit_and_cleanup(menu2)
 
