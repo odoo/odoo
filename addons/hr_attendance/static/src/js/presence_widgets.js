@@ -21,8 +21,8 @@ var FormPresenceIndicator = form_common.AbstractField.extend({
         return this._super();
     },
     render_value: function() {
-        this.$('.oe_hr_attendance_status').toggleClass("oe_hr_attendance_status_green", this.get_value() == 'checked_in');
-        this.$('.oe_hr_attendance_status').toggleClass("oe_hr_attendance_status_red", this.get_value() == 'checked_out');
+        this.$('#oe_hr_attendance_status').toggleClass("oe_hr_attendance_status_green", this.get_value() == 'checked_in');
+        this.$('#oe_hr_attendance_status').toggleClass("oe_hr_attendance_status_red", this.get_value() == 'checked_out');
     },
     display_field: function() {
         this.$el.html(QWeb.render("PresenceIndicator"));
