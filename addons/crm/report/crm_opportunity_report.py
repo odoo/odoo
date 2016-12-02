@@ -100,6 +100,11 @@ class OpportunityReport(models.Model):
         """
         return join_str
     
+    def _where(self):
+        where_str = """
+        """
+        return where_str
+    
     def _group_by(self):
         group_by_str = """
             GROUP BY c.id, stage.name
@@ -114,5 +119,5 @@ class OpportunityReport(models.Model):
             %s
             %s
             %s
-        )""" % (self._table, self._select(), self._from(), self._join(), self._group_by()))
+        )""" % (self._table, self._select(), self._from(), self._join(), self._where(), self._group_by()))
         
