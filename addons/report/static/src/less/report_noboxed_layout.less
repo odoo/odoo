@@ -1,8 +1,10 @@
 .o_noboxed_footer, .o_noboxed_header, .o_noboxed_body {
     font-family: 'Lato';
     color: @gray;
+    font-size: 12px;
 }
 .o_noboxed_header {
+    border-bottom: 1px solid @gray-lighter;
     img {
         max-height: 80px;
         max-width: 160px;
@@ -11,17 +13,16 @@
         color: @o-we-color-text-normal;
         font-weight: 700;
     }
-    > .col-xs-12 {
-        border-top: 1px solid @gray-lighter;
-        border-bottom: 1px solid @gray-lighter;
+}
+.o_noboxed_footer {
+    > .col-xs-12:first-child {
+        border-top: 1px solid @gray-light;
+        border-bottom: 1px solid @gray-light;
 
         ul {
             margin: 4px 0;
         }
     }
-}
-.o_noboxed_footer {
-    border-top: 1px solid @gray-lighter;
 }
 .o_noboxed_body {
     tbody {
@@ -31,6 +32,16 @@
         }
         tr td {
             border-top: none;
+        }
+    }
+    /*Total table*/
+    .row > .col-xs-4 > table {
+        tr:nth-child(odd) {
+            background-color: transparent !important;
+        }
+        tr:first-child td {
+            /*we could get rid of this rule if .border-black td would be terminated in report.less*/
+            border-top: none !important;
         }
     }
     #total {

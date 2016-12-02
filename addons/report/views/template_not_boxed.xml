@@ -4,32 +4,18 @@
     <template id="o_noboxed_template_header">
         <div class="header">
             <div class="row o_noboxed_header">
-                <div class="col-xs-3">
+                <div class="col-xs-3 mb8">
                     <!-- <img src="/report/static/src/img/logo.jpg"/> -->
                     <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"/>
                 </div>
-                <div class="col-xs-9">
+                <div class="col-xs-9 mb8">
                     <div class="row">
-                        <div class="col-xs-12"><h4 class="mt0 mb0" t-field="company.rml_header1"/></div>
+                        <div class="col-xs-12"><h4 class="mt0 mb8" t-field="company.rml_header1"/></div>
                         <div class="col-xs-12" name="company_address">
-                            <h4 t-field="company.name"/>
-                            <span t-field="company.street"/>
-                            <span t-field="company.street2"/>
-                            <span t-field="company.zip"/>
-                            <span t-field="company.city"/>
-                            <span t-field="company.country_id"/>
-                            <!-- <span class="company_address" t-field="company.partner_id"
-                                t-field-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/> -->
+                            <span class="company_address" t-field="company.partner_id"
+                                t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
                         </div>
                     </div>
-                </div>
-                <div class="col-xs-12 mt8">
-                    <ul class="list-inline text-center">
-                        <li t-if="company.phone"><i class="fa fa-phone"></i><small> <span t-field="company.phone"/></small></li>
-                        <li t-if="company.fax"><i class="fa fa-fax"></i><small> <span t-field="company.fax"/></small></li>
-                        <li t-if="company.email"><i class="fa fa-at"></i><small> <span t-field="company.email"/></small></li>
-                        <li t-if="company.website"><i class="fa fa-globe"></i><small> <span t-field="company.website"/></small></li>
-                    </ul>
                 </div>
             </div>
         </div>
@@ -38,24 +24,16 @@
     <template id="o_noboxed_template_footer">
         <div class="footer">
             <div class="row o_noboxed_footer">
-                <div class="col-xs-9 mt8">
-                    <ul t-if="not company.custom_footer" class="list-inline mb0">
-                        <li t-if="company.phone"><small>Tel <span t-field="company.phone"/></small></li>
-                        <li t-if="company.fax"><small>Fax <span t-field="company.fax"/></small></li><br/>
-                        <li t-if="company.email"><small><span t-field="company.email"/></small></li>
-                        <li t-if="company.website"><small><span t-field="company.website"/></small></li>
+                <div class="col-xs-12 mt8 mb8">
+                    <ul class="list-inline text-center">
+                        <li t-if="company.phone"><i class="fa fa-phone"></i> <span t-field="company.phone"/></li>
+                        <li t-if="company.fax"><i class="fa fa-fax"></i> <span t-field="company.fax"/></li>
+                        <li t-if="company.email"><i class="fa fa-at"></i> <span t-field="company.email"/></li>
+                        <li t-if="company.website"><i class="fa fa-globe"></i> <span t-field="company.website"/></li>
                     </ul>
-
-                    <ul t-if="not company.custom_footer" class="list-inline mt0" name="financial_infos">
-                        <li t-if="company.vat"><small>TIN: <span t-field="company.vat"/></small></li>
-                    </ul>
-
-                    <t t-if="company.custom_footer">
-                        <span t-raw="company.rml_footer"/>
-                    </t>
                 </div>
-                <div class="col-xs-3 mt8">
-                    <ul class="list-inline text-right">
+                <div class="col-xs-12 text-center">
+                    <ul class="list-inline">
                         <li><small>Page:</small></li>
                         <li><small><span class="page"/></small></li>
                         <li><small>of</small></li>
