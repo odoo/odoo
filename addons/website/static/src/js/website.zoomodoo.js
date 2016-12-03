@@ -97,7 +97,7 @@
 
         if (this.opts.beforeShow.call(this) === false) return;
 
-        if (!this.isReady) {
+        if (this._needReload()) {
             return this._loadImage(this.$link.attr(this.opts.linkAttribute), function() {
                 if (self.isMouseOver || !testMouseOver) {
                     self.show(e);
@@ -136,6 +136,15 @@
             this._move(e);
         }
     };
+
+    /**
+     * Need reload
+     */
+    ZoomOdoo.prototype._needReload = function() {
+        if(this.isReady)
+            return this.$zoom.attr('src') != this.$target.attr(this.opts.linkAttribute); 
+        return true;
+    }
 
     /**
      * On enter
