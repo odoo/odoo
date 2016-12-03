@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-09-23 09:57+0000\n"
+"PO-Revision-Date: 2016-11-27 08:03+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "<b>Please choose the document type before setting the conditions.</b>"
-msgstr ""
+msgstr "<b>条件を設定する前に、ドキュメントタイプを選択してください。</b>"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -32,7 +32,7 @@ msgstr "アクションルール"
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_line_test
 msgid "Action Rule Line Test"
-msgstr ""
+msgstr "アクションルール項目テスト"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -99,7 +99,7 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
 msgid "Click to setup a new automated action rule."
-msgstr ""
+msgstr "クリックして自動化アクションのルールを設定"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -109,7 +109,7 @@ msgstr "閉じた"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_on_change_fields
 msgid "Comma-separated list of field names that triggers the onchange."
-msgstr ""
+msgstr "onchange　をトリガするフィールド名のカンマ区切りリスト。"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -177,7 +177,7 @@ msgstr "ドメイン"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_server_action_ids
 msgid "Examples: email reminders, call object service, etc."
-msgstr ""
+msgstr "例：電子メールのリマインダー、オブジェクトサービスの呼び出しなど"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
@@ -220,7 +220,7 @@ msgstr "ID"
 msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
-msgstr ""
+msgstr "存在する場合、この条件は、アクションルールを実行する前に満たされなければなりません。"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_domain
@@ -228,7 +228,7 @@ msgstr ""
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
-msgstr ""
+msgstr "存在する場合、この条件は、レコードの更新前に満たされなければなりません。"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -282,7 +282,7 @@ msgstr "最終更新日"
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_lead_id
 msgid "Lead id"
-msgstr ""
+msgstr "リードID"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -405,17 +405,17 @@ msgstr "件名"
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_done
 msgid "Test lead in state 'done'"
-msgstr ""
+msgstr "状態が「完了」のテストリード"
 
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_draft
 msgid "Test lead in state 'draft'"
-msgstr ""
+msgstr "状態が「ドラフト」のテストリード"
 
 #. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_open
 msgid "Test lead in state 'open'"
-msgstr ""
+msgstr "状態が「オープン」のテストリード"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_trg_date_id
@@ -435,19 +435,19 @@ msgid ""
 "                be automatically set to a specific sales team, or an\n"
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
-msgstr ""
+msgstr "自動アクションを使用して、さまざまな画面のアクションを自動的にトリガーします。\n例：特定のユーザーによって作成されたリードが特定の営業チームに自動的に\n設定されるか、14日後にステータスが保留中の案件が自動リマインダ電子メールを\nトリガする等の設定があります。"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_user_id
 msgid "User id"
-msgstr ""
+msgstr "ユーザID"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_calendar_id
 msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
-msgstr ""
+msgstr "日ベースのタイミング条件を計算する場合、営業日に基づいて日付を計算するために、カレンダーを使用することが可能です。"
 
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
@@ -464,7 +464,7 @@ msgstr "実行タイミング"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_active
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "チェックを外すと、ルールが隠され、実行できません。"
 
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
