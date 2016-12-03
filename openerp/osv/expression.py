@@ -910,7 +910,7 @@ class expression(object):
                     leaf.leaf = TRUE_LEAF
                     push(leaf)
                 else:
-                    for elem in reversed(domain):
+                    for elem in reversed(normalize_domain(domain)):
                         push(create_substitution_leaf(leaf, elem, model, internal=True))
 
             # -------------------------------------------------
@@ -940,7 +940,7 @@ class expression(object):
                 else:
                     # we assume that the expression is valid
                     # we create a dummy leaf for forcing the parsing of the resulting expression
-                    for domain_element in reversed(fct_domain):
+                    for domain_element in reversed(normalize_domain(fct_domain)):
                         push(create_substitution_leaf(leaf, domain_element, model))
                     # self.push(create_substitution_leaf(leaf, TRUE_LEAF, model))
                     # self.push(create_substitution_leaf(leaf, AND_OPERATOR, model))
