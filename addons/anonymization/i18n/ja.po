@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-10-14 04:30+0000\n"
+"PO-Revision-Date: 2016-12-03 09:37+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -59,7 +59,7 @@ msgstr "匿名項目"
 #: code:addons/anonymization/anonymization.py:431
 #, python-format
 msgid "Anonymized value can not be empty."
-msgstr ""
+msgstr "匿名化された値は空にできません。"
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:283
@@ -67,7 +67,7 @@ msgstr ""
 msgid ""
 "Before executing the anonymization process, you should make a backup of your"
 " database."
-msgstr ""
+msgstr "匿名化プロセスを実行する前に、データベースのバックアップを作成する必要があります。"
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:427
@@ -75,7 +75,7 @@ msgstr ""
 msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
 "one2many, reference."
-msgstr ""
+msgstr "バイナリ、many2many、many2one、one2many、referenceのようなフィールドの匿名化はできません。"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
@@ -137,7 +137,7 @@ msgstr "完了"
 #: code:addons/anonymization/anonymization.py:431
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "エラー！"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
@@ -195,7 +195,7 @@ msgstr "インポート"
 msgid ""
 "It is not possible to reverse the anonymization process without supplying "
 "the anonymization export file."
-msgstr ""
+msgstr "匿名化エクスポートファイルを指定せずに匿名化プロセスを元に戻すことはできません。"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization___last_update
@@ -288,7 +288,7 @@ msgstr "要約"
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_target_version
 msgid "Target Version"
-msgstr ""
+msgstr "ーゲットバージョン"
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:74
@@ -297,7 +297,7 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to create, write or delete fields."
-msgstr ""
+msgstr "データベースの匿名化は現在不安定な状態です。 一部のフィールドは匿名化されていますが、一部のフィールドは匿名化されていません。 フィールドの作成、書き込み、または削除を試みる前に、この問題を解決するようにしてください。"
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:341
@@ -306,7 +306,7 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything else."
-msgstr ""
+msgstr "データベースの匿名化は現在不安定な状態です。 一部のフィールドは匿名化されていますが、一部のフィールドは匿名化されていません。 他に何かをしようとする前に、この問題を解決しようとするべきです。"
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:374
@@ -316,13 +316,13 @@ msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything."
-msgstr ""
+msgstr "データベースの匿名化は現在不安定な状態です。 一部のフィールドは匿名化されていますが、一部のフィールドは匿名化されていません。 何かしようとする前にこの問題を解決しようとするべきです。"
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:372
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
-msgstr ""
+msgstr "データベースは現在匿名化されています。再度匿名化することはできません。"
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:72
@@ -330,7 +330,7 @@ msgstr ""
 msgid ""
 "The database is currently anonymized, you cannot create, modify or delete "
 "fields."
-msgstr ""
+msgstr "データベースは現在匿名化されています。フィールドの作成、変更、削除はできません。"
 
 #. module: anonymization
 #: code:addons/anonymization/anonymization.py:510
@@ -338,14 +338,14 @@ msgstr ""
 msgid ""
 "The database is not currently anonymized, you cannot reverse the "
 "anonymization."
-msgstr ""
+msgstr "データベースは現在匿名化されていません。匿名化を元に戻すことはできません。"
 
 #. module: anonymization
 #: model:ir.model.fields,help:anonymization.field_ir_model_fields_anonymize_wizard_file_import
 msgid ""
 "This is the file created by the anonymization process. It should have the "
 "'.pickle' extention."
-msgstr ""
+msgstr "これは匿名化プロセスによって作成されたファイルです。 '.pickle'拡張子を持つ必要があります。"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymize.wizard,state:0
@@ -372,22 +372,22 @@ msgstr "クリア -> 匿名"
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization
 msgid "ir.model.fields.anonymization"
-msgstr ""
+msgstr "ir.model.fields.anonymization"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_history
 msgid "ir.model.fields.anonymization.history"
-msgstr ""
+msgstr "ir.model.fields.anonymization.history"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_migration_fix
 msgid "ir.model.fields.anonymization.migration.fix"
-msgstr ""
+msgstr "ir.model.fields.anonymization.migration.fix"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymize_wizard
 msgid "ir.model.fields.anonymize.wizard"
-msgstr ""
+msgstr "ir.model.fields.anonymize.wizard"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
@@ -397,7 +397,7 @@ msgstr "python"
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
 msgid "sql"
-msgstr ""
+msgstr "sql"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_state

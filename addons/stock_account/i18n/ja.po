@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2016-10-10 15:58+0000\n"
+"PO-Revision-Date: 2016-12-01 06:36+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -94,12 +94,12 @@ msgstr "日付指定で、過去日時点の在庫を抽出することができ
 msgid ""
 "Choose the accounting date at which you want to value the stock moves "
 "created by the inventory instead of the default one (the inventory end date)"
-msgstr ""
+msgstr "デフォルトの在庫移動(在庫終了日)の代わりに在庫によって作成された在庫移動を評価する会計日を選択します。"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Choose your date"
-msgstr ""
+msgstr "日付を選択"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_uos_coeff
@@ -117,7 +117,7 @@ msgstr "会社"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Compute from average price"
-msgstr ""
+msgstr "平均価格から計算"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -193,7 +193,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "製品に対して永久評価が有効になっている場合、システムは在庫移動に対応する仕訳入力を自動的に作成しますが、原価計算方法で指定された製品価格が使用されます。 商品カテゴリに設定された在庫変動勘定は現在の在庫金額を表し、在庫入力勘定と在庫勘定は入出庫商品の取引を保持します。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
@@ -205,7 +205,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "製品に対して永久評価が有効になっている場合、システムは在庫移動に対応する仕訳入力を自動的に作成しますが、原価計算方法で指定された製品価格が使用されます。 商品カテゴリに設定された在庫変動勘定は現在の在庫金額を表し、在庫入力勘定と在庫勘定は入出庫商品の取引を保持します。"
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
@@ -304,7 +304,7 @@ msgstr "移動"
 #: code:addons/stock_account/product.py:124
 #, python-format
 msgid "No difference between standard price and new price!"
-msgstr ""
+msgstr "標準価格と新価格との差がありません！"
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
@@ -432,7 +432,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
+msgstr "製品がHR費用で選択することが可能かどうかを指定します"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -445,7 +445,7 @@ msgstr "標準原価"
 #: code:addons/stock_account/product.py:152
 #, python-format
 msgid "Standard Price changed"
-msgstr ""
+msgstr "標準価格変更済"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
@@ -462,7 +462,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
 "Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
-msgstr ""
+msgstr "標準価格：原価は、特定の期間の終了時に(通常は年に1回)手動で更新されます。\n平均価格：原価は入荷ごとに再計算され、製品評価に使用されます。\n実価格：表示される原価は最後に出荷される商品の価格です(在庫損失の場合などに使用されます)。"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -519,7 +519,7 @@ msgstr "時点在庫評価"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
 msgid "Templates for Account Chart"
-msgstr ""
+msgstr "勘定科目表のテンプレート"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
@@ -566,28 +566,28 @@ msgstr "値"
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
-msgstr ""
+msgstr "新しいシリアル番号が発行されると、アラートを通知するまでの日数が表示されます。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_life_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
-msgstr ""
+msgstr "新しいシリアル番号が発行された場合、これは商品が危険になる可能性があるため、消費してはならない日数です。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_removal_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
-msgstr ""
+msgstr "新しいシリアル番号が発行された場合、これは製品が在庫から削除されるまでの日数です。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_use_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
-msgstr ""
+msgstr "新しいシリアルナンバーが発行されたとき、これは危険なく、製品が劣化し始めるまでの日数です。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -646,7 +646,7 @@ msgstr "製品がリアルタイム在庫評価が有効である時、このア
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history
 msgid "Wizard that opens the stock valuation history table"
-msgstr ""
+msgstr "在庫評価履歴テーブルを開くウィザード"
 
 #. module: stock_account
 #: code:addons/stock_account/stock_account.py:275
@@ -654,7 +654,7 @@ msgstr ""
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts"
-msgstr ""
+msgstr "製品カテゴリに定義されている在庫記録がありません。勘定コード表がインストールされているかどうか確認してください"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -669,7 +669,7 @@ msgstr "stock.config.settings"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_history
 msgid "stock.history"
-msgstr ""
+msgstr "stock.history"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
