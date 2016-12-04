@@ -83,18 +83,18 @@
         <record id="fiscal_position_tax_1" model="account.fiscal.position.tax.template">
             <field name="tax_src_id" ref="tax_18_sale"/>
             <field name="position_id" ref="position_gov"/>
-            <field name="tax_dest_id" ref="tax_0_all"/>
+            <field name="tax_dest_id" ref="tax_0_sale"/>
         </record>
         <record id="fiscal_position_tax_2" model="account.fiscal.position.tax.template">
             <field name="tax_src_id" ref="tax_18_purch"/>
             <field name="position_id" ref="position_gov"/>
-            <field name="tax_dest_id" ref="tax_0_all"/>
+            <field name="tax_dest_id" ref="tax_0_purch"/>
         </record>
         <!-- No Lucrativas -->
         <record id="fiscal_position_tax_12" model="account.fiscal.position.tax.template">
             <field name="tax_src_id" ref="tax_18_purch"/>
             <field name="position_id" ref="position_nonprofit"/>
-            <field eval="False" name="tax_dest_id"/>
+            <field name="tax_dest_id" ref="tax_0_purch"/>
         </record>
         <record id="fiscal_position_tax_13" model="account.fiscal.position.tax.template">
             <field name="tax_src_id" ref="tax_18_purch_serv"/>
@@ -123,7 +123,7 @@
         <record id="fiscal_position_tax_6" model="account.fiscal.position.tax.template">
             <field name="tax_src_id" ref="tax_18_purch"/>
             <field name="position_id" ref="position_exterior"/>
-            <field name="tax_dest_id" ref="tax_0_all"/>
+            <field name="tax_dest_id" ref="tax_0_purch"/>
         </record>
         <!-- = = = = = = = = = = = = = = = = = -->
         <!-- Fiscal Position Accounts Template -->
