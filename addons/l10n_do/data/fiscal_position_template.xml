@@ -79,11 +79,6 @@
             <field name="position_id" ref="position_person"/>
             <field name="tax_dest_id" ref="tax_group_person_services"/>
         </record>
-        <record id="fiscal_position_tax_11" model="account.fiscal.position.tax.template">
-            <field name="tax_src_id" ref="tax_group_person_services"/>
-            <field name="position_id" ref="position_person"/>
-            <field eval="False" name="tax_dest_id"/>
-        </record>
         <!-- Gubernamental -->
         <record id="fiscal_position_tax_1" model="account.fiscal.position.tax.template">
             <field name="tax_src_id" ref="tax_18_sale"/>
