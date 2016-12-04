@@ -84,6 +84,26 @@
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_exempt')])]" name="tag_ids"/>
         </record>
+        <record id="tax_0_sale" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">Exento ITBIS Ventas</field>
+            <field name="description">Exento</field>
+            <field name="amount">0</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
+            <field eval="0" name="price_include"/>
+            <field eval="[(6,0,[ref('tag_exempt')])]" name="tag_ids"/>
+        </record>
+        <record id="tax_0_purch" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">Exento ITBIS Compras</field>
+            <field name="description">Exento</field>
+            <field name="amount">0</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field eval="0" name="price_include"/>
+            <field eval="[(6,0,[ref('tag_exempt')])]" name="tag_ids"/>
+        </record>
         <record id="tax_18_sale" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="name">18% ITBIS Ventas</field>
@@ -287,8 +307,8 @@
         </record>
         <record id="ret_10_income_person" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Retención ISR 10% Honorarios a Persona Fí­sica (Servicios)</field>
-            <field name="description">10% del ISR</field>
+            <field name="name">Retención ISR 10% Honorarios a Persona Física (Servicios)</field>
+            <field name="description">10% ISR</field>
             <field name="amount">-10</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -299,8 +319,8 @@
         </record>
         <record id="ret_10_income_rent" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Retención ISR 10% a Persona Fí­sica (Alquiler)</field>
-            <field name="description">10% del ISR</field>
+            <field name="name">Retención ISR 10% a Persona Física (Alquiler)</field>
+            <field name="description">10% ISR</field>
             <field name="amount">-10</field>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -309,9 +329,21 @@
             <field eval="0" name="price_include"/>
             <field eval="[(6,0,[ref('tag_10_income')])]" name="tag_ids"/>
         </record>
+        <record id="ret_10_income_dividend" model="account.tax.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">Retención ISR 10% por Dividendos</field>
+            <field name="description">10% ISR</field>
+            <field name="amount">-10</field>
+            <field name="amount_type">percent</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="do_niif_21030303"/>
+            <field name="refund_account_id" ref="do_niif_11080303"/>
+            <field eval="0" name="price_include"/>
+            <field eval="[(6,0,[ref('tag_10_income')])]" name="tag_ids"/>
+        </record>
         <record id="ret_2_income_person" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Retención ISR 2% a Persona Fí­sica (Servicios)</field>
+            <field name="name">Retención ISR 2% a Persona Física (Servicios)</field>
             <field name="description">2% ISR (N 07-07)</field>
             <field name="amount">-2</field>
             <field name="amount_type">percent</field>
