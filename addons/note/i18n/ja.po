@@ -8,13 +8,14 @@
 # Manami Hashi <manami@roomsfor.hk>, 2016
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
 # NOKA Shigekazu <shigekazu.noka@gmail.com>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: NOKA Shigekazu <shigekazu.noka@gmail.com>, 2016\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,17 +37,17 @@ msgstr "アーカイブ"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
-msgstr ""
+msgstr "付箋メモカテゴリ"
 
 #. module: note
 #: model:ir.actions.act_window,help:note.note_tag_action
 msgid "Click to add a new tag."
-msgstr ""
+msgstr "クリックで新しいタグを追加。"
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid "Click to add a personal note."
-msgstr ""
+msgstr "クリックで個人ノートを追加。"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_color
@@ -143,7 +144,7 @@ msgstr "新規"
 #: code:addons/note/models/note.py:129
 #, python-format
 msgid "New Note"
-msgstr ""
+msgstr "新しいノート"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -160,7 +161,7 @@ msgstr "ノート内容"
 #. module: note
 #: model:ir.model,name:note.model_note_stage
 msgid "Note Stage"
-msgstr ""
+msgstr "ノートステージ"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_name
@@ -170,7 +171,7 @@ msgstr "ノート概要"
 #. module: note
 #: model:ir.model,name:note.model_note_tag
 msgid "Note Tag"
-msgstr ""
+msgstr "ノートタグ"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.action_note_note
@@ -184,12 +185,12 @@ msgstr "ノート"
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
 #: model:ir.model.fields,field_description:note.field_note_stage_user_id
 msgid "Owner"
-msgstr "所有者"
+msgstr "オーナー"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
 msgid "Owner of the note stage"
-msgstr ""
+msgstr "ノートステージのオーナー"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_sequence
@@ -211,7 +212,7 @@ msgstr "ステージ名"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_stage_form
 msgid "Stage of Notes"
-msgstr ""
+msgstr "ノートのステージ"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.action_note_stage
@@ -233,7 +234,7 @@ msgstr "ユーザステージ"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_tag_name
 msgid "Tag Name"
-msgstr ""
+msgstr "タグ名"
 
 #. module: note
 #: sql_constraint:note.tag:0
@@ -274,11 +275,16 @@ msgid ""
 "            on the note. (Useful for meeting minutes, especially if\n"
 "            you activate the pad feature for collaborative writings)."
 msgstr ""
+"ノートを使用して個人的なタスクやノートを整理します。 \n"
+"すべてのノートはプライベートです。 誰もそれらを見ることはできません。\n"
+" しかし、あなたはノート上でフォロワーを招待することによって、\n"
+"他の人といくつかのノートを共有することができます。 \n"
+"(会議の議事録に便利です。特に、共同編集のためにパッド機能を有効にしている場合に便利です)。"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_sequence
 msgid "Used to order the note stages"
-msgstr ""
+msgstr "ノートステージの注文に使用されます"
 
 #. module: note
 #: model:ir.model,name:note.model_res_users
@@ -291,3 +297,5 @@ msgid ""
 "You can customize how you process your notes/tasks by adding,\n"
 "            removing or modifying columns."
 msgstr ""
+"列を追加、削除、または変更することで、\n"
+"ノート/タスクの処理方法をカスタマイズできます。"

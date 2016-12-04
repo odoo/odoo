@@ -7,13 +7,14 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
 # Manami Hashi <manami@roomsfor.hk>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Manami Hashi <manami@roomsfor.hk>, 2016\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,7 +72,7 @@ msgstr "表示文"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_css_class
 msgid "CSS class"
-msgstr ""
+msgstr "CSS class"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -79,6 +80,8 @@ msgid ""
 "Check that the application type is set on <b>Web Application</b>. \n"
 "                                        Now configure the allowed pages on which you will be redirected."
 msgstr ""
+"アプリケーションタイプが<b> Webアプリケーション</b>に設定されていることを確認してください。\n"
+"                                         リダイレクト先の許可ページを設定します。"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -86,11 +89,13 @@ msgid ""
 "Click on <b>Create Project</b> and enter the project name and \n"
 "                                        other details."
 msgstr ""
+"<b>プロジェクトを作成... </b>をクリックしてプロジェクト名を入力し、\n"
+"その他詳細を入力"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Click on <b>Use Google APIs</b>"
-msgstr ""
+msgstr "<b> Google APIを使用する</b>をクリックします。"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_client_id
@@ -106,7 +111,7 @@ msgstr "取引先を参照する会社"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Connect to your Google account and go to"
-msgstr ""
+msgstr "あなたのGoogleアカウントに接続してください"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contract_ids
@@ -132,7 +137,7 @@ msgstr "通貨"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
 msgid "Customer Payment Terms"
-msgstr ""
+msgstr "お客様支払い条件"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
@@ -142,7 +147,7 @@ msgstr "データURL"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
 msgid "Degree of trust you have in this debtor"
-msgstr ""
+msgstr "この債務者の信用度"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
@@ -155,6 +160,8 @@ msgid ""
 "Fill in your address, email and the product name (for example odoo) \n"
 "                                        and then save."
 msgstr ""
+"住所、電子メール、製品名を入力し(例：odoo)\n"
+"                                         保存してください。"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
@@ -164,12 +171,12 @@ msgstr "会計ポジション"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Google Client ID:"
-msgstr ""
+msgstr "GoogleクライアントID"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
 msgid "Has unreconciled entries"
-msgstr ""
+msgstr "未消し込みのエントリーあり"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
@@ -243,7 +250,7 @@ msgstr "OAuthプロバイダ"
 #. module: auth_oauth
 #: sql_constraint:res.users:0
 msgid "OAuth UID must be unique per provider"
-msgstr ""
+msgstr "OAuth UID はプロバイダごとにユニークでなくてはなりません"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_uid
@@ -258,7 +265,7 @@ msgstr "OAuth2プロバイダ"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_users_form
 msgid "Oauth"
-msgstr ""
+msgstr "Oauth"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_oauth_uid
@@ -279,6 +286,9 @@ msgid ""
 "                                        Client Secret</b>). You have to insert your <b>Client ID</b> in \n"
 "                                        the field below."
 msgstr ""
+"Once done, you receive two information (your <b>Client ID</b> and <b>\n"
+"                                        Client Secret</b>). You have to insert your <b>Client ID</b> in \n"
+"                                        the field below."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit_limit
@@ -298,7 +308,7 @@ msgstr "プロバイダ"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Return to Top"
-msgstr ""
+msgstr "トップに戻る"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_scope
@@ -322,23 +332,23 @@ msgstr "付番"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
 msgid "Server uri"
-msgstr ""
+msgstr "サーバuri"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Show Tutorial"
-msgstr ""
+msgstr "チュートリアルを表示"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_tutorial_enabled
 msgid "Show tutorial"
-msgstr ""
+msgstr "チュートリアルを表示"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:97
 #, python-format
 msgid "Sign up is not allowed on this database."
-msgstr ""
+msgstr "このデータベースにサインアップすることはできません。"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_position_id
@@ -359,11 +369,13 @@ msgid ""
 "Then click on <b>Add Credentials</b> and select the second option \n"
 "                                        (OAuth 2.0 Client ID)."
 msgstr ""
+"<b>資格情報の追加</b>をクリックし、2番目のオプションを選択します\n"
+"(OAuth 2.0 クライアントID)."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Then click on <b>Create</b>."
-msgstr ""
+msgstr "次に、<b>作成</b>をクリックします。"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
@@ -384,7 +396,7 @@ msgstr "このアカウントは現在のパートナのためにデフォルト
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
-msgstr ""
+msgstr "この支払期間は、購買発注および仕入先請求書のデフォルト期間の代わりに使用されます"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_payment_term_id
@@ -399,6 +411,8 @@ msgid ""
 "To achieve this, complete the field <b>Authorized redirect URIs</b>.\n"
 "                                        Copy paste the following link in the box"
 msgstr ""
+"これを達成するには、<b>許可リダイレクトURI </b>フィールドに必要事項を入力します。\n"
+"                                         ボックスに以下のリンクを貼り付けてください。"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -406,6 +420,8 @@ msgid ""
 "To setup the sign in process with Google, you have to perform \n"
 "                                    the following steps first."
 msgstr ""
+"Googleでログインプロセスを設定するには、\n"
+"                                     まず以下の手順を実行します。"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_total_invoiced
@@ -440,7 +456,7 @@ msgstr "ユーザ"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_currency_id
 msgid "Utility field to express amount currency"
-msgstr ""
+msgstr "金額を表すユーティリティー項目"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_validation_endpoint
@@ -450,7 +466,7 @@ msgstr "確認URL"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_supplier_payment_term_id
 msgid "Vendor Payment Terms"
-msgstr ""
+msgstr "ベンダー支払条件"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:101
@@ -459,13 +475,13 @@ msgid ""
 "You do not have access to this database or your invitation has expired. "
 "Please ask for an invitation and be sure to follow the link in your "
 "invitation email."
-msgstr ""
+msgstr "このデータベースにアクセスできないか、招待状の有効期限が切れています。 招待状を依頼し、招待状メールのリンクに必ず従ってください。"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
 #: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
 msgid "arch"
-msgstr ""
+msgstr "arch"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_base_config_settings
@@ -480,7 +496,7 @@ msgstr "例: 1234-xyz.apps.googleusercontent.com"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "https://console.developers.google.com/"
-msgstr ""
+msgstr "https://console.developers.google.com/"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter

@@ -106,6 +106,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}${object.state == 'draft' and "
 "'_draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_nacrt' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -140,6 +142,8 @@ msgid ""
 "<b>Invite salespeople or managers</b> via email.<br/><i>Enter one email per "
 "line.</i>"
 msgstr ""
+"<b>Pozovite prodavače ili managere</b> putm maila.<br/><i>Unesite jedan mail"
+" po retku.</i>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_data_notification_email_sale_order
@@ -237,6 +241,8 @@ msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
 msgstr ""
+"<span>(*) Ove postavke odnose se na poduzeće u koje ste trenutno "
+"prijavljeni.</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -246,7 +252,7 @@ msgstr "<strong>Komentar fiskalne pozicije:</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Payment Terms:</strong>"
-msgstr ""
+msgstr "<strong>Uvjeti plaćanja:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -406,12 +412,12 @@ msgstr "Analitički računi prodaje"
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At cost"
-msgstr ""
+msgstr "Po trošku"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At sale price"
-msgstr ""
+msgstr "Po prodajnoj cijeni"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_variants_action
@@ -432,7 +438,7 @@ msgstr "Blokiranje poruke"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Breaks Page"
-msgstr ""
+msgstr "Prelomi stranicu"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
@@ -480,7 +486,7 @@ msgstr "Označite ovaj okvir za upravljanje računima prodajnog tima."
 #: code:addons/sale/static/src/js/tour.js:39
 #, python-format
 msgid "Click here to add some lines to your quotations."
-msgstr ""
+msgstr "Klikinte ovdje za dodavanje linija vašim ponudama."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -511,7 +517,7 @@ msgstr "Tvrtka"
 #: code:addons/sale/static/src/js/tour.js:79
 #, python-format
 msgid "Configuration options are available in the Settings app."
-msgstr ""
+msgstr "Opcije postavki su dostupne u aplikaciji Postavke"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -699,7 +705,7 @@ msgstr "Opis"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Digital Products"
-msgstr ""
+msgstr "Digitalni proizvodi"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -720,7 +726,7 @@ msgstr "Popust (%)"
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
 msgid "Discount included in the price"
-msgstr ""
+msgstr "Popust uključen u cijenu"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
@@ -730,7 +736,7 @@ msgstr "Popust na stavkama"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_pricelist_discount_policy
 msgid "Discount policy"
-msgstr ""
+msgstr "Politika popusta"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_delivery_address:0
@@ -1119,12 +1125,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Lock"
-msgstr ""
+msgstr "Zaključaj"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Locked"
-msgstr ""
+msgstr "Zaključano"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
@@ -2452,4 +2458,4 @@ msgstr "sale.config.settings"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_layout_category
 msgid "sale.layout_category"
-msgstr ""
+msgstr "sale.layout_category"

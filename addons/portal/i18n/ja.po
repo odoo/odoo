@@ -6,13 +6,14 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
 # Manami Hashi <manami@roomsfor.hk>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Manami Hashi <manami@roomsfor.hk>, 2016\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +48,29 @@ msgid ""
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}"
 msgstr ""
+"\n"
+"<p>\n"
+"    親愛なる ${object.user_id.name or ''}　様,\n"
+"</p>\n"
+"<p>\n"
+"    あなたは$ {user.company_id.name} ${object.wizard_id.portal_id.name}でアクセスできるようになりました。\n"
+"</p>\n"
+"<p>\n"
+"    あなたのログインアカウントのデータは：\n"
+"</p>\n"
+"<ul>\n"
+"    <li>ユーザー名: ${object.user_id.login or ''}</li>\n"
+"    <li>ポータル: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"\t<li>データベース: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"</ul>\n"
+"<p>\n"
+"\tパスワードは次のURLから設定または変更できます：\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"${object.wizard_id.welcome_message or ''}"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
@@ -110,12 +134,12 @@ msgstr "チェックすると、このグループはポータルとして使用
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_in_portal
 msgid "In Portal"
-msgstr ""
+msgstr "ポータルで"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
 msgid "Invitation Message"
-msgstr ""
+msgstr "招待メッセージ"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard___last_update
@@ -138,12 +162,12 @@ msgstr "最終更新日"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_user_id
 msgid "Login User"
-msgstr ""
+msgstr "ログインユーザー"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.group_search_view
 msgid "Non-Portal Groups"
-msgstr ""
+msgstr "ポータルグループではない"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
@@ -175,39 +199,42 @@ msgid ""
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
+"以下のリストでポータルに所属する連絡先を選択します。\n"
+"                         選択した各連絡先の電子メールアドレスは、有効で一意でなければなりません。\n"
+"                         必要に応じて、連絡先の電子メールアドレスを直接リストで修正することができます。"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:106
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr ""
+msgstr "いくつかの連絡先に同じ電子メールがあります："
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:103
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "一部の連絡先に有効なメールアドレスがありません："
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:109
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
-msgstr ""
+msgstr "一部の連絡先に、既存のポータルユーザーと同じ電子メールがあります:"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
 msgid "The portal that users can be added in or removed from."
-msgstr ""
+msgstr "ユーザーを追加または削除できるポータル。"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
-msgstr ""
+msgstr "このテキストは、新しいポータルユーザーに送信される電子メールに含まれます。"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
 msgid "This text is included in the email sent to new users of the portal."
-msgstr ""
+msgstr "このテキストは、ポータルの新しいユーザーに送信される電子メールに含まれます。"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:112
@@ -217,6 +244,9 @@ msgid ""
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
 msgstr ""
+"このエラーを解決するには、次の操作を行います。\n"
+"- 関連する連絡先のメールを修正する\n"
+"- 一意のメールを持つ連絡先にのみアクセスを許可する"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
@@ -238,4 +268,4 @@ msgstr "Eメール送信のためのユーザ設定の中にEメールアドレ�
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your Odoo account at ${user.company_id.name}"
-msgstr ""
+msgstr "あなたのOdooアカウントは ${user.company_id.name} です"
