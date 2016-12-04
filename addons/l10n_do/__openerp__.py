@@ -84,7 +84,7 @@ en Odoo):
     """,
     'author': 'Gustavo Valverde - iterativo | Consultores de Odoo',
     'website': 'http://iterativo.do',
-    'depends': ['account', 'purchase', 'sale', 'base_iban'],
+    'depends': ['account', 'base_iban'],
     'data': [
         # Basic accounting data
         'data/coa_template.xml',
