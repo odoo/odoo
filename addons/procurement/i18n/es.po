@@ -283,6 +283,9 @@ msgid ""
 "                having a vendor defined on the product, and products to\n"
 "                manufacture without having a bill of materials."
 msgstr ""
+"Las excepciones más comunes son los productos comprados que \n"
+"                no tienen un proveedor definido y los productos\n"
+"                fabricados sin una lista de materiales."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -432,6 +435,8 @@ msgid ""
 "Reference of the document that created this Procurement. This is "
 "automatically completed by Odoo."
 msgstr ""
+"Referencia del documento que creó este abastecimiento. Es rellenado "
+"automáticamente por Odoo."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -530,12 +535,16 @@ msgid ""
 "                creates the necessary operations to fulfill the need: purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
+"Cuando se confirma el abastecimiento, automáticamente\n"
+"                crea las operaciones necesarias para satisfacer la necesidad:\n"
+"                orden de compra, de fabricación, etc."
 
 #. module: procurement
 #: code:addons/procurement/models/procurement.py:144
 #, python-format
 msgid "You cannot delete procurements that are in cancel state."
 msgstr ""
+"No se pueden eliminar los abastecimientos que están en estado 'cancelado'."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form

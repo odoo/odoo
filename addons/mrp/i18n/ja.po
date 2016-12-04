@@ -184,7 +184,7 @@ msgstr "<strong>名称</strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>No. Of Minutes</strong>"
-msgstr ""
+msgstr "<strong>分番号</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -513,7 +513,7 @@ msgstr "部品表項目"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_bom_line_ids
 msgid "BoM Lines"
-msgstr "部品表ライン"
+msgstr "部品表項目"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_type
@@ -727,7 +727,7 @@ msgstr "消費 解体オーダ"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_consume_line_ids
 msgid "Consume line ids"
-msgstr "消費 ラインIDs"
+msgstr "消費項目IDs"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1093,7 +1093,7 @@ msgstr "作業区リストを表示する時には、オーダー順を指定し
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_sequence
 msgid "Gives the sequence order when displaying."
-msgstr ""
+msgstr "表示用にオーダ連番を付与します"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
@@ -1368,7 +1368,7 @@ msgstr "遅延"
 msgid ""
 "Lines need to be deleted, but can not as you still have some quantities to "
 "consume in them. "
-msgstr "ラインを削除する必要がありますが、そこで消費されている量がまだあるのでできません。"
+msgstr "項目を削除する必要がありますが、そこで消費されている量がまだあるのでできません。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_location_id
@@ -2008,7 +2008,7 @@ msgstr "製造"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_produce_line_ids
 msgid "Produce line ids"
-msgstr "生産ラインids"
+msgstr "生産項目ids"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2386,7 +2386,7 @@ msgstr "工順"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_routing_line_ids
 msgid "Routing Lines"
-msgstr "工順ライン"
+msgstr "工順項目"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_name
@@ -2494,7 +2494,7 @@ msgstr "部品表の検索"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_line_filter
 msgid "Search Bill Of Material Components"
-msgstr ""
+msgstr "部品表構成品の検索"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -2509,7 +2509,7 @@ msgstr "作業オーダ検索"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Search for mrp workcenter"
-msgstr "MRP作業センタの検索"
+msgstr "MRPワークセンターの検索"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_config_settings_manufacturing_lead
@@ -2529,13 +2529,13 @@ msgstr "選択"
 #: model:product.product,name:mrp.product_product_build_kit
 #: model:product.template,name:mrp.product_product_build_kit_product_template
 msgid "Self Build Kit"
-msgstr ""
+msgstr "セルフビルドキット"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_build_kit
 #: model:product.template,description:mrp.product_product_build_kit_product_template
 msgid "Self Build kit."
-msgstr ""
+msgstr "セルフビルドキット"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_sequence
@@ -2549,7 +2549,7 @@ msgstr "付番"
 #. module: mrp
 #: selection:mrp.routing.workcenter,time_mode:0
 msgid "Set duration manually"
-msgstr ""
+msgstr "所要時間を手動で設定"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_config
@@ -2567,19 +2567,19 @@ msgstr "この製品を構成品のセット (キット) として出荷"
 #: code:addons/mrp/models/mrp_unbuild.py:89
 #, python-format
 msgid "Should have a lot for the finished product"
-msgstr ""
+msgstr "完成した製品のロットが必要です"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk
 #: model:product.template,description:mrp.product_product_computer_desk_product_template
 msgid "Solid wood computer desk."
-msgstr ""
+msgstr "無垢材のパソコンデスク。"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_head
 #: model:product.template,description:mrp.product_product_computer_desk_head_product_template
 msgid "Solid wood is a durable natural material."
-msgstr ""
+msgstr "無垢材は耐久性のある天然素材です。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_origin
@@ -2589,13 +2589,13 @@ msgstr "要求元"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_product_product_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
+msgstr "製品がHR費用で選択することが可能かどうかを指定します"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_bolt
 #: model:product.template,description:mrp.product_product_computer_desk_bolt_product_template
 msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
-msgstr ""
+msgstr "ステンレス全ねじ(径 - 5mm, 長さ - 10mm)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_start
@@ -2638,66 +2638,66 @@ msgstr "在庫移動"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_child_bom_id
 msgid "Sub BoM"
-msgstr ""
+msgstr "サブ部品表"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "TPM Big Loss"
-msgstr ""
+msgstr "TPM 大損失"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss
 msgid "TPM Big Losses"
-msgstr ""
+msgstr "TPM 大損失"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_head
 #: model:product.template,name:mrp.product_product_computer_desk_head_product_template
 msgid "Table Head"
-msgstr ""
+msgstr "テーブル台"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_leg
 #: model:product.template,name:mrp.product_product_computer_desk_leg_product_template
 msgid "Table Leg"
-msgstr ""
+msgstr "テーブル足"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_is_done
 #: model:ir.model.fields,help:mrp.field_stock_move_lots_done_move
 msgid "Technical Field to order moves"
-msgstr ""
+msgstr "オーダの移動用テクニカルフィールド"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_check_to_done
 msgid "Technical Field to see if we can show 'Mark as Done' button"
-msgstr ""
+msgstr "「完了としてマーク」ボタンが表示可能か確認するテクニカルフィールド"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_lots_done_wo
 msgid ""
 "Technical Field which is False when temporarily filled in in work order"
-msgstr ""
+msgstr "一時的にワークオーダーを埋めたときにどれがFalseか確認するテクニカルフィールド"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_is_user_working
 msgid "Technical field indicating whether the current user is working. "
-msgstr ""
+msgstr "現在のユーザが動作しているかどうかを示すテクニカルフィールド。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_post_visible
 msgid "Technical field to check when we can post"
-msgstr ""
+msgstr "テクニカルフィールド　投稿できるかどうか確認"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_production_availability
 msgid "Technical: used in views and domains only."
-msgstr ""
+msgstr "テクニカル:ビューとドメインのみで使います"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_working_state
 msgid "Technical: used in views only"
-msgstr ""
+msgstr "テクニカル:ビューのみで使います"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_product_id
@@ -2705,7 +2705,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_product_uom_id
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_production_state
 msgid "Technical: used in views only."
-msgstr ""
+msgstr "テクニカル:ビューのみで使います"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:227
@@ -2719,12 +2719,12 @@ msgstr "選択された計量単位は、製品形態とは異なるカテゴリ
 #: code:addons/mrp/models/mrp_workcenter.py:143
 #, python-format
 msgid "The capacity must be strictly positive."
-msgstr ""
+msgstr "その能力は厳密に正の値でなければなりません。"
 
 #. module: mrp
 #: selection:mrp.bom,ready_to_produce:0
 msgid "The components of 1st operation"
-msgstr ""
+msgstr "最初の操作のコンポーネント"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_routing_id
@@ -2743,18 +2743,19 @@ msgid ""
 "mainly used to compute work center costs during operations and to plan "
 "future loads on work centers based on production planning."
 msgstr ""
+"完成品を製造するための操作のリスト。工順は操作の間の作業区のコストを計算し、製造計画化を基本とする作業区の将来の負荷を計画するために主に利用されます。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_qty_produced
 msgid "The number of products already handled by this work order"
-msgstr ""
+msgstr "この番号の製品は、すでにこの作業オーダによって処理されています"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_operation_id
 msgid ""
 "The operation where the components are consumed, or the finished products "
 "created."
-msgstr ""
+msgstr "コンポーネントが消費されている操作、または作成した完成品。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_routing_id
@@ -2763,16 +2764,17 @@ msgid ""
 "production orders will  be executed through work orders, otherwise "
 "everything is processed in the production order itself. "
 msgstr ""
+"この部品表で製造するための操作。工順が指定されている場合、製造オーダは作業オーダを介して実行されます。それ以外の場合は、すべてが製造オーダ自身で処理されます。"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking_type
 msgid "The picking type determines the picking view"
-msgstr ""
+msgstr "ピッキングビューで表すピッキングタイプ"
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
 msgid "The quantity to produce must be positive!"
-msgstr ""
+msgstr "生産数量は正の数でなければなりません。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_routing_id
@@ -2781,6 +2783,7 @@ msgid ""
 "create work orders afterwardswhich alters the execution of the manufacturing"
 " order. "
 msgstr ""
+"工順は、すべての作業区の使用と、その使用時間が含まれています。これは、製造オーダの実行を変更し、その後、作業オーダを作成します。これは、その後の製造オーダの実行の変更作業オーダを作成します。"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -2802,11 +2805,13 @@ msgid ""
 "show a load of 100% for this phase by default, but if we put a efficiency of"
 " 200%, then his load will only be 50%."
 msgstr ""
+"このフィールドはタスクを完了するためのリソース効率性を示しています。 例  ５つのタスクを５日のフェーズである作業者に割り当てると、 "
+"デフォルトでは、このフェーズで100％の負荷が表示されます。もし200％の効率とすると、彼の負荷は50％となります。."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_ids
 msgid "Time Logs"
-msgstr ""
+msgstr "時間ログ"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -2817,7 +2822,7 @@ msgstr "時間記録"
 #: code:addons/mrp/models/mrp_workorder.py:360
 #, python-format
 msgid "Time Tracking: "
-msgstr ""
+msgstr "タイムトラッキング:"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_stop
@@ -2832,24 +2837,24 @@ msgstr "生産前段取時間"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_time_ids
 msgid "Time ids"
-msgstr ""
+msgstr "時間IDs"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_stop
 msgid "Time in minutes for the cleaning."
-msgstr ""
+msgstr "清掃のための時間（分）"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_start
 msgid "Time in minutes for the setup."
-msgstr ""
+msgstr "準備のための時間（分）"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_time_cycle_manual
 msgid ""
 "Time in minutes. Is the time used in manual mode, or the first time supposed"
 " in real time when there are not any work orders yet."
-msgstr ""
+msgstr "分刻みの時間です。この時間はマニュアルモード、もしくは今まで一度も作業オーダがなかった初めての実時間作業の場合使用します。"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2866,19 +2871,19 @@ msgstr "未処理"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "To Launch"
-msgstr ""
+msgstr "起動予定"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "To Produce"
-msgstr ""
+msgstr "生産予定"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
 msgid ""
 "To create a new work center, Go to <b><i> Master Data/Work Centers. </i></b>"
-msgstr ""
+msgstr "新しい作業区を作るには、 <b><i> マスターデータ/作業区 </i></b>を選択します。"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -2889,6 +2894,11 @@ msgid ""
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload."
 msgstr ""
+"製造や製品の組み立てに、原材料及び完成品を使用するには\n"
+"製造作業も操作しなくてはなりません。製造作業は、多くの場合、\n"
+"作業オーダと呼ばれています。\n"
+"様々な作業が製造コストに異なる影響を及ぼしますので、\n"
+"製造工程を考慮した計画をします。"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -2909,7 +2919,7 @@ msgstr "原材料の合計原価"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_late_count
 msgid "Total Late Orders"
-msgstr ""
+msgstr "合計遅延オーダ"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -2920,12 +2930,12 @@ msgstr "合計数量"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_pending_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_progress_count
 msgid "Total Running Orders"
-msgstr ""
+msgstr "合計仕掛中オーダー"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_traceability
 msgid "Traceability: Lots"
-msgstr ""
+msgstr "トレーサビリティ:ロット"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_tracking
@@ -2937,32 +2947,32 @@ msgstr "追跡"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Unblock"
-msgstr ""
+msgstr "ブロック解除"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild"
-msgstr ""
+msgstr "解体"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_unbuild
 #: model:ir.model.fields,field_description:mrp.field_stock_move_unbuild_id
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Order"
-msgstr ""
+msgstr "解体オーダ"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:76
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
-msgstr ""
+msgstr "解体オーダの製品の量は厳密に正の数である必要があります。"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_unbuild
 #: model:ir.ui.menu,name:mrp.menu_mrp_unbuild
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Orders"
-msgstr ""
+msgstr "解体オーダ"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
@@ -2972,7 +2982,7 @@ msgstr "原価"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_unit_factor
 msgid "Unit Factor"
-msgstr ""
+msgstr "ユニットファクター"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_uom_id
@@ -2988,7 +2998,7 @@ msgstr "単位"
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
-msgstr ""
+msgstr "単位(計量単位、UOM)は、在庫管理のための計量単位です"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3005,7 +3015,7 @@ msgstr "更新"
 #: code:addons/mrp/static/src/xml/mrp.xml:7
 #, python-format
 msgid "Upload your file"
-msgstr ""
+msgstr "ファイルをアップロード"
 
 #. module: mrp
 #. openerp-web
@@ -3033,6 +3043,8 @@ msgid ""
 "                products, process, or actions to take care of. (e.g; Warning, the bill of material changed,\n"
 "                check the details in new worksheet)"
 msgstr ""
+"メッセージは製造時の警告やインベントリの人々に製品や工程、処置の変更に注意を喚起するために\n"
+"使用されます。(例;警告、部品表の変更、新しいワークシート尾の詳細のチェック)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_user_id
@@ -3046,12 +3058,12 @@ msgstr "ユーザ"
 #: model:ir.model.fields,field_description:mrp.field_mrp_message_valid_until
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_tree
 msgid "Validity Date"
-msgstr ""
+msgstr "終了日"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_product
 msgid "Variant"
-msgstr ""
+msgstr "製品バリアント"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_attribute_value_ids
@@ -3083,14 +3095,14 @@ msgstr "入荷待ち"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_waiting
 msgid "Waiting Availability MO"
-msgstr ""
+msgstr "製造オーダ待ち"
 
 #. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/js/mrp.js:24
 #, python-format
 msgid "Waiting Materials"
-msgstr ""
+msgstr "原材料待ち"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
@@ -3111,6 +3123,7 @@ msgid ""
 " picking type. That allows to define procurement rules which trigger "
 "different manufacturing orders with different BoMs. "
 msgstr ""
+"調達は、ピッキングのタイプが設定された「生産」のルートを持っている場合、同じピッキングタイプのBOMを使用して、その製品の製造オーダを作成しようとします。それは別の部品表と異なる製造オーダをトリガとして調達ルールを定義することができます"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -3130,7 +3143,7 @@ msgstr "製造対象の製品がこの倉庫で製造できることを示しま
 msgid ""
 "Will determine if the next work order will be planned after the previous one"
 " or after the first Quantity To Process of the previous one."
-msgstr ""
+msgstr "前回作業のあとに、次の作業オーダが配置されるかどうか、また前回の数量のあとに最初の量を処理するかを判断します。"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -3159,7 +3172,7 @@ msgstr "作業区負荷"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Work Center Name"
-msgstr ""
+msgstr "作業区名"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
@@ -3185,7 +3198,7 @@ msgstr "作業区"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_kanban_action
 msgid "Work Centers Dashboard"
-msgstr ""
+msgstr "作業区ダッシュボード"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_work_orders
@@ -3197,11 +3210,14 @@ msgid ""
 "                considered as units for task assignation as well as capacity\n"
 "                and planning forecast."
 msgstr ""
+"作業区で製造ユニットを作成、管理することができます。\n"
+"これには作業員、機器の割り当てまたそれらの能力をもとに計画を\n"
+"立案することも含まれます。"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Work Instruction"
-msgstr ""
+msgstr "作業手順"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workorder
@@ -3220,11 +3236,12 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required raw materials."
 msgstr ""
+"作業オーダオペレーションで製品を生産する作業区内で行う製造業務を作成、管理することを可能にします。これらは、必要な原材料を定義する部品表に関連づけられています。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_workorder_id
 msgid "Work Order To Consume"
-msgstr ""
+msgstr "消費するための作業オーダ"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_routing_time
@@ -3244,13 +3261,13 @@ msgstr "作業オーダ"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_delta_report
 msgid "Work Orders Deviation"
-msgstr ""
+msgstr "作業オーダ偏差"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_report
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_workcenter_report
 msgid "Work Orders Performance"
-msgstr ""
+msgstr "作業オーダ パフォーマンス"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production
@@ -3269,34 +3286,39 @@ msgid ""
 "            manufacturing order, the MO is automatically done and the related\n"
 "            products are produced."
 msgstr ""
+"作業オーダは、各製造オーダに対して実行される操作の一覧です。\n"
+"製造オーダの最初の作業順序を開始すると、\n"
+"製造オーダが自動的に開始とマークされます。\n"
+"製造オーダーの最新の操作を完了すると、\n"
+"製造オーダーは自動的に行われ、関連製品が完成します。"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Work Sheet"
-msgstr ""
+msgstr "ワークシート"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:520
 #, python-format
 msgid "Work order %s is still running"
-msgstr ""
+msgstr "作業オーダ %s は、現在実行中です。"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Work orders in progress. Click to block work center."
-msgstr ""
+msgstr "進行中の作業オーダ。クリックで作業区をブロック。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_config_settings_group_product_variant
 msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
-msgstr ""
+msgstr "製品バリアントとの共用で、例えば、eコマースでは、同じ製品のいくつかのバリアント定義で使いやすい製品管理を定義することができます"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Workcenter"
-msgstr ""
+msgstr "作業区"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_form_view
@@ -3305,23 +3327,23 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.oee_pivot_view
 #: model:ir.ui.view,arch_db:mrp.oee_tree_view
 msgid "Workcenter Productivity"
-msgstr ""
+msgstr "作業区 生産性"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity
 msgid "Workcenter Productivity Log"
-msgstr ""
+msgstr "作業区 生産記録"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_loss_form_view
 #: model:ir.ui.view,arch_db:mrp.oee_loss_tree_view
 msgid "Workcenter Productivity Loss"
-msgstr ""
+msgstr "作業区 生産ロス"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Workcenter blocked, click to unblock."
-msgstr ""
+msgstr "作業区はブロックされています。クリックでブロック解除"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_calendar_id
@@ -3332,18 +3354,18 @@ msgstr "作業時間"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_messages
 msgid "Workorder Message"
-msgstr ""
+msgstr "作業オーダメッセージ"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_message_action_main
 #: model:ir.ui.menu,name:mrp.mrp_message_menu
 msgid "Workorder Messages"
-msgstr ""
+msgstr "作業オーダメッセージ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_worksheet
 msgid "Worksheet"
-msgstr ""
+msgstr "ワークシート"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_config_settings_module_mrp_byproduct
@@ -3353,19 +3375,23 @@ msgid ""
 "With this module: A + B + C -> D + E.\n"
 "-This installs the module mrp_byproduct."
 msgstr ""
+"部品表に副産品を構成できます。\\n\n"
+"このモジュールなし : A + B + C -> D.\\n\n"
+"このモジュールあり : A + B + C -> D + E.\\n\n"
+"- mrp_byproduct　モジュールをインストールします。"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:458
 #, python-format
 msgid ""
 "You can not cancel production order, a work order is still in progress."
-msgstr ""
+msgstr "製造オーダを取消できません、作業オーダがまだ進行中です。"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:231
 #, python-format
 msgid "You can not change the finished work order."
-msgstr ""
+msgstr "完了した作業オーダを変更することはできません。"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:91
@@ -3374,18 +3400,20 @@ msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
 msgstr ""
+"実行中の製造オーダで使われている部品表は削除できません.\n"
+"終了させるか、取り消してください"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_move.py:123
 #, python-format
 msgid "You cannot cancel a move move having already consumed material"
-msgstr ""
+msgstr "既に消費した材料を有する移動は取り消すことができません"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:44
 #, python-format
 msgid "You have already processed %d. Please input a quantity higher than %d "
-msgstr ""
+msgstr "すでに %dを処理しています。%dより大きい量を入力してください "
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:353
@@ -3395,6 +3423,7 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
+"カテゴリ「パフォーマンス」内で少なくとも1つの生産ロスを定義する必要があります。製造アプリのメニュー:構成 /生産性 ロスで作成してください。"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:349
@@ -3403,7 +3432,7 @@ msgid ""
 "You need to define at least one productivity loss in the category "
 "'Productivity'. Create one from the Manufacturing app, menu: Configuration /"
 " Productivity Losses."
-msgstr ""
+msgstr "カテゴリ「生産性」内で少なくとも1つの生産ロスを定義する必要があります。製造アプリのメニュー:構成 /生産性 ロスで作成してください。"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:401
@@ -3413,24 +3442,26 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
+"カテゴリ「パフォーマンス」内の少なくとも1つのアクティブでない生産性のロスを定義する必要があります。製造アプリのメニュー:構成 /生産性 "
+"ロスで作成してください。"
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:99
 #, python-format
 msgid "You need to provide a lot for the finished product"
-msgstr ""
+msgstr "完製品にロット番号を付与する必要があります "
 
 #. module: mrp
 #: code:addons/mrp/models/stock_move.py:246
 #, python-format
 msgid "You need to supply a lot/serial number."
-msgstr ""
+msgstr "製品ロット/シリアル番号を付与する必要があります。"
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:78
 #, python-format
 msgid "You should at least produce some quantity"
-msgstr ""
+msgstr "少なくともいくらかの量を生成する必要があります"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:287

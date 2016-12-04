@@ -35,17 +35,17 @@ msgstr "分析規則数"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_count
 msgid "# Bill of Material"
-msgstr "部品表№"
+msgstr "部品表数"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_num_invoiced
 msgid "# Invoiced in Purchase"
-msgstr ""
+msgstr "購入手数料数"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_num_invoiced
 msgid "# Invoiced in Sale"
-msgstr ""
+msgstr "請求済販売数"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_mo_count
@@ -55,12 +55,12 @@ msgstr "製造オーダ数"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_count
 msgid "# Product Variants"
-msgstr ""
+msgstr "製品種別番号"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_count
 msgid "# Purchases"
-msgstr ""
+msgstr "購買数"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sales_count
@@ -75,23 +75,26 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"oe_view_nocontent\">\n"
+"                    今すぐOdoo Enterpriseを購入してプロバイダを増やしましょう。\n"
+"                </p>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "<span>kg</span>"
-msgstr ""
+msgstr "<span>kg</span>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Carrier</strong>"
-msgstr ""
+msgstr "<strong>キャリアー</strong>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Weight</strong>"
-msgstr ""
+msgstr "<strong>重量</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_sale
@@ -99,7 +102,7 @@ msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
-msgstr ""
+msgstr "顧客に伝えたい製品の説明。この説明は、すべての販売注文、配達の注文と得意先請求書/払い戻しにコピーされます"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_purchase
@@ -107,14 +110,14 @@ msgid ""
 "A description of the Product that you want to communicate to your vendors. "
 "This description will be copied to every Purchase Order, Receipt and Vendor "
 "Bill/Refund."
-msgstr ""
+msgstr "ベンダーとコミュニケーションしたい製品の詳細。この説明は、すべての発注書、領収書、およびベンダービル/払い戻しにコピーされます。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description
 msgid ""
 "A precise description of the Product, used only for internal information "
 "purposes."
-msgstr ""
+msgstr "内部情報の目的でのみ使用される製品の正確な記述。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_product_type
@@ -125,6 +128,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"保管可能な製品では在庫を管理するための製品です。資産アプリをインストールする必要があります。\n"
+"一方で、消耗品は、在庫が管理されていない製品です。\n"
+"サービスは、あなたが提供する非物質製品です。\n"
+"デジタルコンテンツは、あなたがオンラインで販売する非物質製品です。ファイルにアッタッチされてe-コマースで販売される音楽やデジタル書籍などです。デジタルプロダクトモジュールをインストールする必要があります。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
@@ -134,7 +141,7 @@ msgstr "必要なアクション"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_integration_level
 msgid "Action while validating Delivery Orders"
-msgstr ""
+msgstr "納品書の検証中のアクション"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_active
@@ -188,12 +195,12 @@ msgstr "この製品を生産するための平均遅延日数です。多階層
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_avg_price
 msgid "Avg. Price in Customer Invoices."
-msgstr ""
+msgstr "顧客請求書の平均価格 "
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_avg_price
 msgid "Avg. Price in Vendor Bills "
-msgstr ""
+msgstr "仕入先請求書の平均価格"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_avg_price
@@ -221,7 +228,7 @@ msgstr "計算規則に基づく"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image
 msgid "Big-sized image"
-msgstr ""
+msgstr "大サイズのイメージ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_bom_ids
@@ -231,7 +238,7 @@ msgstr "部品表"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_weight_bulk
 msgid "Bulk Weight"
-msgstr ""
+msgstr "バルク重量"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_can_be_expensed
@@ -259,7 +266,7 @@ msgstr "販売可能"
 msgid ""
 "Can be changed during the 'put in pack' to adjust the weight of the "
 "shipping."
-msgstr ""
+msgstr "出荷時の重量を調整するために「梱包」している間に変更することができます。"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -285,13 +292,13 @@ msgstr "カテゴリルート"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "製品が会員資格の対象かどうかを確認します。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_to_weight
 msgid ""
 "Check if the product should be weighted using the hardware scale integration"
-msgstr ""
+msgstr "ハードウェア計量器統合機能を使用して製品を計量する必要があるかどうかを確認する"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_available_in_pos
@@ -301,7 +308,7 @@ msgstr "この製品をPOSで表示する場合はチェックします。"
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Click to define a new delivery method."
-msgstr ""
+msgstr "新しい配送方法を定義する場合にクリックします。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_color
@@ -336,7 +343,7 @@ msgstr "原価"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_cost_method
 msgid "Cost method"
-msgstr ""
+msgstr "原価計算法"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_standard_price
@@ -344,7 +351,7 @@ msgid ""
 "Cost of the product template used for standard stock valuation in accounting"
 " and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
-msgstr ""
+msgstr "製品テンプレートのコストは、会計の標準在庫評価に使用し、発注書上の基準価格として使用します。製品のデフォルトの単位で表します。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_cost_method
@@ -361,7 +368,7 @@ msgstr "国"
 msgid ""
 "Create a task under this project on sale order validation. This setting must"
 " be set for each company."
-msgstr ""
+msgstr "このプロジェクトの下で販売注文の検証のタスクを作成します。 この設定は、会社ごとに設定する必要があります。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_uid
@@ -389,6 +396,11 @@ msgid ""
 "stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"現在の製品の数量。\n"
+"単一の在庫ロケーションとの関連では、これには、このロケーションに保管されている製品またはその子が含まれます。\n"
+"単一の倉庫のコンテキストでは、この倉庫の在庫ロケーションに保管されている製品またはその子品が含まれます。\n"
+"このショップの倉庫の保管ロケーションに保管されているか、またはその子のいずれかに保管されています。\n"
+"それ以外の場合は、「内部」タイプの在庫ロケーションに保管されているロケーションが含まれます。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_sale_delay
@@ -398,7 +410,7 @@ msgstr "顧客リードタイム"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "顧客参照番号"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
@@ -447,12 +459,12 @@ msgstr "配送"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr ""
+msgstr "配送業者"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Delivery Information"
-msgstr ""
+msgstr "配送情報"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -470,7 +482,7 @@ msgstr "配送方法"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr ""
+msgstr "配送価格ルール"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_id
@@ -504,12 +516,12 @@ msgstr "移動先"
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
-msgstr ""
+msgstr "受注明細の確認でイベント登録を自動的に作成する必要があるかどうかを判断します。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sequence
 msgid "Determine the display order"
-msgstr ""
+msgstr "表示順序を決定します"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
@@ -529,6 +541,8 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
+"各キャリア(UPSなど)は、複数の配送方法(例：\n"
+"                 UPS Express、UPS Standard)に一連の価格ルールが紐づけされています"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
@@ -548,7 +562,7 @@ msgstr "イベント登録"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ticket_ids
 msgid "Event Tickets"
-msgstr ""
+msgstr "イベントのチケット"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expected_margin
@@ -588,14 +602,14 @@ msgstr "費用勘定"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order_carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
-msgstr ""
+msgstr "ピッキングに基づいて出荷品の請求をする場合は、このフィールドに入力します。"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
-msgstr ""
+msgstr "このフォームを入力すると、顧客の配送先住所に応じて配送業者をフィルタリングすることができます。"
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -631,12 +645,16 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
+"予測数量(受注数量 - 受注数量+入庫数量)\n"
+"単一のストックロケーションを持つコンテキストでは、このロケーションに格納されている製品、またはその子製品が含まれます。\n"
+"単一の倉庫のコンテキストでは、この倉庫の在庫ロケーションに保管されている製品またはその子製品が含まれます。\n"
+"それ以外の場合は、「内部」タイプの在庫ロケーションに保管されている製品が含まれます。"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.free_delivery_carrier_product_product
 msgid "Free delivery charges"
-msgstr ""
+msgstr "配送無料"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_if_more_than
@@ -646,12 +664,12 @@ msgstr "次の金額を越えた場合は無料"
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate"
-msgstr ""
+msgstr "レート取得"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate and Create Shipment"
-msgstr ""
+msgstr "レートの取得と出荷の作成"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_packaging_ids
@@ -664,7 +682,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_price_rule_sequence
 msgid "Gives the sequence order when calculating delivery carrier."
-msgstr ""
+msgstr "配送業者を計算する際にシーケンスの順序を指定します。"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -675,7 +693,7 @@ msgstr "グループ化"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_hs_code
 #: model:ir.model.fields,field_description:delivery.field_product_template_hs_code
 msgid "HS Code"
-msgstr ""
+msgstr "HS コード"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_height
@@ -685,7 +703,7 @@ msgstr "高さ"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Height must be positive"
-msgstr ""
+msgstr "高さは正の値でなければなりません"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
@@ -696,12 +714,12 @@ msgstr "ID"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_unread
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_valuation
@@ -713,6 +731,8 @@ msgid ""
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
 msgstr ""
+"製品に対して永久評価が有効になっている場合、システムは在庫移動に対応する仕訳入力を自動的に作成しますが、原価計算方法で指定された製品価格が使用されます。"
+" 商品カテゴリに設定された在庫変動勘定は現在の在庫金額を表し、在庫入力勘定と在庫勘定は入出庫商品の取引を保持します。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_free_if_more_than
@@ -734,20 +754,21 @@ msgid ""
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
+"製品バリアント（falseの場合、製品テンプレートの大サイズの画像）の画像。これ自動的に保存され、アスペクト比で、1024x1024px画像としてサイズが変更されます。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_medium
 msgid ""
 "Image of the product variant (Medium-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "製品バリアント(falseの場合、製品テンプレートの中サイズの画像)の画像"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_image_small
 msgid ""
 "Image of the product variant (Small-sized image of product template if "
 "false)."
-msgstr ""
+msgstr "製品バリアント(falseの場合、製品テンプレートの小サイズの画像)の画像。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_income_id
@@ -762,12 +783,12 @@ msgstr "入りそう"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
-msgstr ""
+msgstr "より多くのプロバイダをインストール"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
 msgid "Integration Level"
-msgstr ""
+msgstr "統合レベル"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_categ_id
@@ -881,6 +902,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sale order validation and track the work hours."
 msgstr ""
+"注文時の数量を手動で設定：分析勘定を作成せずに、手動で入力した数量にもとづいた請求書。\n"
+"契約のタイムシート：関連するタイムシートの追跡時間に基づく請求書。\n"
+"タスクの作成と時間の追跡：セールスオーダーの検証でタスクを作成し、勤務時間を追跡します。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_produce_delay
@@ -1045,6 +1069,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
+"注文数量：顧客が注文した数量に基づく請求書。\n"
+"納入された数量：仕入先が納入した数量（時間または納品書）に基づいて請求されます。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_outgoing_qty
@@ -1081,7 +1107,7 @@ msgstr "梱包"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_pack_operation
 msgid "Packing Operation"
-msgstr ""
+msgstr "梱包作業"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -1091,7 +1117,7 @@ msgstr "取引先"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
 msgid "Physical Packages"
-msgstr ""
+msgstr "実梱包"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pos_categ_id
@@ -1129,7 +1155,7 @@ msgstr "価格リストアイテム"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_item_ids
 msgid "Pricelist item ids"
-msgstr ""
+msgstr "価格リスト項目ID"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1164,7 +1190,7 @@ msgstr "製品属性"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_email_template_id
 msgid "Product Email Template"
-msgstr ""
+msgstr "製品 Eメールのテンプレート"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_life_time
@@ -1255,6 +1281,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
 msgstr ""
+"到着予定の製品の数量。\n"
+"単一の在庫・ロケーションとの関連で、これにはこのロケーションまたはその子製品に到着した製品が含まれます。\n"
+"単一の倉庫のコンテキストでは、この倉庫の在庫ロケーションに到着した製品、またはその子製品が含まれます。\n"
+"それ以外の場合は、「内部」タイプの在庫ロケーションに到着する製品が含まれます。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_outgoing_qty
@@ -1264,11 +1294,15 @@ msgid ""
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
 msgstr ""
+"離れる予定の製品の数量。\n"
+"単一のストックロケーションとの関連で、これにはこのロケーションを離れる商品、またはその子品が含まれます。\n"
+"単一の倉庫のコンテキストでは、これにはこの倉庫の在庫ロケーションを離れる商品またはその子品が含まれます。\n"
+"それ以外の場合は、「内部」タイプの在庫ロケーションを離れる商品が含まれます。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
 msgid "Re-Invoice Expenses"
-msgstr ""
+msgstr "再請求費用"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reception_count
@@ -1283,12 +1317,12 @@ msgstr "再発注規則"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
 msgid "Reordering max qty"
-msgstr ""
+msgstr "最大数量の並べ替え"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_min_qty
 msgid "Reordering min qty"
-msgstr ""
+msgstr "最小数量の並べ替え"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
@@ -1416,7 +1450,7 @@ msgstr "受注明細で製品を選択できるかどうか指定します。"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
+msgstr "製品がHR費用で選択することが可能かどうかを指定します"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_cost_method
@@ -1425,6 +1459,9 @@ msgid ""
 "                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
+"標準価格：原価は、特定の期間の終了時に(通常は年に1回)手動で更新されます。\n"
+"平均価格：原価は入荷ごとに再計算され、製品評価に使用されます。\n"
+"実価格：表示される原価は最後に出荷される商品の価格です(在庫損失の場合などに使用されます)。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_hs_code
@@ -1460,7 +1497,7 @@ msgstr "在庫移動"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
 msgid "Stock quant ids"
-msgstr ""
+msgstr "在庫数量IDs"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_normal_cost
@@ -1499,13 +1536,13 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_pricelist_id
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
-msgstr ""
+msgstr "テクニカルフィールド。価格表を検索するために使用され、データベースに格納されていません。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_quant_ids
 msgid "Technical: used to compute quantities."
-msgstr ""
+msgstr "テクニカル：数量の計算に使用されます。"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
@@ -1532,7 +1569,7 @@ msgstr "配送明細がを追加するには、オーダ状態はドラフトで
 msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
-msgstr ""
+msgstr "販売価格は、製品テンプレートから管理されています。追加属性の価格を設定するには、「バリアント価格」ボタンをクリックしてください。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_volume
@@ -1542,7 +1579,7 @@ msgstr "立法メートルでの容積"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr ""
+msgstr "このコンテンツの重量のKgで表示、梱包数等の表示は含みません。"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -1551,20 +1588,23 @@ msgid ""
 "                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"These methods allow to automatically compute the delivery price\n"
+"                according to your settings; on the sales order (based on the\n"
+"                quotation) or the invoice (based on the delivery orders)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_expense_id
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr ""
+msgstr "このアカウントは、現在の製品の経費を評価するためのデフォルトの請求の代わりに請求書に使用されます。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_income_id
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr ""
+msgstr "このアカウントは、現在の製品の売上を評価するためのデフォルトの請求の代わりに請求書に使用されます。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_creditor_price_difference
@@ -1583,17 +1623,17 @@ msgstr "ピッキングから請求をするときに、この配送方法が使
 msgid ""
 "This field holds the image used as image for the product variant, limited to"
 " 1024x1024px."
-msgstr ""
+msgstr "このフィールドは、この製品の種類で使用するイメージを保持しています。最大1024x1024pxサイズです。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_price_extra
 msgid "This is the sum of the extra price of all attributes"
-msgstr ""
+msgstr "すべての属性の追加料金の合計です。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
 msgid "This percentage will be added to the shipping price."
-msgstr ""
+msgstr "このパーセンテージは出荷価格に加算されます。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_production
@@ -1619,7 +1659,7 @@ msgstr "この在庫場所は、棚卸しの実行で生成される在庫移動
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_pos_categ_id
 msgid "Those categories are used to group similar products for point of sale."
-msgstr ""
+msgstr "これらのカテゴリは、同様の製品を販売時点管理のためにグループ化するために使用されます。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_to_weight
@@ -1639,7 +1679,7 @@ msgstr "合計利鞘"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_margin_rate
 msgid "Total Margin Rate(%)"
-msgstr ""
+msgstr "トータルマージンレート(%)"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_margin_rate
@@ -1660,7 +1700,7 @@ msgstr "追跡"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr ""
+msgstr "追跡参照"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1675,7 +1715,7 @@ msgstr "売上高"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_margin
 msgid "Turnover - Standard price"
-msgstr ""
+msgstr "売上高 - 標準価格"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_uom_id
@@ -1687,12 +1727,12 @@ msgstr "単位"
 #: model:ir.model.fields,help:delivery.field_stock_move_weight_uom_id
 msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
-msgstr ""
+msgstr "単位(計量単位、UOM)は、重量のための計量単位です"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking_weight_uom_id
 msgid "Unit of measurement for Weight"
-msgstr ""
+msgstr "重量用計量単位"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_unread
@@ -1707,7 +1747,7 @@ msgstr "未読メッセージカウンター"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "Valuation"
-msgstr ""
+msgstr "評価"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
@@ -1727,7 +1767,7 @@ msgstr "バリアント画像"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_extra
 msgid "Variant Price Extra"
-msgstr ""
+msgstr "バリアント価格エクストラ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
@@ -1789,28 +1829,28 @@ msgstr ""
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
-msgstr ""
+msgstr "新しいシリアル番号が発行されると、アラートを通知するまでの日数が表示されます。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_life_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
-msgstr ""
+msgstr "新しいシリアル番号が発行された場合、これは商品が危険になる可能性があるため、消費してはならない日数です。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_removal_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
-msgstr ""
+msgstr "新しいシリアル番号が発行された場合、これは製品が在庫から削除されるまでの日数です。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_use_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
-msgstr ""
+msgstr "新しいシリアルナンバーが発行されたとき、これは危険なく、製品が劣化し始めるまでの日数です。"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_input

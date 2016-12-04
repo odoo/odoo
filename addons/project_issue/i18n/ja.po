@@ -7,13 +7,14 @@
 # Manami Hashi <manami@roomsfor.hk>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # NOKA Shigekazu <shigekazu.noka@gmail.com>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: NOKA Shigekazu <shigekazu.noka@gmail.com>, 2016\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,17 +46,17 @@ msgstr "%s (コピー)"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "<b>Category:</b>"
-msgstr ""
+msgstr "<b>カテゴリー:</b>"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "<b>Project:</b>"
-msgstr ""
+msgstr "<b>プロジェクト:</b>"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">アズ </span>"
 
 #. module: project_issue
 #: selection:project.config.settings,module_project_issue_sheet:0
@@ -83,6 +84,13 @@ msgid ""
 "\n"
 "                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage"
 msgstr ""
+"課題のかんばん状態は、それに影響を及ぼす特別な状況を示します。\n"
+"\n"
+"* デフォルトは通常 です\n"
+"\n"
+"* ブロックされている は、この課題の進行を妨げるものがあることを示します。\n"
+"\n"
+"* 次の段階へ進む準備 は、その課題が次の段階に進む準備ができていることを示します"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -142,12 +150,12 @@ msgstr "ブロック"
 #: model:project.issue,legend_done:project_issue.crm_case_patcheserrorinprogram0
 #: model:project.issue,legend_done:project_issue.crm_case_programnotgivingproperoutput0
 msgid "Buzz or set as done"
-msgstr ""
+msgstr "ブザーまたは完了として設定"
 
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
 msgid "By Responsible"
-msgstr ""
+msgstr "責任者"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_channel
@@ -158,7 +166,7 @@ msgstr "チャネル"
 #: model:ir.model.fields,help:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,help:project_issue.field_project_project_use_issues
 msgid "Check this box to manage customer activities through this project"
-msgstr ""
+msgstr "このプロジェクトで顧客活動を管理するには、このチェックボックスをオンにします"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_closed
@@ -233,6 +241,8 @@ msgstr "顧客Eメール"
 #: model:ir.model.fields,help:project_issue.field_project_project_label_issues
 msgid "Customize the issues label, for example to call them cases."
 msgstr ""
+"課題のラベルをカスタマイズします。\n"
+"たとえば、呼び出す場合とか。"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date
@@ -318,7 +328,7 @@ msgstr "時間"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "Edit Issue"
-msgstr ""
+msgstr "課題の編集"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_email_from
@@ -361,7 +371,7 @@ msgstr "高"
 #: code:addons/project_issue/models/project_issue.py:271
 #, python-format
 msgid "I take it"
-msgstr ""
+msgstr "とります"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_id
@@ -380,19 +390,19 @@ msgstr "課題"
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
 msgid "Issue Blocked"
-msgstr ""
+msgstr "課題 ブロック済"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Opened"
-msgstr ""
+msgstr "課題 開設済"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_ready
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_ready
 msgid "Issue Ready"
-msgstr ""
+msgstr "課題 準備済"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
@@ -402,7 +412,7 @@ msgstr "課題ステージ変更"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Issue Summary..."
-msgstr ""
+msgstr "課題サマリ..."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -417,17 +427,17 @@ msgstr "課題トラッカーツリー"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
 msgid "Issue blocked"
-msgstr ""
+msgstr "課題 ブロック済"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue opened"
-msgstr ""
+msgstr "課題 開設済"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
 msgid "Issue ready for next stage"
-msgstr ""
+msgstr "次のステージに移動できる課題"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
@@ -454,12 +464,12 @@ msgstr "課題分析"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr ""
+msgstr "かんばん ブロック説明"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr ""
+msgstr "かんばん 進行中の説明"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_kanban_state
@@ -469,7 +479,7 @@ msgstr "かんばん状態"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_done
 msgid "Kanban Valid Explanation"
-msgstr ""
+msgstr "かんばん 有効な説明"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_last
@@ -479,7 +489,7 @@ msgstr "最終アクション"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Last Message"
-msgstr ""
+msgstr "最終メッセージ"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue___last_update
@@ -524,7 +534,7 @@ msgstr "自分の課題"
 #: model:project.issue,legend_blocked:project_issue.crm_case_patcheserrorinprogram0
 #: model:project.issue,legend_blocked:project_issue.crm_case_programnotgivingproperoutput0
 msgid "Need functional or technical help"
-msgstr ""
+msgstr "機能または技術的なヘルプが必要"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -535,7 +545,7 @@ msgstr "新規"
 #: code:addons/project_issue/models/project_issue.py:275
 #, python-format
 msgid "New Issue"
-msgstr ""
+msgstr "新規課題"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_next
@@ -565,7 +575,7 @@ msgstr "通常"
 #: model:project.issue,legend_blocked:project_issue.crm_case_problemloadingpage0
 #: model:project.issue,legend_blocked:project_issue.crm_case_programmingerror0
 msgid "Not validated"
-msgstr ""
+msgstr "未検証"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
@@ -575,28 +585,28 @@ msgstr "課題クローズまでの日数"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_open
 msgid "Number of Days to open the project issue."
-msgstr ""
+msgstr "プロジェクトの課題を開設するまでの日数。"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_blocked
 msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
-msgstr ""
+msgstr "タスクまたは課題がその段階にある場合、かんばん選択のブロック状態に表示されるデフォルト値を上書きします。"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_done
 msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
-msgstr ""
+msgstr "タスクまたは課題がそのステージにあるときに、かんばん選択の完了状態に表示されるデフォルト値を上書きします。"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_normal
 msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
-msgstr ""
+msgstr "タスクまたは課題がその段階にあるときに、かんばん選択の通常状態で表示されるデフォルト値を上書きします。"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
@@ -609,7 +619,7 @@ msgstr "取引先"
 msgid ""
 "Please remove existing issues in the project linked to the accounts you want"
 " to delete."
-msgstr ""
+msgstr "削除するアカウントにリンクされているプロジェクトの既存の課題を削除してください。"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_priority
@@ -624,7 +634,7 @@ msgstr "優先度"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_description
 msgid "Private Note"
-msgstr ""
+msgstr "非公開ノート"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
@@ -646,7 +656,7 @@ msgstr "プロジェクト課題"
 #: model:ir.ui.view,arch_db:project_issue.project_issue_graph_view
 #: model:ir.ui.view,arch_db:project_issue.project_issue_pivot_view
 msgid "Project Issues"
-msgstr ""
+msgstr "プロジェクト課題"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_config_settings_module_project_issue_sheet
@@ -654,11 +664,13 @@ msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
 msgstr ""
+"プロジェクトの課題/バグ管理のタイムシートサポートを提供します。\n"
+"- これはproject_issue_sheetモジュールをインストールします。"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
 msgid "Rating on issue"
-msgstr ""
+msgstr "課題の評価"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
@@ -668,7 +680,7 @@ msgstr "次のステージに移動可"
 #. module: project_issue
 #: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
 msgid "Ready to reopen"
-msgstr ""
+msgstr "再開準備完了"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -719,6 +731,9 @@ msgid ""
 "                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
+"Odooの課題追跡ツールを使用すると、内部要求、\n"
+"ソフトウェア開発のバグ、顧客の苦情、プロジェクトのトラブル、\n"
+"重大な故障などを効率的に管理できます。"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
@@ -726,6 +741,8 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
 "        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
+"これらの電子メールアドレスは、送信前にこのレコードのすべての受信および送信メールのCCフィールドに追加されます。 "
+"複数のメールアドレスをカンマで区切ります。"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
@@ -735,7 +752,7 @@ msgstr "これらの人がEメールを受け取ります。"
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_config_settings_module_rating_project_issue
 msgid "This allows customers to give rating on issue"
-msgstr ""
+msgstr "これにより、顧客は課題のレーティングを与えることができます"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
@@ -756,12 +773,12 @@ msgstr "タイムシート"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
 msgid "Timesheets on Issues"
-msgstr ""
+msgstr "課題のタイムシート"
 
 #. module: project_issue
 #: selection:project.config.settings,module_rating_project_issue:0
 msgid "Track customer satisfaction on issues"
-msgstr ""
+msgstr "課題の顧客満足度を追跡"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -779,12 +796,12 @@ msgstr "未読メッセージ"
 #: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 msgid "Use Issues"
-msgstr ""
+msgstr "課題を使用"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_project_label_issues
 msgid "Use Issues as"
-msgstr ""
+msgstr "これを課題として使用"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_user_email
@@ -811,7 +828,7 @@ msgstr "課題完了所要時間"
 msgid ""
 "You can link this issue to an existing task or directly create a new one "
 "from here"
-msgstr ""
+msgstr "この課題を既存のタスクにリンクすることも、ここから新しいタスクを直接作成することもできます"
 
 #. module: project_issue
 #: code:addons/project_issue/models/project_issue.py:191

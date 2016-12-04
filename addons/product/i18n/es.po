@@ -22,13 +22,15 @@
 # Sergio Flores <vitavitae1@gmail.com>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Kiko Sánchez <kiko@comunitea.com>, 2016
+# Miguel Orueta <mo@landoo.es>, 2016
+# Many Feathers <many-feathers@hotmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-29 14:00+0000\n"
 "PO-Revision-Date: 2016-09-29 14:00+0000\n"
-"Last-Translator: Kiko Sánchez <kiko@comunitea.com>, 2016\n"
+"Last-Translator: Many Feathers <many-feathers@hotmail.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,12 +47,12 @@ msgstr "Categoría de producto"
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template_product_variant_count
 msgid "# Product Variants"
-msgstr ""
+msgstr "# Variantes de producto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_product_count
 msgid "# Products"
-msgstr ""
+msgstr "# Productos"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:438
@@ -161,11 +163,14 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Precio Público  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Costo  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Otra Lista de Precios  -  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Productos</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -199,6 +204,9 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
+"<strong>Advertencia</strong>: añadir o quitar atributos borrará\n"
+"                        y recreará las variantes existentes y llevará a la\n"
+"                        perdida de sus posibles personalizaciones."
 
 #. module: product
 #: code:addons/product/models/product.py:167 sql_constraint:product.product:0
@@ -279,6 +287,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Un producto almacenable es un producto para el que gestiona el stock. La aplicación \"Inventario\" debe instalarse.\n"
+"A consumable product, on the other hand, is a product for which stock is not managed.\n"
+"A service is a non-material product you provide.\n"
+"A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -314,7 +326,7 @@ msgstr "Todos los productos"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
-msgstr ""
+msgstr "All general settings about this product are managed on"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -357,7 +369,7 @@ msgstr "Aplicable en"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_applied_on
 msgid "Apply On"
-msgstr ""
+msgstr "Aplicar Sobre"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -381,7 +393,7 @@ msgstr "Atributo"
 #: model:ir.ui.view,arch_db:product.product_attribute_line_form
 #: model:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Name"
-msgstr ""
+msgstr "Nombre del Atributo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_price_extra
@@ -615,6 +627,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute_create_variant
 msgid "Check this if you want to create multiple variants for this attribute."
 msgstr ""
+"Marque esta casilla si quiere crear múltiples variantes para este atributo."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_child_id
@@ -692,12 +705,12 @@ msgstr "Compañía"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_company_id
 msgid "Company id"
-msgstr ""
+msgstr "ID de Compañía"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
-msgstr ""
+msgstr "Calcula el Precio"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
@@ -714,7 +727,7 @@ msgstr "Carcasa de ordenador"
 #: model:product.product,name:product.product_product_3
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Computer SC234"
-msgstr ""
+msgstr "Computer SC234"
 
 #. module: product
 #: code:addons/product/models/product_template.py:42
@@ -786,7 +799,7 @@ msgstr "Grupos de países"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_variant
 msgid "Create variant"
-msgstr ""
+msgstr "Crear Variante"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_uid
@@ -867,7 +880,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Ref. Cliente"
 
 #. module: product
 #: model:product.product,name:product.product_delivery_02
@@ -1005,7 +1018,7 @@ msgstr "¡Error! No puede crear categorías recursivas"
 #: code:addons/product/models/product_attribute.py:97
 #, python-format
 msgid "Error ! You cannot use this attribute with the following value."
-msgstr ""
+msgstr "Error ! No es posible usar este atributo con el siguiente valor."
 
 #. module: product
 #: code:addons/product/models/product.py:302
@@ -1014,6 +1027,7 @@ msgid ""
 "Error! It is not allowed to choose more than one value for a given "
 "attribute."
 msgstr ""
+"Error! No está permitido eligir más que un valor para un atributo dado."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:419
@@ -1094,13 +1108,13 @@ msgstr "Ejemplo de producto a facturar al pedido."
 #: model:product.product,description:product.service_cost_01
 #: model:product.template,description:product.service_cost_01_product_template
 msgid "Example of products to invoice based on cost."
-msgstr ""
+msgstr "Ejemplo de productos a facturar basado en el costo."
 
 #. module: product
 #: model:product.product,description:product.product_product_1
 #: model:product.template,description:product.product_product_1_product_template
 msgid "Example of products to invoice based on delivery."
-msgstr ""
+msgstr "Ejemplo de productos a facturar basado en la entrega."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_name
@@ -1136,6 +1150,8 @@ msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
+"Para que se aplique la regla, la cantidad comprada/vendida debe ser mayor o igual que la cantidad mínima especificada en este campo. \n"
+"Expresada en la Unidad de Medida por defecto del producto."
 
 #. module: product
 #: selection:product.pricelist.item,compute_price:0
@@ -1889,7 +1905,7 @@ msgstr "Elemento de la tarifa"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_pricelist_item_ids
 msgid "Pricelist item ids"
-msgstr ""
+msgstr "ID de la tarifa de producto"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
@@ -2472,6 +2488,8 @@ msgstr ""
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
+"Campo técnico. Se utiliza para buscar en tarifas, no almacenadas en la base "
+"de datos."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2641,6 +2659,9 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
 msgstr ""
+"El precio de venta se gestiona desde la plantilla del producto. Haga clic en"
+" el botón 'Variant Prices' para establecer los precios adicionales de los "
+"atributos."
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_9
@@ -2908,7 +2929,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_price_extra
 msgid "Variant Price Extra"
-msgstr ""
+msgstr "Precio adicional de la variante "
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view

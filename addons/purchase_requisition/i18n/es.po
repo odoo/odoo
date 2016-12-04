@@ -13,6 +13,7 @@
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Alejandro Santana <alejandrosantana@anubia.es>, 2016
 # Luis Triana <luis.triana@jarsa.com.mx>, 2016
+# Miguel Orueta <mo@landoo.es>, 2016
 # Sergio Flores <vitavitae1@gmail.com>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
@@ -20,14 +21,13 @@
 # David Perez <david@closemarketing.es>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Luis Martínez Ontalba <tecnisagra.ontalba@gmail.com>, 2016
-# Miguel Orueta <mo@landoo.es>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:54+0000\n"
 "PO-Revision-Date: 2016-11-14 15:54+0000\n"
-"Last-Translator: Miguel Orueta <mo@landoo.es>, 2016\n"
+"Last-Translator: Luis Martínez Ontalba <tecnisagra.ontalba@gmail.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +38,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Call for Tender Reference:</strong><br/>"
-msgstr ""
+msgstr "<strong>Referencia de Licitación:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -63,7 +63,7 @@ msgstr "<strong>Cant</strong>"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Reference </strong>"
-msgstr ""
+msgstr "<strong>Referencia </strong>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -73,17 +73,17 @@ msgstr "<strong>Fecha planificada</strong>"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Scheduled Ordering Date:</strong><br/>"
-msgstr ""
+msgstr "<strong>Fecha de orden programada:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Selection Type:</strong><br/>"
-msgstr ""
+msgstr "<strong>Tipo de Selección:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Source:</strong><br/>"
-msgstr ""
+msgstr "<strong>Origen:</strong><br/>"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -103,7 +103,7 @@ msgstr "Referencia de acuerdo"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_exclusive
 msgid "Agreement Selection Type"
-msgstr ""
+msgstr "Selección del tipo de acuerdo"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10833
@@ -126,13 +126,13 @@ msgstr "Selección del licitador"
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
 msgid "Blanket Order"
-msgstr ""
+msgstr "Pedido abierto"
 
 #. module: purchase_requisition
 #: model:ir.actions.report.xml,name:purchase_requisition.action_report_purchase_requisitions
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Call for Tenders"
-msgstr ""
+msgstr "Licitación"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -148,12 +148,12 @@ msgstr "Cancelado"
 #: code:addons/purchase_requisition/models/purchase_requisition.py:76
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
-msgstr ""
+msgstr "Cancelado por el acuerdo asociado a este presupuesto."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "Click to start a new purchase agreement."
-msgstr ""
+msgstr "Haga clic en para iniciar un nuevo acuerdo de compra."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_company_id
@@ -175,7 +175,7 @@ msgstr "Confirmado"
 #. module: purchase_requisition
 #: selection:product.template,purchase_requisition:0
 msgid "Create a draft purchase order"
-msgstr ""
+msgstr "Crear una orden de compra borrador"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_uid
@@ -194,12 +194,12 @@ msgstr "Creado el"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Data for new quotations"
-msgstr ""
+msgstr "Datos para nuevos presupuestos"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_schedule_date
 msgid "Delivery Date"
-msgstr ""
+msgstr "Fecha de entrega"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_description
@@ -216,7 +216,7 @@ msgstr "Nombre a mostrar"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Do not create RfQ lines automatically"
-msgstr ""
+msgstr "No crear líneas RFQ automáticamente"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -241,6 +241,7 @@ msgstr "Mes final"
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
 msgstr ""
+"Los acuerdos de compra incluyen las licitaciones y los pedidos abiertos."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -249,6 +250,9 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
 "            from the negociated prices."
 msgstr ""
+"Para un pedido abierto, se debe de indicar un período específico\n"
+"            (por ejemplo, un año) , los productos negociados y\n"
+"            sus precios acordados."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -270,11 +274,15 @@ msgid ""
 "            been registered, you can review and compare them and you can\n"
 "            validate some and cancel others."
 msgstr ""
+"En una licitación, puede incluir los productos que necesita comprar\n"
+"            y generar las RFQs a los proveedores. Una vez que las ofertas hayan\n"
+"            sido registradas, se pueden revisar, comparar, confirmar,\n"
+"            y cancelar."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "In negotiation"
-msgstr ""
+msgstr "En negociación"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition___last_update
@@ -315,7 +323,7 @@ msgstr "Solicitudes múltiples"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "New Agreements"
-msgstr ""
+msgstr "Nuevos acuerdos"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -325,18 +333,18 @@ msgstr "Nuevo Presupuesto"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "Number of Orders"
-msgstr ""
+msgstr "Numero de ordenes"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_qty_ordered
 msgid "Ordered Quantities"
-msgstr ""
+msgstr "Cantidades pedidas"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_ordering_date
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Ordering Date"
-msgstr "Fecha de pedido"
+msgstr "Fecha de la orden "
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_picking_type_id
@@ -379,7 +387,7 @@ msgstr "Productos a comprar"
 #. module: purchase_requisition
 #: selection:product.template,purchase_requisition:0
 msgid "Propose a call for tenders"
-msgstr ""
+msgstr "Proponer una licitación"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_requisition_id
@@ -412,22 +420,22 @@ msgstr "Acuerdos de compra"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
 msgid "Purchase Order"
-msgstr "Pedido de compra"
+msgstr "Órden de compra"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Línea pedido de compra"
+msgstr "Línea de orden de compra"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_purchase_ids
 msgid "Purchase Orders"
-msgstr "Pedidos de compra"
+msgstr "Ordenes de compra"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
 msgid "Purchase Orders with requisition"
-msgstr "Pedidos de compra con solicitud"
+msgstr "Ordenes de compra con solicitud"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
@@ -453,7 +461,7 @@ msgstr "Licitación de compra"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
 msgid "Purchase orders"
-msgstr "Pedidos de compra"
+msgstr "Ordenes de compra"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_quantity_copy
@@ -468,7 +476,7 @@ msgstr "Cantidad"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "RFQs/Orders"
-msgstr ""
+msgstr "RFQ/Órdenes"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_to_so
@@ -478,7 +486,7 @@ msgstr "Solicitud de presupuesto"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
 msgid "Request for Quotations"
-msgstr ""
+msgstr "Solicitud de presupuestos"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -509,7 +517,7 @@ msgstr "Fecha prevista"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Search Purchase Agreements"
-msgstr ""
+msgstr "Buscar acuerdos de compra"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,exclusive:0
@@ -528,6 +536,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ: allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
+"Seleccione solo una RFQ (exclusiva): cuando se confirma una orden de compra, cancela la orden de compra restante.\n"
+"\n"
+"                    Seleccione varios RFQ: permite múltiples pedidos. Al confirmar una orden de compra no cancela los pedidos restantes"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
@@ -537,7 +548,7 @@ msgstr "Secuencia"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
 msgid "Set quantities manually"
-msgstr ""
+msgstr "Establecer cantidades manualmente"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -565,6 +576,8 @@ msgstr "Términos y condiciones"
 msgid ""
 "The expected and scheduled delivery date where all the products are received"
 msgstr ""
+"Fecha de entrega prevista y programada en la que se reciben todos los "
+"productos"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -584,12 +597,12 @@ msgstr "Precio unitario"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Use lines of agreement"
-msgstr ""
+msgstr "Utilizar líneas de acuerdo"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
 msgid "Use quantities of agreement"
-msgstr ""
+msgstr "Utilizar cantidades de acuerdo"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -610,7 +623,7 @@ msgstr "Almacén"
 #: code:addons/purchase_requisition/models/purchase_requisition.py:82
 #, python-format
 msgid "You cannot confirm call because there is no product line."
-msgstr ""
+msgstr "No se puede confirmar porque no hay ninguna línea de producto."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:99
@@ -618,7 +631,7 @@ msgstr ""
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
 "requisition."
-msgstr ""
+msgstr "Debe cancelar o validar cada RFQ antes de cerrar el presupuesto."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

@@ -5,6 +5,7 @@
 # Translators:
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 # Manami Hashi <manami@roomsfor.hk>, 2016
 msgid ""
 msgstr ""
@@ -28,13 +29,13 @@ msgstr "取消"
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Close"
-msgstr "処理済"
+msgstr "閉じる"
 
 #. module: base_import_module
 #: code:addons/base_import_module/controllers/main.py:31
 #, python-format
 msgid "Could not select database '%s'"
-msgstr ""
+msgstr "データベース '%s' を選択できません"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
@@ -55,7 +56,7 @@ msgstr "表示名"
 #: code:addons/base_import_module/models/ir_module.py:96
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
-msgstr ""
+msgstr "選択ファイルは最大許容ファイルサイズを超えています '%s'"
 
 #. module: base_import_module
 #: code:addons/base_import_module/models/ir_module.py:88
@@ -66,13 +67,13 @@ msgstr "ファイルがZIP形式でありません。"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_force
 msgid "Force init"
-msgstr ""
+msgstr "初期化を強制"
 
 #. module: base_import_module
 #: model:ir.model.fields,help:base_import_module.field_base_import_module_force
 msgid ""
 "Force init mode even if installed. (will update `noupdate='1'` records)"
-msgstr ""
+msgstr "インストールされても強制初期化モード ( `noupdate='1'` とレコードがアップデートされます)"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_id
@@ -82,7 +83,7 @@ msgstr "ID"
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import App"
-msgstr ""
+msgstr "アプリのインポート"
 
 #. module: base_import_module
 #: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
@@ -95,7 +96,7 @@ msgstr "モジュールインポート"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
 msgid "Import message"
-msgstr ""
+msgstr "メッセージのインポート"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -105,7 +106,7 @@ msgstr "モジュールのインポート"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module_imported
 msgid "Imported Module"
-msgstr ""
+msgstr "インポート済モジュール"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module___last_update
@@ -136,13 +137,13 @@ msgstr "モジュール .ZIPファイル"
 #: code:addons/base_import_module/models/ir_module.py:86
 #, python-format
 msgid "No file sent."
-msgstr ""
+msgstr "ファイルが送られていません"
 
 #. module: base_import_module
 #: code:addons/base_import_module/controllers/main.py:25
 #, python-format
 msgid "Only administrators can upload a module"
-msgstr ""
+msgstr "管理者のみモジュールアップロードが可能です。"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -163,7 +164,7 @@ msgstr "ステータス"
 #: code:addons/base_import_module/models/ir_module.py:35
 #, python-format
 msgid "Unmet module dependencies: %s"
-msgstr ""
+msgstr "モジュールの依存関係が満たされていません: %s"
 
 #. module: base_import_module
 #: selection:base.import.module,state:0
@@ -173,4 +174,4 @@ msgstr "完了"
 #. module: base_import_module
 #: selection:base.import.module,state:0
 msgid "init"
-msgstr ""
+msgstr "初期化"

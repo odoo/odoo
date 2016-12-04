@@ -995,7 +995,7 @@ msgstr "包含内容"
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Lots"
-msgstr "批次"
+msgstr "按批次"
 
 #. module: stock
 #: selection:product.template,tracking:0
@@ -2785,7 +2785,7 @@ msgstr "内部类型"
 msgid ""
 "Internal reference number in case it differs from the manufacturer's "
 "lot/serial number"
-msgstr ""
+msgstr "内部参考号码，它不同于制造商的批次/序列号码"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_category_id
@@ -3281,7 +3281,7 @@ msgstr "批次拆分"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "批次/序列号"
+msgstr "批次/序列"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_lot_id
@@ -5557,7 +5557,7 @@ msgstr "一些产品可使用不同的销售 / 采购单位 ( 高级 )"
 msgid ""
 "Some products require lots/serial numbers, so you need to specify those "
 "first!"
-msgstr ""
+msgstr "有些产品需要批次/序列号，所以你必须提供这些!"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -5828,7 +5828,7 @@ msgstr "本技术字段用于对属于此公司之间的仓库进行补给的路
 msgid ""
 "Technical field used to depict a restriction on the lot/serial number of "
 "quants to consider when marking this move as 'done'"
-msgstr ""
+msgstr "技术字段用来表述在标记此移动为‘完成’’时对要考虑的批次/序列号的限制"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_restrict_partner_id
@@ -6184,6 +6184,8 @@ msgid ""
 "This is the list of all the production lots you recorded. When\n"
 "            you select a lot, you can get the traceability of the products contained in lot."
 msgstr ""
+"这是你记录的所有生产批次的清单。\n"
+"当你选择了一个批次时，你追溯此批次包含的产品。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_owner_id
@@ -7018,6 +7020,8 @@ msgid ""
 "Please first validatethe first inventory adjustement with this product "
 "before creating another one."
 msgstr ""
+"同一产品(%s), 同一位置(%s), 同一包裹, 同一所有人以及同一批号，不能有2个状态为“进行中”的库存调整.  "
+"在创建另一个之前，请先验证第一个库存调整。"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:176

@@ -19,13 +19,14 @@
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
 # Luis Martínez Ontalba <tecnisagra.ontalba@gmail.com>, 2016
 # Luis Triana <luis.triana@jarsa.com.mx>, 2016
+# Miguel Orueta <mo@landoo.es>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:55+0000\n"
 "PO-Revision-Date: 2016-11-14 15:55+0000\n"
-"Last-Translator: Luis Triana <luis.triana@jarsa.com.mx>, 2016\n"
+"Last-Translator: Miguel Orueta <mo@landoo.es>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +54,12 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* El estado \"Borrador\" se utiliza cuando un usuario ha introducido una orden de reparación nueva y no está confirmada.\n"
+"* El estado \"Confirmado\" se utiliza cuando un usuario ha confirmado la orden de reparación.\n"
+"* El estado \"Listo para reparar\" indica que se puede comenzar a reparar, es obligatorio que se haya confirmado previamente.\n"
+"* El estado 'Para ser facturado' se utiliza para generar la factura antes o después de la reparación.\n"
+"* El estado \"Hecho\" se establece cuando se completa la reparación.\n"
+"* El estado \"Cancelado\" indica que un usuario ha cancelado la orden."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -92,7 +99,7 @@ msgstr "<strong>Producto a reparar:</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Shipping address :</strong>"
-msgstr ""
+msgstr "<strong>Dirección de envío :</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -133,7 +140,7 @@ msgstr "Antes de reparación"
 #: code:addons/mrp_repair/models/mrp_repair.py:206
 #, python-format
 msgid "Can only confirm draft repairs."
-msgstr ""
+msgstr "Sólo puede confirmar las reparaciones de borrador."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -162,7 +169,7 @@ msgstr "Cancelado"
 #: code:addons/mrp_repair/models/mrp_repair.py:221
 #, python-format
 msgid "Cannot cancel completed repairs."
-msgstr ""
+msgstr "No se pueden cancelar las reparaciones finalizadas."
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
@@ -240,7 +247,7 @@ msgstr "Ubicación actual"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
 msgid "Default address id"
-msgstr ""
+msgstr "ID de dirección predeterminada"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -654,18 +661,20 @@ msgstr "Referencia reparación"
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
 msgstr ""
+"La reparación debe de estar cancelada para poder ser puesta en borrador."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:343
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
-msgstr ""
+msgstr "La reparación debe estar confirmada antes de comenzar la reparación."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:371
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
 msgstr ""
+"La reparación debe ser terminada para generar los movimientos de productos"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:354
@@ -710,7 +719,7 @@ msgstr "Órdenes de reparación"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "Buscar órdenes de reparación"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -804,6 +813,8 @@ msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
+"El estado de una línea de reparación se establece automáticamente en el de "
+"la orden de reparación vinculada."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -903,3 +914,5 @@ msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
+"¡Tiene que seleccionar una tarifa en el formulario de reparación!\n"
+" Por favor, indique una antes de elegir un producto."
