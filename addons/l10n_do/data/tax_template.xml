@@ -3,8 +3,16 @@
     <data noupdate="1">
         <!-- Chart template for Taxes -->
         <!-- Taxes Tags -->
-        <record id="tag_exempt" model="account.account.tag">
+        <record id="tag_exempt_all" model="account.account.tag">
             <field name="name">ITBIS EXENTO</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_exempt_sale" model="account.account.tag">
+            <field name="name">V-ITBIS EXENTO</field>
+            <field name="applicability">taxes</field>
+        </record>
+        <record id="tag_exempt_purch" model="account.account.tag">
+            <field name="name">C-ITBIS EXENTO</field>
             <field name="applicability">taxes</field>
         </record>
         <record id="tag_10_telco" model="account.account.tag">
@@ -83,7 +91,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">none</field>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_exempt')])]" name="tag_ids"/>
+            <field eval="[(6,0,[ref('tag_exempt_all')])]" name="tag_ids"/>
         </record>
         <record id="tax_0_sale" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -94,7 +102,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_exempt')])]" name="tag_ids"/>
+            <field eval="[(6,0,[ref('tag_exempt_sale')])]" name="tag_ids"/>
         </record>
         <record id="tax_0_purch" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -105,7 +113,7 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field eval="0" name="price_include"/>
-            <field eval="[(6,0,[ref('tag_exempt')])]" name="tag_ids"/>
+            <field eval="[(6,0,[ref('tag_exempt_purch')])]" name="tag_ids"/>
         </record>
         <record id="tax_18_sale" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
