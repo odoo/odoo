@@ -76,6 +76,7 @@
         <!-- Taxes Template -->
         <record id="tax_0_all" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">50</field>
             <field name="name">Exento ITBIS</field>
             <field name="description">Exento</field>
             <field name="amount">0</field>
@@ -86,6 +87,7 @@
         </record>
         <record id="tax_0_sale" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">50</field>
             <field name="name">Exento ITBIS Ventas</field>
             <field name="description">Exento</field>
             <field name="amount">0</field>
@@ -96,6 +98,7 @@
         </record>
         <record id="tax_0_purch" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">50</field>
             <field name="name">Exento ITBIS Compras</field>
             <field name="description">Exento</field>
             <field name="amount">0</field>
@@ -106,8 +109,8 @@
         </record>
         <record id="tax_18_sale" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">18% ITBIS Ventas</field>
             <field name="sequence">1</field>
+            <field name="name">18% ITBIS Ventas</field>
             <field name="description">18%</field>
             <field name="amount">18</field>
             <field name="amount_type">percent</field>
@@ -119,6 +122,7 @@
         </record>
         <record id="tax_18_sale_incl" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">10</field>
             <field name="name">18% ITBIS Incl. Ventas</field>
             <field name="description">18% Incl</field>
             <field name="amount">18</field>
@@ -132,7 +136,7 @@
         <record id="tax_18_purch" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="name">18% ITBIS Compras</field>
-            <field name="sequence">1</field>
+            <field name="sequence">2</field>
             <field name="description">18%</field>
             <field name="amount">18</field>
             <field name="amount_type">percent</field>
@@ -144,6 +148,7 @@
         </record>
         <record id="tax_18_purch_incl" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">20</field>
             <field name="name">18% ITBIS Incl. Compras</field>
             <field name="description">18%</field>
             <field name="amount">18</field>
@@ -156,6 +161,7 @@
         </record>
         <record id="tax_18_purch_serv" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">20</field>
             <field name="name">18% ITBIS Compras - Servicios</field>
             <field name="description">18%</field>
             <field name="amount">18</field>
@@ -168,6 +174,7 @@
         </record>
         <record id="tax_18_purch_serv_incl" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">20</field>
             <field name="name">18% ITBIS Incl. Compras - Servicios</field>
             <field name="description">18%</field>
             <field name="amount">18</field>
@@ -180,6 +187,7 @@
         </record>
         <record id="tax_18_importation" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">20</field>
             <field name="name">18% ITBIS - Importaciones</field>
             <field name="description">18%</field>
             <field name="amount">18</field>
@@ -192,6 +200,7 @@
         </record>
         <record id="tax_18_of_10" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">20</field>
             <field name="name">18% ITBIS sobre el 10% del Monto Total</field>
             <field name="description">18% del 10%</field>
             <field name="amount">18</field>
@@ -204,6 +213,7 @@
         </record>
         <record id="tax_0015_bank" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">30</field>
             <field name="name">Impuesto 0.0015% Transferencia Bancaria</field>
             <field name="description">0.0015%</field>
             <field name="amount">-0.0015</field>
@@ -215,6 +225,7 @@
         </record>
         <record id="tax_10_telco" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">30</field>
             <field name="name">Impuesto 10% Telecomunicaciones (ISC)</field>
             <field name="description">ISC</field>
             <field name="amount">10</field>
@@ -227,6 +238,7 @@
         </record>
         <record id="tax_2_telco" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">30</field>
             <field name="name">Impuesto 2% Telecomunicaciones (CDT)</field>
             <field name="description">CDT</field>
             <field name="amount">2</field>
@@ -239,6 +251,7 @@
         </record>
         <record id="tax_group_telco" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">30</field>
             <field name="name">Impuestos a las Telecomunicaciones</field>
             <field eval="0" name="amount"/>
             <field name="amount_type">group</field>
@@ -247,6 +260,7 @@
         </record>
         <record id="ret_100_tax_nonprofit" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">40</field>
             <field name="name">Retención ITBIS 100% a No Lucrativas (Servicios)</field>
             <field name="description">100% del ITBIS</field>
             <field name="amount">-18</field>
@@ -259,6 +273,7 @@
         </record>
         <record id="ret_100_tax_person" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">40</field>
             <field name="name">Retención ITBIS 100% a Persona Física</field>
             <field name="description">100% del ITBIS</field>
             <field name="amount">-18</field>
@@ -271,6 +286,7 @@
         </record>
         <record id="ret_30_tax_moral" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">40</field>
             <field name="name">Retención ITBIS 30% a Persona Jurídica (Construcción)</field>
             <field name="description">30% del ITBIS</field>
             <field name="amount">-5.4</field>
@@ -283,6 +299,7 @@
         </record>
         <record id="ret_30_tax_freelance" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">40</field>
             <field name="name">Retención ITBIS 30% a Profesionales Liberales (Servicios)</field>
             <field name="description">30% del ITBIS</field>
             <field name="amount">-5.4</field>
@@ -295,6 +312,7 @@
         </record>
         <record id="ret_75_tax_nonformal" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">40</field>
             <field name="name">Retención ITBIS 75% a Proveedores Informales (Bienes)</field>
             <field name="description">75% del ITBIS</field>
             <field name="amount">-13.5</field>
@@ -307,6 +325,7 @@
         </record>
         <record id="ret_10_income_person" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">40</field>
             <field name="name">Retención ISR 10% Honorarios a Persona Física (Servicios)</field>
             <field name="description">10% ISR</field>
             <field name="amount">-10</field>
@@ -319,6 +338,7 @@
         </record>
         <record id="ret_10_income_rent" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">40</field>
             <field name="name">Retención ISR 10% a Persona Física (Alquiler)</field>
             <field name="description">10% ISR</field>
             <field name="amount">-10</field>
@@ -331,6 +351,7 @@
         </record>
         <record id="ret_10_income_dividend" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">40</field>
             <field name="name">Retención ISR 10% por Dividendos</field>
             <field name="description">10% ISR</field>
             <field name="amount">-10</field>
@@ -343,6 +364,7 @@
         </record>
         <record id="ret_2_income_person" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">40</field>
             <field name="name">Retención ISR 2% a Persona Física (Servicios)</field>
             <field name="description">2% ISR (N 07-07)</field>
             <field name="amount">-2</field>
@@ -355,6 +377,7 @@
         </record>
         <record id="ret_2_income_transfer" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">40</field>
             <field name="name">Retención ISR 2% por Transferencia de Títulos</field>
             <field name="description">2% ISR</field>
             <field name="amount">-2</field>
@@ -367,6 +390,7 @@
         </record>
         <record id="ret_27_income_remittance" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">40</field>
             <field name="name">Retención ISR 27% por Remesas al Exterior</field>
             <field name="description">27% ISR</field>
             <field name="amount">-27</field>
@@ -379,6 +403,7 @@
         </record>
         <record id="tax_group_nonformal" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">60</field>
             <field name="name">Retención a Proveedores Informales (Bienes)</field>
             <field name="amount_type">group</field>
             <field eval="0" name="amount"/>
@@ -388,6 +413,7 @@
         </record>
         <record id="tax_group_person_construction" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">60</field>
             <field name="name">Retención a Persona Física (Servicios Construcción con Materiales)</field>
             <field name="amount_type">group</field>
             <field eval="0" name="amount"/>
@@ -396,6 +422,7 @@
         </record>
         <record id="tax_group_moral_construction" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">60</field>
             <field name="name">Retención a Jurídica (Servicios Construcción con Materiales)</field>
             <field name="amount_type">group</field>
             <field eval="0" name="amount"/>
@@ -404,6 +431,7 @@
         </record>
         <record id="tax_group_person_services" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="sequence">60</field>
             <field name="name">Retención a Persona Física por Servicios Profesionales</field>
             <field name="amount_type">group</field>
             <field eval="0" name="amount"/>
