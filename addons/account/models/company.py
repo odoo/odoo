@@ -43,6 +43,9 @@ If you have any queries regarding your account, Please contact us.
 
 Thank you in advance for your cooperation.
 Best Regards,''')
+    edi_xml_attached_mails = fields.Boolean(
+        string='Attach EDI files to emails?',
+        help='I want to attach my EDI files when I send the invoice by email')
 
     @api.multi
     def compute_fiscalyear_dates(self, date):

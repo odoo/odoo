@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import base64
 from lxml import etree
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -385,12 +386,55 @@ class AccountInvoice(models.Model):
         return super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
     @api.multi
+    def _get_edi_attachments(self):
+        ''' Get the EDI documents in the filestore or generates new ones.
+        '''
+        self.ensure_one()
+        country_code = self.company_id.country_id.code
+        func_filenames = 'get_edi_filenames_' + country_code
+        func_attachment = 'generate_edi_' + country_code
+        if not hasattr(self, func_filenames) or self.state not in ('open', 'paid') or self.type not in ('out_invoice', 'out_refund'):
+            return []
+        if self.sent:
+            domain = [
+                ('res_id','=', self.id),
+                ('res_model', '=', self._name),
+                ('name', 'in', getattr(self, func_filenames)())]
+            return self.env['ir.attachment'].search(domain)
+        else:
+            if not hasattr(self, func_attachment):
+                raise UserError(_('Unable to generate EDI: Method %s not found' % func_attachment))
+            edi_attachments = getattr(self, func_attachment)()
+            
+            for edi_attachment in edi_attachments:
+                _logger.info('The EDI document %s is now saved in the database', edi_attachment.name)
+            ids = map(lambda x: x.id, edi_attachments)
+            if ids:
+                self.message_post(
+                    body=_('EDI document generated:'),
+                    attachment_ids=ids,
+                    subtype='mt_invoice_edi_created')
+            return edi_attachments
+
+    @api.multi
+    def prepare_pdf(self, values=None):
+        metadata = super(AccountInvoice, self).prepare_pdf(values=values)
+        to_embed = metadata.get('to_embed', [])
+        for record in self:
+            # Append edi documents
+            to_embed.extend(record._get_edi_attachments())
+            # Mark the invoice as sent to avoid creating further report or edi document
+            record.sent = True
+        metadata['to_embed'] = to_embed
+        return metadata
+
+
+    @api.multi
     def invoice_print(self):
         """ Print the invoice and mark it as sent, so that we can see more
             easily the next step of the workflow
         """
         self.ensure_one()
-        self.sent = True
         return self.env['report'].get_action(self, 'account.report_invoice')
 
     @api.multi
@@ -410,6 +454,12 @@ class AccountInvoice(models.Model):
             mark_invoice_as_sent=True,
             custom_layout="account.mail_template_data_notification_email_account_invoice"
         )
+        # Trigger the generation of attachments to avoid to do that during the onchange transaction
+        # If the wizzard is opened when no attachments have been generated, they are created during
+        # the 'onchange_template_id_wrapper' (mail_compose_message) transaction block that will cause 
+        # some troubles.
+        if not self.sent:
+            self.env['report'].get_pdf([self.id], 'account.report_invoice')
         return {
             'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
@@ -1346,6 +1396,27 @@ class AccountInvoiceLine(models.Model):
         """
         pass
 
+    edi_description = fields.Char(string='EDI description', compute='_compute_edi_description')
+    edi_product_name = fields.Char(string='EDI product name', compute='_compute_edi_product_name')
+
+    @api.multi
+    @api.depends('name')
+    def _compute_edi_description(self):
+        for record in self:
+            lines = map(lambda line: line.strip(), record.name.split('\n'))
+            record.edi_description = ', '.join(lines)
+
+    @api.multi
+    @api.depends('product_id')
+    def _compute_edi_product_name(self):
+        for record in self:
+            product_id = record.product_id
+            variants = [variant.name for variant in product_id.attribute_value_ids]
+            if variants:
+                record.edi_product_name = '%s (%s)' % (product_id.name, ', '.join(variants))
+            else:
+                record.edi_product_name = product_id.name
+
 class AccountInvoiceTax(models.Model):
     _name = "account.invoice.tax"
     _description = "Invoice Tax"
@@ -1480,17 +1551,3 @@ class AccountPaymentTermLine(models.Model):
     def _onchange_option(self):
         if self.option in ('last_day_current_month', 'last_day_following_month'):
             self.days = 0
-
-class MailComposeMessage(models.TransientModel):
-    _inherit = 'mail.compose.message'
-
-    @api.multi
-    def send_mail(self, auto_commit=False):
-        context = self._context
-        if context.get('default_model') == 'account.invoice' and \
-                context.get('default_res_id') and context.get('mark_invoice_as_sent'):
-            invoice = self.env['account.invoice'].browse(context['default_res_id'])
-            invoice = invoice.with_context(mail_post_autofollow=True)
-            invoice.sent = True
-            invoice.message_post(body=_("Invoice sent"))
-        return super(MailComposeMessage, self).send_mail(auto_commit=auto_commit)
