@@ -48,7 +48,7 @@ class Note(models.Model):
         inverse='_inverse_stage_id', string='Stage')
     stage_ids = fields.Many2many('note.stage', 'note_stage_rel', 'note_id', 'stage_id',
         string='Stages of Users',  default=_get_default_stage_id)
-    open = fields.Boolean(string='Active', track_visibility='onchange', default=True)
+    open = fields.Boolean(string='Active', default=True)
     date_done = fields.Date('Date done')
     color = fields.Integer(string='Color Index')
     tag_ids = fields.Many2many('note.tag', 'note_tags_rel', 'note_id', 'tag_id', string='Tags')

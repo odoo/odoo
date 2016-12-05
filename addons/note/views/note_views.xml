@@ -49,11 +49,23 @@
       </field>
     </record>
 
+    <!-- note Tag Tree View -->
+    <record id="note_tag_view_tree" model="ir.ui.view">
+      <field name="name">note.tag.tree</field>
+      <field name="model">note.tag</field>
+      <field name="arch" type="xml">
+        <tree string="Tags" editable="bottom">
+            <field name="name"/>
+        </tree>
+      </field>
+    </record>
+
     <!-- note Tag Action -->
     <record id="note_tag_action" model="ir.actions.act_window">
       <field name="name">Tags</field>
       <field name="res_model">note.tag</field>
       <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
       <field name="help" type="html">
         <p class="oe_view_nocontent_create">
           Click to add a new tag.
@@ -139,7 +151,7 @@
                     <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
                 </header>
                 <sheet>
-                    <field name="tag_ids" widget="many2many_tags" placeholder="Tags" options="{'no_create_edit': True}"/>
+                    <field name="tag_ids" widget="many2many_tags" placeholder="Tags"/>
                     <field name="memo" widget="html" class="oe_memo" editor_height="450px" />
                 </sheet>
                 <div class="oe_chatter">
