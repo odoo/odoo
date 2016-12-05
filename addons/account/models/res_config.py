@@ -106,8 +106,6 @@ class AccountConfigSettings(models.TransientModel):
              'Once the master budgets and the budgets are defined, '
              'the project managers can set the planned amount on each analytic account.\n'
              '-This installs the module account_budget.')
-    module_account_tax_cash_basis = fields.Boolean(string="Allow Tax Cash Basis",
-                                        help='Generate tax cash basis entrie when reconciliating entries')
 
     group_proforma_invoices = fields.Boolean(string='Allow pro-forma invoices',
         implied_group='account.group_proforma_invoices',
@@ -115,6 +113,10 @@ class AccountConfigSettings(models.TransientModel):
     module_account_reports_followup = fields.Boolean("Enable payment followup management",
         help='This allows to automate letters for unpaid invoices, with multi-level recalls.\n'
              '-This installs the module account_reports_followup.')
+    tax_cash_basis_journal_id = fields.Many2one(
+        'account.journal',
+        related='company_id.tax_cash_basis_journal_id',
+        string="Tax Cash Basis Journal",)
 
     default_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", help="This sale tax will be assigned by default on new products.", oldname="default_sale_tax")
     default_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", help="This purchase tax will be assigned by default on new products.", oldname="default_purchase_tax")
