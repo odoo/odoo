@@ -421,7 +421,7 @@ var ProxyDevice  = core.Class.extend(core.mixins.PropertiesMixin,{
                         send_printing_job();
                     },function(error){
                         if (error) {
-                            self.pos.chrome.screen_selector.show_popup('error-traceback',{
+                            self.pos.gui.show_popup('error-traceback',{
                                 'title': _t('Printing Error: ') + error.data.message,
                                 'body':  error.data.debug,
                             });
