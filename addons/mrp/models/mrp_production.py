@@ -14,7 +14,7 @@ class MrpProduction(models.Model):
     _name = 'mrp.production'
     _description = 'Manufacturing Order'
     _date_name = 'date_planned_start'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _order = 'date_planned_start asc,id'
 
     @api.model
@@ -84,7 +84,7 @@ class MrpProduction(models.Model):
         states={'confirmed': [('readonly', False)]}, oldname="date_planned")
     date_planned_finished = fields.Datetime(
         'Deadline End', copy=False, default=fields.Datetime.now,
-        index=True, 
+        index=True,
         states={'confirmed': [('readonly', False)]})
     date_start = fields.Datetime('Start Date', copy=False, index=True, readonly=True)
     date_finished = fields.Datetime('End Date', copy=False, index=True, readonly=True)
@@ -100,11 +100,11 @@ class MrpProduction(models.Model):
              "work centers based on production planning.")
     move_raw_ids = fields.One2many(
         'stock.move', 'raw_material_production_id', 'Raw Materials', oldname='move_lines',
-        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, 
+        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain=[('scrapped', '=', False)])
     move_finished_ids = fields.One2many(
         'stock.move', 'production_id', 'Finished Products',
-        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, 
+        copy=False, states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain=[('scrapped', '=', False)])
     workorder_ids = fields.One2many(
         'mrp.workorder', 'production_id', 'Work Orders',
@@ -136,7 +136,7 @@ class MrpProduction(models.Model):
         default=lambda self: self.env['res.company']._company_default_get('mrp.production'),
         required=True)
 
-    check_to_done = fields.Boolean(compute="_get_produced_qty", string="Check Produced Qty", 
+    check_to_done = fields.Boolean(compute="_get_produced_qty", string="Check Produced Qty",
         help="Technical Field to see if we can show 'Mark as Done' button")
     qty_produced = fields.Float(compute="_get_produced_qty", string="Quantity Produced")
     procurement_group_id = fields.Many2one(

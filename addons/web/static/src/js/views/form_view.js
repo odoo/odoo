@@ -333,7 +333,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                 } else {
                     self.do_push_state({});
                 }
-                self.$el.removeClass('oe_form_dirty');                
+                self.$el.removeClass('oe_form_dirty');
             });
          });
     },
@@ -656,7 +656,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
             self.trigger("save", result);
             return self.reload().then(function() {
                 self.to_view_mode();
-                core.bus.trigger('do_reload_needaction');
                 core.bus.trigger('form_view_saved', self);
             });
         }).always(function(){

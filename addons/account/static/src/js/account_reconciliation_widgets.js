@@ -1121,7 +1121,6 @@ var bankStatementReconciliation = abstractReconciliation.extend({
         this.num_already_reconciled_lines = 0; // Number of lines of the statement which were already reconciled
         this.model_bank_statement = new Model("account.bank.statement");
         this.model_bank_statement_line = new Model("account.bank.statement.line");
-        this.reconciliation_menu_id = false; // Used to update the needaction badge
         // The same move line cannot be selected for multiple reconciliations
         this.excluded_move_lines_ids = {};
         this.widget_childrens = [];
@@ -1146,15 +1145,6 @@ var bankStatementReconciliation = abstractReconciliation.extend({
             deferred_promises.push(self.model_bank_statement
                 .call("reconciliation_widget_preprocess", [self.statement_ids || undefined])
                 .then(function(data){ self.serverPreprocessResultHandler(data) })
-            );
-
-            // Get the id of the menuitem
-            deferred_promises.push(new Model("ir.model.data")
-                .call("xmlid_to_res_id", ["account.menu_bank_reconcile_bank_statements"])
-                .then(function(data) {
-                    self.reconciliation_menu_id = data;
-                    self.doReloadMenuReconciliation();
-                })
             );
 
             // When queries are done, render template and reconciliation lines
@@ -1298,7 +1288,6 @@ var bankStatementReconciliation = abstractReconciliation.extend({
                 self.lines_reconciled_with_ctrl_enter += reconciliations.length;
                 self.reconciled_lines += reconciliations.length;
                 self.updateProgressbar();
-                self.doReloadMenuReconciliation();
 
                 // Display new line if there are left
                 if (self.last_displayed_reconciliation_index < self.lines.length) {
@@ -1444,7 +1433,6 @@ var bankStatementReconciliation = abstractReconciliation.extend({
 
         self.reconciled_lines++;
         self.updateProgressbar();
-        self.doReloadMenuReconciliation();
 
         // Display new line if there are left
         if (self.last_displayed_reconciliation_index < self.lines.length && self.getChildren().length < self.num_reconciliations_fetched_in_batch) {
@@ -1470,19 +1458,6 @@ var bankStatementReconciliation = abstractReconciliation.extend({
         this._super(line);
         if (! this.partner_id && line.partner_name)
             line.q_label = line.partner_name + " : " + line.q_label;
-    },
-
-    /* reloads the needaction badge */
-    doReloadMenuReconciliation: function () {
-        var menu = web_client.menu;
-        if (!menu || !this.reconciliation_menu_id) {
-            return $.when();
-        }
-        return menu.rpc("/web/menu/load_needaction", {'menu_ids': [this.reconciliation_menu_id]}).done(function(r) {
-            menu.on_needaction_loaded(r);
-        }).then(function () {
-            menu.trigger("need_action_reloaded");
-        });
     },
 
     goBackToStatementsTreeView: function() {

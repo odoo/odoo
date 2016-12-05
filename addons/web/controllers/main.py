@@ -786,16 +786,6 @@ class Session(http.Controller):
         request.session.logout(keep_db=True)
         return werkzeug.utils.redirect(redirect, 303)
 
-class Menu(http.Controller):
-
-    @http.route('/web/menu/load_needaction', type='json', auth="user")
-    def load_needaction(self, menu_ids):
-        """ Loads needaction counters for specific menu ids.
-
-            :return: needaction data
-            :rtype: dict(menu_id: {'needaction_enabled': boolean, 'needaction_counter': int})
-        """
-        return request.env['ir.ui.menu'].browse(menu_ids).get_needaction_data()
 
 class DataSet(http.Controller):
 

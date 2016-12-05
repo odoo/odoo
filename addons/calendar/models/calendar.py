@@ -509,7 +509,7 @@ class Meeting(models.Model):
     _name = 'calendar.event'
     _description = "Event"
     _order = "id desc"
-    _inherit = ["mail.thread", "ir.needaction_mixin"]
+    _inherit = ["mail.thread"]
 
     @api.model
     def _default_partners(self):
@@ -1255,15 +1255,6 @@ class Meeting(models.Model):
     ####################################################
     # Messaging
     ####################################################
-
-    # shows events of the day for this user
-    @api.model
-    def _needaction_domain_get(self):
-        return [
-            ('stop', '<=', time.strftime(DEFAULT_SERVER_DATE_FORMAT + ' 23:59:59')),
-            ('start', '>=', time.strftime(DEFAULT_SERVER_DATE_FORMAT + ' 00:00:00')),
-            ('user_id', '=', self.env.user.id),
-        ]
 
     @api.multi
     def _get_message_unread(self):

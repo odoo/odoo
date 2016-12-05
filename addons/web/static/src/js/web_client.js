@@ -150,12 +150,6 @@ return AbstractWebClient.extend({
         return this.menu_dm.add(data_manager.load_action(options.action_id))
             .then(function (result) {
                 return self.action_mutex.exec(function() {
-                    if (options.needaction) {
-                        result.context = new data.CompoundContext(result.context, {
-                            search_default_message_needaction: true,
-                            search_disable_custom_filters: true,
-                        });
-                    }
                     var completed = $.Deferred();
                     $.when(self.action_manager.do_action(result, {
                         clear_breadcrumbs: true,
