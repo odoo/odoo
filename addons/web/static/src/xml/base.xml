@@ -1223,13 +1223,6 @@
     </span>
 </div>
 
-<t t-name="Menu.needaction_counter">
-    <div id="menu_counter" class="badge pull-right">
-        <t t-if="widget.needaction_counter &gt; 99"> 99+ </t>
-        <t t-if="widget.needaction_counter &lt;= 99"> <t t-esc="widget.needaction_counter"/> </t>
-    </div>
-</t>
-
 <t t-name="AceEditor">
     <t t-if="!widget.get('effective_readonly')">
         <div class="oe_form_field o_ace_view_editor oe_ace_open">
