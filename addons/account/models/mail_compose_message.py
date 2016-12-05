@@ -18,11 +18,12 @@ class MailComposeMessage(models.TransientModel):
     @api.multi
     @api.onchange('template_id')
     def onchange_template_id_wrapper(self):
+        '''Add automatically the EDI documents if checked in the config.
+        '''
         super(MailComposeMessage, self).onchange_template_id_wrapper()
         # Append edi documents if necessary
         if self.env.user.company_id.edi_xml_attached_mails:
             invoice = self.env[self.model].browse(self.res_id)
-            l = lambda x: x.id
-            ids = map(l, self.attachment_ids)
-            ids.extend(map(l, invoice._get_edi_attachments()))
+            ids = [x.id for x in self.attachment_ids]
+            ids.extend([x.id for x in invoice._get_edi_attachments()])
             self.attachment_ids = [(6, 0, ids)]
