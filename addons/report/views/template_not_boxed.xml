@@ -22,24 +22,31 @@
     </template>
     <!-- NOBOXED FOOTER -->
     <template id="o_noboxed_template_footer">
-        <div class="footer">
-            <div class="row o_noboxed_footer">
-                <div class="col-xs-12 mt8 mb8">
-                    <ul class="list-inline text-center">
-                        <li t-if="company.phone"><i class="fa fa-phone"></i> <span t-field="company.phone"/></li>
-                        <li t-if="company.fax"><i class="fa fa-fax"></i> <span t-field="company.fax"/></li>
-                        <li t-if="company.email"><i class="fa fa-at"></i> <span t-field="company.email"/></li>
-                        <li t-if="company.website"><i class="fa fa-globe"></i> <span t-field="company.website"/></li>
-                    </ul>
-                </div>
-                <div class="col-xs-12 text-center">
-                    <ul class="list-inline">
-                        <li><small>Page:</small></li>
-                        <li><small><span class="page"/></small></li>
-                        <li><small>of</small></li>
-                        <li><small><span class="topage"/></small></li>
-                    </ul>
-                </div>
+        <div class="footer o_noboxed_footer row">
+            <div class="col-xs-12 text-center">
+                <ul t-if="not company.custom_footer" class="list-inline">
+                    <li t-if="company.phone"><i class="fa fa-phone"></i> <span t-field="company.phone"/></li>
+                    <li t-if="company.fax"><i class="fa fa-fax"></i> <span t-field="company.fax"/></li>
+                    <li t-if="company.email"><i class="fa fa-at"></i> <span t-field="company.email"/></li>
+                    <li t-if="company.website"><i class="fa fa-globe"></i> <span t-field="company.website"/></li>
+                </ul>
+
+                <ul t-if="not company.custom_footer" class="list-inline text-center" name="financial_infos">
+                    <li t-if="company.vat"><small>TIN: <span t-field="company.vat"/></small></li>
+                </ul>
+
+                <t t-if="company.custom_footer">
+                    <div class="col-xs-12 text-center">
+                        <span t-raw="company.rml_footer"/>
+                    </div>
+                </t>
+
+                <ul class="list-inline">
+                    <li>Page:</li>
+                    <li><span class="page"/></li>
+                    <li>of</li>
+                    <li><span class="topage"/></li>
+                </ul>
             </div>
         </div>      
     </template>

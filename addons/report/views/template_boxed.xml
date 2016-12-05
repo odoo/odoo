@@ -22,34 +22,31 @@
     </template>
     <!-- NOBOXED FOOTER -->
     <template id="o_boxed_template_footer">
-        <div class="footer o_boxed_footer">
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                    <ul t-if="not company.custom_footer" class="list-inline mb0 mt8">
-                        <li t-if="company.phone">Tel <span t-field="company.phone"/></li>
-                        <li t-if="company.fax">Fax <span t-field="company.fax"/></li>
-                        <li t-if="company.email"><span t-field="company.email"/></li>
-                        <li t-if="company.website"><span t-field="company.website"/></li>
-                    </ul>
+        <div class="footer o_boxed_footer row">
+            <div class="col-xs-12 text-center">
+                <ul t-if="not company.custom_footer" class="list-inline">
+                    <li t-if="company.phone">Tel <span t-field="company.phone"/></li>
+                    <li t-if="company.fax">Fax <span t-field="company.fax"/></li>
+                    <li t-if="company.email"><span t-field="company.email"/></li>
+                    <li t-if="company.website"><span t-field="company.website"/></li>
+                </ul>
 
-                    <ul t-if="not company.custom_footer" class="list-inline mt0 mb0" name="financial_infos">
-                        <li t-if="company.vat"><small>TIN: <span t-field="company.vat"/></small></li>
-                    </ul>
+                <ul t-if="not company.custom_footer" class="list-inline" name="financial_infos">
+                    <li t-if="company.vat">TIN: <span t-field="company.vat"/></li>
+                </ul>
 
-                    <t t-if="company.custom_footer">
+                <t t-if="company.custom_footer">
+                    <div class="col-xs-12 text-center">
                         <span t-raw="company.rml_footer"/>
-                    </t>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <ul class="list-inline mb0 mt0">
-                        <li><small>Page:</small></li>
-                        <li><small><span class="page"/></small></li>
-                        <li><small>of</small></li>
-                        <li><small><span class="topage"/></small></li>
-                    </ul>
-                </div>
+                    </div>
+                </t>
+
+                <ul class="list-inline">
+                    <li>Page:</li>
+                    <li><span class="page"/></li>
+                    <li>of</li>
+                    <li><span class="topage"/></li>
+                </ul>
             </div>
         </div>      
     </template>
