@@ -5438,6 +5438,13 @@ class BaseModel(object):
 
         return result
 
+    def prepare_pdf(self, values=None):
+        ''' Hook used to add some metadata if needed like embedding, signature...
+        The available keys are:
+            :to_embed: list of ir.attachment to embed in the pdf
+        '''
+        return {}
+
 
 class RecordCache(MutableMapping):
     """ Implements a proxy dictionary to read/update the cache of a record.
