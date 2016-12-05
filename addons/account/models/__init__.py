@@ -13,3 +13,4 @@ import product
 import company
 import res_config
 import web_planner
+import mail_compose_message

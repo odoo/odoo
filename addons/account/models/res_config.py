@@ -144,6 +144,9 @@ class AccountConfigSettings(models.TransientModel):
         help='Get your bank statements from your bank and import them in Odoo in the .CSV format.\n'
             '-This installs the module account_bank_statement_import_csv.')
     overdue_msg = fields.Text(related='company_id.overdue_msg', string='Overdue Payments Message *')
+    edi_xml_attached_mails = fields.Boolean(related='company_id.edi_xml_attached_mails',
+        string='Attach EDI files to emails?*',
+        help='I want to attach my EDI files when I send the invoice by email')
 
 
     @api.model

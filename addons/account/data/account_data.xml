@@ -80,6 +80,12 @@
             <field name="hidden" eval="True"/>
             <field name="description">Invoice Created</field>
         </record>
+        <record id="mt_invoice_edi_created" model="mail.message.subtype">
+            <field name="name">EDI Document(s) Created</field>
+            <field name="res_model">account.invoice</field>
+            <field name="default" eval="False"/>
+            <field name="description">EDI document(s) Created</field>
+        </record>
 
         <!-- Payment methods -->
         <record id="account_payment_method_manual_in" model="account.payment.method">
