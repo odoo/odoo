@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="ubl_party">
+            <!-- This template must be called with a partner_id -->
+            <cac__Party>
+                <cbc__WebsiteURI
+                    t-if="self.website"
+                    t-esc="self.website"/>
+                <cac__PartyName>
+                    <cbc__Name t-esc="self.name"/>
+                </cac__PartyName>
+                <cac__Language t-if="self.lang">
+                    <cbc__LocaleCode t-esc="self.lang"/>
+                </cac__Language>
+                <cac__PostalAddress> 
+                    <cbc__StreetName 
+                        t-if="self.street" 
+                        t-esc="self.street"/>
+                    <cbc__AdditionalStreetName
+                        t-if="self.street2" 
+                        t-esc="self.street2"/>
+                    <cbc__CityName 
+                        t-if="self.city" 
+                        t-esc="self.city"/>
+                    <cbc__PostalZone 
+                        t-if="self.zip" 
+                        t-esc="self.zip"/>
+                    <cbc__CountrySubentity 
+                        t-if="self.state_id" 
+                        t-esc="self.state_id.name"/>
+                    <cbc__CountrySubentityCode 
+                        t-if="self.state_id" 
+                        t-esc="self.state_id.code"/>
+                    <cac__Country 
+                        t-if="self.country_id">
+                        <cbc__IdentificationCode t-esc="self.country_id.code"/> 
+                        <cbc__Name t-esc="self.country_id.name"/> 
+                    </cac__Country>
+                </cac__PostalAddress>
+                <cac__PartyTaxScheme t-if="self.vat">
+                    <cbc__RegistrationName t-esc="self.name"/>
+                    <cbc__CompanyID t-esc="self.sanitized_vat"/>
+                    <cac__TaxScheme>
+                        <cbc__ID 
+                            schemeID="UN/ECE 5153" 
+                            schemeAgencyID="6"
+                            >VAT</cbc__ID>
+                    </cac__TaxScheme>
+                </cac__PartyTaxScheme>
+                <cac__Contact>
+                    <cbc__Name t-esc="self.name"/>
+                    <cbc__Telephone 
+                        t-if="self.phone" 
+                        t-esc="self.phone"/>
+                    <cbc__Telefax 
+                        t-if="self.phone" 
+                        t-esc="self.fax"/>
+                    <cbc__ElectronicMail 
+                        t-if="self.phone" 
+                        t-esc="self.email"/>
+                </cac__Contact>
+            </cac__Party>
+        </template>
+        
+        <template id="ubl_invoice_line">
+            <cbc__ID t-esc="self.id"/>
+            <cbc__Note 
+                t-foreach="self.notes"
+                t-as="note"
+                t-esc="note"/>
+            <cbc__InvoicedQuantity 
+                t-esc="self.invoice_line_id.quantity"/>
+            <cbc__LineExtensionAmount
+                t-att-currencyID="currency_name"
+                t-esc="self.invoice_line_id.price_subtotal"/>
+            <cac__TaxTotal 
+                t-foreach="self.taxes"
+                t-as="tax">
+                <cbc__TaxAmount
+                    t-att-currencyID="currency_name"
+                    t-esc="tax.amount_tax"/>
+            </cac__TaxTotal>
+            <cac__Item>
+                <cbc__Description t-esc="self.description"/>
+                <cbc__Name t-esc="self.name"/>
+                <cac__SellersItemIdentification>
+                    <cbc__ID t-esc="self.invoice_line_id.product_id.default_code"/>
+                </cac__SellersItemIdentification>
+                <cac__AdditionalItemProperty 
+                    t-foreach="self.invoice_line_id.product_id.attribute_value_ids"
+                    t-as="attribute_value_id">
+                    <cbc__Name t-esc="attribute_value_id.attribute_id.name"/>
+                    <cbc__Value t-esc="attribute_value_id.name"/>
+                </cac__AdditionalItemProperty>
+            </cac__Item>
+            <cac__Price>
+                <cbc__PriceAmount 
+                    t-att-currencyID="currency_name"
+                    t-esc="self.invoice_line_id.price_subtotal"/>
+                <cbc__BaseQuantity t-esc="self.invoice_line_id.quantity"/>
+            </cac__Price>
+        </template>
+
+        <template id="ubl_invoice">
+            <Invoice
+                t-att="{
+                    'xmlns': 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2',
+                    'xmlns:cac': 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2',
+                    'xmlns:cbc': 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2'
+                    }">
+                <cbc__UBLVersionID t-esc="version_id"/>
+                <cbc__ID t-esc="self.number"/>
+                <cbc__IssueDate t-esc="self.date_invoice"/>
+                <cbc__InvoiceTypeCode t-esc="type_code"/>
+                <cbc__Note 
+                    t-foreach="notes"
+                    t-as="note"
+                    t-esc="note"/>
+                <cbc__DocumentCurrencyCode t-esc="currency_name"/>
+                <cac__AccountingSupplierParty t-call="account_ubl.ubl_party">
+                        <t t-set="self" t-value="supplier_party"/>
+                </cac__AccountingSupplierParty>
+                <cac__AccountingCustomerParty t-call="account_ubl.ubl_party">
+                        <t t-set="self" t-value="customer_party"/>
+                </cac__AccountingCustomerParty>
+                <cac__PaymentMeans>
+                    <cbc__PaymentMeansCode 
+                        listID="UN/ECE 4461" 
+                        t-esc="42 if bank else 31"/>
+                    <cbc__PaymentDueDate t-esc="self.date_due"/>
+                    <cac__PayeeFinancialAccount t-if="bank and bank.acc_number">
+                        <cbc__ID schemeName="IBAN" t-esc="bank.acc_number"/>
+                        <cac__FinancialInstitutionBranch t-if="bank.bank_bic">
+                            <cac__FinancialInstitution>
+                                <cbc__ID schemeName="BIC" t-esc="bank.bank_bic"/>
+                            </cac__FinancialInstitution>
+                        </cac__FinancialInstitutionBranch>
+                    </cac__PayeeFinancialAccount>
+                </cac__PaymentMeans>
+                <cac__PaymentTerms t-if="self.payment_term_id">
+                    <cbc__Note t-esc="self.payment_term_id.name"/>
+                </cac__PaymentTerms>
+                <cac__TaxTotal t-if="not self.amount_tax == 0">
+                    <cbc__TaxAmount
+                        t-att-currencyID="currency_name"
+                        t-esc="self.amount_tax"/>
+                </cac__TaxTotal>
+                <cac__LegalMonetaryTotal> 
+                    <cbc__LineExtensionAmount 
+                        t-att-currencyID="currency_name"
+                        t-esc="amount_untaxed"/>
+                    <cbc__TaxExclusiveAmount 
+                        t-att-currencyID="currency_name"
+                        t-esc="amount_untaxed"/>
+                    <cbc__TaxInclusiveAmount 
+                        t-att-currencyID="currency_name"
+                        t-esc="amount_total"/>
+                    <cbc__PrepaidAmount 
+                        t-att-currencyID="currency_name"
+                        t-esc="amount_prepaid"/>
+                    <cbc__PayableAmount 
+                        t-att-currencyID="currency_name"
+                        t-esc="residual"/>
+                </cac__LegalMonetaryTotal>
+                <cac__InvoiceLine 
+                    t-foreach="invoice_lines" 
+                    t-as="invoice_line"
+                    t-call="account_ubl.ubl_invoice_line">
+                        <t t-set="self" t-value="invoice_line"/>
+                </cac__InvoiceLine>
+            </Invoice>
+        </template>
+    </data>
+</odoo>
