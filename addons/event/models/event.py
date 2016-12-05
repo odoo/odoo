@@ -140,8 +140,8 @@ class EventEvent(models.Model):
     date_end = fields.Datetime(
         string='End Date', required=True,
         track_visibility='onchange', states={'done': [('readonly', True)]})
-    date_begin_located = fields.Datetime(string='Start Date Located', compute='_compute_date_begin_tz')
-    date_end_located = fields.Datetime(string='End Date Located', compute='_compute_date_end_tz')
+    date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
+    date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
 
     @api.model
     def _tz_get(self):
@@ -151,9 +151,7 @@ class EventEvent(models.Model):
     @api.depends('date_tz', 'date_begin')
     def _compute_date_begin_tz(self):
         if self.date_begin:
-            self_in_tz = self.with_context(tz=(self.date_tz or 'UTC'))
-            date_begin = fields.Datetime.from_string(self.date_begin)
-            self.date_begin_located = fields.Datetime.to_string(fields.Datetime.context_timestamp(self_in_tz, date_begin))
+            self.date_begin_located = format_tz(self.with_context({'use_babel': True}).env, self.date_begin, tz=self.date_tz)
         else:
             self.date_begin_located = False
 
@@ -161,9 +159,7 @@ class EventEvent(models.Model):
     @api.depends('date_tz', 'date_end')
     def _compute_date_end_tz(self):
         if self.date_end:
-            self_in_tz = self.with_context(tz=(self.date_tz or 'UTC'))
-            date_end = fields.Datetime.from_string(self.date_end)
-            self.date_end_located = fields.Datetime.to_string(fields.Datetime.context_timestamp(self_in_tz, date_end))
+            self.date_end_located = format_tz(self.with_context({'use_babel': True}).env, self.date_end, tz=self.date_tz)
         else:
             self.date_end_located = False
 
@@ -443,4 +439,4 @@ class EventRegistration(models.Model):
         elif event_date.month == (today + relativedelta(months=+1)):
             return _('next month')
         else:
-            return _('on ') + format_tz(self.env, self.event_begin_date, tz=self.event_id.date_tz or 'UTC')
+            return _('on ') + format_tz(self.with_context({'use_babel': True}).env, self.event_begin_date, tz=self.event_id.date_tz or 'UTC')
