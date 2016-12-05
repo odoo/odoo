@@ -76,3 +76,16 @@ class WebsiteConfigSettings(models.TransientModel):
     def get_default_google_maps_api_key(self, fields):
         google_maps_api_key = self.env['ir.config_parameter'].get_param('google_maps_api_key', default='')
         return dict(google_maps_api_key=google_maps_api_key)
+
+    @api.depends('google_analytics_key')
+    def _compute_has_google_analytics(self):
+        self.has_google_analytics = bool(self.google_analytics_key)
+
+    @api.depends('google_management_client_id')
+    @api.depends('google_management_client_secret')
+    def _compute_has_google_analytics_dashboard(self):
+        self.has_google_analytics_dashboard = self.google_management_client_id or self.google_management_client_secret
+
+    @api.depends('google_maps_api_key')
+    def _compute_has_google_maps(self):
+        self.has_google_maps = bool(self.google_maps_api_key)
