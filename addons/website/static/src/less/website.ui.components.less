@@ -313,3 +313,10 @@ body .modal {
     margin-left: 13px;
     margin-bottom: 8px;
 }
+
+// Do not show path behind the links in browser printing
+@media print {
+    a[href]:after {
+        content: initial;
+    }
+}

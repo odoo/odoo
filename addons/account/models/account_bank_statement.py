@@ -343,7 +343,6 @@ class AccountBankStatementLine(models.Model):
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
     _order = "statement_id desc, sequence, id desc"
-    _inherit = ['ir.needaction_mixin']
 
     name = fields.Char(string='Label', required=True)
     date = fields.Date(required=True, default=lambda self: self._context.get('date', fields.Date.context_today(self)))
@@ -407,10 +406,6 @@ class AccountBankStatementLine(models.Model):
             if line.move_name:
                 raise UserError(_('It is not allowed to delete a bank statement line that already created a journal entry since it would create a gap in the numbering. You should create the journal entry again and cancel it thanks to a regular revert.'))
         return super(AccountBankStatementLine, self).unlink()
-
-    @api.model
-    def _needaction_domain_get(self):
-        return [('journal_entry_ids', '=', False), ('account_id', '=', False)]
 
     @api.multi
     def button_cancel_reconciliation(self):

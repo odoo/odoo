@@ -47,7 +47,7 @@ class Contract(models.Model):
 
     _name = 'hr.contract'
     _description = 'Contract'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
 
     name = fields.Char('Contract Reference', required=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True)

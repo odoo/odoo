@@ -152,10 +152,19 @@
                         </group>
                     </page>
                 </page>
-                <field name="description_sale" position="after">
-                    <separator string="Description for Pickings" colspan="4"/>
-                    <field name="description_picking" placeholder="Description for Pickings (Rack, Row and Case Information)" nolabel="1" colspan="4"/>
-                </field>
+                <group name="description" position="after">
+                    <group>
+                        <group string="Description for Internal Transfers">
+                            <field name="description_picking" placeholder="Description for Internal Transfers (Rack, Row and Case Information)" nolabel="1"/>
+                        </group>
+                        <group string="Description for Delivery Orders">
+                            <field name="description_pickingout" nolabel="1" placeholder="This note will be displayed on Delivery orders."/>
+                        </group>
+                    </group>
+                    <group string="Description for Receptions">
+                        <field name="description_pickingin" nolabel="1" placeholder="This note will be displayed on the Receptions."/>
+                    </group>
+                </group>
                 <group name="email_template_and_project" position="before">
                     <group name="sale_condition" string="Sale Conditions">
                         <label for="warranty" groups="stock.group_stock_production_lot"/>

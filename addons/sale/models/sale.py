@@ -14,7 +14,7 @@ import odoo.addons.decimal_precision as dp
 
 class SaleOrder(models.Model):
     _name = "sale.order"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _description = "Sales Order"
     _order = 'date_order desc, id desc'
 

@@ -556,18 +556,19 @@
                 <field name="uom_po_id" position="after">
                     <field name="purchase_method" widget="radio" groups="purchase.group_purchase_manager"/>
                 </field>
-                <group name="description" position="after">
-                    <group string="Warning when Purchasing this Product" colspan="2" groups="purchase.group_warning_purchase">
+                <group name="warning" position="inside">
+                    <group string="Warning when Purchasing this Product" groups="purchase.group_warning_purchase">
                         <field name="purchase_line_warn" nolabel="1"/>
                         <field name="purchase_line_warn_msg" colspan="3" nolabel="1"
                                 attrs="{'required':[('purchase_line_warn','!=','no-message')],'readonly':[('purchase_line_warn','=','no-message')]}"/>
                     </group>
                 </group>
-                <field name="description_sale" position="after">
-                    <separator string="Description for Vendors" colspan="4"/>
-                    <field name="description_purchase" nolabel="1"
-                        placeholder="This note will be displayed on requests for quotation." colspan="4"/>
-                </field>
+                <group name="description" position="inside">
+                    <group string="Description for Vendors">
+                       <field name="description_purchase" nolabel="1"
+                            placeholder="This note will be displayed for vendors."/>
+                    </group>
+                </group>
             </field>
         </record>
 

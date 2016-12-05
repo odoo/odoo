@@ -49,7 +49,7 @@ class ProjectTaskType(models.Model):
 class Project(models.Model):
     _name = "project.project"
     _description = "Project"
-    _inherit = ['mail.alias.mixin', 'mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.alias.mixin', 'mail.thread']
     _inherits = {'account.analytic.account': "analytic_account_id"}
     _order = "sequence, name, id"
     _period_number = 5
@@ -288,7 +288,7 @@ class Task(models.Model):
     _name = "project.task"
     _description = "Task"
     _date_name = "date_start"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _mail_post_access = 'read'
     _order = "priority desc, sequence, date_start, name, id"
 

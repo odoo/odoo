@@ -512,12 +512,6 @@ class MailThread(models.AbstractModel):
     #------------------------------------------------------
 
     @api.model
-    def _needaction_domain_get(self):
-        if self._needaction:
-            return [('message_needaction', '=', True)]
-        return []
-
-    @api.model
     def _garbage_collect_attachments(self):
         """ Garbage collect lost mail attachments. Those are attachments
             - linked to res_model 'mail.compose.message', the composer wizard

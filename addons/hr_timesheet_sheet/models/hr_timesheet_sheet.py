@@ -13,7 +13,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class HrTimesheetSheet(models.Model):
     _name = "hr_timesheet_sheet.sheet"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _table = 'hr_timesheet_sheet_sheet'
     _order = "id desc"
     _description = "Timesheet"
@@ -170,13 +170,6 @@ class HrTimesheetSheet(models.Model):
             elif 'state' in init_values and record.state == 'done':
                 return 'hr_timesheet_sheet.mt_timesheet_approved'
         return super(HrTimesheetSheet, self)._track_subtype(init_values)
-
-    @api.model
-    def _needaction_domain_get(self):
-        empids = self.env['hr.employee'].search([('parent_id.user_id', '=', self.env.uid)])
-        if not empids:
-            return False
-        return ['&', ('state', '=', 'confirm'), ('employee_id', 'in', empids.ids)]
 
 
 class HrTimesheetSheetSheetAccount(models.Model):
