@@ -18,11 +18,14 @@ import re
 import subprocess
 import tempfile
 import time
+import sys
 
 from contextlib import closing
 from distutils.version import LooseVersion
 from functools import partial
-from pyPdf import PdfFileWriter, PdfFileReader
+from PyPDF2 import PdfFileWriter, PdfFileReader
+from PyPDF2.generic import DictionaryObject, DecodedStreamObject, NameObject, createStringObject, ArrayObject
+from datetime import datetime
 from reportlab.graphics.barcode import createBarcodeDrawing
 
 
@@ -112,7 +115,7 @@ class Report(models.Model):
             website=website,
             web_base_url=self.env['ir.config_parameter'].get_param('web.base.url', default='')
         )
-        return view_obj.render_template(template, values)
+        return view_obj.with_context(context).render_template(template, values)
 
     #--------------------------------------------------------------------------
     # Main report methods
@@ -391,6 +394,7 @@ class Report(models.Model):
         # Execute WKhtmltopdf
         pdfdocuments = []
         temporary_files = []
+        model = save_in_attachment.get('model')
 
         for index, reporthtml in enumerate(bodies):
             local_command_args = []
@@ -446,13 +450,23 @@ class Report(models.Model):
                             'res_model': save_in_attachment.get('model'),
                             'res_id': reporthtml[0],
                         }
-                        try:
-                            self.env['ir.attachment'].create(attachment)
-                        except AccessError:
-                            _logger.info("Cannot save PDF report %r as attachment", attachment['name'])
-                        else:
-                            _logger.info('The PDF document %s is now saved in the database',
-                                         attachment['name'])
+
+                    # Prepare pdf to add some metadata
+                    record_set = self.env[model].browse(reporthtml[0])
+                    pdf_metadata = record_set.prepare_pdf(values=attachment)
+                    if 'to_embed' in pdf_metadata: 
+                        to_embed = pdf_metadata['to_embed']
+                        self._embed_pdf(pdfreport_path, to_embed)
+                        with open(pdfreport_path, 'rb') as pdfreport:
+                            attachment['datas'] = base64.encodestring(pdfreport.read())
+
+                    try:
+                        self.env['ir.attachment'].create(attachment)
+                    except AccessError:
+                        _logger.info("Cannot save PDF report %r as attachment", attachment['name'])
+                    else:
+                        _logger.info('The PDF document %s is now saved in the database',
+                                     attachment['name'])
 
                 pdfdocuments.append(pdfreport_path)
             except:
@@ -464,6 +478,14 @@ class Report(models.Model):
         else:
             entire_report_path = self._merge_pdf(pdfdocuments)
             temporary_files.append(entire_report_path)
+
+            # Embed files to merged pdf
+            docids = filter(lambda y: y != False, map(lambda x: x[0], bodies))
+            record_set = self.env[model].browse(docids)
+            pdf_metadata = record_set.prepare_pdf()
+            if 'to_embed' in pdf_metadata: 
+                to_embed = pdf_metadata['to_embed']
+                self._embed_pdf(entire_report_path, to_embed)
 
         with open(entire_report_path, 'rb') as pdfdocument:
             content = pdfdocument.read()
@@ -532,6 +554,90 @@ class Report(models.Model):
 
         return command_args
 
+    def _embed_pdf_metadata(self, attachment_id):
+         # TODO: remove when PyPDF2 bug fixed
+        datas = base64.decodestring(attachment_id.datas)
+
+        timeformat = "D:%Y%m%d%H%M%S+00'00'"
+        moddate = datetime.now().strftime(timeformat)
+        createdate = datetime.strptime(
+            attachment_id.create_date, '%Y-%m-%d %H:%M:%S').strftime(timeformat)
+        ext = os.path.splitext(attachment_id.name)[1]
+        subtype = 'text#2F' + ext[1:]
+        size = sys.getsizeof(datas)
+        description = attachment_id.description
+        if not attachment_id.description:
+            description = ''
+
+        fmoddate = DictionaryObject()
+        fmoddate.update({
+            NameObject('/Size'): NameObject(size),
+            NameObject('/CreationDate'): createStringObject(createdate),
+            NameObject('/ModDate'): createStringObject(moddate)
+        })
+
+        fentry = DecodedStreamObject()
+        fentry.setData(datas)
+        fentry.update({
+            NameObject('/Type'): NameObject('/EmbeddedFile'),
+            NameObject('/Params'): fmoddate,
+            NameObject('/Subtype'): NameObject(subtype),
+        })
+
+        fspecentry = DictionaryObject()
+        fspecentry.update({
+            NameObject('/F'): fentry,
+            NameObject('/UF'): fentry,
+        })
+
+        fname = createStringObject(attachment_id.name)
+         
+        fspec = DictionaryObject()
+        fspec.update({
+            NameObject("/AFRelationship"): NameObject("/Alternative"),
+            NameObject("/Desc"): createStringObject(description),
+            NameObject('/Type'): NameObject('/Filespec'),
+            NameObject('/F'): fname,
+            NameObject('/EF'): fspecentry,
+            NameObject("/UF"): fname,
+        })
+
+        return fname, fspec
+
+    def _embed_pdf(self, document, attachment_ids):
+        # There is a bug inside the addAttachment method in PyPDF2 1.26.0 that doesn't allow
+        # to embed multiple files as attachments. So, the fix is hardcoded instead of using the 
+        # addAttachment method. When PyPDF2 will fix this bug, this method should be refactored to 
+        # become more readable.
+        embed_array = []
+        for attachment_id in attachment_ids:
+            fname_obj, fspec_obj = self._embed_pdf_metadata(attachment_id)
+            embed_array.append(fname_obj)
+            embed_array.append(fspec_obj)
+        embed_names = DictionaryObject()
+        embed_names.update({
+            NameObject('/Names'): ArrayObject(embed_array)
+        })
+
+        fembed = DictionaryObject()
+        fembed.update({
+            NameObject('/EmbeddedFiles'): embed_names
+        })
+        writer = PdfFileWriter()   
+        with open(document, 'r+b') as pdf_file:
+            reader = PdfFileReader(pdf_file)
+            writer.appendPagesFromReader(reader)
+            writer._root_object.update({
+                NameObject('/Names'): fembed
+            })
+            # TODO: decomment when PyPDF2 bug fixed and remove craps
+            # for attachment_id in attachment_ids:
+            #     writer.addAttachment(
+            #         attachment_id.name, 
+            #         base64.decodestring(attachment_id.datas))
+            writer.write(pdf_file)
+
+
     def _merge_pdf(self, documents):
         """Merge PDF files into one.
 
@@ -539,16 +645,15 @@ class Report(models.Model):
         :returns: path of the merged pdf
         """
         writer = PdfFileWriter()
-        streams = []  # We have to close the streams *after* PdfFilWriter's call to write()
+        streams = []  # We have to close the streams *after* PdfFileWriter's call to write()
         for document in documents:
             pdfreport = file(document, 'rb')
             streams.append(pdfreport)
             reader = PdfFileReader(pdfreport)
-            for page in range(0, reader.getNumPages()):
-                writer.addPage(reader.getPage(page))
+            writer.appendPagesFromReader(reader)
 
         merged_file_fd, merged_file_path = tempfile.mkstemp(suffix='.html', prefix='report.merged.tmp.')
-        with closing(os.fdopen(merged_file_fd, 'w')) as merged_file:
+        with closing(os.fdopen(merged_file_fd, 'wb')) as merged_file:
             writer.write(merged_file)
 
         for stream in streams:
