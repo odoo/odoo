@@ -34,7 +34,7 @@ class Track(models.Model):
     _name = "event.track"
     _description = 'Event Track'
     _order = 'priority, date'
-    _inherit = ['mail.thread', 'ir.needaction_mixin', 'website.seo.metadata', 'website.published.mixin']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
 
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)

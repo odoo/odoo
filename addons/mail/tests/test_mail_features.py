@@ -14,13 +14,13 @@ class TestMailFeatures(TestMail):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_needaction(self):
-        na_emp1_base = self.env['mail.message'].sudo(self.user_employee)._needaction_count(domain=[])
-        na_emp2_base = self.env['mail.message'].sudo()._needaction_count(domain=[])
+        na_emp1_base = self.group_pigs.sudo(self.user_employee).message_needaction_counter
+        na_emp2_base = self.group_pigs.sudo().message_needaction_counter
 
         self.group_pigs.message_post(body='Test', message_type='comment', subtype='mail.mt_comment', partner_ids=[self.user_employee.partner_id.id])
 
-        na_emp1_new = self.env['mail.message'].sudo(self.user_employee)._needaction_count(domain=[])
-        na_emp2_new = self.env['mail.message'].sudo()._needaction_count(domain=[])
+        na_emp1_new = self.group_pigs.sudo(self.user_employee).message_needaction_counter
+        na_emp2_new = self.group_pigs.sudo().message_needaction_counter
         self.assertEqual(na_emp1_new, na_emp1_base + 1)
         self.assertEqual(na_emp2_new, na_emp2_base)
 

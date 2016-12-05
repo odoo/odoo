@@ -88,7 +88,7 @@ class Applicant(models.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin']
+    _inherit = ['mail.thread', 'utm.mixin']
     _mail_mass_mailing = _('Applicants')
 
     def _default_stage_id(self):

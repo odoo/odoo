@@ -61,7 +61,7 @@ class AccountAssetCategory(models.Model):
 class AccountAssetAsset(models.Model):
     _name = 'account.asset.asset'
     _description = 'Asset/Revenue Recognition'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
 
     entry_count = fields.Integer(compute='_entry_count', string='# Asset Entries')
     name = fields.Char(string='Asset Name', required=True, readonly=True, states={'draft': [('readonly', False)]})

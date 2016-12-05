@@ -82,7 +82,7 @@ class ProcurementOrder(models.Model):
     _name = "procurement.order"
     _description = "Procurement"
     _order = 'priority desc, date_planned, id asc'
-    _inherit = ['mail.thread','ir.needaction_mixin']
+    _inherit = ['mail.thread']
 
 
     name = fields.Text('Description', required=True)
@@ -126,10 +126,6 @@ class ProcurementOrder(models.Model):
         ('running', 'Running'),
         ('done', 'Done')], string='Status', default='confirmed',
         copy=False, required=True, track_visibility='onchange')
-
-    @api.model
-    def _needaction_domain_get(self):
-        return [('state', '=', 'exception')]
 
     @api.model
     def create(self, vals):

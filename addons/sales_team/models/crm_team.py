@@ -6,7 +6,7 @@ from odoo import api, fields, models
 
 class CrmTeam(models.Model):
     _name = "crm.team"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _description = "Sales Team"
     _order = "name"
 
