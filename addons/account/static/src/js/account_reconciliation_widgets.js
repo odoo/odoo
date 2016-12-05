@@ -1068,7 +1068,7 @@ var abstractReconciliationLine = Widget.extend({
             var amount = line.tax_id ? line.amount_before_tax: line.amount;
             dict['credit'] = (amount > 0 ? amount : 0);
             dict['debit'] = (amount < 0 ? -1 * amount : 0);
-            if (line.tax_id) dict['tax_ids'] = [line.tax_id];
+            if (line.tax_id) dict['tax_ids'] = [[4, line.tax_id, null]];
             if (line.analytic_account_id) dict['analytic_account_id'] = line.analytic_account_id;
             return dict;
         });
