@@ -134,6 +134,7 @@ start the server specifying the ``--unaccent`` flag.
 
 import logging
 import traceback
+import binascii
 
 import openerp.modules
 from openerp.osv import fields
@@ -347,7 +348,15 @@ def generate_table_alias(src_table_alias, joined_tables=[]):
         return '%s' % alias, '%s' % _quote(alias)
     for link in joined_tables:
         alias += '__' + link[1]
-    assert len(alias) < 64, 'Table alias name %s is longer than the 64 characters size accepted by default in postgresql.' % alias
+    # Use an alternate alias scheme if length exceeds the PostgreSQL limit
+    #  of 63 characters.
+    if len(alias) >= 63:
+        # We have to fit a 32 bit hash (= 8 characters) and one underscore
+        #  into a 63 character alias. The remaining space we can use to add
+        #  a human readable prefix.
+        ALIAS_PREFIX_LENGTH = 63 - 8 - 1
+        alias = "%s_%08x" % (alias[:ALIAS_PREFIX_LENGTH],
+                             binascii.crc32(alias) & 0xffffffff)
     return '%s' % alias, '%s as %s' % (_quote(joined_tables[-1][0]), _quote(alias))
 
 
@@ -557,9 +566,11 @@ class ExtendedLeaf(object):
     def get_join_conditions(self):
         conditions = []
         alias = self._models[0]._table
+        links = []
         for context in self.join_context:
             previous_alias = alias
-            alias += '__' + context[4]
+            links.append((context[1]._table, context[4]))
+            alias, _ = generate_table_alias(self._models[0]._table, links)
             conditions.append('"%s"."%s"="%s"."%s"' % (previous_alias, context[2], alias, context[3]))
         return conditions
 
