@@ -61,12 +61,12 @@ class EventEvent(models.Model):
             'interval_type': 'after_sub',
             'template_id': self.env.ref('event.event_subscription')
         }), (0, 0, {
-            'interval_nbr': 2,
+            'interval_nbr': 1,
             'interval_unit': 'days',
             'interval_type': 'before_event',
             'template_id': self.env.ref('event.event_reminder')
         }), (0, 0, {
-            'interval_nbr': 15,
+            'interval_nbr': 10,
             'interval_unit': 'days',
             'interval_type': 'before_event',
             'template_id': self.env.ref('event.event_reminder')
@@ -430,15 +430,17 @@ class EventRegistration(models.Model):
         today = fields.Datetime.from_string(fields.Datetime.now())
         event_date = fields.Datetime.from_string(self.event_begin_date)
         diff = (event_date.date() - today.date())
-        if diff.days == 0:
-            return _('Today')
+        if diff.days <= 0:
+            return _('today')
         elif diff.days == 1:
-            return _('Tomorrow')
+            return _('tomorrow')
+        elif (diff.days < 7):
+            return _('in %d days') % (diff.days, )
+        elif (diff.days < 14):
+            return _('next week')
         elif event_date.isocalendar()[1] == today.isocalendar()[1]:
-            return _('This week')
-        elif today.month == event_date.month:
-            return _('This month')
+            return _('this month')
         elif event_date.month == (today + relativedelta(months=+1)):
-            return _('Next month')
+            return _('next month')
         else:
-            return format_tz(self.env, self.event_begin_date, tz='UTC', format='%Y%m%dT%H%M%SZ')
+            return _('on ') + format_tz(self.env, self.event_begin_date, tz=self.event_id.date_tz or 'UTC')
