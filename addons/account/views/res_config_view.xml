@@ -130,11 +130,8 @@
                                 <label for="module_account_budget"/>
                             </div>
                             <div>
-                                <field name="module_account_tax_cash_basis" class="oe_inline"/>
-                                <label for="module_account_tax_cash_basis" />
-                                <p id="journal_config_message" attrs="{'invisible': [('module_account_tax_cash_basis','=',False)]}">
-                                    Once this module is installed, you have to configure Tax Cash Basis Journal.
-                                </p>
+                                <label for="tax_cash_basis_journal_id"/>
+                                <field name="tax_cash_basis_journal_id" class="oe_inline"/>
                             </div>
                         </div>
                     </group>
