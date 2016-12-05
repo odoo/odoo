@@ -9,7 +9,7 @@
     <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries" inherit_id="website_portal.portal_layout" priority="20">
         <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
             <li t-if="quotation_count" t-att-class="page_name == 'quote' and 'active'">
-                <a href="/my/quotes">Quotes</a>
+                <a href="/my/quotes">Quotations</a>
             </li>
             <li t-att-class="page_name == 'order' and 'active'">
                 <a href="/my/orders">Sales Orders</a>
@@ -28,7 +28,7 @@
     <template id="portal_my_home_sale" name="Portal My Home : sales entries" inherit_id="website_portal.portal_my_home" priority="20">
         <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
             <h3 t-if="quotation_count" class="page-header">
-              <a href="/my/quotes">Your Quotes
+              <a href="/my/quotes">Your Quotations
                 <small class="ml8">
                   <span class='badge'><t t-esc="quotation_count"/></span>
                 </small>
