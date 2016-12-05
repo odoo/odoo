@@ -64,7 +64,7 @@ var DebugManager = Widget.extend({
         // whether group is currently enabled for current user
         this._has_features = false;
         // whether the current user is an administrator
-        this._is_admin = session.is_admin;
+        this._is_admin = session.is_system;
         return $.when(
             new Model('res.users').call('check_access_rights', {operation: 'write', raise_exception: false}),
             session.user_has_group('base.group_no_one'),
