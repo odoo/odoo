@@ -43,7 +43,7 @@ class IrUiMenu(models.Model):
                                          ('ir.actions.server', 'ir.actions.server'),
                                          ('ir.actions.client', 'ir.actions.client')])
 
-    web_icon_data = fields.Binary(string='Web Icon Image', compute="_compute_web_icon", store=True, attachment=True)
+    web_icon_data = fields.Binary(string='Web Icon Image', attachment=True)
 
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):
@@ -58,18 +58,6 @@ class IrUiMenu(models.Model):
             return self.parent_id._get_full_name(level - 1) + MENU_ITEM_SEPARATOR + self.name
         else:
             return self.name
-
-    @api.depends('web_icon')
-    def _compute_web_icon(self):
-        """ Returns the image associated to `web_icon`.
-            `web_icon` can either be:
-              - an image icon [module, path]
-              - a built icon [icon_class, icon_color, background_color]
-            and it only has to call `read_image` if it's an image.
-        """
-        for menu in self:
-            if menu.web_icon and len(menu.web_icon.split(',')) == 2:
-                menu.web_icon_data = self.read_image(menu.web_icon)
 
     def read_image(self, path):
         if not path:
@@ -157,12 +145,26 @@ class IrUiMenu(models.Model):
     @api.model
     def create(self, values):
         self.clear_caches()
+        if 'web_icon' in values:
+            values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
         return super(IrUiMenu, self).create(values)
 
     @api.multi
     def write(self, values):
         self.clear_caches()
+        if 'web_icon' in values:
+            values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
         return super(IrUiMenu, self).write(values)
+
+    def _compute_web_icon_data(self, web_icon):
+        """ Returns the image associated to `web_icon`.
+            `web_icon` can either be:
+              - an image icon [module, path]
+              - a built icon [icon_class, icon_color, background_color]
+            and it only has to call `read_image` if it's an image.
+        """
+        if web_icon and len(web_icon.split(',')) == 2:
+            return self.read_image(web_icon)
 
     @api.multi
     def unlink(self):
