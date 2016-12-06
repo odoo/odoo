@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+    <record model="account.account.type" id="user_type_view">
+        <field name="name">Vista</field>
+        <field name="code">view</field>
+        <field name="close_method">none</field>
+    </record>
+
+    <record model="account.account.type" id="user_type_receivable" >
+        <field name="name">A Receber</field>
+        <field name="code">receivable</field>
+        <field name="report_type">income</field>
+        <field name="close_method">unreconciled</field>
+    </record>
+
+    <record model="account.account.type" id="user_type_payable" >
+        <field name="name">A Pagar</field>
+        <field name="code">payable</field>
+        <field name="report_type">expense</field>
+        <field name="close_method">unreconciled</field>
+    </record>
+
+    <record model="account.account.type" id="user_type_income" >
+        <field name="name">Receitas</field>
+        <field name="code">income</field>
+        <field name="report_type">income</field>
+        <field name="close_method">none</field>
+    </record>
+
+    <record model="account.account.type" id="user_type_expense">
+        <field name="name">Despesa</field>
+        <field name="code">expense</field>
+        <field name="report_type">expense</field>
+        <field name="close_method">none</field>
+    </record>
+
+    <record model="account.account.type" id="user_type_tax">
+        <field name="name">Impostos</field>
+        <field name="code">tax</field>
+        <field name="report_type">expense</field>
+        <field name="close_method">unreconciled</field>
+    </record>
+
+    <record model="account.account.type" id="user_type_cash">
+        <field name="name">Caixa</field>
+        <field name="code">cash</field>
+        <field name="report_type">asset</field>
+        <field name="close_method">balance</field>
+    </record>
+
+    <record model="account.account.type" id="user_type_asset">
+        <field name="name">Activo</field>
+        <field name="code">asset</field>
+        <field name="report_type">asset</field>
+        <field name="close_method">balance</field>
+    </record>
+
+    <record model="account.account.type" id="user_type_equity">
+        <field name="name">Passivo</field>
+        <field name="code">equity</field>
+        <field name="report_type">liability</field>
+        <field name="close_method">balance</field>
+    </record>
+
+    <record model="account.account.type" id="user_type_liability">
+        <field name="name">Capital e Resultados</field>
+        <field name="code">liability</field>
+        <field name="report_type">liability</field>
+        <field name="close_method">balance</field>
+    </record>
+
+    </data>
+</openerp>
