@@ -469,7 +469,7 @@ function fetch_document_messages (ids, options) {
     if (options.force_fetch || _.difference(ids.slice(0, LIMIT), loaded_msg_ids).length) {
         var ids_to_load = _.difference(ids, loaded_msg_ids).slice(0, LIMIT);
 
-        return MessageModel.call('message_format', [ids_to_load]).then(function (msgs) {
+        return MessageModel.call('message_format', [ids_to_load], {context: session.user_context}).then(function (msgs) {
             var processed_msgs = [];
             _.each(msgs, function (msg) {
                 processed_msgs.push(add_message(msg, {silent: true}));
