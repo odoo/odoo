@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- NOBOXED HEADER -->
-    <template id="o_boxed_template_header">
-        <div class="header o_boxed_header row">
+    <template id="o_clean_template_header">
+        <div class="header o_clean_header row">
             <div class="col-xs-3">
                 <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"/>
             </div>
-            <div class="col-xs-9 text-right">
+            <div class="col-xs-6 text-center">
                 <h4 class="mt0 mb8" t-field="company.rml_header1"/>
-                <div name="company_address">
-                    <span class="company_address" t-field="company.partner_id"
-                        t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
-                </div>
+            </div>
+            <div class="col-md-3 text-right" name="company_address">
+                <span class="company_address" t-field="company.partner_id"
+                    t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
             </div>
         </div>
     </template>
     <!-- NOBOXED FOOTER -->
-    <template id="o_boxed_template_footer">
-        <div class="footer o_boxed_footer row">
-            <div class="col-xs-12 text-center">
+    <template id="o_clean_template_footer">
+        <div class="footer o_clean_footer row">
+            <div class="col-xs-12">
                 <ul t-if="not company.custom_footer" class="list-inline">
                     <li t-if="company.phone">Tel <span t-field="company.phone"/></li>
                     <li t-if="company.fax">Fax <span t-field="company.fax"/></li>
