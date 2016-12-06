@@ -65,7 +65,7 @@ class TestMailSchedule(TestEventCommon):
         # check before event scheduler
         schedulers = self.EventMail.search([('event_id', '=', test_event.id), ('interval_type', '=', 'before_event')])
         self.assertEqual(len(schedulers), 1, 'event: wrong scheduler creation')
-        self.assertEqual(schedulers[0].scheduled_date, datetime.datetime.strftime(event_date_begin + relativedelta(days=-2), tools.DEFAULT_SERVER_DATETIME_FORMAT), 'event: incorrect scheduled date')
+        self.assertEqual(schedulers[0].scheduled_date, datetime.datetime.strftime(event_date_begin + relativedelta(days=-1), tools.DEFAULT_SERVER_DATETIME_FORMAT), 'event: incorrect scheduled date')
 
         # execute event reminder scheduler explicitly
         schedulers[0].execute()
