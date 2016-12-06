@@ -541,6 +541,20 @@ class TestMailgateway(TestMail):
         self.assertEqual(len(self.group_public.message_ids), 2, 'message_process: group should contain one new message')
         self.assertEqual(len(self.fake_email.child_ids), 1, 'message_process: new message should be children of the existing one')
 
+    def test_message_process_references_external(self):
+        """ Incoming email being a reply to an external email processed by odoo should update thread accordingly """
+        new_message_id = '<ThisIsTooMuchFake.MonsterEmail.789@agrolait.com>'
+        self.fake_email.write({
+            'message_id': new_message_id
+        })
+        self.format_and_process(
+            MAIL_TEMPLATE, to='erroneous@example.com',
+            extra='References: <2233@a.com>\r\n\t<3edss_dsa@b.com> %s' % self.fake_email.message_id,
+            msg_id='<1198923581.41972151344608186800.JavaMail.4@agrolait.com>')
+
+        self.assertEqual(len(self.group_public.message_ids), 2, 'message_process: group should contain one new message')
+        self.assertEqual(len(self.fake_email.child_ids), 1, 'message_process: new message should be children of the existing one')
+
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_references_forward(self):
         """ Incoming email using references but with alias forward should not go into references destination """
