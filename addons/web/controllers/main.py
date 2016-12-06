@@ -532,6 +532,16 @@ def content_disposition(filename, req):
         return "attachment; filename*=UTF-8''%s" % escaped
 
 
+def get_contenttype(filename, contents=None):
+    import mimetypes
+    result = 'application/octet-stream'
+    if filename:
+        ctype, _charset = mimetypes.guess_type(filename)
+        if ctype:
+            result = ctype
+    return result
+
+
 #----------------------------------------------------------
 # OpenERP Web web Controllers
 #----------------------------------------------------------
@@ -1290,8 +1300,9 @@ class Binary(openerpweb.Controller):
             filename = '%s_%s' % (model.replace('.', '_'), id)
             if filename_field:
                 filename = res.get(filename_field, '') or filename
-            return req.make_response(filecontent,
-                [('Content-Type', 'application/octet-stream'),
+            return req.make_response(
+                filecontent,
+                [('Content-Type', get_contenttype(filename, filecontent)),
                  ('Content-Disposition', content_disposition(filename, req))])
 
     @openerpweb.httprequest
@@ -1316,16 +1327,22 @@ class Binary(openerpweb.Controller):
             res = Model.default_get(fields, context)
         filecontent = base64.b64decode(res.get(field, ''))
         if not filecontent:
-            raise ValueError(_("No content found for field '%s' on '%s:%s'") %
-                (field, model, id))
+            raise ValueError(
+                _("No content found for field '%s' on '%s:%s'") %
+                (field, model, id)
+            )
         else:
             filename = '%s_%s' % (model.replace('.', '_'), id)
             if filename_field:
                 filename = res.get(filename_field, '') or filename
-            return req.make_response(filecontent,
-                headers=[('Content-Type', 'application/octet-stream'),
-                        ('Content-Disposition', content_disposition(filename, req))],
-                cookies={'fileToken': token})
+            return req.make_response(
+                filecontent,
+                headers=[
+                    ('Content-Type', get_contenttype(filename, filecontent)),
+                    ('Content-Disposition', content_disposition(filename, req))
+                ],
+                cookies={'fileToken': token}
+            )
 
     @openerpweb.httprequest
     def upload(self, req, callback, ufile):
