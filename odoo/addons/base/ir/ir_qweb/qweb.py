@@ -335,6 +335,7 @@ class QWeb(object):
         if isinstance(template, etree._Element):
             document = template
             template = etree.tostring(template)
+            return (document, template)
         else:
             try:
                 document = options.get('load', self.load)(template, options)
@@ -352,9 +353,8 @@ class QWeb(object):
             else:
                 element = etree.parse(document).getroot()
             for node in element:
-                if node.get('t-name') == template:
+                if node.get('t-name') == str(template):
                     return (node, document)
-            return (element, document)
 
         raise QWebException("Template not found", name=template)
 
