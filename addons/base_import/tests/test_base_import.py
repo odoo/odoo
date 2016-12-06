@@ -99,7 +99,7 @@ class TestO2M(BaseImportCase):
         self.assertEqualFields(self.get_fields('o2m'), make_field(field_type='one2many', fields=[
             ID_FIELD,
             # FIXME: should reverse field be ignored?
-            {'id': 'parent_id', 'name': 'parent_id', 'string': 'Parent id', 'type': 'many2one', 'required': False, 'fields': [
+            {'id': 'parent_id', 'name': 'parent_id', 'string': 'Parent', 'type': 'many2one', 'required': False, 'fields': [
                 {'id': 'parent_id', 'name': 'id', 'string': 'External ID', 'required': False, 'fields': [], 'type': 'id'},
                 {'id': 'parent_id', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': [], 'type': 'id'},
             ]},

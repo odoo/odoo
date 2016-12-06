@@ -470,7 +470,10 @@ class Field(object):
 
         if not self.string and not self.related:
             # related fields get their string from their parent field
-            self.string = name.replace('_', ' ').capitalize()
+            self.string = (
+                name[:-4] if name.endswith('_ids') else
+                name[:-3] if name.endswith('_id') else name
+            ).replace('_', ' ').title()
 
         # self.default must be a callable
         if self.default is not None:
