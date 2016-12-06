@@ -16,6 +16,7 @@ class WebsiteConfigSettings(models.TransientModel):
     website_name = fields.Char('Website Name', related='website_id.name')
 
     language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang')
+    number_of_languages = fields.Integer(string='Number of languages', compute='_compute_number_of_languages', readonly=True)
     default_lang_id = fields.Many2one(string='Default', related='website_id.default_lang_id', relation='res.lang', required=True)
     default_lang_code = fields.Char('Default language code', related='website_id.default_lang_code')
     google_analytics_key = fields.Char('Analytics Key', related='website_id.google_analytics_key')
@@ -89,3 +90,7 @@ class WebsiteConfigSettings(models.TransientModel):
     @api.depends('google_maps_api_key')
     def _compute_has_google_maps(self):
         self.has_google_maps = bool(self.google_maps_api_key)
+
+    @api.depends('language_ids')
+    def _compute_number_of_languages(self):
+        self.number_of_languages = len(self.language_ids)

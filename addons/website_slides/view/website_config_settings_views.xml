@@ -2,13 +2,13 @@
 <odoo>
     <data>
 
-    <record id="view_website_config_settings" model="ir.ui.view">
-        <field name="name">Website livechat settings</field>
+    <record id="website_config_settings_view_form" model="ir.ui.view">
+        <field name="name">Website slides settings</field>
         <field name="model">website.config.settings</field>
         <field name="inherit_id" ref="website.view_website_config_settings"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='slides_google_content_setting']/div/div/div[@class='content-group']" position="replace">
-                <div class="content-group">
+            <xpath expr="//div[@id='slides_install_setting']/div/div/div[@class='content-group']" position="replace">
+                <div class="content-group" groups="base.group_no_one">
                     <hr class="mt8 mb8" />
                     <div class="row">
                         <label class="col-md-4 oe_light_label" for="website_slide_google_app_key"/>
