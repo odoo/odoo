@@ -308,7 +308,7 @@
                                     attrs="{'invisible':[('state', 'not in', ['create', 'write'])]}">
                                 <field name="fields_lines">
                                     <tree string="Field Mappings" editable="bottom">
-                                        <field name="col1" domain="[('model_id', '=', parent.create_model_id)]"/>
+                                        <field name="col1" domain="['|', ('model_id', '=', parent.create_model_id), ('model_id', '=', parent.model_id)]"/>
                                         <field name="type"/>
                                         <field name="value"/>
                                     </tree>

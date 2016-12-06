@@ -593,11 +593,10 @@ class IrActionsServer(models.Model):
             res[exp.col1.name] = exp.eval_value(eval_context=eval_context)[exp.id]
 
         model = action.create_model_id.model
-        result = self.env[model].create(res)
-
+        res = self.env[model].create(res)
         if action.link_field_id:
             record = self.env[action.model_id.model].browse(self._context.get('active_id'))
-            record.write({action.link_field_id.name: res.id})
+            res.write({action.link_field_id.name: record.id})
 
     @api.model
     def _get_eval_context(self, action=None):
@@ -654,6 +653,7 @@ class IrActionsServer(models.Model):
         :return: an action_id to be executed, or False is finished correctly without
                  return action
         """
+        res = {}
         for action in self:
             if not hasattr(self, 'run_action_%s' % action.state):
                 continue
