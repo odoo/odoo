@@ -354,6 +354,7 @@
             <field file="base/static/img/country_flags/co.png" name="image" type="base64" />
             <field name="currency_id" ref="COP" />
             <field eval="57" name="phone_code" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" />
         </record>
         <record id="cr" model="res.country">
             <field name="name">Costa Rica</field>
