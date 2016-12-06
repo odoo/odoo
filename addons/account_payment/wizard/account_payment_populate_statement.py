@@ -28,28 +28,13 @@ class account_payment_populate_statement(osv.osv_memory):
     _name = "account.payment.populate.statement"
     _description = "Account Payment Populate Statement"
     _columns = {
-        'lines': fields.many2many('payment.line', 'payment_line_rel_', 'payment_id', 'line_id', 'Payment Lines')
+        'lines': fields.many2many('payment.line', 'payment_line_rel_', 'payment_id', 'line_id', 'Payment Lines',
+                                  domain=[('move_line_id.reconcile_id', '=', False),
+                                          ('move_line_id.state', '=', 'valid'),
+                                          '|',
+                                          ('bank_statement_line_id', '=', False),
+                                          ('order_id.mode', '=', False)])
     }
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        line_obj = self.pool.get('payment.line')
-
-        res = super(account_payment_populate_statement, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
-        line_ids = line_obj.search(cr, uid, [
-            ('move_line_id.reconcile_id', '=', False),
-            ('bank_statement_line_id', '=', False),
-            ('move_line_id.state','=','valid')])
-        line_ids.extend(line_obj.search(cr, uid, [
-            ('move_line_id.reconcile_id', '=', False),
-            ('order_id.mode', '=', False),
-            ('move_line_id.state','=','valid')]))
-        domain = '[("id", "in", '+ str(line_ids)+')]'
-        doc = etree.XML(res['arch'])
-        nodes = doc.xpath("//field[@name='lines']")
-        for node in nodes:
-            node.set('domain', domain)
-        res['arch'] = etree.tostring(doc)
-        return res
 
     def populate_statement(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('payment.line')
