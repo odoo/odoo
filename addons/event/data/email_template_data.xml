@@ -111,6 +111,10 @@
                                     <img src="/web_editor/font_to_img/61505/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34">
                                 </td>
                                 <td style="padding:30px 10px 25px 10px;width:50%;vertical-align:top;">
+                                    % set location = ''
+                                    % if object.event_id.address_id.name:
+                                        <p style="margin:0px 0px 0px 0px;">${object.event_id.address_id.name}</p>
+                                    % endif
                                     % if object.event_id.address_id.street:
                                         <p style="margin:0px 0px 0px 0px;">${object.event_id.address_id.street}</p>
                                         % set location = object.event_id.address_id.street
@@ -266,6 +270,10 @@
                                     <img src="/web_editor/font_to_img/61505/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34">
                                 </td>
                                 <td style="padding:30px 10px 25px 10px;width:50%;vertical-align:top;">
+                                    % set location = ''
+                                    % if object.event_id.address_id.name:
+                                        <p style="margin:0px 0px 0px 0px;">${object.event_id.address_id.name}</p>
+                                    % endif
                                     % if object.event_id.address_id.street:
                                         <p style="margin:0px 0px 0px 0px;">${object.event_id.address_id.street}</p>
                                         % set location = object.event_id.address_id.street
