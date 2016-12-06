@@ -664,9 +664,9 @@ class account_invoice(osv.osv):
             ir_values_obj = self.pool.get('ir.values')
             res_journal_default = ir_values_obj.get(cr, uid, 'default', 'type=%s' % (type), ['account.invoice'])
             for r in res_journal_default:
-                if r[1] == 'journal_id' and r[2] in journal_ids:
+                if r[1] == 'journal_id' and (r[2] in journal_ids or r[2] == False):
                     val['journal_id'] = r[2]
-            if not val.get('journal_id', False):
+            if 'journal_id' not in val:
                 journal_type_map = dict(obj_journal._columns['type'].selection)
                 journal_type_label = self.pool['ir.translation']._get_source(cr, uid, None, ('code','selection'),
                                                                              context.get('lang'),
