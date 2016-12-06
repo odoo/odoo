@@ -677,6 +677,10 @@ class WizardMultiChartsAccounts(models.TransientModel):
         return res
 
     @api.model
+    def _get_default_bank_account_ids(self):
+        return [{'acc_name': _('Cash'), 'account_type': 'cash'}, {'acc_name': _('Bank'), 'account_type': 'bank'}]
+
+    @api.model
     def default_get(self, fields):
         context = self._context or {}
         res = super(WizardMultiChartsAccounts, self).default_get(fields)
@@ -684,7 +688,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
         account_chart_template = self.env['account.chart.template']
 
         if 'bank_account_ids' in fields:
-            res.update({'bank_account_ids': [{'acc_name': _('Cash'), 'account_type': 'cash'}, {'acc_name': _('Bank'), 'account_type': 'bank'}]})
+            res.update({'bank_account_ids': self._get_default_bank_account_ids()})
         if 'company_id' in fields:
             res.update({'company_id': self.env.user.company_id.id})
         if 'currency_id' in fields:
