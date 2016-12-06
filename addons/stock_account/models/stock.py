@@ -55,7 +55,7 @@ class StockQuant(models.Model):
 
     @api.multi
     def _compute_inventory_value(self):
-        real_value_quants = self.filtered(lambda quant: quant.product_id.cost_method == 'real')
+        real_value_quants = self.filtered(lambda quant: quant.product_id.cost_method in ['real', 'average'])
         for quant in real_value_quants:
             quant.inventory_value = quant.cost * quant.qty
         return super(StockQuant, self - real_value_quants)._compute_inventory_value()
