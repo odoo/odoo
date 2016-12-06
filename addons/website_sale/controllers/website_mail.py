@@ -16,9 +16,10 @@ class WebsiteMailController(WebsiteMail):
         params.pop('rating', False)
         message_data = super(WebsiteMailController, self).chatter_json(res_model=res_model, res_id=res_id, message=message, **params)
         if message_data and kw.get('rating') and res_model == 'product.template':  # restrict rating only for product template
+            res_model_id = request.env.ref('product.model_product_template').id
             rating = request.env['rating.rating'].create({
                 'rating': float(kw.get('rating')),
-                'res_model': res_model,
+                'res_model_id': res_model_id,
                 'res_id': res_id,
                 'message_id': message_data['id'],
                 'consumed': True,
@@ -38,9 +39,10 @@ class WebsiteMailController(WebsiteMail):
             try:
                 fragment = urlparse.urlparse(response.location).fragment
                 message_id = int(fragment.replace('message-', ''))
+                res_model_id = request.env.ref('product.model_product_template').id
                 request.env['rating.rating'].create({
                     'rating': float(kw.get('rating')),
-                    'res_model': res_model,
+                    'res_model_id': res_model_id,
                     'res_id': res_id,
                     'message_id': message_id,
                     'consumed': True,

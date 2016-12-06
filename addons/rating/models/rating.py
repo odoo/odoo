@@ -29,7 +29,8 @@ class Rating(models.Model):
         return uuid.uuid4().hex
 
     res_name = fields.Char(string='Resource name', compute='_compute_res_name', store=True, help="The name of the rated resource.")
-    res_model = fields.Char(string='Document Model', required=True, help="Model name of the rated object", index=True)
+    res_model_id = fields.Many2one('ir.model', 'Related Document Model', index=True, ondelete='cascade', help='Model of the followed resource')
+    res_model = fields.Char(string='Document Model', related='res_model_id.model', store=True, index=True, readonly=True)
     res_id = fields.Integer(string='Document ID', required=True, help="Identifier of the rated object", index=True)
     rated_partner_id = fields.Many2one('res.partner', string="Rated person", help="Owner of the rated resource")
     partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")
@@ -106,6 +107,13 @@ class RatingMixin(models.AbstractModel):
             self.rating_ids._compute_res_name()
         return result
 
+    def unlink(self):
+        """ When removing a record, its rating should be deleted too. """
+        record_ids = self.ids
+        result = super(RatingMixin, self).unlink()
+        self.env['rating.rating'].sudo().search([('res_model', '=', self._name), ('res_id', 'in', record_ids)]).unlink()
+        return result
+
     def rating_get_partner_id(self):
         if hasattr(self, 'partner_id') and self.partner_id:
             return self.partner_id
@@ -122,7 +130,13 @@ class RatingMixin(models.AbstractModel):
         rated_partner = self.rating_get_rated_partner_id()
         ratings = self.rating_ids.filtered(lambda x: x.partner_id.id == partner.id and not x.consumed)
         if not ratings:
-            rating = self.env['rating.rating'].create({'partner_id': partner.id, 'rated_partner_id': rated_partner.id, 'res_model': self._name, 'res_id': self.id})
+            record_model_id = self.env['ir.model'].sudo().search([('model', '=', self._name)], limit=1).id
+            rating = self.env['rating.rating'].create({
+                'partner_id': partner.id,
+                'rated_partner_id': rated_partner.id,
+                'res_model_id': record_model_id,
+                'res_id': self.id
+            })
         else:
             rating = ratings[0]
         return rating.access_token
