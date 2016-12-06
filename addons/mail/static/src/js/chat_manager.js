@@ -15,10 +15,10 @@ var _lt = core._lt;
 var LIMIT = 25;
 var preview_msg_max_size = 350;  // optimal for native english speakers
 
-var MessageModel = new Model('mail.message', session.context);
-var ChannelModel = new Model('mail.channel', session.context);
-var UserModel = new Model('res.users', session.context);
-var PartnerModel = new Model('res.partner', session.context);
+var MessageModel = new Model('mail.message', session.user_context);
+var ChannelModel = new Model('mail.channel', session.user_context);
+var UserModel = new Model('res.users', session.user_context);
+var PartnerModel = new Model('res.partner', session.user_context);
 
 // Private model
 //----------------------------------------------------------------------------------
@@ -444,7 +444,7 @@ function fetch_from_channel (channel, options) {
         domain = new data.CompoundDomain([['id', '<', min_message_id]], domain);
     }
 
-    return MessageModel.call('message_fetch', [domain], {limit: LIMIT}).then(function (msgs) {
+    return MessageModel.call('message_fetch', [domain], {limit: LIMIT, context: session.user_context}).then(function (msgs) {
         if (!cache.all_history_loaded) {
             cache.all_history_loaded =  msgs.length < LIMIT;
         }
@@ -469,7 +469,7 @@ function fetch_document_messages (ids, options) {
     if (options.force_fetch || _.difference(ids.slice(0, LIMIT), loaded_msg_ids).length) {
         var ids_to_load = _.difference(ids, loaded_msg_ids).slice(0, LIMIT);
 
-        return MessageModel.call('message_format', [ids_to_load]).then(function (msgs) {
+        return MessageModel.call('message_format', [ids_to_load], {context: session.user_context}).then(function (msgs) {
             var processed_msgs = [];
             _.each(msgs, function (msg) {
                 processed_msgs.push(add_message(msg, {silent: true}));
@@ -976,7 +976,7 @@ var chat_manager = {
                 }
             });
         } else {
-            new Model(res_model).call('get_formview_id', [res_id, session.context]).then(function (view_id) {
+            new Model(res_model).call('get_formview_id', [res_id, session.user_context]).then(function (view_id) {
                 redirect_to_document(res_model, res_id, view_id);
             });
         }
