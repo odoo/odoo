@@ -434,8 +434,6 @@ class EventRegistration(models.Model):
             return _('in %d days') % (diff.days, )
         elif (diff.days < 14):
             return _('next week')
-        elif event_date.isocalendar()[1] == today.isocalendar()[1]:
-            return _('this month')
         elif event_date.month == (today + relativedelta(months=+1)):
             return _('next month')
         else:

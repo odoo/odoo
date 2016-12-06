@@ -137,7 +137,7 @@ class TestEventFlow(TestEventCommon):
         self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'in 2 days')
 
         self.mock_datetime.now.return_value = Datetime.to_string(datetime.datetime(2015, 12, 10, 12, 0))
-        self.event_0.registration_ids.event_begin_date = datetime.datetime(2015, 12, 31, 6, 0)
-        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'this month')
+        self.event_0.registration_ids.event_begin_date = datetime.datetime(2016, 1, 25, 6, 0)
+        self.assertEqual(self.event_0.registration_ids.get_date_range_str(), u'next month')
 
         self.patcher.stop()
