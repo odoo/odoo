@@ -97,6 +97,8 @@ class FieldConverter(models.AbstractModel):
         Converts the specified field of the browse_record ``record`` to HTML
         :rtype: unicode
         """
+        if not record:
+            return False
         value = record[field_name]
         return False if value is False else record.env[self._name].value_to_html(value, options=options)
 

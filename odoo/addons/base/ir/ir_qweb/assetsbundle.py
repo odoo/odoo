@@ -173,6 +173,11 @@ class AssetsBundle(object):
             ('url', '=like', '/web/content/%-%/{0}%.{1}'.format(self.name, type)),  # The wilcards are id, version and pagination number (if any)
             '!', ('url', '=like', '/web/content/%-{}/%'.format(self.version))
         ]
+
+        # force bundle invalidation on other workers
+        if 'xml' not in tools.config['dev_mode']:
+            self.env['ir.qweb']._get_asset.clear_cache(self.env['ir.qweb'])
+
         return ira.sudo().search(domain).unlink()
 
     def get_attachments(self, type):

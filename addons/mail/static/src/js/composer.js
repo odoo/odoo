@@ -474,6 +474,8 @@ var BasicComposer = Widget.extend({
         // Return a deferred as this function is extended with asynchronous
         // behavior for the chatter composer
         var value = _.escape(this.$input.val()).replace(/\n|\r/g, '<br/>');
+        // prevent html space collapsing
+        value = value.replace(/ /g, '&nbsp;').replace(/([^>])&nbsp;([^<])/g, '$1 $2');
         var commands = this.options.commands_enabled ? this.mention_manager.get_listener_selection('/') : [];
         return $.when({
             content: this.mention_manager.generate_links(value),

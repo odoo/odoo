@@ -13,6 +13,7 @@
     <link href="/website/static/src/less/website.snippets.less" rel="stylesheet" type="text/less"/>
 
     <link href="/report/static/src/less/report.less" rel="stylesheet" type="text/less"/>
+    <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
 </template>
 
 <template id="report.assets_pdf">
@@ -118,6 +119,7 @@
     <div class="footer">
         <div class="text-center" style="border-top: 1px solid black;">
             <ul t-if="not company.custom_footer" class="list-inline">
+                <t t-set="company" t-value="company.sudo()"/>
                 <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
 
                 <li t-if="company.fax and company.phone">&amp;bull;</li>

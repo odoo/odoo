@@ -187,7 +187,7 @@ class TestViewSaving(common.TransactionCase):
     def test_save_escaped_text(self):
         """ Test saving html special chars in text nodes """
         view = self.env['ir.ui.view'].create({
-            'arch': '<t><p><h1>hello world</h1></p></t>',
+            'arch': '<t t-name="dummy"><p><h1>hello world</h1></p></t>',
             'type': 'qweb'
         })
         # script and style text nodes should not escaped client side
