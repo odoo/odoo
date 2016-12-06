@@ -177,7 +177,12 @@ class AccountAssetAsset(models.Model):
         if self.value_residual != 0.0:
             amount_to_depr = residual_amount = self.value_residual
             if self.prorata:
-                depreciation_date = datetime.strptime(self._get_last_depreciation_date()[self.id], DF).date()
+                # if we already have some previous validated entries, starting date is last entry + method period
+                if posted_depreciation_line_ids and posted_depreciation_line_ids[-1].depreciation_date:
+                    last_depreciation_date = datetime.strptime(posted_depreciation_line_ids[-1].depreciation_date, DF).date()
+                    depreciation_date = last_depreciation_date + relativedelta(months=+self.method_period)
+                else:
+                    depreciation_date = datetime.strptime(self._get_last_depreciation_date()[self.id], DF).date()
             else:
                 # depreciation_date = 1st of January of purchase year if annual valuation, 1st of
                 # purchase month in other cases
