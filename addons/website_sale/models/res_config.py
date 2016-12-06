@@ -3,9 +3,6 @@
 
 from odoo import api, models, fields
 
-import logging
-_logger = logging.getLogger(__name__)
-
 class WebsiteConfigSettings(models.TransientModel):
     _inherit = 'website.config.settings'
 
@@ -34,7 +31,7 @@ class WebsiteConfigSettings(models.TransientModel):
     module_delivery_usps = fields.Boolean("USPS integration")
     module_sale_ebay = fields.Boolean("eBay")
 
-    group_website_multiimage = fields.Boolean(string='Multi-Images', implied_group='website_sale.group_website_multi_image', group='base.group_portal,base.group_user,base.group_public')
+    group_website_multiimage = fields.Boolean(string='Multi-Images', implied_group='website_sale.group_website_multi_image')
     group_discount_per_so_line = fields.Boolean(string="Discounted Prices", implied_group='sale.group_discount_per_so_line')
     group_delivery_invoice_address = fields.Boolean(string="Shipping Address", implied_group='sale.group_delivery_invoice_address')
 
@@ -61,16 +58,8 @@ class WebsiteConfigSettings(models.TransientModel):
     group_product_pricelist = fields.Boolean("Show pricelists On Products",
         implied_group='product.group_product_pricelist')
     order_mail_template = fields.Many2one('mail.template', string='Email Template', readonly=True, default=_default_order_mail_template, help="Email sent to customer at the end of the checkout process")
-    group_show_price_subtotal = fields.Boolean(
-        "Show subtotal",
-        store=True,
-        implied_group='sale.group_show_price_subtotal',
-        group='base.group_portal,base.group_user,base.group_public')
-    group_show_price_total = fields.Boolean(
-        "Show total",
-        store=True,
-        implied_group='sale.group_show_price_total',
-        group='base.group_portal,base.group_user,base.group_public')
+    group_show_price_subtotal = fields.Boolean("Show subtotal", implied_group='sale.group_show_price_subtotal')
+    group_show_price_total = fields.Boolean("Show total", implied_group='sale.group_show_price_total')
 
     default_invoice_policy = fields.Selection([
         ('order', 'Ordered quantities'),
@@ -79,17 +68,12 @@ class WebsiteConfigSettings(models.TransientModel):
         default='order',
         default_model='product.template')
 
-    group_multi_currency = fields.Boolean(string='Multi-Currencies',
-            implied_group='base.group_multi_currency',
-            help="Allows to work in a multi currency environment")
+    group_multi_currency = fields.Boolean(string='Multi-Currencies', implied_group='base.group_multi_currency', help="Allows to work in a multi currency environment")
 
     sale_show_tax = fields.Selection([
-            ('total', 'Tax-Included Prices'),
-            ('subtotal', 'Tax-Excluded Prices')],
-        "Product Prices",
-        compute='_compute_sale_show_tax',
-        readonly=False,
-        required=True)
+        ('total', 'Tax-Included Prices'),
+        ('subtotal', 'Tax-Excluded Prices')],
+        "Product Prices", compute='_compute_sale_show_tax', readonly=False, required=True)
 
     @api.model
     def get_default_sale_delivery_settings(self, fields):
