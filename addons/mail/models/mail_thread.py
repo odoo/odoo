@@ -974,6 +974,23 @@ class MailThread(models.AbstractModel):
         return (model, thread_id, route[2], route[3], None if drop_alias else route[4])
 
     @api.model
+    def _extract_bounce_info(self, email):
+        """
+            Extract (mail_id, model, thread_id) from bounce email.
+            Returns (None, None, None) if not a bounce email.
+        """
+        bounce_alias = self.env['ir.config_parameter'].get_param("mail.bounce.alias")
+        localpart = (tools.email_split(email) or [''])[0].split('@', 1)[0].lower()
+        if bounce_alias and localpart.startswith(bounce_alias + '+'):
+            # Bounce regex: typical form of bounce is bounce_alias+128-crm.lead-34@domain
+            bounce_re = re.compile("%s\+(\d+)(?:-([\w.]+)-(\d+))?" % re.escape(bounce_alias), re.UNICODE)
+            bounce_match = bounce_re.search(localpart)
+            if bounce_match:
+                mail_id, model, thread_id = bounce_match.groups()
+                return int(mail_id), model, int(thread_id or 0)
+        return None, None, None
+
+    @api.model
     def message_route(self, message, message_dict, model=None, thread_id=None, custom_values=None):
         """ Attempt to figure out the correct target model, thread_id,
         custom_values and user_id to use for an incoming message.
@@ -1016,11 +1033,9 @@ class MailThread(models.AbstractModel):
             raise TypeError('message must be an email.message.Message at this point')
         MailMessage = self.env['mail.message']
         Alias, dest_aliases = self.env['mail.alias'], self.env['mail.alias']
-        bounce_alias = self.env['ir.config_parameter'].get_param("mail.bounce.alias")
         fallback_model = model
 
         # get email.message.Message variables for future processing
-        local_hostname = socket.gethostname()
         message_id = message.get('Message-Id')
 
         # compute references to find if message is a reply to an existing thread
@@ -1046,15 +1061,8 @@ class MailThread(models.AbstractModel):
         rcpt_tos_localparts = [e.split('@')[0].lower() for e in tools.email_split(rcpt_tos)]
 
         # 0. Verify whether this is a bounced email and use it to collect bounce data and update notifications for customers
-        if bounce_alias and bounce_alias in email_to_localpart:
-            # Bounce regex: typical form of bounce is bounce_alias+128-crm.lead-34@domain
-            # group(1) = the mail ID; group(2) = the model (if any); group(3) = the record ID
-            bounce_re = re.compile("%s\+(\d+)-?([\w.]+)?-?(\d+)?" % re.escape(bounce_alias), re.UNICODE)
-            bounce_match = bounce_re.search(email_to)
-
-            if bounce_match:
-                bounced_mail_id, bounced_model, bounced_thread_id = bounce_match.group(1), bounce_match.group(2), int(bounce_match.group(3))
-
+        bounced_mail_id, bounced_model, bounced_thread_id = self._extract_bounce_info(email_to)
+        if bounced_mail_id:
                 email_part = next((part for part in message.walk() if part.get_content_type() == 'message/rfc822'), None)
                 dsn_part = next((part for part in message.walk() if part.get_content_type() == 'message/delivery-status'), None)
 

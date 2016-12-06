@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-import re
-
-from odoo import api, models, tools
+from odoo import api, models
 from odoo.tools import decode_smtp_header, decode_message_header
-
-_logger = logging.getLogger(__name__)
 
 
 class MailThread(models.AbstractModel):
@@ -17,16 +12,10 @@ class MailThread(models.AbstractModel):
     @api.model
     def message_route(self, message, message_dict, model=None, thread_id=None, custom_values=None):
         """ Override to udpate mass mailing statistics based on bounce emails """
-        bounce_alias = self.env['ir.config_parameter'].get_param("mail.bounce.alias")
         email_to = decode_message_header(message, 'To')
-        email_to_localpart = (tools.email_split(email_to) or [''])[0].split('@', 1)[0].lower()
-
-        if bounce_alias and bounce_alias in email_to_localpart:
-            bounce_re = re.compile("%s\+(\d+)-?([\w.]+)?-?(\d+)?" % re.escape(bounce_alias), re.UNICODE)
-            bounce_match = bounce_re.search(email_to)
-            if bounce_match:
-                bounced_mail_id = bounce_match.group(1)
-                self.env['mail.mail.statistics'].set_bounced(mail_mail_ids=[bounced_mail_id])
+        bounced_mail_id, _, _ = self._extract_bounce_info(email_to)
+        if bounced_mail_id:
+            self.env['mail.mail.statistics'].set_bounced(mail_mail_ids=[bounced_mail_id])
 
         return super(MailThread, self).message_route(message, message_dict, model, thread_id, custom_values)
 
