@@ -813,12 +813,15 @@ class WizardMultiChartsAccounts(models.TransientModel):
         # Create Bank journals
         self._create_bank_journals_from_o2m(company, acc_template_ref)
 
-        # Create the current year earning account (outside of the CoA)
-        self.env['account.account'].create({
-            'code': '999999',
-            'name': _('Undistributed Profits/Losses'),
-            'user_type_id': self.env.ref("account.data_unaffected_earnings").id,
-            'company_id': company.id,})
+        # Create the current year earning account if it wasn't present in the CoA
+        account_obj = self.env['account.account']
+        unaffected_earnings_xml = self.env.ref("account.data_unaffected_earnings")
+        if unaffected_earnings_xml and not account_obj.search([('company_id', '=', company.id), ('user_type_id', '=', unaffected_earnings_xml.id)]):
+            account_obj.create({
+                'code': '999999',
+                'name': _('Undistributed Profits/Losses'),
+                'user_type_id': unaffected_earnings_xml.id,
+                'company_id': company.id,})
         return {}
 
     @api.multi
