@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import itertools
+
 from odoo.addons.mail.tests.common import TestMail
 from odoo.exceptions import AccessError, except_orm
 from odoo.tools import mute_logger
@@ -110,6 +112,21 @@ class TestMailMessage(TestMail):
         self.assertIn('reply_to', msg.message_id)
         self.assertNotIn('mail.channel', msg.message_id)
         self.assertNotIn('-%d-' % self.group_pigs.id, msg.message_id)
+
+    def test_mail_message_notify_from_mail_mail(self):
+        # Due ot post-commit hooks, store send emails in every step
+        self.email_to_list = []
+        mail = self.env['mail.mail'].create({
+            'body_html': '<p>Test</p>',
+            'email_to': 'test@example.com',
+            'partner_ids': [(4, self.user_employee.partner_id.id)]
+        })
+        self.email_to_list.extend(itertools.chain.from_iterable(sent_email['email_to'] for sent_email in self._mails if sent_email.get('email_to')))
+        self.assertNotIn(u'Ernest Employee <e.e@example.com>', self.email_to_list)
+        mail.send()
+        self.email_to_list.extend(itertools.chain.from_iterable(sent_email['email_to'] for sent_email in self._mails if sent_email.get('email_to')))
+        self.assertNotIn(u'Ernest Employee <e.e@example.com>', self.email_to_list)
+        self.assertIn(u'test@example.com', self.email_to_list)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_message_access_search(self):
