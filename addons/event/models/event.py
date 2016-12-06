@@ -434,7 +434,7 @@ class EventRegistration(models.Model):
             return _('in %d days') % (diff.days, )
         elif (diff.days < 14):
             return _('next week')
-        elif event_date.month == (today + relativedelta(months=+1)):
+        elif event_date.month == (today + relativedelta(months=+1)).month:
             return _('next month')
         else:
             return _('on ') + format_tz(self.with_context({'use_babel': True}).env, self.event_begin_date, tz=self.event_id.date_tz or 'UTC')
