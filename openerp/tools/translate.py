@@ -77,6 +77,7 @@ _LOCALE2WIN32 = {
     'gl_ES': 'Galician_Spain',
     'ka_GE': 'Georgian_Georgia',
     'de_DE': 'German_Germany',
+    'de_CH': 'German_Switzerland',
     'el_GR': 'Greek_Greece',
     'gu': 'Gujarati_India',
     'he_IL': 'Hebrew_Israel',
