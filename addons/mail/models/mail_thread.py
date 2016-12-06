@@ -7,7 +7,6 @@ import dateutil
 import email
 import hashlib
 import hmac
-import json
 import lxml
 import logging
 import pytz
