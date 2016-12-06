@@ -787,6 +787,8 @@ class ManyToOneConverter(models.AbstractModel):
 
     @api.model
     def record_to_html(self, field_name, record, options=None):
+        if not record:
+            return ''
         value = record[field_name].sudo().display_name
         return nl2br(value, options=options) if value else ''
 

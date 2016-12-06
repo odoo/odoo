@@ -345,6 +345,7 @@ class PageConverter(werkzeug.routing.PathConverter):
         query = query and query.startswith('website.') and query[8:] or query
         if query:
             domain += [('key', 'like', query)]
+        domain += ['|', ('website_id', '=', request.website.id), ('website_id', '=', False)]
 
         views = View.search_read(cr, uid, domain, fields=['key', 'priority', 'write_date'], order='name', context=context)
         for view in views:
@@ -353,7 +354,7 @@ class PageConverter(werkzeug.routing.PathConverter):
             # when we will have an url mapping mechanism, replace this by a rule: page/homepage --> /
             if xid=='homepage': continue
             record = {'loc': xid}
-            if view['priority'] <> 16:
+            if view['priority'] != 16:
                 record['__priority'] = min(round(view['priority'] / 32.0,1), 1)
             if view['write_date']:
                 record['__lastmod'] = view['write_date'][:10]

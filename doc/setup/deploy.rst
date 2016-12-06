@@ -221,7 +221,7 @@ HTTPS
 =====
 
 Whether it's accessed via website/web client or the webservice, Odoo transmits
-authentication information in cleatext. This means a secure deployment of
+authentication information in cleartext. This means a secure deployment of
 Odoo must use HTTPS\ [#switching]_. SSL termination can be implemented via
 just about any SSL termination proxy, but requires the following setup:
 
