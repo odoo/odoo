@@ -93,72 +93,63 @@ label.oe_light_label, .oe_light_label label {
     font-weight: normal;
 }
 
-.oe_flex_container {
-    display: -webkit-flex;
-    -webkit-flex: 0 1 auto;
-    -webkit-flex-wrap: wrap;
-    -webkit-flex-direction: row;
+.o_settings_container {
+    .o-flex(0, 1, auto);
 
-    display: flex;
-    flex: 0 1 auto;
-    flex-direction: row;
-    flex-wrap: wrap;
-
-    > div {
+    .o_setting_box {
         margin-bottom: 5px;
         margin-top: 5px;
-    }
-}
 
-.oe_setting_box {
-    .oe_enterprise_label {
-        float: right;
-    }
+        .oe_enterprise_label {
+            float: right;
+        }
 
-    button.btn-link, button.btn.btn-link {
-        margin-right: 0;
-        margin-left: 0;
-        padding-right: 0;
-        padding-left: 0;
-    }
+        button.btn-link, button.btn.btn-link {
+            margin-right: 0;
+            margin-left: 0;
+            padding-right: 0;
+            padding-left: 0;
+        }
 
-    .input-group > span + div {
-        float: none;
-    }
-}
+        .input-group > span + div {
+            float: none;
+        }
 
-// pane-border with / without one checkbox (ie in settings)
-.oe_group_addon24 {
-    min-width: 24px;
-    max-width: 24px;
-    width: 24px;
-    text-align: center;
-    position: relative;
-    padding: 0 0 0 0 !important;
+        // pane-border with / without one checkbox (ie in settings)
+        .o_setting_left_pane {
+            min-width: 24px;
+            max-width: 24px;
+            width: 24px;
+            text-align: center;
+            position: relative;
+            padding: 0 0 0 0 !important;
 
-    .o_checkbox, .o_form_field_boolean {
-        margin: 0 0 0 0 !important;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        vertical-align: middle;
-
-        // Large checkbox permits to click easier on all the pane-border
-        input[type="checkbox"] {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: 50;
-            left: 0px;
-
-            + span {
-                left: 4px;
-                top: 50%;
-                margin-top: -7px;
+            .o_checkbox, .o_form_field_boolean {
+                margin: 0 0 0 0 !important;
                 position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                vertical-align: middle;
+
+                // Large checkbox permits to click easier on all the pane-border
+                input[type="checkbox"] {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 50;
+                    left: 0px;
+
+                    + span {
+                        left: 4px;
+                        top: 50%;
+                        margin-top: -7px;
+                        position: absolute;
+                    }
+                }
             }
         }
     }
+
 }

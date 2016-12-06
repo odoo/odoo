@@ -7,10 +7,10 @@
         <field name="arch" type="xml">
             <div id="features_settings" position="after">
                 <h2>Pricing</h2>
-                <div class="row mt16 oe_flex_container" id="sale_pricing_settings">
-                    <div class="col-md-6 oe_setting_box" id="tax_inclusion_setting">
+                <div class="row mt16 o_settings_container" id="sale_pricing_settings">
+                    <div class="col-md-6 o_setting_box" id="tax_inclusion_setting">
                         <div class="input-group">
-                            <span class="input-group-addon oe_group_addon24"/>
+                            <span class="input-group-addon o_setting_left_pane"/>
                             <div class="form-control">
                                 <label for="sale_show_tax"/>
                                 <div class="text-muted">
@@ -27,9 +27,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 oe_setting_box" id="discount_setting">
+                    <div class="col-md-6 o_setting_box" id="discount_setting">
                         <div class="input-group">
-                            <span class="input-group-addon oe_group_addon24">
+                            <span class="input-group-addon o_setting_left_pane">
                                 <field name="group_discount_per_so_line"/>
                             </span>
                             <div class="form-control">
@@ -40,9 +40,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 oe_setting_box" id="pricelists_setting">
+                    <div class="col-md-6 o_setting_box" id="pricelists_setting">
                         <div class="input-group">
-                            <span class="input-group-addon oe_group_addon24">
+                            <span class="input-group-addon o_setting_left_pane">
                                 <field name="sale_pricelist_setting_split_1"/>
                             </span>
                             <div class="form-control">
@@ -63,9 +63,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 oe_setting_box" id="multicurrencies_setting">
+                    <div class="col-md-6 o_setting_box" id="multicurrencies_setting">
                         <div class="input-group" title="This adds the choice of a currency on pricelists.">
-                            <span class="input-group-addon oe_group_addon24">
+                            <span class="input-group-addon o_setting_left_pane">
                                 <field name="group_multi_currency"/>
                             </span>
                             <div class="form-control">
@@ -87,10 +87,10 @@
                     </div>
                 </div>
                 <h2>Products Catalog</h2>
-                <div class="row mt16 oe_flex_container" id="sale_product_catalog_settings">
-                    <div class="col-md-6 oe_setting_box" id="product_attributes_setting">
+                <div class="row mt16 o_settings_container" id="sale_product_catalog_settings">
+                    <div class="col-md-6 o_setting_box" id="product_attributes_setting">
                         <div class="input-group">
-                            <span class="input-group-addon oe_group_addon24">
+                            <span class="input-group-addon o_setting_left_pane">
                                 <field name="group_product_variant"/>
                             </span>
                             <div class="form-control">
@@ -107,9 +107,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 oe_setting_box" id="product_image_setting">
+                    <div class="col-md-6 o_setting_box" id="product_image_setting">
                         <div class="input-group">
-                            <span class="input-group-addon oe_group_addon24">
+                            <span class="input-group-addon o_setting_left_pane">
                                 <field name="group_website_multiimage" widget="checkbox"/>
                             </span>
                             <div class="form-control">
@@ -121,9 +121,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 oe_setting_box" id="sale_option_setting">
+                    <div class="col-md-6 o_setting_box" id="sale_option_setting">
                         <div class="input-group">
-                            <span class="input-group-addon oe_group_addon24">
+                            <span class="input-group-addon o_setting_left_pane">
                                 <field name="module_website_sale_options"/>
                             </span>
                             <div class="form-control">
@@ -135,9 +135,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 oe_setting_box" id="digital_content_setting">
+                    <div class="col-md-6 o_setting_box" id="digital_content_setting">
                         <div class="input-group">
-                            <span class="input-group-addon oe_group_addon24">
+                            <span class="input-group-addon o_setting_left_pane">
                                 <field name="module_website_sale_digital"
                                        title="Provide customers with product-specific links or downloadable content in the confirmation page of the checkout process if the payment gets through.
 To do so, attach some files to a product using the new Files button and publish them."/>
@@ -153,10 +153,10 @@ To do so, attach some files to a product using the new Files button and publish 
                     </div>
                 </div>
                 <h2>Checkout Process</h2>
-                <div class="row mt16 oe_flex_container" id="sale_checkout_settings">
-                    <div class="col-md-6 oe_setting_box" id="checkout_mail_setting">
+                <div class="row mt16 o_settings_container" id="sale_checkout_settings">
+                    <div class="col-md-6 o_setting_box" id="checkout_mail_setting">
                         <div class="input-group">
-                            <span class="input-group-addon oe_group_addon24"/>
+                            <span class="input-group-addon o_setting_left_pane"/>
                             <div class="form-control">
                                 <label string="Confirmation Email"/>
                                 <div class="text-muted">
@@ -172,9 +172,9 @@ To do so, attach some files to a product using the new Files button and publish 
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 oe_setting_box" id="shipping_address_setting">
+                    <div class="col-md-6 o_setting_box" id="shipping_address_setting">
                         <div class="input-group">
-                            <span class="input-group-addon oe_group_addon24">
+                            <span class="input-group-addon o_setting_left_pane">
                                 <field name="group_delivery_invoice_address"/>
                             </span>
                             <div class="form-control">
@@ -185,9 +185,9 @@ To do so, attach some files to a product using the new Files button and publish 
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 oe_setting_box" id="checkout_assignation_setting" groups="base.group_no_one">
+                    <div class="col-md-6 o_setting_box" id="checkout_assignation_setting" groups="base.group_no_one">
                         <div class="input-group">
-                            <span class="input-group-addon oe_group_addon24"/>
+                            <span class="input-group-addon o_setting_left_pane"/>
                             <div class="form-control">
                                 <label string="Assignation"/>
                                 <div class="text-muted">
@@ -209,10 +209,10 @@ To do so, attach some files to a product using the new Files button and publish 
                     </div>
                 </div>
                 <h2>Invoicing</h2>
-                <div class="row mt16 oe_flex_container" id="sale_invoicing_settings">
-                    <div class="col-md-6 oe_setting_box" id="invoicing_policy_setting">
+                <div class="row mt16 o_settings_container" id="sale_invoicing_settings">
+                    <div class="col-md-6 o_setting_box" id="invoicing_policy_setting">
                         <div class="input-group">
-                            <span class="input-group-addon oe_group_addon24"/>
+                            <span class="input-group-addon o_setting_left_pane"/>
                             <div class="form-control">
                                 <label for="default_invoice_policy"/>
                                 <div class="text-muted">
@@ -229,10 +229,10 @@ To do so, attach some files to a product using the new Files button and publish 
                     </div>
                 </div>
                 <h2>Shipping</h2>
-                <div class="row mt16 oe_flex_container" id="sale_shipping_settings">
-                    <div class="col-md-6 oe_setting_box" id="delivery_order_setting">
+                <div class="row mt16 o_settings_container" id="sale_shipping_settings">
+                    <div class="col-md-6 o_setting_box" id="delivery_order_setting">
                         <div class="input-group">
-                            <span class="input-group-addon oe_group_addon24">
+                            <span class="input-group-addon o_setting_left_pane">
                                 <field name="module_sale_stock"/>
                             </span>
                             <div class="form-control">
@@ -244,9 +244,9 @@ To do so, attach some files to a product using the new Files button and publish 
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 oe_setting_box" id="delivery_method_setting">
+                    <div class="col-md-6 o_setting_box" id="delivery_method_setting">
                         <div class="input-group">
-                            <span class="input-group-addon oe_group_addon24">
+                            <span class="input-group-addon o_setting_left_pane">
                                 <field name="module_website_sale_delivery"/>
                             </span>
                             <div class="form-control">
@@ -263,11 +263,11 @@ To do so, attach some files to a product using the new Files button and publish 
                     </div>
                 </div>
                 <h2>Shipping Connectors</h2>
-                <div class="row mt16 oe_flex_container" id="shipping_connectors_settings">
-                    <div class="col-md-6 oe_setting_box" id="ups_provider_setting">
+                <div class="row mt16 o_settings_container" id="shipping_connectors_settings">
+                    <div class="col-md-6 o_setting_box" id="ups_provider_setting">
                         <div class="input-group" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer.
                             Apply shipping connector from delivery methods.">
-                            <span class="input-group-addon oe_group_addon24">
+                            <span class="input-group-addon o_setting_left_pane">
                                 <field name="module_delivery_ups" widget="upgrade_boolean"/>
                             </span>
                             <div class="form-control">
@@ -279,10 +279,10 @@ To do so, attach some files to a product using the new Files button and publish 
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 oe_setting_box" id="shipping_provider_dhl_setting">
+                    <div class="col-md-6 o_setting_box" id="shipping_provider_dhl_setting">
                         <div class="input-group" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer.
                             Apply shipping connector from delivery methods.">
-                            <span class="input-group-addon oe_group_addon24">
+                            <span class="input-group-addon o_setting_left_pane">
                                 <field name="module_delivery_dhl" widget="upgrade_boolean"/>
                             </span>
                             <div class="form-control">
@@ -294,10 +294,10 @@ To do so, attach some files to a product using the new Files button and publish 
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 oe_setting_box" id="shipping_provider_fedex_setting">
+                    <div class="col-md-6 o_setting_box" id="shipping_provider_fedex_setting">
                         <div class="input-group" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer.
                             Apply shipping connector from delivery methods.">
-                            <span class="input-group-addon oe_group_addon24">
+                            <span class="input-group-addon o_setting_left_pane">
                                 <field name="module_delivery_fedex" widget="upgrade_boolean"/>
                             </span>
                             <div class="form-control">
@@ -309,10 +309,10 @@ To do so, attach some files to a product using the new Files button and publish 
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 oe_setting_box" id="shipping_provider_usps_setting">
+                    <div class="col-md-6 o_setting_box" id="shipping_provider_usps_setting">
                         <div class="input-group" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer.
                             Apply shipping connector from delivery methods.">
-                            <span class="input-group-addon oe_group_addon24">
+                            <span class="input-group-addon o_setting_left_pane">
                                 <field name="module_delivery_usps" widget="upgrade_boolean"/>
                             </span>
                             <div class="form-control">
@@ -324,10 +324,10 @@ To do so, attach some files to a product using the new Files button and publish 
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 oe_setting_box" id="shipping_provider_temando_setting">
+                    <div class="col-md-6 o_setting_box" id="shipping_provider_temando_setting">
                         <div class="input-group" title="Shipping connectors allow to compute accurate shipping costs, print shipping labels and request carrier picking at your warehouse to ship to the customer.
                             Apply shipping connector from delivery methods.">
-                            <span class="input-group-addon oe_group_addon24">
+                            <span class="input-group-addon o_setting_left_pane">
                                 <field name="module_delivery_temando" widget="upgrade_boolean"/>
                             </span>
                             <div class="form-control">
@@ -341,10 +341,10 @@ To do so, attach some files to a product using the new Files button and publish 
                     </div>
                 </div>
                 <h2>eCommerce Integrations</h2>
-                <div class="row mt16 oe_flex_container" id="sale_integration_settings">
-                    <div class="col-md-6 oe_setting_box" id="ebay_install_setting">
+                <div class="row mt16 o_settings_container" id="sale_integration_settings">
+                    <div class="col-md-6 o_setting_box" id="ebay_install_setting">
                         <div class="input-group">
-                            <span class="input-group-addon oe_group_addon24">
+                            <span class="input-group-addon o_setting_left_pane">
                                 <field name="module_sale_ebay" widget="upgrade_boolean"/>
                             </span>
                             <div class="form-control">
