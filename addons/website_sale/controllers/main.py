@@ -753,7 +753,10 @@ class WebsiteSale(http.Controller):
                 valid_state = 'authorized' if tx.acquirer_id.auto_confirm == 'authorize' else 'done'
                 if not s2s_result or tx.state != valid_state:
                     return dict(success=False, error=_("Payment transaction failed (%s)") % tx.state_message)
-                return dict(success=True, url='/shop/payment/validate')
+                else:
+                    # Auto-confirm SO if necessary
+                    tx._confirm_so()
+                    return dict(success=True, url='/shop/payment/validate')
             except Exception, e:
                 _logger.warning(_("Payment transaction (%s) failed : <%s>") % (tx.id, str(e)))
                 return dict(success=False, error=_("Payment transaction failed (Contact Administrator)"))
