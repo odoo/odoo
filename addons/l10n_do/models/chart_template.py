@@ -7,17 +7,6 @@ from openerp import models, api, _
 class WizardMultiChartsAccounts(models.TransientModel):
     _inherit = 'wizard.multi.charts.accounts'
 
-    @api.multi
-    def execute(self):
-        """Overwrite the account code to Undistributed Profits/Losses"""
-        res = super(WizardMultiChartsAccounts, self).execute()
-        account_obj = self.env['account.account']
-        account = account_obj.search(
-                [('code', '=', '999999'), ('user_type_id', '=', self.env.ref(
-                                     "account.data_unaffected_earnings").id)])
-        account.write({'code': '61010100'})
-        return res
-
     @api.model
     def _get_default_bank_account_ids(self):
         return [
