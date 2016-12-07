@@ -223,10 +223,11 @@ class Web_Editor(http.Controller):
             attachments_to_remove.unlink()
         return removal_blocked_by
 
-    @http.route('/web_editor/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, key, full=False, bundles=False):
+    @http.route('/web_editor/get_assets_editor_resources', type='json', auth='user', website=True)
+    def get_assets_editor_resources(self, key, bundles=False):
         """ Get inherit view's informations of the template ``key``.
             returns templates info (which can be active or not)
             ``bundles=True`` returns also the asset bundles
         """
-        return request.env["ir.ui.view"].customize_template_get(key, full=full, bundles=bundles)
+        views = request.env["ir.ui.view"].get_related_views(key, bundles=bundles)
+        return views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])

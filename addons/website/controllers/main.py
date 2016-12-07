@@ -244,6 +244,11 @@ class Website(Home):
     def snippets(self):
         return request.env['ir.ui.view'].render_template('website.snippets')
 
+    @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
+    def get_switchable_related_views(self, key):
+        views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
+        return views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
+
     @http.route('/website/reset_templates', type='http', auth='user', methods=['POST'], website=True)
     def reset_template(self, templates, redirect='/'):
         templates = request.httprequest.form.getlist('templates')

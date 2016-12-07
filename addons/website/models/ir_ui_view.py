@@ -134,15 +134,3 @@ class View(models.Model):
             menu_data=self.env['ir.ui.menu'].load_menus_root() if request.website.is_user() else None,
         )
         return qcontext
-
-    @api.model
-    def _customize_template_get_views(self, key, full=False, bundles=False):
-        """ Get inherit view's informations of the template ``key``.
-            returns views (which can be active or not)
-            ``full=False`` returns only the customize_show template
-            ``bundles=True`` returns also the asset bundles
-        """
-        views = super(View, self)._customize_template_get_views(key, full=full, bundles=bundles)
-        if full:
-            return views
-        return views.filtered(lambda v: v.customize_show)
