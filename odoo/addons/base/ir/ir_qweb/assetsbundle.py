@@ -500,7 +500,7 @@ class WebAsset(object):
                 with open(self._filename, 'rb') as fp:
                     return fp.read().decode('utf-8')
             else:
-                return self._ir_attach['datas'].decode('base64')
+                return self._ir_attach['datas'].decode('base64').decode('utf-8')
         except UnicodeDecodeError:
             raise AssetError('%s is not utf-8 encoded.' % self.name)
         except IOError:
