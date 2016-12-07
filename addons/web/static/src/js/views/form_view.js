@@ -116,6 +116,9 @@ var FormView = View.extend(common.FieldManagerMixin, {
         if (this.$el) {
             this.$el.off('.formBlur');
         }
+        if (this.$pager) {
+            this.$pager.off();
+        }
         this._super();
     },
     load_form: function(data) {
@@ -242,9 +245,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
                     return;
                 }
                 var action = $el.data('pager-action');
-                var def = $.when(self.execute_pager_action(action));
-                $el.attr("disabled");
-                def.always(function() {
+                $.when(self.execute_pager_action(action)).always(function() {
                     $el.removeAttr("disabled");
                 });
             });

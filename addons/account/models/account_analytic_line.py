@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp import api, fields, models, _
+from math import copysign
 
 
 class AccountAnalyticLine(models.Model):
@@ -20,7 +21,12 @@ class AccountAnalyticLine(models.Model):
         help='Utility field to express amount currency')
     currency_id = fields.Many2one('res.currency', related='move_id.currency_id', string='Account Currency', store=True, help="The related account currency if not equal to the company one.", readonly=True)
     amount_currency = fields.Monetary(related='move_id.amount_currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True)
+    analytic_amount_currency = fields.Monetary(string='Amount Currency', compute="_get_analytic_amount_currency", help="The amount expressed in the related account currency if not equal to the company one.", readonly=True)
     partner_id = fields.Many2one('res.partner', related='account_id.partner_id', string='Partner', store=True, readonly=True)
+
+    def _get_analytic_amount_currency(self):
+        for line in self:
+            line.analytic_amount_currency = abs(line.amount_currency) * copysign(1, line.amount)
 
     @api.v8
     @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')

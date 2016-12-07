@@ -434,7 +434,7 @@
           <span itemprop="price" style="display:none;" t-esc="product.price"/>
           <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
       </h4>
-      <h4 class="css_non_editable_mode_hidden">
+      <h4 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="product.currency_id.decimal_places">
         <span t-field="product.lst_price"
             t-field-options='{
                "widget": "monetary",
@@ -972,7 +972,7 @@
                       </div>
                   </div>
                   <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="contact_name">Your Name</label>
+                      <label class="control-label" for="name">Your Name</label>
                       <input type="text" name="name" class="form-control" t-att-value="checkout.get('name')"/>
                   </div>
                   <div t-if="has_check_vat" class="clearfix"/>
@@ -985,7 +985,7 @@
                       <input type="text" name="vat" class="form-control" t-att-value="checkout.get('vat')"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-lg-6">
-                      <label class="control-label" for="contact_name">Email</label>
+                      <label class="control-label" for="email">Email</label>
                       <input type="email" name="email" class="form-control" t-att-value="checkout.get('email')"/>
                   </div>
                   <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''} col-lg-6">
@@ -1311,7 +1311,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td></td><td></td>
+                                <td colspan="3"/>
                                 <td class="text-right"><strong>Total:</strong></td>
                                 <td class="text-right">
                                     <strong t-field="order.amount_total"

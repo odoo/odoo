@@ -11,6 +11,7 @@ var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
 var form_common = require('web.form_common');
+var framework = require('web.framework');
 var session = require('web.session');
 
 var _t = core._t;
@@ -841,7 +842,14 @@ var Chatter = form_common.AbstractField.extend({
     },
 
     load_more_messages: function () {
-        this.fetch_and_render_thread(this.msg_ids, {force_fetch: true});
+        var self = this;
+        var top_msg_id = this.$('.o_thread_message').first().data('messageId');
+        var top_msg_selector = '.o_thread_message[data-message-id="' + top_msg_id + '"]';
+        var offset = -framework.getPosition(document.querySelector(top_msg_selector)).top;
+        this.fetch_and_render_thread(this.msg_ids, {force_fetch: true}).then(function(){
+            offset += framework.getPosition(document.querySelector(top_msg_selector)).top;
+            self.thread.scroll_to({offset: offset});
+        });
     },
 
     /**

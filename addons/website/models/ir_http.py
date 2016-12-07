@@ -132,13 +132,12 @@ class ir_http(orm.AbstractModel):
             langs = [lg[0] for lg in request.website.get_languages()]
             path = request.httprequest.path.split('/')
             if first_pass:
+                is_a_bot = self.is_a_bot()
                 nearest_lang = not func and self.get_nearest_lang(path[1])
                 url_lang = nearest_lang and path[1]
                 preferred_lang = ((cook_lang if cook_lang in langs else False)
-                                  or self.get_nearest_lang(request.lang)
+                                  or (not is_a_bot and self.get_nearest_lang(request.lang))
                                   or request.website.default_lang_code)
-
-                is_a_bot = self.is_a_bot()
 
                 request.lang = request.context['lang'] = nearest_lang or preferred_lang
                 # if lang in url but not the displayed or default language --> change or remove
@@ -346,6 +345,7 @@ class PageConverter(werkzeug.routing.PathConverter):
         query = query and query.startswith('website.') and query[8:] or query
         if query:
             domain += [('key', 'like', query)]
+        domain += ['|', ('website_id', '=', request.website.id), ('website_id', '=', False)]
 
         views = View.search_read(cr, uid, domain, fields=['key', 'priority', 'write_date'], order='name', context=context)
         for view in views:
@@ -354,7 +354,7 @@ class PageConverter(werkzeug.routing.PathConverter):
             # when we will have an url mapping mechanism, replace this by a rule: page/homepage --> /
             if xid=='homepage': continue
             record = {'loc': xid}
-            if view['priority'] <> 16:
+            if view['priority'] != 16:
                 record['__priority'] = min(round(view['priority'] / 32.0,1), 1)
             if view['write_date']:
                 record['__lastmod'] = view['write_date'][:10]

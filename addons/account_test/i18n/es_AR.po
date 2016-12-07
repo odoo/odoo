@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2015-11-02 21:26+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-11-07 17:01+0000\n"
+"Last-Translator: Gonzalo Ruzafa <gr@ingadhoc.com>\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/odoo/odoo-9/language/es_AR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,53 +34,53 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr "Pruebas contables"
+msgstr ""
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "Accouting tests on"
-msgstr "Pruebas de contabilidad en"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_active
 msgid "Active"
-msgstr "Activo"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
-msgstr "Comprobar si las líneas del movimiento están compensadas y tienen la misma fecha y periodo"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
 msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
-msgstr "Comprobar en los extractos bancarios que el saldo de cierre sea = saldo de inicio + la suma de las líneas del extracto"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
-msgstr "Comprobar que las facturas pagadas/conciliadas no están en estado 'Abierto'"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
 msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
-msgstr "Comprobar que los apuntes contables conciliados que definen cuentas a cobrar y a pagar pertenecen a facturas conciliadas"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for"
 " Payable and Receivable Accounts"
-msgstr "Comprobar que la factura conciliada para ventas/compras tiene apuntes conciliados para las cuentas a cobrar y a pagar"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr "Comprobar el saldo: suma del debe = suma del haber"
+msgstr ""
 
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
@@ -90,7 +90,7 @@ msgstr ""
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Code Help"
-msgstr "Ayuda del código"
+msgstr ""
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -115,96 +115,96 @@ msgid ""
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
-msgstr "El código siempre debe establecer una variable llamada 'result' con el resultado de la prueba, que puede ser una lista o un diccionario. Si 'result' es una lista vacía, significa que la prueba ha sido satisfactoria. En caso contrario, se tratará de traducir e imprimir lo que hay dentro de 'result'.\n\nSi el resultado de la prueba es un diccionario, se puede establecer una variable llamada 'column_order' para elegir en qué orden se quieren imprimir el contenido de 'result'.\n\nEn caso de necesitarlas, se pueden usar las siguientes variables en el código:\n    * cr: cursor a la base de datos\n    * uid: id. del usuario actual\n\nEn cualquier caso, el código debe ser sentencias Python legales con correcta indentación (si fuera necesario).\n\nEjemplo: \n    sql = '''SELECT id, name, ref, date\n             FROM account_move_line \n             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n          '''\n    cr.execute(sql)\n    result = cr.dictfetchall()"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
 msgid "Created by"
-msgstr "Creado por"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_date
 msgid "Created on"
-msgstr "Creado en"
+msgstr ""
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Description"
-msgstr "Descripción"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_display_name
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_display_name
 msgid "Display Name"
-msgstr "Mostrar Nombre"
+msgstr ""
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Expression"
-msgstr "Expresión"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_id
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test___last_update
 #: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest___last_update
 msgid "Last Modified on"
-msgstr "Última modificación en"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_uid
 msgid "Last Updated by"
-msgstr "Última actualización realizada por"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_date
 msgid "Last Updated on"
-msgstr "Última actualización el"
+msgstr ""
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Python Code"
-msgstr "Código Python"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_code_exec
 msgid "Python code"
-msgstr "Código Python"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_sequence
 msgid "Sequence"
-msgstr "Secuencia"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr "Prueba 1: Balance general"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr "Prueba 3: Líneas de movimiento"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
-msgstr "Prueba 5.1 : Líneas de contabilidad a cobrar y a pagar de facturas no conciliadas"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
-msgstr "Prueba 5.2 : Facturas conciliadas y cuentas a cobrar/a pagar"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
 msgid "Test 6 : Invoices status"
-msgstr "Prueba 6: Estado de las facturas"
+msgstr ""
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
@@ -214,24 +214,24 @@ msgstr ""
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_desc
 msgid "Test Description"
-msgstr "Descripción de la prueba"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_name
 msgid "Test Name"
-msgstr "Nombre de Prueba"
+msgstr ""
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 #: model:ir.ui.view,arch_db:account_test.account_assert_tree
 msgid "Tests"
-msgstr "Tests"
+msgstr ""
 
 #. module: account_test
 #: code:addons/account_test/report/account_test_report.py:49
 #, python-format
 msgid "The test was passed successfully"
-msgstr "La prueba fue superada satisfactoriamente"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_accounting_assert_test

@@ -280,7 +280,7 @@ var ScaleScreenWidget = ScreenWidget.extend({
             return self.pos.proxy.scale_read().then(function(weight){
                 self.set_weight(weight.weight);
             });
-        },{duration:50, repeat: true});
+        },{duration:150, repeat: true});
 
     },
     get_product: function(){
@@ -1813,11 +1813,9 @@ var PaymentScreenWidget = ScreenWidget.extend({
             self.$('.next').removeClass('highlight');
         }
     },
-    // Check if the order is paid, then sends it to the backend,
-    // and complete the sale process
-    validate_order: function(force_validation) {
-        var self = this;
 
+    order_is_valid: function(force_validation) {
+        var self = this;
         var order = this.pos.get_order();
 
         // FIXME: this check is there because the backend is unable to
@@ -1827,22 +1825,22 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 'title': _t('Empty Order'),
                 'body':  _t('There must be at least one product in your order before it can be validated'),
             });
-            return;
+            return false;
         }
 
         var plines = order.get_paymentlines();
         for (var i = 0; i < plines.length; i++) {
             if (plines[i].get_type() === 'bank' && plines[i].get_amount() < 0) {
-                this.pos_widget.screen_selector.show_popup('error',{
+                this.gui.show_popup('error',{
                     'message': _t('Negative Bank Payment'),
                     'comment': _t('You cannot have a negative amount in a Bank payment. Use a cash payment method to return money to the customer.'),
                 });
-                return;
+                return false;
             }
         }
 
         if (!order.is_paid() || this.invoicing) {
-            return;
+            return false;
         }
 
         // The exact amount must be paid if there is no cash payment method defined.
@@ -1856,7 +1854,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                     title: _t('Cannot return change without a cash payment method'),
                     body:  _t('There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale configuration'),
                 });
-                return;
+                return false;
             }
         }
 
@@ -1877,8 +1875,15 @@ var PaymentScreenWidget = ScreenWidget.extend({
                     self.validate_order('confirm');
                 },
             });
-            return;
+            return false;
         }
+
+        return true;
+    },
+
+    finalize_validation: function() {
+        var self = this;
+        var order = this.pos.get_order();
 
         if (order.is_paid_with_cash() && this.pos.config.iface_cashdrawer) { 
 
@@ -1926,6 +1931,14 @@ var PaymentScreenWidget = ScreenWidget.extend({
         } else {
             this.pos.push_order(order);
             this.gui.show_screen('receipt');
+        }
+    },
+
+    // Check if the order is paid, then sends it to the backend,
+    // and complete the sale process
+    validate_order: function(force_validation) {
+        if (this.order_is_valid(force_validation)) {
+            this.finalize_validation();
         }
     },
 });

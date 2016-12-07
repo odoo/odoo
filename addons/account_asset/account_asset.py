@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import calendar
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
 from openerp import api, fields, models, _
 from openerp.exceptions import UserError, ValidationError
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
-from openerp.tools import float_compare
+from openerp.tools import float_compare, float_is_zero
 
 
 class AccountAssetCategory(models.Model):
@@ -129,14 +130,26 @@ class AccountAssetAsset(models.Model):
                 if self.prorata:
                     amount = amount_to_depr / self.method_number
                     if sequence == 1:
-                        days = (self.company_id.compute_fiscalyear_dates(depreciation_date)['date_to'] - depreciation_date).days + 1
-                        amount = (amount_to_depr / self.method_number) / total_days * days
+                        if self.method_period % 12 != 0:
+                            date = datetime.strptime(self.date, '%Y-%m-%d')
+                            month_days = calendar.monthrange(date.year, date.month)[1]
+                            days = month_days - date.day + 1
+                            amount = (amount_to_depr / self.method_number) / month_days * days
+                        else:
+                            days = (self.company_id.compute_fiscalyear_dates(depreciation_date)['date_to'] - depreciation_date).days + 1
+                            amount = (amount_to_depr / self.method_number) / total_days * days
             elif self.method == 'degressive':
                 amount = residual_amount * self.method_progress_factor
                 if self.prorata:
                     if sequence == 1:
-                        days = (self.company_id.compute_fiscalyear_dates(depreciation_date)['date_to'] - depreciation_date).days + 1
-                        amount = (residual_amount * self.method_progress_factor) / total_days * days
+                        if self.method_period % 12 != 0:
+                            date = datetime.strptime(self.date, '%Y-%m-%d')
+                            month_days = calendar.monthrange(date.year, date.month)[1]
+                            days = month_days - date.day + 1
+                            amount = (residual_amount * self.method_progress_factor) / month_days * days
+                        else:
+                            days = (self.company_id.compute_fiscalyear_dates(depreciation_date)['date_to'] - depreciation_date).days + 1
+                            amount = (residual_amount * self.method_progress_factor) / total_days * days
         return amount
 
     def _compute_board_undone_dotation_nb(self, depreciation_date, total_days):
@@ -164,7 +177,12 @@ class AccountAssetAsset(models.Model):
         if self.value_residual != 0.0:
             amount_to_depr = residual_amount = self.value_residual
             if self.prorata:
-                depreciation_date = datetime.strptime(self._get_last_depreciation_date()[self.id], DF).date()
+                # if we already have some previous validated entries, starting date is last entry + method period
+                if posted_depreciation_line_ids and posted_depreciation_line_ids[-1].depreciation_date:
+                    last_depreciation_date = datetime.strptime(posted_depreciation_line_ids[-1].depreciation_date, DF).date()
+                    depreciation_date = last_depreciation_date + relativedelta(months=+self.method_period)
+                else:
+                    depreciation_date = datetime.strptime(self._get_last_depreciation_date()[self.id], DF).date()
             else:
                 # depreciation_date = 1st of January of purchase year if annual valuation, 1st of
                 # purchase month in other cases
@@ -189,6 +207,8 @@ class AccountAssetAsset(models.Model):
                 sequence = x + 1
                 amount = self._compute_board_amount(sequence, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date)
                 amount = self.currency_id.round(amount)
+                if float_is_zero(amount, precision_rounding=self.currency_id.rounding):
+                    continue
                 residual_amount -= amount
                 vals = {
                     'amount': amount,
@@ -378,7 +398,7 @@ class AccountAssetAsset(models.Model):
             'res_model': 'account.move',
             'view_id': False,
             'type': 'ir.actions.act_window',
-            'context': dict(self.env.context or {}, search_default_asset_id=self.id, default_asset_id=self.id),
+            'context': dict(search_default_asset_id=self.id, default_asset_id=self.id),
         }
 
 

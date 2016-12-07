@@ -49,7 +49,7 @@ class AccountInvoice(models.Model):
         self.amount_total = self.amount_untaxed + self.amount_tax
         amount_total_company_signed = self.amount_total
         amount_untaxed_signed = self.amount_untaxed
-        if self.currency_id and self.currency_id != self.company_id.currency_id:
+        if self.currency_id and self.company_id and self.currency_id != self.company_id.currency_id:
             currency_id = self.currency_id.with_context(date=self.date_invoice)
             amount_total_company_signed = currency_id.compute(self.amount_total, self.company_id.currency_id)
             amount_untaxed_signed = currency_id.compute(self.amount_untaxed, self.company_id.currency_id)
@@ -560,6 +560,14 @@ class AccountInvoice(models.Model):
             'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
             'account_id': self.type in ('out_invoice', 'in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id),
         }
+
+        # If the taxes generate moves on the same financial account as the invoice line,
+        # propagate the analytic account from the invoice line to the tax line.
+        # This is necessary in situations were (part of) the taxes cannot be reclaimed,
+        # to ensure the tax move is allocated to the proper analytic account.
+        if not vals.get('account_analytic_id') and line.account_analytic_id and vals['account_id'] == line.account_id.id:
+            vals['account_analytic_id'] = line.account_analytic_id.id
+
         return vals
 
     @api.multi
@@ -570,14 +578,6 @@ class AccountInvoice(models.Model):
             taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id)['taxes']
             for tax in taxes:
                 val = self._prepare_tax_line_vals(line, tax)
-
-                # If the taxes generate moves on the same financial account as the invoice line,
-                # propagate the analytic account from the invoice line to the tax line.
-                # This is necessary in situations were (part of) the taxes cannot be reclaimed,
-                # to ensure the tax move is allocated to the proper analytic account.
-                if not val.get('account_analytic_id') and line.account_analytic_id and val['account_id'] == line.account_id.id:
-                    val['account_analytic_id'] = line.account_analytic_id.id
-
                 key = self.env['account.tax'].browse(tax['id']).get_grouping_key(val)
 
                 if key not in tax_grouped:
@@ -1103,7 +1103,7 @@ class AccountInvoiceLine(models.Model):
         if self.invoice_line_tax_ids:
             taxes = self.invoice_line_tax_ids.compute_all(price, currency, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
         self.price_subtotal = price_subtotal_signed = taxes['total_excluded'] if taxes else self.quantity * price
-        if self.invoice_id.currency_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
+        if self.invoice_id.currency_id and self.invoice_id.company_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
             price_subtotal_signed = self.invoice_id.currency_id.compute(price_subtotal_signed, self.invoice_id.company_id.currency_id)
         sign = self.invoice_id.type in ['in_refund', 'out_refund'] and -1 or 1
         self.price_subtotal_signed = price_subtotal_signed * sign

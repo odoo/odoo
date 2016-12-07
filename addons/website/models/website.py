@@ -157,7 +157,7 @@ class website(osv.osv):
         'domain': fields.char('Website Domain'),
         'company_id': fields.many2one('res.company', string="Company"),
         'language_ids': fields.many2many('res.lang', 'website_lang_rel', 'website_id', 'lang_id', 'Languages'),
-        'default_lang_id': fields.many2one('res.lang', string="Default language"),
+        'default_lang_id': fields.many2one('res.lang', string="Default language", required=True),
         'default_lang_code': fields.related('default_lang_id', 'code', type="char", string="Default language code", store=True),
         'social_twitter': fields.char('Twitter Account'),
         'social_facebook': fields.char('Facebook Account'),
@@ -553,12 +553,12 @@ class website(osv.osv):
 
     def search_pages(self, cr, uid, ids, needle=None, limit=None, context=None):
         name = re.sub(r"^/p(a(g(e(/(w(e(b(s(i(t(e(\.)?)?)?)?)?)?)?)?)?)?)?)?", "", needle or "")
+        name = slugify(name, max_length=50)
         res = []
         for page in self.enumerate_pages(cr, uid, ids, query_string=name, context=context):
-            if needle in page['loc']:
-                res.append(page)
-                if len(res) == limit:
-                    break
+            res.append(page)
+            if len(res) == limit:
+                break
         return res
 
     def image_url(self, cr, uid, record, field, size=None, context=None):

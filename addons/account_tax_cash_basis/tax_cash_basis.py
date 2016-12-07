@@ -52,8 +52,9 @@ class AccountPartialReconcileCashBasis(models.Model):
                 #TOCHECK: normal and cash basis taxes shoudn't be mixed together (on the same invoice line for example) as it will
                 #create reporting issues. Not sure of the behavior to implement in that case, though.
                 # amount to write is the current cash_basis amount minus the one before the reconciliation
+                currency_id = line.currency_id or line.company_id.currency_id
                 matched_percentage = value_before_reconciliation[move.id]
-                amount = (line.credit_cash_basis - line.debit_cash_basis) - (line.credit - line.debit) * matched_percentage
+                amount = currency_id.round((line.credit_cash_basis - line.debit_cash_basis) - (line.credit - line.debit) * matched_percentage)
                 if not self._check_tax_exigible(line):
                     if line.tax_line_id and line.tax_line_id.use_cash_basis:
                         # group by line account
@@ -73,15 +74,15 @@ class AccountPartialReconcileCashBasis(models.Model):
                         for tax in line.tax_ids:
                             line_to_create.append((0, 0, {
                                 'name': '/',
-                                'debit': line.debit_cash_basis - line.debit * matched_percentage,
-                                'credit': line.credit_cash_basis - line.credit * matched_percentage,
+                                'debit': currency_id.round(line.debit_cash_basis - line.debit * matched_percentage),
+                                'credit': currency_id.round(line.credit_cash_basis - line.credit * matched_percentage),
                                 'account_id': line.account_id.id,
                                 'tax_ids': [(6, 0, [tax.id])],
                                 }))
                             line_to_create.append((0, 0, {
                                 'name': '/',
-                                'credit': line.debit_cash_basis - line.debit * matched_percentage,
-                                'debit': line.credit_cash_basis - line.credit * matched_percentage,
+                                'credit': currency_id.round(line.debit_cash_basis - line.debit * matched_percentage),
+                                'debit': currency_id.round(line.credit_cash_basis - line.credit * matched_percentage),
                                 'account_id': line.account_id.id,
                                 }))
 

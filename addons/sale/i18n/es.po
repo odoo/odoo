@@ -10,14 +10,17 @@
 # Daniel Santibáñez Polanco <dansanti@gmail.com>, 2016
 # Denis Ledoux <dle@odoo.com>, 2016
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2015
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2016
+# Nacho Muñoz Rodríguez <nacmuro@gmail.com>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Rafael Blasco <rafabn@antiun.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:44+0000\n"
-"PO-Revision-Date: 2016-10-17 18:56+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>\n"
+"PO-Revision-Date: 2016-11-24 09:32+0000\n"
+"Last-Translator: Nacho Muñoz Rodríguez <nacmuro@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +89,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr ""
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n\n    <p>Hola ${object.partner_id.name},</p>\n    \n    <p>Aquí está su ${object.state in ('draft', 'sent') and 'presupuesto' or 'confirmación del pedido'} de ${object.company_id.name}: </p>\n\n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENCIAS</strong><br />\n       &nbsp;&nbsp;Pedido Número: <strong>${object.name}</strong><br />\n       &nbsp;&nbsp;Total del pedido: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Fecha pedido:  ${format_tz(object.date_order, tz=user.tz, context={'lang':object.partner_id.lang})} <br />\n       % if object.origin:\n       &nbsp;&nbsp;Referencia del pedido: ${object.origin}<br />\n       % endif\n       % if object.client_order_ref:\n       &nbsp;&nbsp;Su referencia: ${object.client_order_ref}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Su contacto: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n       % endif\n    </p>\n\n    % if object.paypal_url:\n    <br/>\n    <p>También es posible el pago directo con Paypal:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n\n    <br/>\n    <p>No dude en contactar con nosotros ante cualquier duda.</p>\n    <p>Gracias por elegir a ${object.company_id.name or 'us'}!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Teléfono:&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
@@ -131,7 +134,7 @@ msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'b
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} ${object.state in ('draft', 'sent') and 'Presupuesto' or 'Pedido'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -557,33 +560,33 @@ msgstr "Realizado"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:70
 #, python-format
 msgid "Down Payment"
-msgstr "Depósito"
+msgstr "Pago anticipado"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_amount
 msgid "Down Payment Amount"
-msgstr "Cantidad del Depósito"
+msgstr "Cantidad de pago anticipado"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_product_id
 msgid "Down Payment Product"
-msgstr "Producto de Depósito"
+msgstr "Producto de pago anticipado"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (fixed amount)"
-msgstr "Depósito (cantidad fija)"
+msgstr "Pago anticipado (cantidad fija)"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (percentage)"
-msgstr "Depósito (porcentaje)"
+msgstr "Pago anticipado (porcentaje)"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:67
 #, python-format
 msgid "Down payment of %s%%"
-msgstr "Depósito de %s%%"
+msgstr "Pago anticipado de %s%%"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -793,7 +796,7 @@ msgstr "Líneas de factura"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines (deduct down payments)"
-msgstr "Líneas a facturar (deducir pagos por adelantado)"
+msgstr "Líneas a facturar (deducir pagos anticipados)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_invoiced
@@ -1650,7 +1653,7 @@ msgstr "Los informes impresos mostrarán los incoterms para los pedidos de venta
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
-msgstr "El producto usado para facturar un adelanto de pago debe de ser de tipo 'Servicio'. Por favor use otro producto o actualice éste."
+msgstr "El producto usado para facturar un pago anticipado debe de ser de tipo 'Servicio'. Por favor use otro producto o actualice éste."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:122
@@ -1659,13 +1662,13 @@ msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
-msgstr "El producto usado para facturar un adelanto de pago debe tener una política de facturación configurada como \"Cantidad pedida\". Por favor actualice su producto para poder crear la factura de depósito."
+msgstr "El producto usado para facturar un pago anticipado debe tener una política de facturación configurada como \"Cantidad pedida\". Por favor actualice su producto para poder crear la factura de anticipo."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:64
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr "El valor del importe por adelantado debe ser positivo."
+msgstr "El valor del importe del pago anticipado debe ser positivo."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:60
@@ -1691,7 +1694,7 @@ msgstr "Este año"
 msgid ""
 "This progress bar shows the stages your quotation will go through.\n"
 "                Use buttons on the left to move forward to the next stages."
-msgstr ""
+msgstr "Esta barra de progreso muestra las etapas de su presupuesto.\nUtilice los botones de la izquierda para avanzar a las siguientes etapas."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -1798,7 +1801,7 @@ msgstr "Base imponible"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
 msgid "Untaxed Total Price"
-msgstr ""
+msgstr "Precio Total sin Impuestos"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1863,7 +1866,7 @@ msgstr "Valor introducido no válido"
 msgid ""
 "You can not remove a sale order line.\n"
 "Discard changes and try setting the quantity to 0."
-msgstr "No puede eliminar una línea de peido de venta.\nDescarte los cambios e intente establecer la cantidad a 0."
+msgstr "No puede eliminar una línea de pedido de venta.\nDescarte los cambios e intente establecer la cantidad a 0."
 
 #. module: sale
 #: code:addons/sale/sale.py:153

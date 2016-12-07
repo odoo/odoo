@@ -9,7 +9,7 @@ import threading
 import urlparse
 
 import openerp
-from openerp import tools, api
+from openerp import tools, api, SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.osv.expression import get_unaccent_wrapper
 from openerp.tools.translate import _
@@ -506,8 +506,12 @@ class res_partner(osv.Model, format_address):
         elif 'is_company' in vals:
             vals['company_type'] = is_company and 'company' or 'person'
         tools.image_resize_images(vals)
-
-        result = super(res_partner, self).write(vals)
+        result = True
+        #To write in SUPERUSER on field is_company and avoid access rights problems.
+        if 'is_company' in vals and self.user_has_groups('base.group_partner_manager') and not self.env.uid == SUPERUSER_ID:
+            result = super(res_partner, self).sudo().write({'is_company': vals.get('is_company')})
+            del vals['is_company']
+        result = result and super(res_partner, self).write(vals)
         for partner in self:
             if any(u.has_group('base.group_user') for u in partner.user_ids if u != self.env.user):
                 self.env['res.users'].check_access_rights('write')

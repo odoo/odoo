@@ -351,7 +351,7 @@ class AccountBankStatement(models.Model):
 class AccountBankStatementLine(models.Model):
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
-    _order = "statement_id desc, sequence"
+    _order = "statement_id desc, sequence, id desc"
     _inherit = ['ir.needaction_mixin']
 
     name = fields.Char(string='Memo', required=True)
@@ -471,7 +471,7 @@ class AccountBankStatementLine(models.Model):
                 'details': {
                     'name': _("Automatically reconciled items"),
                     'model': 'account.move',
-                    'ids': automatic_reconciliation_entries.ids
+                    'ids': automatic_reconciliation_entries.mapped('journal_entry_ids').ids
                 }
             }]
         return {
@@ -644,8 +644,9 @@ class AccountBankStatementLine(models.Model):
         # Look for a single move line with the same amount
         field = currency and 'amount_residual_currency' or 'amount_residual'
         liquidity_field = currency and 'amount_currency' or amount > 0 and 'debit' or 'credit'
+        liquidity_amt_clause = currency and '%(amount)s' or 'abs(%(amount)s)'
         sql_query = self._get_common_sql_query(excluded_ids=excluded_ids) + \
-                " AND ("+field+" = %(amount)s OR (acc.internal_type = 'liquidity' AND "+liquidity_field+" = %(amount)s)) \
+                " AND ("+field+" = %(amount)s OR (acc.internal_type = 'liquidity' AND "+liquidity_field+" = " + liquidity_amt_clause + ")) \
                 ORDER BY date_maturity asc, aml.id asc LIMIT 1"
         self.env.cr.execute(sql_query, params)
         results = self.env.cr.fetchone()
@@ -920,7 +921,22 @@ class AccountBankStatementLine(models.Model):
                     aml_dict['currency_id'] = statement_currency.id
 
             # Create write-offs
+            # When we register a payment on an invoice, the write-off line contains the amount
+            # currency if all related invoices have the same currency. We apply the same logic in
+            # the manual reconciliation.
+            counterpart_aml = self.env['account.move.line']
+            for aml_dict in counterpart_aml_dicts:
+                counterpart_aml |= aml_dict.get('move_line', self.env['account.move.line'])
+            new_aml_currency = False
+            if counterpart_aml\
+                    and len(counterpart_aml.mapped('currency_id')) == 1\
+                    and counterpart_aml[0].currency_id\
+                    and counterpart_aml[0].currency_id != company_currency:
+                new_aml_currency = counterpart_aml[0].currency_id
             for aml_dict in new_aml_dicts:
+                if new_aml_currency and not aml_dict.get('currency_id'):
+                    aml_dict['currency_id'] = new_aml_currency.id
+                    aml_dict['amount_currency'] = company_currency.with_context(ctx).compute(aml_dict['debit'] - aml_dict['credit'], new_aml_currency)
                 aml_obj.with_context(check_move_validity=False).create(aml_dict)
 
             # Create counterpart move lines and reconcile them
