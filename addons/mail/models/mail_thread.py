@@ -2047,6 +2047,10 @@ class MailThread(models.AbstractModel):
         """
         if not partner_ids:
             return
+
+        if self.env.context.get('mail_auto_subscribe_no_notify'):
+            return
+
         for record in self:
             record.message_post_with_view(
                 'mail.message_user_assigned',
