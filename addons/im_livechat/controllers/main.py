@@ -105,3 +105,10 @@ class LivechatController(http.Controller):
                 rating.write(values)
             return rating.id
         return False
+
+    @http.route('/im_livechat/history', type="json", auth="public")
+    def history_pages(self, pid, channel_uuid, page_history=None):
+        channel = request.env['mail.channel'].search([('uuid', '=', channel_uuid)])
+        if channel:
+            channel._send_history_message(pid, page_history)
+        return True
