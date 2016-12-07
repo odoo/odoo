@@ -573,6 +573,7 @@ class IrActionsServer(models.Model):
     def run_action_followers(self, action, eval_context=None):
         model = action.model_id.model
         ref_id = self._context.get('active_id')
+        records = self.env[model].browse(ref_id)
         if self.act_followers and hasattr(records, 'message_subscribe'):
             followers = self.env['mail.followers'].sudo().search(
                 [('res_model', '=', model),
@@ -581,7 +582,7 @@ class IrActionsServer(models.Model):
                  ]
             )
             if not len(followers) == len(self.act_followers):
-                self.env[model].message_subscribe(self.act_followers.ids)
+                records.message_subscribe(self.act_followers.ids)
 
     @api.model
     def run_action_write(self, action, eval_context=None):
