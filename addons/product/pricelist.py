@@ -406,6 +406,7 @@ class product_pricelist_version(osv.osv):
         'company_id': fields.related('pricelist_id','company_id',type='many2one',
             readonly=True, relation='res.company', string='Company', store={
                 'product.pricelist': (_get_product_pricelist, ['company_id'], 20),
+                'product.pricelist.version': (lambda self, cr, uid, ids, c=None: ids, ['pricelist_id'], 20),
             })
     }
     _defaults = {
@@ -507,6 +508,13 @@ class product_pricelist_item(osv.osv):
                     result.add(item_id.id)
         return list(result)
 
+    def _get_product_pricelist_version(self, cr, uid, ids, context=None):
+        result = set()
+        for version in self.pool['product.pricelist.version'].browse(cr, uid, ids, context=context):
+            for item_id in version.items_id:
+                result.add(item_id.id)
+        return list(result)
+
     _columns = {
         'name': fields.char('Rule Name', help="Explicit rule name for this pricelist line."),
         'price_version_id': fields.many2one('product.pricelist.version', 'Price List Version', required=True, select=True, ondelete='cascade'),
@@ -538,6 +546,8 @@ class product_pricelist_item(osv.osv):
         'company_id': fields.related('price_version_id','company_id',type='many2one',
             readonly=True, relation='res.company', string='Company', store={
                 'product.pricelist': (_get_product_pricelist, ['company_id'], 30),
+                'product.pricelist.version': (_get_product_pricelist_version, ['pricelist_id'], 30),
+                'product.pricelist.item': (lambda self, cr, uid, ids, c=None: ids, ['price_version_id'], 30),
             })
     }
 

@@ -746,8 +746,11 @@ class BaseModel(object):
         cls = type(self)
         methods = []
         for attr, func in getmembers(cls, is_constraint):
-            if not all(name in cls._fields for name in func._constrains):
-                _logger.warning("@constrains%r parameters must be field names", func._constrains)
+            for name in func._constrains:
+                if name not in cls._fields:
+                    _logger.warning("method %s.%s: @constrains parameter %r is not a field name", cls._name, attr, name)
+                if not cls._fields[name].store:
+                    _logger.warning("method %s.%s: @constrains parameter %r is not stored", cls._name, attr, name)
             methods.append(func)
 
         # optimization: memoize result on cls, it will not be recomputed

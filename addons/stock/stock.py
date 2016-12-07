@@ -3970,7 +3970,6 @@ class stock_package(osv.osv):
         context = dict(context or {}, active_ids=ids)
         return self.pool.get("report").get_action(cr, uid, ids, 'stock.report_package_barcode_small', context=context)
     
-    
     def unpack(self, cr, uid, ids, context=None):
         quant_obj = self.pool.get('stock.quant')
         for package in self.browse(cr, uid, ids, context=context):
@@ -3978,8 +3977,6 @@ class stock_package(osv.osv):
             quant_obj.write(cr, SUPERUSER_ID, quant_ids, {'package_id': package.parent_id.id or False}, context=context)
             children_package_ids = [child_package.id for child_package in package.children_ids]
             self.write(cr, uid, children_package_ids, {'parent_id': package.parent_id.id or False}, context=context)
-        #delete current package since it contains nothing anymore
-        self.unlink(cr, uid, ids, context=context)
         return self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'stock', 'action_package_view', context=context)
 
     def get_content(self, cr, uid, ids, context=None):
