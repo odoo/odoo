@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 9.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-09 11:58+0000\n"
-"PO-Revision-Date: 2016-06-09 11:58+0000\n"
+"POT-Creation-Date: 2016-12-07 10:39+0000\n"
+"PO-Revision-Date: 2016-12-07 10:39+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -462,12 +462,18 @@ msgid "Unable to find Wkhtmltopdf on this \n"
 msgstr ""
 
 #. module: report
+#: code:addons/report/models/report.py:164
+#, python-format
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
+msgstr ""
+
+#. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "Website:"
 msgstr ""
 
 #. module: report
-#: code:addons/report/models/report.py:430
+#: code:addons/report/models/report.py:464
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr ""

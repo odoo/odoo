@@ -155,6 +155,14 @@ class Report(osv.Model):
     def get_pdf(self, cr, uid, ids, report_name, html=None, data=None, context=None):
         """This method generates and returns pdf version of a report.
         """
+
+        if self._check_wkhtmltopdf() == 'install':
+            # wkhtmltopdf is not installed
+            # the call should be catched before (cf /report/check_wkhtmltopdf) but
+            # if get_pdf is called manually (email template), the check could be
+            # bypassed
+            raise UserError(_("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
+
         if context is None:
             context = {}
 
