@@ -159,7 +159,7 @@ class project(osv.osv):
         cr.execute("""
             SELECT project_id, COALESCE(SUM(planned_hours), 0.0),
                 COALESCE(SUM(total_hours), 0.0), COALESCE(SUM(effective_hours), 0.0)
-            FROM project_task WHERE project_id IN %s AND state <> 'cancelled'
+            FROM project_task WHERE project_id IN %s
             GROUP BY project_id
             """, (tuple(child_parent.keys()),))
         # aggregate results into res
@@ -323,7 +323,8 @@ class project(osv.osv):
     ]
 
     def set_template(self, cr, uid, ids, context=None):
-        res = self.setActive(cr, uid, ids, value=False, context=context)
+        ctx = dict(context or {}, template=True)
+        res = self.setActive(cr, uid, ids, value=False, context=ctx)
         return res
 
     def set_done(self, cr, uid, ids, context=None):
@@ -355,8 +356,11 @@ class project(osv.osv):
         task_obj = self.pool.get('project.task')
         proj = self.browse(cr, uid, old_project_id, context=context)
         for task in proj.tasks:
-            map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, {}, context=context)
-        self.write(cr, uid, [new_project_id], {'tasks':[(6,0, map_task_id.values())]})
+            if task.id in context.get('phase_tasks', []):
+                continue
+            map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, {'project_id': False}, context=context)
+        for task_id in map_task_id.values():
+            self.write(cr, uid, [new_project_id], {'tasks':[(4, task_id)]})
         task_obj.duplicate_task(cr, uid, map_task_id, context=context)
         return True
 
@@ -367,6 +371,7 @@ class project(osv.osv):
             default = {}
 
         context['active_test'] = False
+        context['project_copy'] = True
         default['state'] = 'open'
         default['line_ids'] = []
         default['tasks'] = []
@@ -435,9 +440,13 @@ class project(osv.osv):
 
     # set active value for a project, its sub projects and its tasks
     def setActive(self, cr, uid, ids, value=True, context=None):
+        if context is None : context = {}
         task_obj = self.pool.get('project.task')
         for proj in self.browse(cr, uid, ids, context=None):
             self.write(cr, uid, [proj.id], {'state': value and 'open' or 'template'}, context)
+            #if it's template then no need to deactivate tasks
+            if context.get('template'):
+                continue
             cr.execute('select id from project_task where project_id=%s', (proj.id,))
             tasks_id = [x[0] for x in cr.fetchall()]
             if tasks_id:
@@ -727,8 +736,11 @@ class task(base_stage, osv.osv):
         if not default.get('remaining_hours', False):
             default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
         default['active'] = True
+        task_name = self.browse(cr, uid, id, context=context).name
+        if context.get('project_copy'):
+            default['name'] = task_name
         if not default.get('name', False):
-            default['name'] = self.browse(cr, uid, id, context=context).name or ''
+            default['name'] = task_name or ''
             if not context.get('copy',False):
                 new_name = _("%s (copy)") % (default.get('name', ''))
                 default.update({'name':new_name})
@@ -750,7 +762,8 @@ class task(base_stage, osv.osv):
         for task in self.browse(cr, uid, ids, context=context):
             res[task.id] = True
             if task.project_id:
-                if task.project_id.active == False or task.project_id.state == 'template':
+                #deactivate task only when project is deactivated
+                if not task.project_id.active:
                     res[task.id] = False
         return res
 

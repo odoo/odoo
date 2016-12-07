@@ -55,6 +55,13 @@
   !assert {model: project.task, id: project_task_1, severity: error, string: task should be reevaluated}:
     - remaining_hours == 120.0
 -
+  I check delegated task and close it before closing parent task
+-
+  !python {model: project.task}: |
+    delegated_tasks = self.browse(cr, uid, ref("project_task_1")).child_ids
+    delegate_task_ids = [task.id for task in delegated_tasks]
+    self.action_close(cr, uid, delegate_task_ids)
+-
   I close the task.
 -
   !python {model: project.task}: |

@@ -136,8 +136,11 @@ class project_phase(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
+        phase_name = self.browse(cr, uid, id, context=context).name
+        if context.get('project_copy'):
+            default['name'] = phase_name
         if not default.get('name', False):
-            default.update(name=_('%s (copy)') % (self.browse(cr, uid, id, context=context).name))
+            default.update(name=_('%s (copy)') % (phase_name))
         return super(project_phase, self).copy(cr, uid, id, default, context)
 
     def set_draft(self, cr, uid, ids, *args):
@@ -227,6 +230,43 @@ class project(osv.osv):
         'phase_ids': fields.one2many('project.phase', 'project_id', "Project Phases"),
         'phase_count': fields.function(_phase_count, type='integer', string="Open Phases"),
     }
+
+    def map_tasks(self, cr, uid, old_project_id, new_project_id, context=None):
+        """ copy and map phases from old to new project """
+        if context is None: context = {}
+        map_phase_id = {}
+        phase_tasks = []
+        phase_obj = self.pool.get('project.phase')
+        proj = self.browse(cr, uid, old_project_id, context=context)
+        cntx = dict(context)
+        cntx.update(no_project_reference=True)
+        for phase in proj.phase_ids:
+            phase_tasks.extend([task.id for task in phase.task_ids])
+            map_phase_id[phase.id] = phase_obj.copy(cr, uid, phase.id, {}, context=cntx)
+
+        task_ids = [task.id for phase in phase_obj.browse(cr, uid, map_phase_id.values()) if phase.task_ids for task in phase.task_ids]
+        self.write(cr, uid, [new_project_id],
+                {'tasks': [(6, 0, task_ids)],
+                 'phase_ids': [(6, 0, map_phase_id.values())]
+                })
+        context.update(phase_tasks=phase_tasks)
+        old_proj_phase_ids = [old_proj_phase.id for old_proj_phase in proj.phase_ids]
+        for new_phase in self.browse(cr, uid, new_project_id, context=context).phase_ids:
+            for next_phase in new_phase.next_phase_ids:
+                if next_phase.id in old_proj_phase_ids:
+                    #remove the wrong next reference from old project
+                    phase_obj.write(cr, uid, [new_phase.id], {'next_phase_ids': [(3, next_phase.id)]})
+            for prev_phase in new_phase.previous_phase_ids:
+                if prev_phase.id in old_proj_phase_ids:
+                    #remove the wrong previous reference from old project
+                    phase_obj.write(cr, uid, [new_phase.id], {'previous_phase_ids': [(3, prev_phase.id)]})
+        return super(project, self).map_tasks(cr, uid, old_project_id, new_project_id, context=context)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default['phase_ids'] = []
+        return super(project, self).copy(cr, uid, id, default, context)
 
     def schedule_phases(self, cr, uid, ids, context=None):
         context = context or {}
@@ -333,6 +373,14 @@ class project_task(osv.osv):
     _columns = {
         'phase_id': fields.many2one('project.phase', 'Project Phase', domain="[('project_id', '=', project_id)]"),
     }
+
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        if context.get('no_project_reference'):
+            vals.update(project_id=False)
+        return super(project_task, self).create(cr, uid, vals, context=context)
+
 project_task()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
