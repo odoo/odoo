@@ -308,8 +308,7 @@ class BaseModel(object):
         Fields = self.env['ir.model.fields']
 
         # sparse fields should be created at the end, as they depend on their serialized field
-        model_fields = sorted(self._fields.itervalues(), key=lambda field: field.type == 'sparse')
-        for field in model_fields:
+        for field in self._fields.itervalues():
             vals = {
                 'model_id': model.id,
                 'model': self._name,
@@ -327,17 +326,10 @@ class BaseModel(object):
                 'selectable': bool(field.search or field.store),
                 'translate': bool(field.translate),
                 'relation_field': field.inverse_name if field.type == 'one2many' else None,
-                'serialization_field_id': None,
                 'relation_table': field.relation if field.type == 'many2many' else None,
                 'column1': field.column1 if field.type == 'many2many' else None,
                 'column2': field.column2 if field.type == 'many2many' else None,
             }
-            if getattr(field, 'serialization_field', None):
-                # resolve link to serialization_field if specified by name
-                serialization_field = Fields.search([('model', '=', vals['model']), ('name', '=', field.serialization_field)])
-                if not serialization_field:
-                    raise UserError(_("Serialization field `%s` not found for sparse field `%s`!") % (field.serialization_field, field.name))
-                vals['serialization_field_id'] = serialization_field.id
 
             if field.name not in cols:
                 query = "INSERT INTO ir_model_fields (%s) VALUES (%s) RETURNING id" % (
