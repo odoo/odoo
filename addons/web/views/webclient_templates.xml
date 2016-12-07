@@ -9,7 +9,7 @@
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/utils.less"/>
     </template>
 
-    <template id="web.assets_common">
+    <template id="web.assets_common" name="Common Assets (used in backend interface and website)">
         <t t-call="web.less_helpers"/>
 
         <link rel="stylesheet" type="text/css" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
@@ -79,7 +79,7 @@
         <script type="text/javascript" src="/web/static/src/js/framework/local_storage.js"></script>
     </template>
 
-    <template id="web.assets_backend">
+    <template id="web.assets_backend" name="Backend Assets (used in backend interface)">
         <t t-call="web.less_helpers"/>
 
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/import_bootstrap.less"/>
@@ -187,7 +187,7 @@
         <script type="text/javascript" src="/web/static/src/js/apps.js"></script>
     </template>
 
-    <template id="web.assets_frontend">
+    <template id="web.assets_frontend" name="Website Assets">
         <t t-call="web.less_helpers"/>
 
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/import_bootstrap.less"/>
