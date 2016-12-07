@@ -555,6 +555,12 @@ class IrActionsServer(models.Model):
         return True
 
     @api.model
+    def run_action_code(self, action, eval_context=None):
+        safe_eval(action.code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
+        if 'action' in eval_context:
+            return eval_context['action']
+
+    @api.model
     def run_action_multi(self, action, eval_context=None):
         res = False
         for act in action.multi_ids:
@@ -596,7 +602,7 @@ class IrActionsServer(models.Model):
         res = self.env[model].create(res)
         if action.link_field_id:
             record = self.env[action.model_id.model].browse(self._context.get('active_id'))
-            res.write({action.link_field_id.name: record.id})
+            record.write({action.link_field_id.name: res.id})
 
     @api.model
     def _get_eval_context(self, action=None):
@@ -653,7 +659,7 @@ class IrActionsServer(models.Model):
         :return: an action_id to be executed, or False is finished correctly without
                  return action
         """
-        res = {}
+        res = False
         for action in self:
             if not hasattr(self, 'run_action_%s' % action.state):
                 continue
