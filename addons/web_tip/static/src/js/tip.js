@@ -315,7 +315,9 @@ var Tip = Class.extend({
         });
         $(document).off('keyup.web_tip');
 
-        bus.off('resize', this, this._resize_position);
+        if (this._resize_position) {
+            bus.off('resize', this, this._resize_position);
+        }
         bus.off('resize', this, this._resize);
         bus.off('image_loaded', this, this._resize);
         bus.off('please_reposition_tip', this, this._resize);
