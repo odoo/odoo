@@ -576,6 +576,12 @@ class mail_thread(osv.AbstractModel):
                     _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
                                     email_from, email_to, message_id, model, thread_id, custom_values, uid)
                     return [(model, thread_id, custom_values, uid)]
+                else:
+                    # Reply to a particular document
+                    message = model_pool.browse(cr, uid, thread_id, context=context)
+                    _logger.info('Routing mail from %s to %s with Message-Id %s: reply to document: %s, id: %s, custom_values: %s, uid: %s'
+                                    % (email_from, email_to, message_id, message.model, message.res_id, custom_values, uid))
+                    return [(message.model, message.res_id, custom_values, uid)]
 
         # Verify whether this is a reply to a private message
         if in_reply_to:
