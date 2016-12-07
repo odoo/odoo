@@ -175,21 +175,11 @@ class IrUiView(models.Model):
         return views_to_return
 
     @api.model
-    def _customize_template_get_views(self, key, full=False, bundles=False):
-        """ Get inherit views of the template ``key``.
-            returns views (which can be active or not)
-            ``bundles=True`` returns also the asset bundles
-        """
-        user_groups = set(self.env.user.groups_id)
-        views = self.with_context(active_test=False)._views_get(key, bundles=bundles)
-        views = views.filtered(lambda v: user_groups.issuperset(v.groups_id))
-        return views
-
-    @api.model
-    def customize_template_get(self, key, full=False, bundles=False):
+    def get_related_views(self, key, bundles=False):
         """ Get inherit view's informations of the template ``key``.
             returns templates info (which can be active or not)
             ``bundles=True`` returns also the asset bundles
         """
-        views = self._customize_template_get_views(key, full=full, bundles=bundles)
-        return views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
+        user_groups = set(self.env.user.groups_id)
+        views = self.with_context(active_test=False)._views_get(key, bundles=bundles)
+        return views.filtered(lambda v: user_groups.issuperset(v.groups_id))

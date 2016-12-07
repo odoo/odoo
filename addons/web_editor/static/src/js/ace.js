@@ -186,9 +186,8 @@ var ViewEditor = Widget.extend({
      * @return a deferred which is resolved once everything is loaded and processed.
      */
     loadResources: function () {
-        return ajax.jsonRpc('/web_editor/customize_template_get', 'call', {
+        return ajax.jsonRpc("/web_editor/get_assets_editor_resources", "call", {
             key: this.viewKey,
-            full: true,
             bundles: this.options.includeBundles
         }).then((function (views) {
             // Only keep the active views and index them by ID.

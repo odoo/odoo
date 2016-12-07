@@ -70,9 +70,8 @@ website.TopBarCustomize = Widget.extend({
     },
     load_menu: function () {
         var $menu = this.$el.children("ul");
-        ajax.jsonRpc('/web_editor/customize_template_get', 'call', {
+        ajax.jsonRpc('/website/get_switchable_related_views', 'call', {
             key: this.view_name,
-            full: false
         }).then(function (result) {
             var current_group = "";
             _.each(result, function (item) {
