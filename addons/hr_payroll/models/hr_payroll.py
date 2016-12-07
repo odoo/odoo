@@ -185,7 +185,9 @@ class HrPayslip(models.Model):
                 \n* If the payslip is confirmed then status is set to \'Done\'.
                 \n* When user cancel payslip the status is \'Rejected\'.""")
     line_ids = fields.One2many('hr.payslip.line', 'slip_id', string='Payslip Lines', readonly=True,
-        states={'draft': [('readonly', False)]}, domain=[('appears_on_payslip', '=', True)])
+        states={'draft': [('readonly', False)]})
+    visible_line_ids = fields.One2many('hr.payslip.line', compute='_compute_visible_line_ids',
+        string="Visible Payslip Lines")
     company_id = fields.Many2one('res.company', string='Company', readonly=True, copy=False,
         default=lambda self: self.env['res.company']._company_default_get(),
         states={'draft': [('readonly', False)]})
@@ -212,6 +214,11 @@ class HrPayslip(models.Model):
     def _compute_details_by_salary_rule_category(self):
         for payslip in self:
             payslip.details_by_salary_rule_category = payslip.mapped('line_ids').filtered(lambda line: line.category_id)
+
+    @api.multi
+    def _compute_visible_line_ids(self):
+        for payslip in self:
+            payslip.visible_line_ids = payslip.line_ids.filtered(lambda line: line.appears_on_payslip)
 
     @api.multi
     def _compute_payslip_count(self):

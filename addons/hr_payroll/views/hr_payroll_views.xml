@@ -284,7 +284,7 @@
                             </field>
                         </page>
                         <page string="Salary Computation" >
-                            <field name="line_ids" colspan="4" nolabel="1">
+                            <field name="visible_line_ids" colspan="4" nolabel="1">
                                 <tree string="Salary Structure" editable="bottom" decoration-info="total == 0">
                                     <field name="name"/>
                                     <field name="code"/>
@@ -312,7 +312,7 @@
                             </field>
                         </page>
                         <page string="Details By Salary Rule Category">
-                            <field name="details_by_salary_rule_category" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]">
+                            <field name="details_by_salary_rule_category" context="{'group_by':'category_id'}">
                                 <tree string="Payslip Lines" decoration-info="total == 0">
                                     <field name="category_id"/>
                                     <field name="name"/>
