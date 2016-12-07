@@ -135,11 +135,16 @@
         .o-justify-content(space-between);
         padding: @grid-gutter-width/4;
 
+        > .o_ace_type_switcher > button::after {
+            .o-caret-down();
+            margin-left: 4px;
+        }
+
         > * {
             .o-flex(0, 0, auto);
             margin: 0 @grid-gutter-width/4;
 
-            &.oe_include_bundles {
+            &.o_include_option {
                 .o-flex-display();
                 .o-align-items(center);
                 font-size: 11px;
