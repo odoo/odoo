@@ -629,6 +629,7 @@ class Field(object):
     #
 
     def _add_trigger(self, env, path_str, field=None):
+        fields = env[self.model_name]._field_computed.get(self) or [self]
         path = path_str.split('.')
         # traverse path and add triggers on fields along the way
         for i, name in enumerate(path):
@@ -636,7 +637,7 @@ class Field(object):
             field = model._fields[name]
             # env[self.model_name] --- path[:i] --> model with field
 
-            if field is self:
+            if field in fields:
                 self.recursive = True
                 continue
 
