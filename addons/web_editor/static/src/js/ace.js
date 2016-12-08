@@ -7,6 +7,7 @@ var Dialog = require("web.Dialog");
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var local_storage = require('web.local_storage');
+var session = require("web.session");
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -89,7 +90,7 @@ var ViewEditor = Widget.extend({
             e.preventDefault();
             this.switchType($(e.target).data("type"));
         },
-        'change .oe_view_list': function () {
+        'change .o_res_list': function () {
             this.displayResource(this.selectedResource());
         },
         'click .js_include_bundles': function (e) {
@@ -359,8 +360,10 @@ var ViewEditor = Widget.extend({
         _.each(this.sorted_views, function (view) {
             self.$lists.xml.append($("<option/>", {
                 value: view.id,
-                text: _.str.sprintf("%s%s", _.str.repeat("- ", view.level), view.name),
+                text: view.name,
                 selected: currentId === view.id,
+                "data-level": view.level,
+                "data-debug": view.xml_id,
             }));
         });
 
@@ -370,13 +373,53 @@ var ViewEditor = Widget.extend({
                 label: bundleInfos[0].name,
             }).appendTo(self.$lists.less);
             _.each(bundleInfos[1], function (lessInfo) {
+                var name = lessInfo.url.substring(_.lastIndexOf(lessInfo.url, "/") + 1, lessInfo.url.length - 5);
                 $optgroup.append($("<option/>", {
                     value: lessInfo.url,
-                    text: lessInfo.url + (lessInfo.customized ? _.str.sprintf(" (%s)", _t("customized")) : ""),
+                    text: name,
                     selected: currentId === lessInfo.url,
+                    "data-debug": lessInfo.url,
+                    "data-customized": lessInfo.customized
                 }));
             });
         });
+
+        this.$lists.xml.select2("destroy");
+        this.$lists.xml.select2({
+            formatResult: _formatDisplay,
+            formatSelection: _formatDisplay,
+        });
+        this.$lists.less.select2("destroy");
+        this.$lists.less.select2({
+            formatResult: _formatDisplay,
+            formatSelection: _formatDisplay,
+        });
+
+        function _formatDisplay(data) {
+            var $elem = $(data.element);
+
+            var $div = $("<div/>",  {
+                text: data.text || "",
+                style: "padding: 0 0 0 " + (24 * $elem.data("level")) + "px",
+            });
+
+            if ($elem.data("dirty") || $elem.data("customized")) {
+                $div.prepend($("<span/>", {
+                    class: "fa fa-floppy-o " + ($elem.data("dirty") ? "text-warning" : "text-success"),
+                    style: "margin-right: 8px;",
+                }));
+            }
+
+            if (session.debug && $elem.data("debug")) {
+                $div.append($("<span/>", {
+                    text: " (" + $elem.data("debug") + ")",
+                    class: "text-muted",
+                    style: "font-size: 80%",
+                }));
+            }
+
+            return $div;
+        }
     },
     /**
      * The switchType method switches to the LESS or XML edition. Calling this method will adapt all DOM elements to
@@ -398,7 +441,7 @@ var ViewEditor = Widget.extend({
      * @return the currently resource id (view ID or less file URL)
      */
     selectedResource: function () {
-        return this.$lists[this.currentType].val();
+        return this.$lists[this.currentType].select2("val");
     },
     /**
      * The displayResource method forces the view/less file identified by its ID/URL to be displayed in the editor.
@@ -420,7 +463,7 @@ var ViewEditor = Widget.extend({
         } else {
             this.$viewID.text(_.str.sprintf(_t("Less file: %s"), resID));
         }
-        this.$lists[this.currentType].val(resID);
+        this.$lists[this.currentType].select2("val", resID);
 
         this.$resetButton.toggleClass("hidden", this.currentType === "xml" || !this.less[resID].customized);
     },
@@ -478,16 +521,10 @@ var ViewEditor = Widget.extend({
         if (!resID || !this.editingSessions[type][resID]) return;
 
         var $option = this.$lists[type].find("[value='" + resID + "']");
-        var optionName = $option.text();
-        var dirtyMarker = " (" + _t("unsaved changes") + ")";
         if (isDirty === undefined) {
             isDirty = this.editingSessions[type][resID].getUndoManager().hasUndo();
         }
-        if (isDirty && optionName.indexOf(dirtyMarker) < 0) {
-            $option.text(optionName + dirtyMarker);
-        } else if (!isDirty && optionName.indexOf(dirtyMarker) > 0) {
-            $option.text(optionName.substring(0, optionName.indexOf(dirtyMarker)));
-        }
+        $option.data("dirty", isDirty);
     },
     /**
      * The formatResource method formats the current resource being vizualized.
