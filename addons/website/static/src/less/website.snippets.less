@@ -1,8 +1,10 @@
-// General rules
+///
+/// This file regroups the snippets-specific design rules.
+///
+
 .carousel, .parallax, .blockquote {
     overflow: hidden;
 }
-
 @media (max-width: 400px) {
     section, .parallax, .row, .hr, .blockquote {
         height: auto !important;
@@ -27,7 +29,6 @@
     word-break: break-all;
     border: 1px solid #dddddd;
 }
-
 .table_heading {
     background-color: #f5f5f5;
     border: 1px solid #dddddd;
@@ -35,7 +36,6 @@
     font-size: 14px;
     padding: 4px;
 }
-
 table.table_desc tr td {
     text-align: left;
     padding: 5px;
@@ -56,7 +56,6 @@ table.table_desc tr td {
 .s_comparisons .panel .list-group-item:not(.active) {
     color: #666;
 }
-
 .s_references .img-thumbnail {
     border: none;
 }
@@ -145,7 +144,6 @@ table.table_desc tr td {
 .quotecarousel {
     padding-bottom: 16px;
 }
-
 div.carousel .container {
     > .carousel-caption {
         .o-position-absolute(@right: 50%, @left: 50%);
@@ -372,7 +370,6 @@ div.carousel .container {
     }
 }
 
-// Parallax Theme
 div.carousel {
     .carousel-indicators li {
         box-shadow: 0 0 0 1px grey;
@@ -390,6 +387,7 @@ div.carousel {
     }
 }
 
+// Parallax Theme
 .parallax {
     position: relative;
 
@@ -413,11 +411,6 @@ div.carousel {
         background-attachment: fixed;
     }
 }
-
 .s_parallax {
     min-height: 200px;
-}
-
-.s_big_message { // TO REMOVE IN MASTER > 10.0
-    background-size: cover;
 }
