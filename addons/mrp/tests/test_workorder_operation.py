@@ -123,9 +123,10 @@ class TestWorkOrderProcess(common.TransactionCase):
         # This behaviour was changed
         #self.assertEqual(production_table.state, 'done', "Production order should be in done state.")
 
-        # ----------------------------------------
-        # Check consume quants and produce quants.
-        # ----------------------------------------
+        # ---------------------------------------------------------------
+        # Check consume quants and produce quants after posting inventory
+        # ---------------------------------------------------------------
+        production_table.button_mark_done()
         self.assertEqual(sum(move_table_sheet.quant_ids.mapped('qty')), 1, "Wrong quantity of consumed product %s" % move_table_sheet.product_id.name)
         self.assertEqual(sum(move_leg.quant_ids.mapped('qty')), 4, "Wrong quantity of consumed product %s" % move_leg.product_id.name)
         self.assertEqual(sum(move_table_bolt.quant_ids.mapped('qty')), 4, "Wrong quantity of consumed product %s" % move_table_bolt.product_id.name)
