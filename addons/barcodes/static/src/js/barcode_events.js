@@ -4,6 +4,16 @@ odoo.define('barcodes.BarcodeEvents', function(require) {
 var core = require('web.core');
 var mixins = core.mixins;
 
+
+// For IE >= 9, use this, new CustomEvent(), instead of new Event()
+function CustomEvent ( event, params ) {
+    params = params || { bubbles: false, cancelable: false, detail: undefined };
+    var evt = document.createEvent( 'CustomEvent' );
+    evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+    return evt;
+   }
+CustomEvent.prototype = window.Event.prototype;
+
 var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     timeout: null,
     key_pressed: {},
@@ -63,10 +73,16 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
                 // bug for the longest time that causes keyCode and
                 // charCode to not be set for events created this way:
                 // https://bugs.webkit.org/show_bug.cgi?id=16735
-                new_event = new Event("keypress", {
+                var params = {
                     'bubbles': old_event.bubbles,
                     'cancelable': old_event.cancelable,
-                });
+                };
+                try {
+                    new_event = new Event("keypress", params);
+                } catch(error) {
+                    // For IE >= 9, use new CustomEvent(), instead of new Event()
+                    new_event = new CustomEvent("keypress", params);
+                }
 
                 new_event.viewArg = old_event.viewArg;
                 new_event.ctrl = old_event.ctrl;

@@ -697,7 +697,6 @@ class QuantPackage(models.Model):
             # TDE FIXME: why superuser ?
             package.mapped('quant_ids').sudo().write({'package_id': package.parent_id.id})
             package.mapped('children_ids').write({'parent_id': package.parent_id.id})
-        self.unlink()
         return self.env['ir.actions.act_window'].for_xml_id('stock', 'action_package_view')
 
     @api.multi
