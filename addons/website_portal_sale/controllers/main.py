@@ -82,7 +82,7 @@ class website_account(website_account):
 
         values.update({
             'date': date_begin,
-            'quotations': quotations,
+            'quotations': quotations.sudo(),
             'page_name': 'quote',
             'pager': pager,
             'archive_groups': archive_groups,
@@ -132,7 +132,7 @@ class website_account(website_account):
 
         values.update({
             'date': date_begin,
-            'orders': orders,
+            'orders': orders.sudo(),
             'page_name': 'order',
             'pager': pager,
             'archive_groups': archive_groups,
@@ -214,6 +214,23 @@ class website_account(website_account):
             'sortby': sortby,
         })
         return request.render("website_portal_sale.portal_my_invoices", values)
+
+    @http.route(['/my/invoices/<int:invoice_id>'], type='http', auth="user", website=True)
+    def portal_my_invoices_report(self, invoice_id, **kw):
+        invoice = request.env['account.invoice'].browse(invoice_id)
+        try:
+            invoice.check_access_rights('read')
+            invoice.check_access_rule('read')
+        except AccessError:
+            return request.render("website.403")
+        # print report as sudo, since it require access to taxes, payment term, ... and portal
+        # does not have those access rights.
+        pdf = request.env['report'].sudo().get_pdf([invoice_id], 'account.report_invoice')
+        pdfhttpheaders = [
+            ('Content-Type', 'application/pdf'),
+            ('Content-Length', len(pdf)),
+        ]
+        return request.make_response(pdf, headers=pdfhttpheaders)
 
     def details_form_validate(self, data):
         error, error_message = super(website_account, self).details_form_validate(data)
