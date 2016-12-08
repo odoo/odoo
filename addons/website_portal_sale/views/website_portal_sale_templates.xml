@@ -185,7 +185,7 @@
                 <t t-foreach="invoices" t-as="invoice">
                     <tr>
                         <td class= "cell_overflow">
-                            <a t-att-href="'/report/pdf/account.report_invoice/'+str(invoice.id)" t-att-title="invoice.number"><t t-esc="invoice.number"/></a>
+                            <a t-att-href="'/my/invoices/'+str(invoice.id)" t-att-title="invoice.number"><t t-esc="invoice.number"/></a>
                         </td>
                         <td><span t-field="invoice.date_invoice"/></td>
                         <td class='hidden-xs'><span t-field="invoice.date_due"/></td>
@@ -286,7 +286,7 @@
                             </div>
                             <div>
                               <t t-foreach="invoices" t-as="i">
-                                <t t-set="report_url" t-value="'/report/pdf/account.report_invoice/%s' % i.id"/>
+                                <t t-set="report_url" t-value="'/my/invoices/%s' % i.id"/>
                                 <div>
                                   <a t-att-href="report_url"><span class="fa fa-download"/></a>
                                   <a t-att-href="report_url"><span t-esc="i.number"/></a>
