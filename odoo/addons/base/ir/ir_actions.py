@@ -674,6 +674,10 @@ class IrActionsServer(models.Model):
                 eval_context["context"] = run_self._context
                 func = getattr(run_self, 'run_action_%s' % action.state)
                 res = func(action, eval_context=eval_context)
+            if not active_ids:
+                run_self = self.with_context(eval_context['env'].context)
+                func = getattr(run_self, 'run_action_%s' % action.state)
+                res = func(action, eval_context=eval_context)
         return res
 
     @api.model
