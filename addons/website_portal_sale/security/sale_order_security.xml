@@ -36,13 +36,5 @@
             <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         </record>
 
-        <record id="portal_personal_contact" model="ir.rule">
-            <field name="name">Portal Personal Contacts</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="domain_force">[('message_partner_ids','in',[user.commercial_partner_id.id])]</field>
-            <field eval="0" name="perm_read"/>
-            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
-        </record>
-
     </data>
 </odoo>

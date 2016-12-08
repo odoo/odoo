@@ -31,35 +31,39 @@ class sale_quote(http.Controller):
         if not Order:
             return request.render('website.404')
 
+        # Token or not, sudo the order, since portal user has not access on
+        # taxes, required to compute the total_amout of SO.
+        order_sudo = Order.sudo()
+
         days = 0
-        if Order.validity_date:
-            days = (fields.Date.from_string(Order.validity_date) - fields.Date.from_string(fields.Date.today())).days + 1
+        if order_sudo.validity_date:
+            days = (fields.Date.from_string(order_sudo.validity_date) - fields.Date.from_string(fields.Date.today())).days + 1
         if pdf:
-            pdf = request.env['report'].sudo().with_context(set_viewport_size=True).get_pdf([Order.id], 'website_quote.report_quote')
+            pdf = request.env['report'].sudo().with_context(set_viewport_size=True).get_pdf([order_sudo.id], 'website_quote.report_quote')
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
-        transaction_id = request.session.get('quote_%s_transaction_id' % Order.id)
+        transaction_id = request.session.get('quote_%s_transaction_id' % order_sudo.id)
         if not transaction_id:
-            Transaction = request.env['payment.transaction'].sudo().search([('reference', '=', Order.name)])
+            Transaction = request.env['payment.transaction'].sudo().search([('reference', '=', order_sudo.name)])
         else:
             Transaction = request.env['payment.transaction'].sudo().browse(transaction_id)
         values = {
-            'quotation': Order,
+            'quotation': order_sudo,
             'message': message and int(message) or False,
-            'option': bool(filter(lambda x: not x.line_id, Order.options)),
-            'order_valid': (not Order.validity_date) or (now <= Order.validity_date),
+            'option': bool(filter(lambda x: not x.line_id, order_sudo.options)),
+            'order_valid': (not order_sudo.validity_date) or (now <= order_sudo.validity_date),
             'days_valid': days,
             'action': request.env.ref('sale.action_quotations').id,
-            'breadcrumb': request.env.user.partner_id == Order.partner_id,
+            'breadcrumb': request.env.user.partner_id == order_sudo.partner_id,
             'tx_id': Transaction.id if Transaction else False,
             'tx_state': Transaction.state if Transaction else False,
             'tx_post_msg': Transaction.acquirer_id.post_msg if Transaction else False,
-            'need_payment': Order.invoice_status == 'to invoice' and Transaction.state in ['draft', 'cancel', 'error'],
+            'need_payment': order_sudo.invoice_status == 'to invoice' and Transaction.state in ['draft', 'cancel', 'error'],
             'token': token,
         }
 
-        if Order.require_payment or values['need_payment']:
-            values['acquirers'] = list(request.env['payment.acquirer'].sudo().search([('website_published', '=', True), ('company_id', '=', Order.company_id.id)]))
+        if order_sudo.require_payment or values['need_payment']:
+            values['acquirers'] = list(request.env['payment.acquirer'].sudo().search([('website_published', '=', True), ('company_id', '=', order_sudo.company_id.id)]))
             extra_context = {
                 'submit_class': 'btn btn-primary',
                 'submit_txt': _('Pay & Confirm')
@@ -68,16 +72,16 @@ class sale_quote(http.Controller):
             for acquirer in values['acquirers']:
                 values['buttons'][acquirer.id] = acquirer.with_context(**extra_context).render(
                     '/',
-                    Order.amount_total,
-                    Order.pricelist_id.currency_id.id,
+                    order_sudo.amount_total,
+                    order_sudo.pricelist_id.currency_id.id,
                     values={
                         'return_url': '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
                         'type': 'form',
                         'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
-                        'partner_id': Order.partner_id.id,
+                        'partner_id': order_sudo.partner_id.id,
                     })
         history = request.session.get('my_quotes_history', [])
-        values.update(get_records_pager(history, Order))
+        values.update(get_records_pager(history, order_sudo))
         return request.render('website_quote.so_quotation', values)
 
     @http.route(['/quote/accept'], type='json', auth="public", website=True)
