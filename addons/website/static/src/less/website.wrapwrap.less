@@ -1,3 +1,7 @@
+///
+/// This file regroups the general rules for website design. See the website.snippets.less rules for
+/// snippets-specific rules.
+///
 
 #wrapwrap {
     position: relative;
@@ -48,7 +52,6 @@ footer {
 }
 
 // Odoo options classes
-
 .jumbotron {
     margin-bottom: 0;
 }
@@ -74,63 +77,6 @@ footer {
     &.o_bg_img_opt_repeat_y {
         background-repeat: repeat-y;
     }
-}
-
-//  Background (kept for 8.0 compatibility) (! some are still used by website_blog)
-.oe_dark {
-    background-color: rgba(200, 200, 200, 0.14);
-}
-.oe_black {
-    background-color: rgba(0, 0, 0, 0.9);
-    color: white;
-}
-.oe_green {
-    background-color: #169C78;
-    color: white;
-    .text-muted {
-        color: #ddd;
-    }
-}
-.oe_blue_light {
-    background-color: #41b6ab;
-    color: white;
-    .text-muted {
-        color: #ddd;
-    }
-}
-.oe_blue {
-    background-color: #34495e;
-    color: white;
-}
-.oe_orange {
-    background-color: #f05442;
-    color: white;
-    .text-muted {
-        color: #ddd;
-    }
-}
-.oe_purple {
-    background-color: #b163a3;
-    color: white;
-    .text-muted {
-        color: #ddd;
-    }
-}
-.oe_red {
-    background-color: #9C1b31;
-    color: white;
-    .text-muted {
-        color: #ddd;
-    }
-}
-.oe_none {
-    background-color: #FFFFFF;
-}
-.oe_yellow {
-    background-color: #A2A51B;
-}
-.oe_green {
-    background-color: #149F2C;
 }
 
 // Typography
@@ -218,7 +164,6 @@ hr {
 .container {
     max-width: 100%;
 }
-// container inside container
 .container .container {
     padding-left: 0;
     padding-right: 0;
@@ -241,21 +186,6 @@ ul.nav-stacked > li > a {
 // Columns min height
 [class^="col-md-"] {
     min-height: 24px;
-}
-
-// PUBLISH
-.css_published {
-    .btn-danger, .css_publish {
-        display: none;
-    }
-}
-.css_unpublished {
-    .btn-success, .css_unpublish {
-        display: none;
-    }
-}
-[data-publish='off'] > *:not(.css_options) {
-    opacity: 0.5;
 }
 
 // Others
@@ -308,4 +238,61 @@ ul.nav-stacked > li > a {
         padding-right: 0;
         width: auto;
     }
+}
+
+//  Background (kept for 8.0 compatibility) (! some are still used by website_blog)
+.oe_dark {
+    background-color: rgba(200, 200, 200, 0.14);
+}
+.oe_black {
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+}
+.oe_green {
+    background-color: #169C78;
+    color: white;
+    .text-muted {
+        color: #ddd;
+    }
+}
+.oe_blue_light {
+    background-color: #41b6ab;
+    color: white;
+    .text-muted {
+        color: #ddd;
+    }
+}
+.oe_blue {
+    background-color: #34495e;
+    color: white;
+}
+.oe_orange {
+    background-color: #f05442;
+    color: white;
+    .text-muted {
+        color: #ddd;
+    }
+}
+.oe_purple {
+    background-color: #b163a3;
+    color: white;
+    .text-muted {
+        color: #ddd;
+    }
+}
+.oe_red {
+    background-color: #9C1b31;
+    color: white;
+    .text-muted {
+        color: #ddd;
+    }
+}
+.oe_none {
+    background-color: #FFFFFF;
+}
+.oe_yellow {
+    background-color: #A2A51B;
+}
+.oe_green {
+    background-color: #149F2C;
 }
