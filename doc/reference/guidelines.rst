@@ -408,7 +408,7 @@ Idiomatics Python Programming
 .. code-block:: python
 
     value = my_dict.get('key', None) # very very redundant
-    value= my_dict.get('key') # good
+    value = my_dict.get('key') # good
 
 Also, ``if 'key' in my_dict`` and ``if my_dict.get('key')`` have very different
 meaning, be sure that you're using the right one.
