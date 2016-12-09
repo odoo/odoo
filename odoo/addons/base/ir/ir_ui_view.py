@@ -271,7 +271,7 @@ actual arch.
                         self.raise_view_error(message, self.id)
         return True
 
-    @api.constrains('arch', 'arch_base')
+    @api.constrains('arch_db')
     def _check_xml(self):
         # Sanity checks: the view should not break anything upon rendering!
         # Any exception raised below will cause a transaction rollback.

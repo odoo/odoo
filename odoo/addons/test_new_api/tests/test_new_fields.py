@@ -130,6 +130,26 @@ class TestFields(common.TransactionCase):
         })
         check_stored(discussion3)
 
+    def test_11_computed_access(self):
+        """ test computed fields with access right errors """
+        User = self.env['res.users']
+        user1 = User.create({'name': 'Aaaah', 'login': 'a'})
+        user2 = User.create({'name': 'Boooh', 'login': 'b'})
+        user3 = User.create({'name': 'Crrrr', 'login': 'c'})
+        # add a rule to not give access to user2
+        self.env['ir.rule'].create({
+            'model_id': self.env['ir.model'].search([('model', '=', 'res.users')]).id,
+            'domain_force': "[('id', '!=', %d)]" % user2.id,
+        })
+        # group users as a recordset, and read them as user demo
+        users = (user1 + user2 + user3).sudo(self.env.ref('base.user_demo'))
+        user1, user2, user3 = users
+        # regression test: a bug invalidated the field's value from cache
+        user1.company_type
+        with self.assertRaises(AccessError):
+            user2.company_type
+        user3.company_type
+
     def test_12_recursive(self):
         """ test recursively dependent fields """
         Category = self.env['test_new_api.category']
