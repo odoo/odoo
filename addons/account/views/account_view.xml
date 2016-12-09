@@ -1444,6 +1444,7 @@
                     <field name="value" string="Due Type"/>
                     <field name="value_amount" attrs="{'readonly':[('value','=','balance')]}"/>
                     <field name="days"/>
+                    <field name="days2" />
                     <field name="option" string=""/>
                 </tree>
             </field>
@@ -1470,6 +1471,9 @@
                                 <div class="o_row" attrs="{'invisible': [('option', 'in', ['last_day_following_month', 'last_day_current_month'])]}">
                                     <field name="days"/>
                                     days
+                                </div>
+                                <div class="o_row" attrs="{'invisible': [('option', 'in', ['last_day_following_month', 'last_day_current_month'])]}">
+                                    <field name="days2" />day of month
                                 </div>
                             </div>
                         </group>
