@@ -884,21 +884,21 @@ class Field(object):
     def _compute_value(self, records):
         """ Invoke the compute method on ``records``. """
         # initialize the fields to their corresponding null value in cache
-        computed = records._field_computed[self]
-        for field in computed:
+        for field in records._field_computed[self]:
             for record in records:
                 record._cache[field] = field.convert_to_cache(False, record, validate=False)
-            records.env.computed[field].update(records._ids)
         if isinstance(self.compute, basestring):
             getattr(records, self.compute)()
         else:
             self.compute(records)
-        for field in computed:
-            records.env.computed[field].difference_update(records._ids)
 
     def compute_value(self, records):
         """ Invoke the compute method on ``records``; the results are in cache. """
         with records.env.do_in_draft():
+            saved = {}
+            for field in records._field_computed[self]:
+                ids = saved[field] = records.env.computed[field]
+                records.env.computed[field] = ids.union(records._ids)
             try:
                 self._compute_value(records)
             except (AccessError, MissingError):
@@ -908,6 +908,8 @@ class Field(object):
                         self._compute_value(record)
                     except Exception as exc:
                         record._cache[self.name] = FailedValue(exc)
+            finally:
+                records.env.computed.update(saved)
 
     def determine_value(self, record):
         """ Determine the value of ``self`` for ``record``. """
