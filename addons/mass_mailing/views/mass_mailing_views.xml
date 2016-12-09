@@ -413,7 +413,6 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing">
                                 <div class="o_dropdown_kanban dropdown">
-
                                     <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
                                         <span class="fa fa-bars fa-lg"/>
                                     </a>
@@ -425,7 +424,7 @@
                                 </div>
                                  <div class="oe_kanban_content">
                                     <div class="o_title">
-                                        <h3><field name="name"/></h3>
+                                        <h3 class="mt4 mb4"><field name="name"/></h3>
                                         <div attrs="{'invisible': [('sent_date', '=', False)]}">
                                             <h4 style="display: inline;"><field name="mass_mailing_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/></h4>
                                             <t t-if="record.mass_mailing_campaign_id.raw_value" groups="mass_mailing.group_mass_mailing_campaign"> - </t><field name="sent_date"/>
