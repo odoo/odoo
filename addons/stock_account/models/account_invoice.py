@@ -89,5 +89,6 @@ class AccountInvoiceLine(models.Model):
     def get_invoice_line_account(self, type, product, fpos, company):
         if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund') and product and product.type == 'product':
             accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
-            return accounts['stock_input']
+            if accounts['stock_input']:
+                return accounts['stock_input']
         return super(AccountInvoiceLine, self).get_invoice_line_account(type, product, fpos, company)
