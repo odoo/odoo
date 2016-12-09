@@ -233,7 +233,7 @@ class AccountJournal(models.Model):
     sequence_id = fields.Many2one('ir.sequence', string='Entry Sequence',
         help="This field contains the information related to the numbering of the journal entries of this journal.", required=True, copy=False)
     refund_sequence_id = fields.Many2one('ir.sequence', string='Refund Entry Sequence',
-        help="This field contains the information related to the numbering of the refund entries of this journal.", copy=False)
+        help="This field contains the information related to the numbering of the refund entries of this journal.", copy=False, ondelete="restrict")
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
 
     #groups_id = fields.Many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', string='Groups')
