@@ -99,7 +99,9 @@ return Widget.extend({
             }));
         } else {
             var chart = this['display_' + this.mode]();
-            chart.tooltip.chartContainer(this.$el[0]);
+            if (chart) {
+                chart.tooltip.chartContainer(this.$el[0]);
+            }
         }
     },
     display_bar: function () {

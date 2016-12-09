@@ -268,20 +268,21 @@ class TxAuthorize(models.Model):
         status_code = int(tree.get('x_response_code', '0'))
         if status_code == self._authorize_valid_tx_status:
             if tree.get('x_type').lower() in ['auth_capture', 'prior_auth_capture']:
-                if self.callback_eval and self.state != 'authorized':
-                    safe_eval(self.callback_eval, {'self': self})
+                init_state = self.state
                 self.write({
                     'state': 'done',
                     'acquirer_reference': tree.get('x_trans_id'),
                     'date_validate': fields.Datetime.now(),
                 })
-            if tree.get('x_type').lower() == 'auth_only':
-                if self.callback_eval:
+                if self.callback_eval and init_state != 'authorized':
                     safe_eval(self.callback_eval, {'self': self})
+            if tree.get('x_type').lower() == 'auth_only':
                 self.write({
                     'state': 'authorized',
                     'acquirer_reference': tree.get('x_trans_id'),
                 })
+                if self.callback_eval:
+                    safe_eval(self.callback_eval, {'self': self})
             if tree.get('x_type').lower() == 'void':
                 self.write({
                     'state': 'cancel',

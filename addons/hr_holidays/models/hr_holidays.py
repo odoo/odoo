@@ -504,7 +504,7 @@ class Holidays(models.Model):
                     leaves += self.with_context(mail_notify_force_send=False).create(values)
                 # TODO is it necessary to interleave the calls?
                 leaves.action_approve()
-                if leaves[0].double_validation:
+                if leaves and leaves[0].double_validation:
                     leaves.action_validate()
         return True
 

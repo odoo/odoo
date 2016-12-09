@@ -15,6 +15,7 @@ def geo_find(addr):
         result = json.load(urllib.urlopen(url))
     except Exception as e:
         raise UserError(_('Cannot contact geolocation servers. Please make sure that your Internet connection is up and running (%s).') % e)
+
     if result['status'] != 'OK':
         return None
 
@@ -52,6 +53,13 @@ class ResPartner(models.Model):
                                                 city=partner.city,
                                                 state=partner.state_id.name,
                                                 country=partner.country_id.name))
+            if result is None:
+                result = geo_find(geo_query_address(
+                    city=partner.city,
+                    state=partner.state_id.name,
+                    country=partner.country_id.name
+                ))
+
             if result:
                 partner.write({
                     'partner_latitude': result[0],
