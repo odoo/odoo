@@ -194,6 +194,10 @@ if(!$('.o_website_links_chart').length) {
                 charts.last_month_pie = new PieChart('#last_month_countries_charts', last_month_clicks_by_country);
                 charts.last_week_pie = new PieChart('#last_week_countries_charts', last_week_clicks_by_country);
 
+                var row_width = $('#all_time_countries_charts').parent().width();
+                var charts_svg = $('#all_time_countries_charts,last_month_countries_charts,last_week_countries_charts').find('svg');
+                charts_svg.css('height', Math.max(clicks_by_country.length * (row_width > 750 ? 1 : 2), 20) + 'em');
+
                 _.invoke(charts, 'start');
 
                 nv.utils.windowResize(function () {
