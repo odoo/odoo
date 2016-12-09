@@ -754,7 +754,7 @@ class Orderpoint(models.Model):
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
     ]
 
-    @api.constrains('product_id', 'product_uom')
+    @api.constrains('product_id')
     def _check_product_uom(self):
         ''' Check if the UoM has the same category as the product standard UoM '''
         if any(orderpoint.product_id.uom_id.category_id != orderpoint.product_uom.category_id for orderpoint in self):

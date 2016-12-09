@@ -93,6 +93,14 @@ class CrmLead(models.Model):
                                                     city=lead.city,
                                                     state=lead.state_id.name,
                                                     country=lead.country_id.name))
+
+                if result is None:
+                    result = geo_find(geo_query_address(
+                        city=lead.city,
+                        state=lead.state_id.name,
+                        country=lead.country_id.name
+                    ))
+
                 if result:
                     lead.write({
                         'partner_latitude': result[0],

@@ -308,7 +308,7 @@ class BaseModel(object):
         Fields = self.env['ir.model.fields']
 
         # sparse fields should be created at the end, as they depend on their serialized field
-        model_fields = sorted(self._fields.itervalues(), key=lambda field: field.type == 'sparse')
+        model_fields = sorted(self._fields.itervalues(), key=lambda field: bool(field.sparse))
         for field in model_fields:
             vals = {
                 'model_id': model.id,
@@ -332,11 +332,11 @@ class BaseModel(object):
                 'column1': field.column1 if field.type == 'many2many' else None,
                 'column2': field.column2 if field.type == 'many2many' else None,
             }
-            if getattr(field, 'serialization_field', None):
+            if field.sparse:
                 # resolve link to serialization_field if specified by name
-                serialization_field = Fields.search([('model', '=', vals['model']), ('name', '=', field.serialization_field)])
+                serialization_field = Fields.search([('model', '=', vals['model']), ('name', '=', field.sparse)])
                 if not serialization_field:
-                    raise UserError(_("Serialization field `%s` not found for sparse field `%s`!") % (field.serialization_field, field.name))
+                    raise UserError(_("Serialization field `%s` not found for sparse field `%s`!") % (field.sparse, field.name))
                 vals['serialization_field_id'] = serialization_field.id
 
             if field.name not in cols:
@@ -664,8 +664,11 @@ class BaseModel(object):
         cls = type(self)
         methods = []
         for attr, func in getmembers(cls, is_constraint):
-            if not all(name in cls._fields for name in func._constrains):
-                _logger.warning("@constrains%r parameters must be field names", func._constrains)
+            for name in func._constrains:
+                if name not in cls._fields:
+                    _logger.warning("method %s.%s: @constrains parameter %r is not a field name", cls._name, attr, name)
+                if not cls._fields[name].store:
+                    _logger.warning("method %s.%s: @constrains parameter %r is not stored", cls._name, attr, name)
             methods.append(func)
 
         # optimization: memoize result on cls, it will not be recomputed

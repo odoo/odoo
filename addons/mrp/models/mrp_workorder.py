@@ -356,7 +356,10 @@ class MrpWorkorder(models.Model):
                 raise UserError(_("You need to define at least one productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
         for workorder in self:
             if workorder.production_id.state != 'progress':
-                workorder.production_id.state = 'progress'
+                workorder.production_id.write({
+                    'state': 'progress',
+                    'date_start': datetime.now(),
+                })
             timeline.create({
                 'workorder_id': workorder.id,
                 'workcenter_id': workorder.workcenter_id.id,
