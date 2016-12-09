@@ -63,8 +63,7 @@ class AuthSignupHome(Home):
                 qcontext['error'] = _("Could not reset your password")
                 _logger.exception('error when resetting password')
             except Exception, e:
-                qcontext['error'] = e.message
-
+                qcontext['error'] = e.message or e.name
 
         return request.render('auth_signup.reset_password', qcontext)
 
