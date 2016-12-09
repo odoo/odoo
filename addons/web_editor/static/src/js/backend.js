@@ -340,7 +340,7 @@ var FieldTextHtml = widget.extend({
                 $("body").toggleClass("o_form_FieldTextHtml_fullscreen");
                 var full = $("body").hasClass("o_form_FieldTextHtml_fullscreen");
                 self.$iframe.parents().toggleClass('o_form_fullscreen_ancestor', full);
-                self.resize();
+                $(window).trigger("resize"); // induce a resize() call and let other backend elements know (the navbar extra items management relies on this)
             });
 
         this.$body.on('click', '[data-action="cancel"]', function (event) {

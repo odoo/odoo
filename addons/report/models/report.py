@@ -59,16 +59,21 @@ except (OSError, IOError):
 else:
     _logger.info('Will use the Wkhtmltopdf binary at %s' % _get_wkhtmltopdf_bin())
     out, err = process.communicate()
-    version = re.search('([0-9.]+)', out or "0").group(0)
-    if LooseVersion(version) < LooseVersion('0.12.0'):
-        _logger.info('Upgrade Wkhtmltopdf to (at least) 0.12.0')
-        wkhtmltopdf_state = 'upgrade'
-    else:
-        wkhtmltopdf_state = 'ok'
+    match = re.search('([0-9.]+)', out)
+    if match:
+        version = match.group(0)
+        if LooseVersion(version) < LooseVersion('0.12.0'):
+            _logger.info('Upgrade Wkhtmltopdf to (at least) 0.12.0')
+            wkhtmltopdf_state = 'upgrade'
+        else:
+            wkhtmltopdf_state = 'ok'
 
-    if config['workers'] == 1:
-        _logger.info('You need to start Odoo with at least two workers to print a pdf version of the reports.')
-        wkhtmltopdf_state = 'workers'
+        if config['workers'] == 1:
+            _logger.info('You need to start Odoo with at least two workers to print a pdf version of the reports.')
+            wkhtmltopdf_state = 'workers'
+    else:
+        _logger.info('Wkhtmltopdf seems to be broken.')
+        wkhtmltopdf_state = 'broken'
 
 
 class Report(models.Model):
@@ -141,6 +146,14 @@ class Report(models.Model):
     def get_pdf(self, docids, report_name, html=None, data=None):
         """This method generates and returns pdf version of a report.
         """
+
+        if self._check_wkhtmltopdf() == 'install':
+            # wkhtmltopdf is not installed
+            # the call should be catched before (cf /report/check_wkhtmltopdf) but
+            # if get_pdf is called manually (email template), the check could be
+            # bypassed
+            raise UserError(_("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
+
         # As the assets are generated during the same transaction as the rendering of the
         # templates calling them, there is a scenario where the assets are unreachable: when
         # you make a request to read the assets while the transaction creating them is not done.
