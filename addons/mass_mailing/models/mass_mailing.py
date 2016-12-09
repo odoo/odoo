@@ -324,7 +324,7 @@ class MassMailing(models.Model):
     clicks_ratio = fields.Integer(compute="_compute_clicks_ratio", string="Number of Clicks")
     state = fields.Selection([('draft', 'Draft'), ('in_queue', 'In Queue'), ('sending', 'Sending'), ('done', 'Sent')],
         string='Status', required=True, copy=False, default='draft')
-    color = fields.Integer(related='mass_mailing_campaign_id.color', string='Color Index')
+    color = fields.Integer(string='Color Index')
     # mailing options
     reply_to_mode = fields.Selection(
         [('thread', 'Followers of leads/applicants'), ('email', 'Specified Email Address')],
