@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-09-23 08:57+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-12-04 16:32+0000\n"
+"Last-Translator: Esteban Echeverry <tebanep@nubark.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -158,12 +158,12 @@ msgstr ", si los módulos de contabilidad o de compras están instalados"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr "Conciliar"
+msgstr "-> Conciliar"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View reconciled entries"
-msgstr "Ver entradas conciliadas."
+msgstr "-> Ver entradas conciliadas."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:322
@@ -1713,7 +1713,7 @@ msgstr "Formateado automático"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:15
 #, python-format
 msgid "Automatic reconciliation"
-msgstr ""
+msgstr "Conciliación Automática"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:469
@@ -3127,7 +3127,7 @@ msgstr "Fecha"
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "Day(s) after the end of the invoice month (Net EOM)"
-msgstr "Día(s) después del fin de mes facturado (Net EOM) "
+msgstr "Día(s) después del final del mes de facturación (Neto FDM) "
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -5255,7 +5255,7 @@ msgstr "Nombre Legal"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Legal Notes..."
-msgstr "Avisos legales."
+msgstr "Notas Legales..."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_note
@@ -5265,7 +5265,7 @@ msgstr "Menciones legales que deben ser impresas en las facturas."
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Less Cost of Revenue"
-msgstr "Menor valor de ingresos."
+msgstr "Menos Costo de Ingresos."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -5298,7 +5298,7 @@ msgstr "Menos Pagos"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:15
 #, python-format
 msgid "Let odoo try to reconcile entries for the user"
-msgstr ""
+msgstr "Permitir a Odoo intentar conciliar las entradas por el usuario"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
@@ -5996,7 +5996,7 @@ msgid ""
 "Operation not allowed. You can only reconcile entries that share the same "
 "secondary currency or that don't have one. Edit your journal items or make "
 "another selection before proceeding any further."
-msgstr "Operación no permitida. Solo se puede conciliar entradas que comparten la misma moneda secundaria o que no tienen ninguna. Edite los artículos de su diario o haga otra selección antes de seguir adelante."
+msgstr "Operación no permitida. Sólo se puede conciliar entradas que comparten la misma moneda secundaria o que no tienen ninguna. Edite los artículos de su diario o haga otra selección antes de seguir adelante."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_nocreate
@@ -8720,7 +8720,7 @@ msgstr "Unidad de Medida"
 #: code:addons/account/report/account_aged_partner_balance.py:264
 #, python-format
 msgid "Unknown Partner"
-msgstr "Socio desconocido"
+msgstr "Tercero Desconocido"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9211,7 +9211,7 @@ msgstr "Puede configurar aquí el formato en el que quiere mostrar este registro
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
-msgstr "No puede añadir/modificar entradas anteriores e inclusive de la fecha de bloqueo %s"
+msgstr "No puede añadir/modificar entradas con fecha anterior o igual a la fecha de bloqueo %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:183

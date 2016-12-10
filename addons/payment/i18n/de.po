@@ -5,14 +5,15 @@
 # Translators:
 # Fabian Liesch <fabian.liesch@gmail.com>, 2015
 # Rudolf Schnapka <rs@techno-flex.de>, 2016
+# Torsten Wichmann <t.wichmann@intero-technologies.de>, 2016
 # Wolfgang Taferner, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-08-15 15:32+0000\n"
-"Last-Translator: Wolfgang Taferner\n"
+"PO-Revision-Date: 2016-12-09 10:41+0000\n"
+"Last-Translator: Torsten Wichmann <t.wichmann@intero-technologies.de>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,12 +71,12 @@ msgstr "Zahlungsanbieter"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_id
 msgid "Acquirer Account"
-msgstr ""
+msgstr "Zahlungsanbieterkonto"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method_acquirer_ref
 msgid "Acquirer Ref."
-msgstr ""
+msgstr "Zahlungsanbieterref."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
@@ -90,7 +91,7 @@ msgstr "Aktiv"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_active
 msgid "Add Extra Fees"
-msgstr ""
+msgstr "Zusätzliche Gebühren hinzufügen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_address
@@ -112,12 +113,12 @@ msgstr "Betrag"
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid "At payment no acquirer confirmation needed"
-msgstr ""
+msgstr "Bei Zahlung ist keine Bestätigung des Zahlungsanbieters erforderlich"
 
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid "At payment with acquirer confirmation"
-msgstr ""
+msgstr "Bei Zahlung erfolgt eine Bestätigung des Zahlungsanbieters"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_buckaroo
@@ -158,7 +159,7 @@ msgstr "Konfigurieren Sie die Methoden zur Zahlungsabwicklung"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_method_count
 msgid "Count Payment Method"
-msgstr ""
+msgstr "Anzahl der Zahlungsmethoden"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_country_id
@@ -187,7 +188,7 @@ msgstr "Erzeugt am"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Credentials"
-msgstr ""
+msgstr "Credentials"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -224,7 +225,7 @@ msgstr "Erledigt"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
 msgid "Done Message"
-msgstr ""
+msgstr "Erledigt Nachricht"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -294,7 +295,7 @@ msgstr "Vorlage für Button erstellen"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form with credentials storage"
-msgstr ""
+msgstr "Formular mit Credentials-Speicher"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
@@ -304,7 +305,7 @@ msgstr "Gruppiere nach"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pre_msg
 msgid "Help Message"
-msgstr ""
+msgstr "Hilfe Nachricht"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_id
@@ -321,7 +322,7 @@ msgstr "Bild / Photo"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_reference
 msgid "Internal reference of the TX"
-msgstr ""
+msgstr "Interne Referenz des TX"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_lang
@@ -365,7 +366,7 @@ msgid ""
 "Medium-sized image of this provider. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
-msgstr ""
+msgstr "Mittelgroßes Bild dieses Anbieters. Es wird automatisch als 128x128px Bild verkleinert, wobei das Seitenverhältnis erhalten bleibt. Verwenden Sie dieses Feld in Formularansichten oder einigen Kanbanansichten."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
@@ -386,26 +387,26 @@ msgstr "Diese Nachricht wird angezeigt, um den Ablauf des Zahlungsprozesses zu e
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_error_msg
 msgid "Message displayed, if error is occur during the payment process."
-msgstr ""
+msgstr "Nachricht wird angezeigt, wenn während des Zahlungsvorgangs ein Fehler auftritt."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
-msgstr ""
+msgstr "Nachricht wird angezeigt, wenn Auftrag während des Zahlungsvorgangs abgebrochen wird."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
 msgid ""
 "Message displayed, if order is done successfully after having done the "
 "payment process."
-msgstr ""
+msgstr "Die Nachricht wird angezeigt, wenn die Bestellung erfolgreich abgeschlossen wurde."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_pending_msg
 msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
-msgstr ""
+msgstr "Die Nachricht wird angezeigt, wenn die Bestellung im anstehenden Zustand ist, nachdem Sie den Zahlungsvorgang durchgeführt haben."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -423,12 +424,12 @@ msgstr "Bezeichnung"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method_name
 msgid "Name of the payment method"
-msgstr ""
+msgstr "Name der Zahlungsmethode"
 
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid "No automatic confirmation"
-msgstr ""
+msgstr "Keine automatische Bestätigung"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_config_settings_module_payment_ogone
@@ -438,7 +439,7 @@ msgstr "Ogone"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_auto_confirm
 msgid "Order Confirmation"
-msgstr ""
+msgstr "Auftragsbestätigung"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -516,7 +517,7 @@ msgstr "Unerledigt"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
 msgid "Pending Message"
-msgstr ""
+msgstr "noch nicht erledigt Nachricht"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_phone
@@ -552,12 +553,12 @@ msgstr "Pflichtfelder sind nicht ausgefüllt."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_callback_eval
 msgid "S2S Callback"
-msgstr ""
+msgstr "S2S Callback"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_registration_view_template_id
 msgid "S2S Form Template"
-msgstr ""
+msgstr "S2S Formularvorlage"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_method_action
@@ -587,7 +588,7 @@ msgid ""
 "Small-sized image of this provider. It is automatically resized as a 64x64px"
 " image, with aspect ratio preserved. Use this field anywhere a small image "
 "is required."
-msgstr ""
+msgstr "Kleines Bild des Anbieters. Es wird automatisch als 64x64px-Bild verkleinert, wobei das Seitenverhältnis beibehalten wird. Verwenden Sie dieses Feld, wenn ein kleines Bild benötigt wird."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state
@@ -597,7 +598,7 @@ msgstr "Status"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
 msgid "Template for method registration"
-msgstr ""
+msgstr "Vorlage für die Methodenregistrierung"
 
 #. module: payment
 #: selection:payment.acquirer,environment:0
@@ -618,14 +619,14 @@ msgstr "Die Zahlungsreferenz muß eindeutig sein!"
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
 msgid ""
 "This field holds the image used for this provider, limited to 1024x1024px"
-msgstr ""
+msgstr "Dieses Feld enthält das Bild, das für diesen Anbieter verwendet wird, begrenzt auf 1024x1024px"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
 "                                            It is be rendered with qWeb with the following evaluation context:"
-msgstr ""
+msgstr "Diese Vorlage erzeugt den Zahlungsanbieter-Button mit allen erforderlichen Werten.\nEs wird mit qWeb mit dem folgenden Auswertungskontext gerendert:"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_type

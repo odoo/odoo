@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-10-19 09:25+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
+"POT-Creation-Date: 2016-12-07 10:39+0000\n"
+"PO-Revision-Date: 2016-12-08 11:14+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +25,6 @@ msgid "&amp;bull;"
 msgstr "&amp;bull;"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.layout
 #: model:ir.ui.view,arch_db:report.minimal_layout
 msgid "&lt;!DOCTYPE html&gt;"
 msgstr "&lt;!DOCTYPE html&gt;"
@@ -146,7 +145,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9  23  33 x 62 mm"
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:274
 #, python-format
 msgid "Bad Report Reference"
 msgstr "Foute rapport referentie"
@@ -199,6 +198,7 @@ msgid "Default paper format ?"
 msgstr "Standaard papier formaat?"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_paperformat_display_name
@@ -261,6 +261,7 @@ msgid "Header spacing"
 msgstr "Kop afstand"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_id
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_id
 #: model:ir.model.fields,field_description:report.field_report_id
 #: model:ir.model.fields,field_description:report.field_report_paperformat_id
@@ -273,6 +274,7 @@ msgid "Landscape"
 msgstr "Liggend"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode___last_update
 #: model:ir.model.fields,field_description:report.field_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_abstract_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_paperformat___last_update
@@ -395,6 +397,7 @@ msgstr "Voorbeeldweergave intern rapport"
 #: code:addons/report/static/src/js/qwebactionmanager.js:76
 #: code:addons/report/static/src/js/qwebactionmanager.js:84
 #: code:addons/report/static/src/js/qwebactionmanager.js:91
+#: code:addons/report/static/src/js/qwebactionmanager.js:96
 #: model:ir.model,name:report.model_report
 #, python-format
 msgid "Report"
@@ -443,7 +446,7 @@ msgid "This is a sample of an internal report."
 msgstr "Dit is een voorbeeld van een intern rapport."
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:274
 #, python-format
 msgid "This report is not loaded into the database: %s."
 msgstr "Dit rapport is niet geladen in de database: %s"
@@ -464,12 +467,18 @@ msgid ""
 msgstr "Kan geen Wkhtmltopdf op dit systeem vinden \nHet rapport wordt getoond in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\nwkhtmltopdf.org</a>"
 
 #. module: report
+#: code:addons/report/models/report.py:164
+#, python-format
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
+msgstr "Wkhtmltopdf kon niet gevonden worden op het systeem. De PDF kan niet gegenereerd worden."
+
+#. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "Website:"
 msgstr "Website:"
 
 #. module: report
-#: code:addons/report/models/report.py:413
+#: code:addons/report/models/report.py:464
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Fout in Wkhtmltopdf (fout code: %s). Bericht: %s"
@@ -495,11 +504,10 @@ msgid ""
 msgstr "U moet uw versie van\nWkhtmltopdf updaten naar ten minste versie 0.12.0 om een correcte weergave van koppen en voeteindes te krijgen\nen om tabel-breking tussen pagina's te ondersteunen.<br><br><a href=\"http://wkhtmltopdf.org/\"\ntarget=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
-#: model:ir.model,name:report.model_ir_actions_report_xml
-msgid "ir.actions.report.xml"
-msgstr "ir.actions.report.xml"
-
-#. module: report
-#: model:ir.model,name:report.model_report_abstract_report
-msgid "report.abstract_report"
-msgstr "report.abstract_report"
+#. openerp-web
+#: code:addons/report/static/src/js/qwebactionmanager.js:96
+#, python-format
+msgid ""
+"Your installation of Wkhtmltopdf seems to be broken. The \n"
+"report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
+msgstr "Uw Wkhtmltopdf installatie lijkt stuk te zijn. Het\nrapport wordt in HTML getoond..<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
