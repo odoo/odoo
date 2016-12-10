@@ -1066,16 +1066,21 @@ class account_voucher(osv.osv):
         :return: mapping between fieldname and value of account move line to create
         :rtype: dict
         '''
+        currency_obj = self.pool.get('res.currency')
         voucher = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
         debit = credit = 0.0
         # TODO: is there any other alternative then the voucher type ??
         # ANSWER: We can have payment and receipt "In Advance".
         # TODO: Make this logic available.
         # -for sale, purchase we have but for the payment and receipt we do not have as based on the bank/cash journal we can not know its payment or receipt
+        # As field :  paid_amount_in_company_currency is not returning currency convert value for purchase and sale type voucher, needs to convert here
+        amount = voucher.amount
+        if company_currency <> current_currency:
+            amount = currency_obj.compute(cr, uid, current_currency, company_currency, amount, context=context)
         if voucher.type in ('purchase', 'payment'):
-            credit = voucher.paid_amount_in_company_currency
+            credit = amount
         elif voucher.type in ('sale', 'receipt'):
-            debit = voucher.paid_amount_in_company_currency
+            debit = amount
         if debit < 0: credit = -debit; debit = 0.0
         if credit < 0: debit = -credit; credit = 0.0
         sign = debit - credit < 0 and -1 or 1
@@ -1238,7 +1243,7 @@ class account_voucher(osv.osv):
         voucher_currency = voucher.journal_id.currency or voucher.company_id.currency_id
         ctx.update({
             'voucher_special_currency_rate': voucher_currency.rate * voucher.payment_rate ,
-            'voucher_special_currency': voucher.payment_rate_currency_id and voucher.payment_rate_currency_id.id or False,})
+            'voucher_special_currency': voucher_currency or False,})
         prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
         for line in voucher.line_ids:
             #create one move line per voucher line where amount is not 0.0
