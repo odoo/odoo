@@ -691,7 +691,6 @@ class WebsiteSale(http.Controller):
     def payment(self, **post):
         """ Payment step. This page proposes several payment means based on available
         payment.acquirer. State at this point :
-
          - a draft sale order with lines; otherwise, clean context / session and
            back to the shop
          - no transaction in context / session, or only a draft one, if the customer
@@ -824,6 +823,9 @@ class WebsiteSale(http.Controller):
                 tx_values['payment_token_id'] = token
 
             tx = Transaction.create(tx_values)
+            #transaction state should be in 'pending' state in case of prosessing COD(Collect on delivery) 
+            if tx.acquirer_id.is_cod:
+                tx.state = 'pending'
             request.session['sale_transaction_id'] = tx.id
 
         # update quotation
@@ -899,7 +901,7 @@ class WebsiteSale(http.Controller):
             return request.redirect('/shop')
 
         if (not order.amount_total and not tx) or tx.state in ['pending', 'done', 'authorized']:
-            if (not order.amount_total and not tx):
+            if (not order.amount_total and not tx) or tx.acquirer_id.is_cod:
                 # Orders are confirmed by payment transactions, but there is none for free orders,
                 # (e.g. free events), so confirm immediately
                 order.with_context(send_email=True).action_confirm()

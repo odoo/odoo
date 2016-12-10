@@ -4,3 +4,4 @@
 import res_country
 import delivery
 import sale_order
+import payment_acquirer
