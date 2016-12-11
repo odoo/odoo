@@ -8,7 +8,7 @@
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
 # Jorge Villamil <jorge.villamil@serviciosit.com.mx>, 2015
 # Martin Trigaux, 2016
-# Néstor Gómez Muñoz <nestorgm@gmail.com>, 2015
+# Néstor Gómez Muñoz <nestorgm@gmail.com>, 2015-2016
 # Nhomar Hernández [Vauxoo] <nhomar@vauxoo.com>, 2016
 # Sarai Osorio <sarai.osorio@jarsa.com.mx>, 2016
 # Scott Acock <transifex@scottacock.com>, 2015
@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-09-23 08:57+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-12-10 21:28+0000\n"
+"Last-Translator: Néstor Gómez Muñoz <nestorgm@gmail.com>\n"
 "Language-Team: Spanish (Mexico) (http://www.transifex.com/odoo/odoo-9/language/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -111,7 +111,7 @@ msgstr "# de dígitos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
 msgid "# of Lines"
-msgstr ""
+msgstr "# de Líneas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
@@ -121,7 +121,7 @@ msgstr "# de Transacción"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Factura (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:321
@@ -156,12 +156,12 @@ msgstr ", si se ha instalado la contabilidad o la compra "
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr ""
+msgstr "-> Conciliar"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View reconciled entries"
-msgstr ""
+msgstr "-> Ver entradas reconciliadas"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:322
@@ -329,7 +329,7 @@ msgstr "<span class=\"panel-title\">\n<strong>Grabar sus Cuentas</strong>\n</spa
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr ""
+msgstr "<span title=\"Balance in Odoo\">Balance en Libro Mayor</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1711,7 +1711,7 @@ msgstr "Formato automático"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:15
 #, python-format
 msgid "Automatic reconciliation"
-msgstr ""
+msgstr "Conciliación automática"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:469
@@ -1917,7 +1917,7 @@ msgstr "Estados de Cuenta Bancarios están totalmente conciliados."
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_base
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Base"
-msgstr ""
+msgstr "Base"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1956,7 +1956,7 @@ msgstr "Cobros"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills"
-msgstr ""
+msgstr "Cuentas por pagar"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2305,7 +2305,7 @@ msgstr "Compruebe saldo de cierre"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_is_difference_zero
 msgid "Check if difference is zero."
-msgstr ""
+msgstr "Comprueba si la diferencia es cero"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_reconcile
@@ -2719,7 +2719,7 @@ msgstr "Control-Acceso"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
 msgid "Cost of Revenue"
-msgstr ""
+msgstr "Costo directo de los ingresos"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:388
@@ -3125,7 +3125,7 @@ msgstr "Fechas"
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "Day(s) after the end of the invoice month (Net EOM)"
-msgstr ""
+msgstr "Día(s) después del fin de mes de la factura (FDM neto)"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -4763,7 +4763,7 @@ msgstr "Es un Seguidor"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_is_difference_zero
 msgid "Is zero"
-msgstr ""
+msgstr "Es cero"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_default_credit_account_id
@@ -5253,17 +5253,17 @@ msgstr "Nombre Legal"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Legal Notes..."
-msgstr ""
+msgstr "Notas Legales"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_note
 msgid "Legal mentions that have to be printed on the invoices."
-msgstr ""
+msgstr "Menciones legales que deben imprimirse en las facturas"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Less Cost of Revenue"
-msgstr ""
+msgstr "Menos costo de los ingresos"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -5296,7 +5296,7 @@ msgstr "Menos Pagos"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:15
 #, python-format
 msgid "Let odoo try to reconcile entries for the user"
-msgstr ""
+msgstr "Dejar a Odoo reconciliar entradas por el usuario"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
@@ -5994,7 +5994,7 @@ msgid ""
 "Operation not allowed. You can only reconcile entries that share the same "
 "secondary currency or that don't have one. Edit your journal items or make "
 "another selection before proceeding any further."
-msgstr ""
+msgstr "Operación no permitida. Solo puede reconciliar entradas que comparten el tipo de cambio secundario o que no tienen uno. Edite su diario o haga otra selección antes de seguir adelante."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_nocreate
@@ -8718,7 +8718,7 @@ msgstr "Unidad de Medición"
 #: code:addons/account/report/account_aged_partner_balance.py:264
 #, python-format
 msgid "Unknown Partner"
-msgstr ""
+msgstr "Asociado desconocido"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9016,7 +9016,7 @@ msgstr "Ver"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
 msgid "View reconciled entries"
-msgstr ""
+msgstr "Ver entradas reconciliadas"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -9209,7 +9209,7 @@ msgstr "Puede configurar aquí el formato que desee este registro que se mostrar
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
-msgstr ""
+msgstr "No puede agregar/modificar entradas anteriores o incluso hasta la fecha de bloqueo %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:183
