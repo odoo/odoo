@@ -602,7 +602,7 @@ msgstr "製品数量チェック"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Check availability"
-msgstr "あるかどうかを確認します"
+msgstr "利用可能確認"
 
 #. module: mrp
 #. openerp-web
@@ -630,7 +630,7 @@ msgstr "クリックで製造オーダの作成"
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_message_action_main
 msgid "Click to create a new message."
-msgstr "クリックで新しいメッセージを作成。"
+msgstr "クリックしてメッセージを新規作成してください。"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -640,7 +640,7 @@ msgstr "クリックして工順を新規作成してください。"
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "Click to start a new Unbuild Order"
-msgstr "クリックして新しい解体オーダーを作成"
+msgstr "クリックして解体オーダを新規作成してください。"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
@@ -752,7 +752,7 @@ msgstr "使用量IDs"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Continue Production"
-msgstr "製造中"
+msgstr "製造再開"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
@@ -860,7 +860,7 @@ msgstr "最終開始日"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Default Duration"
-msgstr "デフォルト工期"
+msgstr "デフォルト所要時間"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -1645,7 +1645,7 @@ msgstr "MRPワークセンター"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_search
 msgid "My Messages"
-msgstr "私のメッセージ"
+msgstr "自分のメッセージ"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_message_name
@@ -1710,7 +1710,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_maintenance:0
 msgid "No maintenance machine and work centers"
-msgstr "整備機器と作業区がありません"
+msgstr "整備機械や作業センターなし"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_mps:0
@@ -1736,7 +1736,7 @@ msgstr "この装置には生産性の損失はありません。"
 #. module: mrp
 #: selection:mrp.config.settings,module_quality_mrp:0
 msgid "No quality control"
-msgstr "品質管理がありません"
+msgstr "品質管理なし"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_product_variant:0
@@ -1821,12 +1821,12 @@ msgstr "ハードディスク容量は要件に基づいて用意します"
 #. module: mrp
 #: selection:mrp.routing.workcenter,batch:0
 msgid "Once a minimum number of products is processed"
-msgstr "一度、製品の最小数が処理されます"
+msgstr "最小数量が処理されたとき"
 
 #. module: mrp
 #: selection:mrp.routing.workcenter,batch:0
 msgid "Once all products are processed"
-msgstr "一度、全ての製品が処理されます"
+msgstr "全数量が処理されたとき"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_name
@@ -2083,7 +2083,7 @@ msgstr "トラッキング付製品"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 msgid "Production"
-msgstr "本番"
+msgstr "製造"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_date
@@ -2165,7 +2165,7 @@ msgstr "生産ロス"
 #: model:ir.actions.act_window,name:mrp.product_template_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_product_form
 msgid "Products"
-msgstr "メニュー"
+msgstr "製品"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_product_variant:0
@@ -2515,7 +2515,7 @@ msgstr "MRPワークセンターの検索"
 #: model:ir.model.fields,help:mrp.field_mrp_config_settings_manufacturing_lead
 #: model:ir.model.fields,help:mrp.field_res_company_manufacturing_lead
 msgid "Security days for each manufacturing operation."
-msgstr "各製造操作の安全保障の日"
+msgstr "各製造操作の安全日数"
 
 #. module: mrp
 #. openerp-web
@@ -2827,12 +2827,12 @@ msgstr "タイムトラッキング:"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_stop
 msgid "Time after prod."
-msgstr "生産後片付け時間"
+msgstr "製造後片付時間"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_start
 msgid "Time before prod."
-msgstr "生産前段取時間"
+msgstr "製造前段取時間"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_time_ids
@@ -2965,7 +2965,7 @@ msgstr "解体オーダ"
 #: code:addons/mrp/models/mrp_unbuild.py:76
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
-msgstr "解体オーダの製品の量は厳密に正の数である必要があります。"
+msgstr "解体オーダの製品数量は厳密に正の数である必要があります。"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_unbuild
@@ -3043,8 +3043,8 @@ msgid ""
 "                products, process, or actions to take care of. (e.g; Warning, the bill of material changed,\n"
 "                check the details in new worksheet)"
 msgstr ""
-"メッセージは製造時の警告やインベントリの人々に製品や工程、処置の変更に注意を喚起するために\n"
-"使用されます。(例;警告、部品表の変更、新しいワークシート尾の詳細のチェック)"
+"メッセージは製造や在庫担当者に、製品や工程、処置の変更についての注意を喚起するために使用されます。(例: 「注意 - "
+"部品表が変更されました。新しいワークシートで詳細を確認してください」)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_user_id
