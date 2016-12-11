@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-25 12:58+0000\n"
-"PO-Revision-Date: 2016-12-03 10:03+0000\n"
+"PO-Revision-Date: 2016-12-11 01:35+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgid ""
 "            <p><em>${object.comment}</em></p>\n"
 "        % endif\n"
 "        "
-msgstr ""
+msgstr "\n        <p>おめでとう、あなたはバッジを受け取った<strong>${object.badge_id.name}</strong> !\n            % if object.sender_id\n                このバッジは<strong>${object.sender_id.name}</strong>さんから付与されました。\n            % endif\n        </p>\n\n        % if object.comment\n            <p><em>${object.comment}</em></p>\n        % endif\n        "
 
 #. module: gamification
 #: model:email.template,body_html:gamification.email_template_goal_reminder
@@ -137,7 +137,7 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:754
 #, python-format
 msgid "<br/>Reward (badge %s) for every succeeding user was sent to %s."
-msgstr ""
+msgstr "<br/>後続のすべてのユーザーの報酬 (badge %s) が％sに送信されました。"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:763
@@ -145,7 +145,7 @@ msgstr ""
 msgid ""
 "<br/>Special rewards were sent to the top competing users. The ranking for "
 "this challenge is :"
-msgstr ""
+msgstr "<br/>最高の競合ユーザーに特別な報酬が送られました。 この課題のランキングは次のとおりです:"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.badge_list_action
@@ -221,12 +221,12 @@ msgstr ">="
 msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
-msgstr ""
+msgstr "現在の値と到達する値を比較した場合、目標は完了したと見なされます"
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
 msgid "A selected list of users"
-msgstr ""
+msgstr "選択したユーザーのリスト"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.view_challenge_wizard
@@ -251,70 +251,70 @@ msgstr "高度なオプション"
 #. module: gamification
 #: field:gamification.badge,rule_auth:0
 msgid "Allowance to Grant"
-msgstr ""
+msgstr "付与する手当"
 
 #. module: gamification
 #: help:gamification.challenge,user_domain:0
 msgid "Alternative to a list of users"
-msgstr ""
+msgstr "ユーザーのリストの代わり"
 
 #. module: gamification
 #: field:gamification.challenge,category:0
 msgid "Appears in"
-msgstr ""
+msgstr "表示されます"
 
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid "Assign Challenge To"
-msgstr ""
+msgstr "チャレンジの割り当て"
 
 #. module: gamification
 #: field:gamification.badge,rule_auth_user_ids:0
 msgid "Authorized Users"
-msgstr ""
+msgstr "認定ユーザー"
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
 msgid "Automatic: execute a specific Python code"
-msgstr ""
+msgstr "自動：特定のPythonコードを実行する"
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
 msgid "Automatic: number of records"
-msgstr ""
+msgstr "自動：レコード数"
 
 #. module: gamification
 #: selection:gamification.goal.definition,computation_mode:0
 msgid "Automatic: sum on a field"
-msgstr ""
+msgstr "自動：フィールドの合計"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 #: field:gamification.badge,name:0 field:gamification.badge.user,badge_id:0
 #: field:gamification.badge.user.wizard,badge_id:0
 msgid "Badge"
-msgstr ""
+msgstr "バッジ"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_form_view
 msgid "Badge Description"
-msgstr ""
+msgstr "バッジの説明"
 
 #. module: gamification
 #: model:mail.message.subtype,description:gamification.mt_badge_granted
 #: model:mail.message.subtype,name:gamification.mt_badge_granted
 msgid "Badge Granted"
-msgstr ""
+msgstr "バッジの付与"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_list_view
 msgid "Badge List"
-msgstr ""
+msgstr "バッジリスト"
 
 #. module: gamification
 #: field:gamification.badge.user,badge_name:0
 msgid "Badge Name"
-msgstr ""
+msgstr "バッジ名"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.badge_list_action
@@ -1214,7 +1214,7 @@ msgstr ""
 #. module: gamification
 #: view:gamification.challenge:gamification.challenge_form_view
 msgid "Notification Messages"
-msgstr ""
+msgstr "通知メッセージ"
 
 #. module: gamification
 #: field:gamification.badge,stat_count_distinct:0
@@ -1774,7 +1774,7 @@ msgstr ""
 #. module: gamification
 #: help:gamification.badge,image:0
 msgid "This field holds the image used for the badge, limited to 256x256"
-msgstr ""
+msgstr "このフィールドには、バッジに使用される画像が格納されます。256x256以下のサイズです。"
 
 #. module: gamification
 #: field:gamification.goal,target_goal:0
@@ -1937,7 +1937,7 @@ msgstr ""
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
 msgid "e.g. user.partner_id.id"
-msgstr ""
+msgstr "例. user.partner_id.id"
 
 #. module: gamification
 #: view:gamification.badge:gamification.badge_kanban_view
