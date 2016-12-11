@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-25 13:28+0000\n"
-"PO-Revision-Date: 2015-11-27 08:31+0000\n"
+"PO-Revision-Date: 2016-12-05 12:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-8/language/lt/)\n"
 "MIME-Version: 1.0\n"
@@ -408,7 +408,7 @@ msgstr ""
 #. module: calendar
 #: model:email.template,subject:calendar.calendar_template_meeting_reminder
 msgid "${object.event_id.name} - Reminder"
-msgstr ""
+msgstr "${object.event_id.name} - Priminimas"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:802
@@ -475,7 +475,7 @@ msgstr "Visą dieną"
 #: code:addons/calendar/calendar.py:776
 #, python-format
 msgid "AllDay , %s"
-msgstr ""
+msgstr "Visą dieną, %s"
 
 #. module: calendar
 #: field:calendar.alarm,duration:0
@@ -497,12 +497,12 @@ msgstr ""
 #. module: calendar
 #: field:calendar.event,is_attendee:0
 msgid "Attendee"
-msgstr ""
+msgstr "Dalyvis"
 
 #. module: calendar
 #: field:calendar.event,attendee_status:0
 msgid "Attendee Status"
-msgstr ""
+msgstr "Dalyvio būsena"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
@@ -555,14 +555,14 @@ msgstr "Kalendorius"
 #: model:ir.actions.act_window,name:calendar.action_calendar_alarm
 #: model:ir.ui.menu,name:calendar.menu_calendar_alarm
 msgid "Calendar Alarm"
-msgstr ""
+msgstr "Kalendoriaus signalas"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:42
 #, python-format
 msgid "Calendar Invitation"
-msgstr ""
+msgstr "Kalendoriaus pakvietimas"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
@@ -622,7 +622,7 @@ msgstr "Paskutinės žinutės publikavimo data po šiuo įrašu."
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Day of Month"
-msgstr ""
+msgstr "Mėnesio diena"
 
 #. module: calendar
 #: selection:calendar.event,month_by:0
@@ -678,7 +678,7 @@ msgstr "Laikotarpis"
 #. module: calendar
 #: field:calendar.alarm,duration_minutes:0
 msgid "Duration in minutes"
-msgstr ""
+msgstr "Trukmė minutėmis"
 
 #. module: calendar
 #: selection:calendar.alarm,type:0 field:calendar.attendee,email:0
@@ -719,7 +719,7 @@ msgstr "Pabaigos data"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Ending at"
-msgstr ""
+msgstr "Baigiasi"
 
 #. module: calendar
 #: constraint:calendar.event:0
@@ -740,19 +740,19 @@ msgstr "Įvykis"
 #. module: calendar
 #: field:calendar.event,display_time:0
 msgid "Event Time"
-msgstr ""
+msgstr "Įvykio laikas"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
 msgid "Event alarm"
-msgstr ""
+msgstr "Įvykio signalas"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/js/base_calendar.js:30
 #, python-format
 msgid "Everybody's calendars"
-msgstr ""
+msgstr "Visų kalendoriai"
 
 #. module: calendar
 #: model:calendar.event.type,name:calendar.categ_meet5
@@ -773,7 +773,7 @@ msgstr "Pirmas"
 #: code:addons/calendar/calendar.py:141
 #, python-format
 msgid "First you have to specify the date of the invitation."
-msgstr ""
+msgstr "Pirmiausia turite nurodyti pakvietimo datą."
 
 #. module: calendar
 #: field:calendar.event,message_follower_ids:0
@@ -815,12 +815,12 @@ msgstr "Grupuoti pagal"
 #: code:addons/calendar/calendar.py:1616
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
-msgstr ""
+msgstr "Grupavimas pagal datą nepalaikomas, naudokite kalendoriaus vaizdą."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "HTTP nukreipimas"
 
 #. module: calendar
 #: help:calendar.event,message_summary:0
@@ -861,7 +861,7 @@ msgstr "Vidinis susitikimas"
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
 msgid "Invitation"
-msgstr ""
+msgstr "Pakvietimas"
 
 #. module: calendar
 #: field:calendar.attendee,access_token:0
@@ -881,7 +881,7 @@ msgstr "Pakvietimai"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_wizard_invite
 msgid "Invite wizard"
-msgstr ""
+msgstr "Pakviesti vedlį"
 
 #. module: calendar
 #: field:calendar.event,message_is_follower:0
@@ -915,7 +915,7 @@ msgstr "Paskutinį kartą atnaujinta"
 #. module: calendar
 #: field:res.partner,calendar_last_notif_ack:0
 msgid "Last notification marked as read from base Calendar"
-msgstr ""
+msgstr "Paskutinis pranešimas, pažymėtas kaip skaitytas iš bazinio kalendoriaus"
 
 #. module: calendar
 #: help:calendar.event,rrule_type:0
@@ -935,7 +935,7 @@ msgstr "Įvykio vieta"
 #. module: calendar
 #: field:calendar.contacts,user_id:0
 msgid "Me"
-msgstr ""
+msgstr "Man"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_search
@@ -967,7 +967,7 @@ msgstr "Susitikimo tipai"
 #. module: calendar
 #: field:calendar.attendee,event_id:0
 msgid "Meeting linked"
-msgstr ""
+msgstr "Susitikimas susijęs"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_calendar
@@ -1051,12 +1051,12 @@ msgstr "Reikia veiksmo"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:46
 #, python-format
 msgid "No I'm not going."
-msgstr ""
+msgstr "Ne, aš nedalyvauju."
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
 msgid "Notification"
-msgstr ""
+msgstr "Pranešimas"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
@@ -1160,7 +1160,7 @@ msgstr "Pasikartojimo taisyklė"
 #. module: calendar
 #: field:calendar.event,alarm_ids:0
 msgid "Reminders"
-msgstr ""
+msgstr "Priminimai"
 
 #. module: calendar
 #. openerp-web
@@ -1228,7 +1228,7 @@ msgstr ""
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Send mail"
-msgstr ""
+msgstr "Siųsti laišką"
 
 #. module: calendar
 #: field:calendar.event,show_as:0
@@ -1240,7 +1240,7 @@ msgstr "Rodyti laiką kaip"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:22
 #, python-format
 msgid "Snooze"
-msgstr ""
+msgstr "Snausti"
 
 #. module: calendar
 #: field:calendar.event,start_date:0
@@ -1266,7 +1266,7 @@ msgstr "Būsena"
 #. module: calendar
 #: help:calendar.attendee,state:0
 msgid "Status of the attendee's participation"
-msgstr ""
+msgstr "Dalyvio dalyvavimo būsena"
 
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_tree
@@ -1370,7 +1370,7 @@ msgstr "Iki"
 #. module: calendar
 #: view:calendar.event:calendar.view_calendar_event_form
 msgid "Update only this instance"
-msgstr ""
+msgstr "Atnaujinkite tik šiuo atveju"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:104 code:addons/calendar/calendar.py:141
@@ -1437,13 +1437,13 @@ msgstr "Metai"
 #: code:addons/calendar/static/src/xml/base_calendar.xml:45
 #, python-format
 msgid "Yes I'm going."
-msgstr ""
+msgstr "Taip, aš dalyvauju"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:104
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr ""
+msgstr "Jūs negalite kopijuoti kalendoriaus dalyvio."
 
 #. module: calendar
 #: field:calendar.contacts,active:0
@@ -1465,7 +1465,7 @@ msgstr ""
 #: code:addons/calendar/calendar.py:1245
 #, python-format
 msgid "interval cannot be negative."
-msgstr ""
+msgstr "intervalas negali būti neigiamas."
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:1245 code:addons/calendar/calendar.py:1247
