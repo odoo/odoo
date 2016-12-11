@@ -196,7 +196,7 @@ msgstr "<strong>产品</strong>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "<strong>Products to Consume</strong>"
-msgstr "<strong>待消耗产品</strong>"
+msgstr "<strong>待投料的产品</strong>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -567,7 +567,7 @@ msgstr "变更产品数量"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
 msgid "Change Quantity To Produce"
-msgstr ""
+msgstr "变更待生产数量"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
@@ -577,7 +577,7 @@ msgstr "变更产品数量"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_check_to_done
 msgid "Check Produced Qty"
-msgstr "检查生产的数量"
+msgstr "检查已生产数量"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -702,32 +702,32 @@ msgstr "已确认"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_unbuild_id
 msgid "Consume Unbuild Order"
-msgstr "消耗拆解单"
+msgstr "投料拆解单"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_consume_line_ids
 msgid "Consume line ids"
-msgstr "消耗行 ids"
+msgstr "投料行 ids"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Consumed"
-msgstr "消耗的"
+msgstr "已投料"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Consumed Materials"
-msgstr "消耗的物料"
+msgstr "已投料物料"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_operation_id
 msgid "Consumed in Operation"
-msgstr "消耗在操作"
+msgstr "投料在作业"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_quant_consumed_quant_ids
 msgid "Consumed quant ids"
-msgstr "消耗的份 ids"
+msgstr "投料的份 ids"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -815,7 +815,7 @@ msgstr "当前数量"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_qty_producing
 msgid "Currently Produced Quantity"
-msgstr "当前的已生产数量"
+msgstr "当前已生产数量"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_dashboard
@@ -1224,7 +1224,7 @@ msgstr "是阻塞理由"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_produced
 msgid "Is produced"
-msgstr "生产"
+msgstr "是已生产"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:149
@@ -1808,7 +1808,7 @@ msgstr "操作"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_operation_id
 msgid "Operation To Consume"
-msgstr "待消耗的操作"
+msgstr "投料的作业"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_operation_ids
@@ -1917,7 +1917,7 @@ msgstr "安排订单"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: selection:mrp.production,state:0
 msgid "Planned"
-msgstr "安排"
+msgstr "已安排"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -1983,12 +1983,12 @@ msgstr "生产行 ids"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Produced"
-msgstr "生产"
+msgstr "已生产"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_quant_produced_quant_ids
 msgid "Produced quant ids"
-msgstr "生产的份 ids"
+msgstr "已生产份 ids"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -2194,13 +2194,13 @@ msgstr "产成品数量"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_qty_produced
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Quantity Produced"
-msgstr "已制造数量"
+msgstr "已生产数量"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_product_qty
 msgid "Quantity To Produce"
-msgstr ""
+msgstr "待生产数量"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_batch_size
@@ -2226,7 +2226,7 @@ msgstr "原材料"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_location_src_id
 msgid "Raw Materials Location"
-msgstr "原料库位"
+msgstr "原料位置"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
@@ -2381,7 +2381,7 @@ msgstr "工艺"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_mrp_routings
 msgid "Routings & Planning"
-msgstr "工艺 & 规划"
+msgstr "工艺 & 安排"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -2822,7 +2822,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "To Consume"
-msgstr "待消耗"
+msgstr "待投料"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_lots_quantity
@@ -3199,7 +3199,7 @@ msgstr "工单操作让我们在生产产品的时候在工作中心创建和管
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_workorder_id
 msgid "Work Order To Consume"
-msgstr "待消耗的工单"
+msgstr "投料的工单"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_routing_time
@@ -3230,7 +3230,7 @@ msgstr "工单效能"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production
 msgid "Work Orders Planning"
-msgstr "工票规划"
+msgstr "工单安排"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific

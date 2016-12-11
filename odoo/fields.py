@@ -986,7 +986,9 @@ class Field(object):
     def determine_draft_value(self, record):
         """ Determine the value of ``self`` for the given draft ``record``. """
         if self.compute:
-            self._compute_value(record)
+            fields = record._field_computed[self]
+            with record.env.protecting(fields, record):
+                self._compute_value(record)
         else:
             null = self.convert_to_cache(False, record, validate=False)
             record._cache[self] = SpecialValue(null)

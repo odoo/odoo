@@ -6,13 +6,14 @@
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Manami Hashi <manami@roomsfor.hk>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Manami Hashi <manami@roomsfor.hk>, 2016\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,11 @@ msgid ""
 "                financial accounts and/or analytic accounts (that may represent\n"
 "                projects, departments, categories of products, etc.)"
 msgstr ""
+"予算は、将来のある期間に期待されるあなたの会社の収入\n"
+"                 および/または経費の予測です。\n"
+"                 予算は、いくつかの財務勘定および/または分析勘定\n"
+"                 (プロジェクト、部門、製品のカテゴリなどを表す場合があります)に\n"
+"                 定義されています。"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_account_ids
@@ -38,7 +44,7 @@ msgstr "アカウント"
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_percentage
 msgid "Achievement"
-msgstr ""
+msgstr "成果"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_analytic_account
@@ -64,7 +70,7 @@ msgstr "予算"
 #: model:ir.actions.act_window,name:account_budget.act_account_analytic_account_cb_lines
 #: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
 msgid "Budget Items"
-msgstr ""
+msgstr "予算アイテム"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget_lines
@@ -86,7 +92,7 @@ msgstr "予算ライン"
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_name
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Budget Name"
-msgstr ""
+msgstr "予算名"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_post
@@ -120,11 +126,15 @@ msgid ""
 "                analytic account and monitor its evolution based on the actuals\n"
 "                realised during that period."
 msgstr ""
+"お金の動きを把握し、無駄な出費を避けることによって、\n"
+"             財務上の目標を達成する可能性が高くなります。\n"
+"             分析勘定ごとの予想収益を詳述して予算を予測し、\n"
+"             その期間に実現した実績に基づいて進化を監視します。"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Cancel Budget"
-msgstr ""
+msgstr "予算取消"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -134,7 +144,7 @@ msgstr "取消済"
 #. module: account_budget
 #: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
 msgid "Click to create a new budget."
-msgstr ""
+msgstr "クリックして新しい予算を作成"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_company_id

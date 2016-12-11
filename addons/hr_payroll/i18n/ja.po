@@ -40,58 +40,65 @@ msgid ""
 "                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"*給与明細が作成されるとステータスは「ドラフト」になります\n"
+"                \n"
+"*給与明細が検証中の場合、ステータスは「待機中」です。\n"
+"                \n"
+"*給与明細が確認された場合、ステータスは「完了」に設定されます。\n"
+"                \n"
+"*ユーザーが給与明細をキャンセルするとステータスは「拒否」となります。"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Address</strong>"
-msgstr ""
+msgstr "<strong>住所</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Authorized signature</strong>"
-msgstr ""
+msgstr "<strong>承認された署名</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Bank Account</strong>"
-msgstr ""
+msgstr "<strong>銀行口座</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Date From:</strong>"
-msgstr ""
+msgstr "<strong>日付 自:</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Date From</strong>"
-msgstr ""
+msgstr "<strong>日付 自</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Date To:</strong>"
-msgstr ""
+msgstr "<strong>日付 至:</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Date To</strong>"
-msgstr ""
+msgstr "<strong>日付 至</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Designation</strong>"
-msgstr ""
+msgstr "<strong>指定</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Email</strong>"
-msgstr ""
+msgstr "<strong>Eメール</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -114,7 +121,7 @@ msgstr "<strong>参照</strong>"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Register Name:</strong>"
-msgstr ""
+msgstr "<strong>登録者名:</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -225,13 +232,13 @@ msgstr "取消"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Cancel Payslip"
-msgstr ""
+msgstr "給与明細のキャンセル"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payroll.py:238
 #, python-format
 msgid "Cannot cancel a payslip that is done."
-msgstr ""
+msgstr "実行済の給与明細をキャンセルすることはできません。"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
@@ -336,7 +343,7 @@ msgstr "設定"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_configuration
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
 msgid "Configure Payroll"
-msgstr ""
+msgstr "給与計算を設定"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -380,7 +387,7 @@ msgstr "寄与登録"
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payroll_config_settings_module_hr_payroll_account
 msgid "Create journal entries from payslips"
-msgstr ""
+msgstr "給与明細から仕訳入力を作成する"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_uid
@@ -561,7 +568,7 @@ msgstr "従業員"
 #: code:addons/hr_payroll/models/hr_payroll.py:41
 #, python-format
 msgid "Error ! You cannot create a recursive Salary Structure."
-msgstr ""
+msgstr "エラー！ 再帰的な給与構造は作成できません。"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_register_id
@@ -666,7 +673,7 @@ msgstr "入力"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
 msgid "Install your country's payroll"
-msgstr ""
+msgstr "あなたの国の給与計算をインストールしてください"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_note
@@ -680,6 +687,8 @@ msgid ""
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
+"パーセンテージと固定金額の計算に使用されます。 例えば "
+"1日あたり1ユーロの固定金額を持つ食事バウチャーのルールは、その日数を式の中に定義することができます。たとえば、work_days.WORK100.number_of_daysです。"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
@@ -747,7 +756,7 @@ msgstr "最終更新日"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_module_hr_payroll_account
 msgid "Link your payroll to accounting system"
-msgstr ""
+msgstr "給与計算を会計システムにリンクする"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_category_parent_id
@@ -830,7 +839,7 @@ msgstr "オフィサー"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Other Inputs"
-msgstr ""
+msgstr "その他の入力"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_parent_id
@@ -969,7 +978,7 @@ msgstr "給与明細名"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
 msgid "Payslip Run"
-msgstr ""
+msgstr "給与明細を実行"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
@@ -1062,7 +1071,7 @@ msgstr "数量 / 割合"
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Quantity/rate"
-msgstr ""
+msgstr "数量/レート"
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -1342,7 +1351,7 @@ msgstr "計算の順序を決めるために使用"
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_appears_on_payslip
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_appears_on_payslip
 msgid "Used to display the salary rule on payslip."
-msgstr ""
+msgstr "給与明細に給与ルールを表示するために使用されます。"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -1373,54 +1382,54 @@ msgstr "労働日と入力"
 #: code:addons/hr_payroll/models/hr_payroll.py:770
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
-msgstr ""
+msgstr "給与ルール%s (%s)に定義されている割合の基数または量が正しくありません。"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payroll.py:776
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
-msgstr ""
+msgstr "給与ルール %s (%s)に間違ったPythonコードが定義されています。"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payroll.py:799
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
-msgstr ""
+msgstr "給与ルール %s (%s)に誤ったPython条件が定義されています。"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payroll.py:763
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
-msgstr ""
+msgstr "給与ルール%s (%s)に定義されている数量が正しくありません。"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payroll.py:793
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
-msgstr ""
+msgstr "給与ルール%s (%s)に間違った範囲条件が定義されています。"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payroll.py:268
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
-msgstr ""
+msgstr "ドラフトやキャンセルされていない給与明細を削除することはできません！"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:24
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
-msgstr ""
+msgstr "給与明細(s)を生成するには、従業員(s)を選択する必要があります。"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payroll.py:838
 #, python-format
 msgid "You must set a contract to create a payslip line."
-msgstr ""
+msgstr "あなたは、給与明細行を作成するための契約を設定する必要があります。"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_config_settings
 msgid "hr.payroll.config.settings"
-msgstr ""
+msgstr "hr.payroll.config.settings"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_salary_rule
@@ -1430,7 +1439,7 @@ msgstr "hr.salary.rule"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
 msgid "report.hr_payroll.report_contributionregister"
-msgstr ""
+msgstr "report.hr_payroll.report_contributionregister"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
