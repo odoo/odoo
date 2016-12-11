@@ -308,6 +308,11 @@ msgid ""
 "                                        <span class=\"small\">&gt; 200 contacts</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n"
+"                                        <strong>インポート</strong><br/>\n"
+"                                        <span class=\"small\">&gt; 200 コンタクト先なら</span>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -318,6 +323,11 @@ msgid ""
 "                                        <span class=\"small\">&lt; 200 contacts</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n"
+"                                        <strong> 手入力</strong><br/>\n"
+"                                        <span class=\"small\">&lt; 200 コンタクト先</span>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1908,7 +1918,7 @@ msgstr "自動フォーマット"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:15
 #, python-format
 msgid "Automatic reconciliation"
-msgstr ""
+msgstr "自動消込"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:473
@@ -2427,7 +2437,7 @@ msgstr "現金箱行"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_cashbox_id
 msgid "Cashbox"
-msgstr ""
+msgstr "現金箱"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_cashbox_lines_ids
@@ -2923,7 +2933,7 @@ msgstr "よくできました！"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Congratulations, you're done!"
-msgstr ""
+msgstr "よくできました！"
 
 #. module: account
 #: model:ir.model,name:account.model_account_abstract_payment
@@ -5353,7 +5363,7 @@ msgstr "仕訳明細"
 #: model:ir.actions.client,name:account.action_manual_reconcile
 #, python-format
 msgid "Journal Items to Reconcile"
-msgstr "調整する仕訳明細"
+msgstr "消込対象仕訳明細"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_name
@@ -6024,7 +6034,7 @@ msgstr "さらに <i class=\"fa fa-caret-down\"/>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "More Info"
-msgstr "さらに詳しく"
+msgstr "詳しくはこちらへ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6783,7 +6793,7 @@ msgstr "支払差額"
 #: model:ir.model.fields,field_description:account.field_account_payment_journal_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments_journal_id
 msgid "Payment Journal"
-msgstr ""
+msgstr "支払仕訳"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
@@ -8492,6 +8502,8 @@ msgid ""
 "Technical field used to hide the payment method if the selected journal has "
 "only one available which is 'manual'"
 msgstr ""
+"Technical field used to hide the payment method if the selected journal has "
+"only one available which is 'manual'"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_tax_exigible
@@ -8777,7 +8789,7 @@ msgstr "この請求書に使われる取引先勘定"
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
-msgstr ""
+msgstr "前回の請求書と支払いの照合が実行されて以来、取引先には少なくとも1つの未調整の借方と貸方があります。　"
 
 #. module: account
 #: code:addons/account/models/account_move.py:853
@@ -9417,7 +9429,7 @@ msgstr ""
 msgid ""
 "Unless you are starting a new business, you probably have a list of "
 "customers and vendors you'd like to import."
-msgstr ""
+msgstr "新しいビジネスを開始しない限り、おそらくあなたはすでにインポートする顧客とベンダーのリストがあるはずです。"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
@@ -9745,6 +9757,10 @@ msgid ""
 "                                        manager a CSV file containing all your\n"
 "                                        data."
 msgstr ""
+"インポートプロセス全体を処理します：\n"
+"すべてのデータを含むCSVファイルを\n"
+"Odooプロジェクトマネージャに送信\n"
+"するだけです。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10358,12 +10374,12 @@ msgstr "report.account.report_financial"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_generalledger
 msgid "report.account.report_generalledger"
-msgstr ""
+msgstr "report.account.report_generalledger"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_journal
 msgid "report.account.report_journal"
-msgstr ""
+msgstr "report.account.report_journal"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_overdue
@@ -10373,12 +10389,12 @@ msgstr "report.account.report_overdue"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_partnerledger
 msgid "report.account.report_partnerledger"
-msgstr ""
+msgstr "report.account.report_partnerledger"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_trialbalance
 msgid "report.account.report_trialbalance"
-msgstr ""
+msgstr "report.account.report_trialbalance"
 
 #. module: account
 #: code:addons/account/models/account_move.py:215
@@ -10413,7 +10429,7 @@ msgstr "あなたの銀行口座を設定します"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:296
 #, python-format
 msgid "suppliers"
-msgstr ""
+msgstr "仕入先"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
