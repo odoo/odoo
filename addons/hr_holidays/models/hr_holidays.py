@@ -190,7 +190,7 @@ class Holidays(models.Model):
     type = fields.Selection([
             ('remove', 'Leave Request'),
             ('add', 'Allocation Request')
-        ], string='Request Type', required=True, readonly=True, index=True, default='remove',
+        ], string='Request Type', required=True, readonly=True, index=True, track_visibility='always', default='remove',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help="Choose 'Leave Request' if someone wants to take an off-day. "
              "\nChoose 'Allocation Request' if you want to increase the number of leaves available for someone")
@@ -330,7 +330,10 @@ class Holidays(models.Model):
     def name_get(self):
         res = []
         for leave in self:
-            res.append((leave.id, _("%s on %s : %.2f day(s)") % (leave.employee_id.name, leave.holiday_status_id.name, leave.number_of_days_temp)))
+            if leave.type == 'remove':
+                res.append((leave.id, _("%s on %s : %.2f day(s)") % (leave.employee_id.name, leave.holiday_status_id.name, leave.number_of_days_temp)))
+            else:
+                res.append((leave.id, _("Allocation of %s : %.2f day(s) To %s") % (leave.holiday_status_id.name, leave.number_of_days_temp,leave.employee_id.name)))
         return res
 
     def _check_state_access_right(self, vals):
@@ -559,3 +562,13 @@ class Holidays(models.Model):
             })
 
         return [new_group] + groups
+
+    @api.multi
+    def _message_notification_recipients(self, message, recipients):
+        result = super(Holidays, self)._message_notification_recipients(message, recipients)
+        leave_type = self.env[message.model].browse(message.res_id).type
+        title = _("See Leave") if leave_type == 'remove' else _("See Allocation")
+        for res in result:
+            if result[res].get('button_access'):
+                result[res]['button_access']['title'] = title
+        return result
