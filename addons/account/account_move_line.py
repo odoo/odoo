@@ -1434,6 +1434,9 @@ class account_move_line(osv.osv):
                 #create the Tax movement
                 if not tax['amount'] and not tax[tax_code]:
                     continue
+                #FORWARD-PORT UPTO SAAS-6
+                tax_analytic = (tax_code == 'tax_code_id' and tax.get('account_analytic_collected_id')) or (tax_code == 'ref_tax_code_id' and tax.get('account_analytic_paid_id'))
+
                 data = {
                     'move_id': vals['move_id'],
                     'name': tools.ustr(vals['name'] or '') + ' ' + tools.ustr(tax['name'] or ''),
@@ -1447,6 +1450,7 @@ class account_move_line(osv.osv):
                     'account_id': tax[account_id] or vals['account_id'],
                     'credit': tax['amount']<0 and -tax['amount'] or 0.0,
                     'debit': tax['amount']>0 and tax['amount'] or 0.0,
+                    'analytic_account_id': tax_analytic,
                 }
                 self.create(cr, uid, data, context)
             del vals['account_tax_id']
