@@ -6,7 +6,7 @@
                 <t t-set="menu_categorytitle">Sell</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-shopping-cart'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title">Your Company</t>
+                    <t t-set="page_title">Company Details</t>
                     <p class="text-muted">
                         The first step is to set up your company's information. This is used in several places: Contact us page, website header &amp; footer, printed business documents like orders and invoices, etc.
                     </p>
@@ -128,7 +128,7 @@
             
                 </t>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title">Populate Your Catalog</t>
+                    <t t-set="page_title">Catalog</t>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="panel panel-success">
@@ -171,96 +171,6 @@
                                 </div>
                             </div>
                         </div>
-                </t>
-
-                <t t-call="web_planner.page">
-                    <t t-set="page_title">Taxes</t>
-                    <p class="text-muted">
-                        
-
-                        The last step in setting up your products is configuring the taxes. Taxes are already predefined for most localizations when it comes to regional transactions. However taxes may be specific to customer kinds and localizations. Take some time to check the following parameters:
-                    </p>
-
-                    <div class="panel panel-success">                        
-                        <div class="panel-heading">
-                                <span class="panel-title">
-                                    <span class="fa fa-check-square-o"/>
-                                    <strong>Origin-based vs. destination-based</strong><br/>
-                                        <span class="small"></span>                                    
-                                </span>
-                        </div>                        
-                        <div class="panel-body">
-                        <p>Depending on your state or country, you are required to collect sales taxes with either the rate at buyer’s address (destination-based) or the rate effective at your office or warehouse's address (origin-based).</p>                        
-                        <div class="col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <span class="panel-title">
-                                        <strong>Destination-based</strong><br/>
-                                            <span class="small">Most common</span>
-                                    </span>
-                                </div>
-                                <div class="panel-body">
-                                    <li><a href="https://www.odoo.com/documentation/user/online/accounting/others/taxes/default_taxes.html" target="_blank">Set default taxes</a></li>
-                                    <li><a href="https://www.odoo.com/documentation/user/online/accounting/others/taxes/application.html" target="_blank">Create tax mapping for foreign customers</a></li>                                                          
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <span class="panel-title">
-                                        <strong>Origin-based</strong><br/>
-                                        <span class="small">in some US states, etc.</span>
-                                    </span>
-                                </div>
-                                <div class="panel-body">
-                                    <p>                                                                        
-                                        <li><a href="https://www.odoo.com/documentation/user/online/accounting/others/taxes/default_taxes.html" target="_blank">Set default taxes</a></li>                                    
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <span class="panel-title">
-                                        <strong>You are in the US?</strong><br/>                                        
-                                    </span>
-                                </div>
-                                <div class="panel-body">
-                                    <p>                                                                        
-                                        <li><a href="https://taxcloud.net/#Find-a-Rate" target="_blank">See which tax rate applies in your city</a></li>
-                                        <li><a t-att-href="prepare_backend_url('account.action_account_config')" target="blank">Set this rate as 
-                                            default tax</a> or <a href="https://www.odoo.com/documentation/user/online/accounting/others/taxes/default_taxes.html" target="_blank">See how to do it</a></li>
-                                        <li>In destination-based states: <a href="https://www.odoo.com/documentation/user/online/accounting/others/taxes/taxcloud.html" target="_blank">Use TaxCloud to compute tax rates automatically</a></li>                                     
-                                    </p>
-                                </div>
-                            </div>
-                        </div>                       
-                    </div>                
-                </div>
-                              <div class="panel panel-success">                        
-                        <div class="panel-heading">
-                                <span class="panel-title">
-                                    <span class="fa fa-check-square-o"/>
-                                    <strong>Included vs. excluded in product prices</strong><br/>
-                                        <span class="small"></span>
-                                </span>
-                        </div>                        
-                        <div class="panel-body">
-                            <p>
-                            In North America, prices are shown tax-excluded whatever your business is (default mode in Odoo). In most other countries, only B2B prices are tax-exluded; B2C prices being tax-included.
-                            </p>
-                            <div class="row">
-                            <div class="col-md-12 col-xs-12">
-                                <div class="well well-lg">                                                 
-                                    <a href="https://www.odoo.com/documentation/user/online/accounting/others/taxes/tax_included.html" target="_blank">See how to set tax-included prices</a>                          
-                                </div>
-                            </div>
-                            </div>
-                        </div>    
-                    </div>          
                 </t>
 
                 <t t-call="web_planner.page">
