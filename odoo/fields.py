@@ -1744,6 +1744,14 @@ class Selection(Field):
                 return item[1]
         return False
 
+    def convert_to_column(self, value, record):
+        """ Convert ``value`` from the ``write`` format to the SQL format. """
+        if value is None or value is False:
+            return None
+        if isinstance(value, unicode):
+            return value.encode('utf8')
+        return str(value)
+
 
 class Reference(Selection):
     type = 'reference'

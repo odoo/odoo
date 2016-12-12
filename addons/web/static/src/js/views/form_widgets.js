@@ -955,7 +955,8 @@ var FieldRadio = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     },
     get_value: function () {
         var value = this.get('value');
-        return ((value instanceof Array)? value[0] : value) || false;
+        value = ((value instanceof Array)? value[0] : value);
+        return  _.isUndefined(value) ? false : value;
     },
     render_value: function () {
         var self = this;
