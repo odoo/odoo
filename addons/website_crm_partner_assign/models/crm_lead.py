@@ -190,24 +190,22 @@ class CrmLead(models.Model):
 
     @api.multi
     def partner_interested(self, comment=False):
-        self.check_access_rights('write')
         message = _('<p>I am interested by this lead.</p>')
         if comment:
             message += '<p>%s</p>' % comment
         for lead in self:
             lead.message_post(body=message, subtype="mail.mt_note")
-            lead.sudo().convert_opportunity(lead.partner_id.id)
+            lead.sudo().convert_opportunity(lead.partner_id.id)  # sudo required to convert partner data
 
     @api.multi
     def partner_desinterested(self, comment=False, contacted=False, spam=False):
-        self.check_access_rights('write')
         if contacted:
             message = '<p>%s</p>' % _('I am not interested by this lead. I contacted the lead.')
         else:
             message = '<p>%s</p>' % _('I am not interested by this lead. I have not contacted the lead.')
         partner_ids = self.env['res.partner'].search(
             [('id', 'child_of', self.env.user.partner_id.commercial_partner_id.id)])
-        self.sudo().message_unsubscribe(partner_ids=partner_ids.ids)
+        self.message_unsubscribe(partner_ids=partner_ids.ids)
         if comment:
             message += '<p>%s</p>' % comment
         self.message_post(body=message, subtype="mail.mt_note")
@@ -226,7 +224,6 @@ class CrmLead(models.Model):
     @api.multi
     def update_lead_portal(self, values):
         self.check_access_rights('write')
-
         for lead in self:
             lead_values = {
                 'planned_revenue': values['planned_revenue'],

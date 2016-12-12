@@ -14,9 +14,9 @@ Publish and Assign Partner
     'depends': ['base_geolocalize', 'crm', 'account',
                 'website_partner', 'website_google_map', 'website_portal'],
     'data': [
+        'data/crm_partner_assign_data.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
-        'data/crm_partner_assign_data.xml',
         'wizard/crm_forward_to_partner_view.xml',
         'views/res_partner_views.xml',
         'views/crm_lead_views.xml',
