@@ -1,18 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.exceptions import AccessError
+
 from odoo.tests.common import TransactionCase
+from odoo.addons.crm.tests.common import TestCrmCases
 
 
 class TestPartnerAssign(TransactionCase):
 
-    def test_00_partner_assign(self):
+    def test_partner_assign(self):
+        """ Test the automatic assignation using geolocalisation """
         partner2 = self.env.ref('base.res_partner_2')
         lead = self.env.ref('crm.crm_case_21')
-        '''
-            In order to test find nearest Partner functionality and assign to opportunity,
-            I Set Geo Lattitude and Longitude according to partner address.
-        '''
+
+        # In order to test find nearest Partner functionality and assign to opportunity,
+        # I Set Geo Lattitude and Longitude according to partner address.
         partner2.geo_localize()
 
         # I check Geo Latitude and Longitude of partner after set
@@ -34,3 +37,82 @@ class TestPartnerAssign(TransactionCase):
             lead_forwarded.action_forward()
         except:
             pass
+
+
+class TestPartnerLeadPortal(TestCrmCases):
+
+    def setUp(self):
+        super(TestPartnerLeadPortal, self).setUp()
+        # Partner Grade
+        self.grade = self.env['res.partner.grade'].create({
+            'name': "Grade Test",
+            'partner_weight': 42,
+            'sequence': 3,
+        })
+        # Integrating user/partner, having a salesman
+        self.portal_user = self.env['res.users'].with_context({'no_reset_password': True, 'mail_notrack': True}).create({
+            'name': 'Super Customer Odoo Intregrating Partner',
+            'email': 'super.partner@ododo.com',
+            'login': 'superpartner',
+            'groups_id': [(4, self.env.ref('base.group_portal').id)],
+            'user_id': self.crm_salesman.id,
+            'grade_id': self.grade.id,
+        })
+        self.portal_partner = self.portal_user.partner_id
+        # New lead, assigned to the new portal
+        self.lead = self.env['crm.lead'].with_context(mail_notrack=True).create({
+            'type': "lead",
+            'name': "Test lead new",
+            'user_id': False,
+            'team_id': False,
+            'description': "This is the description of the test new lead.",
+            'partner_assigned_id': self.portal_partner.id
+        })
+        # Sales Team of crm_salesman
+        self.team = self.env['crm.team'].with_context(mail_notrack=True).create({
+            'name': 'Test Team FOR THE WIN',
+            'use_leads': True,
+            'use_opportunities': True,
+            'member_ids': [(6, 0, [self.crm_salesman.id])],
+        })
+
+    def test_partner_lead_accept(self):
+        """ Test an integrating partner accepting the lead """
+        self.lead.sudo(self.portal_user.id).partner_interested(comment="Oh yeah, I take that lead !")
+
+        self.assertEqual(self.lead.type, 'opportunity', 'Bad Type: accepted lead by portal user should become an opportunity.')
+        self.assertFalse(self.lead.team_id, 'Accepting lead does not change the sales team.')
+        self.assertFalse(self.lead.user_id, 'Accepting lead does not change the salesman.')
+
+    def test_partner_lead_decline(self):
+        """ Test an integrating partner decline the lead """
+        self.lead.sudo(self.portal_user.id).partner_desinterested(comment="No thanks, I have enough leads !", contacted=True, spam=False)
+
+        self.assertFalse(self.lead.partner_assigned_id.id, 'The partner_assigned_id of the declined lead should be False.')
+        self.assertTrue(self.portal_user.partner_id in self.lead.sudo().partner_declined_ids, 'Partner who has declined the lead should be in the declined_partner_ids.')
+
+    def test_lead_access_right(self):
+        """ Test another portal user can not write on every leads """
+        # portal user having no right
+        poor_portal_user = self.env['res.users'].with_context({'no_reset_password': True, 'mail_notrack': True}).create({
+            'name': 'Poor Partner (not integrating one)',
+            'email': 'poor.partner@ododo.com',
+            'login': 'poorpartner',
+            'groups_id': [(4, self.env.ref('base.group_portal').id)],
+        })
+        # try to accept a lead that is not mine
+        with self.assertRaises(AccessError):
+            self.lead.sudo(poor_portal_user.id).partner_interested(comment="Oh yeah, I take that lead !")
+
+    def test_lead_creation(self):
+        """ Test the opportinuty creation from portal """
+        data = self.env['crm.lead'].sudo(self.portal_user.id).create_opp_portal({
+            'title': "L'ours bleu",
+            'description': 'A good joke',
+            'contact_name': 'Renaud Rutten',
+        })
+        opportunity = self.env['crm.lead'].browse(data['id'])
+        salesmanteam = self.env['crm.team']._get_default_team_id(user_id=self.portal_user.user_id.id)
+
+        self.assertEqual(opportunity.team_id, salesmanteam, 'The created opportunity should have the same team as the salesman default team of the opportunity creator.')
+        self.assertEqual(opportunity.partner_assigned_id, self.portal_partner, 'Assigned Partner of created opportunity is the (portal) creator.')
