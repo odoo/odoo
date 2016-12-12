@@ -755,8 +755,8 @@ class PurchaseOrderLine(models.Model):
         price_unit = self.env['account.tax']._fix_tax_included_price(seller.price, self.product_id.supplier_taxes_id, self.taxes_id) if seller else 0.0
         if price_unit and seller and self.order_id.currency_id and seller.currency_id != self.order_id.currency_id:
             price_unit = seller.currency_id.compute(price_unit, self.order_id.currency_id)
-        seller_uom = seller.product_uom or seller.product_id.product_tmpl_id.uom_id
-        if self.product_uom and seller_uom != self.product_uom:
+
+        if seller and self.product_uom and seller.product_uom != self.product_uom:
             price_unit = seller.product_uom._compute_price(price_unit, self.product_uom)
 
         self.price_unit = price_unit
@@ -777,17 +777,12 @@ class PurchaseOrderLine(models.Model):
         if not self.product_id:
             return
 
-        seller_min_qty = self.product_id.product_seller_ids\
+        seller_min_qty = self.product_id.seller_ids\
             .filtered(lambda r: r.name == self.order_id.partner_id)\
             .sorted(key=lambda r: r.min_qty)
-        if not seller_min_qty:
-            seller_min_qty = self.product_id.seller_ids\
-                .filtered(lambda r: r.name == self.order_id.partner_id)\
-                .sorted(key=lambda r: r.min_qty)
         if seller_min_qty:
             self.product_qty = seller_min_qty[0].min_qty or 1.0
-            self.product_uom = seller_min_qty[0].product_uom\
-                or seller_min_qty[0].product_id.product_tmpl_id.uom_id
+            self.product_uom = seller_min_qty[0].product_uom
         else:
             self.product_qty = 1.0
 
@@ -944,9 +939,7 @@ class ProcurementOrder(models.Model):
         cache = {}
         res = []
         for procurement in self:
-            suppliers = procurement.product_id.product_seller_ids.filtered(lambda r: not r.product_id or r.product_id == procurement.product_id)
-            if not suppliers: 
-                suppliers = procurement.product_id.seller_ids.filtered(lambda r: not r.product_id or r.product_id == procurement.product_id)
+            suppliers = procurement.product_id.seller_ids.filtered(lambda r: not r.product_id or r.product_id == procurement.product_id)
             if not suppliers:
                 procurement.message_post(body=_('No vendor associated to product %s. Please set one to fix this procurement.') % (procurement.product_id.name))
                 continue

@@ -162,7 +162,6 @@ class ProductProduct(models.Model):
 
     pricelist_item_ids = fields.Many2many(
         'product.pricelist.item', 'Pricelist Items', compute='_get_pricelist_items')
-    product_seller_ids = fields.One2many('product.supplierinfo', 'product_id', 'Variant Vendors')
 
     _sql_constraints = [
         ('barcode_uniq', 'unique(barcode)', _("A barcode can only be assigned to one product !")),
@@ -479,11 +478,29 @@ class ProductProduct(models.Model):
     @api.multi
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False):
         self.ensure_one()
-        SupInfo = self.env['product.supplierinfo']
-        seller = SupInfo.find_seller(self.product_seller_ids, self, partner_id, quantity, date, uom_id)
-        if not seller:
-            seller = SupInfo.find_seller(self.seller_ids, self, partner_id, quantity, date, uom_id)
-        return seller
+        if date is None:
+            date = fields.Date.today()
+        res = self.env['product.supplierinfo']
+        for seller in self.seller_ids:
+            # Set quantity in UoM of seller
+            quantity_uom_seller = quantity
+            if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
+                quantity_uom_seller = uom_id._compute_quantity(quantity_uom_seller, seller.product_uom)
+
+            if seller.date_start and seller.date_start > date:
+                continue
+            if seller.date_end and seller.date_end < date:
+                continue
+            if partner_id and seller.name not in [partner_id, partner_id.parent_id]:
+                continue
+            if quantity_uom_seller < seller.min_qty:
+                continue
+            if seller.product_id and seller.product_id != self:
+                continue
+
+            res |= seller
+            break
+        return res
 
     @api.multi
     def price_compute(self, price_type, uom=False, currency=False, company=False):
@@ -604,29 +621,3 @@ class SuppliferInfo(models.Model):
     delay = fields.Integer(
         'Delivery Lead Time', default=1, required=True,
         help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning.")
-
-    @api.model
-    def find_seller(self, sellers, product, partner_id=False, quantity=0.0, date=None, uom_id=False):
-        if date is None:
-            date = fields.Date.today()
-        res = self
-        for seller in sellers:
-            # Set quantity in UoM of seller
-            quantity_uom_seller = quantity
-            seller_uom = seller.product_uom or seller.product_id.product_tmpl_id.uom_id
-            if quantity_uom_seller and uom_id and uom_id != seller_uom:
-                quantity_uom_seller = uom_id._compute_quantity(quantity_uom_seller, seller_uom)
-            if seller.date_start and seller.date_start > date:
-                continue
-            if seller.date_end and seller.date_end < date:
-                continue
-            if partner_id and seller.name not in [partner_id, partner_id.parent_id]:
-                continue
-            if quantity_uom_seller < seller.min_qty:
-                continue
-            if seller.product_id and seller.product_id != product:
-                continue
-
-            res |= seller
-            break
-        return res
