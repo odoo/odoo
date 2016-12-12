@@ -20,7 +20,7 @@ class IrFilters(models.Model):
     context = fields.Text(default='{}', required=True)
     sort = fields.Text(default='[]', required=True)
     model_id = fields.Selection(selection='_list_all_models', string='Model', required=True)
-    is_default = fields.Boolean(string='Default filter')
+    is_default = fields.Boolean(string='Default Filter')
     action_id = fields.Many2one('ir.actions.actions', string='Action', ondelete='cascade',
                                 help="The menu action this filter applies to. "
                                      "When left empty the filter applies to all menus "
