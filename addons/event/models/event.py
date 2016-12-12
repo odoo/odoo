@@ -165,10 +165,8 @@ class EventEvent(models.Model):
         string='Description', oldname='note', translate=html_translate, sanitize_attributes=False,
         readonly=False, states={'done': [('readonly', True)]})
     # badge fields
-    badge_front = fields.Html(string='Badge Front')
-    badge_back = fields.Html(string='Badge Back')
-    badge_innerleft = fields.Html(string='Badge Inner Left')
-    badge_innerright = fields.Html(string='Badge Inner Right')
+    badge_header = fields.Html(string='Badge Header')
+    badge_footer = fields.Html(string='Badge Footer')
     event_logo = fields.Html(string='Event Logo')
 
     @api.multi

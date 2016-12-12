@@ -3,19 +3,19 @@
     <data noupdate="1">
 
         <record id="event_registration_mail_template_badge" model="mail.template">
-            <field name="name">Event: Registration Badge</field>
+            <field name="name">Event: Registration Ticket</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
             <field name="email_to" >${object.partner_id.email or object.email|safe}</field>
             <field name="lang">${object.partner_id.lang}</field>
-            <field name="subject">Your badge for ${object.event_id.name}</field>
+            <field name="subject">Your ticket for ${object.event_id.name}</field>
             <field name="auto_delete" eval="True"/>
             <field name="report_template" ref="report_event_registration_badge"/>
-            <field name="report_name">badge_of_${(object.event_id.name or '').replace('/','_')}</field>
+            <field name="report_name">ticket_of_${(object.event_id.name or '').replace('/','_')}</field>
             <field name="body_html"><![CDATA[
 <p>Dear ${object.name},</p>
 <p>Thank you for your inquiry.</p>
-<p>Here is your badge for the event ${object.event_id.name}.</p>
+<p>Here is your ticket for the event ${object.event_id.name}.</p>
 <p>If you have any questions, please let us know.</p>
 <p>Best regards,</p>]]></field>
         </record>
@@ -28,6 +28,8 @@
             <field name="lang">${object.partner_id.lang}</field>
             <field name="reply_to" eval="False"/>
             <field name="subject">Your registration at ${object.event_id.name}</field>
+            <field name="report_template" ref="report_event_registration_badge"/>
+            <field name="report_name">ticket_of_${(object.event_id.name or '').replace('/','_')}</field>
             <field name="body_html"><![CDATA[
 <div style="background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
 % set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')
