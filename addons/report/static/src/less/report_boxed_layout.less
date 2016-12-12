@@ -49,7 +49,7 @@
                     border-top: none;
                     border-right: 1px solid @gray;
                 }
-                td:first-child, td:last-child {
+                td:last-child {
                     background-color: @gray-lighter;
                 }
             }
@@ -63,6 +63,9 @@
         tr:last-child td, tr:first-child td {
             /*we could get rid of this rule if .border-black td would be terminated in report.less*/
             border-top: none !important;
+        }
+        tr:first-child td {
+            background-color: transparent;
         }
         tr:last-child td {
             background-color: @gray;
