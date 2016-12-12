@@ -6,12 +6,14 @@
         <field name="model">ir.model</field>
         <field name="inherit_id" ref="base.view_model_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group" position="inside">
-                <group>
-                    <field name="website_form_access"/>
-                    <field name="website_form_label"/>
-                    <field name="website_form_default_field_id"/>
-                </group>
+            <xpath expr="//notebook" position="inside">
+                <page string="Website Forms">
+                    <group>
+                        <field name="website_form_access"/>
+                        <field name="website_form_label"/>
+                        <field name="website_form_default_field_id"/>
+                    </group>
+                </page>
             </xpath>
 
             <xpath expr="//page[@name='base']/group/group/field[@name='translate']" position="after">
