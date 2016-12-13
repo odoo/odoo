@@ -32,14 +32,20 @@ data.dom_ready = dom_ready;
 var all_ready;
 data.ready = function () {
     if (!all_ready) {
-        all_ready = $.when(dom_ready, ajax.loadXML()).then(translations);
+        all_ready = $.when(dom_ready, ajax.loadXML()).then(function () {
+            // TODO find a better way to find if we are in the backend or not
+            // We don't load translation if we are in the backend since it's already done by the webclient
+            if (!$(document).find('.o_web_client').length) {
+                load_translations();
+            }
+        });
     } else if(all_ready.state() === "resolved") { // can add async template
         all_ready = $.when(dom_ready, ajax.loadXML());
     }
     return all_ready;
 };
 
-function translations() {
+function load_translations() {
     function translate_node(node) {
         if(node.nodeType === 3) { // TEXT_NODE
             if(node.nodeValue.match(/\S/)) {
