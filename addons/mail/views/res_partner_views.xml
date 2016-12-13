@@ -8,7 +8,6 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='user_id']" position="after">
-                    <field name='notify_email' widget="radio" groups="base.group_no_one"/>
                     <field name="opt_out" string="Mailing Opt-Out" groups="base.group_no_one"/>
                     <field name="message_bounce" groups="base.group_no_one"/>
                 </xpath>

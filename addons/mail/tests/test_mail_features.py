@@ -26,6 +26,9 @@ class TestMailFeatures(TestMail):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_needaction(self):
+        # needaction use Inbox notification
+        (self.user_employee | self.user_admin).write({'notification_type': 'inbox'})
+
         na_emp1_base = self.test_pigs.sudo(self.user_employee).message_needaction_counter
         na_emp2_base = self.test_pigs.sudo().message_needaction_counter
 
@@ -97,9 +100,9 @@ class TestMessagePost(TestMail):
             'name': 'Attach2', 'datas_fname': 'Attach2',
             'datas': 'bWlncmF0aW9uIHRlc3Q=',
             'res_model': 'mail.compose.message', 'res_id': 0})
-        # partner_2 does not want to receive notification email
-        self.partner_2.write({'notify_email': 'none'})
-        self.user_admin.write({'notify_email': 'always'})
+
+        self.user_admin.write({'notification_type': 'email'})
+
         # subscribe second employee to the group to test notifications
         self.test_pigs.message_subscribe_users(user_ids=[self.env.user.id])
 
@@ -134,12 +137,13 @@ class TestMessagePost(TestMail):
         self.assertFalse(self.env['mail.mail'].search([('mail_message_id', '=', msg.message_id)]),
                          'message_post: mail.mail notifications should have been auto-deleted')
 
-        # notification emails: followers + recipients - notify_email=none (partner_2) - author (user_employee)
+        # notification emails: followers + recipients - author (user_employee)
         self.assertEqual(set(m['email_from'] for m in self._mails),
                          set(['%s <%s>' % (self.user_employee.name, self.user_employee.email)]),
                          'message_post: notification email wrong email_from: should use sender email')
         self.assertEqual(set(m['email_to'][0] for m in self._mails),
                          set(['%s <%s>' % (self.partner_1.name, self.partner_1.email),
+                              '%s <%s>' % (self.partner_2.name, self.partner_2.email),
                               '%s <%s>' % (self.env.user.name, self.env.user.email)]))
         self.assertFalse(any(len(m['email_to']) != 1 for m in self._mails),
                          'message_post: notification email should be sent to one partner at a time')

@@ -801,12 +801,17 @@ class Message(models.Model):
         # those methods are called as SUPERUSER because portal users posting messages
         # have no access to partner model. Maybe propagating a real uid could be necessary.
         email_channels = channels_sudo.filtered(lambda channel: channel.email_send)
+        # make a dedicated search on res.users to avoid user_ids.notification_type that will be user_ids.id in [ARRAY]
+        notif_users = self.env['res.users'].sudo().search([
+            ('partner_id', 'in', partners_sudo.ids),
+            ('notification_type', '=', 'inbox')
+        ])
         partners_sudo.search([
             '|',
-            ('id', 'in', partners_sudo.ids),
+            ('id', 'in', (partners_sudo - notif_users.mapped('partner_id')).ids),
             ('channel_ids', 'in', email_channels.ids),
             ('email', '!=', self_sudo.author_id and self_sudo.author_id.email or self_sudo.email_from),
-            ('notify_email', '!=', 'none')])._notify(self, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
+        ])._notify(self, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
         channels_sudo._notify(self)
 
         # Discard cache, because child / parent allow reading and therefore

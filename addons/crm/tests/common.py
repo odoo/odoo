@@ -19,6 +19,7 @@ class TestCrm(BaseFunctionalTest):
             'name': 'Riton La Chignole',
             'login': 'riton',
             'email': 'riton.salesman_all@example.com',
+            'notification_type': 'inbox',
             'groups_id': [(6, 0, [user_group_employee.id, user_group_salesman_all.id])]
         })
 
