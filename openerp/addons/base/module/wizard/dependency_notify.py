@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2004-2012 OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,15 +19,23 @@
 #
 ##############################################################################
 
-import base_module_import
-import base_module_update
-import base_language_install
-import base_import_language
-import base_module_upgrade
-import base_module_configuration
-import base_export_language
-import base_update_translations
-import dependency_notify
+from openerp.osv import fields,osv
+
+class dependency_notify(osv.osv_memory):
+    _name = 'dependency.notify'
+    _description = 'Notify dependency'
+    _rec_name = 'message'
+
+    _columns = {
+        'message': fields.text('Message'),
+    }
+
+    def uninstall_all(self, cr, uid, ids, context=None):
+        module_pool = self.pool.get('ir.module.module')
+        print context
+        return module_pool.button_immediate_uninstall_final(
+            cr, uid, context['active_ids'], context=context)
+
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

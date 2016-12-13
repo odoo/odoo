@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    <record id="view_dependency_notify_form" model="ir.ui.view">
+        <field name="name">dependency.notify.form</field>
+        <field name="model">dependency.notify</field>
+        <field name="arch" type="xml">
+            <form string="Dependency Notification" version="7.0">
+                <div>
+                    <separator string="Following modules will also uninstall" colspan="4"/>
+                    <field name="message" readonly="1"/>
+                </div>
+                <footer>
+                    <button string="Uninstall All Modules" type="object"
+                        name="uninstall_all" class="oe_highlight"/>
+                    or
+                    <button special="cancel" string="Cancel" type="object"
+                        class="oe_link"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    </data>
+</openerp>

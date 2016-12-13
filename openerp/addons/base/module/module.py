@@ -489,6 +489,31 @@ class module(osv.osv):
 
     #TODO remove me in master, not called anymore
     def button_immediate_uninstall(self, cr, uid, ids, context=None):
+        dep_ids = self.downstream_dependencies(cr, uid, ids, context=context)
+        print dep_ids,ids
+
+        if dep_ids:
+            dep_name = [x.shortdesc for x  in self.browse(
+                cr, uid, dep_ids + ids, context=context)]
+            notify_id = self.pool.get('dependency.notify').create(
+                cr, uid, {'message':
+                          '\n'.join(dep_name)
+                         })
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Confirm Action'),
+                'res_model': 'dependency.notify',
+                'res_id': notify_id,
+                'view_type': 'form',
+                'view_mode': 'form',
+                'context': context,
+                'target': 'new',
+            }
+        return self.button_immediate_uninstall_final(cr, uid, ids,
+                                                     context=context)
+
+
+    def button_immediate_uninstall_final(self, cr, uid, ids, context=None):
         """
         Uninstall the selected module(s) immediately and fully,
         returns the next res.config action to execute
