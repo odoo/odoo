@@ -738,7 +738,7 @@ class Field(object):
 
     def convert_to_column(self, value, record):
         """ Convert ``value`` from the ``write`` format to the SQL format. """
-        if value is None or value == False:
+        if value is None or value is False:
             return None
         if isinstance(value, unicode):
             return value.encode('utf8')
@@ -1398,11 +1398,7 @@ class Char(_String):
             "Char field %s with non-integer size %r" % (self, self.size)
 
     def convert_to_column(self, value, record):
-        #TODO:
-        # * we need to remove the "value==False" from the next line BUT
-        #   for now too many things rely on this broken behavior
-        # * the value==None test should be common to all data types
-        if value is None or value == False:
+        if value is None or value is False:
             return None
         # we need to convert the string to a unicode object to be able
         # to evaluate its length (and possibly truncate it) reliably
