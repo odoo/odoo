@@ -1037,18 +1037,18 @@ class Binary(http.Controller):
                     win.jQuery(win).trigger(%s, %s);
                 </script>"""
         try:
-            for ufile, files in multiple_files.items():
-                for f in files:
-                    attachment = Model.create({
-                        'name': f.filename,
-                        'datas': base64.encodestring(f.read()),
-                        'datas_fname': f.filename,
-                        'res_model': model,
-                        'res_id': int(id),
-                        })
-                args.setdefault('filename', []).append(f.filename)
-                args.setdefault('mimetype', []).append(f.content_type)
-                args.setdefault('id', []).append(attachment.id)
+          for ufile, files in multiple_files.items():
+            for f in files:
+              attachment = Model.create({
+                'name': f.filename,
+                'datas': base64.encodestring(f.read()),
+                'datas_fname': f.filename,
+                'res_model': model,
+                'res_id': int(id),
+              })
+              args.setdefault('filename', []).append(f.filename)
+              args.setdefault('mimetype', []).append(f.content_type)
+              args.setdefault('id', []).append(attachment.id)
         except Exception:
             args = {'error': _("Something horrible happened")}
             _logger.exception("Fail to upload attachment %s" % ufile.filename)
