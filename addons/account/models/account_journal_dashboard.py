@@ -175,7 +175,7 @@ class account_journal(models.Model):
             number_waiting = 0
             for result in query_results:
                 cur = self.env['res.currency'].browse(result.get('currency'))
-                if result.get('state') in ['draft', 'proforma', 'proforma2']:
+                if result.get('state') == 'draft':
                     number_draft += 1
                     sum_draft += cur.compute(result.get('amount_total'), currency)
                 elif result.get('state') == 'open':

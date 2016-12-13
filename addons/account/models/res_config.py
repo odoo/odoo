@@ -32,9 +32,6 @@ class AccountConfigSettings(models.TransientModel):
     module_account_deferred_revenue = fields.Boolean(string="Revenue Recognition")
     module_account_budget = fields.Boolean(string='Budget Management')
     module_account_reports = fields.Boolean("Dynamic Reports")
-    group_proforma_invoices = fields.Boolean(string='Allow pro-forma invoices',
-        implied_group='account.group_proforma_invoices',
-        help="Allows you to put invoices in pro-forma state.")
     module_account_reports_followup = fields.Boolean("Enable payment followup management")
     default_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax",
         default_model="account.config.settings", company_dependent=True, oldname="default_sale_tax")

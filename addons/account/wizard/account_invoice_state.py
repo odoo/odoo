@@ -17,8 +17,8 @@ class AccountInvoiceConfirm(models.TransientModel):
         active_ids = context.get('active_ids', []) or []
 
         for record in self.env['account.invoice'].browse(active_ids):
-            if record.state not in ('draft', 'proforma', 'proforma2'):
-                raise UserError(_("Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-Forma' state."))
+            if record.state != 'draft':
+                raise UserError(_("Selected invoice(s) cannot be confirmed as they are not in 'Draft' state."))
             record.action_invoice_open()
         return {'type': 'ir.actions.act_window_close'}
 
