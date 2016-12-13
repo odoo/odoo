@@ -173,7 +173,7 @@
                                     </div>
                                     <div class="col-xs-6">
                                         <span class="pull-right text-right">
-                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'proforma': 'warning', 'proforma2': 'warning', 'open': 'warning',
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'open': 'warning',
                                             'paid': 'success'}}"/>
                                         </span>
                                     </div>
@@ -217,10 +217,10 @@
             <field name="arch" type="xml">
                 <form string="Vendor Bill">
                 <header>
-                        <button name="action_invoice_open" type="object" states="draft,proforma2" string="Validate" class="oe_highlight" groups="account.group_account_invoice"/>
+                        <button name="action_invoice_open" type="object" states="draft" string="Validate" class="oe_highlight" groups="account.group_account_invoice"/>
                         <button name="%(action_account_invoice_payment)d" type="action" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
                         <button name="%(action_account_invoice_refund)d" type='action' string='Ask Refund' groups="account.group_account_invoice" attrs="{'invisible': ['|',('type', 'in', ['in_refund','out_refund']),('state','not in',('open','paid'))]}"/>
-                        <button name="action_invoice_cancel" type="object" states="draft,proforma2" string="Cancel Bill" groups="account.group_account_invoice"/>
+                        <button name="action_invoice_cancel" type="object" states="draft" string="Cancel Bill" groups="account.group_account_invoice"/>
                         <button name="action_invoice_draft" states="cancel" string="Set to Draft" type="object" groups="account.group_account_invoice"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" />
                 </header>
@@ -348,16 +348,14 @@
             <field name="arch" type="xml">
                 <form string="Invoice">
                 <header>
-                    <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',True), ('state', 'not in', ('open', 'proforma', 'proforma2'))]}" class="oe_highlight" groups="base.group_user"/>
+                    <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',True), ('state', '!=', 'open')]}" class="oe_highlight" groups="base.group_user"/>
                     <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|',('sent','=',True), ('state', '!=', 'open')]}" class="oe_highlight" groups="base.group_user"/>
-                    <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',False), ('state', 'not in', ('open', 'proforma', 'proforma2'))]}" groups="base.group_user"/>
+                    <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',False), ('state', '!=', 'open')]}" groups="base.group_user"/>
                     <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|',('sent','=',False), ('state', '!=', 'open')]}" groups="base.group_user"/>
                     <button name="%(action_account_invoice_payment)d" type="action" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
                     <button name="action_invoice_open" type="object" states="draft" string="Validate" class="oe_highlight" groups="account.group_account_invoice"/>
-                    <button name="action_invoice_open" type="object" states="proforma2" string="Validate" groups="account.group_account_invoice"/>
-                    <button name="action_invoice_proforma2" type="object" states="draft" string="PRO-FORMA" groups="account.group_proforma_invoices"/>
-                    <button name="%(action_account_invoice_refund)d" type='action' string='Refund Invoice' groups="account.group_account_invoice" attrs="{'invisible': ['|',('type', '=', 'out_refund'), ('state', 'not in', ('open','proforma2','paid'))]}"/>
-                    <button name="action_invoice_cancel" type="object" states="draft,proforma2,open" string="Cancel Invoice" groups="base.group_no_one"/>
+                    <button name="%(action_account_invoice_refund)d" type='action' string='Refund Invoice' groups="account.group_account_invoice" attrs="{'invisible': ['|',('type', '=', 'out_refund'), ('state', 'not in', ('open','paid'))]}"/>
+                    <button name="action_invoice_cancel" type="object" states="draft,open" string="Cancel Invoice" groups="base.group_no_one"/>
                     <button name="action_invoice_draft" states="cancel" string="Reset to Draft" type="object" groups="account.group_account_invoice"/>
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,paid"/>
                 </header>
@@ -366,8 +364,7 @@
                 </div>
                 <field name="has_outstanding" invisible="1"/>
                 <sheet string="Invoice">
-                    <label string="Pro Forma Invoice" attrs="{'invisible': [('state','not in',('proforma','proforma2'))]}"/>
-                    <label string="Refund" attrs="{'invisible': ['|',('state','in',('draft','proforma','proforma2')), ('type','&lt;&gt;','out_refund')]}"/>
+                    <label string="Refund" attrs="{'invisible': ['|',('state','=','draft'), ('type','&lt;&gt;','out_refund')]}"/>
                     <h1 class="mt0">
                         <label string="Draft Invoice" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','&lt;&gt;','out_invoice')]}"/>
                         <label string="Draft Refund" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','&lt;&gt;','out_refund')]}"/>
@@ -511,8 +508,7 @@
                 <search string="Search Invoice">
                     <field name="number" string="Invoice" filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('reference', 'ilike', self), ('partner_id', 'child_of', self)]"/>
                     <field name="journal_id" />
-                    <filter name="draft" string="Draft" domain="[('state','in',('draft', 'proforma'))]"/>
-                    <filter name="proforma" string="Proforma" domain="[('state','=','proforma2')]" groups="account.group_proforma_invoices"/>
+                    <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
                     <filter name="invoices" string="Invoices" domain="['&amp;', ('state','in',['open','paid']),('type','in',('out_invoice','in_invoice'))]"/>
                     <filter name="refunds" string="Refunds" domain="['&amp;', ('state','in',['open','paid']),('type','in',('out_refund','in_refund'))]"/>
                     <separator/>

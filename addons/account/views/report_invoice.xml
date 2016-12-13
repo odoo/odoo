@@ -15,7 +15,6 @@
 
             <h2>
                 <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span>
-                <span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
                 <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
                 <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
                 <span t-if="o.type == 'out_refund'">Refund</span>

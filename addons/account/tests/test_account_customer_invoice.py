@@ -70,12 +70,6 @@ class TestAccountCustomerInvoice(AccountTestUsers):
         # I check that Initially customer invoice is in the "Draft" state
         self.assertEquals(self.account_invoice_customer0.state, 'draft')
 
-        # I change the state of invoice to "Proforma2" by clicking PRO-FORMA button
-        self.account_invoice_customer0.action_invoice_proforma2()
-
-        # I check that the invoice state is now "Proforma2"
-        self.assertEquals(self.account_invoice_customer0.state, 'proforma2')
-
         # I check that there is no move attached to the invoice
         self.assertEquals(len(self.account_invoice_customer0.move_id), 0)
 

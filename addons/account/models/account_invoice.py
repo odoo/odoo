@@ -221,8 +221,6 @@ class AccountInvoice(models.Model):
 
     state = fields.Selection([
             ('draft','Draft'),
-            ('proforma', 'Pro-forma'),
-            ('proforma2', 'Pro-forma'),
             ('open', 'Open'),
             ('paid', 'Paid'),
             ('cancel', 'Cancelled'),
@@ -550,17 +548,11 @@ class AccountInvoice(models.Model):
         return True
 
     @api.multi
-    def action_invoice_proforma2(self):
-        if self.filtered(lambda inv: inv.state != 'draft'):
-            raise UserError(_("Invoice must be a draft in order to set it to Pro-forma."))
-        return self.write({'state': 'proforma2'})
-
-    @api.multi
     def action_invoice_open(self):
         # lots of duplicate calls to action_invoice_open, so we remove those already open
         to_open_invoices = self.filtered(lambda inv: inv.state != 'open')
-        if to_open_invoices.filtered(lambda inv: inv.state not in ['proforma2', 'draft']):
-            raise UserError(_("Invoice must be in draft or Pro-forma state in order to validate it."))
+        if to_open_invoices.filtered(lambda inv: inv.state != 'draft'):
+            raise UserError(_("Invoice must be in draft state in order to validate it."))
         to_open_invoices.action_date_assign()
         to_open_invoices.action_move_create()
         return to_open_invoices.invoice_validate()
@@ -583,8 +575,8 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_invoice_cancel(self):
-        if self.filtered(lambda inv: inv.state not in ['proforma2', 'draft', 'open']):
-            raise UserError(_("Invoice must be in draft, Pro-forma or open state in order to be cancelled."))
+        if self.filtered(lambda inv: inv.state not in ['draft', 'open']):
+            raise UserError(_("Invoice must be in draft or open state in order to be cancelled."))
         return self.action_cancel()
 
     @api.multi

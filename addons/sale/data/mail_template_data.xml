@@ -26,7 +26,12 @@
 % endif
 ,</p>
 <p>
-Here is your ${doc_name} <strong>${object.name}</strong>
+Here is
+% if ctx.get('proforma')
+in attachment, your pro-forma
+% else
+the ${doc_name} <strong>${object.name}</strong>
+% endif
 % if object.origin:
 (with reference: ${object.origin} )
 % endif
@@ -34,8 +39,8 @@ amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.na
 from ${object.company_id.name}.
 </p>
 
+% if is_online and not ctx.get('proforma'):
     <br/><br/>
-% if is_online:
     <center>
         <a href="${access_url}" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">${access_name}</a>
         <br/><br/><br/>

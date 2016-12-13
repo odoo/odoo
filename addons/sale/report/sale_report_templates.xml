@@ -30,8 +30,13 @@
             </div>
 
             <h2>
-                <span t-if="doc.state not in ['draft','sent']">Order # </span>
-                <span t-if="doc.state in ['draft','sent']">Quotation # </span>
+                <t t-if="not proforma">
+                    <span t-if="doc.state not in ['draft','sent']">Order # </span>
+                    <span t-if="doc.state in ['draft','sent']">Quotation # </span>
+                </t>
+                <t t-if="proforma">
+                    <span>Pro-Forma # </span>
+                </t>
                 <span t-field="doc.name"/>
             </h2>
 
