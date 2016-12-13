@@ -80,8 +80,8 @@ class MrpWorkcenter(models.Model):
     @api.depends('time_ids', 'time_ids.date_end', 'time_ids.loss_type')
     def _compute_working_state(self):
         for workcenter in self:
-            time_log = self.env['mrp.workcenter.productivity'].search([('workcenter_id', '=', workcenter.id)], limit=1)
-            if not time_log or time_log.date_end:
+            time_log = self.env['mrp.workcenter.productivity'].search([('workcenter_id', '=', workcenter.id), ('date_end', '=', False)], limit=1)
+            if not time_log:
                 workcenter.working_state = 'normal'
             elif time_log.loss_type in ('productive', 'performance'):
                 workcenter.working_state = 'done'
