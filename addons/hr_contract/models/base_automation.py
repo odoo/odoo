@@ -5,10 +5,10 @@ from odoo import api, fields, models
 from odoo.fields import Datetime
 
 
-class BaseActionRule(models.Model):
+class BaseAutomation(models.Model):
     """ Add resource and calendar for time-based conditions """
 
-    _inherit = 'base.action.rule'
+    _inherit = 'base.automation'
 
     trg_date_resource_field_id = fields.Many2one('ir.model.fields', string='Use employee work schedule', help='Use the user\'s working schedule.')
 
@@ -24,4 +24,4 @@ class BaseActionRule(models.Model):
                 start_dt = Datetime.from_string(record_dt)
                 resource_id = user.employee_ids[0].resource_id.id
                 return calendar.schedule_days_get_date(action.trg_date_range, day_date=start_dt, compute_leaves=True, resource_id=resource_id)
-        return super(BaseActionRule, self)._check_delay(action, record, record_dt)
+        return super(BaseAutomation, self)._check_delay(action, record, record_dt)

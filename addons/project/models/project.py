@@ -342,7 +342,7 @@ class Task(models.Model):
              " * Red indicates something is preventing the progress of this task\n"
              " * Green indicates the task is ready to be pulled to the next stage")
     create_date = fields.Datetime(index=True)
-    write_date = fields.Datetime(index=True)  #not displayed in the view but it might be useful with base_action_rule module (and it needs to be defined first for that)
+    write_date = fields.Datetime(index=True)  #not displayed in the view but it might be useful with base_automation module (and it needs to be defined first for that)
     date_start = fields.Datetime(string='Starting Date',
     default=fields.Datetime.now,
     index=True, copy=False)

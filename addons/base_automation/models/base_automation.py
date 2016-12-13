@@ -25,11 +25,9 @@ DATE_RANGE_FUNCTION = {
 }
 
 
-class BaseActionRule(models.Model):
-    """ Base Action Rules """
-
-    _name = 'base.action.rule'
-    _description = 'Action Rules'
+class BaseAutomation(models.Model):
+    _name = 'base.automation'
+    _description = 'Automated Action'
     _order = 'sequence'
 
     name = fields.Char(string='Rule Name', required=True)
@@ -95,14 +93,14 @@ class BaseActionRule(models.Model):
 
     @api.model
     def create(self, vals):
-        base_action_rule = super(BaseActionRule, self).create(vals)
+        base_automation = super(BaseAutomation, self).create(vals)
         self._update_cron()
         self._update_registry()
-        return base_action_rule
+        return base_automation
 
     @api.multi
     def write(self, vals):
-        res = super(BaseActionRule, self).write(vals)
+        res = super(BaseAutomation, self).write(vals)
         if set(vals).intersection(self.CRITICAL_FIELDS):
             self._update_cron()
             self._update_registry()
@@ -110,7 +108,7 @@ class BaseActionRule(models.Model):
 
     @api.multi
     def unlink(self):
-        res = super(BaseActionRule, self).unlink()
+        res = super(BaseAutomation, self).unlink()
         self._update_cron()
         self._update_registry()
         return res
@@ -119,7 +117,7 @@ class BaseActionRule(models.Model):
         """ Activate the cron job depending on whether there exists action rules
             based on time conditions.
         """
-        cron = self.env.ref('base_action_rule.ir_cron_data_bar_check', raise_if_not_found=False)
+        cron = self.env.ref('base_automation.ir_cron_data_base_automation_check', raise_if_not_found=False)
         return cron and cron.toggle(model=self._name, domain=[('kind', '=', 'on_time')])
 
     def _update_registry(self):
@@ -232,7 +230,7 @@ class BaseActionRule(models.Model):
             @api.model
             def create(self, vals, **kw):
                 # retrieve the action rules to possibly execute
-                actions = self.env['base.action.rule']._get_actions(self, ['on_create', 'on_create_or_write'])
+                actions = self.env['base.automation']._get_actions(self, ['on_create', 'on_create_or_write'])
                 # call original method
                 record = create.origin(self.with_env(actions.env), vals, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
@@ -251,7 +249,7 @@ class BaseActionRule(models.Model):
             @api.multi
             def _write(self, vals, **kw):
                 # retrieve the action rules to possibly execute
-                actions = self.env['base.action.rule']._get_actions(self, ['on_write', 'on_create_or_write'])
+                actions = self.env['base.automation']._get_actions(self, ['on_write', 'on_create_or_write'])
                 records = self.with_env(actions.env)
                 # check preconditions on records
                 pre = {action: action._filter_pre(records) for action in actions}
@@ -274,7 +272,7 @@ class BaseActionRule(models.Model):
             @api.multi
             def unlink(self, **kwargs):
                 # retrieve the action rules to possibly execute
-                actions = self.env['base.action.rule']._get_actions(self, ['on_unlink'])
+                actions = self.env['base.automation']._get_actions(self, ['on_unlink'])
                 records = self.with_env(actions.env)
                 # check conditions, and execute actions on the records that satisfy them
                 for action in actions:
@@ -286,8 +284,8 @@ class BaseActionRule(models.Model):
 
         def make_onchange(action_rule_id):
             """ Instanciate an onchange method for the given action rule. """
-            def base_action_rule_onchange(self):
-                action_rule = self.env['base.action.rule'].browse(action_rule_id)
+            def base_automation_onchange(self):
+                action_rule = self.env['base.automation'].browse(action_rule_id)
                 result = {}
                 for server_action in action_rule.server_action_ids.with_context(active_model=self._name, onchange_self=self):
                     res = server_action.run()
@@ -301,7 +299,7 @@ class BaseActionRule(models.Model):
                             result['warning'] = res['warning']
                 return result
 
-            return base_action_rule_onchange
+            return base_automation_onchange
 
         patched_models = defaultdict(set)
         def patch(model, name, method):

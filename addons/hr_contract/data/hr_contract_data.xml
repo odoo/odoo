@@ -55,7 +55,7 @@
             <field name="state">code</field>
             <field name="code">record.set_as_pending()</field>
         </record>
-        <record id="rule_contract_1_set_as_pending" model="base.action.rule">
+        <record id="rule_contract_1_set_as_pending" model="base.automation">
             <field name="name">HR Contract: check for pending</field>
             <field name="model_id" ref="model_hr_contract"/>
             <field name="sequence">50</field>
@@ -66,7 +66,7 @@
             <field name="trg_date_range_type">day</field>
             <field name="server_action_ids" eval="[(6, 0, [ref('contract_set_as_pending')])]"/>
         </record>
-         <record id="rule_contract_2_set_as_pending" model="base.action.rule">
+         <record id="rule_contract_2_set_as_pending" model="base.automation">
             <field name="name">HR Contract: check for pending</field>
             <field name="model_id" ref="model_hr_contract"/>
             <field name="sequence">51</field>
@@ -85,7 +85,7 @@
             <field name="state">code</field>
             <field name="code">record.set_as_close()</field>
         </record>
-        <record id="rule_contract_3_set_as_close" model="base.action.rule">
+        <record id="rule_contract_3_set_as_close" model="base.automation">
             <field name="name">HR Contract: check for close</field>
             <field name="model_id" ref="model_hr_contract"/>
             <field name="sequence">52</field>
@@ -95,7 +95,7 @@
             <field name="trg_date_range_type">day</field>
             <field name="server_action_ids" eval="[(6, 0, [ref('contract_set_as_close')])]"/>
         </record>
-        <record id="rule_contract_4_set_as_close" model="base.action.rule">
+        <record id="rule_contract_4_set_as_close" model="base.automation">
             <field name="name">HR Contract: check for close</field>
             <field name="model_id" ref="model_hr_contract"/>
             <field name="sequence">53</field>

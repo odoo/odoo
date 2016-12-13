@@ -15,7 +15,7 @@
             <field name="state">email</field>
             <field name="template_id" ref="email_template_opportunity_reminder_mail"/>
         </record>
-        <record id="rule_set_reminder_lead" model="base.action.rule">
+        <record id="rule_set_reminder_lead" model="base.automation">
             <field name="name">Set Auto Reminder on leads which are not open since 5 days.</field>
             <field name="model_id" ref="model_crm_lead"/>
             <field name="sequence">1</field>
@@ -41,7 +41,7 @@
             <field name="state">code</field>
             <field name="code">record.write({'team_id': env.ref('sales_team.team_sales_department').id})</field>
         </record>
-        <record id="rule_set_followers_lead" model="base.action.rule">
+        <record id="rule_set_followers_lead" model="base.automation">
             <field name="name">Set Auto Followers on leads which are urgent and come from USA.</field>
             <field name="model_id" ref="model_crm_lead"/>
             <field name="sequence">2</field>
