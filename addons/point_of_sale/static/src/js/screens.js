@@ -938,10 +938,12 @@ var ProductScreenWidget = ScreenWidget.extend({
        }
     },
 
-    show: function(){
+    show: function(reset){
         this._super();
-        this.product_categories_widget.reset_category();
-        this.numpad.state.reset();
+        if (reset) {
+            this.product_categories_widget.reset_category();
+            this.numpad.state.reset();
+        }
     },
 
     close: function(){
