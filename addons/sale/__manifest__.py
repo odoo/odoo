@@ -4,14 +4,14 @@
 {
     'name': 'Sales',
     'version': '1.0',
-    'category': 'Sales',
+    'category': 'hidden',
     'sequence': 15,
     'summary': 'Quotations, Sales Orders, Invoicing',
     'description': """
 Manage sales quotations and orders
 ==================================
 
-This application allows you to manage your sales goals in an effective and efficient manner by keeping track of all sales orders and history.
+This module allows you to manage your sales goals in an effective and efficient manner by keeping track of all sales orders and history.
 
 It handles the full sales workflow:
 
@@ -68,5 +68,4 @@ The Dashboard for the Sales Manager will include
     'css': ['static/src/css/sale.css'],
     'installable': True,
     'auto_install': False,
-    'application': True,
 }
