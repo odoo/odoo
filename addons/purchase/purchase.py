@@ -439,13 +439,6 @@ class PurchaseOrder(models.Model):
             result['res_id'] = self.invoice_ids.id
         return result
 
-    @api.multi
-    def action_set_date_planned(self):
-        for order in self:
-            #DO NOT FORWARD PORT
-            for line in order.order_line:
-                line.update({'date_planned': order.date_planned})
-
 
 class PurchaseOrderLine(models.Model):
     _name = 'purchase.order.line'
