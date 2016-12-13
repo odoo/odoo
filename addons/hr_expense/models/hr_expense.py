@@ -159,6 +159,7 @@ class HrExpense(models.Model):
             'amount_currency': line['price'] > 0 and abs(line.get('amount_currency')) or -abs(line.get('amount_currency')),
             'currency_id': line.get('currency_id'),
             'tax_line_id': line.get('tax_line_id'),
+            'tax_ids': line.get('tax_ids'),
             'ref': line.get('ref'),
             'quantity': line.get('quantity',1.00),
             'product_id': line.get('product_id'),
