@@ -677,7 +677,7 @@ class ResourceResource(models.Model):
         ], string='Resource Type', required=True, default='user')
     user_id = fields.Many2one('res.users', string='User', help='Related user name for the resource to manage its access.')
     time_efficiency = fields.Float(string='Efficiency Factor', required=True, default=100,
-        help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficiency of 200%, then his load will only be 50%.")
+        help="This field is used to calculate the the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes.")
     calendar_id = fields.Many2one("resource.calendar", string='Working Time', help="Define the schedule of resource")
 
     @api.multi
