@@ -468,6 +468,7 @@ class ir_mail_server(osv.osv):
                          _("Please define at least one SMTP server, or provide the SMTP parameters explicitly."))
 
         try:
+            message.replace_header('From', '%s <%s>' % (message['From'], smtp_user))
             message_id = message['Message-Id']
 
             # Add email in Maildir if smtp_server contains maildir.
