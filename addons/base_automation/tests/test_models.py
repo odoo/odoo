@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class LeadTest(models.Model):
-    _name = "base.action.rule.lead.test"
+    _name = "base.automation.lead.test"
     _description = "Action Rule Test"
 
     name = fields.Char(string='Subject', required=True, index=True)
@@ -17,13 +17,13 @@ class LeadTest(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner')
     date_action_last = fields.Datetime(string='Last Action', readonly=True)
     customer = fields.Boolean(related='partner_id.customer', readonly=True, store=True)
-    line_ids = fields.One2many('base.action.rule.line.test', 'lead_id')
+    line_ids = fields.One2many('base.automation.line.test', 'lead_id')
 
 
 class LineTest(models.Model):
-    _name = "base.action.rule.line.test"
+    _name = "base.automation.line.test"
     _description = "Action Rule Line Test"
 
     name = fields.Char()
-    lead_id = fields.Many2one('base.action.rule.lead.test', ondelete='cascade')
+    lead_id = fields.Many2one('base.automation.lead.test', ondelete='cascade')
     user_id = fields.Many2one('res.users')

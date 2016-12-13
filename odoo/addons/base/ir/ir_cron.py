@@ -140,7 +140,7 @@ class ir_cron(models.Model):
 
     @classmethod
     def _acquire_job(cls, db_name):
-        # TODO remove 'check' argument from addons/base_action_rule/base_action_rule.py
+        # TODO remove 'check' argument from addons/base_automation/base_automation.py
         """ Try to process one cron job.
 
         This selects in database all the jobs that should be processed. It then
