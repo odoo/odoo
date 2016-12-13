@@ -21,21 +21,21 @@ class BaseFunctionalTest(common.SavepointCase):
             'login': 'ernest',
             'email': 'e.e@example.com',
             'signature': '--\nErnest',
-            'notify_email': 'always',
+            'notification_type': 'email',
             'groups_id': [(6, 0, [user_group_employee.id])]})
         cls.user_public = Users.create({
             'name': 'Bert Tartignole',
             'login': 'bert',
             'email': 'b.t@example.com',
             'signature': 'SignBert',
-            'notify_email': 'always',
+            'notification_type': 'email',
             'groups_id': [(6, 0, [user_group_public.id])]})
         cls.user_portal = Users.create({
             'name': 'Chell Gladys',
             'login': 'chell',
             'email': 'chell@gladys.portal',
             'signature': 'SignChell',
-            'notify_email': 'always',
+            'notification_type': 'email',
             'groups_id': [(6, 0, [user_group_portal.id])]})
         cls.user_admin = cls.env.user
 
@@ -86,12 +86,10 @@ class TestMail(BaseFunctionalTest):
         # Test Data for Partners
         cls.partner_1 = cls.env['res.partner'].create({
             'name': 'Valid Lelitre',
-            'email': 'valid.lelitre@agrolait.com',
-            'notify_email': 'always'})
+            'email': 'valid.lelitre@agrolait.com'})
         cls.partner_2 = cls.env['res.partner'].create({
             'name': 'Valid Poilvache',
-            'email': 'valid.other@gmail.com',
-            'notify_email': 'always'})
+            'email': 'valid.other@gmail.com'})
 
         TestModel = cls.env['mail.test'].with_context({
             'mail_create_nolog': True,

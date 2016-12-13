@@ -19,14 +19,6 @@ class Partner(models.Model):
     _mail_mass_mailing = _('Customers')
 
     message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact")
-    notify_email = fields.Selection([
-        ('none', 'Never'),
-        ('always', 'All Messages')],
-        'Email Messages and Notifications', required=True,
-        oldname='notification_email_send', default='always',
-        help="Policy to receive emails for new messages pushed to your personal Inbox:\n"
-             "- Never: no emails are sent\n"
-             "- All Messages: for every notification you receive in your Inbox")
     opt_out = fields.Boolean(
         'Opt-Out', help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
                         "Filter 'Available for Mass Mailing' allows users to filter the partners when performing mass mailing.")
@@ -140,6 +132,7 @@ class Partner(models.Model):
                 ('res_partner_id', 'in', email.recipient_ids.ids)])
             notifications.write({
                 'is_email': True,
+                'is_read': True,  # handle by email discards Inbox notification
                 'email_status': 'ready',
             })
 
