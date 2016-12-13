@@ -20,7 +20,7 @@ class TestCreatePicking(common.TestProductCommon):
             'name': 'Pauline Poivraisselle',
             'login': 'pauline',
             'email': 'pur@example.com',
-            'notify_email': 'none',
+            'notification_type': 'inbox',
             'groups_id': [(6, 0, [res_users_purchase_user.id])]})
 
         self.po_vals = {

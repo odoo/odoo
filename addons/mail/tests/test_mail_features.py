@@ -86,8 +86,8 @@ class TestMessagePost(TestMail):
             'datas': 'bWlncmF0aW9uIHRlc3Q=',
             'res_model': 'mail.compose.message', 'res_id': 0})
         # partner_2 does not want to receive notification email
-        self.partner_2.write({'notify_email': 'none'})
-        self.user_admin.write({'notify_email': 'always'})
+        # self.partner_2.write({'notify_email': 'none'})
+        self.user_admin.write({'notification_type': 'email'})
         # subscribe second employee to the group to test notifications
         self.group_pigs.message_subscribe_users(user_ids=[self.env.user.id])
 

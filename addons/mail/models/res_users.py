@@ -23,6 +23,13 @@ class Users(models.Model):
         ('everyone', 'Everyone'),
         ('partners', 'Authenticated Partners'),
         ('followers', 'Followers only')], string='Alias Contact Security', related='alias_id.alias_contact')
+    notification_type = fields.Selection([
+        ('email', 'Handle by Emails'),
+        ('inbox', 'Handle in Odoo')],
+        'Notification Management', required=True, default='email',
+        help="Policy on how to handle Chatter notifications:\n"
+             "- Emails: notifications are sent to your email\n"
+             "- Odoo: notifications appear in your Odoo Inbox")
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
@@ -32,10 +39,10 @@ class Users(models.Model):
         init_res = super(Users, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
         type(self).SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
-        type(self).SELF_WRITEABLE_FIELDS.extend(['notify_email'])
+        type(self).SELF_WRITEABLE_FIELDS.extend(['notification_type'])
         # duplicate list to avoid modifying the original reference
         type(self).SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
-        type(self).SELF_READABLE_FIELDS.extend(['notify_email'])
+        type(self).SELF_READABLE_FIELDS.extend(['notification_type'])
         return init_res
 
     @api.model
