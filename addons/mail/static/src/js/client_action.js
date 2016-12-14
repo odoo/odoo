@@ -78,6 +78,9 @@ var PartnerInviteDialog = Dialog.extend({
                     var names = _.escape(_.pluck(data, 'text').join(', '));
                     var notification = _.str.sprintf(_t('You added <b>%s</b> to the conversation.'), names);
                     self.do_notify(_t('New people'), notification);
+                    // Clear the members_deferred to fetch again the partner
+                    // when get_mention_partner_suggestions from the chat_manager is triggered
+                    delete chat_manager.get_channel(self.channel_id).members_deferred;
                 });
         }
     },
