@@ -61,8 +61,10 @@ class AccountChartTemplate(models.Model):
                     for company in company_ids:
                         # write account.account translations in the real COA
                         chart_template_id._process_accounts_translations(company.id, langs, 'name')
-                        # copy account.tax translations
+                        # copy account.tax name translations
                         chart_template_id._process_taxes_translations(company.id, langs, 'name')
+                        # copy account.tax description translations
+                        chart_template_id._process_taxes_translations(company.id, langs, 'description')
                         # copy account.fiscal.position translations
                         chart_template_id._process_fiscal_pos_translations(company.id, langs, 'name')
         return True
@@ -108,8 +110,10 @@ class base_language_install(models.TransientModel):
                 for company in self.env['res.company'].search([('chart_template_id', '=', coa.id)]):
                     # write account.account translations in the real COA
                     coa._process_accounts_translations(company.id, [self.lang], 'name')
-                    # copy account.tax translations
+                    # copy account.tax name translations
                     coa._process_taxes_translations(company.id, [self.lang], 'name')
+                    # copy account.tax description translations
+                    coa._process_taxes_translations(company.id, [self.lang], 'description')
                     # copy account.fiscal.position translations
                     coa._process_fiscal_pos_translations(company.id, [self.lang], 'name')
         return res
