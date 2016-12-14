@@ -6,9 +6,8 @@
                 <t t-foreach="docs" t-as="o">
                     <t t-call="report.external_layout">
                         <div class="page">
-                            <h2>
-                            Stock Inventory 
-                            </h2>
+                            <h2>Stock Inventory</h2>
+
                             <table class="table table-condensed">
                             <thead>
                                 <tr>
@@ -27,27 +26,37 @@
                                 </tr>
                             </tbody>
                             </table>
+
+                            <t t-set="locations" t-value="o.line_ids.mapped('location_id')"/>
                             <table class="table table-condensed">
                                 <thead>
                                     <tr>
-                                        <th><strong>Location</strong></th>
+                                        <th groups="stock.group_stock_multi_locations"><strong>Location</strong></th>
                                         <th><strong>Product</strong></th>
-                                        <th><strong>Production Lot</strong></th>
-                                        <th><strong>Package</strong></th>
+                                        <th groups="stock.group_production_lot"><strong>Production Lot</strong></th>
+                                        <th groups="stock.group_tracking_lot"><strong>Package</strong></th>
                                         <th class="text-right"><strong>Quantity</strong></th>
                                     </tr>
                                 </thead>
-                                <tr t-foreach="o.line_ids" t-as="line">
-                                    <td><span t-field="line.location_id"/></td>
-                                    <td><span t-field="line.product_id"/></td>
-                                    <td><span t-field="line.prod_lot_id"/></td>
-                                    <td><span t-field="line.package_id"/></td>
-                                    <td class="text-right"><span t-field="line.product_qty"/> <span t-field="line.product_uom_id" groups="product.group_uom"/></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                </tr>
+                                <tbody>
+                                    <t t-foreach="locations" t-as="location">
+                                        <tr groups="stock.group_stock_multi_locations">
+                                            <td colspan="2"><strong t-esc="location.display_name"/></td>
+                                            <td groups="stock.group_production_lot"></td>
+                                            <td groups="stock.group_tracking_lot"></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr t-foreach="o.line_ids.filtered(lambda line: line.location_id.id == location.id)" t-as="line">
+                                            <td groups="stock.group_stock_multi_locations"></td>
+                                            <td><span t-field="line.product_id"/></td>
+                                            <td groups="stock.group_production_lot"><span t-field="line.prod_lot_id"/></td>
+                                            <td groups="stock.group_tracking_lot"><span t-field="line.package_id"/></td>
+                                            <td class="text-right"><span t-field="line.product_qty"/> <span t-field="line.product_uom_id" groups="product.group_uom"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
                             </table>
+
                             <t t-if="o.filter == 'product' and o.product_id">
                               <div class="row">
                                 <div class="col-xs-4 pull-right">
