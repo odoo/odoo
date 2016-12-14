@@ -11,7 +11,6 @@
         <record id="action_email_reminder_lead" model="ir.actions.server">
             <field name="name">Reminder to User</field>
             <field name="model_id" ref="model_crm_lead"/>
-            <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="state">email</field>
             <field name="template_id" ref="email_template_opportunity_reminder_mail"/>
@@ -38,7 +37,6 @@
         <record id="action_set_team_sales_department" model="ir.actions.server">
             <field name="name">Set team to Sales Department</field>
             <field name="model_id" ref="model_crm_lead"/>
-            <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
             <field name="code">record.write({'team_id': env.ref('sales_team.team_sales_department').id})</field>

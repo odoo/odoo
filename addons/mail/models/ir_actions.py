@@ -11,11 +11,6 @@ class ServerActions(models.Model):
     _inherit = ['ir.actions.server']
 
     state = fields.Selection(selection_add=[('email', 'Send Email')])
-    email_from = fields.Char('From', related='template_id.email_from', readonly=True)
-    email_to = fields.Char('To (Emails)', related='template_id.email_to', readonly=True)
-    partner_to = fields.Char('To (Partners)', related='template_id.partner_to', readonly=True)
-    subject = fields.Char('Subject', related='template_id.subject', readonly=True)
-    body_html = fields.Html('Body', related='template_id.body_html', readonly=True)
     template_id = fields.Many2one(
         'mail.template', 'Email Template', ondelete='set null',
         domain="[('model_id', '=', model_id)]",

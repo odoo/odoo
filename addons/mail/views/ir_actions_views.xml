@@ -16,27 +16,6 @@
                         <group attrs="{'invisible': [('model_id', '=', False)]}">
                             <field name="template_id"
                                     attrs="{'required': [('state', '=', 'email')]}"/>
-                            <p colspan="2" attrs="{'invisible': [('template_id', '!=', False)]}">
-                                Choose a template to display its values.
-                            </p>
-                            <p colspan="2" attrs="{'invisible': [('template_id', '=', False)]}">
-                                The values displayed hereunder are informative. When sending the email, the values
-                                will be taken from the email template.
-                            </p>
-                        </group>
-                        <group attrs="{'invisible': ['|', ('model_id', '=', False), ('template_id', '=', False)]}">
-                            <label for="email_from"/>
-                            <div>
-                                <field name="email_from" nolabel="1'" readonly="1"
-                                        attrs="{'required': [('state', '=', 'email')]}"/>
-                                <p attrs="{'invisible': [('email_from', '!=', False)]}">
-                                    Your template does not defined the email address of the sender. Please update your template.
-                                </p>
-                            </div>
-                            <field name="email_to" readonly="1"/>
-                            <field name="partner_to" readonly="1"/>
-                            <field name="subject" readonly="1" attrs="{'required': [('state', '=', 'email')]}"/>
-                            <field name="body_html" readonly="1" attrs="{'required': [('state', '=', 'email')]}"/>
                         </group>
                     </page>
                 </xpath>

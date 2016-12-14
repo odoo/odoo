@@ -51,7 +51,6 @@
         <record id="contract_set_as_pending" model="ir.actions.server">
             <field name="name">HR Contract: set as pending</field>
             <field name="model_id" ref="model_hr_contract"/>
-            <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
             <field name="code">record.set_as_pending()</field>
@@ -82,7 +81,6 @@
         <record id="contract_set_as_close" model="ir.actions.server">
             <field name="name">HR Contract: set as close</field>
             <field name="model_id" ref="model_hr_contract"/>
-            <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
             <field name="code">record.set_as_close()</field>
