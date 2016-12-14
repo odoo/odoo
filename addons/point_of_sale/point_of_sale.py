@@ -536,8 +536,12 @@ class pos_session(osv.osv):
             }
             statements.append(create_statement(st_values, context=context))
 
+        unique_name = self.pool['ir.sequence'].next_by_code(cr, uid, 'pos.session', context=context)
+        if values.get('name'):
+            unique_name += ' ' + values['name']
+
         values.update({
-            'name': self.pool['ir.sequence'].next_by_code(cr, uid, 'pos.session', context=context),
+            'name': unique_name,
             'statement_ids': [(6, 0, statements)],
             'config_id': config_id
         })
@@ -641,6 +645,35 @@ class pos_session(osv.osv):
             'url':   '/pos/web/',
         }
 
+    @api.multi
+    def open_cashbox(self):
+        self.ensure_one()
+        context = dict(self._context)
+        balance_type = context.get('balance') or 'start'
+        context['bank_statement_id'] = self.cash_register_id.id
+        context['balance'] = balance_type
+
+        action = {
+            'name': _('Cash Control'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'account.bank.statement.cashbox',
+            'view_id': self.env.ref('account.view_account_bnk_stmt_cashbox').id,
+            'type': 'ir.actions.act_window',
+            'context': context,
+            'target': 'new'
+        }
+
+        cashbox_id = None
+        if balance_type == 'start':
+            cashbox_id = self.cash_register_id.cashbox_start_id.id
+        else:
+            cashbox_id = self.cash_register_id.cashbox_end_id.id
+        if cashbox_id:
+            action['res_id'] = cashbox_id
+
+        return action
+
 class pos_order(osv.osv):
     _name = "pos.order"
     _description = "Point of Sale"
@@ -681,41 +714,30 @@ class pos_order(osv.osv):
         }
 
     # This deals with orders that belong to a closed session. In order
-    # to recover from this we:
-    # - assign the order to another compatible open session
-    # - if that doesn't exist, create a new one
+    # to recover from this situation we create a new rescue session,
+    # making it obvious that something went wrong.
+    # A new, separate, rescue session is preferred for every such recovery,
+    # to avoid adding unrelated orders to live sessions.
     def _get_valid_session(self, cr, uid, order, context=None):
         session = self.pool.get('pos.session')
         closed_session = session.browse(cr, uid, order['pos_session_id'], context=context)
-        open_sessions = session.search(cr, uid, [('state', '=', 'opened'),
-                                                 ('config_id', '=', closed_session.config_id.id),
-                                                 ('user_id', '=', closed_session.user_id.id)],
-                                       limit=1, order="start_at DESC", context=context)
-
         _logger.warning('session %s (ID: %s) was closed but received order %s (total: %s) belonging to it',
                         closed_session.name,
                         closed_session.id,
                         order['name'],
                         order['amount_total'])
+        _logger.warning('attempting to create recovery session for saving order %s', order['name'])
+        new_session_id = session.create(cr, uid, {
+            'config_id': closed_session.config_id.id,
+            'name': _('(RESCUE FOR %(session)s)') % {'session': closed_session.name},
+            'rescue': True, # avoid conflict with live sessions
+        }, context=context)
+        new_session = session.browse(cr, uid, new_session_id, context=context)
 
-        if open_sessions:
-            open_session = session.browse(cr, uid, open_sessions[0], context=context)
-            _logger.warning('using session %s (ID: %s) for order %s instead',
-                            open_session.name,
-                            open_session.id,
-                            order['name'])
-            return open_session.id
-        else:
-            _logger.warning('attempting to create new session for order %s', order['name'])
-            new_session_id = session.create(cr, uid, {
-                'config_id': closed_session.config_id.id,
-            }, context=context)
-            new_session = session.browse(cr, uid, new_session_id, context=context)
+        # bypass opening_control (necessary when using cash control)
+        new_session.signal_workflow('open')
 
-            # bypass opening_control (necessary when using cash control)
-            new_session.signal_workflow('open')
-
-            return new_session_id
+        return new_session_id
 
     def _match_payment_to_invoice(self, cr, uid, order, context=None):
         account_precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
@@ -932,7 +954,7 @@ class pos_order(osv.osv):
             # set name based on the sequence specified on the config
             session = self.pool['pos.session'].browse(cr, uid, values['session_id'], context=context)
             values['name'] = session.config_id.sequence_id._next()
-            values.setdefault('session_id', session.config_id.pricelist_id.id)
+            values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
         else:
             # fallback on any pos.order sequence
             values['name'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'pos.order', context=context)
