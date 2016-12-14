@@ -10,12 +10,7 @@ class ServerActions(models.Model):
     _name = 'ir.actions.server'
     _inherit = ['ir.actions.server']
 
-    @api.model
-    def _get_states(self):
-        res = super(ServerActions, self)._get_states()
-        res.insert(0, ('email', 'Send Email'))
-        return res
-
+    state = fields.Selection(selection_add=[('email', 'Send Email')])
     email_from = fields.Char('From', related='template_id.email_from', readonly=True)
     email_to = fields.Char('To (Emails)', related='template_id.email_to', readonly=True)
     partner_to = fields.Char('To (Partners)', related='template_id.partner_to', readonly=True)
@@ -52,4 +47,3 @@ class ServerActions(models.Model):
         ctx['mail_notify_force_send'] = False
         eval_context['env'].context = ctx
         return eval_context
-
