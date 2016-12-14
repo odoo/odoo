@@ -7,18 +7,15 @@
             <field name="model">ir.actions.server</field>
             <field name="inherit_id" ref="base.view_server_action_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//page[@name='code']" position="after">
-                    <page string="Email" autofocus="autofocus"
-                            attrs="{'invisible': [('state', '!=', 'email')]}">
-                        <p attrs="{'invisible': [('model_id', '!=', False)]}">
-                            Please set the Base Model before setting the action details.
-                        </p>
-                        <group attrs="{'invisible': [('model_id', '=', False)]}">
-                            <field name="template_id"
-                                    attrs="{'required': [('state', '=', 'email')]}"/>
-                        </group>
-                    </page>
-                </xpath>
+                <field name="link_field_id" position="after">
+                    <field name="partner_ids" widget="many2many_tags"
+                        attrs="{'invisible': [('state', '!=', 'followers')]}"/>
+                    <field name="channel_ids" widget="many2many_tags"
+                        attrs="{'invisible': [('state', '!=', 'followers')]}"/>
+                    <field name="template_id"
+                        attrs="{'invisible': [('state', '!=', 'email')],
+                                'required': [('state', '=', 'email')]}"/>
+                </field>
             </field>
         </record>
 

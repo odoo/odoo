@@ -471,6 +471,7 @@ class IrActionsServer(models.Model):
              "- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
              "- 'Write on a Record': update the values of a record\n"
              "- 'Execute several actions': define an action that triggers several other server actions\n"
+             "- 'Add Followers': add followers to a record (available in Discuss)\n"
              "- 'Send Email': automatically send an email (available in email_template)")
     # Generic
     sequence = fields.Integer(default=5,
