@@ -932,7 +932,7 @@ class pos_order(osv.osv):
             # set name based on the sequence specified on the config
             session = self.pool['pos.session'].browse(cr, uid, values['session_id'], context=context)
             values['name'] = session.config_id.sequence_id._next()
-            values.setdefault('session_id', session.config_id.pricelist_id.id)
+            values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
         else:
             # fallback on any pos.order sequence
             values['name'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'pos.order', context=context)
