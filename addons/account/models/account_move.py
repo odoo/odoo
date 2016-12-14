@@ -128,7 +128,6 @@ class AccountMove(models.Model):
     def post(self):
         invoice = self._context.get('invoice', False)
         self._post_validate()
-
         for move in self:
             move.line_ids.create_analytic_lines()
             if move.name == '/':
@@ -142,7 +141,10 @@ class AccountMove(models.Model):
                         # If invoice is actually refund and journal has a refund_sequence then use that one or use the regular one
                         sequence = journal.sequence_id
                         if invoice and invoice.type in ['out_refund', 'in_refund'] and journal.refund_sequence:
+                            if not journal.refund_sequence_id:
+                                raise UserError(_('Please define a sequence for the refunds'))
                             sequence = journal.refund_sequence_id
+                                                            
                         new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
                     else:
                         raise UserError(_('Please define a sequence on the journal.'))
@@ -1086,6 +1088,7 @@ class AccountMoveLine(models.Model):
             # Create tax lines
             for tax_vals in res['taxes']:
                 if tax_vals['amount']:
+                    tax = self.env['account.tax'].browse([tax_vals['id']])
                     account_id = (amount > 0 and tax_vals['account_id'] or tax_vals['refund_account_id'])
                     if not account_id: account_id = vals['account_id']
                     temp = {
@@ -1097,6 +1100,7 @@ class AccountMoveLine(models.Model):
                         'statement_id': vals.get('statement_id'),
                         'debit': tax_vals['amount'] > 0 and tax_vals['amount'] or 0.0,
                         'credit': tax_vals['amount'] < 0 and -tax_vals['amount'] or 0.0,
+                        'analytic_account_id': vals.get('analytic_account_id') if tax.analytic else False,
                     }
                     bank = self.env["account.bank.statement"].browse(vals.get('statement_id'))
                     if bank.currency_id != bank.company_id.currency_id:
