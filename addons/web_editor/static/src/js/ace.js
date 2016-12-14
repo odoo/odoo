@@ -106,13 +106,18 @@ var ViewEditor = Widget.extend({
                 storeEditorWidth();
             }
         }
-        document.body.addEventListener('mouseup', stopResizing, true);
         self.$('.ace_gutter').mouseup(stopResizing).mousedown(startResizing).click(stopResizing);
-        $(document).mousemove(updateWidth);
+        $(document).on("mousemove.ViewEditor", updateWidth).on("mouseup.ViewEditor", stopResizing);
         $('button[data-action=edit]').click(function () {
             self.close();
         });
         resizeEditor(readEditorWidth());
+
+        return this._super.apply(this, arguments);
+    },
+    destroy: function () {
+        this._super.apply(this, arguments);
+        $(document).off(".ViewEditor");
     },
 
     // The 4 following methods are meant to be extended depending on the context
@@ -149,7 +154,7 @@ var ViewEditor = Widget.extend({
             view.children = [];
         });
         _.each(index, function (view) {
-            var parentId = view.inherit_id;
+            var parentId = view.inherit_id[0];
             if (parentId && index[parentId]) {
                 index[parentId].children.push(view);
             } else {
@@ -320,7 +325,10 @@ var ViewEditor = Widget.extend({
             if (line) self.aceEditor.on('changeSession', onchangeSession);
             this.$("#ace-view-list").val(session.id).change();
         }
-        return session.text.match(/\s+name=['"]([^'"]+)['"]/i)[1], "<b>Malformed XML document</b>:<br/>" + message;
+        return {
+            title: session.text.match(/\s+name=['"]([^'"]+)['"]/i)[1],
+            message: "<b>Malformed XML document</b>:<br/>" + message
+        };
     },
 });
 

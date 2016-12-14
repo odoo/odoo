@@ -3,17 +3,18 @@
 # * pad
 # 
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Olivier Dony <odo@odoo.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Xavier Belmere <Info@cartmeleon.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Richard Mathot <rim@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
 "Last-Translator: Richard Mathot <rim@odoo.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -30,14 +31,16 @@ msgstr "Sociétés"
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: pad
+#: model:ir.model.fields,help:pad.field_base_config_settings_pad_key
 #: model:ir.model.fields,help:pad.field_res_company_pad_key
 msgid "Etherpad lite api key."
 msgstr "Clé api de l'etherpad lite."
 
 #. module: pad
+#: model:ir.model.fields,help:pad.field_base_config_settings_pad_server
 #: model:ir.model.fields,help:pad.field_res_company_pad_server
 msgid "Etherpad lite server. Example: beta.primarypad.com"
 msgstr "Serveur etherpad lite. Exemple: beta.primarypad.com"
@@ -58,6 +61,16 @@ msgid "Pad Api Key"
 msgstr "Clé api du pad"
 
 #. module: pad
+#: model:ir.model.fields,field_description:pad.field_base_config_settings_pad_key
+msgid "Pad Api Key *"
+msgstr ""
+
+#. module: pad
+#: model:ir.model.fields,field_description:pad.field_base_config_settings_pad_server
+msgid "Pad Server *"
+msgstr ""
+
+#. module: pad
 #: code:addons/pad/models/pad.py:57
 #, python-format
 msgid ""
@@ -73,9 +86,19 @@ msgid "Pad server"
 msgstr ""
 
 #. module: pad
-#: model:ir.ui.view,arch_db:pad.view_company_form_inherit_pad
+#: model:ir.ui.view,arch_db:pad.view_general_configuration_form_inherit_pad
 msgid "Pads"
 msgstr "Pads"
+
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/xml/pad.xml:6
+#, python-format
+msgid ""
+"Please enter your Etherpad credentials through the menu 'Settings > General "
+"Settings > Configure your company data', in the 'Configuration' tab of your "
+"company."
+msgstr ""
 
 #. module: pad
 #. openerp-web
@@ -92,18 +115,12 @@ msgid "Unable to load pad"
 msgstr "Impossible de charger le pad"
 
 #. module: pad
-#. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:6
-#, python-format
-msgid ""
-"You must configure the etherpad through the menu Settings > Companies > "
-"Companies, in the configuration tab of your company."
-msgstr ""
-"Vous devez configurer l'etherpad à partir de Configuration > Sociétés > "
-"Sociétés, dans l'onglet Configuration de votre société."
+#: model:ir.model,name:pad.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
 
 #. module: pad
-#: model:ir.ui.view,arch_db:pad.view_company_form_inherit_pad
+#: model:ir.ui.view,arch_db:pad.view_general_configuration_form_inherit_pad
 msgid "e.g. beta.primarypad.com"
 msgstr "p. ex. beta.primarypad.com"
 

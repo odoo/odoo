@@ -34,7 +34,7 @@ class AccountInvoiceLine(models.Model):
                 # on the moves we encounter.
                 average_price_unit = self._compute_average_price(qty_done, quantity, moves)
                 price_unit = average_price_unit or price_unit
-                price_unit = self.uom_id._compute_quantity(price_unit, self.product_id.uom_id, round=False)
+                price_unit = self.product_id.uom_id._compute_price(price_unit, self.uom_id)
         return price_unit
 
     def _compute_average_price(self, qty_done, quantity, moves):

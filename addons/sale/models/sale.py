@@ -49,7 +49,7 @@ class SaleOrder(models.Model):
         refund is not directly linked to the SO.
         """
         for order in self:
-            invoice_ids = order.order_line.mapped('invoice_lines').mapped('invoice_id')
+            invoice_ids = order.order_line.mapped('invoice_lines').mapped('invoice_id').filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
             # Search for invoices which have been 'cancelled' (filter_refund = 'modify' in
             # 'account.invoice.refund')
             # use like as origin may contains multiple references (e.g. 'SO01, SO02')
@@ -175,7 +175,7 @@ class SaleOrder(models.Model):
         return super(SaleOrder, self)._track_subtype(init_values)
 
     @api.multi
-    @api.onchange('partner_shipping_id')
+    @api.onchange('partner_shipping_id', 'partner_id')
     def onchange_partner_shipping_id(self):
         """
         Trigger the change of fiscal position when the shipping address is modified.
@@ -299,29 +299,16 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_view_invoice(self):
-        invoice_ids = self.mapped('invoice_ids')
-        imd = self.env['ir.model.data']
-        action = imd.xmlid_to_object('account.action_invoice_tree1')
-        list_view_id = imd.xmlid_to_res_id('account.invoice_tree')
-        form_view_id = imd.xmlid_to_res_id('account.invoice_form')
-
-        result = {
-            'name': action.name,
-            'help': action.help,
-            'type': action.type,
-            'views': [[list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'kanban'], [False, 'calendar'], [False, 'pivot']],
-            'target': action.target,
-            'context': action.context,
-            'res_model': action.res_model,
-        }
-        if len(invoice_ids) > 1:
-            result['domain'] = "[('id','in',%s)]" % invoice_ids.ids
-        elif len(invoice_ids) == 1:
-            result['views'] = [(form_view_id, 'form')]
-            result['res_id'] = invoice_ids.ids[0]
+        invoices = self.mapped('invoice_ids')
+        action = self.env.ref('account.action_invoice_tree1').read()[0]
+        if len(invoices) > 1:
+            action['domain'] = [('id', 'in', invoices.ids)]
+        elif len(invoices) == 1:
+            action['views'] = [(self.env.ref('account.invoice_form').id, 'form')]
+            action['res_id'] = invoices.ids[0]
         else:
-            result = {'type': 'ir.actions.act_window_close'}
-        return result
+            action = {'type': 'ir.actions.act_window_close'}
+        return action
 
     @api.multi
     def action_invoice_create(self, grouped=False, final=False):
@@ -508,7 +495,7 @@ class SaleOrder(models.Model):
             for tax in line.tax_id:
                 group = tax.tax_group_id
                 res.setdefault(group, 0.0)
-                res[group] += tax.compute_all(line.price_unit, quantity=line.product_uom_qty)['taxes'][0]['amount']
+                res[group] += tax.compute_all(line.price_reduce, quantity=line.product_uom_qty)['taxes'][0]['amount']
         res = sorted(res.items(), key=lambda l: l[0].sequence)
         res = map(lambda l: (l[0].name, formatLang(self.env, l[1], currency_obj=currency)), res)
         return res
@@ -670,6 +657,10 @@ class SaleOrderLine(models.Model):
         return new_procs
 
     @api.model
+    def _get_purchase_price(self, pricelist, product, product_uom, date):
+        return {}
+
+    @api.model
     def create(self, values):
         onchange_fields = ['name', 'price_unit', 'product_uom', 'tax_id']
         if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
@@ -823,13 +814,14 @@ class SaleOrderLine(models.Model):
 
         vals = {}
         domain = {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
-        if not self.product_uom or (self.product_id.uom_id.category_id.id != self.product_uom.category_id.id):
+        if not self.product_uom or (self.product_id.uom_id.id != self.product_uom.id):
             vals['product_uom'] = self.product_id.uom_id
+            vals['product_uom_qty'] = 1.0
 
         product = self.product_id.with_context(
             lang=self.order_id.partner_id.lang,
             partner=self.order_id.partner_id.id,
-            quantity=self.product_uom_qty,
+            quantity=vals.get('product_uom_qty') or self.product_uom_qty,
             date=self.order_id.date_order,
             pricelist=self.order_id.pricelist_id.id,
             uom=self.product_uom.id

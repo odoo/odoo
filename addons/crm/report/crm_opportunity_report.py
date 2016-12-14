@@ -49,8 +49,9 @@ class OpportunityReport(models.Model):
     medium_id = fields.Many2one('utm.medium', string='Medium', readonly=True)
 
     def init(self):
+        tools.drop_view_if_exists(self._cr, 'crm_opportunity_report')
         self._cr.execute("""
-            CREATE OR REPLACE VIEW crm_opportunity_report AS (
+            CREATE VIEW crm_opportunity_report AS (
                 SELECT
                     c.id,
                     c.date_deadline,

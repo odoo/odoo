@@ -250,13 +250,13 @@ class AccountBankStatement(models.Model):
         context = dict(self._context or {})
         context['journal_id'] = self.journal_id.id
         return {
-            'name': _('Journal Items'),
+            'name': _('Journal Entries'),
             'view_type': 'form',
             'view_mode': 'tree,form',
-            'res_model': 'account.move.line',
+            'res_model': 'account.move',
             'view_id': False,
             'type': 'ir.actions.act_window',
-            'domain': [('statement_id', 'in', self.ids)],
+            'domain': [('id', 'in', self.mapped('move_line_ids').mapped('move_id').ids)],
             'context': context,
         }
 
@@ -342,7 +342,7 @@ class AccountBankStatement(models.Model):
 class AccountBankStatementLine(models.Model):
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
-    _order = "statement_id desc, sequence"
+    _order = "statement_id desc, sequence, id desc"
     _inherit = ['ir.needaction_mixin']
 
     name = fields.Char(string='Label', required=True)
@@ -366,6 +366,7 @@ class AccountBankStatementLine(models.Model):
     journal_entry_ids = fields.One2many('account.move', 'statement_line_id', 'Journal Entries', copy=False, readonly=True)
     amount_currency = fields.Monetary(help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one('res.currency', string='Currency', help="The optional other currency if it is a multi-currency entry.")
+    state = fields.Selection(related='statement_id.state' , string='Status', readonly=True)
     move_name = fields.Char(string='Journal Entry Name', readonly=True,
         default=False, copy=False,
         help="Technical field holding the number given to the journal entry, automatically set when the statement line is reconciled then stored to set the same number again if the line is cancelled, set to draft and re-processed again.")
@@ -471,7 +472,7 @@ class AccountBankStatementLine(models.Model):
                 'details': {
                     'name': _("Automatically reconciled items"),
                     'model': 'account.move',
-                    'ids': automatic_reconciliation_entries.ids
+                    'ids': automatic_reconciliation_entries.mapped('journal_entry_ids').ids
                 }
             }]
         return {
@@ -644,8 +645,9 @@ class AccountBankStatementLine(models.Model):
         # Look for a single move line with the same amount
         field = currency and 'amount_residual_currency' or 'amount_residual'
         liquidity_field = currency and 'amount_currency' or amount > 0 and 'debit' or 'credit'
+        liquidity_amt_clause = currency and '%(amount)s' or 'abs(%(amount)s)'
         sql_query = self._get_common_sql_query(excluded_ids=excluded_ids) + \
-                " AND ("+field+" = %(amount)s OR (acc.internal_type = 'liquidity' AND "+liquidity_field+" = %(amount)s)) \
+                " AND ("+field+" = %(amount)s OR (acc.internal_type = 'liquidity' AND "+liquidity_field+" = " + liquidity_amt_clause + ")) \
                 ORDER BY date_maturity asc, aml.id asc LIMIT 1"
         self.env.cr.execute(sql_query, params)
         results = self.env.cr.fetchone()
@@ -949,8 +951,23 @@ class AccountBankStatementLine(models.Model):
                     aml_dict['currency_id'] = statement_currency.id
 
             # Create write-offs
+            # When we register a payment on an invoice, the write-off line contains the amount
+            # currency if all related invoices have the same currency. We apply the same logic in
+            # the manual reconciliation.
+            counterpart_aml = self.env['account.move.line']
+            for aml_dict in counterpart_aml_dicts:
+                counterpart_aml |= aml_dict.get('move_line', self.env['account.move.line'])
+            new_aml_currency = False
+            if counterpart_aml\
+                    and len(counterpart_aml.mapped('currency_id')) == 1\
+                    and counterpart_aml[0].currency_id\
+                    and counterpart_aml[0].currency_id != company_currency:
+                new_aml_currency = counterpart_aml[0].currency_id
             for aml_dict in new_aml_dicts:
                 aml_dict['payment_id'] = payment and payment.id or False
+                if new_aml_currency and not aml_dict.get('currency_id'):
+                    aml_dict['currency_id'] = new_aml_currency.id
+                    aml_dict['amount_currency'] = company_currency.with_context(ctx).compute(aml_dict['debit'] - aml_dict['credit'], new_aml_currency)
                 aml_obj.with_context(check_move_validity=False, apply_taxes=True).create(aml_dict)
 
             # Create counterpart move lines and reconcile them

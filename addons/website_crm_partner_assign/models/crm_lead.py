@@ -33,25 +33,19 @@ class CrmLead(models.Model):
         if not partner_assigned:
             self.date_assign = False
         else:
-            self.write({
-                'date_assign': fields.Date.context_today(self),
-                'user_id': partner_assigned.user_id,
-            })
+            self.date_assign = fields.Date.context_today(self)
+            self.user_id = partner_assigned.user_id
 
     @api.multi
     def assign_salesman_of_assigned_partner(self):
         salesmans_leads = {}
         for lead in self:
             if (lead.stage_id.probability > 0 and lead.stage_id.probability < 100) or lead.stage_id.sequence == 1:
-                partner_assigned_related_user = self.env['res.users'].search([('partner_id', '=', lead.partner_assigned_id.id)], limit=1)
-                if lead.partner_assigned_id and partner_assigned_related_user and partner_assigned_related_user != lead.user_id:
-                    salesman_id = partner_assigned_related_user.id
-                    if salesmans_leads.get(salesman_id):
-                        salesmans_leads[salesman_id].append(lead.id)
-                    else:
-                        salesmans_leads[salesman_id] = lead.ids
-        for salesman_id, lead_ids in salesmans_leads.items():
-            leads = self.browse(lead_ids)
+                if lead.partner_assigned_id and lead.partner_assigned_id.user_id != lead.user_id:
+                    salesmans_leads.setdefault(lead.partner_assigned_id.user_id.id, []).append(lead.id)
+
+        for salesman_id, leads_ids in salesmans_leads.items():
+            leads = self.browse(leads_ids)
             leads.write({'user_id': salesman_id})
             for lead in leads:
                 lead._onchange_user_id()
@@ -99,6 +93,14 @@ class CrmLead(models.Model):
                                                     city=lead.city,
                                                     state=lead.state_id.name,
                                                     country=lead.country_id.name))
+
+                if result is None:
+                    result = geo_find(geo_query_address(
+                        city=lead.city,
+                        state=lead.state_id.name,
+                        country=lead.country_id.name
+                    ))
+
                 if result:
                     lead.write({
                         'partner_latitude': result[0],
@@ -197,12 +199,12 @@ class CrmLead(models.Model):
             lead.sudo().convert_opportunity(lead.partner_id.id)
 
     @api.multi
-    def partner_desinterested(self, comment=False, contacted=False):
+    def partner_desinterested(self, comment=False, contacted=False, spam=False):
         self.check_access_rights('write')
         if contacted:
-            message = _('<p>I am not interested by this lead. I contacted the lead.</p>')
+            message = '<p>%s</p>' % _('I am not interested by this lead. I contacted the lead.')
         else:
-            message = _('<p>I am not interested by this lead. I have not contacted the lead.</p>')
+            message = '<p>%s</p>' % _('I am not interested by this lead. I have not contacted the lead.')
         partner_ids = self.env['res.partner'].search(
             [('id', 'child_of', self.env.user.partner_id.commercial_partner_id.id)])
         self.sudo().message_unsubscribe(partner_ids=partner_ids.ids)
@@ -210,8 +212,13 @@ class CrmLead(models.Model):
             message += '<p>%s</p>' % comment
         self.message_post(body=message, subtype="mail.mt_note")
         values = {
-            'partner_assigned_id': False
+            'partner_assigned_id': False,
         }
+
+        if spam:
+            tag_spam = self.env.ref('website_crm_partner_assign.tag_portal_lead_is_spam', False)
+            if tag_spam and tag_spam not in self.tag_ids:
+                values['tag_ids'] = [(4, tag_spam.id, False)]
         if partner_ids:
             values['partner_declined_ids'] = map(lambda p: (4, p, 0), partner_ids.ids)
         self.sudo().write(values)

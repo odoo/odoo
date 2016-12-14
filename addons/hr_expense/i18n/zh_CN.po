@@ -3,27 +3,14 @@
 # * hr_expense
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# ChinaMaker <tiexinliu@126.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
-# Rona Lin <ssauapw@qq.com>, 2016
-# Gary Wei <Gary.wei@elico-corp.com>, 2016
-# fausthuang <faust_huang@hotmail.com>, 2016
-# Luke <cialuo@qq.com>, 2016
-# waveyeung <waveyeung@qq.com>, 2016
-# Talway <9010446@qq.com>, 2016
-# Xu Lei <xulei8@qq.com>, 2016
-# mrshelly <mrshelly@hotmail.com>, 2016
-# liulixia <liu.lixia@elico-corp.com>, 2016
-# s ss <yiwuxinde@gmail.com>, 2016
+# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 13:59+0000\n"
-"PO-Revision-Date: 2016-09-29 13:59+0000\n"
-"Last-Translator: s ss <yiwuxinde@gmail.com>, 2016\n"
+"POT-Creation-Date: 2016-11-14 15:53+0000\n"
+"PO-Revision-Date: 2016-11-14 15:53+0000\n"
+"Last-Translator: Jeffery Chen Fan <jeffery9@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -148,9 +135,14 @@ msgid "Accounting Date"
 msgstr "会计日期"
 
 #. module: hr_expense
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
+msgid "Accounting Entries"
+msgstr "会计分录"
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Actual expense sheets, not the refused ones"
-msgstr ""
+msgstr "确切的费用单，没有否决的"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
@@ -228,7 +220,7 @@ msgstr "取消"
 #: model:product.product,name:hr_expense.car_travel
 #: model:product.template,name:hr_expense.car_travel_product_template
 msgid "Car Travel Expenses"
-msgstr "差旅费"
+msgstr "交通费"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -242,7 +234,7 @@ msgstr "保证诚实和合规，<br/>(日期和签名).<br/><br/>"
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_to_post
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
 msgid "Click here to create a new expense report."
-msgstr "点击这里创建新费用报表"
+msgstr "点击这里创建新费用报告"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_request_approve_expense_sheet
@@ -252,15 +244,15 @@ msgid "Click here to create new expenses."
 msgstr "点击这里创建新费用"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:287
+#: code:addons/hr_expense/models/hr_expense.py:304
 #, python-format
 msgid "Click to add a new expense,"
-msgstr "点击创建一个新的费用单，"
+msgstr "点击创建一个新费用，"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Click to create a new expense category."
-msgstr "点击这里生成新的费用种类"
+msgstr "点击这里生成新的费用类别"
 
 #. module: hr_expense
 #. openerp-web
@@ -284,7 +276,7 @@ msgstr "公司"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_register_payment_wizard_company_id
 msgid "Company related to this journal"
-msgstr "日记账相关的公司"
+msgstr "此日记账相关的公司"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_configuration
@@ -310,7 +302,7 @@ msgstr "恭喜你，成功了！"
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Create a new expense.<br>"
-msgstr "点击创建一个新的费用.<br>"
+msgstr "创建新费用.<br>"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_create_uid
@@ -346,7 +338,7 @@ msgstr "日期"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_alias_prefix
 msgid "Default Alias Name for Expenses"
-msgstr "默认费用别名"
+msgstr "费用的默认别名"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_department_id
@@ -382,7 +374,7 @@ msgstr "不要犹豫做"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_register_payment_view_form
 msgid "Draft Payment"
-msgstr "付款草稿"
+msgstr "草稿付款"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_employee_id
@@ -417,7 +409,7 @@ msgstr "费用"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_name
 msgid "Expense Description"
-msgstr "费用描述"
+msgstr "费用说明"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
@@ -432,7 +424,7 @@ msgstr "费用日记账"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_expense_line_ids
 msgid "Expense Lines"
-msgstr "费用行"
+msgstr "费用明细行"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
@@ -445,17 +437,17 @@ msgstr "费用产品"
 #: model:ir.model,name:hr_expense.model_hr_expense_sheet
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id
 msgid "Expense Report"
-msgstr "费用报表"
+msgstr "费用报告"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_state
 msgid "Expense Report State"
-msgstr ""
+msgstr "费用报告状态"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_name
 msgid "Expense Report Summary"
-msgstr ""
+msgstr "费用报告摘要"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_reports
@@ -501,7 +493,7 @@ msgstr "费用表"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Expense refuse reason"
-msgstr "费用拒绝理由"
+msgstr "费用否决理由"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
@@ -516,12 +508,12 @@ msgstr "费用报告已支付"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense report refused"
-msgstr "费用报告被拒绝"
+msgstr "费用报告被否决"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_confirmed
 msgid "Expense report submitted, waiting approval"
-msgstr ""
+msgstr "费用报告已提交，等待审判中"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_root
@@ -555,7 +547,7 @@ msgstr "费用月份："
 #: model:ir.actions.report.xml,name:hr_expense.action_report_hr_expense_sheet
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Expenses Report"
-msgstr ""
+msgstr "费用报告"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department_expense_sheets_to_approve_count
@@ -574,13 +566,13 @@ msgid "Expenses by Month"
 msgstr "费用 按月份"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:381
+#: code:addons/hr_expense/models/hr_expense.py:399
 #, python-format
 msgid "Expenses must belong to the same Employee."
 msgstr "费用必须属于同一个员工"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:486
+#: code:addons/hr_expense/models/hr_expense.py:511
 #, python-format
 msgid ""
 "Expenses must have an expense journal specified to generate accounting "
@@ -588,10 +580,10 @@ msgid ""
 msgstr "费用必须指定一个日记账用来录入总账"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:385
+#: code:addons/hr_expense/models/hr_expense.py:403
 #, python-format
 msgid "Expenses must have been paid by the same entity (Company or employee)"
-msgstr ""
+msgstr "费用必须由同一个实体支付（公司或与员工）"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -602,7 +594,7 @@ msgstr "你的团队成员的费用"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "Expenses to Invoice"
-msgstr "要开票的费用"
+msgstr "待开票的费用"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_to_submit
@@ -612,7 +604,7 @@ msgstr "待提交的费用"
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Expenses will go through these steps:"
-msgstr ""
+msgstr "费用将通过这些步骤："
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -640,7 +632,7 @@ msgstr "通用信息"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Get Mobile"
-msgstr ""
+msgstr "取得移动版"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -667,24 +659,24 @@ msgstr "酒店住宿"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
 msgid "Hr Department"
-msgstr "部门"
+msgstr "HR部门"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_register_payment_wizard
 msgid "Hr Expense Register Payment wizard"
-msgstr ""
+msgstr "HR费用登记付款向导"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
 msgid "Hr Expense refuse Reason wizard"
-msgstr "HR费用拒绝理由向导"
+msgstr "HR费用否决理由向导"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_config_settings_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_id
-#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_8892
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_id_8893
 msgid "ID"
 msgstr "ID"
 
@@ -777,7 +769,7 @@ msgstr "名字"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "New Expense"
-msgstr "新报销单"
+msgstr "新费用"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -786,7 +778,7 @@ msgid "New Mail"
 msgstr "新邮件"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:235
+#: code:addons/hr_expense/models/hr_expense.py:251
 #, python-format
 msgid ""
 "No Expense account found for the product %s (or for it's category), please "
@@ -794,13 +786,13 @@ msgid ""
 msgstr "找不到产品 %s (或者这个产品)的费用科目，请配置一下"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:204
+#: code:addons/hr_expense/models/hr_expense.py:218
 #, python-format
 msgid "No Home Address found for the employee %s, please configure one."
-msgstr "员工%s地址没有找到，请设置"
+msgstr "员工%s的家庭地址没有找到，请设置"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:200
+#: code:addons/hr_expense/models/hr_expense.py:197
 #, python-format
 msgid "No credit account found for the %s journal, please configure one."
 msgstr "找不到%s日记账的贷方科目，　请配置一下"
@@ -808,7 +800,7 @@ msgstr "找不到%s日记账的贷方科目，　请配置一下"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Not Refused"
-msgstr "未拒绝"
+msgstr "未否决"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
@@ -849,7 +841,7 @@ msgstr "一经批准，你的费用报告进入会计，"
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
-msgstr "当你生成了你的费用申请，发送给你的经理，他会验证。"
+msgstr "一旦创建了你的费用申请，发送给你的经理，他将验证它。"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -867,7 +859,7 @@ msgstr "已支付"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_partner_id
 msgid "Partner"
-msgstr "合作伙伴"
+msgstr "业务伙伴"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_register_payment_wizard_amount
@@ -908,7 +900,7 @@ msgid "Planner"
 msgstr "计划"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:239
+#: code:addons/hr_expense/models/hr_expense.py:255
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product expense: "
@@ -964,7 +956,7 @@ msgstr "原因"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Reason to refuse expense."
-msgstr "拒绝费用申请的理由"
+msgstr "否决费用的理由"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -994,7 +986,7 @@ msgstr "已拒绝"
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_my_expenses_refused
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Refused Expenses"
-msgstr ""
+msgstr "否决的费用"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_register_payment_wizard_action
@@ -1012,7 +1004,7 @@ msgstr "报表"
 #: selection:hr.expense,state:0
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
 msgid "Reported"
-msgstr ""
+msgstr "已报告"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_reports
@@ -1037,7 +1029,7 @@ msgstr "待发布的报告"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Resubmit"
-msgstr ""
+msgstr "重新提交"
 
 #. module: hr_expense
 #. openerp-web
@@ -1106,12 +1098,12 @@ msgstr "主题:"
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
 msgid "Submit To Manager"
-msgstr ""
+msgstr "提交给管理员"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 msgid "Submit to Manager"
-msgstr "提交给经理"
+msgstr "提交给管理员"
 
 #. module: hr_expense
 #: selection:hr.expense.sheet,state:0
@@ -1173,7 +1165,7 @@ msgstr "该字段在费用单据完成时会使用到。"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_bank_journal_id
 msgid "The payment method used when the expense is paid by the company."
-msgstr "此付费方式当费用由公司支付时使用"
+msgstr "此付费方式用于当费用由公司支付时"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1203,7 +1195,7 @@ msgstr "待支付"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "To Post"
-msgstr ""
+msgstr "待过账"
 
 #. module: hr_expense
 #: selection:hr.expense,state:0
@@ -1251,7 +1243,7 @@ msgstr "计量单位"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_approved_expense
 msgid "Unreported Expenses"
-msgstr ""
+msgstr "未报告的费用"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_register_payment_view_form
@@ -1276,7 +1268,7 @@ msgstr "查看附件"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_form_view
 msgid "View Report"
-msgstr ""
+msgstr "查看报告"
 
 #. module: hr_expense
 #. openerp-web
@@ -1291,7 +1283,7 @@ msgid "We hope this feature helped you manage your expenses efficiently."
 msgstr "我们希望这个功能帮你有效率的管理你的费用"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:483
+#: code:addons/hr_expense/models/hr_expense.py:508
 #, python-format
 msgid "You can only generate accounting entry for approved expense(s)."
 msgstr "你只能对已批准的费用生产会计分录"
@@ -1315,6 +1307,12 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:425
+#, python-format
+msgid "You cannot delete a posted expense."
+msgstr ""
+
+#. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:106
 #, python-format
 msgid "You cannot report expenses for different employees in the same report!"
@@ -1324,7 +1322,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:104
 #, python-format
 msgid "You cannot report twice the same line!"
-msgstr ""
+msgstr "同一行你不能报告两次！"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
@@ -1340,10 +1338,10 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Your Email Address"
-msgstr "您的电子邮件地址"
+msgstr "你的电子邮件地址"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:465
+#: code:addons/hr_expense/models/hr_expense.py:490
 #, python-format
 msgid ""
 "Your Expense %s has been refused.<br/><ul "
@@ -1379,7 +1377,7 @@ msgid "or"
 msgstr "或"
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:288
+#: code:addons/hr_expense/models/hr_expense.py:305
 #, python-format
 msgid "or send receipts by email to %s."
 msgstr ""

@@ -311,8 +311,10 @@ options.registry.parallax = options.Class.extend({
             this.$target.data("snippet-view", new animation.registry.parallax(this.$target));
         }
         this.scroll();
-        this.buildingBlock.$el.on("snippet-dropped snippet-activated", this._refresh.bind(this));
-        this.$target.on('snippet-option-change snippet-option-preview', this._refresh.bind(this));
+
+        this._refresh_callback = this._refresh.bind(this);
+        this.buildingBlock.$el.on("snippet-dropped snippet-activated", this._refresh_callback);
+        this.$target.on('snippet-option-change snippet-option-preview', this._refresh_callback);
     },
     scroll: function (type, value) {
         this.$target.attr("data-scroll-background-ratio", value);
@@ -329,6 +331,11 @@ options.registry.parallax = options.Class.extend({
     on_move: function () {
         this._super.apply(this, arguments);
         this._refresh();
+    },
+    on_remove: function () {
+        this._super.apply(this, arguments);
+        this.$target.off("snippet-option-change snippet-option-preview", this._refresh_callback);
+        this.buildingBlock.$el.off("snippet-dropped snippet-activated", this._refresh_callback);
     },
 });
 

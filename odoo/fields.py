@@ -26,6 +26,8 @@ DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 EMPTY_DICT = frozendict()
 
+RENAMED_ATTRS = [('select', 'index'), ('digits_compute', 'digits')]
+
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__[:-7] + '.schema')
 
@@ -299,7 +301,7 @@ class Field(object):
         'args': EMPTY_DICT,             # the parameters given to __init__()
         '_attrs': EMPTY_DICT,           # the field's non-slot attributes
         '_module': None,                # the field's module name
-        'setup_full_done': False,       # whether the field has been fully setup
+        '_setup_done': None,            # the field's setup state: None, 'base' or 'full'
 
         'automatic': False,             # whether the field is automatically created ("magic" field)
         'inherited': False,             # whether the field is inherited (_inherits)
@@ -343,7 +345,7 @@ class Field(object):
         kwargs['string'] = string
         args = {key: val for key, val in kwargs.iteritems() if val is not Default}
         self.args = args or EMPTY_DICT
-        self.setup_full_done = False
+        self._setup_done = None
 
     def new(self, **kwargs):
         """ Return a field of the same type as ``self``, with its own parameters. """
@@ -395,14 +397,15 @@ class Field(object):
 
     def setup_base(self, model, name):
         """ Base setup: things that do not depend on other models/fields. """
-        if self.setup_full_done and not self.related:
+        if self._setup_done and not self.related:
             # optimization for regular fields: keep the base setup
-            self.setup_full_done = False
+            self._setup_done = 'base'
         else:
             # do the base setup from scratch
             self._setup_attrs(model, name)
             if not self.related:
                 self._setup_regular_base(model)
+            self._setup_done = 'base'
 
     #
     # Setup field parameter attributes
@@ -455,6 +458,12 @@ class Field(object):
 
         self.set_all_attrs(attrs)
 
+        # check for renamed attributes (conversion errors)
+        for key1, key2 in RENAMED_ATTRS:
+            if key1 in attrs:
+                _logger.warning("Field %s: parameter %r is no longer supported; use %r instead.",
+                                self, key1, key2)
+
         # prefetch only stored, column, non-manual and non-deprecated fields
         if not (self.store and self.column_type) or self.manual or self.deprecated:
             self.prefetch = False
@@ -475,12 +484,12 @@ class Field(object):
 
     def setup_full(self, model):
         """ Full setup: everything else, except recomputation triggers. """
-        if not self.setup_full_done:
+        if self._setup_done != 'full':
             if not self.related:
                 self._setup_regular_full(model)
             else:
                 self._setup_related_full(model)
-            self.setup_full_done = True
+            self._setup_done = 'full'
 
     #
     # Setup of non-related fields
@@ -894,10 +903,12 @@ class Field(object):
             env.invalidate(spec)
 
         else:
-            # simply write to the database, and update cache
+            # Write to database
             write_value = self.convert_to_write(self.convert_to_record(value, record), record)
             record.write({self.name: write_value})
-            record._cache[self] = value
+            # Update the cache unless value contains a new record
+            if not (self.relational and not all(value)):
+                record._cache[self] = value
 
     ############################################################################
     #
@@ -911,15 +922,15 @@ class Field(object):
         for field in fields:
             for record in records:
                 record._cache[field] = field.convert_to_cache(False, record, validate=False)
-        with records.env.protecting(fields, records):
-            if isinstance(self.compute, basestring):
-                getattr(records, self.compute)()
-            else:
-                self.compute(records)
+        if isinstance(self.compute, basestring):
+            getattr(records, self.compute)()
+        else:
+            self.compute(records)
 
     def compute_value(self, records):
         """ Invoke the compute method on ``records``; the results are in cache. """
-        with records.env.do_in_draft():
+        fields = records._field_computed[self]
+        with records.env.do_in_draft(), records.env.protecting(fields, records):
             try:
                 self._compute_value(records)
             except (AccessError, MissingError):
@@ -975,7 +986,9 @@ class Field(object):
     def determine_draft_value(self, record):
         """ Determine the value of ``self`` for the given draft ``record``. """
         if self.compute:
-            self._compute_value(record)
+            fields = record._field_computed[self]
+            with record.env.protecting(fields, record):
+                self._compute_value(record)
         else:
             null = self.convert_to_cache(False, record, validate=False)
             record._cache[self] = SpecialValue(null)
@@ -1231,6 +1244,13 @@ class Monetary(Field):
                 value = currency.round(float(value or 0.0))
                 return float_precision(value, currency.decimal_places)
         return float(value or 0.0)
+
+    def convert_to_read(self, value, record, use_name_get=True):
+        # float_precision values are not supported in pure XMLRPC
+        return float(value)
+
+    def convert_to_write(self, value, record):
+        return value
 
 
 class _String(Field):
@@ -1724,6 +1744,14 @@ class Selection(Field):
                 return item[1]
         return False
 
+    def convert_to_column(self, value, record):
+        """ Convert ``value`` from the ``write`` format to the SQL format. """
+        if value is None or value is False:
+            return None
+        if isinstance(value, unicode):
+            return value.encode('utf8')
+        return str(value)
+
 
 class Reference(Selection):
     type = 'reference'
@@ -1871,7 +1899,8 @@ class Many2one(_Relational):
                 return process(value._ids)
             raise ValueError("Wrong value for %s: %r" % (self, value))
         elif isinstance(value, tuple):
-            return process((value[0],))
+            # value is either a pair (id, name), or a tuple of ids
+            return process(value[:1])
         elif isinstance(value, dict):
             return process(record.env[self.comodel_name].new(value)._ids)
         else:
@@ -1945,8 +1974,8 @@ class _RelationalMulti(_Relational):
         if isinstance(value, BaseModel):
             if not validate or (value._name == self.comodel_name):
                 return process(value._ids)
-        elif isinstance(value, list):
-            # value is a list of record ids or commands
+        elif isinstance(value, (list, tuple)):
+            # value is a list/tuple of commands, dicts or record ids
             comodel = record.env[self.comodel_name]
             # determine the value ids; by convention empty on new records
             ids = OrderedSet(record[self.name].ids if record.id else ())
@@ -1987,7 +2016,7 @@ class _RelationalMulti(_Relational):
 
     def convert_to_write(self, value, record):
         # make result with new and existing records
-        result = [(5,)]
+        result = [(6, 0, [])]
         for record in value:
             if not record.id:
                 values = {name: record[name] for name in record._cache}
@@ -1998,7 +2027,7 @@ class _RelationalMulti(_Relational):
                 values = record._convert_to_write(values)
                 result.append((1, record.id, values))
             else:
-                result.append((4, record.id))
+                result[0][2].append(record.id)
         return result
 
     def convert_to_onchange(self, value, record, fnames=()):
@@ -2171,7 +2200,11 @@ class One2many(_RelationalMulti):
                     query = "SELECT id FROM %s WHERE %s=%%s AND id <> ALL(%%s)" % (comodel._table, inverse)
                     comodel._cr.execute(query, (record.id, act[2] or [0]))
                     lines = comodel.browse([row[0] for row in comodel._cr.fetchall()])
-                    lines.write({inverse: False})
+                    inverse_field = comodel._fields[inverse]
+                    if inverse_field.ondelete == 'cascade':
+                        lines.unlink()
+                    else:
+                        lines.write({inverse: False})
 
 
 class Many2many(_RelationalMulti):

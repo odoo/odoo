@@ -108,6 +108,15 @@ class PickingType(models.Model):
             res.append((picking_type.id, name))
         return res
 
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        domain = []
+        if name:
+            domain = ['|', ('name', operator, name), ('warehouse_id.name', operator, name)]
+        picks = self.search(domain + args, limit=limit)
+        return picks.name_get()
+
     @api.onchange('code')
     def onchange_picking_code(self):
         if self.code == 'incoming':
@@ -716,7 +725,7 @@ class Picking(models.Model):
 
                         # check if the quant is matching the operation details
                         if ops.package_id:
-                            flag = quant.package_id and bool(QuantPackage.search([('id', 'child_of', [ops.package_id.id])])) or False
+                            flag = quant.package_id == ops.package_id
                         else:
                             flag = not quant.package_id.id
                         flag = flag and (ops.owner_id.id == quant.owner_id.id)
@@ -860,7 +869,7 @@ class Picking(models.Model):
                 moves_reassign = any(x.origin_returned_move_id or x.move_orig_ids for x in picking.move_lines if x.state not in ['done', 'cancel'])
                 if moves_reassign and picking.location_id.usage not in ("supplier", "production", "inventory"):
                     # unnecessary to assign other quants than those involved with pack operations as they will be unreserved anyways.
-                    picking.with_context(reserve_only_ops=True, no_state_change=True).rereserve_quants(move_ids=todo_moves.ids)
+                    picking.with_context(reserve_only_ops=True, no_state_change=True).rereserve_quants(move_ids=picking.move_lines.ids)
                 picking.do_recompute_remaining_quantities()
 
             # split move lines if needed
@@ -915,7 +924,7 @@ class Picking(models.Model):
                     vals = self._prepare_values_extra_move(pack_operation, product, remaining_qty)
                     moves |= moves.create(vals)
         if moves:
-            moves.action_confirm()
+            moves.with_context(skip_check=True).action_confirm()
         return moves
 
     @api.model
@@ -958,6 +967,7 @@ class Picking(models.Model):
         """ Move all non-done lines into a new backorder picking. If the key 'do_only_split' is given in the context, then move all lines not in context.get('split', []) instead of all non-done lines.
         """
         # TDE note: o2o conversion, todo multi
+        backorders = self.env['stock.picking']
         for picking in self:
             backorder_moves = backorder_moves or picking.move_lines
             if self._context.get('do_only_split'):
@@ -978,7 +988,8 @@ class Picking(models.Model):
                 picking.write({'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
             backorder_picking.action_confirm()
             backorder_picking.action_assign()
-        return True
+            backorders |= backorder_picking
+        return backorders
 
     @api.multi
     def put_in_pack(self):

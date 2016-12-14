@@ -1,23 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_payment
-#
+# 
 # Translators:
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2016
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-06-27 10:33+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
-"Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
-"Language: pl\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016\n"
+"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
@@ -48,7 +50,7 @@ msgstr "Konfiguruj beneficjenta"
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_account_config_settings_default_acquirer
 msgid "Default Acquirer"
-msgstr "nieobecne wyzwania"
+msgstr "Domyślny beneficjent"
 
 #. module: website_payment
 #: model:ir.model.fields,help:website_payment.field_account_config_settings_default_acquirer
@@ -83,12 +85,7 @@ msgid "Manage your payment methods"
 msgstr ""
 
 #. module: website_payment
-#: model:ir.ui.view,arch_db:website_payment.pay_methods
-msgid "My Account"
-msgstr "Moje konto"
-
-#. module: website_payment
-#: code:addons/website_payment/controllers/main.py:43
+#: code:addons/website_payment/controllers/main.py:45
 #, python-format
 msgid "Pay Now"
 msgstr "Zapłać teraz"
@@ -123,7 +120,7 @@ msgstr "Zapłatę wykonano przez"
 #: model:ir.ui.view,arch_db:website_payment.confirm
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "Reference"
-msgstr "Kod"
+msgstr "Odnośnik"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay
@@ -145,9 +142,3 @@ msgstr "account.config.settings"
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "payment_provider_logo"
 msgstr "payment_provider_logo"
-
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr "Pełny adres URL dostępu do dokumentu przez stronę."
-
-#~ msgid "Website URL"
-#~ msgstr "Adres strony internetowej"

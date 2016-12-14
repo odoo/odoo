@@ -77,18 +77,26 @@ class IrQWeb(models.AbstractModel, QWeb):
         env = self.env
         if lang != env.context.get('lang'):
             env = env(context=dict(env.context, lang=lang))
+
         template = env['ir.ui.view'].read_template(name)
 
-        res_id = isinstance(name, (int, long)) and name or None
-        if res_id:
+        # QWeb's `read_template` will check if one of the first children of
+        # what we send to it has a "t-name" attribute having `name` as value
+        # to consider it has found it. As it'll never be the case when working
+        # with view ids or children view or children primary views, force it here.
+        def is_child_view(view_name):
+            view_id = self.env['ir.ui.view'].get_view_id(view_name)
+            view = self.env['ir.ui.view'].browse(view_id)
+            return view.inherit_id is not None
+
+        if isinstance(name, (int, long)) or is_child_view(name):
             for node in etree.fromstring(template):
                 if node.get('t-name'):
-                    return node
-                elif res_id and node.tag == "t":
-                    node.set('t-name', str(res_id))
-                    return node
-
-        return template
+                    node.set('t-name', str(name))
+                    return node.getparent()
+            return None  # trigger "template not found" in QWeb
+        else:
+            return template
 
     # order
 

@@ -8,7 +8,7 @@ will automatically create Odoo users for them on the fly.
 Configuration:
 --------------
 After installing this module, you need to configure the LDAP parameters in the
-Configuration tab of the Company details. Different companies may have different
+General Settings menu. Different companies may have different
 LDAP servers, as long as they have unique usernames (usernames need to be unique
 in Odoo, even across multiple companies).
 
@@ -52,7 +52,7 @@ encrypted.
 
 User Template:
 --------------
-In the LDAP configuration on the Company form, it is possible to select a *User
+In the LDAP configuration on the General Settings, it is possible to select a *User
 Template*. If set, this user will be used as template to create the local users
 whenever someone authenticates for the first time via LDAP authentication. This
 allows pre-setting the default groups and menus of the first-time users.

@@ -1,50 +1,23 @@
 // MODALS
 body .modal {
-    a {
-        &:focus, &:active, &:focus:active {
-            outline: none!important;
-        }
-    }
 
     &.o_website_modal {
-        font-family: @o-we-font-family;
-
-        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-            font-family: @o-we-font-family;
-        }
+        .o-w-preserve-base();
+        .o-w-preserve-headings();
+        .o-w-preserve-forms();
+        .o-w-preserve-links();
+        .o-w-preserve-btn();
+        .o-w-preserve-wells();
+        .o-w-preserve-modals();
 
         .modal-content {
-            border-radius: 0;
-            color: initial!important;
-            background-color: @o-we-color-paper!important;
             .modal-header .o_subtitle {
                 margin-left: 10px;
             }
             .modal-body {
-                color: inherit!important;
-                background-color: transparent!important;
                 .o_modal_header {
                     .o-webclient-padding(@top: 10px, @bottom: 10px);
                     .clearfix();
-                }
-            }
-            .modal-footer {
-                text-align: left;
-
-                .btn {
-                    border-radius: 0;
-
-                    &.btn-primary {
-                        .button-variant(white, @odoo-brand-optional, @odoo-brand-optional);
-                        text-transform: uppercase;
-                    }
-                    &.btn-default {
-                        .button-variant(@odoo-brand-optional, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
-                        text-transform: uppercase;
-                    }
-                    &.btn-link {
-                        .button-variant(@odoo-brand-optional, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
-                    }
                 }
             }
         }
@@ -89,7 +62,6 @@ body .modal {
 
             .modal-content {
                 background-color: black!important;
-                color: lightgray!important;
                 border: 3px outset gray;
                 border-radius: 20px;
 
@@ -99,6 +71,7 @@ body .modal {
                     font-family: @o-we-font-family;
 
                     h4 {
+                        color: lightgray;
                         font-family:inherit;
                         font-weight: normal;
 
@@ -109,6 +82,8 @@ body .modal {
                 }
 
                 .modal-body {
+                    background-color: inherit!important;
+                    border-radius: 20px;
                     padding: 15px;
 
                     @mobile-preview-width: 320px;
@@ -267,7 +242,7 @@ body .modal {
 }
 
 // LOGIN FORM
-.oe_login_form, .oe_signup_form {
+.oe_login_form, .oe_signup_form, .oe_reset_password_form {
     max-width: 300px;
     position: relative;
     margin: 50px auto;
@@ -324,6 +299,10 @@ body .modal {
 
 // ACE EDITOR
 .o_ace_view_editor {
+    .o-w-preserve-base();
+    .o-w-preserve-btn();
+    .o-w-preserve-forms();
+
     .o-position-absolute(@odoo-navbar-height, 0, 0);
     position: fixed;
     z-index: 1001;

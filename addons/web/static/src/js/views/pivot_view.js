@@ -275,9 +275,10 @@ var PivotView = View.extend({
             col_domain = this.headers[col_id].domain,
             context = _.omit(_.clone(this.context), 'group_by');
 
-        var views = _.filter(this.options.action.views, function (view) {
-            return view[1] === 'form' || view[1] === 'list';
-        });
+        var views = [
+            _find_view_info.call(this, "list"),
+            _find_view_info.call(this, "form"),
+        ];
 
         return this.do_action({
             type: 'ir.actions.act_window',
@@ -290,6 +291,12 @@ var PivotView = View.extend({
             context: context,
             domain: this.domain.concat(row_domain, col_domain),
         });
+
+        function _find_view_info(view_type) {
+            return _.find(this.options.action.views, function (view) {
+                return view[1] === view_type;
+            }) || [false, view_type];
+        }
     },
     on_measure_row_click: function (event) {
         var $target = $(event.target),
@@ -826,6 +833,12 @@ var PivotView = View.extend({
             complete: framework.unblockUI,
             error: crash_manager.rpc_error.bind(crash_manager)
         });    
+    },
+    destroy: function () {
+        if (this.$buttons) {
+            this.$buttons.find('button').off(); // remove jquery's tooltip() handlers
+        }
+        return this._super.apply(this, arguments);
     },
 });
 

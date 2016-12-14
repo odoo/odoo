@@ -62,7 +62,7 @@ var KanbanView = View.extend({
 
         this.qweb = new QWeb(session.debug, {_s: session.origin});
 
-        this.limit = this.options.limit || 40;
+        this.limit = this.options.limit || parseInt(this.fields_view.arch.attrs.limit, 10) || 40;
         this.fields = {};
         this.fields_keys = _.keys(this.fields_view.fields);
         this.grouped = undefined;
@@ -520,7 +520,7 @@ var KanbanView = View.extend({
 
     open_record: function (event, options) {
         if (this.dataset.select_id(event.data.id)) {
-            this.do_switch_view('form', null, options); //, null, { mode: "edit" });
+            this.do_switch_view('form', options);
         } else {
             this.do_warn("Kanban: could not find id#" + event.data.id);
         }

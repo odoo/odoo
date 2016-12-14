@@ -3,20 +3,21 @@
 # * website_portal_sale
 # 
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Clo <clo@odoo.com>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
 # Olivier Dony <odo@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
+"POT-Creation-Date: 2016-09-29 14:01+0000\n"
+"PO-Revision-Date: 2016-09-29 14:01+0000\n"
 "Last-Translator: Olivier Dony <odo@odoo.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -163,11 +164,6 @@ msgid "<strong>Unit Price</strong>"
 msgstr "<strong>Prix unitaire</strong>"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_backend_link
-msgid "Access the complete Sale application"
-msgstr "Accédez à l'application Ventes complète"
-
-#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Amount Due"
 msgstr "Montant dû"
@@ -194,13 +190,9 @@ msgid "Due Date"
 msgstr "Date d'échéance"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sales_backend_access
-msgid ""
-"If you wish to access the complete application to manage your orders, you "
-"can follow"
-msgstr ""
-"Si vous souhaitez accepter à l'application complète pour gérer vos "
-"commandes, vous pouvez suivre"
+#: model:ir.model,name:website_portal_sale.model_account_invoice
+msgid "Invoice"
+msgstr "Facture"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
@@ -248,6 +240,11 @@ msgid "Pay Now"
 msgstr "Payer maintenant"
 
 #. module: website_portal_sale
+#: model:ir.model,name:website_portal_sale.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transaction"
+
+#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
 msgid "Quotation"
 msgstr "Devis"
@@ -261,6 +258,11 @@ msgstr "Devis №"
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_menu_sale
 msgid "Quotes"
 msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.model.fields,field_description:website_portal_sale.field_payment_transaction_sale_order_id
+msgid "Sale Order"
+msgstr "Bon de commande"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
@@ -328,8 +330,3 @@ msgstr "Vos commandes"
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid "Your Quotes"
 msgstr "Vos Devis"
-
-#. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sales_backend_access
-msgid "this link"
-msgstr "ce lien"

@@ -1,76 +1,59 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_quote
-#
+# 
 # Translators:
-# Viktor Pogrebniak <vp@aifil.ru>, 2016
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2016
+# dr&mx <dronmax@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-05-27 23:18+0000\n"
-"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
-"Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
-"Language: ru\n"
+"POT-Creation-Date: 2016-10-10 08:44+0000\n"
+"PO-Revision-Date: 2016-10-10 08:44+0000\n"
+"Last-Translator: dr&mx <dronmax@gmail.com>, 2016\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
-"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: website_quote
 #: model:mail.template,body_html:website_quote.confirmation_mail
 msgid ""
 "\n"
-"<div summary=\"o_mail_template\" style=\"padding:0px; width:600px; margin:0 "
-"auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
-"collapse:collapse; background:inherit; color:inherit\">\n"
+"<div summary=\"o_mail_template\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px "
-"5px;font-size: 12px\">\n"
-"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
-"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
 "            </td>\n"
 "        </tr></tbody>\n"
 "    </table>\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
-"collapse:collapse; background:inherit; color:inherit\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;"
-"\">\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
 "                <div>\n"
-"                    <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
 "                </div>\n"
 "            </td>\n"
 "        </tr></tbody>\n"
 "    </table>\n"
 "</div>\n"
-"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
-"background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-"
-"align:justify; margin:0 auto; border-collapse:collapse; background:inherit; "
-"color:inherit\">\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
 "            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
 "                <p>Dear ${object.partner_id.name},</p><br/>\n"
-"                <p>Your order <a href=\"/quote/${object.id}/${object."
-"access_token}\">${object.name}</a> has been validated!</p><br/>\n"
+"                <p>Your order <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> has been validated!</p><br/>\n"
 "                \n"
 "                % if object.partner_id.user_ids\n"
-"                <p>You can view your quotes, sales orders and invoices "
-"online by going to our <a style=\"text-decoration:none; color: #a24689;\" "
-"href=\"/my/home\">Online Portal</a>.</p><br/>\n"
+"                <p>You can view your quotes, sales orders and invoices online by going to our <a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\">Online Portal</a>.</p><br/>\n"
 "                % endif\n"
 "\n"
-"                <p>If you have any question, do not hesitate to contact us.</"
-"p><br/>\n"
-"                <p>Thank you for choosing ${object.company_id.name or \"us"
-"\"}!</p>\n"
+"                <p>If you have any question, do not hesitate to contact us.</p><br/>\n"
+"                <p>Thank you for choosing ${object.company_id.name or \"us\"}!</p>\n"
 "            </td>\n"
 "        </tr><tr>\n"
 "            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
@@ -79,11 +62,9 @@ msgid ""
 "                </p>\n"
 "                % endif\n"
 "                <p style=\"font-size: 11px;\"><strong>Sent by\n"
-"                <a href=\"${user.company_id.website}\" style=\"text-"
-"decoration:none; color: #a24689;\">\n"
+"                <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #875A7B;\">\n"
 "                    <strong>${user.company_id.name}</strong>\n"
-"                </a> using <a href=\"www.odoo.com\" style=\"text-decoration:"
-"none; color: #a24689;\"><strong>Odoo</strong></a>\n"
+"                </a> using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\"><strong>Odoo</strong></a>\n"
 "                </strong></p>\n"
 "            </td>\n"
 "        </tr></tbody>\n"
@@ -94,7 +75,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "! You can"
-msgstr ""
+msgstr "! Вы можете"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
@@ -104,12 +85,14 @@ msgid "% discount"
 msgstr "% скидка"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "&amp;bull;"
+msgstr "&amp;bull;"
+
+#. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "&amp;nbsp;"
-msgstr ""
+msgstr "и "
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -121,77 +104,71 @@ msgstr "&amp;times;"
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid ""
 ":\n"
-"                                this content will appear on the quotation "
-"only if this\n"
+"                                this content will appear on the quotation only if this\n"
 "                                product is put on the quote."
 msgstr ""
 ":\n"
-"                                это содержимое появится в предложении, "
-"только если\n"
+"                                это содержимое появится в предложении, только если\n"
 "                                на этот товар назначена цена."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid ""
 ":\n"
-"                                this content will appear on the quotation "
-"only if this\n"
+"                                this content will appear on the quotation only if this\n"
 "                                product is used in the quote."
 msgstr ""
 ":\n"
-"                                это содержимое появится в предложении, "
-"только если этот\n"
+"                                это содержимое появится в предложении, только если этот\n"
 "                                товар есть в расценках."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> Принять"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "<i class=\"fa fa-check\"/> Accept &amp; Pay"
+msgstr "<i class=\"fa fa-check\"/> Принять &amp; Оплатить"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept Order"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> Принять заказ"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Pay Now"
-msgstr ""
+msgstr "<i class=\"fa fa-check\"/> Оплатить сейчас"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
 msgid "<i class=\"fa fa-comment\"/> Feedback"
-msgstr ""
+msgstr "<i class=\"fa fa-comment\"/> Обратная связь"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-times\"/> Reject"
-msgstr ""
+msgstr "<i class=\"fa fa-times\"/> Отказаться"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid ""
 "<i>You will be able to create dynamic page interacting with the ORM.</i>"
 msgstr ""
-"<i>Вы сможете создать динамическую страницу, взаимодействующую с ОРО</i>"
+"<i>Вы сможете создать динамическую веб-страницу, взаимодействующую с ОРО</i>"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid ""
 "<i>You will be able to develop a full application with backend and user "
 "interface.</i>"
 msgstr ""
+"<i>Вы сможете разработать полное приложение с программным и пользовательским"
+" интерфейсом</i>"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid ""
 "<i>You will be able to develop simple dynamic compenents in HTML pages.</i>"
@@ -212,17 +189,6 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-msgid ""
-"<span style=\"text-align: -webkit-center\">This course is dedicated to "
-"developers who need to grasp knowledge of the <strong>business applications "
-"development </strong>process. This course is for new developers or for IT "
-"professionals eager to learn more about technical aspects.</span>"
-msgstr ""
-
-#. module: website_quote
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid ""
 "<span style=\"text-align: -webkit-center; \">This course is dedicated to "
@@ -265,7 +231,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<span>with payment terms: </span>"
-msgstr ""
+msgstr "<span>с условием оплаты: </span>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.opt_quotation_signature
@@ -283,6 +249,8 @@ msgid ""
 "<strong>Get high billing rates</strong> as you deliver a\n"
 "                                     highly valuable software."
 msgstr ""
+"<strong>Добиться высокого рейтинга продаж</strong> с помощью использования "
+"эффективного программного обеспечения."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -292,34 +260,23 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid ""
-"<strong>Having attended this course, participants should be able to:</strong>"
-msgstr ""
+"<strong>Having attended this course, participants should be able "
+"to:</strong>"
+msgstr "<strong>Посетив этот курс ученикам следует знать о:</strong>"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "<strong>Objectives:</strong>"
-msgstr "<strong>Цели:</strong>"
+msgstr "<strong>Цели:</strong> "
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "<strong>Our prices include:</strong>"
 msgstr "<strong>Наши цены включают в себя:</strong>"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "<strong>Requirements:</strong>"
 msgstr "<strong>Требования:</strong>"
@@ -327,7 +284,7 @@ msgstr "<strong>Требования:</strong>"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "<strong>Subtotal:</strong>"
-msgstr ""
+msgstr "<strong>Подытог:</strong>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
@@ -338,9 +295,6 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_1
-#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "<strong>There are three components to the training</strong>"
 msgstr ""
@@ -367,7 +321,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "<strong>Total:</strong>"
-msgstr "<strong>Итог:</strong>"
+msgstr "<strong>Итого:</strong>"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -387,12 +341,17 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "About us"
-msgstr ""
+msgstr "О нас"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Access to the Lead"
-msgstr ""
+msgstr "Доступ к инициативе"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
+msgid "Add to order lines"
+msgstr "Добавить строки заказа"
 
 #. module: website_quote
 #: model:product.product,name:website_quote.product_product_quote_3
@@ -404,12 +363,9 @@ msgid "Advanced CRM Functional"
 msgstr "Расширенный функционал системы управления взаимоотношений с клиентами"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Advanced JQuery"
-msgstr ""
+msgstr "Дополнительно JQuery"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_amount_undiscounted
@@ -422,11 +378,10 @@ msgid ""
 "An administrator can set up default Terms and conditions in your Company "
 "settings."
 msgstr ""
+"Администратор может установить сроки и условия по умолчанию в настройках "
+"вашего предприятия."
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Arrays"
 msgstr "Множества"
@@ -435,10 +390,12 @@ msgstr "Множества"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "As a leading professional services firm,\n"
-"                                       we know that success is all about "
-"the\n"
+"                                       we know that success is all about the\n"
 "                                       commitment we put on strong services."
 msgstr ""
+"Как ведущая компания в сфере услуг,\n"
+"мы знаем, что успех услуги заключается\n"
+"в том, чтобы сделать лучше, чем должно."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
@@ -448,7 +405,7 @@ msgstr "Запросить изменения"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "Back"
-msgstr ""
+msgstr "Назад"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -458,7 +415,7 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Become an Odoo Consultant."
-msgstr ""
+msgstr "Стать консультантом Odoo."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -473,9 +430,6 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_1
-#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Better comfort to facilitate your learning process"
 msgstr ""
@@ -483,40 +437,28 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Bill To:"
-msgstr "Счет:"
+msgstr "Счёт для:"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Bootstrap CSS"
-msgstr ""
+msgstr "Bootstrap CSS"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Bring your own laptop."
-msgstr ""
+msgstr "Принесите свой собственный ноутбук."
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Building a Full Application"
-msgstr ""
+msgstr "Создание полного приложения"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Calling the ORM"
-msgstr ""
+msgstr "Вызов ORM"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -553,7 +495,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_mail_template_id
 msgid "Confirmation Mail"
-msgstr ""
+msgstr "Письмо подтверждения"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -561,22 +503,16 @@ msgid "Contact us"
 msgstr "Свяжитесь с нами"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Controllers and Views"
-msgstr ""
+msgstr "Контроллеры и представления"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Convert Lead to Opportunity &amp; Customer management"
-msgstr ""
+msgstr "Конвертация инициатив в возможности, управление заказчиками"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Course Summary"
 msgstr "Краткое описание курса"
@@ -587,7 +523,7 @@ msgstr "Краткое описание курса"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_create_uid
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создал"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_create_date
@@ -595,7 +531,7 @@ msgstr "Создано"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_create_date
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_create_date
 msgid "Created on"
-msgstr "Создан"
+msgstr "Создано"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -605,35 +541,26 @@ msgstr "Клиент:"
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Customers/Vendors"
-msgstr ""
+msgstr "Клиенты/Поставщики"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Database management"
-msgstr ""
+msgstr "Система управления базами данных"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Day 1"
-msgstr "День 1"
+msgstr "1 день"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Day 2"
 msgstr "2 день"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Day 3"
@@ -643,8 +570,7 @@ msgstr "3 день"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Deliver <strong>strong value added services</strong> as you can\n"
-"                                       rely on a leading open source "
-"software, with\n"
+"                                       rely on a leading open source software, with\n"
 "                                       the support of the publisher."
 msgstr ""
 
@@ -654,7 +580,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_name
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_name
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_website_description
-#: model:ir.ui.view,arch_db:website_quote.optional_products
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Description"
@@ -671,9 +596,6 @@ msgid "Description for the website"
 msgstr "Описание для веб-сайта"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Develop a new module for a particular application."
 msgstr "Разработка нового модуля для конкретного приложения."
@@ -696,12 +618,9 @@ msgstr "Скидка (%)"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_display_name
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_display_name
 msgid "Display Name"
-msgstr "Отображаемое Имя"
+msgstr "Отображаемое имя"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Dive into Strings"
 msgstr ""
@@ -714,7 +633,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Edit Quote"
-msgstr ""
+msgstr "Редактировать предложение"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -725,60 +644,48 @@ msgstr "Редактировать шаблон"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Enjoy the traction of the <strong>fastest growing\n"
-"                                    management software</strong> in the "
-"world."
+"                                    management software</strong> in the world."
 msgstr ""
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Every year, we redirect more than 100,000 customer\n"
-"                                requests to our official partners. These are "
-"prospects\n"
-"                                that filled a form on the Odoo website and "
-"wanted to\n"
-"                                use Odoo. The right partner to fulfill the "
-"customer\n"
-"                                request is selected based on the customer "
-"localization\n"
-"                                (nearest partner) and the grade of the "
-"partner."
+"                                requests to our official partners. These are prospects\n"
+"                                that filled a form on the Odoo website and wanted to\n"
+"                                use Odoo. The right partner to fulfill the customer\n"
+"                                request is selected based on the customer localization\n"
+"                                (nearest partner) and the grade of the partner."
 msgstr ""
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Every year, we redirect more than 100,000 customer\n"
-"                        requests to our official partners. These are "
-"prospects\n"
-"                        that filled a form on the Odoo website and wanted "
-"to\n"
+"                        requests to our official partners. These are prospects\n"
+"                        that filled a form on the Odoo website and wanted to\n"
 "                        use Odoo. The right partner to fulfill the customer\n"
-"                        request is selected based on the customer "
-"localization\n"
+"                        request is selected based on the customer localization\n"
 "                        (nearest partner) and the grade of the partner."
 msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Expiration Date:"
-msgstr ""
+msgstr "Действителен до:"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Fetchmail Configuration"
-msgstr ""
+msgstr "Fetchmail конфигурация"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "For an extra fee, partners can get access to Odoo's\n"
-"                                core developers and functional experts. This "
-"can help\n"
-"                                you succeed in delivering more complex or "
-"bigger\n"
-"                                projects by getting the support of highly "
-"experienced\n"
+"                                core developers and functional experts. This can help\n"
+"                                you succeed in delivering more complex or bigger\n"
+"                                projects by getting the support of highly experienced\n"
 "                                consultants on demand."
 msgstr ""
 
@@ -791,9 +698,6 @@ msgid "Functional Training"
 msgstr "Функциональное обучение"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Functions"
 msgstr "Функции"
@@ -806,7 +710,7 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Get access to our experts"
-msgstr ""
+msgstr "Получите доступ к нашим специалистам"
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_line_sequence
@@ -814,16 +718,18 @@ msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr ""
 
 #. module: website_quote
+#: model:ir.model.fields,help:website_quote.field_sale_order_option_sequence
+msgid "Gives the sequence order when displaying a list of suggested product."
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "Great quotation templates will significantly\n"
-"                                <strong>boost your success rate</strong>. "
-"The\n"
-"                                first section is usually about your "
-"company,\n"
+"                                <strong>boost your success rate</strong>. The\n"
+"                                first section is usually about your company,\n"
 "                                your references, your methodology or\n"
-"                                guarantees, your team, SLA, terms and "
-"conditions, etc."
+"                                guarantees, your team, SLA, terms and conditions, etc."
 msgstr ""
 
 #. module: website_quote
@@ -835,17 +741,11 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_1
-#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Hands-on exercises and their solutions"
 msgstr ""
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Hello World"
 msgstr "Привет Мир!"
@@ -853,20 +753,17 @@ msgstr "Привет Мир!"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "High Margins"
-msgstr ""
+msgstr "Высокая маржа"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
 msgid "History"
-msgstr "Журнал"
+msgstr "История"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "How to Debug"
-msgstr ""
+msgstr "Как выполнить отладку"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_id
@@ -880,16 +777,14 @@ msgstr "ID"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "If edit a quotation from the 'Preview' of a quotation, you will\n"
-"                        update the quotation for this customer only. If you "
-"edit the quotation\n"
-"                        template (from the Configuration menu), all future "
-"quotations will\n"
+"                        update the quotation for this customer only. If you edit the quotation\n"
+"                        template (from the Configuration menu), all future quotations will\n"
 "                        use this modified template."
 msgstr ""
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:76
-#: code:addons/website_quote/controllers/main.py:227
+#: code:addons/website_quote/controllers/main.py:211
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -903,6 +798,12 @@ msgid "Immediate after website order validation"
 msgstr ""
 
 #. module: website_quote
+#: selection:sale.order,require_payment:0
+#: selection:sale.quote.template,require_payment:0
+msgid "Immediate after website order validation and save a token"
+msgstr ""
+
+#. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Incl. tax)"
 msgstr ""
@@ -910,12 +811,9 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Install and administer Odoo."
-msgstr ""
+msgstr "Установка и администрирование Odoo."
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Install and administer your own server;"
 msgstr "Установка и администрирование собственного сервера;"
@@ -923,15 +821,12 @@ msgstr "Установка и администрирование собстве�
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Installation and Configuration"
-msgstr ""
+msgstr "Установка и настройка"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Integrated Help"
-msgstr ""
+msgstr "Встроенная справка"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.navigation_menu
@@ -940,45 +835,31 @@ msgid "Introduction"
 msgstr "Введение"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Introduction to JQuery"
-msgstr ""
+msgstr "Введение в JQuery"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Introduction to Javascript"
-msgstr ""
+msgstr "Введение в Javascript"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Introduction to QWeb"
-msgstr ""
+msgstr "Введение в QWeb"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "It includes <strong>discounts on Odoo\n"
-"                                Enterprise</strong>, technical and/or "
-"functional\n"
+"                                Enterprise</strong>, technical and/or functional\n"
 "                                <strong>trainings</strong>,\n"
 "                                <strong>support</strong> services,\n"
-"                                <strong>marketing documents</strong>, access "
-"to\n"
-"                                the <strong>partner portal</strong>, rights "
-"to\n"
-"                                <strong>use the trademark</strong>, sales "
-"support\n"
-"                                from a <strong>dedicated account manager</"
-"strong>."
+"                                <strong>marketing documents</strong>, access to\n"
+"                                the <strong>partner portal</strong>, rights to\n"
+"                                <strong>use the trademark</strong>, sales support\n"
+"                                from a <strong>dedicated account manager</strong>."
 msgstr ""
 
 #. module: website_quote
@@ -995,7 +876,7 @@ msgstr "Последний раз изменено"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_write_uid
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_write_uid
 msgid "Last Updated by"
-msgstr "Последний раз обновлено"
+msgstr "Последний раз обновил"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_write_date
@@ -1038,38 +919,31 @@ msgid "Line Description"
 msgstr "Описание строки"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_line_id
+msgid "Line id"
+msgstr "ID строки"
+
+#. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Lines"
 msgstr "Строк"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_1
-#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Live Q&amp;A sessions with a trainer"
 msgstr ""
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Loops"
-msgstr ""
+msgstr "Петли"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_1
-#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Lower training budget for the same quality courses"
 msgstr ""
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_1
-#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Modular approach applied to the learning method"
 msgstr ""
@@ -1077,12 +951,9 @@ msgstr ""
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Module Installation"
-msgstr ""
+msgstr "Установка модуля"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Modules"
 msgstr "Модули"
@@ -1090,22 +961,19 @@ msgstr "Модули"
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Multi Language Management"
-msgstr ""
+msgstr "Управление языками"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "My Account"
-msgstr "Моя учетная запись"
+msgid "My Quotations"
+msgstr "Мои ценовые предложения"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Negotiation and Quotation Revisions"
-msgstr ""
+msgstr "Переговоры и пересмотр цен"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_1
-#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "New interactive learning experience"
 msgstr ""
@@ -1127,50 +995,36 @@ msgid "Objectives"
 msgstr "Цели"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Odoo Official Website"
 msgstr "Официальный вебсайт Odoo"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Odoo Web Client"
-msgstr ""
+msgstr "Odoo веб-клиент"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Odoo promotes its partners through various ways:\n"
-"                                publication on our website, official "
-"communication,\n"
-"                                publication of your success stories, etc. As "
-"soon as\n"
-"                                you become an Odoo partner and have followed "
-"the\n"
-"                                official trainings, you will be visible on "
-"the partner\n"
+"                                publication on our website, official communication,\n"
+"                                publication of your success stories, etc. As soon as\n"
+"                                you become an Odoo partner and have followed the\n"
+"                                official trainings, you will be visible on the partner\n"
 "                                directory listing."
 msgstr ""
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Official certified partner"
-msgstr ""
+msgstr "Официальный сертифицированный партнер"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_1
-#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
-#, fuzzy
 msgid "Online Training"
-msgstr "Функциональное обучение"
+msgstr "Обучение онлайн"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1200,13 +1054,13 @@ msgid "Optional Products Lines"
 msgstr "Строки дополнительных товаров"
 
 #. module: website_quote
-#: code:addons/website_quote/models/order.py:294
+#: code:addons/website_quote/models/sale_order.py:169
 #, python-format
 msgid "Order paid by %s. Transaction: %s. Amount: %s."
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:94
+#: code:addons/website_quote/controllers/main.py:90
 #, python-format
 msgid "Order signed by %s"
 msgstr "Заказ подписан %s"
@@ -1214,38 +1068,34 @@ msgstr "Заказ подписан %s"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Other Settings"
-msgstr ""
+msgstr "Другие настройки"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
-#, fuzzy
 msgid "Our Offer"
-msgstr "Ваш Заказ"
+msgstr "Наше предложение"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Our Partnership Offer"
-msgstr ""
+msgstr "Наше партнерское предложение"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Quality"
-msgstr ""
+msgstr "Наше качество"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
-#, fuzzy
 msgid "Our Service"
-msgstr "Услуга"
+msgstr "Наш сервис"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Our automated testing server software is called Runbot,\n"
-"                                and you can try it out here: http://runbot."
-"odoo.com.\n"
-"                                A dedicated runbot server is available for "
-"every\n"
+"                                and you can try it out here: http://runbot.odoo.com.\n"
+"                                A dedicated runbot server is available for every\n"
 "                                partner."
 msgstr ""
 
@@ -1253,10 +1103,11 @@ msgstr ""
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Our partnership offer includes all you need to\n"
-"                                grow your business and deliver quality "
-"services\n"
+"                                grow your business and deliver quality services\n"
 "                                with the Odoo Partner Program."
 msgstr ""
+"Наше партнерство предложение включает все, что вам нужно для развития вашего"
+" бизнеса и предоставления качественных услуг с Odoo партнерской программой."
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1264,9 +1115,6 @@ msgid "Partial and Full Shipment / Delivery"
 msgstr ""
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid ""
@@ -1275,9 +1123,6 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid ""
@@ -1286,11 +1131,11 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:66
-#: code:addons/website_quote/controllers/main.py:231
+#: code:addons/website_quote/controllers/main.py:65
+#: code:addons/website_quote/controllers/main.py:204
 #, python-format
 msgid "Pay & Confirm"
-msgstr ""
+msgstr "Оплатить & подтвердить"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_require_payment
@@ -1301,24 +1146,12 @@ msgstr "Платеж"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Payment Method:"
-msgstr "Метод Оплаты:"
-
-#. module: website_quote
-#: model:ir.model,name:website_quote.model_payment_transaction
-msgid "Payment Transaction"
-msgstr "Операция Оплаты"
+msgstr "Метод оплаты:"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "Preview"
-msgstr ""
-
-#. module: website_quote
-#: model:web.tip,description:website_quote.quotation_tip_1
-msgid ""
-"Preview the online quotation. You'll be able to edit the quotation content "
-"before send it to the customer."
-msgstr ""
+msgstr "Просмотр"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
@@ -1346,9 +1179,10 @@ msgstr "Печать"
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_product_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_product_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_product_id
+#: model:ir.ui.view,arch_db:website_quote.optional_products
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "Product"
-msgstr "Товар"
+msgstr "Продукт"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1363,16 +1197,14 @@ msgstr ""
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_product_template
 msgid "Product Template"
-msgstr "Шаблон продукта"
+msgstr "Шаблон Продукта"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "Product quality is the foundation we\n"
-"                                       stand on; we build it with a "
-"relentless\n"
-"                                       focus on fabric, performance and "
-"craftsmanship."
+"                                       stand on; we build it with a relentless\n"
+"                                       focus on fabric, performance and craftsmanship."
 msgstr ""
 
 #. module: website_quote
@@ -1381,7 +1213,6 @@ msgid "Product:"
 msgstr "Товар:"
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.optional_products
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "Products"
 msgstr "Продукция"
@@ -1392,12 +1223,9 @@ msgid "Purchase Requisition and Purchase Order Management"
 msgstr ""
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Python Objects"
-msgstr ""
+msgstr "Объекты Python"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_quantity
@@ -1415,12 +1243,12 @@ msgstr "Предложение цен"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_number_of_days
 msgid "Quotation Duration"
-msgstr ""
+msgstr "Продолжительность предложения"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_option
 msgid "Quotation Option"
-msgstr ""
+msgstr "Вариант ценового предложения"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_template_id
@@ -1450,10 +1278,10 @@ msgstr "Шаблоны предложения"
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_quote_viewed
 msgid "Quotation Viewed"
-msgstr ""
+msgstr "Ценовое предложение просмотренно"
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:32
+#: code:addons/website_quote/controllers/main.py:26
 #, python-format
 msgid "Quotation viewed by customer"
 msgstr "Предложение, просмотренное клиентом"
@@ -1474,25 +1302,21 @@ msgid "Reject This Quote"
 msgstr "Отказаться от предложенной цены"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Report Engine"
-msgstr ""
+msgstr "Движок отчетов"
 
 #. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_order_require_payment
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_require_payment
 msgid ""
-"Require immediate payment by the customer when validating the order from the "
-"website quote"
+"Require immediate payment by the customer when validating the order from the"
+" website quote"
 msgstr ""
+"Требовать немедленной оплаты клиента при проверке заказа с сайта предложения"
+" цен"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Requirements"
@@ -1502,11 +1326,6 @@ msgstr "Требования"
 #: model:ir.model,name:website_quote.model_sale_order_option
 msgid "Sale Options"
 msgstr "Опции продажи"
-
-#. module: website_quote
-#: model:ir.model.fields,field_description:website_quote.field_payment_transaction_sale_order_id
-msgid "Sale Order"
-msgstr "Заказ продажи"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_order_id
@@ -1528,7 +1347,7 @@ msgstr "Заказ продаж"
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Позиция заказа на продажу"
+msgstr "Строка заказа"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
@@ -1540,14 +1359,10 @@ msgstr ""
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Save time in your implementation project by having your\n"
-"                                developments tested automatically by our "
-"automated test\n"
-"                                servers. At every code commit, you get a "
-"full Odoo\n"
-"                                instance that you can try out online. When "
-"this\n"
-"                                instance is deployed, your code is "
-"automatically put\n"
+"                                developments tested automatically by our automated test\n"
+"                                servers. At every code commit, you get a full Odoo\n"
+"                                instance that you can try out online. When this\n"
+"                                instance is deployed, your code is automatically put\n"
 "                                through our 2000+ automated unit tests."
 msgstr ""
 "Не тратьте лишнее время на тестирование проекта - наши сервера "
@@ -1562,14 +1377,22 @@ msgid "Schedule Phone Calls and Meetings"
 msgstr ""
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_layout_category_id
+#: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_layout_category_id
+msgid "Section"
+msgstr "Раздел"
+
+#. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_access_token
 msgid "Security Token"
 msgstr "Маркер доступа"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_sequence
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_sequence
 msgid "Sequence"
-msgstr "Нумерация"
+msgstr "Последовательность"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -1587,12 +1410,9 @@ msgid "Sign &amp; Confirm"
 msgstr ""
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_1
-#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Structure of the Training"
-msgstr ""
+msgstr "Структура обучения"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
@@ -1613,11 +1433,8 @@ msgstr "Налоги"
 
 #. module: website_quote
 #: model:product.product,name:website_quote.product_product_quote_2
-#: model:product.product,quote_description:website_quote.product_product_quote_2
 #: model:product.template,name:website_quote.product_product_quote_2_product_template
 #: model:product.template,name:website_quote.product_template_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,name:website_quote.website_sale_order_line_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Technical Training"
@@ -1636,7 +1453,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "Terms &amp; Conditions"
-msgstr "Сроки &amp; Условия"
+msgstr "Сроки и условия"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_note
@@ -1646,18 +1463,15 @@ msgstr "Условия"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Test developments automatically"
-msgstr ""
+msgstr "Тестирование событий автоматически"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_1
-#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid ""
 "These courses feature the same high quality course content found in our "
 "traditional classroom trainings, supplemented with modular sessions and "
-"cloud-based labs. Many of our online learning courses also include dozens of "
-"recorded webinars and live sessions by our senior instructors."
+"cloud-based labs. Many of our online learning courses also include dozens of"
+" recorded webinars and live sessions by our senior instructors."
 msgstr ""
 
 #. module: website_quote
@@ -1671,17 +1485,15 @@ msgstr ""
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "This is a <strong>sample quotation template</strong>. You should\n"
-"                                customize it to fit your own needs from the "
-"<i>Sale</i>\n"
-"                                application, using the menu: "
-"Configuration /\n"
+"                                customize it to fit your own needs from the <i>Sale</i>\n"
+"                                application, using the menu: Configuration /\n"
 "                                Quotation Templates."
 msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "This order"
-msgstr ""
+msgstr "Этот заказ"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1701,43 +1513,35 @@ msgstr "Это предложение было отклонено."
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid ""
 "Titles with style <i>Heading 1</i> and\n"
-"                                <i>Heading 2</i> will be used to generate "
-"the\n"
+"                                <i>Heading 2</i> will be used to generate the\n"
 "                                table of content automatically."
 msgstr ""
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "To get more information, visit the"
 msgstr "Для получения подробной информации, посетите"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "Total Price"
+msgstr "Итоговая цена"
+
+#. module: website_quote
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Training Center Module"
 msgstr "Модуль Учебный центр"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Underscore"
-msgstr ""
+msgstr "Подчеркивание"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Understand the development concepts and architecture;"
-msgstr ""
+msgstr "Понимать концепции развития и архитектуры;"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1751,7 +1555,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "Unit Price"
-msgstr "Цена за ед."
+msgstr "Цена за Единицу"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_uom_id
@@ -1764,10 +1568,8 @@ msgstr "Единица измерения "
 #: model:ir.actions.act_window,help:website_quote.action_sale_quotation_template
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                    Send these quotes by email and let your customers sign "
-"online.\n"
-"                    Use cross-selling and discounts to push and boost your "
-"sales."
+"                    Send these quotes by email and let your customers sign online.\n"
+"                    Use cross-selling and discounts to push and boost your sales."
 msgstr ""
 "Пользуйтесь шаблонами для создания элегантных профессиональных коммерческих "
 "предложений за минуты. Отправляйте эти предложения по электронной почте, "
@@ -1780,32 +1582,25 @@ msgid "Validate Order"
 msgstr "Подтвердить Заказа"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Variables &amp; Operators"
 msgstr ""
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_1
-#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Videos with detailed demos"
-msgstr ""
+msgstr "Видео с подробной демо"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Warehouse Management Introduction"
-msgstr ""
+msgstr "Внедрение управления складом"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "We always ensure that our products are\n"
-"                                       set at a fair price so that you will "
-"be\n"
+"                                       set at a fair price so that you will be\n"
 "                                       happy to buy them."
 msgstr ""
 
@@ -1816,20 +1611,21 @@ msgid ""
 "                        experienced sales person, to help you develop your\n"
 "                        Odoo business. The account manager helps you get\n"
 "                        leads, close deals, gives you feedback and best\n"
-"                        practices, delivers sales training and is your "
-"direct\n"
+"                        practices, delivers sales training and is your direct\n"
 "                        point of contact for any request you may have."
 msgstr ""
-"Мы выделим вам персонального менеджера с большим опытом продаж, чтобы помощь "
-"развитию вашего бизнеса с Odoo. Менеджер поможет вам привлекать заказчиков и "
-"закрывать сделки, предоставит отзыв и расскажет о типичных подходах, "
-"проведёт тренинг по успешным продажам - это ваш прямой контакт для любых "
+"Мы выделим вам персонального менеджера с большим \n"
+"опытом продаж, чтобы помощь развитию вашего бизнеса \n"
+"с Odoo. Менеджер поможет вам привлекать заказчиков \n"
+"и закрывать сделки, предоставит отзыв и расскажет о \n"
+"типичных подходах, проведёт тренинг по успешным \n"
+"продажам — это ваш прямой контакт для любых \n"
 "возникающих вопросов."
 
 #. module: website_quote
 #: model:ir.actions.report.xml,name:website_quote.report_web_quote
 msgid "Web Quotation"
-msgstr ""
+msgstr "Предложение цен"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
@@ -1837,18 +1633,12 @@ msgid "Website Description"
 msgstr "Описание веб-сайта"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "What you will learn?"
 msgstr "Что вы будете изучать?"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Workflows"
 msgstr "Рабочие процессы"
@@ -1857,20 +1647,17 @@ msgstr "Рабочие процессы"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "You can <strong>set a description per product</strong>. Odoo will\n"
-"                        automatically create a quotation using the "
-"descriptions\n"
-"                        of all products in the proposal. The table of "
-"content\n"
-"                        on the left is generated automatically using the "
-"styles you\n"
+"                        automatically create a quotation using the descriptions\n"
+"                        of all products in the proposal. The table of content\n"
+"                        on the left is generated automatically using the styles you\n"
 "                        used in your description (heading 1, heading 2, ...)"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:143
+#: code:addons/website_quote/controllers/main.py:134
 #, python-format
 msgid "You cannot add options to a confirmed order."
-msgstr ""
+msgstr "Нельзя добавить опции к подтвержденному заказу."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -1903,17 +1690,14 @@ msgid "Your advantage:"
 msgstr "Ваша выгода:"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_1
-#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Your advantages"
-msgstr ""
+msgstr "Ваши преимущества"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your feedback....."
-msgstr ""
+msgstr "Ваши комментарии..."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1923,12 +1707,17 @@ msgstr "Ваше сообщение было успешно отправлено
 #. module: website_quote
 #: model:mail.template,subject:website_quote.confirmation_mail
 msgid "Your order ${object.name} is confirmed"
-msgstr ""
+msgstr "Ваш заказ ${object.name} подтвержден."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "Your payment has been authorized."
+msgstr "Ваш платеж был подтвержден."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your payment has been received, thank you for your trust."
-msgstr ""
+msgstr "Ваш платеж был получен, спасибо за ваше доверие."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1952,12 +1741,9 @@ msgid "days"
 msgstr "дней"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "drinks and lunch;"
-msgstr ""
+msgstr "напитки и обед;"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1971,17 +1757,17 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "has already been cancelled"
-msgstr ""
+msgstr "уже было отменено"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "has already been validated"
-msgstr ""
+msgstr "уже были проверены"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "has not yet been sent"
-msgstr ""
+msgstr "еще не было отправлено"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1995,29 +1781,6 @@ msgid "or"
 msgstr "или"
 
 #. module: website_quote
-#: model:product.product,quote_description:website_quote.product_product_quote_2
-#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
-#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "training material."
-msgstr ""
-
-#. module: website_quote
-#: model:ir.model.fields,field_description:website_quote.field_sale_order_option_line_id
-msgid "unknown"
-msgstr "неизвестен"
-
-#~ msgid ""
-#~ "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-#~ "'draft' or ''}"
-#~ msgstr ""
-#~ "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-#~ "'draft' or ''}"
-
-#~ msgid "Send by Email"
-#~ msgstr "Отправить по эл.почте"
-
-#~ msgid ""
-#~ "We are always reachable to help you, do not hesitate to contact us at any "
-#~ "time."
-#~ msgstr "Мы всегда готовы помочь, вы можете связаться с нами в любое время."
+msgstr "учебные материалы."

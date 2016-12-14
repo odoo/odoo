@@ -55,19 +55,19 @@ class _Cleaner(clean.Cleaner):
 
     def __call__(self, doc):
         # perform quote detection before cleaning and class removal
-        for el in doc.iter():
+        for el in doc.iter(tag=etree.Element):
             self.tag_quote(el)
 
         super(_Cleaner, self).__call__(doc)
 
         # if we keep attributes but still remove classes
         if not getattr(self, 'safe_attrs_only', False) and self.strip_classes:
-            for el in doc.iter():
+            for el in doc.iter(tag=etree.Element):
                 self.strip_class(el)
 
         # if we keep style attribute, sanitize them
         if not self.style and self.sanitize_style:
-            for el in doc.iter():
+            for el in doc.iter(tag=etree.Element):
                 self.parse_style(el)
 
     def tag_quote(self, el):
@@ -223,6 +223,8 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         cleaned = cleaned.replace('%7C', '|')
         cleaned = cleaned.replace('&lt;%', '<%')
         cleaned = cleaned.replace('%&gt;', '%>')
+        # html considerations so real html content match database value
+        cleaned.replace(u'\xa0', '&nbsp;')
     except etree.ParserError, e:
         if 'empty' in str(e):
             return ""

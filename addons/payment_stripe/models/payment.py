@@ -33,8 +33,10 @@ class PaymentAcquirerStripe(models.Model):
         self.ensure_one()
         stripe_tx_values = dict(tx_values)
         temp_stripe_tx_values = {
+            'company': self.company_id.name,
             'amount': tx_values.get('amount'),
             'currency': tx_values.get('currency') and tx_values.get('currency').name or '',
+            'currency_id': tx_values.get('currency') and tx_values.get('currency').id or '',
             'address_line1': tx_values['partner_address'],
             'address_city': tx_values['partner_city'],
             'address_country': tx_values['partner_country'] and tx_values['partner_country'].name or '',
@@ -168,11 +170,11 @@ class PaymentTokenStripe(models.Model):
 
     @api.model
     def stripe_create(self, values):
-        res = None
+        res = {}
         payment_acquirer = self.env['payment.acquirer'].browse(values.get('acquirer_id'))
         url_token = 'https://%s/tokens' % payment_acquirer._get_stripe_api_url()
         url_customer = 'https://%s/customers' % payment_acquirer._get_stripe_api_url()
-        if values['cc_number']:
+        if values.get('cc_number'):
             payment_params = {
                 'card[number]': values['cc_number'].replace(' ', ''),
                 'card[exp_month]': str(values['cc_expiry'][:2]),
@@ -202,5 +204,5 @@ class PaymentTokenStripe(models.Model):
 
         # pop credit card info to info sent to create
         for field_name in ["cc_number", "cvc", "cc_holder_name", "cc_expiry", "cc_brand"]:
-            values.pop(field_name)
+            values.pop(field_name, None)
         return res

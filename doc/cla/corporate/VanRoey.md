@@ -13,6 +13,4 @@ Yenthe Van Ginneken  yenthe.vanginneken@vanroey.be https://github.com/Yenthe666
 List of contributors:
 
 Yenthe Van Ginneken  yenthe.vanginneken@vanroey.be https://github.com/Yenthe666
-Maarten Wijnants maarten.wijnants@vanroey.be https://github.com/weilant
 Vincent Adriaensen vincent.adriaensen@vanroey.be https://github.com/vincentadriaensen
-Pieter Paulussen pieter.paulussen@vanroey.be https://github.com/PieterPaulussen

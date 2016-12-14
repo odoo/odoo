@@ -137,6 +137,7 @@ class Website(Home):
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True)
     def sitemap_xml_index(self):
+        current_website = request.website
         Attachment = request.env['ir.attachment'].sudo()
         View = request.env['ir.ui.view'].sudo()
         mimetype = 'application/xml;charset=utf-8'
@@ -150,8 +151,8 @@ class Website(Home):
                 'name': url,
                 'url': url,
             })
-
-        sitemap = Attachment.search([('url', '=', '/sitemap.xml'), ('type', '=', 'binary')], limit=1)
+        dom = [('url', '=' , '/sitemap-%d.xml' % current_website.id), ('type', '=', 'binary')]
+        sitemap = Attachment.search(dom, limit=1)
         if sitemap:
             # Check if stored version is still valid
             create_date = fields.Datetime.from_string(sitemap.create_date)
@@ -161,7 +162,9 @@ class Website(Home):
 
         if not content:
             # Remove all sitemaps in ir.attachments as we're going to regenerated them
-            sitemaps = Attachment.search([('url', '=like', '/sitemap%.xml'), ('type', '=', 'binary')])
+            dom = [('type', '=', 'binary'), '|', ('url', '=like' , '/sitemap-%d-%%.xml' % current_website.id),
+                   ('url', '=' , '/sitemap-%d.xml' % current_website.id)]
+            sitemaps = Attachment.search(dom)
             sitemaps.unlink()
 
             pages = 0
@@ -175,16 +178,17 @@ class Website(Home):
                 if urls.strip():
                     content = View.render_template('website.sitemap_xml', {'content': urls})
                     pages += 1
-                    last_sitemap = create_sitemap('/sitemap-%d.xml' % pages, content)
+                    last_sitemap = create_sitemap('/sitemap-%d-%d.xml' % (current_website.id, pages), content)
                 else:
                     break
 
             if not pages:
                 return request.not_found()
             elif pages == 1:
+                # rename the -id-page.xml => -id.xml
                 last_sitemap.write({
-                    'url': "/sitemap.xml",
-                    'name': "/sitemap.xml"
+                    'url': "/sitemap-%d.xml" % current_website.id,
+                    'name': "/sitemap-%d.xml" % current_website.id,
                 })
             else:
                 # Sitemaps must be split in several smaller files with a sitemap index
@@ -192,7 +196,7 @@ class Website(Home):
                     'pages': range(1, pages + 1),
                     'url_root': request.httprequest.url_root,
                 })
-                create_sitemap('/sitemap.xml', content)
+                create_sitemap('/sitemap-%d.xml' % current_website.id, content)
 
         return request.make_response(content, [('Content-Type', mimetype)])
 
@@ -262,10 +266,10 @@ class Website(Home):
 
     @http.route('/website/customize_template_get', type='json', auth='user', website=True)
     def customize_template_get(self, key, full=False, bundles=False):
-        """ Get inherit view's informations of the template ``key``. By default, only
-            :returns ``customize_show`` templates (which can be active or not), if
-                ``full=True`` returns inherit view's informations of the template ``key``.
-                ``bundles=True`` returns also the asset bundles
+        """ Get inherit view's informations of the template ``key``.
+            returns templates info (which can be active or not)
+            ``full=False`` returns only the customize_show template
+            ``bundles=True`` returns also the asset bundles
         """
         return request.env["ir.ui.view"].customize_template_get(key, full=full, bundles=bundles)
 
@@ -370,6 +374,7 @@ class Website(Home):
         ], type='http', auth="public", website=True)
     def actions_server(self, path_or_xml_id_or_id, **post):
         ServerActions = request.env['ir.actions.server']
+        action = action_id = None
 
         # find the action_id: either an xml_id, the path, or an ID
         if isinstance(path_or_xml_id_or_id, basestring) and '.' in path_or_xml_id_or_id:

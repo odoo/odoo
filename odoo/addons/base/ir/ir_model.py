@@ -131,6 +131,10 @@ class IrModel(models.Model):
                 if model.state != 'manual':
                     raise UserError(_("Model '%s' contains module data and cannot be removed!") % model.name)
 
+        # prevent screwing up fields that depend on these models' fields
+        for model in self:
+            model.field_id._prepare_update()
+
         self._drop_table()
         res = super(IrModel, self).unlink()
 
@@ -148,11 +152,11 @@ class IrModel(models.Model):
     def write(self, vals):
         if '__last_update' in self._context:
             self = self.with_context({k: v for k, v in self._context.iteritems() if k != '__last_update'})
-        if 'model' in vals:
+        if 'model' in vals and any(rec.model != vals['model'] for rec in self):
             raise UserError(_('Field "Model" cannot be modified on models.'))
-        if 'state' in vals:
+        if 'state' in vals and any(rec.state != vals['state'] for rec in self):
             raise UserError(_('Field "Type" cannot be modified on models.'))
-        if 'transient' in vals:
+        if 'transient' in vals and any(rec.transient != vals['transient'] for rec in self):
             raise UserError(_('Field "Transient Model" cannot be modified on models.'))
         # Filter out operations 4 from field id, because the web client always
         # writes (4,id,False) even for non dirty items.
@@ -422,6 +426,19 @@ class IrModelFields(models.Model):
         return True
 
     @api.multi
+    def _prepare_update(self):
+        """ Check whether the fields in ``self`` may be modified or removed.
+            This method prevents the modification/deletion of many2one fields
+            that have an inverse one2many, for instance.
+        """
+        for record in self:
+            model = self.env[record.model]
+            field = model._fields[record.name]
+            if field.type == 'many2one' and model._field_inverses.get(field):
+                msg = _("The field '%s' cannot be removed because the field '%s' depends on it.")
+                raise UserError(msg % (field, model._field_inverses[field][0]))
+
+    @api.multi
     def unlink(self):
         if not self:
             return True
@@ -430,6 +447,9 @@ class IrModelFields(models.Model):
         if not self._context.get(MODULE_UNINSTALL_FLAG) and \
                 any(field.state != 'manual' for field in self):
             raise UserError(_("This column contains module data and cannot be removed!"))
+
+        # prevent screwing up fields that depend on these fields
+        self._prepare_update()
 
         model_names = self.mapped('model')
         self._drop_column()
@@ -522,6 +542,7 @@ class IrModelFields(models.Model):
 
                 if vals.get('name', item.name) != item.name:
                     # We need to rename the column
+                    item._prepare_update()
                     if column_rename:
                         raise UserError(_('Can only rename one field at a time!'))
                     if vals['name'] in obj._fields:
@@ -1208,6 +1229,7 @@ class IrModelData(models.Model):
         datas = self.search([('module', 'in', modules_to_remove)])
         wkf_todo = []
         to_unlink = tools.OrderedSet()
+        undeletable = self.browse([])
 
         for data in datas.sorted(key='id', reverse=True):
             model = data.model
@@ -1232,6 +1254,7 @@ class IrModelData(models.Model):
                 _logger.info('Unable to force processing of workflow for item %s@%s in order to leave activity to be deleted', res_id, model, exc_info=True)
 
         def unlink_if_refcount(to_unlink):
+            undeletable = self.browse()
             for model, res_id in to_unlink:
                 external_ids = self.search([('model', '=', model), ('res_id', '=', res_id)])
                 if external_ids - datas:
@@ -1255,28 +1278,30 @@ class IrModelData(models.Model):
                     self.env[model].browse(res_id).unlink()
                 except Exception:
                     _logger.info('Unable to delete %s@%s', res_id, model, exc_info=True)
+                    undeletable += external_ids
                     self._cr.execute('ROLLBACK TO SAVEPOINT record_unlink_save')
                 else:
                     self._cr.execute('RELEASE SAVEPOINT record_unlink_save')
+            return undeletable
 
         # Remove non-model records first, then model fields, and finish with models
-        unlink_if_refcount(item for item in to_unlink if item[0] not in ('ir.model', 'ir.model.fields', 'ir.model.constraint'))
-        unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model.constraint')
+        undeletable += unlink_if_refcount(item for item in to_unlink if item[0] not in ('ir.model', 'ir.model.fields', 'ir.model.constraint'))
+        undeletable += unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model.constraint')
 
         modules = self.env['ir.module.module'].search([('name', 'in', modules_to_remove)])
         constraints = self.env['ir.model.constraint'].search([('module', 'in', modules.ids)])
         constraints._module_data_uninstall()
 
-        unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model.fields')
+        undeletable += unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model.fields')
 
         relations = self.env['ir.model.relation'].search([('module', 'in', modules.ids)])
         relations._module_data_uninstall()
 
-        unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model')
+        undeletable += unlink_if_refcount(item for item in to_unlink if item[0] == 'ir.model')
 
         self._cr.commit()
 
-        datas.unlink()
+        (datas - undeletable).unlink()
 
     @api.model
     def _process_end(self, modules):

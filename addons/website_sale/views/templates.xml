@@ -217,10 +217,13 @@
 
     <template id="sort" inherit_id="website_sale.products" active="True" customize_show="True" name="Show Sort by">
         <xpath expr="//div[@class='products_pager']/div/t[@t-call][last()]" position="after">
+            <t t-set="list_price_desc_label">Price <i class="fa fa-arrow-up" aria-hidden="true"/></t>
+            <t t-set="list_price_asc_label">Price <i class="fa fa-arrow-down" aria-hidden="true"/></t>
+            <t t-set="name_asc_label">Name</t>
             <t t-set="website_sale_sortable" t-value="[
-                ('Price &lt;i class=\'fa fa-arrow-up\' aria-hidden=\'true\'&gt;&lt;/i&gt;', 'list_price desc'),
-                ('Price &lt;i class=\'fa fa-arrow-down\' aria-hidden=\'true\'&gt;&lt;/i&gt;', 'list_price asc'),
-                ('Name', 'name asc')
+                (list_price_desc_label, 'list_price desc'),
+                (list_price_asc_label, 'list_price asc'),
+                (name_asc_label, 'name asc')
             ]"/>
             <div class="dropdown btn-group dropdown_sorty_by">
                 <a href="#" class="dropdown-toggle btn btn-default" data-toggle="dropdown">
@@ -589,7 +592,7 @@
               <span itemprop="price" style="display:none;" t-esc="product.website_price"/>
               <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
           </h4>
-          <h4 class="css_non_editable_mode_hidden">
+          <h4 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="product.currency_id.decimal_places">
             <span t-field="product.lst_price"
                 t-options='{
                    "widget": "monetary",
@@ -1178,7 +1181,7 @@
                                     <t t-if="mode[1] == 'billing'">
                                         <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-md-6" id="div_email">
                                             <label class="control-label" for="email">Email</label>
-                                            <input type="tel" name="email" class="form-control" t-att-value="'email' in checkout and checkout['email']" />
+                                            <input type="email" name="email" class="form-control" t-att-value="'email' in checkout and checkout['email']" />
                                         </div>
                                     </t>
                                     <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''} col-md-6" id="div_phone">

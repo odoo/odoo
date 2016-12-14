@@ -4,6 +4,10 @@
             <field name="name">No more partner available</field>
             <field name="color">3</field>
         </record>
+        <record model="crm.lead.tag" id="tag_portal_lead_is_spam">
+            <field name="name">Spam</field>
+            <field name="color">3</field>
+        </record>
         <record id="email_template_lead_forward_mail" model="mail.template">
             <field name="name">Lead Mass Mail</field>
             <field name="model_id" model="ir.model" search="[('name', '=', 'crm.lead.forward.to.partner')]"></field>
@@ -12,7 +16,6 @@
             <field name="email_from">${(user.email or '')|safe}</field>
             <field name="subject">Fwd: Lead: ${ctx['partner_id'].name}</field>
             <field name="body_html"><![CDATA[
-            
 <p>Hello,</p>
 
 
@@ -36,9 +39,8 @@
 
 <p>Thanks,</p>
 
-<pre>
-${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}
-</pre>
+${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or '' | safe}
+
 % if not ctx['partner_id'].user_id:
 PS: It looks like you do not have an account manager assigned to you, please contact us.
 % endif

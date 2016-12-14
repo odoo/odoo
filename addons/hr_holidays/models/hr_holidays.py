@@ -504,7 +504,7 @@ class Holidays(models.Model):
                     leaves += self.with_context(mail_notify_force_send=False).create(values)
                 # TODO is it necessary to interleave the calls?
                 leaves.action_approve()
-                if leaves[0].double_validation:
+                if leaves and leaves[0].double_validation:
                     leaves.action_validate()
         return True
 
@@ -559,12 +559,13 @@ class Holidays(models.Model):
         groups = super(Holidays, self)._notification_recipients(message, groups)
 
         self.ensure_one()
+        hr_actions = []
         if self.state == 'confirm':
             app_action = self._notification_link_helper('controller', controller='/hr_holidays/validate')
-            hr_actions = [{'url': app_action, 'title': _('Approve')}]
+            hr_actions += [{'url': app_action, 'title': _('Approve')}]
         if self.state in ['confirm', 'validate', 'validate1']:
             ref_action = self._notification_link_helper('controller', controller='/hr_holidays/refuse')
-            hr_actions = [{'url': ref_action, 'title': _('Refuse')}]
+            hr_actions += [{'url': ref_action, 'title': _('Refuse')}]
 
         new_group = (
             'group_hr_holidays_user', lambda partner: bool(partner.user_ids) and any(user.has_group('hr_holidays.group_hr_holidays_user') for user in partner.user_ids), {

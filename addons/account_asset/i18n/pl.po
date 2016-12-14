@@ -49,7 +49,7 @@ msgstr "# pozycji amortyzacji"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_nbr
 msgid "# of Installment Lines"
-msgstr "# Linii rat"
+msgstr "# pozycji umorzeń"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -65,7 +65,8 @@ msgstr "Zapis na koncie"
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_id
 msgid "Account used in the depreciation entries, to decrease the asset value."
 msgstr ""
-"Konto stosowane w zapisach amortyzacji do zmniejszania wartości środka."
+"Konto stosowane w zapisach amortyzacji do zmniejszania wartości środka "
+"(odpisów umorzeniowych)."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_expense_id
@@ -73,12 +74,15 @@ msgid ""
 "Account used in the periodical entries, to record a part of the asset as "
 "expense."
 msgstr ""
+"Konto stosowane w zapisach tworzonych okresowo, do księgowania amortyzacji."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
 msgid ""
 "Account used to record the purchase of the asset at its original price."
 msgstr ""
+"Konto stosowane do zapisów dla pierwotnej ceny środka trwałego w trakcie "
+"jego zakupu."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -89,7 +93,7 @@ msgstr "Aktywne"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Additional Options"
-msgstr ""
+msgstr "Dodatkowe opcje"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:568
@@ -105,7 +109,7 @@ msgstr "Wartość pozycji amortyzacji"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_value
 msgid "Amount of Installment Lines"
-msgstr "Wartość linii rat"
+msgstr "Wartość pozycji umorzeń"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_analytic_id
@@ -137,7 +141,7 @@ msgstr "Kategoria środka"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
 msgid "Asset Durations to Modify"
-msgstr "Czas trwania aktywów do modyfikacji"
+msgstr "Czas życia środka do modyfikacji"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
@@ -147,12 +151,12 @@ msgstr "Data końcowa środka trwałego"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_asset_method_time
 msgid "Asset Method Time"
-msgstr "Metoda czasu Aktywu"
+msgstr "Metoda czasu środka"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_name
 msgid "Asset Name"
-msgstr "Nazwa aktywa"
+msgstr "Nazwa środka"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
@@ -184,24 +188,24 @@ msgstr "Kategoria środka"
 #: code:addons/account_asset/models/account_asset.py:263
 #, python-format
 msgid "Asset created"
-msgstr "Utworzone aktywa"
+msgstr "Utworzono środek trwały"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
 msgid "Asset depreciation line"
-msgstr "Pozycja amortyzacji aktywu"
+msgstr "Pozycja amortyzacji środka"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:296
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr ""
-"Zlikwidowane lub sprzedane środki trwałe. Wpis oczekuje na zatwierdzenie."
+"Zlikwidowane lub sprzedane środki trwałe. Zapis oczekuje na zatwierdzenie."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_asset
 msgid "Asset/Revenue Recognition"
-msgstr "Rozpoznawanie aktyw/dochodów"
+msgstr "Rozpoznawanie środków/dochodów"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
@@ -210,7 +214,7 @@ msgstr "Rozpoznawanie aktyw/dochodów"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_purchase_tree
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
 msgid "Assets"
-msgstr "Aktywa"
+msgstr "Środki"
 
 #. module: account_asset
 #: model:ir.actions.act_window,name:account_asset.action_asset_asset_report
@@ -224,12 +228,12 @@ msgstr "Analiza środków"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_move_asset_depreciation_ids
 msgid "Assets Depreciation Lines"
-msgstr ""
+msgstr "Pozycje amortyzacji środków"
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
 msgid "Assets and Revenues"
-msgstr "Aktywa i dochody"
+msgstr "Środki i dochody"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -244,7 +248,7 @@ msgstr "Środki w stanie projekt lub otwartym"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
 msgid "Assets in draft state"
-msgstr "Projekty środków"
+msgstr "Środki w stanie projekt"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -254,7 +258,7 @@ msgstr "Środki w stanie aktywnym"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_open_asset
 msgid "Auto-confirm Assets"
-msgstr ""
+msgstr "Auto-potwierdzanie środków"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -272,7 +276,7 @@ msgstr "Kategoria"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Category of asset"
-msgstr "Kategoria aktywu"
+msgstr "Kategoria środka"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_open_asset
@@ -280,13 +284,13 @@ msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
 msgstr ""
-"Zaznacz to, jeśli chcesz automatycznie potwierdzać aktywa tej kategorii "
+"Zaznacz to, jeśli chcesz automatycznie potwierdzać środki tej kategorii, "
 "kiedy są tworzone przez fakturę."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_group_entries
 msgid "Check this if you want to group the generated entries by categories."
-msgstr ""
+msgstr "Zaznacz to, jeśli chcesz pogrupować zapisy według kategorii."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
@@ -309,7 +313,7 @@ msgid ""
 "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
 msgstr ""
 "Wybierz metodę obliczania dat i liczby amortyzacji.\n"
-"  * Liczba Amortyzacji: Określaj liczbę linii i czasu amortyzacji między dwoma amortzacjami.\n"
+"  * Liczba Amortyzacji: Określaj liczbę linii i czasu amortyzacji między dwoma amortyzacjami.\n"
 "  * Data Końcowa: Wybierz czas pomiędzy dwoma amortyzacjami i datę, której amortyzacje nie przekroczą."
 
 #. module: account_asset
@@ -318,8 +322,8 @@ msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
 msgstr ""
-"Wybierz okres czasu, dla którego chcesz automatycznie publikować(księgować) "
-"pozycje aktywnych aktywów"
+"Wybierz okres czasu, dla którego chcesz automatycznie księgować pozycje "
+"aktywnych środków"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
@@ -469,7 +473,7 @@ msgstr "Amortyzacja"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Asset Account"
-msgstr "Konto amortyzacji umorzenia środków trwałych"
+msgstr "Konto amortyzacji środka"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -485,22 +489,22 @@ msgstr "Data amortyzacji"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
 msgid "Depreciation Entries: Asset Account"
-msgstr ""
+msgstr "Zapisy amortyzacji: konto środka"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_expense_id
 msgid "Depreciation Entries: Expense Account"
-msgstr ""
+msgstr "Zapisy amortyzacji: Konto amortyzacji"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
 msgid "Depreciation Entry"
-msgstr "Wpis amortyzacji"
+msgstr "Zapis amortyzacji"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Depreciation Expense Account"
-msgstr "Konto amortyzacji umorzenia wydatków"
+msgstr "Konto amortyzacji środka"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -554,13 +558,13 @@ msgstr "Nazwa wyświetlana"
 #: code:addons/account_asset/models/account_asset.py:299
 #, python-format
 msgid "Disposal Move"
-msgstr "Usuwanie przeniesienia"
+msgstr "Zapis likwidacji"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:302
 #, python-format
 msgid "Disposal Moves"
-msgstr "Usuwanie przeniesień"
+msgstr "Zapisy likwidacji"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:550
@@ -598,14 +602,14 @@ msgid ""
 "From this report, you can have an overview on all depreciations. The\n"
 "            search bar can also be used to personalize your assets depreciation reporting."
 msgstr ""
-"Z tego raportu możesz dowiedzieć się o wszystkich amortyzacjach. "
-"wyszukiwarka może być również używana by spersonalizować raportowanie "
-"amortyzacji środków trwałych."
+"Z tego raportu możesz dowiedzieć się o wszystkich amortyzacjach. Panel "
+"konfiguracji może być użyty, aby spersonalizować raportowanie amortyzacji "
+"środków trwałych."
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
 msgid "Generate Assets Entries"
-msgstr "Generuj wpisy aktywów"
+msgstr "Generuj zapisy środków"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
@@ -625,7 +629,7 @@ msgstr "Wartość całkowita"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Gross value of asset"
-msgstr "Cena brutto aktywów"
+msgstr "Wartość brutto środków"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -641,7 +645,7 @@ msgstr "Grupuj wg..."
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_group_entries
 msgid "Group Journal Entries"
-msgstr ""
+msgstr "Grupuj zapisy"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_id
@@ -683,13 +687,12 @@ msgstr "Faktura"
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "linia faktury"
+msgstr "Pozycja faktury"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_salvage_value
 msgid "It is the amount you plan to have that you cannot depreciate."
-msgstr ""
-"To jest wartość, którą planujesz posiadać, jej nie możesz amortyzować."
+msgstr "To jest wartość, którą planujesz zostawić i nie chcesz amortyzować."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
@@ -745,7 +748,7 @@ msgstr "Liniowo"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_check
 msgid "Linked"
-msgstr ""
+msgstr "Połączone"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.asset_modify_form
@@ -796,7 +799,7 @@ msgstr "Liczba amortyzacji"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Number of Entries"
-msgstr "Liczba wpisów"
+msgstr "Liczba zapisów"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_period
@@ -806,7 +809,7 @@ msgstr "Liczba miesięcy w okresie"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "One Entry Every"
-msgstr ""
+msgstr "Jeden zapis co"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:570
@@ -861,7 +864,7 @@ msgstr "Szablon produktu"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_prorata
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_prorata
 msgid "Prorata Temporis"
-msgstr "Dzielone proporcjonalnie"
+msgstr "Prorata temporis"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:342
@@ -870,8 +873,8 @@ msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
 msgstr ""
-"\"Proporcjonalnie\" może być zastosowane tylko dla metody czasowej \"liczba "
-"amortyzacji\"."
+"\"Prorata temporis\" może być zastosowane tylko dla metody czasowej \"liczba"
+" amortyzacji\"."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -896,12 +899,12 @@ msgstr "Przyczyna"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Account"
-msgstr ""
+msgstr "Konto uznania"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Income Account"
-msgstr "Rozpoznawanie konta przychodów"
+msgstr "Konto rozpoznania przychodów"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_code
@@ -992,8 +995,8 @@ msgid ""
 "This wizard will post installment/depreciation lines for the selected month.<br/>\n"
 "                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
 msgstr ""
-"Jeśli kreator zaksięguje pozycję raty/amortzacji podczas wybranego miesiąca.\n"
-"Wygeneruje to też wpisy do dziennika dla wszelkich powiązanych pozycji rat podczas tego okresu rozpoznania środka trwałego/dochodu"
+"Jeśli kreator zaksięguje pozycję umorzenia/amortyzacji podczas wybranego miesiąca.\n"
+"Wygeneruje to też zapisy dla wszelkich powiązanych pozycji umorzeń podczas tego okresu rozpoznania środka trwałego/dochodu"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time
@@ -1040,9 +1043,9 @@ msgid ""
 "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
 "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
-"Gdy środek trwały jest tworzony jego status to 'wersja robocza'.\n"
-"Jeśli środek trwały jest zatwierdzony, jego status zmienia się w 'bieżący' i pozycje amortyzacji mogą być księgowane.\n"
-"Możesz ręcznie zamknąć środek trwały gdy okres amortyzacji się zakończy. Jeśli ostatnia pozycja amortyzacji jest zaksięgowana środek trwały automatycznie przechodzi w ten status."
+"Gdy środek trwały jest tworzony jego stan to 'Projekt'.\n"
+"Jeśli środek trwały jest zatwierdzony, jego status zmienia się w 'Uruchomione' i pozycje amortyzacji mogą być księgowane.\n"
+"Możesz ręcznie zamknąć środek trwały, gdy okres amortyzacji się zakończy. Jeśli ostatnia pozycja amortyzacji jest zaksięgowana, to środek trwały automatycznie przechodzi w ten status."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name
@@ -1059,7 +1062,7 @@ msgstr "Nie możesz usunąć dokumentu, który jest w stanie %s."
 #: code:addons/account_asset/models/account_asset.py:110
 #, python-format
 msgid "You cannot delete a document that contains posted entries."
-msgstr "Nie możesz usunąć dokumentu ponieważ zawiera zaksięgowane wpisy."
+msgstr "Nie możesz usunąć dokumentu ponieważ zawiera zaksięgowane zapisy."
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:579
@@ -1071,7 +1074,7 @@ msgstr "Nie możesz usunąć zaksięgowanej pozycji amortyzacji."
 #: code:addons/account_asset/models/account_asset.py:581
 #, python-format
 msgid "You cannot delete posted installment lines."
-msgstr "Nie możesz usunąć zaksięgowanych pozycji rat."
+msgstr "Nie możesz usunąć zaksięgowanych pozycji umorzeń."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard

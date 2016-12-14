@@ -1,26 +1,41 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_portal
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
+# zbik2607 <darek@krokus.com.pl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-06-22 10:43+0000\n"
-"Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
-"Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
-"Language: pl\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>, 2016\n"
+"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
+"Language: pl\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.account
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
+msgid ""
+"<span class=\"sr-only\">Toggle navigation</span>\n"
+"                            <span class=\"icon-bar\"/>\n"
+"                            <span class=\"icon-bar\"/>"
+msgstr ""
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.portal_archive_groups
+msgid "Archives"
+msgstr "Archiwa"
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "Change"
 msgstr "Zmień"
 
@@ -38,12 +53,10 @@ msgstr "Nazwa firmy"
 #: model:ir.ui.view,arch_db:website_portal.details
 msgid ""
 "Confirm\n"
-"                                        <span class=\"fa fa-long-arrow-right"
-"\"/>"
+"                                        <span class=\"fa fa-long-arrow-right\"/>"
 msgstr ""
 "Potwierdź\n"
-"                                        <span class=\"fa fa-long-arrow-right"
-"\"/>"
+"                                        <span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.contact
@@ -78,17 +91,17 @@ msgstr "Szczegóły"
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
 msgid "Email"
-msgstr "E-mail"
+msgstr "Email"
 
 #. module: website_portal
-#: code:addons/website_portal/controllers/main.py:73
+#: code:addons/website_portal/controllers/main.py:103
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr ""
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.details
 #: model:ir.ui.view,arch_db:website_portal.my_account_link
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "My Account"
 msgstr "Moje konto"
 
@@ -103,7 +116,7 @@ msgid "Place your content here."
 msgstr ""
 
 #. module: website_portal
-#: code:addons/website_portal/controllers/main.py:88
+#: code:addons/website_portal/controllers/main.py:119
 #, python-format
 msgid "Some required fields are empty."
 msgstr ""
@@ -124,7 +137,7 @@ msgid "VAT Number"
 msgstr "Numer NIP"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.account
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "Your Details"
 msgstr "Twoje szczegóły"
 

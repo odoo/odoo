@@ -3,17 +3,14 @@
 # * report
 # 
 # Translators:
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
-# Gary Wei <Gary.wei@elico-corp.com>, 2016
-# waveyeung <waveyeung@qq.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
+# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2016\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Jeffery Chen Fan <jeffery9@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,7 +91,7 @@ msgstr "允许自定义报表。"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_report_ids
 msgid "Associated reports"
-msgstr "相关报表"
+msgstr "关联的报告"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -204,7 +201,7 @@ msgstr "默认纸张格式？"
 #: code:addons/report/static/src/xml/report.xml:12
 #, python-format
 msgid "Discard"
-msgstr "舍弃"
+msgstr "丢弃"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
@@ -227,17 +224,17 @@ msgid "Edit"
 msgstr "编辑"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit external footer"
 msgstr "编辑外部页脚"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit external header"
 msgstr "编辑外部页眉"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit internal header"
 msgstr "编辑内部表头"
 
@@ -250,7 +247,7 @@ msgstr "电子邮件："
 #: code:addons/report/models/report_paperformat.py:68
 #, python-format
 msgid "Error ! You cannot select a format AND specific page width/height."
-msgstr ""
+msgstr "错误！你不能定义页面尺寸时选择固定格式。"
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -260,7 +257,7 @@ msgstr "Executive 47.5× 10英寸，190.5 x 254毫米"
 #. module: report
 #: model:ir.model.fields,help:report.field_report_paperformat_report_ids
 msgid "Explicitly associated reports"
-msgstr "明确的相关报表"
+msgstr "明确关联的报告"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -338,7 +335,7 @@ msgstr "Letter 2 8.5 x 11 尺寸, 215.9 x 279.4 毫米"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_name
 msgid "Name"
-msgstr "名称"
+msgstr "名字"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_orientation
@@ -382,6 +379,11 @@ msgid "Paper format"
 msgstr "纸张格式"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_base_config_settings_paperformat_id
+msgid "Paper format *"
+msgstr "纸张格式 *"
+
+#. module: report
 #: model:ir.ui.view,arch_db:report.paperformat_view_form
 #: model:ir.ui.view,arch_db:report.paperformat_view_tree
 msgid "Paper format configuration"
@@ -404,13 +406,13 @@ msgstr "纵向"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_externalpreview
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Preview External Report"
 msgstr "预览外部报表"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_internalpreview
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Preview Internal Report"
 msgstr "预览内部报表"
 
@@ -444,7 +446,7 @@ msgstr "报表"
 #: model:ir.ui.menu,name:report.reporting_menuitem
 #: model:ir.ui.menu,name:report.reports_menuitem
 msgid "Reports"
-msgstr "报表"
+msgstr "报告"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_margin_right
@@ -516,6 +518,12 @@ msgstr ""
 "wkhtmltopdf.org</a>"
 
 #. module: report
+#: code:addons/report/models/report.py:164
+#, python-format
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
+msgstr ""
+
+#. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "Website:"
 msgstr "网站:"
@@ -534,7 +542,7 @@ msgid ""
 "You need to start OpenERP with at least two \n"
 "workers to print a pdf version of the reports."
 msgstr ""
-"您需要至少使用两个workers启动Odoo\n"
+"你需要至少使用两个workers启动Odoo\n"
 "来打印pdf报表。"
 
 #. module: report
@@ -547,23 +555,27 @@ msgid ""
 "support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
 msgstr ""
-"您需要升级您的 \n"
+"你需要升级你的 \n"
 "Wkhtmltopdf 到至少 0.12.0 以显示正确的页首与页尾 \n"
 "以及支持制表键间隔页面。<br><br><a href=\"http://wkhtmltopdf.org/\"\n"
 "\n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
-#: model:ir.model,name:report.model_ir_actions_report_xml
-msgid "ir.actions.report.xml"
-msgstr "ir.actions.report.xml"
+#: model:ir.model,name:report.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
+
+#. module: report
+#. openerp-web
+#: code:addons/report/static/src/js/qwebactionmanager.js:96
+#, python-format
+msgid ""
+"Your installation of Wkhtmltopdf seems to be broken. The \n"
+"report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
+msgstr ""
 
 #. module: report
 #: model:ir.model,name:report.model_ir_qweb_field_barcode
 msgid "ir.qweb.field.barcode"
 msgstr ""
-
-#. module: report
-#: model:ir.model,name:report.model_report_abstract_report
-msgid "report.abstract_report"
-msgstr "report.abstract_report"

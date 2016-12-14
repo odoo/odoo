@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
+from odoo.tools import float_is_zero
 
 
 class ProductTemplate(models.Model):
@@ -39,7 +40,7 @@ class ProductTemplate(models.Model):
     @api.one
     @api.depends('property_valuation', 'categ_id.property_valuation')
     def _compute_valuation_type(self):
-        self.valuation = self.property_valuation if self.property_valuation else self.categ_id.property_valuation
+        self.valuation = self.property_valuation or self.categ_id.property_valuation
 
     @api.one
     def _set_valuation_type(self):
@@ -48,7 +49,7 @@ class ProductTemplate(models.Model):
     @api.one
     @api.depends('property_cost_method', 'categ_id.property_cost_method')
     def _compute_cost_method(self):
-        self.cost_method = self.property_cost_method if self.property_cost_method else self.categ_id.property_cost_method
+        self.cost_method = self.property_cost_method or self.categ_id.property_cost_method
 
     @api.one
     def _set_cost_method(self):
@@ -56,9 +57,8 @@ class ProductTemplate(models.Model):
 
     @api.onchange('type')
     def onchange_type_valuation(self):
-        if self.type != 'product':
-            self.valuation = 'manual_periodic'
-        return {}
+        # TO REMOVE IN MASTER
+        pass
 
     @api.multi
     def _get_product_accounts(self):
@@ -89,9 +89,8 @@ class ProductProduct(models.Model):
 
     @api.onchange('type')
     def onchange_type_valuation(self):
-        if self.type != 'product':
-            self.valuation = 'manual_periodic'
-        return {}
+        # TO REMOVE IN MASTER
+        pass
 
     @api.multi
     def do_change_standard_price(self, new_price, account_id):
@@ -105,7 +104,7 @@ class ProductProduct(models.Model):
         for location in locations:
             for product in self.with_context(location=location.id, compute_child=False):
                 diff = product.standard_price - new_price
-                if diff:
+                if float_is_zero(diff, precision_rounding=product.currency_id.rounding):
                     raise UserError(_("No difference between standard price and new price!"))
                 if not product_accounts[product.id].get('stock_valuation', False):
                     raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))

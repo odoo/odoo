@@ -4,6 +4,7 @@
 from datetime import timedelta
 
 from odoo import api, fields, models
+from odoo.tools.safe_eval import safe_eval
 
 
 class ProjectIssue(models.Model):
@@ -28,6 +29,15 @@ class ProjectIssue(models.Model):
         return super(ProjectIssue, self).rating_apply(rate, token=token, feedback=feedback, subtype="rating_project_issue.mt_issue_rating")
 
 
+class Stage(models.Model):
+
+    _inherit = ['project.task.type']
+
+    def _default_domain_rating_template_id(self):
+        domain = super(Stage, self)._default_domain_rating_template_id()
+        return ['|'] + domain + [('model', '=', 'project.issue')]
+
+
 class Project(models.Model):
 
     _inherit = "project.project"
@@ -35,7 +45,7 @@ class Project(models.Model):
     def _send_rating_mail(self):
         super(Project, self)._send_rating_mail()
         for project in self:
-            project.issue_ids._send_issue_rating_mail()
+            self.env['project.issue'].search([('project_id', '=', project.id)])._send_issue_rating_mail()
 
     @api.depends('percentage_satisfaction_task', 'percentage_satisfaction_issue')
     def _compute_percentage_satisfaction_project(self):
@@ -48,7 +58,7 @@ class Project(models.Model):
                 activity_great = activity_task['great']
                 activity_sum = sum(activity_task.values())
             if project.use_issues:
-                activity_issue = project.issue_ids.rating_get_grades(domain)
+                activity_issue = self.env['project.issue'].search([('project_id', '=', project.id)]).rating_get_grades(domain)
                 activity_great += activity_issue['great']
                 activity_sum += sum(activity_issue.values())
             project.percentage_satisfaction_project = activity_great * 100 / activity_sum if activity_sum else -1
@@ -67,7 +77,11 @@ class Project(models.Model):
         """ return the action to see all the rating about the issues of the project """
         action = self.env['ir.actions.act_window'].for_xml_id('rating', 'action_view_rating')
         issues = self.env['project.issue'].search([('project_id', 'in', self.ids)])
-        return dict(action, domain=[('res_id', 'in', issues.ids), ('res_model', '=', 'project.issue')])
+        action_domain = safe_eval(action['domain']) if action['domain'] else []
+        domain = ['&', ('res_id', 'in', issues.ids), ('res_model', '=', 'project.issue')]
+        if action_domain:
+            domain = ['&'] + domain + action_domain
+        return dict(action, domain=domain)
 
     @api.multi
     def action_view_all_rating(self):
@@ -75,10 +89,10 @@ class Project(models.Model):
         task_domain = action['domain']
         domain = []
         if self.use_tasks: # add task domain, if neeeded
-            domain = ['&'] + task_domain
+            domain = task_domain
         if self.use_issues: # add issue domain if needed
-            issues = self.env['project.issue'].search([('project_id', 'in', self.ids)])
-            domain = domain + ['&', ('res_id', 'in', issues.ids), ('res_model', '=', 'project.issue')]
+            issue_domain = self.action_view_issue_rating()['domain']
+            domain = domain + issue_domain
         if self.use_tasks and self.use_issues:
             domain = ['|'] + domain
         return dict(action, domain=domain)

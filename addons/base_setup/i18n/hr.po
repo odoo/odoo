@@ -35,6 +35,8 @@ msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
 msgstr ""
+"<span>(*) Ove postavke odnose se na poduzeće u koje ste trenutno "
+"prijavljeni.</span>"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_portal
@@ -65,7 +67,7 @@ msgstr "Dozvoli korisnicima uvoz podataka iz  CSV/XLS/XLSX/ODS datoteka"
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_currency
 msgid "Allows to work in a multi currency environment"
-msgstr ""
+msgstr "Omogućuje rad u multivalutnoj okolini"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -93,6 +95,8 @@ msgid ""
 "Check this to define the report footer manually. Otherwise it will be filled"
 " in automatically."
 msgstr ""
+"Označite ovdje za ručno definiranje podnožja izvještaja. Ako nije označeno "
+"podnožje će biti automatski popunjeno."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_id
@@ -122,12 +126,12 @@ msgstr "Datum kreiranja"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_footer
 msgid "Custom Report Footer *"
-msgstr ""
+msgstr "Prilagođeno podnožje izvještaja *"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_custom_footer
 msgid "Custom footer *"
-msgstr ""
+msgstr "Prilagođeno podnožje *"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
@@ -137,7 +141,7 @@ msgstr "Naziv za prikaz"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Edit default access rights for new users"
-msgstr ""
+msgstr "Uredi zadana prava pristupa za nove korisnike"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -147,7 +151,7 @@ msgstr "E-pošta"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_font
 msgid "Font *"
-msgstr ""
+msgstr "Font *"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_rml_footer
@@ -235,7 +239,7 @@ msgstr "Višestruke valute"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "New users access rights"
-msgstr ""
+msgstr "Prava pristupa novih korisnika"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -249,7 +253,7 @@ msgstr ""
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_paper_format
 msgid "Paper Format *"
-msgstr ""
+msgstr "Format papira *"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -264,22 +268,22 @@ msgstr "Predpogled RML izvještaja"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header
 msgid "RML Header *"
-msgstr ""
+msgstr "RML zaglavlje *"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header2
 msgid "RML Internal Header *"
-msgstr ""
+msgstr "RML Interno zaglavlje *"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header3
 msgid "RML Internal Header for Landscape Reports *"
-msgstr ""
+msgstr "RML interno zaglavlje za položeni ispis *"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "RML Report Configuration"
-msgstr ""
+msgstr "Postavke RML izvještaja"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -289,7 +293,7 @@ msgstr "Postava izvještaja"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_footer_readonly
 msgid "Report Footer *"
-msgstr ""
+msgstr "Podnožje izvještaja *"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_font
@@ -297,11 +301,13 @@ msgid ""
 "Set the font into the report header, it will be used as default font in the "
 "RML reports of the user company"
 msgstr ""
+"Postavite font u zaglavlju RML izvještaja, i on će biti korišten kao zadani "
+"font RML izvještaja za poduzeće korisnika"
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_share
 msgid "Share or embed any screen of Odoo."
-msgstr ""
+msgstr "Dijeli ili uklopi bilokoji ekran openerpa"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_share_partner
@@ -315,6 +321,9 @@ msgid ""
 " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
 msgstr ""
+"Dijelite partnere među svim poduzećima u vašoj instanci.\n"
+"*označeno: Partneri su vidljivi u svim poduzećima, bez obzira da li je poduzeće definirano na partneru.\n"
+"*neoznačeno: Svako poduzeće može vidjeti samo svoje partnere (partneri na kojima je poduzeće definirano). Partneri koji nisu povezani sa poduzećem, vidljivi si u svim poduzećima."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -337,11 +346,13 @@ msgid ""
 "This installs the module inter_company_rules.\n"
 " Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
 msgstr ""
+"Ovo instalira modul inter_company_rules.\n"
+"Postavite pravila poduzeća za automatsko kreiranje ponuda i nabava kada jedno poduzeće prodaje/nabavlja od drugog unutar instance."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
 msgid "Use external authentication providers (OAuth)"
-msgstr ""
+msgstr "Koristite pružatelje vanjske autorizacije (OAuth)"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration

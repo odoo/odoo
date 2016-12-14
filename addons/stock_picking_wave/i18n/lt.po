@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_picking_wave
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2016
+# Audrius Palenskis <audrius.palenskis@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-11-22 16:11+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/"
-"lt/)\n"
-"Language: lt\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Audrius Palenskis <audrius.palenskis@gmail.com>, 2016\n"
+"Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
-"%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: lt\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_to_wave
@@ -166,7 +167,7 @@ msgid "Name of the picking wave"
 msgstr ""
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:42
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:52
 #, python-format
 msgid "Nothing to print."
 msgstr ""
@@ -177,10 +178,10 @@ msgid "Person responsible for this wave"
 msgstr ""
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:64
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9894
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -203,7 +204,7 @@ msgid "Picking Waves not finished"
 msgstr ""
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9894
 msgid "Picking wave associated to this picking"
 msgstr ""
 
@@ -215,13 +216,13 @@ msgstr "Važtaraščiai"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
-msgid "Print all pickings"
-msgstr ""
+msgid "Print"
+msgstr "Spausdinti"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_user_id
 msgid "Responsible"
-msgstr "Atsakingas asmuo"
+msgstr "Atsakingas"
 
 #. module: stock_picking_wave
 #: selection:stock.picking.wave,state:0
@@ -239,7 +240,7 @@ msgid "Select a wave"
 msgstr ""
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:59
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:59
 #, python-format
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
@@ -268,7 +269,7 @@ msgstr "Pakeistas etapas"
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_state
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 msgid "State"
-msgstr "Savivaldybė"
+msgstr "Būsena"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
@@ -280,12 +281,9 @@ msgstr ""
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
 msgid ""
 "The goal of the picking waves is to group operations that may\n"
-"                (needs to) be done together in order to increase their "
-"efficiency.\n"
-"                It may also be useful to assign jobs (one person = one wave) "
-"or\n"
-"                help the timing management of operations (tasks to be done "
-"at 1pm)."
+"                (needs to) be done together in order to increase their efficiency.\n"
+"                It may also be useful to assign jobs (one person = one wave) or\n"
+"                help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
 
 #. module: stock_picking_wave
@@ -294,7 +292,7 @@ msgid "Transfer"
 msgstr "Pervesti"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:63
 #, python-format
 msgid "Transferred by"
 msgstr ""
@@ -308,39 +306,3 @@ msgstr "Naudotojas"
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_stock_picking_wave_search_inherit
 msgid "Wave"
 msgstr ""
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Paskutinė pranešimo publikavimo data šiame įraše."
-
-#~ msgid "Followers"
-#~ msgstr "Prenumeratoriai"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jeigu pažymėta, nauji pranešimai reikalaus jūsų dėmesio."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Paskutinio pranešimo data"
-
-#~ msgid "Messages"
-#~ msgstr "Pranešimai"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Pranešimų ir komunikacijos istorija"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Veiksmų skaičius"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Žinučių, kurių prireiks veiksmui skaičius"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Neperskaitytų žinučių skaičius"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Neskaityti pranešimai"
-
-#~ msgid "Website Messages"
-#~ msgstr "Interneto svetainės pranešimai"
-
-#~ msgid "Website communication history"
-#~ msgstr "Interneto svetainės komunikacijos istorija"

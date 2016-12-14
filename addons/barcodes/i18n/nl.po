@@ -10,10 +10,10 @@
 # Alain van Hall <ajcvhall@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"POT-Creation-Date: 2016-11-14 15:54+0000\n"
+"PO-Revision-Date: 2016-11-14 15:54+0000\n"
 "Last-Translator: Alain van Hall <ajcvhall@gmail.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgid ""
 "                                if the regular expression matches a prefix of the barcode."
 msgstr ""
 "De <i>nomenclatuur</i> van een barcode bepaalt hoe barcodes worden herkend en gecategoriseerd.\n"
-"                                Wanneer een barcode wordt gescand, wordt ze geassocieerd met de <i>eerste</i> regel van een\n"
+"                                Wanneer een barcode wordt gescand, wordt ze gekoppeld met de <i>eerste</i> regel van een\n"
 "                                passend patroon. De syntax van een patroon is zoals een reguliere expressie, en een barcode wordt\n"
 "                                gematcht indien de reguliere expressie overeenkomt met een prefix van de barcode."
 
@@ -157,6 +157,13 @@ msgid "Credit Card"
 msgstr "Credit Card"
 
 #. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:100
+#, python-format
+msgid "Discard"
+msgstr "Annuleren"
+
+#. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Discounted Product"
 msgstr "Korting product"
@@ -190,14 +197,14 @@ msgstr "Codering"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:56
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:62
 #, python-format
 msgid "Error : Document not editable"
 msgstr "Fout: document kan niet gewijzigd worden"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:60
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:66
 #, python-format
 msgid "Error : No last scanned barcode"
 msgstr "Fout: Geen laats gescande barcode  "
@@ -285,13 +292,20 @@ msgid "Rules"
 msgstr "Regels"
 
 #. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:86
+#, python-format
+msgid "Select"
+msgstr "Selecteren"
+
+#. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_sequence
 msgid "Sequence"
 msgstr "Reeks"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:77
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:85
 #, python-format
 msgid "Set quantity"
 msgstr "Ingestelde hoeveelheid "
@@ -335,14 +349,14 @@ msgstr ""
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:56
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:62
 #, python-format
 msgid "To modify this document, please first start edition."
 msgstr "Om dit document te wijzigen moet u eerst de wijzigingsmodus starten."
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:60
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:66
 #, python-format
 msgid "To set the quantity please scan a barcode first."
 msgstr "Om uw kwantiteit in te stellen scan eerst uw barcode. "

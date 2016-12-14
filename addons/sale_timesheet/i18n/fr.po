@@ -3,21 +3,21 @@
 # * sale_timesheet
 # 
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Clo <clo@odoo.com>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Xavier Belmere <Info@cartmeleon.com>, 2016
 # Frédéric LIETART <stuff@thelinuxfr.org>, 2016
 # Baptiste Bisson <inactive+baptisteb@transifex.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2016-09-19 12:36+0000\n"
+"PO-Revision-Date: 2016-09-19 12:36+0000\n"
 "Last-Translator: Baptiste Bisson <inactive+baptisteb@transifex.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -25,6 +25,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_account_id
+msgid "Account"
+msgstr "Compte"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
@@ -121,11 +126,11 @@ msgid "Task"
 msgstr "Tâche"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/procurement.py:72
-#: code:addons/sale_timesheet/models/procurement.py:74
+#: code:addons/sale_timesheet/models/procurement.py:80
 #, python-format
-msgid "Task created"
-msgstr "Tâche créée"
+msgid ""
+"Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
@@ -137,6 +142,14 @@ msgstr "Tâches"
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
 msgid "Tasks associated to this sale"
 msgstr "Les tâches associées à cette vente"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/procurement.py:84
+#, python-format
+msgid ""
+"This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s)"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid

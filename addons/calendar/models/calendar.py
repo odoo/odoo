@@ -1128,8 +1128,8 @@ class Meeting(models.Model):
             data['rrule_type'] = 'weekly'
         #repeat monthly by nweekday ((weekday, weeknumber), )
         if rule._bynweekday:
-            data['week_list'] = day_list[rule._bynweekday[0][0]].upper()
-            data['byday'] = str(rule._bynweekday[0][1])
+            data['week_list'] = day_list[list(rule._bynweekday)[0][0]].upper()
+            data['byday'] = str(list(rule._bynweekday)[0][1])
             data['month_by'] = 'day'
             data['rrule_type'] = 'monthly'
 
@@ -1372,7 +1372,7 @@ class Meeting(models.Model):
             if not self._context.get('dont_notify'):
                 if len(meeting.alarm_ids) > 0 or values.get('alarm_ids'):
                     partners_to_notify = meeting.partner_ids.ids
-                    event_attendees_changes = attendees_create and attendees_create[real_ids[0]]
+                    event_attendees_changes = attendees_create and real_ids and attendees_create[real_ids[0]]
                     if event_attendees_changes:
                         partners_to_notify.append(event_attendees_changes['removed_partners'].ids)
                     self.env['calendar.alarm_manager'].notify_next_alarm(partners_to_notify)

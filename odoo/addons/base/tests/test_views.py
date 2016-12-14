@@ -12,6 +12,14 @@ from odoo.tests import common
 from odoo.tools import mute_logger
 
 
+class ViewXMLID(common.TransactionCase):
+    def test_model_data_id(self):
+        """ Check whether views know their xmlid record. """
+        view = self.env.ref('base.view_company_form')
+        self.assertTrue(view)
+        self.assertTrue(view.model_data_id)
+        self.assertEqual(view.model_data_id.complete_name, 'base.view_company_form')
+
 class ViewCase(common.TransactionCase):
     def setUp(self):
         super(ViewCase, self).setUp()
@@ -1175,3 +1183,70 @@ class TestXPathExtentions(common.BaseCase):
         self.assertEqual(
             len(tree.xpath('//node[hasclass("foo", "baz")]')),
             1)
+
+
+class TestQWebRender(ViewCase):
+
+    def test_render(self):
+        view1 = self.View.create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">
+                    <div><span>something</span></div>
+                </t>
+        """
+        })
+        view2 = self.View.create({
+            'name': "dummy_ext",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """
+                <xpath expr="//div" position="inside">
+                    <span>another thing</span>
+                </xpath>
+            """
+        })
+        view3 = self.View.create({
+            'name': "dummy_primary_ext",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'mode': 'primary',
+            'arch': """
+                <xpath expr="//div" position="inside">
+                    <span>another primary thing</span>
+                </xpath>
+            """
+        })
+
+        # render view and child view with an id
+        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id]).render(view1.id)
+        content2 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id]).render(view2.id)
+
+        self.assertEqual(content1, content2)
+
+        # render view and child view with an xmlid
+        self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"
+                            "VALUES ('dummy', 'ir.ui.view', %s, 'base')" % view1.id)
+        self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"
+                            "VALUES ('dummy_ext', 'ir.ui.view', %s, 'base')" % view2.id)
+
+        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id]).render('base.dummy')
+        content2 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id]).render('base.dummy_ext')
+
+        self.assertEqual(content1, content2)
+
+        # render view and primary extension with an id
+        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id]).render(view1.id)
+        content3 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id]).render(view3.id)
+
+        self.assertNotEqual(content1, content3)
+
+        # render view and primary extension with an xmlid
+        self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"
+                            "VALUES ('dummy_primary_ext', 'ir.ui.view', %s, 'base')" % view3.id)
+
+        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id]).render('base.dummy')
+        content3 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id]).render('base.dummy_primary_ext')
+
+        self.assertNotEqual(content1, content3)

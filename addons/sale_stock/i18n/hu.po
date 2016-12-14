@@ -7,10 +7,10 @@
 # krnkris <krnkris@freemail.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
 "Last-Translator: krnkris <krnkris@freemail.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -31,6 +31,11 @@ msgid "<strong>Incoterms:</strong>"
 msgstr "<strong>Incoterms:</strong>"
 
 #. module: sale_stock
+#: model:ir.ui.menu,name:sale_stock.menu_aftersale
+msgid "After-Sale"
+msgstr "Értékesítés utáni"
+
+#. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
 msgstr "Szállítási ár hozzáadásának engedélyezése"
@@ -41,6 +46,13 @@ msgid "Allow setting manufacturing order properties per order line (advanced)"
 msgstr ""
 "Lehetővé teszi a gyártási megrendelés tételemkénti tulajdonságainak a "
 "beállítását (haladó)"
+
+#. module: sale_stock
+#: selection:sale.config.settings,module_sale_order_dates:0
+msgid ""
+"Allow to modify the sales order dates to postpone deliveries and "
+"procurements"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
@@ -59,6 +71,11 @@ msgstr ""
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
 msgstr "Vállalatok"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_sale_order_dates
+msgid "Date"
+msgstr "Dátum"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_default_picking_policy
@@ -137,7 +154,13 @@ msgid "Invoice Line"
 msgstr "Számla tételsor"
 
 #. module: sale_stock
+#: model:ir.ui.menu,name:sale_stock.menu_invoiced
+msgid "Invoicing"
+msgstr "Számlázás"
+
+#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
+#: model:ir.model.fields,help:sale_stock.field_sale_config_settings_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
@@ -192,6 +215,11 @@ msgid "Procurement"
 msgstr "Beszerzés"
 
 #. module: sale_stock
+#: selection:sale.config.settings,module_sale_order_dates:0
+msgid "Procurements and deliveries dates are based on the sales order dates"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
 msgid "Product"
 msgstr "Termék"
@@ -239,12 +267,17 @@ msgstr "Vásárlói megrendelés tételsor"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "Vevői megrendelési statisztikák"
+msgstr "Vásárlói megrendelési statisztikák"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
 msgstr "Értékesítések Biztonsági napszámok"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
+msgid "Sales Safety Days *"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable

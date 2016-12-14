@@ -3,16 +3,16 @@
 # * sales_team
 # 
 # Translators:
-# Oregional <geza.nagy@oregional.hu>, 2016
 # krnkris <krnkris@freemail.hu>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
 "Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -74,12 +74,12 @@ msgstr "Aktív"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:114
 #, python-format
 msgid "Activities Done"
-msgstr "Tevékenységek elvégezve"
+msgstr "Tevékenység elvégezve"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
 msgid "Apply"
-msgstr "Alkalmaz"
+msgstr "Alkalmazás"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -87,21 +87,27 @@ msgid "Archived"
 msgstr "Archivált"
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_action_res_partner_bank_form
 #: model:ir.ui.menu,name:sales_team.menu_config_bank_accounts
 msgid "Bank Accounts"
 msgstr "Bankszámlák"
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_action_res_bank_form
+msgid "Banks"
+msgstr "Bankok"
+
+#. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
 msgid "Cancel"
-msgstr "Mégse"
+msgstr "Mégsem"
 
 #. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid "Click here to define a new sales team."
-msgstr "Kattintson egy új értékesítési csoport meghatározásához."
+msgstr "Új értékesítési csapat létrehozása"
 
 #. module: sales_team
 #. openerp-web
@@ -114,7 +120,7 @@ msgstr "Kattintson egy új értékesítési csoport meghatározásához."
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:182
 #, python-format
 msgid "Click to set"
-msgstr "Beállításhoz kattintson"
+msgstr "Beállítás"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_color
@@ -129,7 +135,6 @@ msgstr "Vállalat"
 
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_sale_config
-#: model:ir.ui.menu,name:sales_team.menu_sale_config_sales
 msgid "Configuration"
 msgstr "Beállítások"
 
@@ -152,7 +157,7 @@ msgstr "Kapcsolattartó megszólítások"
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_config_address_book
 msgid "Contacts"
-msgstr "Kapcsolattartók"
+msgstr "Kapcsolatok"
 
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_country_partner
@@ -169,24 +174,29 @@ msgstr "Ország csoport"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:215
 #, python-format
 msgid "Create a few opportunities in it."
-msgstr ""
+msgstr "Hozzon létre egy néhány lehetőséget"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_create_uid
 #: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_uid
 msgid "Created by"
-msgstr "Készítette"
+msgstr "Létrehozta"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_create_date
 #: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_date
 msgid "Created on"
-msgstr "Létrehozás dátuma"
+msgstr "Létrehozva"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_action_currency_form
+msgid "Currencies"
+msgstr "Pénznemek"
 
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_partner_form
 msgid "Customers"
-msgstr "Vásárlók"
+msgstr "Vevők"
 
 #. module: sales_team
 #. openerp-web
@@ -227,8 +237,7 @@ msgstr ""
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:214
 #, python-format
 msgid "Great sales journeys start with a clean pipeline."
-msgstr ""
-"Nagyszerű értékesítési útkiosztáshoz induljon el egy tiszta folyamattal."
+msgstr "A nagyszerű értékesítések tiszta folyamattal kezdődnek."
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -255,6 +264,8 @@ msgid ""
 "If set, sale team used notably for sales and assignations related to this "
 "partner"
 msgstr ""
+"Ha beállított, értékesítési csapatot használ a különösképpen a partnerhez "
+"vonatkozó értékesítésekhez és hozzárendelésekhez"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_active
@@ -262,28 +273,33 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the sales "
 "team without removing it."
 msgstr ""
-"Ha az aktív mező hamisra állított, akkor lehetővé teszi az értékesítő "
-"csoport eltüntetését annak elvétele nélkül."
+"Ha az aktív mező hamisra állított, akkor lehetővé teszi az értékesítő csapat"
+" eltüntetését annak elvétele nélkül."
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "Indirect Sales"
+msgstr "Közvetett értékesítés"
 
 #. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:140
 #, python-format
 msgid "Invoiced"
-msgstr "Számlázott"
+msgstr "Számlázva"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team___last_update
 #: model:ir.model.fields,field_description:sales_team.field_sale_config_settings___last_update
 msgid "Last Modified on"
-msgstr "Utoljára frissítve ekkor"
+msgstr "Utoljára módosítva"
 
 #. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:188
 #, python-format
 msgid "Last Month"
-msgstr "Utolsó hónap"
+msgstr "Előző hónap"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_write_uid
@@ -298,11 +314,6 @@ msgid "Last Updated on"
 msgstr "Utoljára frissítve "
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_crm_config_lead
-msgid "Leads & Opportunities"
-msgstr "Érdeklődések és lehetőségek"
-
-#. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_localisation
 msgid "Localization"
 msgstr "Lokalizáció"
@@ -310,7 +321,7 @@ msgstr "Lokalizáció"
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
 msgid "Manager"
-msgstr "Igazgató"
+msgstr "Menedzser"
 
 #. module: sales_team
 #. openerp-web
@@ -341,7 +352,7 @@ msgstr "Folyamatom"
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "My Salesteams"
-msgstr "Értékesítési csoportom"
+msgstr "Értékesítési csapatom"
 
 #. module: sales_team
 #. openerp-web
@@ -365,11 +376,6 @@ msgid "Only Integer Value should be valid."
 msgstr "Kizárólag egész érték lehet érvényes."
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_crm_config_opportunity
-msgid "Opportunities"
-msgstr "Lehetőségek"
-
-#. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
 msgid "Partner"
 msgstr "Partner"
@@ -387,6 +393,11 @@ msgid "Reply-To"
 msgstr "Válaszcím"
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_sale_report
+msgid "Reports"
+msgstr "Kimutatások"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "Eladási árlista"
@@ -394,9 +405,8 @@ msgstr "Eladási árlista"
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_base_partner
 #: model:ir.ui.menu,name:sales_team.menu_sales
-#: model:ir.ui.menu,name:sales_team.menu_sales_config
 msgid "Sales"
-msgstr "Értékesítések"
+msgstr "Értékesítés"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -415,27 +425,30 @@ msgid ""
 "Sales Team the user is member of. Used to compute the members of a sales "
 "team through the inverse one2many"
 msgstr ""
+"Értékesítési csapat, melynek a felhasználó a tagja. Az értékesítési csapat "
+"tagok számításához használja a fordított  one2many keresztül"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_act
 #: model:ir.actions.act_window,name:sales_team.sales_team_config_action
+#: model:ir.ui.menu,name:sales_team.sales_team_config
 msgid "Sales Teams"
 msgstr "Értékesítési csapatok"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Sales team"
-msgstr "Értékesítési csoport"
+msgstr "Értékesítési csapat"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Salesteam name..."
-msgstr "Értékesítési csoport neve..."
+msgstr "Értékesítési csapat neve..."
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Salesteams Search"
-msgstr "Értékesítési csoportok keresése"
+msgstr "Értékesítési csapatok keresése"
 
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_sale_general_settings
@@ -454,18 +467,18 @@ msgstr "Cél"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_user_id
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Team Leader"
-msgstr "Csoportvezető"
+msgstr "Csapatvezető"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member_ids
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
-msgstr "Csoport tag"
+msgstr "Csapat tag"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
 msgid "The color of the team"
-msgstr ""
+msgstr "A csapat színe"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_reply_to
@@ -545,7 +558,7 @@ msgstr "Lehetőségek kimutatás jelentéséhez"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:13
 #, python-format
 msgid "To do"
-msgstr "Tennivaló"
+msgstr "Teendő"
 
 #. module: sales_team
 #. openerp-web
@@ -563,19 +576,19 @@ msgid ""
 "                    departments into separate teams. Each team will work in\n"
 "                    its own list of opportunities."
 msgstr ""
-" Használja az értékesítési csoportokat a különböző értékesítők vagy\n"
+" Használja az értékesítési csapatokat a különböző értékesítők vagy\n"
 "                          osztályok különálló csoportokba szervezéséhez. \n"
-"Mindegyik csoport a saját lehetőség listáin dolgozik."
+"Mindegyik csapat a saját lehetőségeinek listáin dolgozik."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
 msgid "User: All Documents"
-msgstr ""
+msgstr "Felhasználó: Összes dokumentum"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman
 msgid "User: Own Documents Only"
-msgstr ""
+msgstr "Felhasználó: Csak a saját dokumentumok"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
@@ -583,25 +596,30 @@ msgid "Users"
 msgstr "Felhasználók"
 
 #. module: sales_team
+#: model:crm.team,name:sales_team.salesteam_website_sales
+msgid "Website Sales"
+msgstr "Honlap értékesítés"
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:127
 #, python-format
 msgid "Won in Opportunities"
-msgstr "Megnyert a Lehetőségen"
+msgstr "Megnyert a lehetőség"
 
 #. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Wrong value entered!"
-msgstr "Rosszérték lett megadva!"
+msgstr "Rossz érték lett megadva!"
 
 #. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:89
 #, python-format
 msgid "exp. closing"
-msgstr "exp. closing"
+msgstr "várható zárás"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_ir_ui_view

@@ -31,7 +31,7 @@ class OgoneController(http.Controller):
     @http.route(['/payment/ogone/s2s/create_json'], type='json', auth='public', csrf=False)
     def ogone_s2s_create_json(self, **kwargs):
         new_id = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
-        return new_id
+        return new_id.id
 
     @http.route(['/payment/ogone/s2s/create'], type='http', auth='public', methods=["POST"], csrf=False)
     def ogone_s2s_create(self, **post):
@@ -47,7 +47,7 @@ class OgoneController(http.Controller):
     @http.route(['/payment/ogone/s2s/feedback'], auth='none', csrf=False)
     def feedback(self, **kwargs):
         try:
-            tx = request.env['payment.transaction']._ogone_form_get_tx_from_data(kwargs)
+            tx = request.env['payment.transaction'].sudo()._ogone_form_get_tx_from_data(kwargs)
             tx._ogone_s2s_validate()
         except ValidationError:
             return 'ko'

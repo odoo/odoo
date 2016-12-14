@@ -25,7 +25,7 @@ class ProductAttributevalue(models.Model):
     name = fields.Char('Value', required=True, translate=True)
     sequence = fields.Integer('Sequence', help="Determine the display order")
     attribute_id = fields.Many2one('product.attribute', 'Attribute', ondelete='cascade', required=True)
-    product_ids = fields.Many2many('product.product', id1='att_id', id2='prod_id', string='Variants', readonly=True)
+    product_ids = fields.Many2many('product.product', string='Variants', readonly=True)
     price_extra = fields.Float(
         'Attribute Price Extra', compute='_compute_price_extra', inverse='_set_price_extra',
         default=0.0, digits=dp.get_precision('Product Price'),
@@ -93,7 +93,7 @@ class ProductAttributeLine(models.Model):
 
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', ondelete='cascade', required=True)
     attribute_id = fields.Many2one('product.attribute', 'Attribute', ondelete='restrict', required=True)
-    value_ids = fields.Many2many('product.attribute.value', id1='line_id', id2='val_id', string='Attribute Values')
+    value_ids = fields.Many2many('product.attribute.value', string='Attribute Values')
 
     @api.constrains('value_ids', 'attribute_id')
     def _check_valid_attribute(self):

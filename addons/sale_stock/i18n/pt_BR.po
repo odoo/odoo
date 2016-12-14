@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
-# grazziano <g.negocios@outlook.com.br>, 2016
-# Mateus Lopes <mateus1@gmail.com>, 2016
+# Grazziano Duarte <gra.negocia@gmail.com>, 2016
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
+# Mateus Lopes <mateus1@gmail.com>, 2016
 # Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2016
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
 "Last-Translator: Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -26,13 +26,18 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr ""
+msgstr "<strong>Referência do cliente:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
 msgstr "<strong>Incoterms:</strong>"
+
+#. module: sale_stock
+#: model:ir.ui.menu,name:sale_stock.menu_aftersale
+msgid "After-Sale"
+msgstr "Pós-venda"
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
@@ -45,6 +50,13 @@ msgid "Allow setting manufacturing order properties per order line (advanced)"
 msgstr ""
 "Permitir a definição de propriedades da ordem de produção por linha de ordem"
 " (avançado)"
+
+#. module: sale_stock
+#: selection:sale.config.settings,module_sale_order_dates:0
+msgid ""
+"Allow to modify the sales order dates to postpone deliveries and "
+"procurements"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
@@ -61,6 +73,11 @@ msgstr ""
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
 msgstr "Empresas"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_sale_order_dates
+msgid "Date"
+msgstr "Data"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_default_picking_policy
@@ -101,7 +118,7 @@ msgstr "Habilitar a Rota na Linha da Ordem de Vendas"
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
 msgid "Incoterms"
-msgstr "Inconterms"
+msgstr "Incoterms"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
@@ -139,7 +156,13 @@ msgid "Invoice Line"
 msgstr "Linha da Fatura"
 
 #. module: sale_stock
+#: model:ir.ui.menu,name:sale_stock.menu_invoiced
+msgid "Invoicing"
+msgstr "Faturamento"
+
+#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
+#: model:ir.model.fields,help:sale_stock.field_sale_config_settings_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
@@ -195,6 +218,11 @@ msgid "Procurement"
 msgstr "Aquisição"
 
 #. module: sale_stock
+#: selection:sale.config.settings,module_sale_order_dates:0
+msgid "Procurements and deliveries dates are based on the sales order dates"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
 msgid "Product"
 msgstr "Produto"
@@ -248,6 +276,11 @@ msgstr "Estatísticas de Pedidos de Venda"
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
 msgstr "Dias Seguros de Vendas"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
+msgid "Sales Safety Days *"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable

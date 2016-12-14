@@ -4,32 +4,33 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
-# Oihane Crucelaegui <oihanecruce@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Sergio Flores <vitavitae1@gmail.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
-# Alejandro Die Sanchis <marketing@domatix.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# Daniel Santibáñez Polanco <dansanti@gmail.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
 # Sergio Hevia <sah@talleresbernesga.com>, 2016
 # Cristóbal Martí Oliver <info@moblesmarti.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
 # Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
 # David Perez <david@closemarketing.es>, 2016
+# Daniel Santibáñez Polanco <dansanti@gmail.com>, 2016
+# Alejandro Die Sanchis <marketing@domatix.com>, 2016
 # Esteban Echeverry <tebanep@nubark.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Alejandro Santana <alejandrosantana@anubia.es>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Sergio Flores <vitavitae1@gmail.com>, 2016
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Miguel Orueta <mo@landoo.es>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1e\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:38+0000\n"
-"PO-Revision-Date: 2016-08-18 08:38+0000\n"
-"Last-Translator: Leonardo Chianea <noamixcontenidos@gmail.com>, 2016\n"
+"POT-Creation-Date: 2016-09-07 08:58+0000\n"
+"PO-Revision-Date: 2016-09-07 08:58+0000\n"
+"Last-Translator: Miguel Orueta <mo@landoo.es>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,6 +81,12 @@ msgid ""
 msgstr ""
 "Diccionario Python a evaluar para proporcionar valores por defecto cuando un"
 " nuevo registro se cree para este seudónimo."
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_computer3
+#: model:maintenance.equipment,name:maintenance.equipment_computer5
+msgid "Acer Laptop"
+msgstr "Portátil Acer"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_active
@@ -387,8 +394,13 @@ msgid "Equipment Categories"
 msgstr "Categorías de equipamiento"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_id_3386
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_id_3424
 msgid "Equipment Category"
+msgstr ""
+
+#. module: maintenance
+#: model:res.groups,name:maintenance.group_equipment_manager
+msgid "Equipment Manager"
 msgstr ""
 
 #. module: maintenance
@@ -431,6 +443,17 @@ msgstr "Siga el proceso de la solicitud y comuníquese con el colaborador."
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Group by..."
 msgstr "Agrupar por..."
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_printer1
+msgid "HP Inkjet printer"
+msgstr "Impresora de inyección de tinta HP"
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_computer11
+#: model:maintenance.equipment,name:maintenance.equipment_computer9
+msgid "HP Laptop"
+msgstr "Portátil HP"
 
 #. module: maintenance
 #: selection:maintenance.request,priority:0
@@ -627,6 +650,11 @@ msgid "Model"
 msgstr "Modelo"
 
 #. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_monitor
+msgid "Monitors"
+msgstr ""
+
+#. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Más <i class=\"fa fa-caret-down\"/>"
@@ -712,6 +740,14 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Modelo padre que contiene el alias. El modelo que contiene la referencia "
+"alias no es necesariamente el modelo dado por alias_model_id (example: "
+"project (parent_model) and task (model))"
+
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_phone
+msgid "Phones"
+msgstr "Teléfonos"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_contact
@@ -721,6 +757,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Política para publicar un mensaje en el documento utilizando el servidor de correo.\n"
+"- todo el mundo: todos pueden publicar\n"
+"- socios: sólo socios autenticados\n"
+"- seguidores: sólo seguidores del documento relacionado o miembros de los siguientes canales\n"
 
 #. module: maintenance
 #: selection:maintenance.request,maintenance_type:0
@@ -776,7 +816,7 @@ msgstr "Reparado"
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports
 msgid "Reporting"
-msgstr "Informando"
+msgstr "Informes"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
@@ -801,7 +841,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_request_ids
 msgid "Request ids"
-msgstr ""
+msgstr "Id. solicitudes"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -814,6 +854,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Responsible"
 msgstr "Responsable"
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_monitor1
+#: model:maintenance.equipment,name:maintenance.equipment_monitor4
+#: model:maintenance.equipment,name:maintenance.equipment_monitor6
+msgid "Samsung Monitor 15\""
+msgstr "Monitor de 15\" Samsung"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -958,6 +1005,11 @@ msgstr ""
 "encontrar el propietario adecuado basado en la dirección del emisor (De), o "
 "usará la cuenta de administrador si no se encuentra un usuario para esa "
 "dirección."
+
+#. module: maintenance
+#: model:res.groups,comment:maintenance.group_equipment_manager
+msgid "The user will be able to manage equipments."
+msgstr ""
 
 #. module: maintenance
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_action

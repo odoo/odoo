@@ -3,15 +3,15 @@
 # * report
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
 # krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:26+0000\n"
-"PO-Revision-Date: 2016-08-26 10:26+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -226,17 +226,17 @@ msgid "Edit"
 msgstr "Szerkesztés"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit external footer"
 msgstr "Külső lábjegyzet szerkesztése"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit external header"
 msgstr "Külső fejléc szerkesztése"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Edit internal header"
 msgstr "Belső fejléc szerkesztése"
 
@@ -383,6 +383,11 @@ msgid "Paper format"
 msgstr "Papír formátum"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_base_config_settings_paperformat_id
+msgid "Paper format *"
+msgstr "Papír formátum *"
+
+#. module: report
 #: model:ir.ui.view,arch_db:report.paperformat_view_form
 #: model:ir.ui.view,arch_db:report.paperformat_view_tree
 msgid "Paper format configuration"
@@ -405,13 +410,13 @@ msgstr "Álló"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_externalpreview
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Preview External Report"
 msgstr "A külső jelentés előnézete"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_internalpreview
-#: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
+#: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Preview Internal Report"
 msgstr "A belső jelentés előnézete"
 
@@ -520,6 +525,12 @@ msgstr ""
 "wkhtmltopdf.org</a>"
 
 #. module: report
+#: code:addons/report/models/report.py:164
+#, python-format
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
+msgstr ""
+
+#. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "Website:"
 msgstr "Weboldal:"
@@ -557,16 +568,20 @@ msgstr ""
 " target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
-#: model:ir.model,name:report.model_ir_actions_report_xml
-msgid "ir.actions.report.xml"
-msgstr "ir.actions.report.xml"
+#: model:ir.model,name:report.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
+
+#. module: report
+#. openerp-web
+#: code:addons/report/static/src/js/qwebactionmanager.js:96
+#, python-format
+msgid ""
+"Your installation of Wkhtmltopdf seems to be broken. The \n"
+"report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
+msgstr ""
 
 #. module: report
 #: model:ir.model,name:report.model_ir_qweb_field_barcode
 msgid "ir.qweb.field.barcode"
 msgstr "ir.qweb.field.barcode"
-
-#. module: report
-#: model:ir.model,name:report.model_report_abstract_report
-msgid "report.abstract_report"
-msgstr "report.abstract_report"

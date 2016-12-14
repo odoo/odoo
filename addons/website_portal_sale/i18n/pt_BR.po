@@ -3,7 +3,7 @@
 # * website_portal_sale
 # 
 # Translators:
-# grazziano <g.negocios@outlook.com.br>, 2016
+# Grazziano Duarte <gra.negocia@gmail.com>, 2016
 # Anderson Fratuci <ander.frat@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Mateus Lopes <mateus1@gmail.com>, 2016
@@ -11,10 +11,10 @@
 # Cezar <cezar.santanna@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0alpha1c\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 10:27+0000\n"
-"PO-Revision-Date: 2016-08-26 10:27+0000\n"
+"POT-Creation-Date: 2016-09-29 14:01+0000\n"
+"PO-Revision-Date: 2016-09-29 14:01+0000\n"
 "Last-Translator: Cezar <cezar.santanna@gmail.com>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -161,11 +161,6 @@ msgid "<strong>Unit Price</strong>"
 msgstr "Preço Unitário"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sale_backend_link
-msgid "Access the complete Sale application"
-msgstr "Acesse o aplicativo Venda completo"
-
-#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid "Amount Due"
 msgstr "Valor Devido"
@@ -192,13 +187,9 @@ msgid "Due Date"
 msgstr "Data de Vencimento"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sales_backend_access
-msgid ""
-"If you wish to access the complete application to manage your orders, you "
-"can follow"
-msgstr ""
-"Se você deseja acessar o aplicativo completo para gerenciar suas ordens, "
-"você pode seguir"
+#: model:ir.model,name:website_portal_sale.model_account_invoice
+msgid "Invoice"
+msgstr "Fatura"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
@@ -246,6 +237,11 @@ msgid "Pay Now"
 msgstr "Pagar agora"
 
 #. module: website_portal_sale
+#: model:ir.model,name:website_portal_sale.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transação do Pagamento"
+
+#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
 msgid "Quotation"
 msgstr "Cotação"
@@ -259,6 +255,11 @@ msgstr "Cotação #"
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_menu_sale
 msgid "Quotes"
 msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.model.fields,field_description:website_portal_sale.field_payment_transaction_sale_order_id
+msgid "Sale Order"
+msgstr "Pedido de Venda"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
@@ -326,8 +327,3 @@ msgstr "Seus Pedidos"
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid "Your Quotes"
 msgstr "Suas Cotações"
-
-#. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.sales_backend_access
-msgid "this link"
-msgstr "este link"

@@ -393,22 +393,8 @@ div.carousel {
 
 .parallax {
     position: relative;
-    min-height: 200px;
 
-    &::before {
-        content: "";
-        display: inline-block;
-        width: 0;
-        min-height: inherit;
-        height: 100%;
-        vertical-align: middle;
-    }
-
-    > .oe_structure {
-        display: inline-block;
-        width: 100%;
-        vertical-align: middle;
-
+    .oe_structure {
         > :first-child {
             margin-top: 32px;
         }
@@ -416,4 +402,12 @@ div.carousel {
             margin-bottom: 32px;
         }
     }
+}
+
+.s_parallax {
+    min-height: 200px;
+}
+
+.s_big_message { // TO REMOVE IN MASTER > 10.0
+    background-size: cover;
 }

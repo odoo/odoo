@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * membership
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-07-08 03:28+0000\n"
-"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
-"Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
-"Language: th\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016\n"
+"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: th\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: membership
@@ -36,7 +37,7 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_associate_member
 msgid ""
-"A member with whom you want to associate your membership.It will consider "
+"A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
 msgstr ""
 
@@ -75,7 +76,7 @@ msgstr ""
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Associated Partner"
-msgstr "คู่ค้าที่เกี่ยวข้อง"
+msgstr "Associated Partner"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
@@ -125,6 +126,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Company"
 msgstr "บริษัท"
+
+#. module: membership
+#: model:ir.ui.menu,name:membership.menu_marketing_config_association
+msgid "Configuration"
+msgstr "การกำหนดค่า"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_tree
@@ -224,13 +230,9 @@ msgid "Error ! Ending Date cannot be set before Beginning Date."
 msgstr ""
 
 #. module: membership
-#: constraint:res.partner:0
+#: code:addons/membership/models/partner.py:159
+#, python-format
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-
-#. module: membership
-#: constraint:membership.membership_line:0
-msgid "Error, this membership product is out of date"
 msgstr ""
 
 #. module: membership
@@ -260,12 +262,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Group By"
-msgstr "จัดกลุ่มโดย"
+msgstr "จัดกลุ่มตาม"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Group by..."
-msgstr "จับกลุ่มโดย…"
+msgstr "จัดกลุ่มโดย…"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_id
@@ -283,7 +285,7 @@ msgstr "ไม่เปิดใช้งาน"
 #: model:ir.model,name:membership.model_account_invoice
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_id
 msgid "Invoice"
-msgstr "ใบกำกับสินค้า/ใบแจ้งหนี้"
+msgstr "ใบแจ้งหนี้"
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
@@ -315,8 +317,7 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose "
-"invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
@@ -325,18 +326,12 @@ msgstr ""
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
 msgid ""
 "It indicates the membership status.\n"
-"                        -Non Member: A member who has not applied for any "
-"membership.\n"
-"                        -Cancelled Member: A member who has cancelled his "
-"membership.\n"
-"                        -Old Member: A member whose membership date has "
-"expired.\n"
-"                        -Waiting Member: A member who has applied for the "
-"membership and whose invoice is going to be created.\n"
-"                        -Invoiced Member: A member whose invoice has been "
-"created.\n"
-"                        -Paid Member: A member who has paid the membership "
-"amount."
+"-Non Member: A member who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paid Member: A member who has paid the membership amount."
 msgstr ""
 
 #. module: membership
@@ -375,6 +370,7 @@ msgstr ""
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
+#: model:ir.ui.menu,name:membership.menu_association
 #: model:ir.ui.menu,name:membership.menu_membership
 #: model:ir.ui.view,arch_db:membership.membership_members_tree
 msgid "Members"
@@ -497,8 +493,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:membership.action_membership_members
 msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
-"                 Current Membership Status, Discussions and History of "
-"Membership, etc."
+"                 Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
 
 #. module: membership
@@ -522,13 +517,13 @@ msgid "Partner"
 msgstr "คู่ค้า"
 
 #. module: membership
-#: code:addons/membership/membership.py:351
+#: code:addons/membership/models/partner.py:181
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
 msgstr ""
 
 #. module: membership
-#: code:addons/membership/membership.py:349
+#: code:addons/membership/models/partner.py:179
 #, python-format
 msgid "Partner is a free Member."
 msgstr ""
@@ -546,7 +541,7 @@ msgstr "รูปแบบสินค้า"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_quantity
 msgid "Quantity"
-msgstr "จำนวน"
+msgstr "ปริมาณ"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_report_membership
@@ -613,7 +608,7 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_to
 msgid "To"
-msgstr ""
+msgstr "ถึง"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
