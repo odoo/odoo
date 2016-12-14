@@ -105,7 +105,7 @@ class test_search(TransactionCase):
         cron_ids = {}
         for u in 'BAC':
             user_ids[u] = Users.create({'name': u, 'login': u}).id
-            cron_ids[u] = Cron.create({'name': u, 'user_id': user_ids[u]}).id
+            cron_ids[u] = Cron.create({'name': u, 'model_id': self.env.ref('base.model_res_partner').id, 'user_id': user_ids[u]}).id
 
         ids = Cron.search([('id', 'in', cron_ids.values())], order='user_id').ids
         expected_ids = [cron_ids[l] for l in 'ABC']

@@ -119,7 +119,7 @@ class BaseActionRule(models.Model):
         """ Activate the cron job depending on whether there exists action rules
             based on time conditions.
         """
-        cron = self.env.ref('base_action_rule.ir_cron_crm_action', raise_if_not_found=False)
+        cron = self.env.ref('base_action_rule.ir_cron_data_bar_check', raise_if_not_found=False)
         return cron and cron.toggle(model=self._name, domain=[('kind', '=', 'on_time')])
 
     def _update_registry(self):
