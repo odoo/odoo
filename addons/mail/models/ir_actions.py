@@ -10,7 +10,14 @@ class ServerActions(models.Model):
     _name = 'ir.actions.server'
     _inherit = ['ir.actions.server']
 
-    state = fields.Selection(selection_add=[('email', 'Send Email')])
+    state = fields.Selection(selection_add=[
+        ('email', 'Send Email'),
+        ('followers', 'Add Followers')
+    ])
+    # Followers
+    partner_ids = fields.Many2many('res.partner', string='Add Followers')
+    channel_ids = fields.Many2many('mail.channel', string='Add Channels')
+    # Template
     template_id = fields.Many2one(
         'mail.template', 'Email Template', ondelete='set null',
         domain="[('model_id', '=', model_id)]",
@@ -21,6 +28,14 @@ class ServerActions(models.Model):
         """ Render the raw template in the server action fields. """
         if self.template_id and not self.template_id.email_from:
             raise UserError(_('Your template should define email_from'))
+
+    @api.model
+    def run_action_followers_multi(self, action, eval_context=None):
+        Model = self.env[action.model_id.model]
+        if self.partner_ids or self.channel_ids and hasattr(Model, 'message_subscribe'):
+            records = Model.browse(self._context.get('active_ids', self._context.get('active_id')))
+            records.message_subscribe(self.partner_ids.ids, self.channel_ids.ids, force=False)
+        return False
 
     @api.model
     def run_action_email(self, action, eval_context=None):
