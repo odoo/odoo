@@ -444,9 +444,9 @@ class IrActionsServer(models.Model):
     DEFAULT_PYTHON_CODE = """# Available variables:
 #  - time, datetime, dateutil, timezone: Python libraries
 #  - env: Odoo Environement
-#  - model: Model of the record on which the action is triggered
-#  - record: Record on which the action is triggered if there is one, otherwise None
-#  - records: Records on which the action is triggered if there is one, otherwise None
+#  - model: Odoo Model of the record on which the action is triggered; is a void recordset
+#  - record: record set of the current record on which the action is triggered; may be be void
+#  - records: record set of all records on which the action is triggered; may be void
 #  - log : log(message), function to log debug information in logging table
 #  - Warning: Warning Exception to use with raise
 # To return an action, assign: action = {...}\n\n\n\n"""
@@ -455,17 +455,6 @@ class IrActionsServer(models.Model):
     def _select_objects(self):
         records = self.env['ir.model'].search([])
         return [(record.model, record.name) for record in records] + [('', '')]
-
-    @api.model
-    def _get_states(self):
-        """ Override me in order to add new states in the server action. Please
-        note that the added key length should not be higher than already-existing
-        ones. """
-        return [('code', 'Execute Python Code'),
-                ('client_action', 'Run a Client Action'),
-                ('object_create', 'Create or Copy a new Record'),
-                ('object_write', 'Write on a Record'),
-                ('multi', 'Execute several actions')]
 
     name = fields.Char(string='Action Name', translate=True)
     type = fields.Char(default='ir.actions.server')
@@ -476,24 +465,30 @@ class IrActionsServer(models.Model):
                                  "a Python expression, like 'record.list_price > 5000'. A void "
                                  "condition is considered as always True. Help about python expression "
                                  "is given in the help tab.")
-    state = fields.Selection(selection=lambda self: self._get_states(),
-                             string='Action To Do', default='code', required=True,
-                             help="Type of server action. The following values are available:\n"
-                                  "- 'Execute Python Code': a block of python code that will be executed\n"
-                                  "- 'Run a Client Action': choose a client action to launch\n"
-                                  "- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
-                                  "- 'Write on a Record': update the values of a record\n"
-                                  "- 'Execute several actions': define an action that triggers several other server actions\n"
-                                  "- 'Send Email': automatically send an email (available in email_template)")
+    state = fields.Selection([
+        ('code', 'Execute Python Code'),
+        ('client_action', 'Run a Client Action'),
+        ('object_create', 'Create or Copy a new Record'),
+        ('object_write', 'Write on a Record'),
+        ('multi', 'Execute several actions')], string='Action To Do',
+        default='code', required=True,  # set default to write ?
+        help="Type of server action. The following values are available:\n"
+             "- 'Execute Python Code': a block of python code that will be executed\n"
+             "- 'Run a Client Action': choose a client action to launch\n"
+             "- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
+             "- 'Write on a Record': update the values of a record\n"
+             "- 'Execute several actions': define an action that triggers several other server actions\n"
+             "- 'Send Email': automatically send an email (available in email_template)")
     # Generic
     sequence = fields.Integer(default=5,
                               help="When dealing with multiple actions, the execution order is "
                                    "based on the sequence. Low number means high priority.")
     model_id = fields.Many2one('ir.model', string='Base Model', required=True, ondelete='cascade',
                                help="Base model on which the server action runs.")
-    model_name = fields.Char(related='model_id.model', readonly=True)
-    menu_ir_values_id = fields.Many2one('ir.values', string='More Menu entry', readonly=True,
-                                        help='More menu entry.', copy=False)
+    model_name = fields.Char(related='model_id.model', readonly=True, store=True)
+    menu_ir_values_id = fields.Many2one('ir.values', string='Action on Object',
+                                        copy=False, readonly=True,
+                                        help='IrValues entry of the related more menu entry action')
     # Client Action
     action_id = fields.Many2one('ir.actions.actions', string='Client Action',
                                 help="Select the client action that has to be executed.")
