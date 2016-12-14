@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from decimal import Decimal
 from openerp import api, tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
@@ -83,10 +84,18 @@ class sale_order_line(osv.osv):
                         # new_list_price is in company's currency while price in pricelist currency
                         ctx = dict(context_partner, date=self.order_id.date_order)
                         new_list_price = self.env['res.currency'].browse(currency_id).with_context(ctx).compute(new_list_price, line.order_id.pricelist_id.currency_id)
+                    discount = float(
+                        (
+                            Decimal(new_list_price) -
+                            Decimal(
+                                list_price[line.order_id.pricelist_id.id][0]
+                            )
+                        ) / Decimal(new_list_price) * 100
+                    )
                     discount = tools.float_round(
-                        (new_list_price - line.price_unit) /
-                        new_list_price * 100,
-                        precision_digits=1,
+                        discount,
+                        precision_digits=self.env['decimal.precision']
+                        .precision_get('Discount')
                     )
                     if discount > 0:
                         line.price_unit = new_list_price
