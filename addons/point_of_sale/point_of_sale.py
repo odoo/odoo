@@ -645,6 +645,35 @@ class pos_session(osv.osv):
             'url':   '/pos/web/',
         }
 
+    @api.multi
+    def open_cashbox(self):
+        self.ensure_one()
+        context = dict(self._context)
+        balance_type = context.get('balance') or 'start'
+        context['bank_statement_id'] = self.cash_register_id.id
+        context['balance'] = balance_type
+
+        action = {
+            'name': _('Cash Control'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'account.bank.statement.cashbox',
+            'view_id': self.env.ref('account.view_account_bnk_stmt_cashbox').id,
+            'type': 'ir.actions.act_window',
+            'context': context,
+            'target': 'new'
+        }
+
+        cashbox_id = None
+        if balance_type == 'start':
+            cashbox_id = self.cash_register_id.cashbox_start_id.id
+        else:
+            cashbox_id = self.cash_register_id.cashbox_end_id.id
+        if cashbox_id:
+            action['res_id'] = cashbox_id
+
+        return action
+
 class pos_order(osv.osv):
     _name = "pos.order"
     _description = "Point of Sale"
