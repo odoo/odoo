@@ -458,7 +458,8 @@ class IrActionsServer(models.Model):
     name = fields.Char(string='Action Name', translate=True)
     type = fields.Char(default='ir.actions.server')
     usage = fields.Selection([
-        ('ir_actions_server', 'Server Action')], string='Usage',
+        ('ir_actions_server', 'Server Action'),
+        ('ir_cron', 'Scheduled Action')], string='Usage',
         default='ir_actions_server', required=True)
     state = fields.Selection([
         ('code', 'Execute Python Code'),

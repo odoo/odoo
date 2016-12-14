@@ -2,11 +2,12 @@
 <odoo>
     <data>
         <record id="ir_cron_rating_project" model="ir.cron">
-            <field name="name">Send Customer Rating Forms</field>
+            <field name="name">Project: Send rating</field>
+            <field name="model_id" ref="project.model_project_project"/>
+            <field name="state">code</field>
+            <field name="code">model._send_rating_all()</field>
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
-            <field name="model">project.project</field>
-            <field name="function">_send_rating_all</field>
         </record>
 
         <record id="mt_task_rating" model="mail.message.subtype">
