@@ -13,6 +13,8 @@ class StockSettings(models.TransientModel):
         res = super(StockSettings, self).default_get(fields)
         if 'warehouse_and_location_usage_level' in fields or not fields:
             res['warehouse_and_location_usage_level'] = int(res.get('group_stock_multi_locations', False)) + int(res.get('group_stock_multi_warehouses', False))
+        if 'propagation_minimum_delta' not in res:
+            res['propagation_minimum_delta'] = self.env['res.company']._company_default_get().propagation_minimum_delta
         return res
 
     group_product_variant = fields.Selection([
