@@ -36,7 +36,6 @@
 
         <record id="action_partner_post" model="ir.actions.server">
             <field name="name">Website Partner Post and Thanks Demo</field>
-            <field name="condition">True</field>
             <field name="website_published" eval="True"/>
             <field name="website_path">partner_thanks</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -112,7 +111,6 @@ response = request.website.render("website.template_partner_post", {'partner': p
 
         <record id="action_partner_comment" model="ir.actions.server">
             <field name="name">Website Partners Comment Form</field>
-            <field name="condition">True</field>
             <field name="website_published" eval="True"/>
             <field name="website_path">partner_comment</field>
             <field name="model_id" ref="base.model_res_partner"/>
