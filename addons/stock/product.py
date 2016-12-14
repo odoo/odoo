@@ -359,8 +359,17 @@ class product_product(osv.osv):
             if f == 'outgoing_qty':
                 c.update({ 'states': ('confirmed','waiting','assigned'), 'what': ('out',) })
             stock = self.get_product_available(cr, uid, ids, context=c)
+            mto_ids = []
+            check = 'procure_method' in self._all_columns
+            if check:
+                procure_meth = {res['id']: res['procure_method'] for res in self.read(cr, uid, ids, ['procure_method'])}
             for id in ids:
+                if check and procure_meth[id] == 'make_to_order':
+                    mto_ids.append(id)
                 res[id][f] = stock.get(id, 0.0)
+        for id in mto_ids:
+            if 'virtual_available' in res[id] and 'qty_available' in res[id]:
+                res[id]['virtual_available'] = res[id]['qty_available']
         return res
 
     _columns = {
