@@ -317,9 +317,6 @@ class ProcurementOrder(models.Model):
                     })],
                 })
                 procurement.message_post(body=_("Purchase Requisition created"))
-                requisition_id.message_post_with_view('mail.message_origin_link',
-                    values={'self': requisition_id, 'origin': procurement},
-                    subtype_id=self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note'))
                 procurement.requisition_id = requisition_id
                 procurements += procurement
                 res += [procurement.id]

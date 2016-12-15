@@ -956,9 +956,16 @@ class ProcurementOrder(models.Model):
             if not po:
                 vals = procurement._prepare_purchase_order(partner)
                 po = self.env['purchase.order'].create(vals)
-                name = (procurement.group_id and (procurement.group_id.name + ":") or "") + (procurement.name != "/" and procurement.name or procurement.move_dest_id.raw_material_production_id and procurement.move_dest_id.raw_material_production_id.name or "")
-                message = _("This purchase order has been created from: <a href=# data-oe-model=procurement.order data-oe-id=%d>%s</a>") % (procurement.id, name)
-                po.message_post(body=message)
+
+                #special case: No brigde module between sale and purchase.
+                #To set sale order reference in purchase order we need to check this.
+                if hasattr(procurement, 'sale_line_id'):
+                    saleorder = self.env['sale.order'].search([('procurement_group_id', '=', procurement.group_id.id)])
+                    if saleorder:
+                        po.message_post_with_view('mail.message_origin_link',
+                            values={'self': po, 'origin': saleorder},
+                            subtype_id=self.env.ref('mail.mt_note').id)
+
                 cache[domain] = po
             elif not po.origin or procurement.origin not in po.origin.split(', '):
                 # Keep track of all procurements
@@ -969,9 +976,15 @@ class ProcurementOrder(models.Model):
                         po.write({'origin': po.origin})
                 else:
                     po.write({'origin': procurement.origin})
-                name = (self.group_id and (self.group_id.name + ":") or "") + (self.name != "/" and self.name or self.move_dest_id.raw_material_production_id and self.move_dest_id.raw_material_production_id.name or "")
-                message = _("This purchase order has been modified from: <a href=# data-oe-model=procurement.order data-oe-id=%d>%s</a>") % (procurement.id, name)
-                po.message_post(body=message)
+
+                #special case: No brigde module between sale and purchase.
+                #To set sale order reference in purchase order we need to check this.
+                if hasattr(procurement, 'sale_line_id'):
+                    saleorder = self.env['sale.order'].search([('procurement_group_id', '=', procurement.group_id.id)])
+                    if saleorder:
+                        po.message_post_with_view('mail.message_origin_link',
+                            values={'self': po, 'origin': saleorder, 'edit': True},
+                            subtype_id=self.env.ref('mail.mt_note').id)
             if po:
                 res += [procurement.id]
 
