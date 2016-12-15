@@ -24,6 +24,7 @@ class account_tax(osv.osv):
     _inherit = 'account.tax'
     _columns = {
         'name': fields.char('Tax Name', required=True, select=True, translate=True),
+        'description': fields.char('Display on Invoices', required=True, translate=True),
     }
 
 
