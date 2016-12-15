@@ -233,7 +233,7 @@ class Employee(models.Model):
 class Department(models.Model):
 
     _name = "hr.department"
-    _description = "Hr Department"
+    _description = "HR Department"
     _inherit = ['mail.thread']
     _order = "name"
 
