@@ -24,12 +24,11 @@ class Task(models.Model):
             task.subtask_count = self.search_count([('id', 'child_of', task.id), ('id', '!=', task.id)])
 
     @api.depends('timesheet_ids.unit_amount', 'planned_hours', 'child_ids.stage_id',
-                 'child_ids.planned_hours', 'child_ids.effective_hours', 'child_ids.children_hours')
+                 'child_ids.planned_hours', 'child_ids.effective_hours', 'child_ids.children_hours', 'child_ids.timesheet_ids.unit_amount')
     def _hours_get(self):
-        for task in self:
-
+        for task in self.sorted(key='id', reverse=True):
             for child_task in task.child_ids:
-                if child_task.stage_id and child_task.stage_id.fold:
+                if child_task.stage_id and not child_task.stage_id.fold:
                     task.children_hours += child_task.effective_hours + child_task.children_hours
                 else:
                     task.children_hours += max(child_task.planned_hours, child_task.effective_hours + child_task.children_hours)
@@ -41,7 +40,7 @@ class Task(models.Model):
 
             if task.stage_id and task.stage_id.fold:
                 task.progress = 100.0
-            elif (task.planned_hours > 0.0 and task.effective_hours):
+            elif (task.planned_hours > 0.0 and (task.effective_hours or task.children_hours)):
                 task.progress = round(min(100.0 * (task.effective_hours + task.children_hours) / task.planned_hours, 99.99), 2)
             else:
                 task.progress = 0.0
