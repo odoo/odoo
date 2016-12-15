@@ -23,7 +23,7 @@ from openerp import tools
 from openerp.osv import osv, fields
 
 
-def _reopen(self, res_id, model):
+def _reopen(self, res_id, model, prev_active_ids):
     return {'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'view_type': 'form',
@@ -34,6 +34,7 @@ def _reopen(self, res_id, model):
             # templates requires a model in context
             'context': {
                 'default_model': model,
+                'active_ids': prev_active_ids
             },
             }
 
@@ -148,7 +149,7 @@ class mail_compose_message(osv.TransientModel):
             template_values = record.onchange_template_id(template_id, record.composition_mode, record.model, record.res_id)['value']
             template_values['template_id'] = template_id
             record.write(template_values)
-            return _reopen(self, record.id, record.model)
+            return _reopen(self, record.id, record.model, context.get('active_ids', []))
 
     #------------------------------------------------------
     # Wizard validation and send
