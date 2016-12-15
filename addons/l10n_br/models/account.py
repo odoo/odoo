@@ -4,12 +4,20 @@
 from odoo import fields, models
 
 
+class AccountTaxGroup(models.Model):
+    _inherit = 'account.tax.group'
+
+    tax_discount = fields.Boolean(string='Discount this Tax in Prince',
+                                  help="Mark it for (ICMS, PIS e etc.).")
+
+
 class AccountTaxTemplate(models.Model):
     """ Add fields used to define some brazilian taxes """
     _inherit = 'account.tax.template'
 
     tax_discount = fields.Boolean(string='Discount this Tax in Prince',
-                                    help="Mark it for (ICMS, PIS e etc.).")
+                                  related='tax_group_id.tax_discount',
+			          help="Mark it for (ICMS, PIS e etc.).")
     base_reduction = fields.Float(string='Redution', digits=0, required=True,
                                     help="Um percentual decimal em % entre 0-1.", default=0)
     amount_mva = fields.Float(string='MVA Percent', digits=0, required=True,
@@ -25,7 +33,8 @@ class AccountTax(models.Model):
     """ Add fields used to define some brazilian taxes """
     _inherit = 'account.tax'
 
-    tax_discount = fields.Boolean(string='Discount this Tax in Prince', 
+    tax_discount = fields.Boolean(string='Discount this Tax in Prince',
+			          related='tax_group_id.tax_discount',
                                   help="Mark it for (ICMS, PIS e etc.).")
     base_reduction = fields.Float(string='Redution', digits=0, required=True,
                                   help="Um percentual decimal em % entre 0-1.", default=0)
