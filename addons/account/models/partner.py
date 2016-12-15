@@ -20,7 +20,7 @@ class AccountFiscalPosition(models.Model):
     company_id = fields.Many2one('res.company', string='Company')
     account_ids = fields.One2many('account.fiscal.position.account', 'position_id', string='Account Mapping', copy=True)
     tax_ids = fields.One2many('account.fiscal.position.tax', 'position_id', string='Tax Mapping', copy=True)
-    note = fields.Text('Notes', help="Legal mentions that have to be printed on the invoices.")
+    note = fields.Text('Notes', translate=True, help="Legal mentions that have to be printed on the invoices.")
     auto_apply = fields.Boolean(string='Detect Automatically', help="Apply automatically this fiscal position.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
     country_id = fields.Many2one('res.country', string='Country',
