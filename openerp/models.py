@@ -749,7 +749,7 @@ class BaseModel(object):
             for name in func._constrains:
                 if name not in cls._fields:
                     _logger.warning("method %s.%s: @constrains parameter %r is not a field name", cls._name, attr, name)
-                if not cls._fields[name].store:
+                if not cls._fields[name].column:
                     _logger.warning("method %s.%s: @constrains parameter %r is not stored", cls._name, attr, name)
             methods.append(func)
 
