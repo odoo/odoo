@@ -505,8 +505,11 @@ class Report(osv.Model):
         report_obj = self.pool['ir.actions.report.xml']
         qwebtypes = ['qweb-pdf', 'qweb-html']
         conditions = [('report_type', 'in', qwebtypes), ('report_name', '=', report_name)]
-        idreport = report_obj.search(cr, uid, conditions)[0]
-        return report_obj.browse(cr, uid, idreport)
+        # We won't get a context from the controller because the client would have to serialize it in the URL and that would be problematic
+        # We'll just use the user's default context, at least it will yield some language translation
+        context = self.pool['res.users'].context_get(cr, uid)
+        idreport = report_obj.search(cr, uid, conditions, context=context)[0]
+        return report_obj.browse(cr, uid, idreport, context=context)
 
     def _build_wkhtmltopdf_args(self, paperformat, specific_paperformat_args=None):
         """Build arguments understandable by wkhtmltopdf from a report.paperformat record.

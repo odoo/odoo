@@ -484,10 +484,10 @@ class stock_quant(osv.osv):
 
     def apply_removal_strategy(self, cr, uid, location, product, quantity, domain, removal_strategy, context=None):
         if removal_strategy == 'fifo':
-            order = 'in_date, id'
+            order = 'in_date, location_id, package_id, lot_id, id'
             return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
         elif removal_strategy == 'lifo':
-            order = 'in_date desc, id desc'
+            order = 'in_date desc, location_id desc, package_id desc, lot_id desc, id desc'
             return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
         raise osv.except_osv(_('Error!'), _('Removal strategy %s not implemented.' % (removal_strategy,)))
 
@@ -2293,6 +2293,7 @@ class stock_move(osv.osv):
 
     def action_assign(self, cr, uid, ids, context=None):
         """ Checks the product type and accordingly writes the state.
+        @return: True
         """
         context = context or {}
         quant_obj = self.pool.get("stock.quant")
@@ -2354,6 +2355,7 @@ class stock_move(osv.osv):
         #force assignation of consumable products and incoming from supplier/inventory/production
         if to_assign_moves:
             self.force_assign(cr, uid, list(to_assign_moves), context=context)
+        return True
 
     def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels the moves and if all moves are cancelled it cancels the picking.

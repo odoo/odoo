@@ -342,7 +342,15 @@ class ir_ui_menu(osv.osv):
                         else:
                             dom = eval(menu.action.params_store or '{}', {'uid': uid}).get('domain')
                         res[menu.id]['needaction_enabled'] = obj._needaction
-                        res[menu.id]['needaction_counter'] = obj._needaction_count(cr, uid, dom, context=context)
+                        ctx = context
+                        if menu.action.context:
+                            try:
+                                # use magical UnquoteEvalContext to ignore undefined client-side variables such as `active_id`
+                                eval_ctx = tools.UnquoteEvalContext(**context)
+                                ctx = eval(menu.action.context, locals_dict=eval_ctx, nocopy=True) or None
+                            except Exception:
+                                pass
+                        res[menu.id]['needaction_counter'] = obj._needaction_count(cr, uid, dom, context=ctx)
         return res
 
     def get_user_roots(self, cr, uid, context=None):

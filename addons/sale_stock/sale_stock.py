@@ -40,6 +40,9 @@ class sale_order(osv.osv):
     def _get_shipped(self, cr, uid, ids, name, args, context=None):
         res = {}
         for sale in self.browse(cr, uid, ids, context=context):
+            if sale.state == 'shipping_except':
+                res[sale.id] = False
+                continue
             group = sale.procurement_group_id
             if group:
                 res[sale.id] = all([proc.state in ['cancel', 'done'] for proc in group.procurement_ids])
@@ -57,7 +60,7 @@ class sale_order(osv.osv):
     def _get_orders_procurements(self, cr, uid, ids, context=None):
         res = set()
         for proc in self.pool.get('procurement.order').browse(cr, uid, ids, context=context):
-            if proc.state =='done' and proc.sale_line_id:
+            if proc.state in ('cancel', 'done') and proc.sale_line_id:
                 res.add(proc.sale_line_id.order_id.id)
         return list(res)
 
@@ -92,7 +95,8 @@ class sale_order(osv.osv):
             ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""On demand: A draft invoice can be created from the sales order when needed. \nOn delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \nBefore delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."""),
         'shipped': fields.function(_get_shipped, string='Delivered', type='boolean', store={
-                'procurement.order': (_get_orders_procurements, ['state'], 10)
+                'procurement.order': (_get_orders_procurements, ['state'], 10),
+                'sale.order': (lambda s, cr, uid, ids, ctx=None: ids, ['state'], 20),
             }),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
         'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking associated to this sale'),
@@ -223,7 +227,7 @@ class sale_order_line(osv.osv):
         'product_packaging': fields.many2one('product.packaging', 'Packaging'),
         'number_packages': fields.function(_number_packages, type='integer', string='Number Packages'),
         'route_id': fields.many2one('stock.location.route', 'Route', domain=[('sale_selectable', '=', True)]),
-        'product_tmpl_id': fields.related('product_id', 'product_tmpl_id', type='many2one', relation='product.template', string='Product Template'),
+        'product_tmpl_id': fields.related('product_id', 'product_tmpl_id', type='many2one', relation='product.template', string='Product Template', readonly=True),
     }
 
     _defaults = {
