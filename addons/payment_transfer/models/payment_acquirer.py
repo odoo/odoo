@@ -29,13 +29,13 @@ class TransferPaymentAcquirer(osv.Model):
         accounts = self.pool['res.partner.bank'].name_get(cr, uid, bank_ids, context=context)
         bank_title = _('Bank Accounts') if len(accounts) > 1 else _('Bank Account')
         bank_accounts = ''.join(['<ul>'] + ['<li>%s</li>' % name for id, name in accounts] + ['</ul>'])
-        post_msg = '''<div>
+        post_msg = _('''<div>
 <h3>Please use the following transfer details</h3>
 <h4>%(bank_title)s</h4>
 %(bank_accounts)s
 <h4>Communication</h4>
 <p>Please use the order name as communication reference.</p>
-</div>''' % {
+</div>''') % {
             'bank_title': bank_title,
             'bank_accounts': bank_accounts,
         }
