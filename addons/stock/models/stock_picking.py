@@ -381,7 +381,7 @@ class Picking(models.Model):
             elif self.partner_id:
                 location_dest_id = self.partner_id.property_stock_customer.id
             else:
-                customerloc, location_dest_id = self.env['stock.warehouse']._get_partner_locations()
+                location_dest_id, supplierloc = self.env['stock.warehouse']._get_partner_locations()
 
             self.location_id = location_id
             self.location_dest_id = location_dest_id

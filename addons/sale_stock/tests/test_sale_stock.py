@@ -233,3 +233,37 @@ class TestSaleStock(TestSale):
 
         self.so.action_done()
         self.assertEqual(self.so.invoice_status, 'invoiced', 'Sale Stock: so invoice_status should be "invoiced" when set to done')
+
+    def test_04_create_picking_update_saleorderline(self):
+        """
+        Test that updating multiple sale order lines after a succesful delivery creates a single picking containing
+        the new move lines.
+        """
+        # sell two products
+        item1 = self.products['prod_order']
+        item2 = self.products['prod_del']
+
+        self.so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
+                (0, 0, {'name': item2.name, 'product_id': item2.id, 'product_uom_qty': 1, 'product_uom': item2.uom_id.id, 'price_unit': item2.list_price}),
+            ],
+        })
+        self.so.action_confirm()
+
+        # deliver them
+        self.assertEquals(len(self.so.picking_ids), 1)
+        self.so.picking_ids[0].action_done()
+        self.assertEquals(self.so.picking_ids[0].state, "done")
+
+        # update the two original sale order lines
+        self.so.write({
+            'order_line': [
+                (1, self.so.order_line[0].id, {'product_uom_qty': 2}),
+                (1, self.so.order_line[1].id, {'product_uom_qty': 2}),
+            ]
+        })
+
+        # a single picking should be created for the new delivery
+        self.assertEquals(len(self.so.picking_ids), 2)
