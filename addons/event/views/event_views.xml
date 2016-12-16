@@ -242,7 +242,7 @@
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
                     <filter string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
-                    <filter string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
+                    <filter name="confirm" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
                     <separator/>
                     <filter string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
                     <separator/>

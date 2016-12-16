@@ -1113,6 +1113,7 @@ var FieldReference = common.AbstractField.extend(common.ReinitializeFieldMixin, 
         this.m2o = new FieldMany2One(fm, { attrs: {
             name: 'Referenced Document',
             modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
+            context: this.build_context().eval(),
         }});
         this.m2o.on("change:value", this, this.data_changed);
         this.m2o.appendTo(this.$(".oe_form_view_reference_m2o"));
