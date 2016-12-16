@@ -200,7 +200,7 @@ class Report(osv.Model):
         # Get the ir.actions.report.xml record we are working on.
         report = self._get_report_from_name(cr, uid, report_name)
         # Check if we have to save the report or if we have to get one from the db.
-        save_in_attachment = self._check_attachment_use(cr, uid, ids, report)
+        save_in_attachment = self._check_attachment_use(cr, uid, ids, report, context=context)
         # Get the paperformat associated to the report, otherwise fallback on the company one.
         if not report.paperformat_id:
             user = self.pool['res.users'].browse(cr, uid, uid)
@@ -273,7 +273,8 @@ class Report(osv.Model):
         return self._run_wkhtmltopdf(
             cr, uid, headerhtml, footerhtml, contenthtml, context.get('landscape'),
             paperformat, specific_paperformat_args, save_in_attachment,
-            context.get('set_viewport_size')
+            context.get('set_viewport_size'),
+            context
         )
 
     @api.v8
@@ -319,7 +320,7 @@ class Report(osv.Model):
     # Report generation helpers
     #--------------------------------------------------------------------------
     @api.v7
-    def _check_attachment_use(self, cr, uid, ids, report):
+    def _check_attachment_use(self, cr, uid, ids, report, context=None):
         """ Check attachment_use field. If set to true and an existing pdf is already saved, load
         this one now. Else, mark save it.
         """
@@ -328,7 +329,7 @@ class Report(osv.Model):
         save_in_attachment['loaded_documents'] = {}
 
         if report.attachment:
-            records = self.pool[report.model].browse(cr, uid, ids)
+            records = self.pool[report.model].browse(cr, uid, ids, context=context)
             filenames = self._attachment_filename(cr, uid, records, report)
             attachments = None
             if report.attachment_use:
@@ -380,7 +381,7 @@ class Report(osv.Model):
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state
 
-    def _run_wkhtmltopdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None, set_viewport_size=False):
+    def _run_wkhtmltopdf(self, cr, uid, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None, set_viewport_size=False, context=None):
         """Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
 
@@ -483,7 +484,7 @@ class Report(osv.Model):
                             'res_id': reporthtml[0],
                         }
                         try:
-                            self.pool['ir.attachment'].create(cr, uid, attachment)
+                            self.pool['ir.attachment'].create(cr, uid, attachment, context)
                         except AccessError:
                             _logger.info("Cannot save PDF report %r as attachment", attachment['name'])
                         else:
