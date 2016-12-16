@@ -1,14 +1,24 @@
-- 
-  Create new global procurement rule from Stock -> Output
-- 
-  !record {model: procurement.rule, id: global_proc_rule}:
-    name: Stock -> output
-    action: move
-    picking_type_id: stock.picking_type_internal
-    location_src_id: stock.stock_location_stock
-    location_id: stock.stock_location_output 
-- 
-  Create Delivery Order from Output -> Customer 
+-
+  Create a product route containing a procurement rule that will
+  generate a move from Stock for every procurement created in Output
+-
+  !record {model: stock.location.route, id: product_route}:
+    name: Stock -> output route
+    product_selectable: True
+    pull_ids:
+      - name: Stock -> output rule
+        action: move
+        picking_type_id: stock.picking_type_internal
+        location_src_id: stock.stock_location_stock
+        location_id: stock.stock_location_output
+-
+  Set this route on `product.product_product_3`
+-
+  !python {model: product.product, id: product.product_product_3}: |
+    self.write({'route_ids': [(4, ref('stock.product_route'))]})
+-
+  Create Delivery Order of 10 `product.product_product_3`
+  from Output -> Customer
 - 
   !record {model: stock.picking, id: pick_output}:
     name: Delivery order for procurement
@@ -31,7 +41,7 @@
   !python {model: procurement.order, id: False}: |
     self.run_scheduler()
 - 
-  Check a picking was created from stock to output.
+  Check that a picking was created from stock to output.
 - 
   !python {model: stock.move, id: False}: |
     picking = self.env["stock.picking"].browse(ref("pick_output"))

@@ -137,7 +137,7 @@
           </p>
         </field>
     </record>
-    <menuitem action="action_location_form" id="menu_action_location_form" 
+    <menuitem action="action_location_form" id="menu_action_location_form"
         parent="menu_warehouse_config" sequence="2"/>
 
 
@@ -211,7 +211,6 @@
             <field name="res_model">stock.location.path</field>
         </record>
 
-<menuitem id="menu_stock_location_path" name="Global Push Rules" parent="stock.menu_routes_config" action="stolocpath" groups="base.group_no_one" sequence="4"/>
 
         <!--Routes-->
         <record id="stock_location_route_tree" model="ir.ui.view">
@@ -308,7 +307,6 @@
             </field>
         </record>
 
-        <menuitem action="action_routes_form" id="menu_stock_routes"
-            parent="stock.menu_routes_config" sequence="1" />
+        <menuitem id="menu_routes_config" action="action_routes_form" name="Routes" parent="menu_warehouse_config" sequence="3" groups="stock.group_adv_location"/>
 
 </odoo>
