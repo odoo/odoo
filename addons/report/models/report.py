@@ -263,7 +263,6 @@ class Report(models.Model):
             headerhtml, footerhtml, contenthtml, context.get('landscape'),
             paperformat, specific_paperformat_args, save_in_attachment,
             context.get('set_viewport_size'),
-            context
         )
 
     @api.noguess
