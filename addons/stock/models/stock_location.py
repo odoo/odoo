@@ -178,7 +178,7 @@ class PushedFlow(models.Model):
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('procurement.order'), index=True)
-    route_id = fields.Many2one('stock.location.route', 'Route')
+    route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
     location_from_id = fields.Many2one(
         'stock.location', 'Source Location', index=True, ondelete='cascade', required=True,
         help="This rule can be applied when a move is confirmed that has this location as destination location")
