@@ -272,8 +272,9 @@ var ScaleScreenWidget = ScreenWidget.extend({
         });
 
         this.$('.next,.buy-product').click(function(){
-            self.order_product();
             self.gui.show_screen(self.next_screen);
+            // add product *after* switching screen to scroll properly
+            self.order_product();
         });
 
         queue.schedule(function(){
@@ -964,10 +965,12 @@ var ProductScreenWidget = ScreenWidget.extend({
        }
     },
 
-    show: function(){
+    show: function(reset){
         this._super();
-        this.product_categories_widget.reset_category();
-        this.numpad.state.reset();
+        if (reset) {
+            this.product_categories_widget.reset_category();
+            this.numpad.state.reset();
+        }
     },
 
     close: function(){

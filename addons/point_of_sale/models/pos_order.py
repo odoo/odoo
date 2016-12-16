@@ -53,36 +53,29 @@ class PosOrder(models.Model):
         }
 
     # This deals with orders that belong to a closed session. In order
-    # to recover from this we:
-    # - assign the order to another compatible open session
-    # - if that doesn't exist, create a new one
+    # to recover from this situation we create a new rescue session,
+    # making it obvious that something went wrong.
+    # A new, separate, rescue session is preferred for every such recovery,
+    # to avoid adding unrelated orders to live sessions.
     def _get_valid_session(self, order):
         PosSession = self.env['pos.session']
         closed_session = PosSession.browse(order['pos_session_id'])
-        open_session = PosSession.search(
-            [('state', '=', 'opened'),
-             ('config_id', '=', closed_session.config_id.id),
-             ('user_id', '=', closed_session.user_id.id)],
-            limit=1, order="start_at DESC")
 
         _logger.warning('session %s (ID: %s) was closed but received order %s (total: %s) belonging to it',
                         closed_session.name,
                         closed_session.id,
                         order['name'],
                         order['amount_total'])
+        _logger.warning('attempting to create recovery session for saving order %s', order['name'])
+        new_session = PosSession.create({
+            'config_id': closed_session.config_id.id,
+            'name': _('(RESCUE FOR %(session)s)') % {'session': closed_session.name},
+            'rescue': True,    # avoid conflict with live sessions
+        })
+        # bypass opening_control (necessary when using cash control)
+        new_session.action_pos_session_open()
 
-        if open_session:
-            _logger.warning('using session %s (ID: %s) for order %s instead',
-                            open_session.name,
-                            open_session.id,
-                            order['name'])
-            return open_session
-        else:
-            _logger.warning('attempting to create new session for order %s', order['name'])
-            new_session = PosSession.create({'config_id': closed_session.config_id.id})
-            # bypass opening_control (necessary when using cash control)
-            new_session.action_pos_session_open()
-            return new_session
+        return new_session
 
     def _match_payment_to_invoice(self, order):
         account_precision = self.env['decimal.precision'].precision_get('Account')
@@ -408,7 +401,7 @@ class PosOrder(models.Model):
             # set name based on the sequence specified on the config
             session = self.env['pos.session'].browse(values['session_id'])
             values['name'] = session.config_id.sequence_id._next()
-            values.setdefault('session_id', session.config_id.pricelist_id.id)
+            values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
         else:
             # fallback on any pos.order sequence
             values['name'] = self.env['ir.sequence'].next_by_code('pos.order')
