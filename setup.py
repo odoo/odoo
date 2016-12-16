@@ -74,7 +74,7 @@ def py2exe_options():
                         'mock',
                         'openerp',
                         'openid',
-                        'PIL',
+                        'pillow',
                         'poplib',
                         'psutil',
                         'pychart',
@@ -126,7 +126,7 @@ setup(
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'mako',
         'mock',
-        'PIL', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
+        'pillow', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'psutil',  # windows binary code.google.com/p/psutil/downloads/list
         'psycopg2 >= 2.2',
         'pychart',  # not on pypi, use: pip install http://download.gna.org/pychart/PyChart-1.39.tar.gz
