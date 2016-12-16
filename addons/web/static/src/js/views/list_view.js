@@ -1101,7 +1101,7 @@ ListView.List = Class.extend({
             }
         }
         return column.format(record.toForm().data, {
-            model: this.model,
+            model: this.dataset.model,
             id: record.get('id')
         });
     },
