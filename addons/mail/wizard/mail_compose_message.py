@@ -396,7 +396,7 @@ class MailComposer(models.TransientModel):
             # generate the saved template
             record.write({'template_id': template.id})
             record.onchange_template_id_wrapper()
-            return _reopen(self, record.id, record.model, context=context)
+            return _reopen(self, record.id, record.model, context=self._context)
 
     #------------------------------------------------------
     # Template rendering
