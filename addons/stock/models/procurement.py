@@ -26,7 +26,7 @@ class ProcurementRule(models.Model):
 
     location_id = fields.Many2one('stock.location', 'Procurement Location')
     location_src_id = fields.Many2one('stock.location', 'Source Location', help="Source location is action=move")
-    route_id = fields.Many2one('stock.location.route', 'Route', help="If route_id is False, the rule is global")
+    route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
     procure_method = fields.Selection([
         ('make_to_stock', 'Take From Stock'),
         ('make_to_order', 'Create Procurement')], string='Move Supply Method',
@@ -131,8 +131,6 @@ class ProcurementOrder(models.Model):
             warehouse_routes = self.warehouse_id.route_ids
             if warehouse_routes:
                 res = Pull.search(expression.AND([[('route_id', 'in', warehouse_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
-        if not res:
-            res = Pull.search(expression.AND([[('route_id', '=', False)], domain]), order='sequence', limit=1)
         return res
 
     def _get_stock_move_values(self):

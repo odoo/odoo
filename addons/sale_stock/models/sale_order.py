@@ -88,7 +88,7 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     product_packaging = fields.Many2one('product.packaging', string='Packaging', default=False)
-    route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)])
+    route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)], ondelete='restrict')
     product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id', string='Product Template', readonly=True)
 
     @api.depends('order_id.state')

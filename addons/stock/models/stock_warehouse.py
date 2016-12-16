@@ -57,9 +57,9 @@ class Warehouse(models.Model):
     out_type_id = fields.Many2one('stock.picking.type', 'Out Type')
     in_type_id = fields.Many2one('stock.picking.type', 'In Type')
     int_type_id = fields.Many2one('stock.picking.type', 'Internal Type')
-    crossdock_route_id = fields.Many2one('stock.location.route', 'Crossdock Route')
-    reception_route_id = fields.Many2one('stock.location.route', 'Receipt Route')
-    delivery_route_id = fields.Many2one('stock.location.route', 'Delivery Route')
+    crossdock_route_id = fields.Many2one('stock.location.route', 'Crossdock Route', ondelete='restrict')
+    reception_route_id = fields.Many2one('stock.location.route', 'Receipt Route', ondelete='restrict')
+    delivery_route_id = fields.Many2one('stock.location.route', 'Delivery Route', ondelete='restrict')
     resupply_wh_ids = fields.Many2many(
         'stock.warehouse', 'stock_wh_resupply_table', 'supplied_wh_id', 'supplier_wh_id',
         'Resupply Warehouses')

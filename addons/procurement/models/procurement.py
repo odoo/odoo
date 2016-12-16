@@ -103,7 +103,7 @@ class ProcurementOrder(models.Model):
     group_id = fields.Many2one('procurement.group', 'Procurement Group')
     rule_id = fields.Many2one(
         'procurement.rule', 'Rule',
-        track_visibility='onchange',
+        track_visibility='onchange', ondelete='restrict',
         help="Chosen rule for the procurement resolution. Usually chosen by the system but can be manually set by the procurement manager to force an unusual behavior.")
 
     product_id = fields.Many2one(
