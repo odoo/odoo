@@ -30,7 +30,7 @@
                     <filter string="My Tasks" name="my_tasks" domain="[('user_id','=',uid)]"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                     <separator/>
-                    <filter string="New" name="draft" domain="[('stage_id.sequence', '&lt;=', 1)]"/>
+                    <filter string="Starred" name="starred" domain="[('priority','=',1)]"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
