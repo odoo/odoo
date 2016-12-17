@@ -26,8 +26,8 @@ class ProjectTaskType(models.Model):
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
         default=_get_default_project_ids)
     legend_priority = fields.Char(
-        string='Priority Management Explanation', translate=True,
-        help='Explanation text to help users using the star and priority mechanism on stages or issues that are in this stage.')
+        string='Starred Explanation', translate=True,
+        help='Explanation text to help users using the star on tasks or issues in this stage.')
     legend_blocked = fields.Char(
         'Red Kanban Label', default='Blocked', translate=True,
         help='Override the default value displayed for the blocked state for kanban selection, when the task or issue is in that stage.')
@@ -325,9 +325,9 @@ class Task(models.Model):
     name = fields.Char(string='Task Title', track_visibility='always', required=True, index=True)
     description = fields.Html(string='Description')
     priority = fields.Selection([
-            ('0','Normal'),
-            ('1','High')
-        ], default='0', index=True)
+            ('0','Non Starred'),
+            ('1','Starred')
+        ], default='0', index=True, string="Starred")
     sequence = fields.Integer(string='Sequence', index=True, default=10,
         help="Gives the sequence order when displaying a list of tasks.")
     stage_id = fields.Many2one('project.task.type', string='Stage', track_visibility='onchange', index=True,
