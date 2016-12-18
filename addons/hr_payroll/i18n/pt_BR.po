@@ -5,17 +5,18 @@
 # Translators:
 # Mateus Lopes <mateus1@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Grazziano Duarte <gra.negocia@gmail.com>, 2016
+# grazziano <gra.negocia@gmail.com>, 2016
 # francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2016
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
+# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>, 2016\n"
+"Last-Translator: Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +41,10 @@ msgid ""
 "                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
+"* Quando o holerite é criado o estado é 'Provisório'.\n"
+"* Se o holerite está sob verificação, a situação 'Aguardando'.\n"
+"* Se o holerite é confirmado em seguida a situação é definida como 'Concluído'.\n"
+"* Quando o usuário cancelar o holerite a situação é 'Rejeitado'."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -236,7 +241,7 @@ msgstr "Cancelar Holerite"
 #: code:addons/hr_payroll/models/hr_payroll.py:238
 #, python-format
 msgid "Cannot cancel a payslip that is done."
-msgstr ""
+msgstr "Não é possível cancelar um holerite que está feito."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
@@ -694,6 +699,10 @@ msgid ""
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
+"Ele é usado no cálculo da percentagem e, por uma porcentagem de valor fixo ."
+" Por exemplo A regra vale-refeição para ter valor fixo de R$ 10 por dia de "
+"trabalho pode ter sua quantidade definida na expressão como "
+"worked_days.WORK100.number_of_days."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
@@ -986,7 +995,7 @@ msgstr "Nome Recibo de Pagamento"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
 msgid "Payslip Run"
-msgstr ""
+msgstr "Rodar Holerite"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
@@ -1442,7 +1451,7 @@ msgstr "Você precisa selecionar o funcionário para gerar o holerite."
 #: code:addons/hr_payroll/models/hr_payroll.py:838
 #, python-format
 msgid "You must set a contract to create a payslip line."
-msgstr ""
+msgstr "Você deve definir um contrato para criar uma linha de salários."
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_config_settings

@@ -6,11 +6,11 @@
 # Ediz Duman <neps1192@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
-# Murat Kaplan <muratk@projetgrup.com>, 2016
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
 # Doğan Altunbay <doganaltunbay@gmail.com>, 2016
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2016
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
+# Murat Kaplan <muratk@projetgrup.com>, 2016
 # gezgin biri <gezginbiri@hotmail.com>, 2016
 # Saban Yildiz <sabany@projetgrup.com>, 2016
 # Gurkan Erdogdu <gurkan.erdogdu@mechsoft.com.tr>, 2016
@@ -135,6 +135,9 @@ msgid ""
 "                        &lt;body class=\"ie9\"&gt;\n"
 "                    &lt;![endif]--&gt;"
 msgstr ""
+"&lt;!--[if lt IE 10]&gt;\n"
+"&lt;body class=\"ie9\"&gt;\n"
+"&lt;![endif]--&gt;"
 
 #. module: web
 #. openerp-web
@@ -300,7 +303,7 @@ msgstr "Ekle"
 #: code:addons/web/static/src/xml/base.xml:932
 #, python-format
 msgid "Add Custom Filter"
-msgstr "Özel süzgeç ekle"
+msgstr "Özel Filtre Ekle"
 
 #. module: web
 #. openerp-web
@@ -386,7 +389,7 @@ msgstr "Arşiv"
 #: code:addons/web/static/src/js/views/form_widgets.js:641
 #, python-format
 msgid "Archived"
-msgstr "Arşiv"
+msgstr "Arşivlenmiş"
 
 #. module: web
 #. openerp-web
@@ -676,7 +679,7 @@ msgstr "Oluşturan Kullanıcı:"
 #: code:addons/web/static/src/js/views/search_menus.js:177
 #, python-format
 msgid "Custom Filter"
-msgstr "Özel Süzgeç"
+msgstr "Özel Filtre"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.login
@@ -876,7 +879,7 @@ msgstr "Hata, parola değiştirilemedi !"
 #: code:addons/web/static/src/js/views/form_widgets.js:426
 #, python-format
 msgid "Error: Bad domain"
-msgstr ""
+msgstr "Hata: Kötü domain"
 
 #. module: web
 #. openerp-web
@@ -968,7 +971,7 @@ msgstr "Alan:"
 #: code:addons/web/static/src/xml/base.xml:157
 #, python-format
 msgid "Fields View Get"
-msgstr "Alanların görünümünü al"
+msgstr "Alanların Görünümünü Al"
 
 #. module: web
 #. openerp-web
@@ -1126,7 +1129,7 @@ msgstr "Resim"
 #: code:addons/web/static/src/xml/base.xml:1091
 #, python-format
 msgid "Import-Compatible Export"
-msgstr "İçe almaya uygun çıktı"
+msgstr "İç Aktarıma-Uygun Dış Aktarım"
 
 #. module: web
 #. openerp-web
@@ -1264,7 +1267,7 @@ msgstr "Veritabanlarını Yönet"
 #: code:addons/web/static/src/xml/base.xml:130
 #, python-format
 msgid "Manage Filters"
-msgstr "Süzgeçleri Yönet"
+msgstr "Filtreleri Yönet"
 
 #. module: web
 #. openerp-web
@@ -1300,7 +1303,7 @@ msgstr "Yöntem:"
 #: code:addons/web/static/src/js/framework/crash_manager.js:16
 #, python-format
 msgid "Missing Record"
-msgstr "Kayıp kayıt"
+msgstr "Kayıp Kayıt"
 
 #. module: web
 #. openerp-web
@@ -1587,7 +1590,7 @@ msgstr "Sadece sen"
 #: code:addons/web/static/src/xml/base.xml:95
 #, python-format
 msgid "Open Developer Tools"
-msgstr ""
+msgstr "Geliştirici Araçlarını Açın"
 
 #. module: web
 #. openerp-web
@@ -1616,7 +1619,7 @@ msgstr "Parola"
 #: code:addons/web/static/src/xml/base.xml:548
 #, python-format
 msgid "Pie Chart"
-msgstr "Pasta grafiği"
+msgstr "Pasta Grafiği"
 
 #. module: web
 #. openerp-web
@@ -2269,7 +2272,7 @@ msgstr "Desteklenmeyen %s operatörü %s alanında"
 #: code:addons/web/static/src/xml/base.xml:1256
 #, python-format
 msgid "Update translations"
-msgstr ""
+msgstr "Çevirileri güncelle"
 
 #. module: web
 #. openerp-web
@@ -2564,7 +2567,7 @@ msgstr "olan"
 #: code:addons/web/static/src/js/views/search_filters.js:186
 #, python-format
 msgid "is between"
-msgstr ""
+msgstr "arasında"
 
 #. module: web
 #. openerp-web

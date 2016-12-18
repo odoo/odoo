@@ -3,19 +3,20 @@
 # * stock_account
 # 
 # Translators:
-# Grazziano Duarte <gra.negocia@gmail.com>, 2016
+# grazziano <gra.negocia@gmail.com>, 2016
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
 # Mateus Lopes <mateus1@gmail.com>, 2016
 # francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016
+# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016\n"
+"Last-Translator: Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,6 +66,9 @@ msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
 msgstr ""
+"Não é possível encontrar uma conta de estoque para o produto% s. Você deve "
+"definir um na categoria de produto, ou no local, antes de processar esta "
+"operação."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:246
@@ -74,6 +78,9 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
+"Não é possível encontrar uma conta de estoque para o produto% s. Você deve "
+"definir um na categoria de produto, ou no local, antes de processar esta "
+"operação."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -126,6 +133,8 @@ msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
 msgstr ""
+"Erro de configuração. Configure a conta de diferença de preço no produto ou "
+"sua categoria para processar essa operação."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -136,7 +145,7 @@ msgstr "Custo"
 #: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
 msgid "Cost method"
-msgstr ""
+msgstr "Método de Formação de Custo"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
@@ -148,7 +157,7 @@ msgstr "Método de Formação de Custo"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
 msgid "Counter-Part Account"
-msgstr ""
+msgstr "Conta de Contra-Partida"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -430,7 +439,7 @@ msgstr "Recuperar a avaliação atual de estoque."
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Set standard price"
-msgstr ""
+msgstr "Definir preço padrão"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
@@ -458,6 +467,9 @@ msgid ""
 "                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
+"Preço Padrão: O preço de custo é atualizado manualmente no final de um determinado período (geralmente a cada ano).\n"
+"                     Preço médio: o preço de custo é recalculado a cada remessa recebida e utilizada para a valorização do produto.\n"
+"                     Real Preço: O preço de custo é o preço do último produto de saída (será o uso em caso de perda de inventário, por exemplo)."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
@@ -473,7 +485,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
 msgid "Stock Accounting"
-msgstr ""
+msgstr "Contando Estoque"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -541,6 +553,9 @@ msgid ""
 "probably a configuration error. Check the costing method and the standard "
 "price"
 msgstr ""
+"O valor de avaliação encontrado para o produto% s é zero. O que significa "
+"que provavelmente há um erro de configuração. Verifique o método de cálculo "
+"de custos eo preço padrão"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
@@ -581,7 +596,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
 msgid "Valuation"
-msgstr ""
+msgstr "Valorização"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
@@ -688,6 +703,8 @@ msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"Você não tem nenhuma conta de avaliação de ações definida em sua categoria "
+"de produto. Você deve definir um antes de processar esta operação."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
