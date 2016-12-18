@@ -539,7 +539,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-"                                        <strong>Bankafschriften afpunten</strong>\n"
+"                                        <strong>Bankafschriften afletteren</strong>\n"
 "                                    </span>"
 
 #. module: account
@@ -837,7 +837,7 @@ msgid ""
 "<strong>On-the-fly payment reconciliation:</strong> automatic suggestions of"
 " outstanding payments when creating invoices."
 msgstr ""
-"<strong>Direct afpunten van betalingen:</strong> openstaande betalingen "
+"<strong>Direct afletteren van betalingen:</strong> openstaande betalingen "
 "worden automatisch gesuggereerd wanneer u een factuur aanmaakt."
 
 #. module: account
@@ -890,7 +890,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Reconcile your Bank Statements</strong>"
-msgstr "<strong>Uw bankafschriften afpunten</strong>"
+msgstr "<strong>Uw bankafschriften afletteren</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7509,6 +7509,12 @@ msgstr ""
 #, python-format
 msgid "Please create some invoice lines."
 msgstr "Maak factuurregels aan."
+
+#. module: account
+#: code:addons/account/models/account_move.py:140
+#, python-format
+msgid "Please define a sequence for the refunds"
+msgstr "Definieer een reeks voor credits."
 
 #. module: account
 #: code:addons/account/models/account_move.py:141

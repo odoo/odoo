@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Jeffery Chen Fan <jeffery9@gmail.com>, 2016
+# Yuan Xulei <hi@yxl.name>, 2016
 # Ted Wang <feiyuwang2012@gmail.com>, 2016
 msgid ""
 msgstr ""
@@ -318,7 +319,7 @@ msgstr "预收: %s"
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Advanced pricing based on formulas (discounts, margins, rounding)"
-msgstr ""
+msgstr "基于公式(打折、毛利、舍入)的高级定价"
 
 #. module: sale
 #: selection:sale.config.settings,group_warning_sale:0
@@ -677,7 +678,7 @@ msgstr "存款"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
-msgstr "存款产品"
+msgstr "定金产品"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_name
@@ -757,33 +758,33 @@ msgstr ""
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:84
 #, python-format
 msgid "Down Payment"
-msgstr "首付"
+msgstr "预付定金"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_amount
 msgid "Down Payment Amount"
-msgstr "首付总额"
+msgstr "预付定金总额"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_product_id
 msgid "Down Payment Product"
-msgstr "首付产品"
+msgstr "预付定金产品"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (fixed amount)"
-msgstr "首付(固定总额)"
+msgstr "预付定金(固定总额)"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (percentage)"
-msgstr "首付(百分比)"
+msgstr "预付定金(百分比)"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:81
 #, python-format
 msgid "Down payment of %s%%"
-msgstr "首付百分比 %s%%"
+msgstr "预付定金按 %s%%"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -971,7 +972,7 @@ msgstr "可开票的明细行"
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines (deduct down payments)"
-msgstr "可开票明细行 ( 扣除首付 )"
+msgstr "可开具发票明细 ( 扣除预付定金 )"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_invoiced
@@ -1908,7 +1909,7 @@ msgstr "以邮件发送"
 #. module: sale
 #: selection:sale.config.settings,module_website_quote:0
 msgid "Send quotations your customer can approve & pay online (advanced)"
-msgstr ""
+msgstr "发送顾客可以在线批准和支付的报价单(高级功能)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
@@ -1994,7 +1995,7 @@ msgstr "源单据"
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Specific prices per customer segment, currency, etc."
-msgstr ""
+msgstr "为不同顾客、货币等指定不同价格"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_state
@@ -2091,7 +2092,7 @@ msgstr ""
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
-msgstr "此产品用于开具首付发票，应该为“服务”类型。请使用其它产品或更新本产品。"
+msgstr "此产品用于开具预付定金发票，应该为“服务”类型。请使用其它产品或更新本产品。"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:145
@@ -2100,13 +2101,13 @@ msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
-msgstr "此产品用于首付开票，开票策略应该设为“订购数量”。请更新你的存款产品，以创建存款发票。"
+msgstr "此产品用于开具预付定金发票，开票策略应该设为“订购数量”。请更新你的定金产品，以创建定金发票。"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:78
 #, python-format
 msgid "The value of the down payment amount must be positive."
-msgstr "首付必须为正数。"
+msgstr "定金必须为正数。"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:74

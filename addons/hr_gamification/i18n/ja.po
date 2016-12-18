@@ -28,13 +28,15 @@ msgid ""
 "A goal is defined by a user and a goal type.\n"
 "                    Goals can be created automatically by using challenges."
 msgstr ""
+"目標は、ユーザーと目標タイプによって定義されます。\n"
+"                    チャレンジを使用して目標を自動的に作成できます。"
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_badge_ids
 msgid ""
 "All employee badges, linked to the employee either directly or through the "
 "user"
-msgstr ""
+msgstr "従業員に直接または、ユーザーを通じてリンクされた、すべての従業員バッジ"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.challenge_list_action2
@@ -43,6 +45,9 @@ msgid ""
 "                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                    The goals are created for the specified users or member of the group."
 msgstr ""
+"選ばれたユーザーに評価のために目標のリストを割り当てます。\n"
+"                    課題は、目標の自動作成に期間(毎週、毎月...)を使用することができます。\n"
+"                    目標は、指定されたユーザーまたはグループのメンバー用に作成されます。"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users_badge_ids
@@ -54,12 +59,12 @@ msgstr "バッジ"
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid ""
 "Badges are rewards of good work. Give them to people you believe deserve it."
-msgstr ""
+msgstr "バッジは良い仕事への報奨です。 あなたがそれに値すると信じている人々にそれらを与えます。"
 
 #. module: hr_gamification
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_direct_badge_ids
 msgid "Badges directly linked to the employee"
-msgstr ""
+msgstr "Badges directly linked to the employee"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -86,7 +91,7 @@ msgstr "クリックすると目標が作成されます。"
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Click to grant this employee his first badge"
-msgstr ""
+msgstr "クリックすると、この従業員に最初のバッジを付与します"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -96,7 +101,7 @@ msgstr "彼らが何をしたのか、なぜそれが重要なのかを説明す
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_direct_badge_ids
 msgid "Direct badge ids"
-msgstr ""
+msgstr "ダイレクトバッジID"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_hr_employee
@@ -113,7 +118,7 @@ msgstr "従業員バッジ"
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_goal_ids
 msgid "Employee HR Goals"
-msgstr ""
+msgstr "従業員のHR目標"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge
@@ -123,12 +128,12 @@ msgstr "ゲーミフィケーションバッジ"
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user
 msgid "Gamification user badge"
-msgstr ""
+msgstr "ゲーミフィケーションのユーザーバッジ"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users_goal_ids
 msgid "Goal ids"
-msgstr ""
+msgstr "目標ids"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.goals_menu_groupby_action2
@@ -139,22 +144,22 @@ msgstr "達成履歴"
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Grant a Badge"
-msgstr ""
+msgstr "バッジを付与"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
 msgid "Granted"
-msgstr ""
+msgstr "付与済"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_granted_employees_count
 msgid "Granted employees count"
-msgstr ""
+msgstr "付与された従業員数"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_has_badges
 msgid "Has badges"
-msgstr ""
+msgstr "バッジがあります"
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users_calendar_last_notif_ack
@@ -164,24 +169,24 @@ msgstr "既読とマークされた最後のカレンダ通知"
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "Received Badges"
-msgstr ""
+msgstr "受け取ったバッジ"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee"
-msgstr ""
+msgstr "従業員を報奨"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "Reward Employee with"
-msgstr ""
+msgstr "従業員に報奨授与"
 
 #. module: hr_gamification
 #: code:addons/hr_gamification/models/gamification.py:18
 #, python-format
 msgid "The selected employee does not correspond to the selected user."
-msgstr ""
+msgstr "選択した従業員が選択されたユーザーに対応していません。"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_res_users
@@ -191,7 +196,7 @@ msgstr "ユーザ"
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "What are you thankful for?"
-msgstr ""
+msgstr "あなたは何のために感謝していますか？"
 
 #. module: hr_gamification
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:21
@@ -203,7 +208,7 @@ msgstr "自分自身にバッジを与えることはできません！"
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:18
 #, python-format
 msgid "You can send badges only to employees linked to a user."
-msgstr ""
+msgstr "バッジは、ユーザーにリンクされている従業員にのみ送信できます。"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge_user_wizard
@@ -213,4 +218,4 @@ msgstr "gamification.badge.user.wizard"
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
 msgid "to reward this employee for a good action"
-msgstr ""
+msgstr "従業員の良い行動を報奨する"
