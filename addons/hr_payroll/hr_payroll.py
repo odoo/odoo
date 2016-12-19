@@ -638,7 +638,7 @@ class hr_payslip(osv.osv):
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
         employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
         res['value'].update({
-                    'name': _('Salary Slip of %s for %s') % (employee_id.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=self.env.context.get('lang', 'en_US')))),
+                    'name': _('Salary Slip of %s for %s') % (employee_id.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=context.get('lang', 'en_US')))),
                     'company_id': employee_id.company_id.id
         })
 
