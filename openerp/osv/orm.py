@@ -2909,13 +2909,6 @@ class BaseModel(object):
                             f_obj_type = None
                         else:
                             f_obj_type = get_pg_type(f) and get_pg_type(f)[0]
-                        
-                        # RUSTINE, ADD JUST TO AVOID REGENERATION OF COLOR COLUMN,
-                        # THIS CODE IS TEMPORARY
-                        if k == 'color' and self._name == 'product.product':
-                            f_pg_type = 'varchar'
-                            f_obj_type = 'varchar'
-                            f._type = 'char'
 
                         if f_obj_type:
                             ok = False
