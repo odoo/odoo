@@ -493,14 +493,20 @@ var BasicComposer = Widget.extend({
         var self = this;
         this.preprocess_message().then(function (message) {
             self.trigger('post_message', message);
-
-            // Empty input, selected partners and attachments
-            self.$input.val('');
-            self.mention_manager.reset_selections();
-            self.set('attachment_ids', []);
-
+            self.clear_composer_on_send();
             self.$input.focus();
         });
+    },
+
+    clear_composer: function() {
+        // Empty input, selected partners and attachments
+        this.$input.val('');
+        this.mention_manager.reset_selections();
+        this.set('attachment_ids', []);
+    },
+
+    clear_composer_on_send: function() {
+        this.clear_composer();
     },
 
     // Events
