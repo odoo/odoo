@@ -301,30 +301,30 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
                 else:
                     raise Exception("Unknown query type '%s'. Valid types are: sql, python." % (query['query_type'], ))
 
-            # update the anonymization fields:
-            ano_fields = IrModelFieldsAnonymization.search([('state', '!=', 'not_existing')])
-            ano_fields.write({'state': 'clear'})
+        # update the anonymization fields:
+        ano_fields = IrModelFieldsAnonymization.search([('state', '!=', 'not_existing')])
+        ano_fields.write({'state': 'clear'})
 
-            # add a result message in the wizard:
-            self.msg = '\n'.join(["Successfully reversed the anonymization.", ""])
+        # add a result message in the wizard:
+        self.msg = '\n'.join(["Successfully reversed the anonymization.", ""])
 
-            # create a new history record:
-            history = self.env['ir.model.fields.anonymization.history'].create({
-                'date': fields.Datetime.now(),
-                'field_ids': [[6, 0, ano_fields.ids]],
-                'msg': self.msg,
-                'filepath': False,
-                'direction': 'anonymized -> clear',
-                'state': 'done'
-            })
+        # create a new history record:
+        history = self.env['ir.model.fields.anonymization.history'].create({
+            'date': fields.Datetime.now(),
+            'field_ids': [[6, 0, ano_fields.ids]],
+            'msg': self.msg,
+            'filepath': False,
+            'direction': 'anonymized -> clear',
+            'state': 'done'
+        })
 
-            return {
-                'res_id': self.id,
-                'view_id': self.env.ref('anonymization.view_ir_model_fields_anonymize_wizard_form').ids,
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.model.fields.anonymize.wizard',
-                'type': 'ir.actions.act_window',
-                'context': {'step': 'just_desanonymized'},
-                'target': 'new'
-            }
+        return {
+            'res_id': self.id,
+            'view_id': self.env.ref('anonymization.view_ir_model_fields_anonymize_wizard_form').ids,
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'ir.model.fields.anonymize.wizard',
+            'type': 'ir.actions.act_window',
+            'context': {'step': 'just_desanonymized'},
+            'target': 'new'
+        }
