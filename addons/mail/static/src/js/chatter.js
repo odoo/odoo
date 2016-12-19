@@ -91,6 +91,10 @@ var ChatterComposer = composer.BasicComposer.extend({
         return def;
     },
 
+    clear_composer_on_send: function() {
+        /* chatter don't clear message on sent but after successful sent */
+    },
+
     /**
     * Send the message on SHIFT+ENTER, but go to new line on ENTER
     */
@@ -382,13 +386,13 @@ var Chatter = form_common.AbstractField.extend({
         chat_manager
             .post_message(message, options)
             .then(function () {
-                self.close_composer();
+                self.close_composer(true);
                 if (message.partner_ids.length) {
                     self.refresh_followers(); // refresh followers' list
                 }
             })
             .fail(function () {
-                // todo: display notification
+                self.do_notify(_t('Sending Error'), _t('Your message has not been sent.'));
             });
     },
 
@@ -538,7 +542,7 @@ var Chatter = form_common.AbstractField.extend({
     close_composer: function (force) {
         if (this.composer && (this.composer.is_empty() || force)) {
             this.composer.do_hide();
-            this.composer.$input.val('');
+            this.composer.clear_composer();
             this.mute_new_message_button(false);
         }
     },
