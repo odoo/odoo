@@ -23,7 +23,13 @@ class SaleOrder(models.Model):
                 # Prevent SOAP call to external shipping provider when SO has no lines yet
                 continue
             else:
-                order.delivery_price = order.carrier_id.with_context(order_id=order.id).price
+                if order.carrier_id:
+                    carrier = order.carrier_id
+                    sale_delivery = order._get_delivery_price(carrier)
+                    if not sale_delivery:
+                        price = carrier._compute_delivery_price_for_so(order)
+                        sale_delivery = order._set_delivery_price(price, carrier)
+                    order.delivery_price = sale_delivery.price
 
     @api.onchange('partner_id')
     def onchange_partner_id_dtype(self):
@@ -36,6 +42,21 @@ class SaleOrder(models.Model):
         for so in self:
             so.invoice_shipping_on_delivery = all([not line.is_delivery for line in so.order_line])
         return res
+
+    @api.multi
+    def _get_delivery_price(self, carrier):
+        self.ensure_one()
+        return self.env['sale.delivery.carrier'].search([('order_id', '=', self.id), ('carrier_id', '=', carrier.id)], limit=1)
+
+    @api.multi
+    def _set_delivery_price(self, price_unit, carrier):
+        self.ensure_one()
+        return self.env['sale.delivery.carrier'].create({
+            'order_id': self.id,
+            'carrier_id': carrier.id,
+            'price': price_unit,
+            'available': bool(price_unit) if carrier.delivery_type not in ['fixed', 'base_on_rule'] else True
+        })
 
     @api.multi
     def _delivery_unset(self):
@@ -55,7 +76,12 @@ class SaleOrder(models.Model):
 
                 if carrier.delivery_type not in ['fixed', 'base_on_rule']:
                     # Shipping providers are used when delivery_type is other than 'fixed' or 'base_on_rule'
-                    price_unit = order.carrier_id.get_shipping_price_from_so(order)[0]
+                    sale_delivery = order._get_delivery_price(carrier)
+                    if not sale_delivery:
+                        price_unit = order.carrier_id.get_shipping_price_from_so(order)[0]
+                        order._set_delivery_price(price_unit, order.carrier_id)
+                    else:
+                        price_unit = sale_delivery.price
                 else:
                     # Classic grid-based carriers
                     carrier = order.carrier_id.verify_carrier(order.partner_shipping_id)
@@ -111,3 +137,20 @@ class SaleOrderLine(models.Model):
             if not line.product_id or not line.product_uom or not line.product_uom_qty:
                 return 0.0
             line.product_qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
+
+    @api.multi
+    def write(self, value):
+        result = super(SaleOrderLine, self).write(value)
+        SaleDelivery = self.env['sale.delivery.carrier']
+        for sale in self.mapped('order_id'):
+            SaleDelivery.search([('order_id', '=', sale.id)]).unlink()
+        return result
+
+
+class SaleDeliveryCarrier(models.TransientModel):
+    _name = "sale.delivery.carrier"
+
+    order_id = fields.Many2one('sale.order', string="Sale Order")
+    carrier_id = fields.Many2one('delivery.carrier', string="Delivery Method")
+    price = fields.Float(string="Estimated Delivery Price")
+    available = fields.Boolean()
