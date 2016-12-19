@@ -27,7 +27,7 @@
                         <th><span t-if="any([line.tax_id for line in quotation.order_line])">Taxes</span></th>
                         <th><span t-if="True in [line.discount > 0 for line in quotation.order_line]">Discount</span></th>
                         <th class="text-right">Unit Price</th>
-                        <th class="text-right" groups="sale.group_show_price_subtotal">Price</th>
+                        <th class="text-right" groups="sale.group_show_price_subtotal">Amount</th>
                         <th class="text-right price_tax_included" groups="sale.group_show_price_total">Total Price</th>
                         <th></th>
                     </tr>
