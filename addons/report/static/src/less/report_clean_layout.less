@@ -1,27 +1,40 @@
 .o_clean_footer, .o_clean_header, .o_clean_body {
     font-family: 'Lato';
+    color: #000;
     font-size: 12px;
-    color: @gray;
 }
 .o_clean_header {
+    //font-size: 17px;
     img {
         max-height: 100px;
-        max-width: 160px;
+        max-width: 300px;
     }
 }
 .o_clean_footer {
-    border-top: 3px solid @gray;
-    font-size: 10px;
+    margin: 0 3px;
+    border-top: 3px solid #000;
+    div[class^="col-"] {
+        padding-left: 0;
+    }
     ul {
-        margin: 4px 0;
+        line-height: 1.2;
+    }
+    .pagenumber {
+        width: 35px;
+        height: 35px;
+        border: 3px solid #000;
+        padding-top: 6px;
+        margin-righ
+        t: -15px;
     }
 }
 .o_clean_body {
+    //font-size: 12px;
     table {
         thead {
             tr th {
                 text-align: left !important;
-                border-top: 3px solid @gray !important;
+                border-top: 3px solid #000 !important;
                 text-transform: uppercase;
             }
             tr th:last-child {
@@ -32,12 +45,12 @@
             }
         }
         tbody {
-            color: @gray;
+            color: #000;
             tr:first-child td {
                 border-top: none;
             }
             tr:last-child td {
-                border-bottom: 3px solid @gray;
+                border-bottom: 3px solid #000;
             }
             tr {
                 td {
@@ -55,7 +68,10 @@
             width: 43%;
             margin-top: -20px;
             > table {
-            tr:last-child td, tr:first-child td {
+            tr:last-child td {
+                border-top: 3px solid #000 !important;
+            }
+            tr:first-child td {
                 /*we could get rid of this rule if .border-black td would be terminated in report.less*/
                 border-top: none !important;
             }

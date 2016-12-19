@@ -10,16 +10,20 @@
         max-width: 160px;
     }
     h4 {
-        color: @o-we-color-text-normal;
+        color: @odoo-brand-primary;
         font-weight: 700;
     }
 }
 .o_noboxed_footer {
     .col-xs-12 ul:first-child {
-        border-top: 1px solid @gray-light;
-        border-bottom: 1px solid @gray-light;
+        border-top: 1px solid @odoo-brand-primary;
+        border-bottom: 1px solid @odoo-brand-primary;
         padding: 4px 0;
         margin: 0;
+
+        li {
+            color: @odoo-brand-primary;
+        }
 
         ul {
             margin: 4px 0;
@@ -27,10 +31,18 @@
     }
 }
 .o_noboxed_body {
+    background-image: url(/report/static/src/img/bg_noboxed_template12.jpg);
+    background-size: cover;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    min-height: 800px;
+    thead tr th, h2 {
+        color: @odoo-brand-primary;
+    }
     tbody {
         color: @gray;
         tr:nth-child(odd) {
-            background-color: @gray-lighter;
+            background-color: rgba(184, 171, 180, 0.5);
         }
         tr td {
             border-top: none;
@@ -44,6 +56,9 @@
         tr:first-child td {
             /*we could get rid of this rule if .border-black td would be terminated in report.less*/
             border-top: none !important;
+        }
+        tr:last-child td {
+            color: @odoo-brand-primary;
         }
     }
     #total {

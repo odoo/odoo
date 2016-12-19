@@ -3,15 +3,18 @@
     <!-- NOBOXED HEADER -->
     <template id="o_noboxed_template_header">
         <div class="header o_noboxed_header row">
+        <t t-set="cfacss"><style>* {background-color:red !important;}</style></t>
             <div class="col-xs-3 mb8">
                 <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"/>
             </div>
-            <div class="col-xs-9 mb8">
-                <h4 class="mt0 mb8" t-field="company.rml_header1"/>
+            <div class="col-xs-3 mb8">
                 <div name="company_address">
                     <span class="company_address" t-field="company.partner_id"
                         t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
                 </div>
+            </div>
+            <div class="col-xs-6">
+                <h4 class="mt0 mb8 pull-right" t-field="company.rml_header1"/>
             </div>
         </div>
     </template>
