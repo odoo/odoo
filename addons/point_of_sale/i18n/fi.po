@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:18+0000\n"
-"PO-Revision-Date: 2016-10-28 16:37+0000\n"
+"PO-Revision-Date: 2016-12-10 14:54+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -152,7 +152,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 #: model:ir.ui.view,arch_db:point_of_sale.report_usersproduct
 msgid "<strong>Company</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Yritys</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
@@ -217,7 +217,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Journal</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Päiväkirja</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_payment
@@ -406,7 +406,7 @@ msgstr "<strong>Yksikköhinta</strong>"
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 #: model:ir.ui.view,arch_db:point_of_sale.report_usersproduct
 msgid "<strong>User</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Käyttäjä</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
@@ -423,7 +423,7 @@ msgstr "= Teoreettinen loppusaldo"
 #: code:addons/point_of_sale/static/src/js/screens.js:1854
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
-msgstr ""
+msgstr "? Valitsemalla \"Vahvista\" validoi maksun."
 
 #. module: point_of_sale
 #. openerp-web
@@ -436,7 +436,7 @@ msgstr "Asiakkaan nimi vaaditaan"
 #: model:ir.model.fields,help:point_of_sale.field_res_users_pos_security_pin
 msgid ""
 "A Security PIN used to protect sensible functionality in the Point of Sale"
-msgstr ""
+msgstr "PIN koodia käytetään suojaaman arkaluontoisia tietoja POS -laitteessa"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
@@ -608,7 +608,7 @@ msgstr "Salli käyttäjien synkronoida omat kalenterinsa Google kalenterin kanss
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_base_import
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
-msgstr ""
+msgstr "Salli käyttäjien tuoda tietoa CSV/XLS/XLSX/ODS -tiedostoista"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_auth_oauth_google_enabled
@@ -2149,7 +2149,7 @@ msgstr "Tee maksu"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_inter_company_rules
 msgid "Manage Inter Company"
-msgstr ""
+msgstr "Hallitse sidosyritystä"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_group_product_variant
@@ -3424,7 +3424,7 @@ msgstr "Jaa tai upota mikä tahansa Odoo:n näyttö."
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_company_share_partner
 msgid "Share partners to all companies"
-msgstr ""
+msgstr "Jaa kumppanit moniyritysten kesken"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_company_share_product
@@ -3437,7 +3437,7 @@ msgid ""
 "Share your partners to all companies defined in your instance.\n"
 " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
 " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
-msgstr ""
+msgstr "Jaa kumppanisi kaikkien määriteltyjen yritysten kesken.\n* Aktivoitu : Kumppanit näkyvät kaikille yrityksille, myös niille jotka ovat itse määritelleet saman kumppanin.\n* Ei-aktivoitu : Jokainen yritys näkee vain itse määrittelemänsä kumppanit ja niiden lisäksi kumppanit jotka eivät liity mihinkään yritykseen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_company_share_product
@@ -3960,7 +3960,7 @@ msgstr "Tämä asentaa moduulin: google_docs."
 msgid ""
 "This installs the module inter_company_rules.\n"
 " Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
-msgstr ""
+msgstr "Tämä asentaa inter_company_rules -modulin.\nModulilla voidaan määritellä säännöt automaattisten tarjousten (SO/PO) luomiselle kun sidosyritysten välillä ostetaan/myydään hyödykkeitä."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_pos_restaurant
@@ -4276,7 +4276,7 @@ msgstr "-"
 msgid ""
 "Work in multi-company environments, with appropriate security access between"
 " companies."
-msgstr ""
+msgstr "Työskentele moniyritysympäristössä, jossa on tietoturvallinen pääsynhallinta eri yritysten välillä."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_group_product_variant

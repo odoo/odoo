@@ -3,6 +3,7 @@
 # * account
 # 
 # Translators:
+# gebri <gebri@inmail.sk>, 2016
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 # Martin Trigaux, 2016
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2015-2016
@@ -11,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-09-23 08:57+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-12-08 11:28+0000\n"
+"Last-Translator: gebri <gebri@inmail.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,7 +106,7 @@ msgstr "# Číslic"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
 msgid "# of Lines"
-msgstr ""
+msgstr "# Riadkov"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
@@ -115,7 +116,7 @@ msgstr "# Transakcií"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Faktúra (Ref ${object.number or 'n/a'})"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:321
@@ -150,12 +151,12 @@ msgstr ", ak je nainštalované účtovnictvo alebo nákup"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr ""
+msgstr "-> Zosúladiť"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View reconciled entries"
-msgstr ""
+msgstr "-> Zobraziť zosúladené vstupy"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:322
@@ -323,7 +324,7 @@ msgstr "<span class=\"panel-title\">\n<strong>Zaznamenať vaše účty</strong>\
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr ""
+msgstr "<span title=\"Zostatok v Odoo\">Zostatok v GL</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1705,7 +1706,7 @@ msgstr "Automatické formátovanie"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:15
 #, python-format
 msgid "Automatic reconciliation"
-msgstr ""
+msgstr "Automatické zosúladenie"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:469
@@ -1911,7 +1912,7 @@ msgstr "Bankové výpisy sú plne zosúladené."
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_base
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Base"
-msgstr ""
+msgstr "Základ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1950,7 +1951,7 @@ msgstr "Účtovanie"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills"
-msgstr ""
+msgstr "Účtenky"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2299,7 +2300,7 @@ msgstr "Skontrolovať konečný zostatok"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_is_difference_zero
 msgid "Check if difference is zero."
-msgstr ""
+msgstr "Over či rozdiel je nula."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_reconcile
@@ -2713,7 +2714,7 @@ msgstr "Riadenie prístupu"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_direct_costs
 msgid "Cost of Revenue"
-msgstr ""
+msgstr "Náklady Príjmu"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:388
@@ -3119,7 +3120,7 @@ msgstr "Dátum"
 #. module: account
 #: selection:account.payment.term.line,option:0
 msgid "Day(s) after the end of the invoice month (Net EOM)"
-msgstr ""
+msgstr "Dni po konci mesiaca faktúry (Net EOM)"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -4757,7 +4758,7 @@ msgstr "Je odberateľ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_is_difference_zero
 msgid "Is zero"
-msgstr ""
+msgstr "Je nula"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_default_credit_account_id
@@ -5247,17 +5248,17 @@ msgstr "Právne meno"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Legal Notes..."
-msgstr ""
+msgstr "Právne Poznámky..."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_note
 msgid "Legal mentions that have to be printed on the invoices."
-msgstr ""
+msgstr "Právne údaje ktoré musia byť vytlačené na faktúre."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Less Cost of Revenue"
-msgstr ""
+msgstr "Menej Nákladov Príjmu"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -5290,7 +5291,7 @@ msgstr "Menej platby"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:15
 #, python-format
 msgid "Let odoo try to reconcile entries for the user"
-msgstr ""
+msgstr "Nechaj odoo skúsiť zosúladiť vstupy pre používateľa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
@@ -5988,7 +5989,7 @@ msgid ""
 "Operation not allowed. You can only reconcile entries that share the same "
 "secondary currency or that don't have one. Edit your journal items or make "
 "another selection before proceeding any further."
-msgstr ""
+msgstr "Operácia nie je povolená. Môžeš zosúladiť len vstupy ktoré majú rovnakú druhú menu alebo nemajú žiadnu. Oprav svoje položky alebo urob iný výber pred pokračovaním ďalej."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_nocreate
@@ -8712,7 +8713,7 @@ msgstr "Merná jednotka"
 #: code:addons/account/report/account_aged_partner_balance.py:264
 #, python-format
 msgid "Unknown Partner"
-msgstr ""
+msgstr "Neznámy Partner"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9010,7 +9011,7 @@ msgstr "Zobrazenie"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
 msgid "View reconciled entries"
-msgstr ""
+msgstr "Zobraziť zosúladené vstupy"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -9203,7 +9204,7 @@ msgstr "Tu môžete nastaviť formát v ktorom chcete zobrazovať tento záznam.
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
-msgstr ""
+msgstr "Nemôžete pridať/upravovať vstupy pred a vrátane uzamknutého dátumu %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:183

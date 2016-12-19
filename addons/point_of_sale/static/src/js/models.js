@@ -1081,7 +1081,8 @@ exports.Orderline = Backbone.Model.extend({
     init_from_JSON: function(json) {
         this.product = this.pos.db.get_product_by_id(json.product_id);
         if (!this.product) {
-            console.error('ERROR: attempting to recover product not available in the point of sale');
+            console.error('ERROR: attempting to recover product ID', json.product_id,
+                'not available in the point of sale. Correct the product or clean the browser cache.');
         }
         this.price = json.price_unit;
         this.set_discount(json.discount);

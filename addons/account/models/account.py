@@ -149,7 +149,7 @@ class AccountAccount(models.Model):
     @api.one
     def copy(self, default=None):
         default = dict(default or {})
-        default.update(code=_("%s (copy)") % (self.code or ''))
+        default.setdefault('code', _("%s (copy)") % (self.code or ''))
         return super(AccountAccount, self).copy(default)
 
     @api.multi
