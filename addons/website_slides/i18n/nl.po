@@ -41,6 +41,9 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Hallo,</p>\n"
+"<p> ${user.name} deelde het ${object.slide_type} <strong>${object.name}</strong> met u! </p> <p style=\"text-align: center; margin-top: 10px;\"> <a href=\"${object.website_url}\"> <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\"> </a> </p> <p style=\"text-align: center; margin-top: 10px;\"> <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\"> Bekijk <strong>${object.name}</strong> </a> </p>\n"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -61,6 +64,21 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Hallo,</p>\n"
+"<p>\n"
+"    Een nieuwe ${object.slide_type} <strong>${object.name}</strong> is gepubliceerd op ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        Bekijk <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
@@ -440,6 +458,9 @@ msgid ""
 "\n"
 "Find out more at https://www.odoo.com/page/e-commerce"
 msgstr ""
+"Maak een mooie en professionele e-commerce website met Odoo.\n"
+"\n"
+"Lees meer op https://www.odoo.com/page/e-commerce"
 
 #. module: website_slides
 #. openerp-web
@@ -500,6 +521,9 @@ msgid ""
 "\n"
 "Learn more at https://odoo.com"
 msgstr ""
+"Ontdek de all-in-one business management software-oplossing voor elke bedrijfsgrootte en use case.\n"
+"\n"
+"Meer informatie op https://odoo.com"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_dislikes
@@ -555,6 +579,10 @@ msgid ""
 "Chrome: http://bit.ly/2613LcY\n"
 "iOS: http://bit.ly/1ZUZsZD"
 msgstr ""
+"Download geweldige urenstaten door Odoo en ontdek hoe eenvoudig aanwezigheid controle en HRM kan zijn! \n"
+"\n"
+"Chrome: http://bit.ly/2613LcY\n"
+"iOS: http://bit.ly/1ZUZsZD"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_download_security
@@ -914,6 +942,9 @@ msgid ""
 "close new leads. Check out our three-part video and discover more at "
 "www.odoo.com"
 msgstr ""
+"Odoo's volledig geïntegreerde marketing app helpt u bij het werven, omzetten"
+" en sluiten nieuwe leads. Bekijk onze driedelige video en ontdek meer op "
+"www.odoo.com"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_7
@@ -1186,6 +1217,9 @@ msgid ""
 "\n"
 "Discover more at https://www.odoo.com/page/sign"
 msgstr ""
+"Stop met het handmatig afdrukken en scannen. Gebruik elektronische handtekening met Odoo ondertekenen! \n"
+"\n"
+"Ontdek meer op https://www.odoo.com/page/sign"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_tag_form
