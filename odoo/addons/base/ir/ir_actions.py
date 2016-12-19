@@ -211,7 +211,7 @@ class IrActionsReportXml(models.Model):
         for report in self:
             if report.ir_values_id:
                 try:
-                    self.report.ir_values_id.sudo().unlink()
+                    report.ir_values_id.sudo().unlink()
                 except Exception:
                     raise UserError(_('Deletion of the action record failed.'))
         return True
