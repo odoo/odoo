@@ -73,9 +73,10 @@ class AccountInvoice(models.Model):
             if line in self.invoice_line_ids.mapped('purchase_line_id'):
                 continue
             data = self._prepare_invoice_line_from_po_line(line)
-            new_line = new_lines.new(data)
-            new_line._set_additional_fields(self)
-            new_lines += new_line
+            if not data['quantity'] == 0.0: # it is useless to create an invoice line with quantity == 0.0
+                new_line = new_lines.new(data)
+                new_line._set_additional_fields(self)
+                new_lines += new_line
 
         self.invoice_line_ids += new_lines
         self.purchase_id = False
