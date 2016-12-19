@@ -497,7 +497,7 @@ class SaleOrder(models.Model):
                 res.setdefault(group, 0.0)
                 res[group] += tax.compute_all(line.price_reduce, quantity=line.product_uom_qty)['taxes'][0]['amount']
         res = sorted(res.items(), key=lambda l: l[0].sequence)
-        res = map(lambda l: (l[0].name, formatLang(self.env, l[1], currency_obj=currency)), res)
+        res = map(lambda l: (l[0].name, l[1]), res)
         return res
 
 
