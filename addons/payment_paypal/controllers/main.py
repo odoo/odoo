@@ -6,6 +6,7 @@ except ImportError:
     import json
 import logging
 import pprint
+import urllib
 import urllib2
 import werkzeug
 
@@ -29,7 +30,7 @@ class PaypalController(http.Controller):
         return return_url
 
     def _parse_pdt_response(self, response):
-        """ Parse a text reponse for a PDT verification .
+        """ Parse a text response for a PDT verification .
 
             :param response str: text response, structured in the following way:
                 STATUS\nkey1=value1\nkey2=value2...\n
@@ -40,6 +41,9 @@ class PaypalController(http.Controller):
         lines = filter(None, response.split('\n'))
         status = lines.pop(0)
         pdt_post = dict(line.split('=', 1) for line in lines)
+        # html unescape
+        for post in pdt_post:
+            pdt_post[post] = urllib.unquote_plus(pdt_post[post]).decode('utf8')
         return status, pdt_post
 
     def paypal_validate_data(self, **post):
