@@ -37,7 +37,7 @@ $('.interested_partner_assign_confirm').on('click',function(e){
 
 
 $('.desinterested_partner_assign_confirm').on('click',function(){
-    var $btn = this;
+    var $btn = $(this);
     $btn.prop('disabled', true);
     new Model('crm.lead')
         .call("partner_desinterested",
@@ -55,7 +55,7 @@ $('.desinterested_partner_assign_confirm').on('click',function(){
 });
 
 opp_stage_buttons.on('click',function(e){
-    var $btn = this;
+    var $btn = $(this);
     $btn.prop('disabled', true);
     new Model('crm.lead')
         .call("write", [[parseInt(e.currentTarget.getAttribute('opp'))],{
@@ -76,7 +76,7 @@ $('.edit_contact_form .country_id').on('change', function(){
 });
 
 $('.edit_contact_confirm').on('click',function(){
-    var $btn = this;
+    var $btn = $(this);
     $btn.prop('disabled', true);
     new Model('crm.lead')
         .call("write", [[parseInt($('.edit_contact_form .opportunity_id').val())],{
@@ -120,7 +120,7 @@ $('.new_opp_confirm').on('click',function(e){
 });
 
 $('.edit_opp_confirm').on('click',function(){
-    var $btn = this;
+    var $btn = $(this);
     $btn.prop('disabled', true);
     new Model('crm.lead')
         .call("update_lead_portal", [[parseInt($('.edit_opp_form .opportunity_id').val())],{
