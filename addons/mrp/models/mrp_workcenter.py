@@ -90,7 +90,6 @@ class MrpWorkcenter(models.Model):
 
     @api.multi
     def _compute_blocked_time(self):
-        # TDE FIXME: productivity loss type should be only losses, probably count other time logs differently ??
         data = self.env['mrp.workcenter.productivity'].read_group([
             ('date_start', '>=', fields.Datetime.to_string(datetime.datetime.now() - relativedelta.relativedelta(months=1))),
             ('workcenter_id', 'in', self.ids),
