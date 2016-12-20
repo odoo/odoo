@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_stock_config_settings_inherit_landed_cost" model="ir.ui.view">
+        <field name="name">stock.config.settings.inherit.landed.cost</field>
+        <field name="model">stock.config.settings</field>
+        <field name="inherit_id" ref="stock.view_stock_config_settings"/>
+        <field name="arch" type="xml">
+            <div name="landed_cost_info" position="replace">
+                <div class="mt16" attrs="{'invisible': [('module_stock_landed_costs','=',False)]}">
+                    <button name="%(stock_landed_costs.stock_landed_cost_type_action)d" icon="fa-arrow-right" type="action" string="Landed Cost Types" class="btn-link"/>
+                </div>
+            </div>
+        </field>
+    </record>
+
+</odoo>

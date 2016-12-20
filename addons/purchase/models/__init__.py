@@ -3,6 +3,7 @@
 
 import account_invoice
 import purchase
+import stock_config_settings
 import res_company
 import res_config
 import res_partner
