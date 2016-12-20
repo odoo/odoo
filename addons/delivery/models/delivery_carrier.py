@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import psycopg2
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, registry, SUPERUSER_ID, _
 
 _logger = logging.getLogger(__name__)
 
@@ -39,6 +40,7 @@ class DeliveryCarrier(models.Model):
     delivery_type = fields.Selection([('fixed', 'Fixed Price')], string='Provider', default='fixed', required=True)
     integration_level = fields.Selection([('rate', 'Get Rate'), ('rate_and_ship', 'Get Rate and Create Shipment')], string="Integration Level", default='rate_and_ship', help="Action while validating Delivery Orders")
     prod_environment = fields.Boolean("Environment", help="Set to True if your credentials are certified for production.")
+    debug_logging = fields.Boolean('Debug logging', help="Log requests in order to ease debugging")
     company_id = fields.Many2one('res.company', string='Company', related='product_id.company_id', store=True)
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True, ondelete='restrict')
 
@@ -58,6 +60,10 @@ class DeliveryCarrier(models.Model):
     def toggle_prod_environment(self):
         for c in self:
             c.prod_environment = not c.prod_environment
+
+    def toggle_debug(self):
+        for c in self:
+            c.debug_logging = not c.debug_logging
 
     @api.multi
     def install_more_provider(self):
@@ -153,6 +159,29 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
         if hasattr(self, '%s_cancel_shipment' % self.delivery_type):
             return getattr(self, '%s_cancel_shipment' % self.delivery_type)(pickings)
+
+    def log_xml(self, xml_string, func):
+        self.ensure_one()
+
+        if self.debug_logging:
+            db_name = self._cr.dbname
+
+            # Use a new cursor to avoid rollback that could be caused by an upper method
+            try:
+                db_registry = registry(db_name)
+                with db_registry.cursor() as cr:
+                    env = api.Environment(cr, SUPERUSER_ID, {})
+                    IrLogging = env['ir.logging']
+                    IrLogging.sudo().create({'name': 'delivery.carrier',
+                              'type': 'server',
+                              'dbname': db_name,
+                              'level': 'DEBUG',
+                              'message': xml_string,
+                              'path': self.delivery_type,
+                              'func': func,
+                              'line': 1})
+            except psycopg2.Error:
+                pass
 
     # ------------------------------------------------ #
     # Fixed price shipping, aka a very simple provider #
