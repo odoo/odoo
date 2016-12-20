@@ -345,7 +345,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     on_groups_started: function() {
         var self = this;
-        if (this.group_by) {
+        if (this.group_by && this.group_by_field.type != "date") {
             // Kanban cards drag'n'drop
             var $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards');
             $columns.sortable({
