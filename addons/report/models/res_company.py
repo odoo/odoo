@@ -7,6 +7,14 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
 
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format')
+    report_footer_default = fields.Html('Standard Report Foorter', compute='_compute_report_footer_default', readonly=True)
+
+    @api.multi
+    def _compute_report_footer_default(self):
+        for company in self:
+            company.report_footer_default = self.env['ir.ui.view'].render_template('report.external_layout_footer_default', {
+                'company': company,
+            })
 
     @api.model_cr
     def init(self):

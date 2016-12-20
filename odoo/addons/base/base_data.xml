@@ -17,7 +17,6 @@
         <record id="main_partner" model="res.partner" context="{'default_is_company': True}">
             <field name="name">My Company</field>
             <field name="company_id" eval="None"/>
-            <field name="image" type="base64" file="base/static/img/main_partner-image.png"/>
             <field name="customer" eval="False"/>
             <field name="is_company" eval="True"/>
             <field name="street"></field>
@@ -32,7 +31,6 @@
         <record id="main_company" model="res.company">
             <field name="name">My Company</field>
             <field name="partner_id" ref="main_partner"/>
-            <field name="rml_header1">My Company Tagline</field>
             <field name="currency_id" ref="base.EUR"/>
         </record>
 

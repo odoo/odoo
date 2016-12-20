@@ -8,6 +8,7 @@ class BaseConfigSettings(models.TransientModel):
     _inherit = 'base.config.settings'
 
     paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format *')
+    report_footer_default = fields.Html(related="company_id.report_footer_default")
 
     def edit_external_header(self):
         return self.company_id.edit_external_header()

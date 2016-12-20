@@ -100,25 +100,30 @@
             </div>
             <div class="col-xs-9 text-right" style="margin-top:20px;" t-field="company.rml_header1"/>
         </div>
-        <div class="row zero_min_height">
+        <div t-if="company.logo or company.rml_header1" class="row zero_min_height">
             <div class="col-xs-12">
                 <div style="border-bottom: 1px solid black;"></div>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-6" name="company_address">
+                <t t-if="company.street and company.zip">
                 <span t-field="company.partner_id"
                     t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
                     style="border-bottom: 1px solid black; display:inline-block;"/>
+                </t>
+                <t t-if="not (company.street and company.zip)">
+                    <p name="report_company_data_warning">
+                        <i class="fa fa-warning"/> Company address is not defined. Please, got to <i>Settings > General Settings > configure your company data </i>, to set the missing informations.
+                    </p>
+                </t>
             </div>
         </div>
     </div>
 </template>
 
-<template id="external_layout_footer">
-    <div class="footer">
-        <div class="text-center" style="border-top: 1px solid black;">
-            <ul t-if="not company.custom_footer" class="list-inline">
+<template id="external_layout_footer_default">
+    <ul class="list-inline">
                 <t t-set="company" t-value="company.sudo()"/>
                 <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
 
@@ -132,12 +137,20 @@
                 <li t-if="company.website">Website: <span t-field="company.website"/></li>
             </ul>
 
-            <ul t-if="not company.custom_footer" class="list-inline" name="financial_infos">
+    <ul class="list-inline" name="financial_infos">
                 <li t-if="company.vat">TIN: <span t-field="company.vat"/></li>
             </ul>
+</template>
+
+<template id="external_layout_footer">
+    <div class="footer">
+        <div class="text-center" style="border-top: 1px solid black;">
+            <t t-if="not company.custom_footer">
+                <t t-call="report.external_layout_footer_default"/>
+            </t>
 
             <t t-if="company.custom_footer">
-                <span t-raw="company.rml_footer"/>
+                <span t-raw="company.rml_footer" style="white-space: pre-wrap;"/>
             </t>
 
             <ul class="list-inline">
@@ -147,7 +160,7 @@
                 <li><span class="topage"/></li>
             </ul>
         </div>
-    </div>      
+    </div>
 </template>
 
 <template id="internal_layout">
