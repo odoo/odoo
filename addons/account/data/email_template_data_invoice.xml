@@ -53,9 +53,11 @@ from ${object.company_id.name}.
 % endif
 
 <p>Thank you,</p>
+<p style="color:#888888">
 % if object.user_id and object.user_id.signature:
     ${object.user_id.signature | safe}
 % endif
+</p>
 ]]></field>
         </record>
 
