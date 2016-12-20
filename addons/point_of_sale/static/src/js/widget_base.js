@@ -31,6 +31,7 @@ function openerp_pos_basewidget(instance, module){ //module is instance.point_of
                 if(typeof amount === 'number'){
                     amount = Math.round(amount*100)/100;
                     amount = amount.toFixed(decimals);
+                    amount = openerp.instances[this.session.name].web.format_value(parseFloat(amount), { type : 'float' });
                 }
                 if(this.currency.position === 'after'){
                     return amount + ' ' + (this.currency.symbol || '');
