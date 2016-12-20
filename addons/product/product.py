@@ -917,9 +917,11 @@ class product_product(osv.osv):
             result[product.id] = price_extra
         return result
 
-    def _select_seller(self, cr, uid, product_id, partner_id=False, quantity=0.0, date=time.strftime(DEFAULT_SERVER_DATE_FORMAT), uom_id=False, context=None):
+    def _select_seller(self, cr, uid, product_id, partner_id=False, quantity=0.0, date=None, uom_id=False, context=None):
         if context is None:
             context = {}
+        if date is None:
+            date = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
         res = self.pool.get('product.supplierinfo').browse(cr, uid, [])
         for seller in product_id.seller_ids:
             # Set quantity in UoM of seller
