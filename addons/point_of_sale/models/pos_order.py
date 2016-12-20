@@ -911,9 +911,12 @@ class ReportSaleDetails(models.AbstractModel):
 
     @api.multi
     def render_html(self, docids, data=None):
-        company = request.env.user.company_id
-        date_start = self.env.context.get('date_start', False)
-        date_stop = self.env.context.get('date_stop', False)
+        date_start = data.get('date_start', False)
+        date_stop = data.get('date_stop', False)
+        active_wizard_ids = self.env.context.get("active_ids")
+        pos_config_ids = None
+        if active_wizard_ids:
+            pos_config_ids = self.env['pos.details.wizard'].browse(active_wizard_ids).pos_config_ids
         data = dict(data or {}, date_start=date_start, date_stop=date_stop)
-        data.update(self.get_sale_details(date_start, date_stop, company))
+        data.update(self.get_sale_details(date_start, date_stop, pos_config_ids))
         return self.env['report'].render('point_of_sale.report_saledetails', data)
