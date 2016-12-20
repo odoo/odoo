@@ -1349,7 +1349,7 @@ class calendar_event(osv.Model):
             data['rrule_type'] = 'monthly'
 
         if r._bymonthday:
-            data['day'] = r._bymonthday[0]
+            data['day'] = list(r._bymonthday)[0]
             data['month_by'] = 'date'
             data['rrule_type'] = 'monthly'
 
