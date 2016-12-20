@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <record id="sale_order_view_form" model="ir.ui.view">
+         <field name="name">sale.order.form.inherit.coupon</field>
+         <field name="model">sale.order</field>
+         <field name="inherit_id" ref="sale.view_order_form" />
+         <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_cancel']" position="before">
+                <button name="%(sale_coupon.sale_coupon_apply_code_action)d" string="Apply Coupon" type="action" groups="base.group_user" states="draft"/>
+            </xpath>
+            <xpath expr="//page[@string='Other Information']">
+                <group groups="base.group_no_one">
+                    <group string="Promotion Program">
+                        <field name="promo_code" groups="base.group_no_one"/>
+                    </group>
+                </group>
+                <group string="Offered Coupons">
+                    <div>
+                        <field name="generated_coupon_ids" groups="base.group_no_one" readonly="1"/>
+                    </div>
+                </group>
+                <group string="Applied Coupons">
+                    <div>
+                        <field name="applied_coupon_ids" groups="base.group_no_one" options="{'no_create': True}"/>
+                    </div>
+                </group>
+            </xpath>
+         </field>
+    </record>
+
+    <record id="sale_order_action" model="ir.actions.act_window">
+        <field name="name">Sales Order</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale.view_order_tree"/>
+        <field name="domain">[('state', '!=', 'cancel')]</field>
+        <field name="context">{}</field>
+    </record>
+</odoo>

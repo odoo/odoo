@@ -1,0 +1,20 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+{
+    'name': "Sale Coupon",
+    'summary': """Allows to use discount coupons in sales orders""",
+    'description': """Integrate coupon mechanism in sales orders.""",
+    'category': 'Sales',
+    'version': '1.0',
+    'depends': ['sale'],
+    'data': [
+        'security/ir.model.access.csv',
+        'wizard/sale_coupon_apply_code_views.xml',
+        'wizard/sale_coupon_generate_views.xml',
+        'views/sale_order_views.xml',
+        'views/sale_coupon_views.xml',
+        'views/sale_coupon_program_views.xml',
+        'views/sale_config_settings_views.xml',
+        'data/sale_coupon_data.xml',
+    ],
+}

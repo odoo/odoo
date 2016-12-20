@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_config_settings_view_form" model="ir.ui.view">
+        <field name="name">sale settings</field>
+        <field name="model">sale.config.settings</field>
+        <field name="inherit_id" ref="sales_team.view_sale_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='quotations_sales']" position="inside">
+                <label for="id" string="Coupons"/>
+                <div>
+                    <field name="module_sale_coupon" class="oe_inline" widget="upgrade_boolean"/>
+                    <label for="module_sale_coupon"/>
+                    <a href="https://www.odoo.com/fr_FR/" target="_blank"> More Info</a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
