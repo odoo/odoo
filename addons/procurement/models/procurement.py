@@ -127,6 +127,24 @@ class ProcurementOrder(models.Model):
         ('done', 'Done')], string='Status', default='confirmed',
         copy=False, required=True, track_visibility='onchange')
 
+
+    @api.multi
+    def name_get(self):
+        result = []
+        for p in self:
+            result.append((p.id, p.origin and (p.origin+': '+p.name) or p.name))
+        return result
+
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        if name:
+            domain = ['|', ('name',operator,name), ('origin',operator,name)]
+            procs = self.search(domain + args, limit=limit)
+        else:
+            procs = self.search(args, limit=limit)
+        return procs.name_get()
+
     @api.model
     def create(self, vals):
         procurement = super(ProcurementOrder, self).create(vals)

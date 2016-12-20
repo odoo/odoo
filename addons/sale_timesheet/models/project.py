@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
-    procurement_id = fields.Many2one('procurement.order', 'Procurement', ondelete='set null')
+    procurement_id = fields.Many2one('procurement.order', 'Assign to Order', ondelete='set null', help="Procurement of the sale order line on which the timesheets should be assigned")
     sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Line', related='procurement_id.sale_line_id', store=True)
 
     @api.multi
