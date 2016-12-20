@@ -238,7 +238,8 @@ class AccountBankStatement(models.Model):
                     st_line.fast_counterpart_creation()
                 elif not st_line.journal_entry_ids.ids:
                     raise UserError(_('All the account entries lines must be processed in order to close the statement.'))
-                moves = (moves | st_line.journal_entry_ids)
+                for aml in st_line.journal_entry_ids:
+                    moves |= aml.move_id
             if moves:
                 moves.post()
             statement.message_post(body=_('Statement %s confirmed, journal items were created.') % (statement.name,))
@@ -280,13 +281,12 @@ class AccountBankStatement(models.Model):
             Return ids of statement lines left to reconcile and other data for the reconciliation widget.
         """
         statements = self
-        bsl_obj = self.env['account.bank.statement.line']
         # NB : The field account_id can be used at the statement line creation/import to avoid the reconciliation process on it later on,
         # this is why we filter out statements lines where account_id is set
 
-        sql_query = """SELECT stl.id 
-                        FROM account_bank_statement_line stl  
-                        WHERE account_id IS NULL AND not exists (select 1 from account_move m where m.statement_line_id = stl.id)
+        sql_query = """SELECT stl.id
+                        FROM account_bank_statement_line stl
+                        WHERE account_id IS NULL AND not exists (select 1 from account_move_line aml where aml.statement_line_id = stl.id)
                             AND company_id = %s
                 """
         params = (self.env.user.company_id.id,)
@@ -362,10 +362,10 @@ class AccountBankStatementLine(models.Model):
     note = fields.Text(string='Notes')
     sequence = fields.Integer(index=True, help="Gives the sequence order when displaying a list of bank statement lines.", default=1)
     company_id = fields.Many2one('res.company', related='statement_id.company_id', string='Company', store=True, readonly=True)
-    journal_entry_ids = fields.One2many('account.move', 'statement_line_id', 'Journal Entries', copy=False, readonly=True)
+    journal_entry_ids = fields.One2many('account.move.line', 'statement_line_id', 'Journal Items', copy=False, readonly=True)
     amount_currency = fields.Monetary(help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one('res.currency', string='Currency', help="The optional other currency if it is a multi-currency entry.")
-    state = fields.Selection(related='statement_id.state' , string='Status', readonly=True)
+    state = fields.Selection(related='statement_id.state', string='Status', readonly=True)
     move_name = fields.Char(string='Journal Entry Name', readonly=True,
         default=False, copy=False,
         help="Technical field holding the number given to the journal entry, automatically set when the statement line is reconciled then stored to set the same number again if the line is cancelled, set to draft and re-processed again.")
@@ -409,32 +409,30 @@ class AccountBankStatementLine(models.Model):
 
     @api.multi
     def button_cancel_reconciliation(self):
-        moves_to_unbind = self.env['account.move']
-        moves_to_cancel = self.env['account.move']
+        aml_to_unbind = self.env['account.move.line']
+        aml_to_cancel = self.env['account.move']
         payment_to_unreconcile = self.env['account.payment']
         payment_to_cancel = self.env['account.payment']
         for st_line in self:
-            moves_to_unbind |= st_line.journal_entry_ids
+            aml_to_unbind |= st_line.journal_entry_ids
             for move in st_line.journal_entry_ids:
                 for line in move.line_ids:
                     payment_to_unreconcile |= line.payment_id
                     if st_line.move_name and line.payment_id.payment_reference == st_line.move_name:
                         #there can be several moves linked to a statement line but maximum one created by the line itself
-                        moves_to_cancel |= st_line.journal_entry_ids
+                        aml_to_cancel |= st_line.journal_entry_ids
                         payment_to_cancel |= line.payment_id
-        moves_to_unbind = moves_to_unbind - moves_to_cancel
+        aml_to_unbind = aml_to_unbind - aml_to_cancel
         payment_to_unreconcile = payment_to_unreconcile - payment_to_cancel
 
-        if moves_to_unbind:
-            moves_to_unbind.write({'statement_line_id': False})
-            for move in moves_to_unbind:
-                move.line_ids.filtered(lambda x:x.statement_id == st_line.statement_id).write({'statement_id': False})
+        if aml_to_unbind:
+            aml_to_unbind.write({'statement_line_id': False})
         if payment_to_unreconcile:
             payment_to_unreconcile.unreconcile()
 
-        if moves_to_cancel:
-            for move in moves_to_cancel:
-                move.line_ids.remove_move_reconcile()
+        if aml_to_cancel:
+            aml_to_cancel.remove_move_reconcile()
+            moves_to_cancel = set([x.move_id for x in aml_to_cancel])
             moves_to_cancel.button_cancel()
             moves_to_cancel.unlink()
         if payment_to_cancel:
@@ -559,7 +557,7 @@ class AccountBankStatementLine(models.Model):
         """
         # Blue lines = payment on bank account not assigned to a statement yet
         reconciliation_aml_accounts = [self.journal_id.default_credit_account_id.id, self.journal_id.default_debit_account_id.id]
-        domain_reconciliation = ['&', '&', ('statement_id', '=', False), ('account_id', 'in', reconciliation_aml_accounts), ('payment_id','<>', False)]
+        domain_reconciliation = ['&', '&', ('statement_line_id', '=', False), ('account_id', 'in', reconciliation_aml_accounts), ('payment_id','<>', False)]
 
         # Black lines = unreconciled & (not linked to a payment or open balance created by statement
         domain_matching = ['&', ('reconciled', '=', False), '|', ('payment_id','=',False), ('statement_id', '<>', False)]
@@ -740,7 +738,6 @@ class AccountBankStatementLine(models.Model):
         if self.ref:
             ref = move_ref + ' - ' + self.ref if move_ref else self.ref
         data = {
-            'statement_line_id': self.id,
             'journal_id': self.statement_id.journal_id.id,
             'date': self.date,
             'ref': ref,
@@ -873,9 +870,8 @@ class AccountBankStatementLine(models.Model):
         # Fully reconciled moves are just linked to the bank statement
         total = self.amount
         for aml_rec in payment_aml_rec:
-            total -= aml_rec.debit-aml_rec.credit
-            aml_rec.write({'statement_id': self.statement_id.id})
-            aml_rec.move_id.write({'statement_line_id': self.id})
+            total -= aml_rec.debit - aml_rec.credit
+            aml_rec.write({'statement_line_id': self.id})
             counterpart_moves = (counterpart_moves | aml_rec.move_id)
 
         # Create move line(s). Either matching an existing journal entry (eg. invoice), in which
@@ -923,7 +919,7 @@ class AccountBankStatementLine(models.Model):
             for aml_dict in to_create:
                 aml_dict['move_id'] = move.id
                 aml_dict['partner_id'] = self.partner_id.id
-                aml_dict['statement_id'] = self.statement_id.id
+                aml_dict['statement_line_id'] = self.id
                 if st_line_currency.id != company_currency.id:
                     aml_dict['amount_currency'] = aml_dict['debit'] - aml_dict['credit']
                     aml_dict['currency_id'] = st_line_currency.id
