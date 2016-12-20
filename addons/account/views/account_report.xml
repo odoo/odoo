@@ -9,9 +9,8 @@
             report_type="qweb-pdf"
             name="account.report_invoice"
             file="account.report_invoice"
-            attachment_use="True"
-            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
         />
+
         <record id="account_invoices" model="ir.actions.report.xml">
             <field name="print_report_name">(object.type == 'out_invoice' and object.state == 'draft' and 'Draft Invoice' or
             object.type == 'out_invoice' and object.state in ('open','paid') and 'Invoice'+'-'+(object.number) or
