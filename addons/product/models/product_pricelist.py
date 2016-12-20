@@ -300,7 +300,7 @@ class Pricelist(models.Model):
         Property = self.env['ir.property'].with_context(force_company=company_id or self.env.user.company_id.id)
 
         p = Partner.browse(partner_id)
-        pl = Property.get('property_product_pricelist', Partner._name, '%s,%s' % (Partner._name, p.id))
+        pl = Property.get('property_product_pricelist', Partner._name, '%s,%s' % (Partner._name, p.id)).id
 
         if not pl:
             if p.country_id.code:
