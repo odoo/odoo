@@ -126,8 +126,10 @@ class Company(models.Model):
     rml_header2 = fields.Text(string='RML Internal Header', required=True, default=_header2)
     rml_header3 = fields.Text(string='RML Internal Header for Landscape Reports', required=True, default=_header3)
     rml_footer = fields.Text(string='Custom Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
-    rml_footer_readonly = fields.Text(related='rml_footer', string='Report Footer', readonly=True)
-    custom_footer = fields.Boolean(help="Check this to define the report footer manually. Otherwise it will be filled in automatically.")
+    custom_footer = fields.Selection([
+        (0, 'Use standard footer'),
+        (1, 'Use custom footer')
+    ], "Report Footer", default=0, help="""Set to 'custom' this to define the report footer manually. Otherwise it will be filled in automatically.""")
     font = fields.Many2one('res.font', string="Font", default=lambda self: self._get_font(),
                            domain=[('mode', 'in', ('Normal', 'Regular', 'all', 'Book'))],
                            help="Set the font into the report header, it will be used as default font in the RML reports of the user company")
@@ -149,7 +151,7 @@ class Company(models.Model):
     phone = fields.Char(related='partner_id.phone', store=True)
     fax = fields.Char(compute='_compute_address', inverse='_inverse_fax')
     website = fields.Char(related='partner_id.website')
-    vat = fields.Char(related='partner_id.vat', string="Tax ID")
+    vat = fields.Char(related='partner_id.vat', string="TIN")
     company_registry = fields.Char()
     rml_paper_format = fields.Selection([('a4', 'A4'), ('us_letter', 'US Letter')], string="Paper Format", required=True, default='a4', oldname='paper_format')
     sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)

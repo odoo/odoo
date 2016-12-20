@@ -113,15 +113,11 @@
                     <group string="Report Configuration" name="report">
                         <label for="custom_footer"/>
                         <div>
-                            <field name="custom_footer" class="oe_inline"/>                                
+                            <field name="custom_footer" class="oe_inline" widget="radio"/>
                         </div>
-                        <label for="rml_footer"/>
+                        <label for="rml_footer" attrs="{'invisible':[('custom_footer','=', False)]}"/>
                         <div>
-                            <field name="rml_footer" class="oe_inline"/>                                
-                        </div>
-                        <label for="rml_footer_readonly"/>
-                        <div>
-                            <field name="rml_footer_readonly" class="oe_inline"/>                                
+                            <field name="rml_footer" class="oe_inline" attrs="{'invisible':[('custom_footer','=', False)]}"/>
                         </div>
                     </group>
                     <group string="RML Report Configuration" groups="base.group_no_one">

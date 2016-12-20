@@ -6,7 +6,7 @@
         <field name="model">base.config.settings</field>
         <field name="arch" type="xml">
             <data>
-                <group name="report" position="inside">
+                <xpath expr="//group[@name='report']" position="inside">
                     <label for="paperformat_id"/>
                     <div>
                         <field name="paperformat_id" class="oe_inline"/>
@@ -16,7 +16,10 @@
                         <button name="edit_external_footer" string="Edit external footer" type="object" class="oe_link"/>
                         <button name="edit_internal_header" string="Edit internal header" type="object" class="oe_link"/>
                     </div>
-                </group>
+                </xpath>
+                <xpath expr="//label[@for='rml_footer']" position="before">
+                    <field name="report_footer_default" class="oe_inline"/>
+                </xpath>
             </data>
         </field>
     </record>

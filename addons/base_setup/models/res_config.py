@@ -35,9 +35,8 @@ class BaseConfigSettings(models.TransientModel):
             help="Allows to work in a multi currency environment")
 
     # Report config from base/res/res_company.py
-    custom_footer = fields.Boolean(related="company_id.custom_footer", string="Custom footer *", help="Check this to define the report footer manually. Otherwise it will be filled in automatically.")
-    rml_footer = fields.Text(related="company_id.rml_footer", string='Custom Report Footer *', help="Footer text displayed at the bottom of all reports.")
-    rml_footer_readonly = fields.Text(related='rml_footer', string='Report Footer *', readonly=True)
+    custom_footer = fields.Selection(related="company_id.custom_footer")
+    rml_footer = fields.Text(related="company_id.rml_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.")
     rml_paper_format = fields.Selection(related="company_id.rml_paper_format", string="Paper Format *", required=True)
     font = fields.Many2one(related='company_id.font', string="Font *", help="Set the font into the report header, it will be used as default font in the RML reports of the user company")
     rml_header = fields.Text(related="company_id.rml_header", string="RML Header *")
