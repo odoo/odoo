@@ -720,15 +720,15 @@ class calendar_event(osv.Model):
         return [d.astimezone(pytz.UTC) for d in rset1]
 
     def _get_recurrency_end_date(self, cr, uid, id, context=None):
-        data = self.read(cr, uid, id, ['final_date', 'recurrency', 'rrule_type', 'count', 'end_type', 'stop'], context=context)
+        data = self.read(cr, uid, id, ['final_date', 'recurrency', 'rrule_type', 'count', 'end_type', 'stop', 'interval'], context=context)
 
         if not data.get('recurrency'):
             return False
 
         end_type = data.get('end_type')
         final_date = data.get('final_date')
-        if end_type == 'count' and all(data.get(key) for key in ['count', 'rrule_type', 'stop']):
-            count = data['count'] + 1
+        if end_type == 'count' and all(data.get(key) for key in ['count', 'rrule_type', 'stop', 'interval']):
+            count = (data['count'] + 1) * data['interval']
             delay, mult = {
                 'daily': ('days', 1),
                 'weekly': ('days', 7),
