@@ -11,6 +11,7 @@ Add your sales document in the frontend portal. Your customers will be able to c
         'sale',
         'website_portal',
         'website_payment',
+        'portal',
     ],
     'data': [
         'views/templates.xml',
