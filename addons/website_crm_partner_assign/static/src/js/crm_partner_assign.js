@@ -37,7 +37,7 @@ $('.interested_partner_assign_confirm').on('click',function(e){
 
 
 $('.desinterested_partner_assign_confirm').on('click',function(){
-    var $btn = this;
+    var $btn = $(this);
     $btn.prop('disabled', true);
     new Model('crm.lead')
         .call("partner_desinterested",
@@ -55,7 +55,7 @@ $('.desinterested_partner_assign_confirm').on('click',function(){
 });
 
 opp_stage_buttons.on('click',function(e){
-    var $btn = this;
+    var $btn = $(this);
     $btn.prop('disabled', true);
     new Model('crm.lead')
         .call("write", [[parseInt(e.currentTarget.getAttribute('opp'))],{
@@ -76,7 +76,7 @@ $('.edit_contact_form .country_id').on('change', function(){
 });
 
 $('.edit_contact_confirm').on('click',function(){
-    var $btn = this;
+    var $btn = $(this);
     $btn.prop('disabled', true);
     new Model('crm.lead')
         .call("write", [[parseInt($('.edit_contact_form .opportunity_id').val())],{
@@ -120,16 +120,15 @@ $('.new_opp_confirm').on('click',function(e){
 });
 
 $('.edit_opp_confirm').on('click',function(){
-    var $btn = this;
+    var $btn = $(this);
     $btn.prop('disabled', true);
     new Model('crm.lead')
         .call("update_lead_portal", [[parseInt($('.edit_opp_form .opportunity_id').val())],{
-            activity_id: parseInt($('.edit_opp_form .next_activity').find(":selected").attr('data')),
             planned_revenue: parseFloat($('.edit_opp_form .planned_revenue').val()),
             probability: parseFloat($('.edit_opp_form .probability').val()),
-            date_deadline: $('.edit_opp_form .date_deadline').val(),
-            title_action: $('.edit_opp_form .title_action').val(),
-            date_action: $('.edit_opp_form .date_action').val(),
+            activity_type_id: parseInt($('.edit_opp_form .next_activity').find(":selected").attr('data')),
+            activity_summary: $('.edit_opp_form .activity_summary').val(),
+            activity_date_deadline: $('.edit_opp_form .activity_date_deadline').val(),
             priority: $('input[name="PriorityRadioOptions"]:checked').val(),
         }])
         .fail(function() {
@@ -143,14 +142,14 @@ $('.edit_opp_confirm').on('click',function(){
 
 $('.edit_opp_form .next_activity').on('change', function(){
     var selected = $('.edit_opp_form .next_activity').find(":selected");
-    if(selected.attr('description')){
-        $('.edit_opp_form .title_action').val(selected.attr('description'));
+    if(selected.attr('activity_summary')){
+        $('.edit_opp_form .activity_summary').val(selected.attr('activity_summary'));
     }
     if(selected.attr('days')){
         var date_now = moment();
         var days = parseInt(selected.attr('days'));
         var date = date_now.add(days, 'days');
-        $('.edit_opp_form .date_action').val(date.format('YYYY-MM-DD'));
+        $('.edit_opp_form .activity_date_deadline').val(date.format('YYYY-MM-DD'));
     }
 });
 

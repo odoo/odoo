@@ -52,11 +52,10 @@ CRM_LEAD_FIELDS_TO_MERGE = [
 
 
 class Lead(FormatAddress, models.Model):
-
     _name = "crm.lead"
     _description = "Lead/Opportunity"
-    _order = "priority desc,date_action,id desc"
-    _inherit = ['mail.thread', 'utm.mixin']
+    _order = "priority desc,activity_date_deadline,id desc"
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _mail_mass_mailing = _('Leads / Opportunities')
 
     def _default_probability(self):
@@ -116,12 +115,6 @@ class Lead(FormatAddress, models.Model):
     probability = fields.Float('Probability', group_operator="avg", default=lambda self: self._default_probability())
     planned_revenue = fields.Float('Expected Revenue', track_visibility='always')
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
-
-    # CRM Actions
-    next_activity_id = fields.Many2one("crm.activity", string="Next Activity", index=True)
-    date_action = fields.Date('Next Activity Date', index=True)
-    title_action = fields.Char('Next Activity Summary')
-
     color = fields.Integer('Color Index', default=0)
     partner_address_name = fields.Char('Partner Contact Name', related='partner_id.name', readonly=True)
     partner_address_email = fields.Char('Partner Contact Email', related='partner_id.email', readonly=True)
@@ -170,8 +163,8 @@ class Lead(FormatAddress, models.Model):
         today = date.today()
         for lead in self:
             kanban_state = 'grey'
-            if lead.date_action:
-                lead_date = fields.Date.from_string(lead.date_action)
+            if lead.activity_date_deadline:
+                lead_date = fields.Date.from_string(lead.activity_date_deadline)
                 if lead_date >= today:
                     kanban_state = 'green'
                 else:
@@ -269,18 +262,6 @@ class Lead(FormatAddress, models.Model):
     def _onchange_state(self):
         if self.state_id:
             self.country_id = self.state_id.country_id.id
-
-    @api.onchange('next_activity_id')
-    def _onchange_next_activity_id(self):
-        values = {
-            'title_action': False,
-            'date_action': False,
-        }
-        if self.next_activity_id:
-            values['title_action'] = self.next_activity_id.description
-            if self.next_activity_id.days:
-                values['date_action'] = fields.Datetime.to_string(datetime.now() + timedelta(days=self.next_activity_id.days))
-        self.update(values)
 
     # ----------------------------------------
     # ORM override (CRUD, fields_view_get, ...)
@@ -934,13 +915,13 @@ class Lead(FormatAddress, models.Model):
                 if date_deadline < date.today():
                     result['closing']['overdue'] += 1
             # Next activities
-            if opp.next_activity_id and opp.date_action:
-                date_action = fields.Date.from_string(opp.date_action)
-                if date_action == date.today():
+            for activity in opp.activity_ids:
+                date_deadline = fields.Date.from_string(activity.date_deadline)
+                if date_deadline == date.today():
                     result['activity']['today'] += 1
-                if date.today() <= date_action <= date.today() + timedelta(days=7):
+                if date.today() <= date_deadline <= date.today() + timedelta(days=7):
                     result['activity']['next_7_days'] += 1
-                if date_action < date.today():
+                if date_deadline < date.today():
                     result['activity']['overdue'] += 1
             # Won in Opportunities
             if opp.date_closed:
@@ -957,19 +938,19 @@ class Lead(FormatAddress, models.Model):
         # crm.activity is a very messy model so we need to do that in order to retrieve the actions done.
         self._cr.execute("""
             SELECT
-                m.id,
-                m.subtype_id,
-                m.date,
-                l.user_id,
-                l.type
-            FROM mail_message M
-                LEFT JOIN crm_lead L ON (M.res_id = L.id)
-                INNER JOIN crm_activity A ON (M.subtype_id = A.subtype_id)
+                mail_message.id,
+                mail_message.subtype_id,
+                mail_message.mail_activity_type_id,
+                mail_message.date,
+                crm_lead.user_id,
+                crm_lead.type
+            FROM mail_message
+                LEFT JOIN crm_lead  ON (mail_message.res_id = crm_lead.id)
+                INNER JOIN mail_activity_type activity_type ON (mail_message.mail_activity_type_id = activity_type.id)
             WHERE
-                (M.model = 'crm.lead') AND (L.user_id = %s) AND (L.type = 'opportunity')
+                (mail_message.model = 'crm.lead') AND (crm_lead.user_id = %s) AND (crm_lead.type = 'opportunity')
         """, (self._uid,))
         activites_done = self._cr.dictfetchall()
-
         for activity in activites_done:
             if activity['date']:
                 date_act = fields.Date.from_string(activity['date'])

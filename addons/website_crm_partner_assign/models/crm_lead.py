@@ -226,30 +226,33 @@ class CrmLead(models.Model):
     @api.multi
     def update_lead_portal(self, values):
         self.check_access_rights('write')
+
         for lead in self:
-            if values['date_action'] == '':
-                values['date_action'] = False
-            if lead.next_activity_id.id != values['activity_id'] or lead.title_action != values['title_action']\
-               or lead.date_action != values['date_action']:
-                activity = lead.sudo().next_activity_id
-                body_html = "<div><b>%(title)s</b>: %(next_activity)s</div>%(description)s" % {
-                    'title': _('Activity Done'),
-                    'next_activity': activity.name,
-                    'description': lead.title_action and '<p><em>%s</em></p>' % lead.title_action or '',
-                }
-                lead.message_post(
-                    body=body_html,
-                    subject=lead.title_action,
-                    subtype="mail.mt_note")
-            lead.write({
+            lead_values = {
                 'planned_revenue': values['planned_revenue'],
                 'probability': values['probability'],
-                'next_activity_id': values['activity_id'],
-                'title_action': values['title_action'],
-                'date_action': values['date_action'] if values['date_action'] else False,
                 'priority': values['priority'],
-                'date_deadline': values['date_deadline'] if values['date_deadline'] else False,
-            })
+            }
+            # As activities may belong to several users, only the current portal user activity
+            # will be modified by the portal form. If no activity exist we create a new one instead
+            # that we assign to the portal user.
+            user_activity = lead.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
+            if user_activity:
+                user_activity.sudo().write({
+                    'activity_type_id': values['activity_type_id'],
+                    'summary': values['activity_summary'],
+                    'date_deadline': values['activity_date_deadline'],
+                })
+            else:
+                self.env['mail.activity'].sudo().create({
+                    'res_model_id': self.env.ref('crm.model_crm_lead').id,
+                    'res_id': lead.id,
+                    'user_id': self.env.user.id,
+                    'activity_type_id': values['activity_type_id'],
+                    'summary': values['activity_summary'],
+                    'date_deadline': values['activity_date_deadline'],
+                })
+            lead.write(lead_values)
 
     @api.model
     def create_opp_portal(self, values):

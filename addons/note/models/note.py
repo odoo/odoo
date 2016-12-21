@@ -33,7 +33,7 @@ class Tag(models.Model):
 class Note(models.Model):
 
     _name = 'note.note'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Note"
     _order = 'sequence'
 

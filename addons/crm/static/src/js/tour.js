@@ -35,18 +35,22 @@ tour.register('crm_tour', {
     position: "right",
     run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
-    trigger: ".o_kanban_record:not(.o_updating) .oe_kanban_status_grey",
+    trigger: ".o_kanban_record:not(.o_updating) .o_activity_color_default",
     extra_trigger: ".o_opportunity_kanban",
-    content: _t("This opportunity has <b>no next activity scheduled</b>. <i>Click to set one.</i>"),
+    content: _t("This opportunity has <b>no activity planned</b>. <i>Click to check them.</i>"),
     position: "bottom"
 }, {
-    trigger: ".o_recommended_activity .o_radio_item",
+    trigger: ".o_schedule_activity",
+    extra_trigger: ".o_opportunity_kanban",
+    content: _t("Schedule an activity by clicking here"),
+    position: "bottom"
+}, {
+    trigger: ".modal-body .o_form_field_many2one",
     extra_trigger: ".o_opportunity_kanban",
     content: _t("<p>You will be able to customize your followup activities. Examples:</p><ol><li>introductory email</li><li>call 10 days after</li><li>second call 3 days after, ...</li></ol><p class='mb0'><i>Select a standard activity for now on.</i></p>"),
-    position: "left",
+    position: "bottom",
     run: function (actions) {
-        actions.auto(this.$anchor.children("input").first());
-        actions.auto(".modal-footer .btn-primary");
+        actions.auto(".modal-footer .btn-default");
     },
 }, {
     trigger: ".o_kanban_record",

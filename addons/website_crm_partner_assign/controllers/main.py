@@ -94,10 +94,10 @@ class WebsiteAccount(website_account):
 
         searchbar_filters = {
             'all': {'label': _('All'), 'domain': []},
-            'today': {'label': _('Today Activities'), 'domain': [('date_action', '=', today)]},
+            'today': {'label': _('Today Activities'), 'domain': [('activity_date_deadline', '=', today)]},
             'week': {'label': _('This Week Activities'),
-                     'domain': [('date_action', '>=', today), ('date_action', '<=', this_week_end_date)]},
-            'overdue': {'label': _('Overdue Activities'), 'domain': [('date_action', '<', today)]},
+                     'domain': [('activity_date_deadline', '>=', today), ('activity_date_deadline', '<=', this_week_end_date)]},
+            'overdue': {'label': _('Overdue Activities'), 'domain': [('activity_date_deadline', '<', today)]},
             'won': {'label': _('Won'), 'domain': [('stage_id.probability', '=', 100), ('stage_id.fold', '=', True)]},
             'lost': {'label': _('Lost'), 'domain': [('active', '=', False)]},
         }
@@ -158,8 +158,9 @@ class WebsiteAccount(website_account):
         return request.render(
             "website_crm_partner_assign.portal_my_opportunity", {
                 'opportunity': lead,
+                'user_activity': lead.activity_ids.filtered(lambda activity: activity.user_id == request.env.user)[:1],
                 'stages': request.env['crm.stage'].search([('probability', '!=', '100')], order='sequence desc'),
-                'activities': request.env['crm.activity'].sudo().search([], order='sequence desc'),
+                'activity_types': request.env['mail.activity.type'].sudo().search([]),
                 'states': request.env['res.country.state'].sudo().search([]),
                 'countries': request.env['res.country'].sudo().search([]),
             })
