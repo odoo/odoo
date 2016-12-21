@@ -287,6 +287,8 @@ def http_to_wsgi(http_dir):
         server = Dummy()
         server.server_name = environ['SERVER_NAME']
         server.server_port = int(environ['SERVER_PORT'])
+        if 'X-Forwarded-Proto' in headers:
+            server.proto = headers['X-Forwarded-Proto']
 
         # Initialize the underlying handler and associated auth. provider.
         con = openerp.service.websrv_lib.noconnection(environ['wsgi.input'])
