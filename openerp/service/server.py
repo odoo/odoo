@@ -956,11 +956,15 @@ def start(preload=None, stop=False):
     """
     global server
     load_server_wide_modules()
+    test_mode = config['test_enable'] or config['test_file']
     if openerp.evented:
         server = GeventServer(openerp.service.wsgi_server.application)
-    elif config['workers']:
+    elif config['workers'] and not test_mode:
         server = PreforkServer(openerp.service.wsgi_server.application)
     else:
+        if test_mode and config['workers']:
+            _logger.warning("Ignoring workers setting. "
+                            "Forcing threaded server for unit testing.")
         server = ThreadedServer(openerp.service.wsgi_server.application)
 
     if config['auto_reload']:
