@@ -350,7 +350,7 @@ class MrpProduction(models.Model):
             mto_route = False
         for move in self.move_raw_ids:
             product = move.product_id
-            routes = product.route_ids + product.categ_id.route_ids
+            routes = product.route_ids + product.route_from_categ_ids
             # TODO: optimize with read_group?
             pull = self.env['procurement.rule'].search([('route_id', 'in', [x.id for x in routes]), ('location_src_id', '=', move.location_id.id),
                                                         ('location_id', '=', move.location_dest_id.id)], limit=1)
