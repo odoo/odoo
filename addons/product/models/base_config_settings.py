@@ -12,11 +12,6 @@ class BaseConfigSettings(models.TransientModel):
         help="Share your product to all companies defined in your instance.\n"
              " * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
              " * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies.")
-    group_product_variant = fields.Selection([
-        (0, "No variants on products"),
-        (1, 'Products can have several attributes, defining variants (Example: size, color,...)')], "Product Variants",
-        implied_group='product.group_product_variant',
-        help='Work with product variant allows you to define some variant of the same products, an ease the product management in the ecommerce for example')
 
     @api.model
     def get_default_company_share_product(self, fields):
