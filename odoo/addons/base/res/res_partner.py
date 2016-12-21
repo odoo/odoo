@@ -43,13 +43,19 @@ class FormatAddress(object):
 
     @api.model
     def fields_view_get_address(self, arch):
-        #consider the country of the user, not the country of the partner we want to display
+
+        # TODO: if self._name != 'res.partner': call ir.ui.view.postprocess_and_fields()
+        # and catch ValueError -> return arch
+
+        # consider the country of the user, not the country of the partner we want to display
         address_view_id = self.env.user.company_id.country_id.address_view_id
         if address_view_id and not self._context.get('no_address_format'):
             #render the partner address accordingly to address_view_id
             doc = etree.fromstring(arch)
             for address_node in doc.xpath("//div[@class='o_address_format']"):
-                sub_view = self.env['res.partner'].with_context(no_address_format=True).fields_view_get(view_id=address_view_id.id, view_type='form', toolbar=False, submenu=False)
+                Partner = self.env['res.partner'].with_context(no_address_format=True)
+                sub_view = Partner.fields_view_get(
+                    view_id=address_view_id.id, view_type='form', toolbar=False, submenu=False)
                 sub_view_node = etree.fromstring(sub_view['arch'])
                 address_node.getparent().replace(address_node, sub_view_node)
             arch = etree.tostring(doc)
