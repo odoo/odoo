@@ -118,6 +118,7 @@ setup(
     include_package_data=True,
     dependency_links=['http://download.gna.org/pychart/'],
     install_requires=[
+        'future>=0.13.0',
         'babel',
         'docutils',
         'feedparser',
