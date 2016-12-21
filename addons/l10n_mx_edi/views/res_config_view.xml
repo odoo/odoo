@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_config_settings_account_mx_inherit" model="ir.ui.view">
+        <field name="name">account.config.settings.form</field>
+        <field name="model">account.config.settings</field>
+        <field name="inherit_id" ref="account.view_account_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='edi_group']" position="inside">
+                <field name="l10n_mx_edi_cer"/>
+                <field name="l10n_mx_edi_cer_key"/>
+                <field name="l10n_mx_edi_cer_password" password="True" 
+                    placeholder="Add your certificate password"/>
+                <field name="l10n_mx_edi_pac"/>
+                <field name="l10n_mx_edi_pac_test_env"/>
+                <field name="l10n_mx_edi_pac_username"
+                    placeholder="Add your username"/>
+                <field name="l10n_mx_edi_pac_password" password="True"
+                    placeholder="Add your password"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

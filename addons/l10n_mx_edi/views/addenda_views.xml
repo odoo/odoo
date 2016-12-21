@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_addenda" model="ir.actions.act_window">
+            <field name="name">Addenda</field>
+            <field name="res_model">edi.mx.addenda</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create an Addenda.
+                </p>
+            </field>
+        </record>
+
+        <record id="addenda_tree" model="ir.ui.view">
+            <field name="name">edi.mx.addenda.tree</field>
+            <field name="model">edi.mx.addenda</field>
+            <field name="arch" type="xml">
+                <tree string="Addenda">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="addenda_form" model="ir.ui.view">
+            <field name="name">edi.mx.addenda.form</field>
+            <field name="model">edi.mx.addenda</field>
+            <field name="arch" type="xml">
+                <form string="Addenda">
+                    <sheet>
+                        <group name="configuration">
+                            <field name="name"/>
+                            <field name="body_xml"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="addenda_search" model="ir.ui.view">
+            <field name="name">addenda.search</field>
+            <field name="model">edi.mx.addenda</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

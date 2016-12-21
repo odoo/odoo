@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Account-mx-related subtypes for messaging / Chatter -->
+        <record id="mt_invoice_l10n_mx_edi_msg" model="mail.message.subtype">
+            <field name="name">mx.edi.msg</field>
+            <field name="res_model">account.invoice</field>
+            <field name="default" eval="False"/>
+            <field name="description">EDI document message for MX</field>
+        </record>
+    </data>
+</odoo>

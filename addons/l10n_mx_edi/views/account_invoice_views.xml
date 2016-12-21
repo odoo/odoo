@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_l10n_mx_edi_invoice_form_inherit" model="ir.ui.view">
+            <field name="name">edi.mx.invoice.form.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group//group[last()]" position="inside">
+                    <label for="l10n_mx_edi_sat_status"/>
+                    <div class="o_row">
+                        <field name="l10n_mx_edi_sat_status"/>
+                        <button name="l10n_mx_edi_update_sat_status" string="Update" class="oe_link" type="object" groups="account.group_account_invoice"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_l10n_mx_edi_invoice_filter_inherit" model="ir.ui.view">
+            <field name="name">edi.mx.invoice.filter.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <filter name="mx_edi_sign" string="To sign by PAC" domain="[('l10n_mx_edi_sat_status', '=', 'to_sign')]"/>
+                    <filter name="mx_edi_cancel" string="To cancel by PAC" domain="[('l10n_mx_edi_sat_status', '=', 'to_cancel')]"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

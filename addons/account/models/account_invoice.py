@@ -385,47 +385,55 @@ class AccountInvoice(models.Model):
                     view_id = get_view_id('invoice_form', 'account.invoice.form').id
         return super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
-    @api.multi
     def _get_edi_attachments(self):
-        ''' Get the EDI documents in the filestore or generates new ones.
-        '''
         self.ensure_one()
-        country_code = self.company_id.country_id.code
-        func_filenames = 'get_edi_filenames_' + country_code
-        func_attachment = 'generate_edi_' + country_code
-        if not hasattr(self, func_filenames) or self.state not in ('open', 'paid') or self.type not in ('out_invoice', 'out_refund'):
+        # Check the state of the invoice
+        if self.state not in ('open', 'paid') or self.type not in ('out_invoice', 'out_refund'):
             return []
+
+        # Check for methods based on country
+        country_code = self.company_id.country_id.code.lower()
+        func_filenames = 'l10n_' + country_code + '_edi_filenames'
+        func_attachment = 'l10n_' + country_code + '_edi_generate'
+        if not hasattr(self, func_filenames) or not hasattr(self, func_attachment):
+            # Mark the invoice as sent, no documents to generate
+            self.sent = True
+            return []
+
         if self.sent:
+            # Look for already generated documents
             domain = [
                 ('res_id','=', self.id),
                 ('res_model', '=', self._name),
                 ('name', 'in', getattr(self, func_filenames)())]
             return self.env['ir.attachment'].search(domain)
         else:
-            if not hasattr(self, func_attachment):
-                raise UserError(_('Unable to generate EDI: Method %s not found' % func_attachment))
-            edi_attachments = getattr(self, func_attachment)()
+            # Mark the invoice as sent
+            self.sent = True
+
+            # Generate new documents
+            attachment_ids = getattr(self, func_attachment)()
             
-            for edi_attachment in edi_attachments:
-                _logger.info('The EDI document %s is now saved in the database', edi_attachment.name)
-            ids = map(lambda x: x.id, edi_attachments)
-            if ids:
+            for attachment_id in attachment_ids:
+                _logger.info('The EDI document %s is now saved in the database', attachment_id.name)
+
+            if attachment_ids:
                 self.message_post(
-                    body=_('EDI document generated:'),
-                    attachment_ids=ids,
+                    body=_('EDI document(s) generated'),
+                    attachment_ids=[attach.id for attach in attachment_ids],
                     subtype='mt_invoice_edi_created')
-            return edi_attachments
+            return attachment_ids
 
     @api.multi
     def prepare_pdf(self, values=None):
+        ''' In the case of EDI, we decided to embed the EDI documents in the report.
+        To do that, we look for methods to generate or to retrieve the original EDI documents for the
+        invoice.
+        '''
         metadata = super(AccountInvoice, self).prepare_pdf(values=values)
         to_embed = metadata.get('to_embed', [])
         for record in self:
-            # Append edi documents
             to_embed.extend(record._get_edi_attachments())
-            # Mark the invoice as sent to avoid creating further report or edi document
-            record.sent = True
-        metadata['to_embed'] = to_embed
         return metadata
 
 
