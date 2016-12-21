@@ -21,7 +21,7 @@
     ${object.partner_id.name}
 % endif
 ,</p><p>
-Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} <strong>${object.name}</strong>
+Here is, in attachment, a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} <strong>${object.name}</strong>
 % if object.partner_ref:
     with reference: ${object.partner_ref}
 % endif
@@ -32,8 +32,13 @@ amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>
 from ${object.company_id.name}.
 </p>
 
-<p>If you have any question, do not hesitate to contact us.</p>
+<p>Do not hesitate to contact us, further you have any question.</p>
 <p>Best regards,</p>
+<p style="color:#888888;">
+% if object.user_id and object.user_id.signature:
+    ${object.user_id.signature | safe}
+% endif
+</p>
 ]]></field>
         </record>
 
