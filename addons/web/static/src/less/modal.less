@@ -3,6 +3,10 @@
     .modal-content {
         border-radius: 0;
 
+        // weird fix to solve multiple bootstrap model backdrop issue
+        -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5), 0 0 0 5000px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5), 0 0 0 5000px rgba(0, 0, 0, 0.5);
+
         .modal-header .o_subtitle {
             margin-left: 10px;
         }
