@@ -23,7 +23,7 @@ var AbstractFieldUpgrade = {
         this._super.apply(this, arguments);
         this.get_enterprise_label().after($("<span>", {
             text: "Enterprise",
-            'class': "label label-primary oe_inline"
+            'class': "label label-primary oe_inline oe_enterprise_label"
         }));
     },
 

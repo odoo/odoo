@@ -84,9 +84,10 @@ class SaleConfiguration(models.TransientModel):
         implied_group='sale.group_show_price_total',
         group='base.group_portal,base.group_user,base.group_public')
     sale_show_tax = fields.Selection([
-        ('subtotal', 'Show line subtotals without taxes (B2B)'),
-        ('total', 'Show line subtotals with taxes included (B2C)')], "Tax Display",
-        default='subtotal',
+            ('subtotal', 'Show line subtotals without taxes (B2B)'),
+            ('total', 'Show line subtotals with taxes included (B2C)')], "Tax Display",
+        compute='_compute_sale_show_tax',
+        readonly=False,
         required=True)
     default_invoice_policy = fields.Selection([
         ('order', 'Invoice ordered quantities'),
@@ -142,11 +143,6 @@ class SaleConfiguration(models.TransientModel):
                 'group_pricelist_item': False,
             })
 
-    @api.multi
-    def set_sale_tax_defaults(self):
-        return self.env['ir.values'].sudo().set_default(
-            'sale.config.settings', 'sale_show_tax', self.sale_show_tax)
-
     @api.onchange('sale_show_tax')
     def _onchange_sale_tax(self):
         if self.sale_show_tax == "subtotal":
@@ -159,3 +155,7 @@ class SaleConfiguration(models.TransientModel):
                 'group_show_price_total': True,
                 'group_show_price_subtotal': False,
             })
+
+    @api.depends('group_show_price_total')
+    def _compute_sale_show_tax(self):
+        self.sale_show_tax = 'total' if self.group_show_price_total else 'subtotal'
