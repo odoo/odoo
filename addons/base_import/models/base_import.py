@@ -66,7 +66,7 @@ class Import(models.TransientModel):
     file_type = fields.Char('File Type')
 
     @api.model
-    def get_fields(self, model, depth=FIELDS_RECURSION_LIMIT, full=False):
+    def get_fields(self, model, depth=FIELDS_RECURSION_LIMIT):
         """ Recursively get fields for the provided model (through
         fields_get) and filter them according to importability
 
@@ -120,8 +120,7 @@ class Import(models.TransientModel):
             'type': 'id',
         }]
         model_fields = Model.fields_get()
-        blacklist = ([] if full else models.MAGIC_COLUMNS) + [Model.CONCURRENCY_CHECK_FIELD]
-
+        blacklist = models.MAGIC_COLUMNS + [Model.CONCURRENCY_CHECK_FIELD]
         for name, field in model_fields.iteritems():
             if name in blacklist:
                 continue
@@ -153,7 +152,7 @@ class Import(models.TransientModel):
                     dict(field_value, name='.id', string=_("Database ID"), type='id'),
                 ]
             elif field['type'] == 'one2many' and depth:
-                field_value['fields'] = self.get_fields(field['relation'], depth=depth - 1, full=full)
+                field_value['fields'] = self.get_fields(field['relation'], depth=depth-1)
                 if self.user_has_groups('base.group_no_one'):
                     field_value['fields'].append({'id': '.id', 'name': '.id', 'string': _("Database ID"), 'required': False, 'fields': [], 'type': 'id'})
 
@@ -588,114 +587,44 @@ class Import(models.TransientModel):
 
     @api.model
     def _parse_float_from_data(self, data, index, name, options):
-        """
-            DEPRECATED, use _parse_float_data instead !
-
-            Convert ``float string`` into `float python`` using ``xxx_separators`` from options.
-
-            :param list(list(str)) data: the content of file to import
-            :param (str, int) indexes: tuple with (field name, index in data)
-            :param options: format-specific options. {encoding, quoting, separator, headers}
-                            Separators options: 'float_thousand_separator', 'float_decimal_separator'
-            :returns: alter the data directly
-            :raises ValueError: in case the float could not be converted
-        """
-        return self._parse_float_data(data, [(name, index, 'float')], options)
-
-    @api.model
-    def _parse_float_data(self, data, indexes, options):
-        """ Convert ``float string`` into `float python`` using ``xxx_separators`` from options.
-
-            :param list(list(str)) data: the content of file to import
-            :param list((str, int, str)) indexes: (('field_name', index, str), ('field_name2', index2, str), ...)
-            :param options: format-specific options. {encoding, quoting, separator, headers}
-                            Separators options: 'float_thousand_separator', 'float_decimal_separator'
-            :returns: alter the data directly
-            :raises ValueError: if the float could not be converted
-        """
         thousand_separator = options.get('float_thousand_separator', ' ')
         decimal_separator = options.get('float_decimal_separator', '.')
         for line in data:
-            for (name, index, dummy) in indexes:
-                if not line[index]:
-                    continue
-                line[index] = line[index].replace(thousand_separator, '').replace(decimal_separator, '.')
-                old_value = line[index]
-                line[index] = self._remove_currency_symbol(line[index])
-                if line[index] is False:
-                    raise ValueError(_("Column %s contains incorrect values (value: %s)" % (name, old_value)))
-
-    @api.model
-    def _parse_date_data(self, data, indexes, options):
-        """ Convert ``date/datetime string`` into `date/datetime python`` using ``xxx_format`` from options.
-
-            :param list(list(str)) data: the content of file to import
-            :param list((str, int, str)) indexes: (('field_name', index, str), ('field_name2', index2, str), ...)
-            :param options: format-specific options. {encoding, quoting, separator, headers}
-                            Separators options: 'date_format', 'datetime_format'
-            :returns: alter the data directly
-            :raises ValueError: if the date/datetime could not be converted
-            :raises Exception: if the format is improperly configured or other unexpected error.
-        """
-        dt = datetime.datetime
-        for (name, index, field_type) in indexes:
-            server_format = DEFAULT_SERVER_DATE_FORMAT if field_type == 'date' else DEFAULT_SERVER_DATETIME_FORMAT
-            if options.get('%s_format' % field_type, server_format) != server_format:
-                user_format = ustr(options.get('%s_format' % field_type)).encode('utf-8')
-                for num, line in enumerate(data):
-                    if line[index]:
-                        try:
-                            line[index] = dt.strftime(dt.strptime(ustr(line[index]).encode('utf-8'), user_format), server_format)
-                        except ValueError, e:
-                            raise ValueError(_("Column %s contains incorrect values. Error in line %d: %s") % (name, num + 1, ustr(e.message)))
-                        except Exception, e:
-                            raise ValueError(_("Error Parsing Date [%s:L%d]: %s") % (name, num + 1, ustr(e.message)))
-
-    def _get_field_type(self, field_name_split, all_fields):
-        """ Return the type of the field.
-
-            :param [str) field_name_split: the complete field name spliited on '/'. Eg: vendor_id/product_id/price = [vendor_id, product_id, price]
-            :param (str, (...)) all_fields: a tuple of all fields available (limit of FIELDS_RECURSION_LIMIT).
-                                            ('<field>', ('fields'={ <recursive> }, type='<type>'))
-        """
-        field = field_name_split[0]
-
-        if len(field_name_split) == 1:
-            return all_fields[field][1]
-
-        all_fields = dict(map(lambda d: (d['name'], (d['fields'], d['type'])), all_fields[field][0]))
-        return self._get_field_type(field_name_split[1:], all_fields)
-
-    @api.model
-    def get_parsers(self):
-        return {
-            'date': self._parse_date_data,
-            'datetime': self._parse_date_data,
-            'float': self._parse_float_data,
-            'monetary': self._parse_float_data,
-        }
+            if not line[index]:
+                continue
+            line[index] = line[index].replace(thousand_separator, '').replace(decimal_separator, '.')
+            old_value = line[index]
+            line[index] = self._remove_currency_symbol(line[index])
+            if line[index] is False:
+                raise ValueError(_("Column %s contains incorrect values (value: %s)" % (name, old_value)))
 
     @api.multi
     def _parse_import_data(self, data, import_fields, options):
-        all_fields = self.get_fields(self.res_model, full=True)
+        # Get fields of type date/datetime
+        all_fields = self.env[self.res_model].fields_get()
+        for name, field in all_fields.iteritems():
+            if field['type'] in ('date', 'datetime') and name in import_fields:
+                # Parse date
+                index = import_fields.index(name)
+                dt = datetime.datetime
+                server_format = DEFAULT_SERVER_DATE_FORMAT if field['type'] == 'date' else DEFAULT_SERVER_DATETIME_FORMAT
 
-        # preprocess all_field to have: ('<field>', ('fields'={ <recursive> }, type='<type>'))
-        all_fields = dict(map(lambda d: (d['name'], (d['fields'], d['type'])), all_fields))
+                if options.get('%s_format' % field['type'], server_format) != server_format:
+                    user_format = ustr(options.get('%s_format' % field['type'])).encode('utf-8')
+                    for num, line in enumerate(data):
+                        if line[index]:
+                            try:
+                                line[index] = dt.strftime(dt.strptime(ustr(line[index]).encode('utf-8'), user_format), server_format)
+                            except ValueError, e:
+                                raise ValueError(_("Column %s contains incorrect values. Error in line %d: %s") % (name, num + 1, ustr(e.message)))
+                            except Exception, e:
+                                raise ValueError(_("Error Parsing Date [%s:L%d]: %s") % (name, num + 1, ustr(e.message)))
 
-        # group parser by field to import
-        to_parse = {}
-        for f in import_fields:
-            index = import_fields.index(f)
-            detected_type = self._get_field_type(f.split('/'), all_fields)
-            if detected_type in self.get_parsers().keys():
-                func = self.get_parsers()[detected_type].__name__
-                to_parse.setdefault(func, []).append((f, index, detected_type))
-
-        # meth = method parser
-        # vals = (('filed_name', index, type), ('field_name2', index2, type), ...)
-        for meth, vals in to_parse.iteritems():
-            getattr(self, meth)(data, vals, options)
-
+            elif field['type'] in ('float', 'monetary') and name in import_fields:
+                # Parse float, sometimes float values from file have currency symbol or () to denote a negative value
+                # We should be able to manage both case
+                index = import_fields.index(name)
+                self._parse_float_from_data(data, index, name, options)
         return data
 
     @api.multi
