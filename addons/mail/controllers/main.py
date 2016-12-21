@@ -114,7 +114,10 @@ class MailController(http.Controller):
         is_editable = request.env.user.has_group('base.group_no_one')
         partner_id = request.env.user.partner_id
         follower_id = None
-        for follower in request.env['mail.followers'].browse(follower_ids):
+        follower_recs = request.env['mail.followers'].sudo().browse(follower_ids)
+        res_ids = follower_recs.mapped('res_id')
+        request.env[res_model].browse(res_ids).check_access_rule("write")
+        for follower in follower_recs:
             is_uid = partner_id == follower.partner_id
             follower_id = follower.id if is_uid else follower_id
             followers.append({
