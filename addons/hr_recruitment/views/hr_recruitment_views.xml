@@ -36,8 +36,6 @@
                 <field name="partner_phone"/>
                 <field name="job_id"/>
                 <field name="stage_id"/>
-                <field name="title_action" invisible="context.get('invisible_next_action', True)"/>
-                <field name="date_action" invisible="context.get('invisible_next_date', True)"/>
                 <field name="medium_id"/>
                 <field name="source_id"/>
                 <field name="priority"/>
@@ -45,6 +43,21 @@
                 <field name="availability" invisible="1"/>
                 <field name="department_id" invisible="context.get('invisible_department', True)"/>
                 <field name="user_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_applicant_view_tree_activity" model="ir.ui.view">
+        <field name="name">hr.applicant.view.tree.activity</field>
+        <field name="model">hr.applicant</field>
+        <field name="arch" type="xml">
+            <tree string="Next Activities" decoration-danger="activity_date_deadline &lt; current_date" default_order="activity_date_deadline">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="activity_date_deadline"/>
+                <field name="activity_type_id"/>
+                <field name="activity_summary"/>
+                <field name="stage_id"/>
             </tree>
         </field>
     </record>
@@ -113,11 +126,6 @@
                     </group>
                     <group>
                         <field name="user_id"/>
-                        <label for="title_action"/>
-                        <div>
-                            <field name="date_action"/>
-                            <field name="title_action" class="oe_inline" placeholder="e.g. Call for interview"/>
-                        </div>
                         <field name="priority" widget="priority"/>
                         <field name="medium_id" groups="base.group_no_one" />
                         <field name="source_id"/>
@@ -150,6 +158,7 @@
             </sheet>
             <div class="oe_chatter">
                 <field name="message_follower_ids" widget="mail_followers"/>
+                <field name="activity_ids" widget="mail_activity"/>
                 <field name="message_ids" widget="mail_thread"/>
             </div>
           </form>
@@ -178,17 +187,13 @@
     </record>
 
     <record id="view_crm_case_jobs_filter" model="ir.ui.view">
-        <field name="name">Jobs - Recruitment Search</field>
+        <field name="name">hr.applicant.view.search</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <search string="Search Applicants">
                 <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
-                <filter string="My" domain="[('user_id', '=', uid)]"/>
+                <filter string="My Applications" domain="[('user_id', '=', uid)]"/>
                 <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
-                <separator/>
-                <filter string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
-                    domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
-                <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <field name="job_id"/>
@@ -196,6 +201,17 @@
                 <field name="user_id"/>
                 <field name="stage_id" domain="[]"/>
                 <separator/>
+                <filter string="My Activities" name="activities_my"
+                    domain="[('activity_ids.user_id', '=', uid)]"/>
+                <filter string="Today Activities" name="activities_today"
+                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Upcoming Activities (7 days)" name="activities_week"
+                    domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                             ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                    ]"/>
+                <filter string="Overdue Activities" name="activities_overdue"
+                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
                 <field name="categ_ids"/>
                 <field name="attachment_ids" filter_domain="[('attachment_ids.index_content', 'ilike', self)]" string="Attachments"/>
                 <separator/>
@@ -211,17 +227,15 @@
         </field>
     </record>
 
-    <!-- CRM Lead Calendar View -->
     <record model="ir.ui.view" id="hr_applicant_calendar_view">
         <field name="name">Hr Applicants Calendar</field>
         <field name="model">hr.applicant</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <calendar string="Applicants"
-                date_start="date_action" color="user_id">
+            <calendar string="Applicants" date_start="activity_date_deadline" color="user_id">
                 <field name="name"/>
                 <field name="partner_name"/>
-                <field name="title_action"/>
+                <field name="activity_summary"/>
             </calendar>
         </field>
     </record>
@@ -240,12 +254,13 @@
                 <field name="partner_name"/>
                 <field name="type_id"/>
                 <field name="job_id"/>
-                <field name="title_action"/>
                 <field name="department_id"/>
                 <field name="categ_ids"/>
                 <field name="message_needaction_counter"/>
                 <field name="attachment_number"/>
                 <field name="active"/>
+                <field name="activity_ids" />
+                <field name="activity_state" />
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
@@ -273,13 +288,12 @@
                                     <i><field name="name"/></i><br/>
                                     <field name="job_id"/><br/>
                                     <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>
-                                    <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
-                                    <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
-                                        <t t-if="record.date_action.raw_value"> : </t>
-                                        <field name="title_action"/>
                                 <div class="oe_kanban_bottom_right">
+                                    <div class="o_kanban_inline_block ml4">
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                    </div>
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
-                                    <div class="pull-left" groups="base.group_user">
+                                    <div class="pull-left mt4" groups="base.group_user">
                                         <field name="priority" widget="priority"/>
                                     </div>
                                 </div>
@@ -316,6 +330,22 @@
               </p>
          </field>
     </record>
+
+    <record id="hr_applicant_action_activity" model="ir.actions.act_window">
+        <field name="name">My Next Activities</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,kanban,calendar</field>
+        <field name="view_id" ref="hr_applicant_view_tree_activity"/>
+        <field name="context">{'search_default_activities_my': 1}</field>
+        <field name="domain">[('activity_date_deadline', '!=', False)]</field>
+        <field name="help" type="html">
+            <p>
+                Currently there are not any activity scheduled.
+            </p>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window" id="action_hr_job_sources">
         <field name="name">Jobs Sources</field>
         <field name="res_model">hr.recruitment.source</field>
@@ -499,7 +529,7 @@
             process and follow up all operations: meetings, interviews, etc.
           </p><p>
             Applicants and their attached CV are created automatically when an email is sent.
-            If you install the document management modules, all resumes are indexed automatically, 
+            If you install the document management modules, all resumes are indexed automatically,
             so that you can easily search through their content.
           </p>
         </field>
@@ -526,7 +556,7 @@
         <field name="act_window_id" ref="crm_case_categ0_act_job"/>
     </record>
 
-    <record model="ir.actions.act_window.view" id="action_hr_sec_graph_view_act_job">
+    <record id="action_hr_sec_graph_view_act_job" model="ir.actions.act_window.view">
         <field name="sequence" eval="4"/>
         <field name="view_mode">graph</field>
         <field name="view_id" ref="crm_case_graph_view_job"/>
@@ -549,7 +579,18 @@
     <menuitem
         name="Applications"
         parent="menu_hr_recruitment_root"
-        id="menu_crm_case_categ0_act_job" action="crm_case_categ0_act_job" sequence="2" groups="base.group_no_one"/>
+        id="menu_crm_case_categ0_act_job" sequence="2"/>
+
+    <menuitem
+        name="All Applications"
+        parent="menu_crm_case_categ0_act_job"
+        id="menu_crm_case_categ_all_app" action="crm_case_categ0_act_job" sequence="2"/>
+
+    <menuitem id="hr_applicant_nmenu_activity"
+        name="Next Activities"
+        parent="hr_recruitment.menu_crm_case_categ0_act_job"
+        action="hr_applicant_action_activity"
+        sequence="20"/>
 
     <!-- Resume and Letters -->
     <record id="ir_attachment_view_search_inherit_hr_recruitment" model="ir.ui.view">

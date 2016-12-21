@@ -293,6 +293,7 @@ class MailComposer(models.TransientModel):
                 'record_name': self.record_name,
                 'no_auto_thread': self.no_auto_thread,
                 'mail_server_id': self.mail_server_id.id,
+                'mail_activity_type_id': self.mail_activity_type_id.id,
             }
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:

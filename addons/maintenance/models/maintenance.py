@@ -89,7 +89,7 @@ class MaintenanceEquipmentCategory(models.Model):
 
 class MaintenanceEquipment(models.Model):
     _name = 'maintenance.equipment'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Equipment'
 
     @api.multi
@@ -205,7 +205,7 @@ class MaintenanceEquipment(models.Model):
 
 class MaintenanceRequest(models.Model):
     _name = 'maintenance.request'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Maintenance Requests'
     _order = "id desc"
 

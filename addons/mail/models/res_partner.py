@@ -14,7 +14,7 @@ class Partner(models.Model):
     """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used
        to restrict usage of automatic email templates. """
     _name = "res.partner"
-    _inherit = ['res.partner', 'mail.thread']
+    _inherit = ['res.partner', 'mail.thread', 'mail.activity.mixin']
     _mail_flat_thread = False
     _mail_mass_mailing = _('Customers')
 
