@@ -558,13 +558,6 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <page name="sales" position="after">
-                    <page string="Purchase" name="purchase" attrs="{'invisible': [('purchase_ok','=',False)]}">
-                        <group string="Vendors" name="vendors">
-                            <field name="seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id)}" nolabel="1"/>
-                        </group>
-                    </page>
-                </page>
                 <group name="invoicing" position="inside">
                     <group string="Purchase Bills" name="bill" attrs="{'invisible': [('purchase_ok','=',False)]}" groups="purchase.group_purchase_manager">
                         <field name="purchase_method" widget="radio"/>
@@ -581,6 +574,52 @@
                     <group string="Description for Vendors" attrs="{'invisible': [('purchase_ok','=',False)]}">
                        <field name="description_purchase" nolabel="1"
                             placeholder="This note will show up on purchase orders."/>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+        <record id="product_template_supplier_view_form_inherit_purchase" model="ir.ui.view">
+            <field name="name">product.template.supplier.form.inherit.purchase</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <page name="sales" position="after">
+                    <page string="Purchase" name="purchase" attrs="{'invisible': [('purchase_ok','=',False)]}">
+                        <group string="Vendors" name="vendors">
+                            <field name="seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id)}" nolabel="1"/>
+                        </group>
+                    </page>
+                </page>
+            </field>
+        </record>
+
+        <record id="product_product_supplier_view_form_inherit_purchase" model="ir.ui.view">
+            <field name="name">product.product.supplier.form.inherit.purchase</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <page name="sales" position="after">
+                    <page string="Purchase" name="purchase" attrs="{'invisible': [('purchase_ok','=',False)]}">
+                        <group string="Vendors" name="vendors">
+                            <field name="seller_ids" readonly="1" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id)}" nolabel="1"/>
+                        </group>
+                        <group string="Variant Vendors">
+                            <field name="product_seller_ids" nolabel="1"/>
+                        </group>
+                    </page>
+                </page>
+            </field>
+        </record>
+
+        <record id="product_variant_supplier_easy_edit_view" model="ir.ui.view">
+            <field name="name">product.product.supplier.view.form.easy</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+            <field name="arch" type="xml">
+                <group name="pricing_and_weight" position="after">
+                    <group string="Variant Vendors">
+                        <field name="product_seller_ids" nolabel="1"/>
                     </group>
                 </group>
             </field>
