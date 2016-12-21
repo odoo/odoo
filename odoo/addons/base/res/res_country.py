@@ -59,10 +59,6 @@ class Country(models.Model):
     country_group_ids = fields.Many2many('res.country.group', 'res_country_res_country_group_rel',
                          'res_country_id', 'res_country_group_id', string='Country Groups')
     state_ids = fields.One2many('res.country.state', 'country_id', string='States')
-    enforce_cities = fields.Boolean(
-        string='Enforce Cities',
-        help="Check this box to ensure every address created in that country has a 'City' chosen "
-             "in the list of the country's cities.")
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)',

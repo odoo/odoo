@@ -21,14 +21,6 @@
             <field name="arch" type="xml">
                 <form>
                     <div class="oe_button_box">
-                        <button name="%(base.action_res_city_tree)d"
-                            class="oe_stat_button"
-                            icon="fa-globe"
-                            type="action"
-                            context="{'default_country_id': active_id, 'search_default_country_id': active_id}"
-                            string="Cities">
-
-                        </button>
                     </div>
                     <field name="image" widget="image" class="oe_avatar"/>
                     <group>
@@ -39,7 +31,6 @@
                         </group>
                         <group>
                             <field name="phone_code"/>
-                            <field name="enforce_cities"/>
                         </group>
                         <group string="Advanced Address Formatting" groups="base.group_no_one" >
                             <field name="address_format" placeholder="Address format..."/>

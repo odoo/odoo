@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import res_country
-import res_city
 import res_lang
 import res_partner
 import res_bank
