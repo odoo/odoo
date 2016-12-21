@@ -9,51 +9,49 @@ var _t = instance.web._t;
 instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags.extend({
 
     start: function() {
-        this.values = [];
-        this.values_checking = [];
+        this.mutex = new openerp.Mutex();
+
+        // This widget will indirectly trigger a change:value to it's parent widget
+        // when setting the value of valid partners. For this reason we have to keep an
+        // internal state of the last value in order to compute the effective value changes.
+        this.last_processed_value = [];
 
         this.on("change:value", this, this.on_change_value_check);
-        this.trigger("change:value");
-
         this._super.apply(this, arguments);
     },
 
     on_change_value_check : function () {
-        this.values = _.uniq(this.values);
+        var self = this;
+        var values = this.get('value').slice(0);  // Clone the array
 
-        // filter for removed values
-        var values_removed = _.difference(this.values, this.get('value'));
-        if (values_removed.length) {
-            this.values = _.difference(this.values, values_removed);
-            this.set({'value': this.values});
-            return false;
-        }
-
-        // find not checked values that are not currently on checking
-        var not_checked = _.difference(this.get('value'), this.values, this.values_checking);
-        if (not_checked.length) {
-            // remember values on checking for cheked only one time
-            this.values_checking = this.values_checking.concat(not_checked);
-            // check values
-            this._check_email_popup(not_checked);
+        // We only validate partners emails in case the value is not empty
+        // and is different from the last processed value
+        var effective_change = _.difference(values, self.last_processed_value).length;
+        if (values.length && effective_change) {
+            this.mutex.exec(function() {
+                return self._check_email_popup(values);
+            });
         }
     },
 
     _check_email_popup: function (ids) {
         var self = this;
+        var valid_partners;
+
         new instance.web.Model('res.partner').call("search", [[
-                ["id", "in", ids], 
-                ["email", "=", false], 
-                ["notify_email", "=", 'always'] ]], 
+                ["id", "in", ids],
+                ["email", "=", false],
+                ["notify_email", "=", 'always'] ]],
                 {context: this.build_context()})
             .then(function (record_ids) {
-                // valid partner
-                var valid_partner = _.difference(ids, record_ids);
-                self.values = self.values.concat(valid_partner);
-                self.values_checking = _.difference(self.values_checking, valid_partner);
+                var popups_deferreds = [];
+                self.valid_partners = _.difference(ids, record_ids);
 
-                // unvalid partner
+                // Propose the user to correct invalid partners
                 _.each(record_ids, function (id) {
+                    var popup_def = $.Deferred();
+                    popups_deferreds.push(popup_def);
+
                     var pop = new instance.web.form.FormOpenPopup(self);
                     pop.show_element(
                         'res.partner',
@@ -64,14 +62,18 @@ instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags
                         }
                     );
                     pop.on('write_completed', self, function () {
-                        this.values.push(id);
-                        this.values_checking = _.without(this.values_checking, id);
-                        this.set({'value': this.values});
+                        self.valid_partners.push(id);
                     });
                     pop.on('closed', self, function () {
-                        this.values_checking = _.without(this.values_checking, id);
-                        this.set({'value': this.values});
+                        popup_def.resolve();
                     });
+                });
+                return $.when.apply($, popups_deferreds).then(function() {
+                    // All popups have been processed for the given ids
+                    // It is now time to set the final value with valid partners ids.
+                    var filtered_value = _.uniq(self.valid_partners);
+                    self.last_processed_value = filtered_value;
+                    self.set({'value': filtered_value});
                 });
             });
     },
