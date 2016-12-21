@@ -166,7 +166,7 @@ return Widget.extend({
         var chart = nv.models.multiBarChart();
         var maxVal = _.max(values, function(v) {return v.y})
         chart.options({
-          margin: {left: 12 * String(maxVal && maxVal.y || 10000000).length},
+          margin: {left: 12 * String(maxVal && maxVal.y || 10000000).length, bottom: 60},
           delay: 250,
           transition: 10,
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
@@ -175,7 +175,7 @@ return Widget.extend({
           rightAlignYAxis: false,
           stacked: this.stacked,
           reduceXTicks: false,
-          // rotateLabels: 40,
+          rotateLabels: -20,
           showControls: (this.groupbys.length > 1)
         });
         chart.yAxis.tickFormat(function(d) { return formats.format_value(d, { type : 'float' });});
