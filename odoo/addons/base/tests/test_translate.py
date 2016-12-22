@@ -186,7 +186,7 @@ class TranslationToolsTestCase(unittest.TestCase):
         result = xml_translate(lambda term: term, source)
         self.assertEquals(result, source)
 
-    def test_translate_xml_translations(self):
+    def test_translate_xml_invalid_translations(self):
         """ Test xml_translate() with invalid translations. """
         source = """<form string="Form stuff">
                         <h1>Blah <i>blah</i> blah</h1>
