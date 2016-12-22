@@ -162,6 +162,22 @@ class TranslationToolsTestCase(unittest.TestCase):
         self.assertItemsEqual(terms,
             ['<span class="oe_menu_text">Blah</span>', 'More <b class="caret"/>'])
 
+    def test_translate_xml_with_namespace(self):
+        """ Test xml_translate() on elements with namespaces. """
+        terms = []
+        # do not slit the long line below, otherwise the result will not match
+        source = """<Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+                        <cbc:UBLVersionID t-esc="version_id"/>
+                        <t t-foreach="[1, 2, 3, 4]" t-as="value">
+                            Oasis <cac:Test t-esc="value"/>
+                        </t>
+                    </Invoice>"""
+        result = xml_translate(terms.append, source)
+        self.assertEquals(result, source)
+        self.assertItemsEqual(terms, ['Oasis'])
+        result = xml_translate(lambda term: term, source)
+        self.assertEquals(result, source)
+
     def test_translate_html(self):
         """ Test xml_translate() and html_translate() with <i> elements. """
         source = """<i class="fa-check"></i>"""
