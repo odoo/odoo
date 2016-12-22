@@ -167,9 +167,8 @@ return Widget.extend({
         svg.transition().duration(0);
 
         var chart = nv.models.multiBarChart();
-        var maxVal = _.max(values, function(v) {return v.y})
         chart.options({
-          margin: {left: 12 * String(maxVal && maxVal.y || 10000000).length, bottom: 60},
+          margin: {left: 120, bottom: 60},
           delay: 250,
           transition: 10,
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
@@ -308,9 +307,8 @@ return Widget.extend({
         svg.transition().duration(0);
 
         var chart = nv.models.lineChart();
-        var maxVal = _.max(values, function(v) {return v.y})
         chart.options({
-          margin: {left: 12 * String(maxVal && maxVal.y || 10000000).length, right: 50},
+          margin: {left: 120, bottom: 60},
           useInteractiveGuideline: true,
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
