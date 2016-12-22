@@ -102,7 +102,7 @@ class ProjectIssue(models.Model):
     def _compute_inactivity_days(self):
         current_datetime = fields.Datetime.from_string(fields.Datetime.now())
         for issue in self:
-            dt_create_date = fields.Datetime.from_string(issue.create_date)
+            dt_create_date = fields.Datetime.from_string(issue.create_date) or current_datetime
             issue.days_since_creation = (current_datetime - dt_create_date).days
 
             if issue.date_action_last:
