@@ -15,7 +15,7 @@
                     <field name="product_uom_id" string="Unit of Measure" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
                     <field name="availability"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                    <field name="origin"/>
+                    <field name="origin" groups="base.group_no_one"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -105,7 +105,7 @@
                             <field name="date_planned_start"/>
                             <field name="date_planned_finished" invisible="1"/>
                             <field name="user_id"/>
-                            <field name="origin"/>
+                            <field name="origin" groups="base.group_no_one"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                         </group>
                     </group>
