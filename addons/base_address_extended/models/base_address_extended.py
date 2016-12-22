@@ -52,31 +52,33 @@ class Partner(models.Model):
             previous_pos = 0
             street_vals = ""
             separator = ""
+            # iter on fields in street_format, detected as '%(<field_name>)s'
             for re_match in re.finditer(r'%\(\w+\)s', street_format):
-                if not previous_field:
-                    previous_field = re_match.group()[2:-2]
-                    previous_pos = re_match.end()
-                    if previous_field not in street_fields:
-                        raise UserError(_("Unrecognized field %s in street format.") % previous_field)
-                    if partner[previous_field]:
-                        street_vals += partner[previous_field]
-                    continue
+                # [2:-2] is used to remove the extra chars '%(' and ')s'
                 field_name = re_match.group()[2:-2]
                 field_pos = re_match.start()
-                # get the substring between 2 fields, to be used as separator
-                separator = street_format[previous_pos:field_pos]
                 if field_name not in street_fields:
                     raise UserError(_("Unrecognized field %s in street format.") % field_name)
-                if street_vals and partner[field_name]:
-                    street_vals += separator
-                if partner[field_name]:
-                    street_vals += partner[field_name]
+                if not previous_field:
+                    # first iteration: add heading chars in street_format
+                    if partner[field_name]:
+                        street_vals += street_format[0:field_pos] + partner[field_name]
+                else:
+                    # get the substring between 2 fields, to be used as separator
+                    separator = street_format[previous_pos:field_pos]
+                    if street_vals and partner[field_name]:
+                        street_vals += separator
+                    if partner[field_name]:
+                        street_vals += partner[field_name]
                 previous_field = field_name
                 previous_pos = re_match.end()
 
-            #must use a sql query to bypass the orm as it would call _split_street that will try to set the fields we just modified
-            self._cr.execute('UPDATE res_partner SET street = %s WHERE ID = %s', (street_vals, partner.id))
+            # add trailing chars in street_format
+            street_vals += street_format[previous_pos:]
 
+            # /!\ Note that we must use a sql query to bypass the orm as it would call _split_street()
+            # that would try to set the fields we just modified.
+            self._cr.execute('UPDATE res_partner SET street = %s WHERE ID = %s', (street_vals, partner.id))
 
     @api.multi
     @api.depends('street', 'country_id.street_format')
@@ -97,7 +99,7 @@ class Partner(models.Model):
             previous_pos = 0
             street_raw = partner.street
             field_name = None
-            #iter on fields in street_format, detected as '%(<field_name>)s'
+            # iter on fields in street_format, detected as '%(<field_name>)s'
             for re_match in re.finditer(r'%\(\w+\)s', street_format):
                 field_pos = re_match.start()
                 # get the substring between 2 fields, to be used as separator
