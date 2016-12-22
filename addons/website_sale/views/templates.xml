@@ -745,6 +745,8 @@
                     </a>
                 </t>
                 <t t-if="not (step&gt;20 and step&lt;50)">
+                    <!-- why website_sale_order is not set here ? -->
+                    <t t-set="website_sale_order" t-value="website.sale_get_order()" />
                     <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services">Shipping &amp;</t>
                         Billing<span class="chevron"/>
                 </t>
@@ -760,52 +762,58 @@
 
     <template id="extra_info" name="Checkout Extra Info">
         <t t-call="website.layout">
+            <t t-set="no_footer">1</t>
             <div id="wrap">
                 <div class="container oe_website_sale">
-                    <t t-call="website_sale.wizard_checkout">
-                        <t t-set="step" t-value="30" />
-                    </t>
-                    <h1 class="mb32">Extra Step</h1>
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2 oe_cart">
+                          <div class='row'>
+                            <t t-call="website_sale.wizard_checkout">
+                                <t t-set="step" t-value="30"/>
+                            </t>
+                            <h2 class="mb32 ml16">Extra Step</h2>
+                          </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="oe_structure">
-                    <form action="/website_form/" method="post" class="s_website_form form-horizontal container-fluid mt32" enctype="multipart/form-data" data-force_action="shop.sale.order" data-model_name="sale.order" data-success_page="/shop/payment">
-                        <div class="form-group form-field o_website_form_custom">
-                            <div class="col-md-3 col-sm-4 text-right">
-                                <label class="control-label" for="client_order_ref">
-                                  Your Reference
-                                </label>
+                <div class="oe_structure row">
+                    <div class='col-md-6 col-md-offset-3'>
+                        <form action="/website_form/" method="post" class="s_website_form form-horizontal container-fluid  text-right-not-xs" enctype="multipart/form-data" data-force_action="shop.sale.order" data-model_name="sale.order" data-success_page="/shop/payment">
+                            <div class="form-group form-field o_website_form_custom">
+                                <div class="col-md-4 col-sm-5">
+                                    <label class="control-label" for="client_order_ref">Your Reference</label>
+                                </div>
+                                <div class="col-md-8 col-sm-7">
+                                    <input type="text" class="form-control o_website_form_input" name="client_order_ref"/>
+                                </div>
                             </div>
-                            <div class="col-md-7 col-sm-8">
-                                <input type="text" class="form-control o_website_form_input" name="client_order_ref"/>
+                            <div class="form-group form-field o_website_form_custom">
+                                <div class="col-md-4 col-sm-5">
+                                    <label class="control-label" for="Give us your feedback...">Give us your feedback...</label>
+                                </div>
+                                <div class="col-md-8 col-sm-7">
+                                    <textarea class="form-control o_website_form_input" name="Give us your feedback..." />
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group form-field o_website_form_custom">
-                            <div class="col-md-3 col-sm-4 text-right">
-                                <label class="control-label" for="Give us your feedback...">Give us your feedback...</label>
+                            <div class="form-group form-field o_website_form_custom">
+                                <div class="col-md-4 col-sm-5">
+                                    <label class="control-label" for="a_document">A document to provide ? </label>
+                                </div>
+                                <div class="col-md-8 col-sm-7">
+                                    <input type="file" class="form-control o_website_form_input" name="a_document" />
+                                </div>
                             </div>
-                            <div class="col-md-7 col-sm-8">
-                                <textarea class="form-control o_website_form_input" name="Give us your feedback..." />
+                            <div class="form-group">
+                                <div class="col-md-4 col-sm-5">
+                                </div>
+                                <div class="col-md-8 col-sm-7">
+                                    <a href="/shop/checkout" class="btn btn-default mb32 pull-left"><span class="fa fa-long-arrow-left" /> Previous</a>
+                                    <a class="btn btn-default btn-primary pull-right mb32 o_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-long-arrow-right" /></a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group form-field o_website_form_custom">
-                            <div class="col-md-3 col-sm-4 text-right">
-                                <label class="control-label" for="a_document">A document to provide ? </label>
-                            </div>
-                            <div class="col-md-7 col-sm-8">
-                                <input type="file" class="form-control o_website_form_input" name="a_document" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
-                                <span class="btn btn-primary pull-right btn-lg o_website_form_send o_default_snippet_text">
-                                    <span>Next </span><span class="fa fa-long-arrow-right" />
-                                </span>
-                                <span id="o_website_form_result" class="text-danger ml8" />
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                     <!--
-                        <t t-set="website_sale_order" t-value="website.sale_get_order()" />
                         <script>
                             $("input[name='client_order_ref']").val(_.unescape('<t t-esc="escape(website_sale_order.client_order_ref or '') or ''"/>'));
                         </script>
@@ -908,10 +916,12 @@
         <t t-call="website.layout">
             <div id="wrap">
                 <div class="container oe_website_sale">
-                    <t t-call="website_sale.wizard_checkout">
-                        <t t-set="step" t-value="10" />
-                    </t>
-                    <h1 class="mb32">Shopping Cart</h1>
+                    <div class="row">
+                        <t t-call="website_sale.wizard_checkout">
+                            <t t-set="step" t-value="10" />
+                        </t>
+                        <h2 class="mb32 ml16">Shopping Cart</h2>
+                    </div>
                     <div class="row">
                         <div class="col-md-8 col-sm-9 oe_cart">
                             <t t-call="website_sale.cart_lines" />
@@ -923,14 +933,14 @@
                             </a>
                             <div class="oe_structure" />
                         </div>
-                        <div class="col-lg-3 col-lg-offset-1 col-sm-3 col-md-3 hidden-xs text-muted" id="right_column">
-                            <h4>Policies</h4>
-                            <ul class="list-unstyled mb32">
+                        <div class="col-lg-3 col-lg-offset-1 col-sm-3 col-md-3 text-muted" id="right_column">
+                            <h4 class='hidden-xs'>Policies</h4>
+                            <ul class="hidden-xs list-unstyled mb32">
                                 <li>☑ 30-days money-back guarantee</li>
                                 <li>☑ Invoice sent by e-Mail</li>
                             </ul>
-                            <h4>Secure Payment</h4>
-                            <ul class="list-unstyled mb32">
+                            <h4 class='hidden-xs'>Secure Payment</h4>
+                            <ul class="hidden-xs list-unstyled mb32">
                                 <li>☑ 256 bit encryption</li>
                                 <li>☑ Processed by Ogone</li>
                             </ul>
@@ -974,7 +984,7 @@
 
     <template id="suggested_products_list" inherit_id="website_sale.cart_lines" customize_show="True" name="Alternative Products in my cart">
         <xpath expr="//table[@id='cart_products']" position="after">
-            <h5 class='text-muted' t-if="suggested_products">Suggested Accessories:</h5>
+            <h5 class='text-muted js_cart_lines' t-if="suggested_products">Suggested Accessories:</h5>
             <table t-if="suggested_products" class="js_cart_lines table table-striped table-condensed">
                 <tbody>
                     <tr t-foreach="suggested_products" t-as="product">
@@ -1023,8 +1033,8 @@
         <xpath expr="//div[@id='right_column']" position="inside">
             <h4>Coupon Code</h4>
             <p>
-                        Have a coupon code? Fill in this field and apply.
-                      </p>
+              Have a coupon code? Fill in this field and apply.
+            </p>
             <t t-if="code_not_available">
                 <p class="bg-warning">This promo code is not available</p>
             </t>
@@ -1294,48 +1304,51 @@
                             </t>
                         </div>
                         <div class="col-md-8 col-md-offset-2 oe_cart">
-                            <div class='row'>
-                                <t t-call="website_sale.wizard_checkout">
-                                    <t t-set="step" t-value="40" />
-                                </t>
-                                <h1 class="mb32">Confirm Order</h1>
+                          <div class='row'>
+                            <t t-call="website_sale.wizard_checkout">
+                                <t t-set="step" t-value="40" />
+                            </t>
+                            <h2 class="mb32 ml16">Confirm Order</h2>
+                         </div>
+                         <div class="row">
+                            <div class='col-md-12'>
+                                <table class="table table-striped table-condensed" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
+                                    <thead>
+                                        <tr>
+                                            <th class='td-img'>Product</th>
+                                            <th></th>
+                                            <th class='td-qty'>Quantity</th>
+                                            <th class='text-center td-price'>Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="website_sale_order.website_order_line" t-as="line">
+                                            <td class='' colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
+                                            <td class='td-img' t-if="line.product_id.product_tmpl_id">
+                                                <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
+                                                    <span t-field="line.product_id.image_small" t-options="{'widget': 'image', 'class': 'img-rounded'}" />
+                                                </a>
+                                            </td>
+                                            <td class='td-product_name' t-if="line.product_id.product_tmpl_id">
+                                                <div>
+                                                    <strong t-field="line.product_id.with_context(display_default_code=False).display_name" />
+                                                </div>
+                                                <div class="text-muted hidden-xs small">
+                                                    <t t-foreach="line.name.splitlines()[1:]" t-as="name_line">
+                                                        <span><t t-esc="name_line"/></span><br/>
+                                                    </t>
+                                                </div>
+                                            </td>
+                                            <td class='td-qty'>
+                                                <div t-esc="line.product_uom_qty" />
+                                            </td>
+                                            <td class="text-center td-price">
+                                                <span t-field="line.price_unit" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                            <table class="table table-striped table-condensed" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
-                                <thead>
-                                    <tr>
-                                        <th class='td-img'>Product</th>
-                                        <th></th>
-                                        <th class='td-qty'>Quantity</th>
-                                        <th class='text-center td-price'>Price</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr t-foreach="website_sale_order.website_order_line" t-as="line">
-                                        <td class='' colspan="2" t-if="not line.product_id.product_tmpl_id"></td>
-                                        <td class='td-img' t-if="line.product_id.product_tmpl_id">
-                                            <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
-                                                <span t-field="line.product_id.image_small" t-options="{'widget': 'image', 'class': 'img-rounded'}" />
-                                            </a>
-                                        </td>
-                                        <td class='td-product_name' t-if="line.product_id.product_tmpl_id">
-                                            <div>
-                                                <strong t-field="line.product_id.with_context(display_default_code=False).display_name" />
-                                            </div>
-                                            <div class="text-muted hidden-xs small">
-                                                <t t-foreach="line.name.splitlines()[1:]" t-as="name_line">
-                                                    <span><t t-esc="name_line"/></span><br/>
-                                                </t>
-                                            </div>
-                                        </td>
-                                        <td class='td-qty'>
-                                            <div t-esc="line.product_uom_qty" />
-                                        </td>
-                                        <td class="text-center td-price">
-                                            <span t-field="line.price_unit" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
                             <div>
                                 <t t-call="website_sale.total">
                                     <t t-set='extra_class' t-value='"col-sm-4 col-sm-offset-8 col-xs-8 col-xs-offset-4"'/>
@@ -1343,8 +1356,8 @@
                             </div>
                             <div class="clearfix" />
                             <div class="oe_structure" />
-
-                            <div class="js_payment mb64 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
+                          </div>
+                          <div class="js_payment mb64 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
                                 <div class="col-lg-5 col-sm-6">
                                     <h4>Payment Method:</h4>
                                     <ul class="list-unstyled">
@@ -1402,8 +1415,8 @@
                                         </div>
                                     </t>
                                 </div>
-                            </div>
-                            <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
+                          </div>
+                          <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
                                 <div class="col-sm-12">
                                     <form target="_self" action="/shop/payment/validate" method="post" class="pull-right">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
@@ -1413,7 +1426,7 @@
                                         </a>
                                     </form>
                                 </div>
-                            </div>
+                          </div>
                         </div>
 
 
@@ -1663,10 +1676,12 @@
             <t t-set="additional_title">Shop - Confirm payment</t>
             <div id="wrap">
                 <div class="container oe_website_sale">
-                    <t t-call="website_sale.wizard_checkout">
-                        <t t-set="step" t-value="40" />
-                    </t>
-                    <h1 class="mb32">Confirm <em t-field="tx.sale_order_id.name" /> Payment</h1>
+                    <div class="row">
+                        <t t-call="website_sale.wizard_checkout">
+                            <t t-set="step" t-value="40" />
+                        </t>
+                        <h2 class="mb32 ml16">Confirm <em t-field="tx.sale_order_id.name" /> Payment</h2>
+                    </div>
                     <div class="row">
                         <div class="col-lg-8 col-md-9 col-sm-12">
                             <div class='row'>

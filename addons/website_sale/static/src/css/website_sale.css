@@ -23,46 +23,46 @@
   margin-right: auto;
 }
 
-.oe_website_sale ul ul {
-  margin-left: 1.5em;
-}
-.oe_website_sale ul ul .td-product_name {
+.oe_website_sale .td-product_name, .oe_website_sale h1[itemprop="name"], .oe_website_sale .oe_product_cart form h5 {
   word-wrap: break-word;
 }
-.oe_website_sale ul ul .td-img {
+.oe_website_sale .td-product_name {
+  min-width: 140px;
+}
+.oe_website_sale .td-img {
   width: 100px;
 }
-.oe_website_sale ul ul .td-qty {
+.oe_website_sale .td-qty {
   width: 130px;
 }
-.oe_website_sale ul ul .td-price, .oe_website_sale ul ul .td-price-total {
+.oe_website_sale .td-price, .oe_website_sale .td-price-total {
   width: 100px;
 }
 @media (max-width: 767px) {
-  .oe_website_sale ul ul .td-img, .oe_website_sale ul ul .td-price-total {
+  .oe_website_sale .td-img, .oe_website_sale .td-price-total {
     display: none;
   }
-  .oe_website_sale ul ul .td-qty {
-    width: 80px;
+  .oe_website_sale .td-qty {
+    width: 60px;
   }
-  .oe_website_sale ul ul .td-price {
+  .oe_website_sale .td-price {
     width: 80px;
   }
 }
 @media (max-width: 476px) {
-  .oe_website_sale ul ul .td-qty {
+  .oe_website_sale .td-qty {
     width: 60px;
   }
-  .oe_website_sale ul ul .oe_cart table thead, .oe_website_sale ul ul #modal_optional_products table thead {
+  .oe_website_sale .oe_cart table thead, .oe_website_sale #modal_optional_products table thead {
     display: none;
   }
-  .oe_website_sale ul ul .oe_cart table td.td-img, .oe_website_sale ul ul #modal_optional_products table td.td-img {
+  .oe_website_sale .oe_cart table td.td-img, .oe_website_sale #modal_optional_products table td.td-img {
     display: none;
   }
-  .oe_website_sale ul ul .oe_cart a span.hidden-xs, .oe_website_sale ul ul #modal_optional_products a span.hidden-xs {
+  .oe_website_sale .oe_cart a span.hidden-xs, .oe_website_sale #modal_optional_products a span.hidden-xs {
     display: none !important;
   }
-  .oe_website_sale ul ul .oe_cart a span.visible-xs-inline, .oe_website_sale ul ul #modal_optional_products a span.visible-xs-inline {
+  .oe_website_sale .oe_cart a span.visible-xs-inline, .oe_website_sale #modal_optional_products a span.visible-xs-inline {
     display: inline !important;
   }
 }
@@ -533,6 +533,14 @@ ul.wizard li.text-primary .chevron:before {
 ul.wizard li:first-child {
   padding-left: 15px;
   border-radius: 4px 0 0 4px;
+}
+
+ul.wizard li:last-child {
+  border-radius: 0 4px 4px 0;
+  border-right-width: 1px;
+}
+ul.wizard li:last-child .chevron {
+  display: none;
 }
 
 /* Shipping & Billing */
