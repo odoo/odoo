@@ -59,6 +59,14 @@
                                 </group>
                             </group>
                         </page>
+                        <page string="Inventory" name="inventory" groups="stock.group_stock_user,product.group_stock_packaging">
+                            <group name="packaging" string="Packaging"
+                                colspan="4"
+                                attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
+                                groups="product.group_stock_packaging">
+                                <field name="packaging_ids" nolabel="1"/>
+                            </group>
+                        </page>
                         <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
                             <div name="pricelist_item" groups="product.group_product_pricelist">
                                 <separator string="Pricing"/>
