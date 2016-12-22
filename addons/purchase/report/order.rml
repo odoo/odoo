@@ -173,8 +173,8 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_header"><b>[[ o.state=='draft' and removeParentNode('para') ]] Purchase Order Confirmation N° [[ o.name ]]</b></para>
-    <para style="terp_header"><b>[[ o.state&lt;&gt;'draft' and removeParentNode('para') ]] Request for Quotation N° [[ o.name ]]</b></para>
+    <para style="terp_header"><b>[[ o.state in ['draft', 'sent'] and removeParentNode('para') ]] Purchase Order Confirmation N° [[ o.name ]]</b></para>
+    <para style="terp_header"><b>[[ o.state not in ['draft', 'sent'] and removeParentNode('para') ]] Request for Quotation N° [[ o.name ]]</b></para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
