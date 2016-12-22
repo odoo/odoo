@@ -4,17 +4,17 @@
     <template id="o_clean_template_header">
         <div class="header o_clean_header row">
             <div class="col-xs-6">
-                <img src="/report/static/src/img/logo2.png" alt="#"/>
+                <img src="/report/static/src/img/logo_sample.png" alt="#"/>
                 <!-- <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"/> -->
-                <!--<strong><h3 class="mt0" t-field="company.rml_header1"/></strong> /-->
             </div>
-            <!-- <div class="col-xs-6 text-center">
-            </div> -->
             <div class="col-xs-5 col-xs-offset-1" name="company_address">
-                <strong>
-                    <span class="company_address" t-field="company.partner_id"
-                    t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
-                </strong>
+                <ul class="list-unstyled">
+                    <strong><li t-if="company.name"><span t-field="company.name"/></li></strong>
+                    <li t-if="company.phone">Tel <span t-field="company.phone"/></li>
+                    <li t-if="company.fax">Fax <span t-field="company.fax"/></li>
+                    <li t-if="company.email"><span t-field="company.email"/></li>
+                    <li t-if="company.website"><span t-field="company.website"/></li>
+                </ul>
             </div>
         </div>
     </template>
@@ -28,12 +28,10 @@
             </div>
             <div class="col-xs-4 text-right">
                 <ul t-if="not company.custom_footer" class="list-inline mt4 mb0">
-                    <li t-if="company.phone">Tel <span t-field="company.phone"/></li>
-                    <li t-if="company.fax">Fax <span t-field="company.fax"/></li>
-                </ul>
-                <ul t-if="not company.custom_footer" class="list-inline mt0">
-                    <li t-if="company.email"><span t-field="company.email"/></li>
-                    <li t-if="company.website"><span t-field="company.website"/></li>
+                    <li>
+                        <span class="company_address" t-field="company.partner_id"
+                        t-field-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+                    </li>
                 </ul>
 
                 <t t-if="company.custom_footer">
@@ -43,7 +41,7 @@
                 </t>
             </div>
             <div class="col-xs-4">
-                <h3 class="mt4 mb0 text-uppercase"><strong>Thanks for <br/>your business</strong></h3>
+                <h4 class="mt4 mb0 text-uppercase" t-field="company.rml_header1"/>
             </div>
             <div class="col-xs-1">
                 <ul class="list-inline pagenumber pull-right text-center mt16">

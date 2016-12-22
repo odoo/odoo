@@ -4,20 +4,20 @@
     font-size: 12px;
 }
 .o_clean_header {
-    //font-size: 17px;
     img {
         max-height: 100px;
         max-width: 300px;
     }
 }
 .o_clean_footer {
+    font-size: 10px;
     margin: 0 3px;
     border-top: 3px solid #000;
     div[class^="col-"] {
         padding-left: 0;
     }
-    ul {
-        line-height: 1.2;
+    div:nth-child(3) {
+        padding-left: 15px;
     }
     .pagenumber {
         width: 35px;
@@ -29,7 +29,6 @@
     }
 }
 .o_clean_body {
-    //font-size: 12px;
     table {
         thead {
             tr th {
@@ -69,7 +68,7 @@
             margin-top: -20px;
             > table {
             tr:last-child td {
-                border-top: 3px solid #000 !important;
+                border-top: 1px solid @gray-lighter !important;
             }
             tr:first-child td {
                 /*we could get rid of this rule if .border-black td would be terminated in report.less*/
