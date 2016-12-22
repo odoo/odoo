@@ -1174,7 +1174,7 @@ class calendar_event(osv.Model):
                 pile = []
                 ok = True
                 for arg in domain:
-                    if str(arg[0]) in ('start', 'stop', 'final_date'):
+                    if str(arg[0]) in ('start', 'stop', 'final_date', 'start_date', 'stop_date', 'start_datetime', 'stop_datetime'):
                         if (arg[1] == '='):
                             ok = r_date.strftime('%Y-%m-%d') == arg[2]
                         if (arg[1] == '>'):
