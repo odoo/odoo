@@ -560,12 +560,6 @@
                 <group name="inventory" position="after">
                     <separator string="Vendors"/>
                     <field name="seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id)}"/>
-                    <group name="packaging" string="Packaging"
-                        colspan="4"
-                        attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
-                        groups="product.group_stock_packaging">
-                        <field name="packaging_ids" nolabel="1"/>
-                    </group>
                 </group>
                 <field name="uom_po_id" position="after">
                     <field name="purchase_method" widget="radio" groups="purchase.group_purchase_manager"/>
