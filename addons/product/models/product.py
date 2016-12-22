@@ -163,6 +163,10 @@ class ProductProduct(models.Model):
     pricelist_item_ids = fields.Many2many(
         'product.pricelist.item', 'Pricelist Items', compute='_get_pricelist_items')
 
+    packaging_ids = fields.One2many(
+        'product.packaging', 'product_id', 'Packaging',
+        help="Gives the different ways to package the same product.")
+
     _sql_constraints = [
         ('barcode_uniq', 'unique(barcode)', _("A barcode can only be assigned to one product !")),
     ]
@@ -572,7 +576,7 @@ class ProductPackaging(models.Model):
 
     name = fields.Char('Packaging Type', required=True)
     sequence = fields.Integer('Sequence', default=1, help="The first in the sequence is the default one.")
-    product_tmpl_id = fields.Many2one('product.template', string='Product')
+    product_id = fields.Many2one('product.product', string='Product')
     qty = fields.Float('Quantity per Package', help="The total number of products you can have per pallet or box.")
 
 
