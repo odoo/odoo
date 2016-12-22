@@ -17,12 +17,12 @@ base.ready().then(function () {
             trigger: 'hover',
             html: 'true',
             content: function () {
-                var getratingid = $(this).data('id');
-                var getratingdate = $(this).data('date');
-                var sys_base_rating_time = time.auto_str_to_date(getratingdate);
-                var duration = moment(sys_base_rating_time).fromNow();
-                $("#rating_"+ getratingid).find(".rating-timeduration").text(duration);
-                return $("#rating_"+ getratingid).html();
+                var id = $(this).data('id');
+                var rating_date = $(this).data('rating-date');
+                var base_date = time.auto_str_to_date(rating_date);
+                var duration = moment(base_date).fromNow();
+                $("#rating_"+ id).find(".rating-timeduration").text(duration);
+                return $("#rating_"+ id).html();
             }
         });
     });

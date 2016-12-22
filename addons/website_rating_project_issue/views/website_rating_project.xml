@@ -99,13 +99,13 @@
                         </span>
                         <div>
                             <t t-if="i['happy']">
-                                <img class="o-top-partner-rating-image" src='/rating/static/src/img/rating_10.png'/> <t t-esc="i['happy']"/>
+                                <img class="o-top-rating-image" src='/rating/static/src/img/rating_10.png'/> <t t-esc="i['happy']"/>
                             </t>
                             <t t-if="i['okay']">
-                                <img class="o-top-partner-rating-image" src='/rating/static/src/img/rating_5.png'/> <t t-esc="i['okay']"/>
+                                <img class="o-top-rating-image" src='/rating/static/src/img/rating_5.png'/> <t t-esc="i['okay']"/>
                             </t>
                             <t t-if="i['unhappy']">
-                                <img class="o-top-partner-rating-image" src='/rating/static/src/img/rating_1.png'/> <t t-esc="i['unhappy']"/>
+                                <img class="o-top-rating-image" src='/rating/static/src/img/rating_1.png'/> <t t-esc="i['unhappy']"/>
                             </t>
                         </div>
                     </div>
@@ -142,7 +142,7 @@
             <div class="row">
                 <div class="col-md-8">
                     <t t-foreach="data['ratings']" t-as="rating">
-                        <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png' t-att-alt="rating.rated_partner_id" class="mt4 o-rating-image" t-att-data-id="rating.id" t-att-data-date="rating.write_date"/>
+                        <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png' class="mt4 o-rating-image" t-att-data-id="rating.id" t-att-data-rating-date="rating.write_date"/>
                         <t t-call="website_rating_project_issue.rating_popover"/>
                     </t>
                 </div>
