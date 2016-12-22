@@ -20,12 +20,12 @@
         margin-left: auto
         margin-right: auto
 
-.oe_website_sale ul ul
-    margin-left: 1.5em
-
-    .td-product_name
+.oe_website_sale
+    .td-product_name, h1[itemprop="name"], .oe_product_cart form h5
         word-wrap: break-word
 
+    .td-product_name
+        min-width: 140px
     .td-img
         width: 100px
 
@@ -39,7 +39,7 @@
         .td-img, .td-price-total
             display: none
         .td-qty
-            width: 80px
+            width: 60px
         .td-price
             width: 80px
 
@@ -465,6 +465,12 @@ ul.wizard li.text-primary .chevron:before
 ul.wizard li:first-child
     padding-left: 15px
     border-radius: 4px 0 0 4px
+
+ul.wizard li:last-child
+    border-radius: 0 4px 4px 0
+    border-right-width: 1px
+    .chevron
+        display: none
 
 /* Shipping & Billing */
 .label-optional
