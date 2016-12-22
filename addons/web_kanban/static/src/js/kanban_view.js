@@ -817,8 +817,20 @@ function transform_qweb_template (node, fvg, many2manys) {
             } else if (fields_registry.contains(ftype)) {
                 // do nothing, the kanban record will handle it
             } else {
-                node.tag = qweb.prefix;
-                node.attrs[qweb.prefix + '-esc'] = 'record.' + node.attrs.name + '.value';
+                if (node.attrs.bold) {
+                    node.tag = 'strong';
+                    var children_node = {
+                        attrs: {},
+                        children: [],
+                        tag: qweb.prefix,
+                    };
+                    children_node.attrs[qweb.prefix + '-esc'] = 'record.' + node.attrs.name + '.value';
+                    node.children.push(children_node);
+                } else {
+                    node.tag = qweb.prefix;
+                    node.attrs[qweb.prefix + '-esc'] = 'record.' + node.attrs.name + '.value';
+                }
+
             }
             break;
         case 'button':
