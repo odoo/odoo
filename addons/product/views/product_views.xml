@@ -62,7 +62,7 @@
                         <page string="Inventory" name="inventory" groups="stock.group_stock_user,product.group_stock_packaging">
                             <group name="packaging" string="Packaging"
                                 colspan="4"
-                                attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
+                                attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1)]}"
                                 groups="product.group_stock_packaging">
                                 <field name="packaging_ids" nolabel="1"/>
                             </group>
@@ -225,6 +225,11 @@
                                 </group>
                             </group>
                         </group>
+                        <group name="packaging" string="Packaging"
+                            colspan="4"
+                            groups="product.group_stock_packaging">
+                            <field name="packaging_ids" nolabel="1"/>
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -294,6 +299,9 @@
                    <attribute name="name">lst_price</attribute>
                    <attribute name="attrs">{'readonly': [('product_variant_count', '&gt;', 1)]}</attribute>
                 </field>
+                <group name="packaging" position="attributes">
+                    <attribute name="attrs">{'invisible': 0}</attribute>
+                </group>
                 <field name="name" position="after">
                     <field name="product_tmpl_id" class="oe_inline" readonly="1" invisible="1" attrs="{'required': [('id', '!=', False)]}"/>
                 </field>
