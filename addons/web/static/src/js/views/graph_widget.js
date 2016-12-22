@@ -107,7 +107,8 @@ return Widget.extend({
     display_bar: function () {
         // prepare data for bar chart
         var data, values,
-            measure = this.fields[this.measure].string;
+            measure = this.fields[this.measure].string,
+            self = this;
 
         // zero groupbys
         if (this.groupbys.length === 0) {
@@ -180,7 +181,12 @@ return Widget.extend({
           rotateLabels: -20,
           showControls: (this.groupbys.length > 1)
         });
-        chart.yAxis.tickFormat(function(d) { return formats.format_value(d, { type : 'float' });});
+        chart.yAxis.tickFormat(function(d) {
+            return formats.format_value(d, {
+                type : 'float',
+                digits : self.fields[self.measure] && self.fields[self.measure].digits || [69, 2],
+            });
+        });
 
         chart(svg);
         this.to_remove = chart.update;
@@ -312,7 +318,12 @@ return Widget.extend({
         });
         chart.xAxis.tickValues(tickValues)
             .tickFormat(tickFormat);
-        chart.yAxis.tickFormat(function(d) { return formats.format_value(d, { type : 'float' });});
+        chart.yAxis.tickFormat(function(d) {
+            return formats.format_value(d, {
+                type : 'float',
+                digits : self.fields[self.measure] && self.fields[self.measure].digits || [69, 2],
+            });
+        });
 
         chart(svg);
         this.to_remove = chart.update;
