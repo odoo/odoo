@@ -186,6 +186,24 @@ class TranslationToolsTestCase(unittest.TestCase):
         result = xml_translate(lambda term: term, source)
         self.assertEquals(result, source)
 
+    def test_translate_xml_translations(self):
+        """ Test xml_translate() with invalid translations. """
+        source = """<form string="Form stuff">
+                        <h1>Blah <i>blah</i> blah</h1>
+                        Put some <b>more text</b> here
+                        <field name="foo"/>
+                    </form>"""
+        translations = {
+            "Put some <b>more text</b> here": "Mettre <b>plus de texte</i> ici",
+        }
+        expect = """<form string="Form stuff">
+                        <h1>Blah <i>blah</i> blah</h1>
+                        Mettre &lt;b&gt;plus de texte&lt;/i&gt; ici
+                        <field name="foo"/>
+                    </form>"""
+        result = xml_translate(translations.get, source)
+        self.assertEquals(result, expect)
+
     def test_translate_html(self):
         """ Test xml_translate() and html_translate() with <i> elements. """
         source = """<i class="fa-check"></i>"""
