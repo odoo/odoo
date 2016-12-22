@@ -52,6 +52,14 @@ class TranslationToolsTestCase(unittest.TestCase):
         self.assertEquals(result, source)
         self.assertItemsEqual(terms, [source])
 
+    def test_translate_xml_unicode(self):
+        """ Test xml_translate() on plain text with unicode characters. """
+        terms = []
+        source = u"Un heureux évènement"
+        result = xml_translate(terms.append, source)
+        self.assertEquals(result, source)
+        self.assertItemsEqual(terms, [source])
+
     def test_translate_xml_text_entity(self):
         """ Test xml_translate() on plain text with HTML escaped entities. """
         terms = []
