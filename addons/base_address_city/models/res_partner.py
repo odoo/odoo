@@ -3,25 +3,41 @@
 
 from lxml import etree
 
-from odoo import api
-from odoo.addons.base.res.res_partner import FormatAddress
+from odoo import api, models, fields
 
-class FormatAddressExt(FormatAddress):
+class FormatAddressMixin(models.AbstractModel):
+    _inherit = "format.address.mixin"
 
     @api.model
     def fields_view_get_address(self, arch):
-        arch = super(FormatAddressExt, self).fields_view_get_address(arch)
-        if self.env.user.company_id.country_id.enforce_cities:
-            #render the partner address accordingly to address_view_id
-            doc = etree.fromstring(arch)
-            for address_node in doc.xpath("//field[@name='city']"):
-                #do your stuff
-                pass
+        arch = super(FormatAddressMixin, self).fields_view_get_address(arch)
+        #render the partner address accordingly to address_view_id
+        doc = etree.fromstring(arch)
+        for city_node in doc.xpath("//field[@name='city']"):
+            replacement_xml = """
+            <div>
+            <field name="country_enforce_cities" invisible="1"/>
+            <div attrs="{'invisible': [('country_enforce_cities', '=', False)]}">
+                <field name='city' attrs="{'invisible': ['|', ('city_id', '!=', False), ('city', '=', False)]}"/>
+                <field name='city_id'/>
+            </div>
+            </div>
+            """
+            city_id_node = etree.fromstring(replacement_xml)
+            city_node.getparent().replace(city_node, city_id_node)
 
-                #Partner = self.env['res.partner'].with_context(no_address_format=True)
-                #sub_view = Partner.fields_view_get(
-                #    view_id=address_view_id.id, view_type='form', toolbar=False, submenu=False)
-                #sub_view_node = etree.fromstring(sub_view['arch'])
-                #address_node.getparent().replace(address_node, sub_view_node)
-            arch = etree.tostring(doc)
+        arch = etree.tostring(doc)
         return arch
+
+
+class Partner(models.Model):
+    _inherit = 'res.partner'
+
+    country_enforce_cities = fields.Boolean(related='country_id.enforce_cities')
+    city_id = fields.Many2one('res.city', string='Company')
+
+    @api.onchange('city_id')
+    def _onchange_city_id(self):
+        self.city = self.city_id.name
+        self.zip = self.city_id.zipcode
+        self.state_id = self.city_id.state_id

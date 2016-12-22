@@ -39,9 +39,9 @@ def _tz_get(self):
     return [(tz, tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
 
 
-class FormatAddress(object):
+class FormatAddressMixin(models.AbstractModel):
+    _name = "format.address.mixin"
 
-    @api.model
     def fields_view_get_address(self, arch):
 
         # TODO: if self._name != 'res.partner': call ir.ui.view.postprocess_and_fields()
@@ -57,6 +57,11 @@ class FormatAddress(object):
                 sub_view = Partner.fields_view_get(
                     view_id=address_view_id.id, view_type='form', toolbar=False, submenu=False)
                 sub_view_node = etree.fromstring(sub_view['arch'])
+                if self._name != 'res.partner':
+                    try:
+                        self.env['ir.ui.view'].postprocess_and_fields(self._name, sub_view_node, None)
+                    except ValueError:
+                        return arch
                 address_node.getparent().replace(address_node, sub_view_node)
             arch = etree.tostring(doc)
         return arch
@@ -123,10 +128,14 @@ class PartnerTitle(models.Model):
 
     _sql_constraints = [('name_uniq', 'unique (name)', "Title name already exists !")]
 
-class Partner(models.Model, FormatAddress):
+class Partner(models.Model):
     _description = 'Partner'
+    _inherit = ['format.address.mixin']
     _name = "res.partner"
     _order = "display_name"
+
+    def _default_country(self):
+        return self.env.user.company_id.country_id.id
 
     def _default_category(self):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
@@ -184,7 +193,7 @@ class Partner(models.Model, FormatAddress):
     zip = fields.Char(change_default=True)
     city = fields.Char()
     state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
-    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
+    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict', default=_default_country)
     email = fields.Char()
     email_formatted = fields.Char(
         'Formatted Email', compute='_compute_email_formatted',
@@ -302,13 +311,13 @@ class Partner(models.Model, FormatAddress):
         return tools.image_resize_image_big(image.encode('base64'))
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         if (not view_id) and (view_type == 'form') and self._context.get('force_email'):
             view_id = self.env.ref('base.view_partner_simple_form').id
-        res = super(Partner, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        res, base_model = super(Partner, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             res['arch'] = self.fields_view_get_address(res['arch'])
-        return res
+        return res, base_model
 
     @api.constrains('parent_id')
     def _check_parent_id(self):

@@ -52,7 +52,6 @@ class Partner(models.Model):
             previous_pos = 0
             street_vals = ""
             separator = ""
-            #import pdb;pdb.set_trace()
             for re_match in re.finditer(r'%\(\w+\)s', street_format):
                 if not previous_field:
                     previous_field = re_match.group()[2:-2]
