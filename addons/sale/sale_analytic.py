@@ -47,6 +47,12 @@ class AccountAnalyticLine(models.Model):
     def _get_invoice_price(self, order):
         if self.unit_amount == 0.0:
             return 0.0
+
+        # Prevent unnecessary currency conversion that could be impacted by exchange rate
+        # fluctuations
+        if self.currency_id and self.amount_currency and self.currency_id == order.currency_id:
+            return abs(self.amount_currency / self.unit_amount)
+
         price_unit = abs(self.amount / self.unit_amount)
         currency_id = self.company_id.currency_id
         if currency_id and currency_id != order.currency_id:
