@@ -44,11 +44,40 @@ class Partner(models.Model):
         """Updates the street field.
         Writes the `street` field on the partners when one of the sub-fields in STREET_FIELDS
         has been touched"""
+        street_fields = self.get_street_fields()
         for partner in self:
             street_format = (partner.country_id.street_format or
                 '%(street_number)s/%(street_number2)s %(street_name)s')
-            street_vals = {field: partner[field] or '' for field in self.get_street_fields()}
-            partner.street = street_format % street_vals
+            previous_field = None
+            previous_pos = 0
+            street_vals = ""
+            separator = ""
+            #import pdb;pdb.set_trace()
+            for re_match in re.finditer(r'%\(\w+\)s', street_format):
+                if not previous_field:
+                    previous_field = re_match.group()[2:-2]
+                    previous_pos = re_match.end()
+                    if previous_field not in street_fields:
+                        raise UserError(_("Unrecognized field %s in street format.") % previous_field)
+                    if partner[previous_field]:
+                        street_vals += partner[previous_field]
+                    continue
+                field_name = re_match.group()[2:-2]
+                field_pos = re_match.start()
+                # get the substring between 2 fields, to be used as separator
+                separator = street_format[previous_pos:field_pos]
+                if field_name not in street_fields:
+                    raise UserError(_("Unrecognized field %s in street format.") % field_name)
+                if street_vals and partner[field_name]:
+                    street_vals += separator
+                if partner[field_name]:
+                    street_vals += partner[field_name]
+                previous_field = field_name
+                previous_pos = re_match.end()
+
+            #must use a sql query to bypass the orm as it would call _split_street that will try to set the fields we just modified
+            self._cr.execute('UPDATE res_partner SET street = %s WHERE ID = %s', (street_vals, partner.id))
+
 
     @api.multi
     @api.depends('street', 'country_id.street_format')
@@ -60,7 +89,7 @@ class Partner(models.Model):
             if not partner.street:
                 partner.street_name = ''
                 partner.street_number = ''
-                partner.street_number2= ''
+                partner.street_number2 = ''
                 continue
 
             street_format = (partner.country_id.street_format or
