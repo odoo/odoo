@@ -48,7 +48,7 @@ return ChatWindow.extend({
     on_keydown: function (event) {
         event.stopPropagation();
     },
-    on_click_expand: _.debounce(function () {
+    on_click_expand: _.debounce(function (event) {
         event.preventDefault();
         var options = {clear_breadcrumbs: true, active_id: this.channel_id};
         this.do_action('mail.mail_channel_action_client_chat', options).then(function () {
