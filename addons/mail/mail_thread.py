@@ -30,6 +30,7 @@ import socket
 import time
 import xmlrpclib
 from email.message import Message
+from lxml import etree
 
 from openerp import tools
 from openerp import SUPERUSER_ID
@@ -844,15 +845,27 @@ class mail_thread(osv.AbstractModel):
                     else:
                         filename=decode(filename)
                 encoding = part.get_content_charset()  # None if attachment
-                # 1) Explicit Attachments -> attachments
-                if filename or part.get('content-disposition', '').strip().startswith('attachment'):
+                content_type = re.split(r"\s*[,;]\s*", part.get('Content-Type').strip())[0]
+
+                # 1) check for inline images
+                if part.get('content-disposition', '').strip().startswith('inline') or content_type.startswith('image/'):
+                    content_id = str(part.get('Content-ID'))
+                    content_id = email.utils.collapse_rfc2231_value(content_id).strip()
+                    doc = etree.HTML(body)
+                    for node in doc.xpath("//img[@src='cid:%s']" %(content_id)):
+                        node.set('src', 'data:%s;%s,%s' %(content_type, part.get('Content-Transfer-Encoding'), part.get_payload()))
+                    body = etree.tostring(doc)
+
+                # 2) Explicit Attachments -> attachments
+                elif filename or part.get('content-disposition', '').strip().startswith('attachment'):
                     attachments.append((filename or 'attachment', part.get_payload(decode=True)))
                     continue
-                # 2) text/plain -> <pre/>
-                if part.get_content_type() == 'text/plain' and (not alternative or not body):
+
+                # 3) text/plain -> <pre/>
+                elif part.get_content_type() == 'text/plain' and (not alternative or not body):
                     body = tools.append_content_to_html(body, tools.ustr(part.get_payload(decode=True),
                                                                          encoding, errors='replace'), preserve=True)
-                # 3) text/html -> raw
+                # 4) text/html -> raw
                 elif part.get_content_type() == 'text/html':
                     # mutlipart/alternative have one text and a html part, keep only the second
                     # mixed allows several html parts, append html content
@@ -862,7 +875,8 @@ class mail_thread(osv.AbstractModel):
                         body = html
                     else:
                         body = tools.append_content_to_html(body, html, plaintext=False)
-                # 4) Anything else -> attachment
+
+                # 5) Anything else -> attachment
                 else:
                     attachments.append((filename or 'attachment', part.get_payload(decode=True)))
         return body, attachments
