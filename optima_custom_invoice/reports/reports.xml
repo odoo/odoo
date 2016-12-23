@@ -1,0 +1,15 @@
+<openerp>
+    <data>
+        <report 
+            id="account_custom_invoice"
+            model="account.invoice"
+            string="Custom Invoices"
+            report_type="qweb-pdf"
+            name="optima_custom_invoice.custom_invoice"
+            file="optima_custom_invoice.custom_invoice"
+            attachment_use="True"
+            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+        />
+
+    </data>
+</openerp>

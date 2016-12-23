@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="res_company_inherit_default_settings" model="ir.ui.view">
+            <field name="name">res.company.report.settings</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+		 <xpath expr="//page[@string='Report Configuration']" position="inside">
+			<group name="default_invoice" string="Default Invoice Settings">
+				<group>
+			           <field name="invoice_logo" widget="image" class="oe_avatar" string="Invoice Logo"/>
+			           <field name="template_invoice"/>
+				   <field name="odd"/>
+				   <field name="even"/>
+				</group>
+				<group>
+				   <field name="theme_color"/>
+				   <field name="theme_txt_color"/>
+				   <field name="text_color"/>
+				   <field name="name_color"/>
+				   <field name="cust_color"/>
+				</group>
+			</group>
+		 </xpath>
+	    </field>
+	</record>
+    </data>
+</openerp>
+

@@ -1,0 +1,86 @@
+<openerp>
+    <data>
+	<!-- salary adanve Action-->
+	<record id="ke_advance_action" model="ir.actions.act_window">
+         <field name="name">Salary Advance Request</field>
+         <field name="res_model">ke.advance</field>
+         <field name="view_mode">tree,form</field>
+        </record>
+<menuitem id="ke_menu_advance" parent="hr.menu_hr_root" name="Salary Advance" sequence="25"/>
+<menuitem id="ke_menu_advance_request" parent="ke_menu_advance" name="Salary Advance Request" action="ke_advance_action"/>
+<!-- advance  Form view-->
+        <record id="ke_advance_form" model="ir.ui.view">
+         <field name="name">ke.advance.form</field>
+         <field name="model">ke.advance</field>
+         <field name="arch" type="xml">
+           <form>
+	    <header>
+		<button string="Send for Approval" name="approval" type="workflow" class="oe_highlight" attrs="{'invisible': ['|',('same_user', '!=', True), ('state', '!=', 'draft')]}"/>
+                <button string="Approve" name="approve" type="workflow" class="oe_highlight" groups="base.group_sal_adv" attrs="{'invisible': ['|',('same_user', '!=', False), ('state', '!=', 'approval')]}"/>
+		<button string="Disapprove" name="disapprove"  type="workflow" groups="base.group_sal_adv" class="oe_highlight" attrs="{'invisible': ['|',('same_user', '!=', False), ('state', '!=', 'approval')]}"/>
+                <button string="Reset to Draft" name="reset" type="workflow" states="approval" class="oe_highlight"/>
+		 <field name="state" widget="statusbar" statusbar_visible="draft,approval,approved,disapproved" statusbar_colors="{&quot;draft&quot;:&quot;blue&quot;,&quot;approval&quot;:&quot;blue&quot;,&quot;approved&quot;:&quot;green&quot;}"/>
+	    </header>
+            <sheet>
+		<group>
+                  <field name="name"/>
+		</group>
+		<group>
+                  <group>
+			<field name="same_user" invisible="1"/>
+		<!--	<field name="same_dept" invisible="0"/> -->
+                        <field name="employee_id" options="{'no_quick_create':True, 'no_open': True}"/>
+                <!--        <field name="amount"/> -->
+                <!--        <field name="dept_id"/> -->
+                  </group>
+                  <group>
+			<field name="contract_id" options="{'no_quick_create':True, 'no_open': True}"/>
+                 <!--       <field name="date_to"/> -->
+                  </group>
+                </group>
+                <group>
+                   <field name="amount"/>
+                </group>
+	    <notebook>
+		<page string="Reasons For Advance">
+		 <field name="description"/>
+		</page>
+	    </notebook>
+            </sheet>
+	 	<div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+            	</div>
+           </form>
+         </field>
+        </record>
+<!-- Advance Tree view-->
+        <record id="ke_advance_tree" model="ir.ui.view">
+         <field name="name">ke.advance.tree</field>
+         <field name="model">ke.advance</field>
+         <field name="arch" type="xml">
+           <tree colors="blue: state == 'draft'; black: state == 'approval'; red: state == 'disapproved'">
+                 <field name="name"/>
+		 <field name="dept_id"/>
+		 <field name="employee_id"/>
+                 <field name="amount"/>
+                 <field name="state"/>
+           </tree>
+         </field>
+        </record>
+
+<!--add overtime field for every department -->
+<!--<record id="ke_hr_department_inherit" model="ir.ui.view">	
+    <field name="model">hr.department</field>
+    <field name="inherit_id" ref="hr.view_department_form"/>
+    <field name="arch" type="xml">
+	<data>
+	<xpath expr="//field[@name = 'manager_id']" position="after">
+		<field name="overtime"/>
+	</xpath>
+	</data>
+    </field>	
+</record> -->
+    </data>
+</openerp>
+

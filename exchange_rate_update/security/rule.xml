@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="1">
+
+<record id="currency_rate_update_service_multicompany_rule" model="ir.rule">
+    <field name="name">Current Rate Update Service multi-company</field>
+    <field name="model_id" ref="model_currency_rate_update_service"/>
+    <field name="global" eval="True"/>
+    <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
+</record>
+
+</data>
+</openerp>

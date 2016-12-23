@@ -1,0 +1,19 @@
+<openerp>
+<data>
+<!--Add Social media IDs to res.company -->
+<record id="ke_res_company_inherit1" model="ir.ui.view">
+    <field name="model">res.company</field>
+    <field name="inherit_id" ref="base.view_company_form"/>
+    <field name="arch" type="xml">
+        <data>
+        <xpath expr="//field[@name = 'company_registry']" position="after">
+                <field name="facebook"/>
+                <field name="twitter"/>
+                <field name="googleplus"/>
+        </xpath>
+        </data>
+    </field>
+</record>
+    </data>
+</openerp>
+

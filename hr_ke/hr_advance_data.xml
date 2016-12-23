@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Salary Advance   messaging / Chatter -->
+        <record id="ke_advance_approval" model="mail.message.subtype">
+            <field name="name">ke.advance.approval</field>
+            <field name="res_model">ke.advance</field>
+            <field name="description">Salary Advance request submitted for approval</field>
+        </record>
+        <record id="ke_advance_approved" model="mail.message.subtype">
+            <field name="name">ke.advance.approved</field>
+            <field name="res_model">ke.advance</field>
+            <field name="description">Salary Advance approved!</field>
+        </record>
+        <record id="ke_advance_disapproved" model="mail.message.subtype">
+            <field name="name">ke.advance.disapproved</field>
+            <field name="res_model">ke.advance</field>
+            <field name="description">Salary Advance disapproved!</field>
+        </record>
+        <record id="ke_advance_draft" model="mail.message.subtype">
+            <field name="name">ke.advance.draft</field>
+            <field name="res_model">ke.advance</field>
+            <field name="description">Salary Advance request has been set to draft state</field>
+        </record>
+        <record id="ke_advance_default" model="mail.message.subtype">
+            <field name="name">ke.advance.default</field>
+            <field name="res_model">ke.advance</field>
+	     <field name="default" eval="True"/>
+            <field name="description">New Salary Advance Request</field>
+        </record>
+
+    </data>
+</openerp>
+

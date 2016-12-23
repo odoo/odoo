@@ -1,0 +1,14 @@
+<openerp>
+   <data>
+	<record id="base.group_overtime" model="res.groups">
+		<field name="name">Overtime_Approver</field>
+		<field name="category_id" ref="base.module_category_human_resources"/>
+		<field name="comment">The user will be able to approve overtime requests created by employees.</field>
+	</record>
+	<record id="base.group_sal_adv" model="res.groups">
+		<field name="name">Salary_Advance_Approver</field>
+		<field name="category_id" ref="base.module_category_human_resources"/>
+		<field name="comment">The user will be able to approve Salary Advance requests created by employees.</field>
+	</record>
+   </data>
+</openerp>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="rate_company_inherit">
+            <field name="name">res.company.form.x_rate.inherit</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Exchange Rate settings" groups="base.group_system">
+                        <group>
+                           <field name="update_rate"/> 
+                           <field name="rate_source"/>
+                           <field name="api_key" attrs="{'invisible': [('rate_source', '!=', 'oanda')], 'required': [('rate_source', '=', 'oanda')]}"/>
+                        </group>
+                        <notebook>
+			   <page string='Currencies to Update'>
+				<field name="quotes"/>
+				<button type="object" name="button_update_rate" class="oe_highlight" string="Update"/>
+			   </page>
+			</notebook>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+    </data>
+</openerp>
+

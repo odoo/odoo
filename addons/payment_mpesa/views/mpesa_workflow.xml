@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<openerp>
+<data>
+<!-- mpesa message Workflow -->
+<record id="mpesa_message_workflow" model="workflow">
+    <field name="name">mpesa.message.workflow</field>
+    <field name="osv">mpesa.message</field>
+    <field name="on_create">True</field>
+</record>
+
+<!--Activities-->
+<record id="mpesa_message_raw_act" model="workflow.activity">
+    <field name="wkf_id" ref="mpesa_message_workflow"/>
+    <field name="flow_start">True</field>
+    <field name="name">mpesa.message.raw</field>
+</record>
+
+<record id="mpesa_message_processed_act" model="workflow.activity">
+    <field name="wkf_id" ref="mpesa_message_workflow"/>
+    <field name="flow_stop">True</field>
+    <field name="name">mpesa.message.processed</field>
+    <field name="kind">function</field>
+    <field name="action">mpesa_message_process()</field>
+</record>
+
+<!-- Transitions-->
+
+<record id="mpesa_trans_raw_processed" model="workflow.transition">     <!-- 1. process the message as soon as its received-->
+    <field name="act_from" ref="mpesa_message_raw_act"/>
+    <field name="act_to" ref="mpesa_message_processed_act"/>
+    <field name="condition">True</field>
+</record>
+
+
+</data>
+</openerp>
+
+

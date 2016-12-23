@@ -1,0 +1,119 @@
+<openerp>
+    <data>
+<!--  Add product styles action  in the  sales menu -->
+
+        <record id="action_product_styles" model="ir.actions.act_window">
+            <field name="name">Product Styles</field>
+            <field name="res_model">product.style</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+
+<!--  Add payment transactions to sales menu -->
+     <menuitem id="optima_menu_transactions" name="Transactions" parent="base.menu_base_partner" sequence="11"/>
+     <menuitem action="payment.action_payment_transaction" id="optima_menu_transactions_tree" parent="optima_menu_transactions"/>
+     <menuitem id="optima_menu_product_styles" name="Product Styles" parent="base.menu_base_partner" sequence="15"/>
+     <menuitem action="action_product_styles" id="optima_menu_product_style" parent="optima_menu_product_styles" name="Product Style"/>
+
+<!--  make transaction status readonly for security reasons -->
+     <record model="ir.ui.view" id="optima_payment_transaction_form">
+            <field name="model">payment.transaction</field>
+            <field name="inherit_id" ref="payment.transaction_form"/>
+            <field name="arch" type="xml">
+              <xpath expr="//form[@string='Payment Transactions']" position="attributes">
+	       <attribute name="edit">false</attribute>	
+               <attribute name="create">false</attribute>
+               <attribute name="delete">false</attribute>
+              </xpath>
+            </field>
+     </record>
+     <record model="ir.ui.view" id="optima_payment_transaction_tree">
+            <field name="model">payment.transaction</field>
+            <field name="inherit_id" ref="payment.transaction_list"/>
+            <field name="arch" type="xml">
+              <xpath expr="//tree[@string='Payment Transactions']" position="attributes">
+               <attribute name="edit">false</attribute>                                    
+               <attribute name="create">false</attribute>
+               <attribute name="delete">false</attribute>
+              </xpath>
+            </field>
+     </record>
+
+<!--  Modify Product Tree view to include more fields -->
+     <record model="ir.ui.view" id="optima_product__tree">
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+              <xpath expr="//field[@name='categ_id']" position="attributes">
+               <attribute name="invisible">1</attribute>
+              </xpath>
+              <xpath expr="//field[@name='type']" position="after">
+               <field name="public_categ_ids"/>
+              </xpath>
+              <xpath expr="//field[@name='state']" position="before">
+               <field name="website_published"/>
+	       <field name="website_style_ids" widget="many2many"/>
+              </xpath>
+              <xpath expr="//field[@name='virtual_available']" position="after">
+               <field name="list_price"/>
+              </xpath>
+            </field>
+     </record>
+<!--  Modify Product form to include 2 more images -->
+     <record model="ir.ui.view" id="optima_product__form">
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+              <xpath expr="//field[@name='image_medium']" position="after">
+               <field name="image_medium2" widget="image" class="oe_avatar oe_left"/>
+               <field name="image_medium3" widget="image" class="oe_avatar oe_left"/>
+              </xpath>
+            </field>
+     </record>
+     <record id="optima_product_style_tree" model="ir.ui.view">
+            <field name="name">Product Style Tree</field>
+            <field name="model">product.style</field>
+            <field name="arch" type="xml">
+                <tree string="Product Style">
+                    <field name="name"/>
+                    <field name="msg"/>
+                    <field name="html_class"/>
+                    <field name="shape"/>
+                    <field name="text_color"/>
+                    <field name="bg_color"/>
+                    <field name="height"/>
+                    <field name="width"/>
+                </tree>
+            </field>
+        </record>
+     <record id="optima_product_style_form" model="ir.ui.view">
+            <field name="name">Product Style Form</field>
+            <field name="model">product.style</field>
+            <field name="arch" type="xml">
+                <form string="Product Style">
+		 <sheet>
+		  <group string="Product Website Promotion Style">
+                   <group>
+                    <field name="name" required="True"/>
+                    <field name="msg" required="True"/>
+                    <field name="shape" required="True"/>
+                    <field name="top" required="True"/>
+		    <field name="left" required="True"/>
+                    <field name="text_top" required="True"/>
+		   </group>
+		   <group>
+                    <field name="text_color" required="True"/>
+                    <field name="font_size" required="True"/>
+                    <field name="bg_color" required="True"/>
+                    <field name="height" required="True"/>
+                    <field name="width" required="True"/>
+                    <field name="html_class"/>
+		   </group>
+		 </group>
+		</sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

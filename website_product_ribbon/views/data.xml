@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+        <record id="1" model="product.style_shapes">
+            <field name="name">12 Point Burst</field>
+            <field name="css">burst-12</field>
+        </record>
+        <record id="2" model="product.style_shapes">
+            <field name="name">Badge</field>
+            <field name="css">badge-ribbon</field>
+        </record>
+
+        <record id="3" model="product.style_shapes">
+            <field name="name">Television</field>
+            <field name="css">tv</field>
+        </record>
+        <record id="100" model="product.style">
+            <field name="name">Style 1</field>
+            <field name="shape" ref="1"></field>
+        </record>
+        <record id="101" model="product.style">
+            <field name="name">Style 2</field>
+            <field name="shape" ref="3"></field>
+        </record>
+        <record id="102" model="product.style">
+            <field name="name">Style 3</field>
+            <field name="shape" ref="2"></field>
+        </record>
+</data>
+</openerp>

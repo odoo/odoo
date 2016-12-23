@@ -1,0 +1,27 @@
+<openerp>
+    <data>
+            <!--inherits the default invoice report  and override its name -->
+      <report 
+            id="account.account_invoices"
+            model="account.invoice"
+            string="Invoices"
+            report_type="qweb-pdf"
+            name="customized_invoice.my_invoice"
+            file="customized_invoice.my_invoice"
+            attachment_use="True"
+            attachment="(object.state in ('open','paid')) and ((object.number or '').replace('/','-')+('-paid' if object.state in ('paid') else '-unpaid')+'.pdf')"
+      />
+
+        <report 
+            id="account_invoice_action_report_duplicate"
+            model="account.invoice"
+            string="Duplicates"
+            report_type="qweb-pdf"
+            name="customized_invoice.my_duplicate"
+            file="customized_invoice.my_duplicate"
+            attachment_use="False"
+        />
+
+
+    </data>
+</openerp>

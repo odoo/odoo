@@ -1,0 +1,441 @@
+<openerp>
+    <data>
+	<!-- Law Modify Invoice Form-->
+	<record id="law_invoice_form_inherit" model="ir.ui.view">
+	 <field name="name">account.invoice.form.inherit</field>
+	 <field name="model">account.invoice</field>
+	 <field name="inherit_id" ref="account.invoice_form"/>
+	 <field name="arch" type="xml">
+	  <xpath expr="//field[@name='product_id']" position="attributes">
+		<attribute name="on_change">bill_id_change(product_id, quantity, name, parent.partner_id, context)</attribute>
+		<attribute name="domain">[('matter_id', '=', parent.matter_id)]</attribute>
+	        
+	  </xpath>
+	  <xpath expr="//field[@name='price_unit']" position="attributes">
+		<attribute name="invisible">1</attribute>
+	  </xpath>
+	  <xpath expr="//field[@name='partner_id']" position="attributes">
+		<attribute name="string"></attribute>
+	  </xpath>
+	  <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="matter_id" on_change="prepare_bills(matter_id)"/>
+          </xpath>
+	 </field>
+	</record>
+
+	<!-- Law Modify Invoice Menu Items to change from "customer" to "Client"-->
+        <menuitem id="account.menu_finance_receivables" name="Invoice and Payments" parent="account.menu_finance" sequence="2"/>
+	<menuitem id="law_trust_accounts_menu" name="Trust Accounts" parent="account.menu_finance" sequence="1"/>
+	<menuitem id="account.menu_action_invoice_tree1"  action="account.action_invoice_tree1" name="Client Invoices" parent="account.menu_finance_receivables"/>
+	<menuitem id="account.menu_action_invoice_tree3"  action="account.action_invoice_tree3" name="Client Refunds" parent="account.menu_finance_receivables"/>
+	<menuitem id="account_voucher.menu_action_vendor_receipt"  action="account_voucher.action_vendor_receipt" name="Client Payments" parent="account.menu_finance_receivables"/>
+
+        <!-- Create a group with no users and use it to hide unwanted menus-->
+	<record id="group_with_no_access" model="res.groups">
+         <field name="name">Group - No user</field>
+	</record>
+	<!-- Law remove the "Customers" Menuitem  in the Accounting menu-->
+	<menuitem id="account.menu_account_customer" parent="account.menu_finance_receivables" groups="group_with_no_access"/>
+	<menuitem id="account_voucher.menu_action_sale_receipt"  parent="account.menu_finance_receivables" groups="group_with_no_access"/>
+
+	<record id="account_voucher.action_sale_receipt" model="ir.actions.act_window">
+	   <field name="res_model">account.voucher</field>
+	   <field name="name"> </field>
+	</record>
+
+        <!-- Law Modify Invoice Action Items to change from "customer" to "Client"-->
+        <record id="account.action_invoice_tree3" model="ir.actions.act_window">
+            <field name="name">Client Refunds</field>
+	    <field name="res_model">account.invoice</field>
+	</record>
+	<record id="account.action_invoice_tree1" model="ir.actions.act_window">
+	   <field name="name">Client Invoices</field>
+	   <field name="res_model">account.invoice</field>
+	</record>
+        <record id="account_voucher.action_vendor_receipt" model="ir.actions.act_window">
+            <field name="name">Client Payments</field>
+	    <field name="res_model">account.voucher</field>
+	</record>
+        <record id="account_voucher.act_pay_voucher" model="ir.actions.act_window">
+            <field name="name">Client Payments</field>
+	    <field name="res_model">account.voucher</field>
+	</record>
+<!-- Search Filter for Trust Account -->
+        <record id="law_trust_accounting_search_filter" model="ir.ui.view">
+         <field name="name">Law Trust Accounting - Search</field>
+         <field name="model">law.trust.accounting</field>
+         <field name="arch" type="xml">
+          <search string="Search Trust Accounts">
+           <field name="client_id" string="Client" filter_domain="[('client_id', 'ilike', self)]"/>
+           <field name="matter_id" string="Matter ID" filter_domain="[('matter_id', 'ilike', self)]"/>
+	   <field name="operation" string="Transaction Type" filter_domain="[('operation', 'ilike', self)]"/>
+           <field name="number" string="Number" filter_domain="[('number', 'ilike', self)]"/>
+           <field name="ref"  filter_domain="[('ref', 'ilike', self)]"/>
+           <field name="state"  filter_domain="[('state', 'ilike', self)]"/>
+	   <field name="narration"  filter_domain="[('narration', 'ilike', self)]"/>
+	   <field name="transaction_date"  filter_domain="[('transaction_date', 'ilike', self)]"/>
+	   <field name="debit"  filter_domain="[('debit', 'ilike', self)]"/>
+	   <field name="credit"  filter_domain="[('credit', 'ilike', self)]"/>
+	   <field name="description"  filter_domain="[('description', 'ilike', self)]"/>
+	   <field name="matter_from"  filter_domain="[('matter_from', 'ilike', self)]"/>
+	   <field name="matter_to"  filter_domain="[('matter_to', 'ilike', self)]"/>
+	   <field name="ttype"  filter_domain="[('ttype', 'ilike', self)]"/> 
+	   
+           <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>	   
+           <filter string="Posted" name="posted" domain="[('state', '=', 'posted')]"/>
+	   <filter string="Deposits" name="deposit" domain="[('operation', '=', 'deposit')]"/>
+	   <filter string="Withdrawals" name="withdrawal" domain="[('operation', '=', 'draw')]"/>
+	   <filter string="Posted-Withdrawals" name="posted_withdrawal" domain="[('operation', '=', 'draw'), ('state', '=', 'posted')]" invisible="1"/>
+	   <filter string="Client-Withdrawals" name="client_withdrawal" domain="[('operation', '=', 'draw'), ('state', '=', 'posted'), 
+				('matter_id', '=', False)]" invisible="1"/>
+	   <filter string="Unallocated" name="unallocated" domain="[('matter_id', '=', False), ('state', '=', 'posted')]" invisible="1"/>
+	   <filter string="Matter-to-Matter" name="transfer" domain="[('operation', '=', 'transfer')]"/>
+	   <filter string="Client-to-Matter" name="trans-client" domain="[('operation', '=', 'trans-client')]"/>
+	   <group string="Group By">
+		<filter string="Transaction Type" name="operation" context="{'group_by': 'operation'}"/>
+		<filter string="Clients" name="clients" context="{'group_by': 'client_id'}"/>
+		<filter string="Matters" name="matters" context="{'group_by': 'matter_id'}"/>
+		<filter string="Date:Month" name="month" context="{'group_by': 'transaction_date:month'}"/>
+		<filter string="Date:Week" name="week" context="{'group_by': 'transaction_date:week'}"/>
+		<filter string="Date:Year" name="year" context="{'group_by': 'transaction_date:year'}"/>
+		<filter string="Date:Day" name="day" context="{'group_by': 'transaction_date:day'}"/>
+		<filter string="Date:Quarter" name="quarter" context="{'group_by': 'transaction_date:quarter'}"/>
+		<filter string="Status" name="state" context="{'group_by': 'state'}"/>
+		<filter string="Transaction Number" name="number" context="{'group_by': 'number'}"/>
+		<filter string="Period" name="period" context="{'group_by': 'period_id'}"/>
+		<filter string="Debit/Credit" name="ttype" context="{'group_by': 'ttype'}"/>
+	   </group>
+          </search>
+         </field>
+        </record>
+
+	
+	<!-- Trust Accounting Action -->
+        <record id="law_trust_accounting_form_act" model="ir.actions.act_window">
+	  <field name="name">Trust Accounting </field>
+	  <field name="res_model">law.trust.accounting</field>
+	  <field name="view_mode">tree,form,graph</field>
+	  <field name="search_view_id" ref="law_trust_accounting_search_filter"/>
+	  <field name="help" type="html">
+	   <p>
+		Here you can record the Trust Accounting transactions relating to your clients
+	   </p>
+	  </field>
+	</record>
+
+        <record model="ir.ui.view" id="law_trust_account_graph">
+            <field name="name">law.trust.accounting.graph</field>
+            <field name="model">law.trust.accounting</field>
+            <field name="arch" type="xml">
+                <graph string="Trust Account Transactions" type="bar">
+                    <field name="operation"/>
+                </graph>
+            </field>
+        </record>
+
+
+	<menuitem id="law_trust_accounting_menu"  action="law_trust_accounting_form_act" name="Trust Accounting" parent="law_trust_accounts_menu"/>
+
+        <!-- Trust Accounting Tree View -->
+        <record model="ir.ui.view" id="law_trust_tree_view">
+            <field name="name">Trust Tree</field>
+            <field name="model">law.trust.accounting</field>
+	    <field name="domain">[('matter_id', '!=', False)]</field>
+            <field name="arch" type="xml">
+                <tree colors="blue: state=='draft'">
+		 <field name="transaction_date"/>
+                 <field name="ref"/>
+                 <field name="client_id"/>
+		 <field name="matter_id"/>
+		 <field name="operation"/>
+		 <field name="narration"/>
+                 <field name="journal_id"/>
+                 <field name="debit" sum="total"/>
+		 <field name="credit" sum="total"/>
+                 <field name="state" invisible="True"/>
+                </tree>
+            </field>
+        </record>
+
+
+
+       <!-- Trust Accounting Form View -->
+        <record model="ir.ui.view" id="law_trust_form_view">
+            <field name="name">Trust Accounting Form</field>
+            <field name="model">law.trust.accounting</field>
+            <field name="arch" type="xml">
+                <form>
+		 <header>
+		  <button name="validate_trust_transaction" string="Validate" states="draft" class="oe_highlight"/>
+		  <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"draft":"green"}'/>
+		 </header>
+		  <sheet>
+                        <div name="depo_buttons" class="oe_right oe_button_box">
+
+                            <button class="oe_inline oe_stat_button" type="action"
+                             name=""
+                             attrs="{'invisible': [('matter_id', '=', False)]}"
+                             icon="fa-pencil-square-o"
+                             context="{'search_default_matter_id': matter_id}">
+                             <div><strong><field name="matter_trust" widget="monetary"/></strong><br/>Matter Funds</div>
+                            </button>
+                            <button class="oe_inline oe_stat_button" type="action"
+                             name=""
+                             attrs="{'invisible': [('client_id', '=', False)]}"
+                             icon="fa-pencil-square-o"
+                             context="{'search_default_client_id': client_id}">
+                             <div><strong><field name="client_trust" widget="monetary"/></strong><br/>Client Funds</div>
+                            </button>
+                        </div>
+
+			<h1>
+			   <label string="Transaction#" attrs="{'invisible':[('state', '=', 'draft')]}"/>
+			   <field name="number" readonly="1" class="oe_inline" attrs="{'invisible':[('state', '=', 'draft')]}"/>
+			</h1>
+		   <group>
+			<group>
+			<field name="id" invisible="1"/>
+			<field name="ttype" invisible="1"/>
+			<field name="operation"/>
+			<field name="client_id" options="{'no_quick_create':True}"/>
+                 	<field name="matter_id" options="{'no_quick_create':True}" attrs="{'invisible': ['|', ('operation', '=', 'transfer'),('operation', '=', 'trans-client')]}"/>
+			<field name="matter_from" options="{'no_quick_create':True}" attrs="{'invisible': [('operation', '!=', 'transfer')], 
+					'required': [('operation', '=', 'transfer')]}"/>
+                 	<field name="debit" string="Amount" attrs="{'invisible': ['|','|','|',('operation', '=', 'deposit'), '&amp;',('operation', '=', 'transfer'), ('ttype', '=', 'cr'), '&amp;',('operation', '=', 'trans-client'), ('ttype', '=', 'cr'), ('operation', '=', False)]}"/>
+			<field name="credit" string="Amount" attrs="{'invisible': ['|','|', ('operation', '=', 'draw'), '&amp;',('operation', '=', 'transfer'), ('ttype', '=', 'dr'), '&amp;',('operation', '=', 'trans-client'), ('ttype', '=', 'dr')]}"/>
+			<!--<field name="period_id"/> -->
+			</group>
+			<group>
+                 	<field name="transaction_date"/>
+                 	<field name="journal_id" options="{'no_quick_create':True}"/>
+			<field name="matter_to" options="{'no_quick_create':True}" attrs="{'invisible': [('operation', '!=', 'transfer'), 
+				('operation', '!=', 'trans-client')], 'required': [ '|', ('operation', '=', 'transfer'), ('operation', '=', 'trans-client')]}"/>
+                 	<field name="ref"/>
+			</group>
+		   </group>
+		   <notebook>
+			<page string="Description">
+			 <field name="description"/>
+			</page>
+			<page string="Other Info">
+			 <group>
+			  <group>
+                            <field name="cr_account_id"/>
+			    <field name="period_id"/> 
+			  </group>
+			  <group>
+                            <field name="dr_account_id"/>
+                          </group>
+			  </group>
+                        </page>
+		   </notebook>
+
+		  </sheet>
+                </form>
+            </field>
+        </record>
+
+
+
+
+<!-- Trust Accounting  Work Flow -->
+        <record id="law_trust_account_wf" model="workflow">
+            <field name="name">law.trust.basic</field>
+            <field name="osv">law.trust.accounting</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="law_trust_account_act_draft" model="workflow.activity">
+            <field name="wkf_id" ref="law_trust_account_wf"/>
+            <field name="name">draft</field>
+            <field name="flow_start">True</field>
+        </record>
+
+
+        <record id="law_trust_account_act_done" model="workflow.activity">
+            <field name="wkf_id" ref="law_trust_account_wf"/>
+            <field name="name">validate</field>
+            <field name="action">validate_trust_transaction()</field>
+            <field name="kind">function</field>
+            <field name="flow_stop">True</field>
+        </record>
+
+        <record id="law_trust_account_tr1" model="workflow.transition">
+            <field name="act_from" ref="law_trust_account_act_draft"/>
+            <field name="act_to" ref="law_trust_account_act_done"/>
+            <field name="signal">validate_trust_transaction</field>
+            <field name="condition">True</field>
+        </record>
+
+<!--Insert the trust balance button in the matters form -->
+        <record id="law_matters_trust_bals_inherit1" model="ir.ui.view">
+            <field name="name">view.law.matter.form.trust.inherited1</field>
+            <field name="model">law.matter</field>
+            <field name="inherit_id" ref="law_matter.law_matter_form_view"/>
+            <field name="arch" type="xml">
+	      <data>
+		<xpath expr="//div[@name='matter_buttons']" position="inside">
+			<button class="oe_inline oe_stat_button" type="action"
+                        name="%(account.action_invoice_tree)d"
+                        icon="fa-exclamation-triangle"
+                        context="{'search_default_matter_id': active_id}">
+                        <div><strong><field name="unpaid_fee" widget="monetary"/></strong><br/>Unpaid Fees</div>
+                </button>
+			<button class="oe_inline oe_stat_button" type="action"
+                            name="%(law_trust_accounting_form_act)d"
+                            icon="fa-money"
+                            context="{'search_default_matter_id': active_id, 'search_default_posted_withdrawal': True}">
+                             <div><strong><field name="op_bal" widget="monetary"/></strong><br/>Operating Bal.</div>
+                        </button>
+			<button class="oe_inline oe_stat_button" type="action"
+                            name="%(law_trust_accounting_form_act)d"
+                            icon="fa-university"
+                            context="{'search_default_matter_id': active_id}">
+			     <div><strong><field name="trust_bal" widget="monetary"/></strong><br/>Trust Bal.</div>
+                        </button>
+		</xpath>
+		<xpath expr="//div[@id='matter_files']" position="after">
+		  <page string="Trust Account">
+			<label for="transactions"/>
+			<field name="transactions" context="{'default_client_id': client_id}"/>
+		  </page>
+		  <page string="Invoices">
+                        <label for="invoices"/>
+                        <field name="invoices" context="{'default_partner_id': client_id, 'default_matter_id': active_id}"/>
+                  </page>
+		</xpath>
+	      </data>
+	    </field>
+	</record>
+
+<!--Insert the trust balance button in the client form -->
+        <record id="law_client_trust_bals_inherit1" model="ir.ui.view">
+            <field name="name">view.law.client.form.trust.inherited1</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field eval="18" name="priority"/>
+            <field name="arch" type="xml">
+              <data>
+                <xpath expr="//div[@name='buttons']" position="inside">
+			<button class="oe_inline oe_stat_button" type="action"
+                            name="%(account.action_invoice_tree)d"
+                            icon="fa-exclamation-triangle"
+                            context="{'search_default_partner_id': active_id, 'search_default_unpaid':True }">
+                             <div><strong><field name="unpaid_fee" widget="monetary"/></strong><br/>Unpaid Fees</div>
+                        </button>
+			<button class="oe_inline oe_stat_button" type="action"
+                            name="%(law_matter.law_billable_act)d"
+                            icon="fa-exclamation"
+                            context="{'search_default_client_id': active_id, 'search_default_unbilled': True}">
+                             <div><strong><field name="unbilled_fee" widget="monetary"/></strong><br/>Unbilled Fees</div>
+                        </button>
+                        <button class="oe_inline oe_stat_button" type="action"
+                            name="%(law_trust_accounting_form_act)d"
+                            icon="fa-university"
+                            context="{'search_default_client_id': active_id, 'search_default_unallocated': True}">
+                             <div><strong><field name="trust_bal" widget="monetary"/></strong><br/>Trust Bal</div>
+                        </button>
+			<button class="oe_inline oe_stat_button" type="action"
+                            name="%(law_trust_accounting_form_act)d"
+                            icon="fa-money"
+                            context="{'search_default_client_id': active_id, 'search_default_client_withdrawal': True}">
+                             <div><strong><field name="op_bal" widget="monetary"/></strong><br/>Operating Bal</div>
+                        </button>
+			<button class="oe_inline oe_stat_button" type="action"
+                            name="%(calendar.action_calendar_event)d"
+                            icon="fa-calendar"
+                            context="{'search_default_partner_ids': active_id}">
+                             <div><strong><field name="events" /></strong><br/>Events/Meetings</div>
+                        </button>
+                </xpath>
+                <xpath expr="//page[@name='internal_notes']" position="after">
+                  <page string="Trust Fund">
+                        <label for="transactions"/>
+                        <field name="transactions" context="{'default_client_id': active_id}"/>
+                  </page>
+		  <page string="Invoices">
+                        <label for="invoices"/>
+                        <field name="invoices" context="{'default_partner_id': active_id}"/>
+                  </page>
+		  <page string="Time/Expenses">
+                        <label for="bill_ids"/>
+                        <field name="bill_ids" context="{'default_client_id': active_id}"/>
+                  </page>
+                </xpath>
+		<xpath expr="//field[@name='fax']" position="attributes">
+			<attribute name="invisible">1</attribute>			
+		</xpath>
+		<xpath expr="//field[@name='title']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                </xpath>
+		 <xpath expr="//field[@name='state_id']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                </xpath>
+		 <xpath expr="//field[@name='zip']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                </xpath>
+		<xpath expr="//field[@name='website']" position="attributes">
+                        <attribute name="attrs">{'invisible': [('is_company', '=', False)]}</attribute>
+                </xpath>
+		<xpath expr="//field[@name='street2']" position="attributes">
+                        <attribute name="placeholder">Street..(optional)</attribute>
+                </xpath>
+		<xpath expr="//field[@name='phone']" position="attributes">
+                        <attribute name="placeholder">e.g +254 715 956 866</attribute>
+                </xpath>
+		<xpath expr="//field[@name='function']" position="attributes">
+                        <attribute name="placeholder">e.g Manager</attribute>
+			<attribute name="string">Occupation</attribute>
+                </xpath>
+		<xpath expr="//page[@name='sales_purchases']" position="attributes">
+                        <attribute name="string">Internal Settings</attribute>
+                </xpath>
+		<xpath expr="//field[@name='user_id']" position="attributes">
+                        <attribute name="string">Intro Lawyer</attribute>
+                </xpath>
+		<xpath expr="//page[@name='sales_purchases']//field[@name='customer']" position="attributes">
+                        <attribute name="string">Client</attribute>
+                </xpath>
+              </data>
+            </field>
+        </record>
+        <record id="law_client_trust_payment_inherit1" model="ir.ui.view">
+            <field name="name">view.law.client.trust.payment.inherited1</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_voucher.view_vendor_receipt_form"/>
+            <field name="arch" type="xml">
+              <data>
+		<xpath expr="//field[@name='journal_id']" position="replace">
+			<field name="journal_id" on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, 
+				date, amount, type, company_id, context)" string="Payment Option"/>
+		</xpath>
+		<xpath expr="//field[@name='partner_id']" position="after">
+		      <field name="source" options="{'no_quick_create':True}"/>
+                </xpath>
+              </data>
+            </field>
+        </record>
+
+<!--Modify the Invoice old payment wizard to allow payment from trust fund -->
+        <record id="law_client_trust_payment_inherit2" model="ir.ui.view">
+            <field name="name">view.law.client.trust.payment.inherited2</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_voucher.view_vendor_receipt_dialog_form"/>
+            <field name="arch" type="xml">
+              <data>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                      <field name="source" options="{'no_quick_create':True}"/>
+                </xpath>
+		<xpath expr="//field[@name='journal_id']" position="replace">
+		     <field name="journal_id" invisible="context.get('line_type', False)"
+			 on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, company_id, context)"
+                         string="Payment Option"/>
+		</xpath>
+
+              </data>
+            </field>
+        </record>
+
+
+    </data>
+</openerp>

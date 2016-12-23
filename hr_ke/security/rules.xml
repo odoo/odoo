@@ -1,0 +1,28 @@
+<openerp>
+  <data>
+	<record id="ke_overtime_rule" model="ir.rule">
+	 <field name="name">HR employee should see his/her own overtime only </field>
+	 <field name="model_id" ref="model_ke_overtime"/>
+	 <field name="domain_force">[('user_id', '=', user.id)]</field>
+	 <field name="groups"  eval="[(4, ref('base.group_user'))]"/>
+	</record>
+	<record id="ke_overtime_rule2" model="ir.rule">
+	 <field name="name">HR Officer can see all overtime requests for payroll reasons </field>
+	 <field name="model_id" ref="model_ke_overtime"/>
+	 <field name="domain_force"></field>
+	 <field name="groups"  eval="[(4, ref('base.group_hr_user'))]"/>
+	</record>
+	<record id="ke_overtime_rule3" model="ir.rule">
+	 <field name="name">The Overtime approving user can only aprove 'OVERTIME' type of Earning </field>
+	 <field name="model_id" ref="model_ke_earnings"/>
+	 <field name="domain_force">[('code', '=', 'OVERTIME')]</field>
+	 <field name="groups"  eval="[(4, ref('base.group_overtime'))]"/>
+	</record>
+	<record id="ke_overtime_rule4" model="ir.rule">
+	 <field name="name">The Overtime approving user can only approve Overtime requests from his/her department </field>
+	 <field name="model_id" ref="model_ke_overtime"/>
+	 <field name="domain_force">[('same_dept', '=', 1)]</field>
+	 <field name="groups"  eval="[(4, ref('base.group_overtime'))]"/>
+	</record>
+  </data>
+</openerp>

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+	<!-- Types of LAW -->
+	<record id="law1" model="law.type">
+	 <field name="code">BAN</field>
+	 <field name="name">Bankruptcy</field>
+	</record>
+        <record id="law2" model="law.type">
+         <field name="code">BAN</field>
+         <field name="name">Collections</field>
+        </record>
+        <record id="law3" model="law.type">
+         <field name="code">BUS</field>
+         <field name="name">Corporate</field>
+        </record>
+        <record id="law4" model="law.type">
+         <field name="code">CRM</field>
+         <field name="name">Defense-Criminal</field>
+        </record>
+        <record id="law5" model="law.type">
+         <field name="code">CRM</field>
+         <field name="name">Defense-Suit</field>
+        </record>
+        <record id="law6" model="law.type">
+         <field name="code">CRM</field>
+         <field name="name">Defense-Suit</field>
+        </record>
+        <record id="law7" model="law.type">
+         <field name="code">FAM</field>
+         <field name="name">Divorce</field>
+        </record>
+        <record id="law8" model="law.type">
+         <field name="code">TWE</field>
+         <field name="name">Estate Planning</field>
+        </record>
+        <record id="law9" model="law.type">
+         <field name="code">FAM</field>
+         <field name="name">Marriage</field>
+        </record>
+        <record id="law10" model="law.type">
+         <field name="code">GOV</field>
+         <field name="name">Local and Municipal</field>
+        </record>
+        <record id="law11" model="law.type">
+         <field name="code">ETH</field>
+         <field name="name">Legal Advertising</field>
+        </record>
+        <record id="law12" model="law.type">
+         <field name="code">EMP</field>
+         <field name="name">Hiring and Firing</field>
+        </record>
+        <record id="law13" model="law.type">
+         <field name="code">EDU</field>
+         <field name="name">Student Rights</field>
+        </record>
+        <record id="law14" model="law.type">
+         <field name="code">CON</field>
+         <field name="name">State Constitutional Law</field>
+        </record>
+        <record id="law15" model="law.type">
+         <field name="code">ADR</field>
+         <field name="name">Arbitration</field>
+        </record>
+        <record id="law16" model="law.type">
+         <field name="code">ENV</field>
+         <field name="name">Environmental Law</field>
+        </record>
+        <record id="law17" model="law.type">
+         <field name="code">INL</field>
+         <field name="name">International Law</field>
+        </record>
+        <record id="law18" model="law.type">
+         <field name="code">LAB</field>
+         <field name="name">Labour Law</field>
+        </record>
+        <record id="law19" model="law.type">
+         <field name="code">PER</field>
+         <field name="name">Personal Law</field>
+        </record>
+        <record id="law20" model="law.type">
+         <field name="code">REL</field>
+         <field name="name">Property Law</field>
+        </record>
+
+<!-- Types of Activities -->
+
+        <record id="act1" model="law.activity_type">
+         <field name="code">CORR</field>
+         <field name="name">Correspondence</field>
+        </record>
+        <record id="act2" model="law.activity_type">
+         <field name="code">CT</field>
+         <field name="name">Court Time</field>
+        </record>
+
+        <record id="act3" model="law.activity_type">
+         <field name="code">DEPO</field>
+         <field name="name">Deposition</field>
+        </record>
+
+        <record id="act4" model="law.activity_type">
+         <field name="code">DOC</field>
+         <field name="name">Documentation</field>
+        </record>
+
+        <record id="act5" model="law.activity_type">
+         <field name="code">DRF</field>
+         <field name="name">Draft</field>
+        </record>
+
+        <record id="act6" model="law.activity_type">
+         <field name="code">MEET</field>
+         <field name="name">Meeting</field>
+        </record>
+
+        <record id="act6" model="law.activity_type">
+         <field name="code">OTH</field>
+         <field name="name">Other</field>
+        </record>
+
+        <record id="act8" model="law.activity_type">
+         <field name="code">PHN</field>
+         <field name="name">Phone Call</field>
+        </record>
+
+        <record id="act9" model="law.activity_type">
+         <field name="code">RES</field>
+         <field name="name">Research</field>
+        </record>
+
+        <record id="act10" model="law.activity_type">
+         <field name="code">REV</field>
+         <field name="name">Review</field>
+        </record>
+
+        <record id="act11" model="law.activity_type">
+         <field name="code">TRN</field>
+         <field name="name">Training</field>
+        </record>
+
+        <record id="act12" model="law.activity_type">
+         <field name="code">TRV</field>
+         <field name="name">Travel</field>
+        </record>
+
+<!-- Types of Law Expenses -->
+        <record id="exp1" model="law.expense_type">
+         <field name="code">POST</field>
+         <field name="name">Mailing/Postage</field>
+	 <field name="taxable">False</field>
+        </record>
+
+        <record id="exp2" model="law.expense_type">
+         <field name="code">MEAL</field>
+         <field name="name">Meal</field>
+         <field name="taxable">False</field>
+        </record>
+
+        <record id="exp3" model="law.expense_type">
+         <field name="code">MISC</field>
+         <field name="name">Miscellaneous</field>
+         <field name="taxable">False</field>
+        </record>
+
+        <record id="exp4" model="law.expense_type">
+         <field name="code">PRNT</field>
+         <field name="name">Printing</field>
+         <field name="taxable">False</field>
+        </record>
+
+        <record id="exp5" model="law.expense_type">
+         <field name="code">COPY</field>
+         <field name="name">Copying</field>
+         <field name="taxable">False</field>
+        </record>
+
+        <record id="exp6" model="law.expense_type">
+         <field name="code">TRVL</field>
+         <field name="name">Travel/Lodging</field>
+         <field name="taxable">False</field>
+        </record>
+
+
+</data>
+</openerp>

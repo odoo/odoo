@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+<template id="my_invoice">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+	<t t-call="{{o.template_id.xml_id}}" t-lang="o.partner_id.lang"/>
+     </t>
+    </t>
+</template>
+<template id="my_duplicate">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+	<t t-call="{{o.template_id.xml_id.replace('document', 'duplicate')}}" t-lang="o.partner_id.lang"/>
+     </t>
+    </t>
+</template>
+</data>
+</openerp>
