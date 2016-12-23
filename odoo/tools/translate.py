@@ -155,14 +155,9 @@ node_pattern = re.compile(r"<[^>]*>(.*)</[^<]*>", re.DOTALL | re.MULTILINE | re.
 
 def translate_xml_node(node, callback, method, parser=None):
     """ Return the translation of the given XML/HTML node. """
-    if (
-        isinstance(node, SKIPPED_ELEMENT_TYPES) or
-        node.tag in SKIPPED_ELEMENTS or
-        node.get('t-translation', "").strip() == "off" or
-        node.tag == 'attribute' and node.get('name') not in TRANSLATED_ATTRS or
-        node.getparent() is None and avoid_pattern.match(node.text or "")
-    ):
-        return node
+
+    def nonspace(text):
+        return bool(text) and not text.isspace()
 
     def concat(text1, text2):
         return text2 if text1 is None else text1 + (text2 or "")
@@ -176,13 +171,6 @@ def translate_xml_node(node, callback, method, parser=None):
         for child in source:
             node.append(child)
 
-    def translatable(node):
-        """ Determine whether ``node`` is translatable inline. """
-        return all(subnode.tag in TRANSLATED_ELEMENTS and
-                   not any(name.startswith("t-") for name in subnode.attrib) and
-                   not avoid_pattern.match(subnode.text or "")
-                   for subnode in node.iter())
-
     def translate_text(text):
         """ Return the translation of ``text`` (the term to translate is without
             surrounding spaces), or a falsy value if no translation applies.
@@ -193,54 +181,98 @@ def translate_xml_node(node, callback, method, parser=None):
 
     def translate_content(node):
         """ Return ``node`` with its content translated inline. """
-        if any(text.strip() for text in node.itertext()):
-            # serialize the node that contains the stuff to translate
-            text = etree.tostring(node, method=method, encoding='utf8').decode('utf8')
-            # retrieve the node's content and translate it
-            match = node_pattern.match(text)
-            trans = translate_text(match.group(1))
-            if trans:
-                # replace the content, and convert it back to an XML node
-                text = text[:match.start(1)] + trans + text[match.end(1):]
-                try:
-                    node = etree.fromstring(encode(text), parser=parser)
-                except etree.ParseError:
-                    # fallback: escape the translation as text
-                    node = etree.Element(node.tag, node.attrib, node.nsmap)
-                    node.text = trans
+        # serialize the node that contains the stuff to translate
+        text = etree.tostring(node, method=method, encoding='utf8').decode('utf8')
+        # retrieve the node's content and translate it
+        match = node_pattern.match(text)
+        trans = translate_text(match.group(1))
+        if trans:
+            # replace the content, and convert it back to an XML node
+            text = text[:match.start(1)] + trans + text[match.end(1):]
+            try:
+                node = etree.fromstring(encode(text), parser=parser)
+            except etree.ParseError:
+                # fallback: escape the translation as text
+                node = etree.Element(node.tag, node.attrib, node.nsmap)
+                node.text = trans
         return node
 
-    # make an element like node that will contain the result
-    result = etree.Element(node.tag, nsmap=node.nsmap)
+    def process(node):
+        """ If ``node`` can be translated inline, return ``(has_text, node)``,
+            where ``has_text`` is a boolean that tells whether ``node`` contains
+            some actual text to translate. Otherwise return ``(None, result)``,
+            where ``result`` is the translation of ``node`` except for its tail.
+        """
+        if (
+            isinstance(node, SKIPPED_ELEMENT_TYPES) or
+            node.tag in SKIPPED_ELEMENTS or
+            node.get('t-translation', "").strip() == "off" or
+            node.tag == 'attribute' and node.get('name') not in TRANSLATED_ATTRS or
+            node.getparent() is None and avoid_pattern.match(node.text or "")
+        ):
+            return (None, node)
 
-    # copy and translate attributes from node to result
-    for name, value in node.items():
-        if name in TRANSLATED_ATTRS:
-            value = translate_text(value) or value
-        result.set(name, value)
+        # make an element like node that will contain the result
+        result = etree.Element(node.tag, node.attrib, node.nsmap)
 
-    # translate content by parts using a "todo" node
-    todo = etree.Element('div', nsmap=node.nsmap)
-    if avoid_pattern.match(node.text or ""):
-        result.text = node.text
-    else:
-        todo.text = node.text
-    for child in node:
-        if translatable(child):
-            todo.append(child)
+        # use a "todo" node to translate content by parts
+        todo = etree.Element('div', nsmap=node.nsmap)
+        if avoid_pattern.match(node.text or ""):
+            result.text = node.text
         else:
-            # translate the content of todo and append it to result
-            append_content(result, translate_content(todo))
-            # recursively translate child (without tail) and append it to result
-            tail, child.tail = child.tail, None
-            result.append(translate_xml_node(child, callback, method, parser))
-            # put the tail of child in todo
-            todo = etree.Element('div', nsmap=node.nsmap)
-            todo.text = tail
-    # translate the content of todo and append it to result
-    append_content(result, translate_content(todo))
+            todo.text = node.text
+        todo_has_text = nonspace(todo.text)
 
-    return result
+        # process children recursively
+        for child in node:
+            child_has_text, child = process(child)
+            if child_has_text is None:
+                # translate the content of todo and append it to result
+                append_content(result, translate_content(todo) if todo_has_text else todo)
+                # add translated child to result
+                result.append(child)
+                # move child's untranslated tail to todo
+                todo = etree.Element('div', nsmap=node.nsmap)
+                todo.text, child.tail = child.tail, None
+                todo_has_text = nonspace(todo.text)
+            else:
+                # child is translatable inline; add it to todo
+                todo.append(child)
+                todo_has_text = todo_has_text or child_has_text
+
+        # determine whether node is translatable inline
+        if (
+            node.tag in TRANSLATED_ELEMENTS and
+            not (result.text or len(result)) and
+            not any(name.startswith("t-") for name in node.attrib)
+        ):
+            # complete result and return it
+            append_content(result, todo)
+            result.tail = node.tail
+            has_text = todo_has_text or nonspace(result.text) or nonspace(result.tail)
+            return (has_text, result)
+
+        # translate the content of todo and append it to result
+        append_content(result, translate_content(todo) if todo_has_text else todo)
+
+        # translate the required attributes
+        for name, value in result.items():
+            if name in TRANSLATED_ATTRS:
+                result.set(name, translate_text(value) or value)
+
+        # add the untranslated tail to result
+        result.tail = node.tail
+
+        return (None, result)
+
+    has_text, node = process(node)
+    if has_text is True:
+        # translate the node as a whole
+        wrapped = etree.Element('div')
+        wrapped.append(node)
+        return translate_content(wrapped)[0]
+
+    return node
 
 
 def xml_translate(callback, value):
