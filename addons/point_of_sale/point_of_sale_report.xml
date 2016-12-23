@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <openerp>
     <data>
-        <report id="report_user_label"
-            model="res.users" 
-            name="point_of_sale.user.label"
+        <report
+            id="report_user_label"
+            model="res.users"
             string="User Labels"
-            xml="point_of_sale/report/user_label.xml"
-            xsl="point_of_sale/report/user_label.xsl"
+            report_type="qweb-pdf"
+            name="point_of_sale.report_userlabel"
+            file="point_of_sale.report_userlabel"
         />
 
         <report
