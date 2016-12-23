@@ -23,6 +23,8 @@ import time
 
 from openerp.report import report_sxw
 from openerp import pooler
+from datetime import datetime
+
 
 class Overdue(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -50,10 +52,15 @@ class Overdue(report_sxw.rml_parse):
 
     def _lines_get(self, partner):
         moveline_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
-        movelines = moveline_obj.search(self.cr, self.uid,
-                [('partner_id', '=', partner.id),
-                    ('account_id.type', 'in', ['receivable', 'payable']),
-                    ('state', '<>', 'draft'), ('reconcile_id', '=', False)])
+        movelines = moveline_obj.search(
+            self.cr, self.uid,
+            [
+                ('partner_id', '=', partner.id),
+                ('date_maturity', '<', datetime.today()),
+                ('account_id.type', 'in', ['receivable', 'payable']),
+                ('state', '<>', 'draft'), ('reconcile_id', '=', False)
+            ]
+        )
         movelines = moveline_obj.browse(self.cr, self.uid, movelines)
         return movelines
 
