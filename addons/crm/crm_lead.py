@@ -220,7 +220,7 @@ class crm_lead(format_address, osv.osv):
         'description': fields.text('Notes'),
         'write_date': fields.datetime('Update Date', readonly=True),
         'categ_ids': fields.many2many('crm.case.categ', 'crm_lead_category_rel', 'lead_id', 'category_id', 'Tags', \
-            domain="['|', ('section_id', '=', section_id), ('section_id', '=', False), ('object_id.model', '=', 'crm.lead')]", help="Classify and analyze your lead/opportunity categories like: Training, Service"),
+            domain="['&', ('object_id.model', '=', 'crm.lead'), '|', ('section_id', '=', section_id), ('section_id', '=', False)  ]", help="Classify and analyze your lead/opportunity categories like: Training, Service"),
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner company that will be created while converting the lead into opportunity', select=1),
         'opt_out': fields.boolean('Opt-Out', oldname='optout',
