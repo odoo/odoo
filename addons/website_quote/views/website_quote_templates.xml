@@ -18,7 +18,7 @@
                     <tr>
                         <th>Products</th>
                         <th>Quantity</th>
-                        <th>Taxes</th>
+                        <th><span t-if="any([line.tax_id for line in quotation.order_line])">Taxes</span></th>
                         <th><span t-if="True in [line.discount > 0 for line in quotation.order_line]">Discount</span></th>
                         <th class="text-right">Unit Price</th>
                         <th class="text-right" groups="sale.group_show_price_subtotal">Price</th>
@@ -64,9 +64,8 @@
                                         t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'
                                         t-att-style="line.discount and 'text-decoration: line-through' or None"
                                         t-att-class="(line.discount and 'text-danger' or '') + ' text-right'"/>
-                                    <!-- TODO: apply monetary widget formating -->
                                     <div t-if="line.discount">
-                                        <t t-esc="'%.2f' % ((1-line.discount / 100.0) * line.price_unit)"/>
+                                        <t t-esc="(1-line.discount / 100.0) * line.price_unit" t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                                     </div>
                               </td>
                               <td class="text-right" groups="sale.group_show_price_subtotal">
@@ -532,6 +531,13 @@
                           <span t-field="quotation.client_order_ref"/>
                       </div>
                   </div>
+                  <div class="clearfix"/>
+                  <div t-if="quotation.payment_term_id">
+                      <label class="col-sm-5 col-xs-5 text-right">Payment Term:</label>
+                      <div class="col-sm-7 col-xs-7">
+                          <span t-field="quotation.payment_term_id"/>
+                      </div>
+                  </div>
               </div>
           </div>
       </div>
@@ -573,10 +579,11 @@
   </template>
 
   <template id="optional_products">
-        <section t-if="quotation.options" id="options">
+      <t t-if="any([(not option.line_id) for option in quotation.options])">
+        <section>
             <h1 class="page-header">Suggested Products</h1>
         </section>
-        <section t-if="quotation.options" id="options">
+        <section>
             <table class="table table-hover wq-table">
                 <thead>
                     <tr>
@@ -604,7 +611,7 @@
                                     t-att-style="option.discount and 'text-decoration: line-through' or None"
                                     t-att-class="option.discount and 'text-danger' or None"/>
                                     <div t-if="option.discount">
-                                        <t t-esc="'%.2f' % ((1-option.discount / 100.0) * option.price_unit)"/>
+                                        <t t-esc="(1-option.discount / 100.0) * option.price_unit" t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                                     </div>
                                 </strong>
                             </td>
@@ -618,6 +625,7 @@
                 </tbody>
             </table>
         </section>
+      </t>
   </template>
 
   <!-- Template to edit the quotation template with the website editor -->
