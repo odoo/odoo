@@ -1,0 +1,59 @@
+ <openerp>
+
+<data>
+
+<record id="my_view_partner_form_inherit" model="ir.ui.view">
+
+<field name="name">my.view.partner.form.inherit</field>
+
+<field name="model">res.partner</field>
+
+<field name="inherit_id" ref="base.view_partner_form"/>
+
+<field name="arch" type="xml">
+
+<!-- Locate the position to add a new tab "My New Tab" in "Form View Sale Order"-->
+
+<xpath expr="//page[1]" position="after">
+
+<page string="Statutory Details">
+
+<group>
+
+<!-- here we add our new field "ecc_trading" inside our new tab -->
+
+<field name="ecc_trading"/>
+<field name="ecc_manufacturing"/>
+<field name="tin_no"/>
+<field name="service_tax_no"/>
+<field name="pan_no"/>
+
+</group>
+
+</page>
+
+</xpath>
+
+</field>
+
+</record>
+
+<!-- This is to add our field in the quotation saler order and print -->
+
+<!-- <template id="my_report_saleorder_document" inherit_id="sale.report_saleorder_document">
+
+<xpath expr="//table[@class='table table-condensed']" position="after">
+
+<strong>My label field for quotation sale order: </strong><span t-field="doc.mycustomfield1"/><br></br>
+ -->
+<!-- with this code we can add fields from other module (products) to sale order document and print -->
+
+<!-- <strong>Field get it from product module: </strong><span t-field="doc.product_id.product_tmpl_id.warranty"/>
+
+</xpath>
+
+</template> -->
+
+ </data>
+
+</openerp>
