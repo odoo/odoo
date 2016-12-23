@@ -62,7 +62,7 @@ $('.oe_website_sale').each(function () {
         var product_id = parseInt($input.data('product-id'),10);
         var product_ids = [product_id];
         $dom_optional.each(function(){
-            product_ids.push($(this).find('span[data-product-id]').data('product-id'));
+            product_ids.push($(this).find('[data-oe-model="product.product"]').data('oe-id'));
         });
         if (isNaN(value)) value = 0;
         $input.data('update_change', true);
@@ -77,7 +77,7 @@ $('.oe_website_sale').each(function () {
             $dom.find('.text-danger').toggle(res[product_id]<default_price && (default_price-res[product_id] > default_price/100));
             //optional case
             $dom_optional.each(function(){
-                var id = $(this).find('span[data-product-id]').data('product-id');
+                var id = $(this).find('[data-oe-model="product.product"]').data('oe-id');
                 var price = parseFloat($(this).find(".text-danger > span.oe_currency_value").text());
                 $(this).find("span.oe_currency_value").last().text(price_to_str(res[id]));
                 $(this).find('.text-danger').toggle(res[id]<price && (price-res[id]>price/100));
