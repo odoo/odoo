@@ -879,8 +879,8 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
             }
             var sort_fields = self._sort,
                     compare = function (v1, v2) {
-                        return (v1 < v2) ? -1
-                             : (v1 > v2) ? 1
+                        return (v1 < v2 || typeof v1 === "undefined") ? -1
+                             : (v1 > v2 || typeof v2 === "undefined") ? 1
                              : 0;
                     };
             // Array.sort is not necessarily stable. We must be careful with this because
