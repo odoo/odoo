@@ -1016,12 +1016,12 @@ class calendar_event(osv.Model):
             startdatetime = startdatetime or start
             if startdatetime:
                 start = datetime.strptime(startdatetime, DEFAULT_SERVER_DATETIME_FORMAT)
-                value['start_date'] = datetime.strftime(start, DEFAULT_SERVER_DATE_FORMAT)
+                value['start_date'] = fields.date.context_today(self, cr, uid, context=context, timestamp=start)
 
             enddatetime = enddatetime or end
             if enddatetime:
                 end = datetime.strptime(enddatetime, DEFAULT_SERVER_DATETIME_FORMAT)
-                value['stop_date'] = datetime.strftime(end, DEFAULT_SERVER_DATE_FORMAT)
+                value['stop_date'] = fields.date.context_today(self, cr, uid, context=context, timestamp=end)
         else:  # from date to datetime
             user = self.pool['res.users'].browse(cr, uid, uid, context)
             tz = pytz.timezone(user.tz) if user.tz else pytz.utc
