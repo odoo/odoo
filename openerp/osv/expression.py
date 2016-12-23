@@ -601,7 +601,7 @@ class ExtendedLeaf(object):
                 - left is in MAGIC_COLUMNS
         """
         if not is_operator(self.leaf) and not is_leaf(self.leaf, internal):
-            raise ValueError("Invalid leaf %s" % str(self.leaf))
+            raise ValueError("Invalid leaf: %s" % str(self.leaf))
 
     def is_operator(self):
         return is_operator(self.leaf)
