@@ -421,7 +421,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     on_record_moved : function(record, old_group, old_index, new_group, new_index) {
         var self = this;
         $.fn.tipsy.clear();
-        $(old_group.$el).add(new_group.$el).find('.oe_kanban_aggregates, .oe_kanban_group_length').hide();
         if (old_group === new_group) {
             new_group.records.splice(old_index, 1);
             new_group.records.splice(new_index, 0, record);
@@ -435,6 +434,19 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             this.dataset.write(record.id, data, {}).done(function() {
                 record.do_reload();
                 new_group.do_save_sequences();
+            }).then(function(){
+                _.each([new_group, old_group], function(group){
+                    $(group.$el).find('.oe_kanban_aggregates').empty();
+                    _.each(self.aggregates, function(value, key) {
+                        var record_value = group === new_group ? record.values[key]['value'] : -record.values[key]['value'];
+                        group.group.get('aggregates')[key] = group.group.get('aggregates')[key] + record_value;
+                        group.aggregates[value] = instance.web.format_value(group.group.get('aggregates')[key], {type: 'float'});
+                        $(group.$el).find('.oe_kanban_aggregates').append('<li><span>' + value + ':</span> ' + group.aggregates[value] + '</li>');
+                    });
+                    if (group === new_group) group.group.attributes.length++;
+                    else group.group.attributes.length--;
+                    $(group.$el).find('.oe_kanban_group_length').text(group.group.get('length') > 99 ? "99+" : group.group.get('length'));
+                });
             }).fail(function(error, evt) {
                 evt.preventDefault();
                 alert(_t("An error has occured while moving the record to this group: ") + data.fault_code);
