@@ -158,7 +158,7 @@ var Query = Class.extend({
         });
 
         var self = this;
-        return this._model.call('read_group', {
+        return $.when(this._model.call('read_group', {
             groupby: grouping,
             fields: _.uniq(raw_fields),
             domain: this._model.domain(this._filter),
@@ -167,7 +167,12 @@ var Query = Class.extend({
             lazy: this._lazy,
             limit: this._limit,
             orderby: serialize_sort(this._order_by) || false
-        }).then(function (results) {
+        }),
+        this._model.call('fields_get', {
+            allfields: grouping,
+            context: ctx
+        }))
+        .then(function (results, fields_get) {
             return _(results).map(function (result) {
                 // FIX: querygroup initialization
                 result.__context = result.__context || {};
@@ -175,7 +180,7 @@ var Query = Class.extend({
                 _.defaults(result.__context, ctx);
                 var grouping_fields = self._lazy ? [grouping[0]] : grouping;
                 return new QueryGroup(
-                    self._model.name, grouping_fields, result);
+                    self._model.name, grouping_fields, result, fields_get);
             });
         });
     },
@@ -251,13 +256,21 @@ var Query = Class.extend({
 });
 
 var QueryGroup = Class.extend({
-    init: function (model, grouping_fields, read_group_group) {
+    init: function (model, grouping_fields, read_group_group, fields_get) {
         // In cases where group_by_no_leaf and no group_by, the result of
         // read_group has aggregate fields but no __context or __domain.
         // Create default (empty) values for those so that things don't break
         var fixed_group = _.extend(
             {__context: {group_by: []}, __domain: []},
             read_group_group);
+
+        fixed_group = _.object(_.map(fixed_group, function(val, key){
+            if(fields_get[key] && fields_get[key].hasOwnProperty('selection')){
+                var value = _.find(fields_get[key].selection, function(sel){return sel[0] == val});
+                return [key, value ? value[1] : val];
+            }else{
+                return [key, val];
+            }}));
 
         var count_key = (grouping_fields[0] && grouping_fields[0].split(':')[0]) + '_count';
         var aggregates = {};
