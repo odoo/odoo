@@ -164,7 +164,7 @@ class hr_job(osv.Model):
     # ----------------------------------------
     _no_of_employee = _get_nbr_employees  # v7 compatibility
     job_open = set_open  # v7 compatibility
-    job_recruitment = set_recruit  # v7 compatibility
+    job_recruitement = set_recruit  # v7 compatibility
 
 
 class hr_employee(osv.osv):
