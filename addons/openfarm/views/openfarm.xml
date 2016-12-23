@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+         <!-- Top menu item -->
+        <menuitem name="Open Farm"
+            id="menu_openfarm_root"/>
+
+        <menuitem name="Products" id="menu_openfarm_product" parent="menu_openfarm_root" />
+
+        <!-- Product Public Categories -->
+        <record id="product_openfarm_category_form_view" model="ir.ui.view">
+            <field name="name">openfarm.product.category.form</field>
+            <field name="model">openfarm.product.category</field>
+            <field name="arch" type="xml">
+                <form string="Open Farm Categories">
+                    <sheet>
+                        <div class="oe_left">
+                            <group>
+                                <field name="name"/>
+                                <field name="parent_id"/>
+                            </group>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="product_openfarm_category_tree_view" model="ir.ui.view">
+            <field name="name">openfarm.product.category.tree</field>
+            <field name="model">openfarm.product.category</field>
+            <field name="field_parent" eval="False"/>
+            <field name="arch" type="xml">
+                <tree string="Open Farm Product Categories">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product_openfarm_category_action" model="ir.actions.act_window">
+            <field name="name">Open Farm Product Categories</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">openfarm.product.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new category.
+              </p>
+            </field>
+        </record>
+        <menuitem action="product_openfarm_category_action" id="menu_product_openfarm_category" parent="menu_openfarm_product" sequence="0" />
+        <!-- END -->
+
+        <!-- Product -->
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook" position="inside">
+                    <page string="Open Farm" name="openfarm">
+                        <group name="website_and_of" position="inside">
+                            <group name="openfarm" string="Open Farm">
+                                <field name="of_category_id"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <record id="product_template_action" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="context" eval="{}"/>
+            <field name="domain" eval="[]"/>
+            <field name="search_view_id" eval="False"/> <!-- Force empty -->
+            <field name="view_id" eval="False"/> <!-- Force empty -->
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new product.
+              </p><p>
+                You must define a product for everything you use open farm interface.
+              </p>
+            </field>
+        </record>
+        <menuitem
+            action="product_template_action"
+            id="menu_openfarm_products"
+            parent="menu_openfarm_product" sequence="2"/>
+    </data>
+</openerp>
