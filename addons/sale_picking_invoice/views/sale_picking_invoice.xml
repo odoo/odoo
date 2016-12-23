@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit Picking Form view -->
+    <record id="view_picking_form_inherit_sale_picking_invoice" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <button name="do_prepare_partial" position="after">
+                <field name="sale_invoice_status" invisible="1"/>
+                <button name="action_so_invoice_create" string="Create Invoice" type="object"
+                    groups="account.group_account_invoice"
+                    attrs="{'invisible': ['|', ('sale_invoice_status', '!=', 'to invoice'), ('state', '!=', 'done')]}"
+                    help="Create, validate and print the invoice of the associated Sale Order"/>
+            </button>
+        </field>
+    </record>
+</odoo>
