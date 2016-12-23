@@ -460,6 +460,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
                 var id = field.attrs.name;
                 return for_(id, fields[id], field);
         }));
+        debugger;
         if (grouped) {
             this.columns.unshift(
                 new ListView.MetaColumn('_group', _t("Group")));
