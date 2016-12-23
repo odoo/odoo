@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="payment_acquirer_allpay" model="payment.acquirer">
+            <field name="name">allPay</field>
+            <field name="provider">allpay</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="view_template_id" ref="allpay_acquirer_button"/>
+            <field name="environment">test</field>
+            <field name="pre_msg"><![CDATA[
+<p>You will be redirected to the allPay website after clicking on the payment button.</p>]]></field>
+            <field name="allpay_merchant_id">dummy</field>
+            <field name="allpay_hash_key">dummy</field>
+            <field name="allpay_hash_iv">dummy</field>
+        </record>
+
+    </data>
+</openerp>
