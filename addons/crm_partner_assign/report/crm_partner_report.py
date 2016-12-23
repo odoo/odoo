@@ -59,11 +59,11 @@ class crm_partner_report_assign(osv.osv):
                     p.user_id,
                     p.section_id,
                     (SELECT count(id) FROM crm_lead WHERE partner_assigned_id=p.id) AS opp,
-                    i.price_total as turnover,
+                    i.amount_total as turnover,
                     i.period_id
                 FROM
                     res_partner p
-                    left join account_invoice_report i
+                    left join account_invoice i
                         on (i.partner_id=p.id and i.type in ('out_invoice','out_refund') and i.state in ('open','paid'))
             )""")
 
