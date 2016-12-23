@@ -86,7 +86,7 @@ class fleet_vehicle_cost(osv.Model):
         'odometer_unit': fields.related('vehicle_id', 'odometer_unit', type="char", string="Unit", readonly=True),
         'date' :fields.date('Date',help='Date when the cost has been executed'),
         'contract_id': fields.many2one('fleet.vehicle.log.contract', 'Contract', help='Contract attached to this cost'),
-        'auto_generated': fields.boolean('Automatically Generated', readonly=True, required=True),
+        'auto_generated': fields.boolean('Automatically Generated', readonly=True),
         'year': fields.function(_year_get_fnc, type="char", string='Year', store=True),
     }
 
