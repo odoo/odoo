@@ -21,7 +21,7 @@
 {
     'name' : 'Fleet Management',
     'version' : '0.1',
-    'author' : 'OpenERP S.A.',
+    'author' : 'OpenERP SA',
     'sequence': 110,
     'category': 'Managing vehicles and contracts',
     'website' : 'https://www.odoo.com/page/fleet',
