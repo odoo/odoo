@@ -157,20 +157,6 @@ class AccountMove(models.Model):
         return self.write({'state': 'posted'})
 
     @api.multi
-    def button_cancel(self):
-        for move in self:
-            if not move.journal_id.update_posted:
-                raise UserError(_('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
-        if self.ids:
-            self._check_lock_date()
-            self._cr.execute('UPDATE account_move '\
-                       'SET state=%s '\
-                       'WHERE id IN %s', ('draft', tuple(self.ids),))
-            self.invalidate_cache()
-        self._check_lock_date()
-        return True
-
-    @api.multi
     def unlink(self):
         for move in self:
             #check the lock date + check if some entries are reconciled
