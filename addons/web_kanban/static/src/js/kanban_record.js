@@ -46,6 +46,12 @@ var KanbanRecord = Widget.extend({
         var self = this;
         this.id = record.id;
         this.values = {};
+        var fields_diff = _.difference(_.keys(self.fields), _.keys(record));
+        if (fields_diff.length) {
+            _.each(fields_diff, function(field) {
+                record[field] = false;
+            });
+        }
         _.each(record, function(v, k) {
             self.values[k] = {
                 value: v
