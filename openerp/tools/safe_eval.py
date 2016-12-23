@@ -20,7 +20,6 @@
 """
 safe_eval module - methods intended to provide more restricted alternatives to
                    evaluate simple and/or untrusted code.
-
 Methods in this module are typically used as alternatives to eval() to parse
 OpenERP domain strings, conditions and expressions, mostly based on locals
 condition/math builtins.
@@ -36,19 +35,23 @@ from psycopg2 import OperationalError
 from types import CodeType
 import logging
 
+from .misc import ustr
+
+import openerp
+
 __all__ = ['test_expr', 'safe_eval', 'const_eval']
 
 # The time module is usually already provided in the safe_eval environment
 # but some code, e.g. datetime.datetime.now() (Windows/Python 2.5.2, bug
 # lp:703841), does import time.
-_ALLOWED_MODULES = ['_strptime', 'time']
+_ALLOWED_MODULES = ['_strptime', 'math', 'time']
 
 _UNSAFE_ATTRIBUTES = ['f_builtins', 'f_globals', 'f_locals', 'gi_frame',
                       'co_code', 'func_globals']
 
 _CONST_OPCODES = set(opmap[x] for x in [
     'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP', 'DUP_TOPX',
-    'POP_BLOCK','SETUP_LOOP', 'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE',
+    'POP_BLOCK', 'SETUP_LOOP', 'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE',
     'LOAD_CONST', 'RETURN_VALUE', 'STORE_SUBSCR', 'STORE_MAP'] if x in opmap)
 
 _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
@@ -60,28 +63,28 @@ _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
     'BINARY_OR', 'INPLACE_ADD', 'INPLACE_SUBTRACT', 'INPLACE_MULTIPLY',
     'INPLACE_DIVIDE', 'INPLACE_REMAINDER', 'INPLACE_POWER',
     'INPLACE_LEFTSHIFT', 'INPLACE_RIGHTSHIFT', 'INPLACE_AND',
-    'INPLACE_XOR','INPLACE_OR'
+    'INPLACE_XOR', 'INPLACE_OR'
     ] if x in opmap))
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'LOAD_NAME', 'CALL_FUNCTION', 'COMPARE_OP', 'LOAD_ATTR',
     'STORE_NAME', 'GET_ITER', 'FOR_ITER', 'LIST_APPEND', 'DELETE_NAME',
     'JUMP_FORWARD', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE', 'JUMP_ABSOLUTE',
-    'MAKE_FUNCTION', 'SLICE+0', 'SLICE+1', 'SLICE+2', 'SLICE+3',
+    'MAKE_FUNCTION', 'SLICE+0', 'SLICE+1', 'SLICE+2', 'SLICE+3', 'BREAK_LOOP',
+    'CONTINUE_LOOP', 'RAISE_VARARGS', 'YIELD_VALUE',
     # New in Python 2.7 - http://bugs.python.org/issue4715 :
     'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE',
     'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'END_FINALLY',
     'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
-    'LOAD_GLOBAL', # Only allows access to restricted globals
+    'LOAD_GLOBAL',  # Only allows access to restricted globals
     ] if x in opmap))
 
 _logger = logging.getLogger(__name__)
 
+
 def _get_opcodes(codeobj):
     """_get_opcodes(codeobj) -> [opcodes]
-
     Extract the actual opcodes as a list from a code object
-
     >>> c = compile("[1 + 2, (1,2)]", "", "eval")
     >>> _get_opcodes(c)
     [100, 100, 23, 100, 100, 102, 103, 83]
@@ -97,37 +100,33 @@ def _get_opcodes(codeobj):
         else:
             i += 1
 
+
 def assert_no_dunder_name(code_obj, expr):
     """ assert_no_dunder_name(code_obj, expr) -> None
-
     Asserts that the code object does not refer to any "dunder name"
     (__$name__), so that safe_eval prevents access to any internal-ish Python
     attribute or method (both are loaded via LOAD_ATTR which uses a name, not a
     const or a var).
-
     Checks that no such name exists in the provided code object (co_names).
-
     :param code_obj: code object to name-validate
     :type code_obj: CodeType
     :param str expr: expression corresponding to the code object, for debugging
                      purposes
     :raises NameError: in case a forbidden name (containing two underscores)
                        is found in ``code_obj``
-
     .. note:: actually forbids every name containing 2 underscores
     """
     for name in code_obj.co_names:
         if "__" in name or name in _UNSAFE_ATTRIBUTES:
             raise NameError('Access to forbidden name %r (%r)' % (name, expr))
 
+
 def assert_valid_codeobj(allowed_codes, code_obj, expr):
     """ Asserts that the provided code object validates against the bytecode
     and name constraints.
-
     Recursively validates the code objects stored in its co_consts in case
     lambdas are being created/used (lambdas generate their own separated code
     objects and don't live in the root one)
-
     :param allowed_codes: list of permissible bytecode instructions
     :type allowed_codes: set(int)
     :param code_obj: code object to name-validate
@@ -147,9 +146,9 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
         if isinstance(const, CodeType):
             assert_valid_codeobj(allowed_codes, const, 'lambda')
 
+
 def test_expr(expr, allowed_codes, mode="eval"):
     """test_expr(expression, allowed_codes[, mode]) -> code_object
-
     Test that the expression contains only the allowed opcodes.
     If the expression is valid and contains only allowed codes,
     return the compiled code object.
@@ -161,25 +160,21 @@ def test_expr(expr, allowed_codes, mode="eval"):
             expr = expr.strip()
         code_obj = compile(expr, "", mode)
     except (SyntaxError, TypeError, ValueError):
-        _logger.debug('Invalid eval expression', exc_info=True)
         raise
-    except Exception:
-        _logger.debug('Disallowed or invalid eval expression', exc_info=True)
-        raise ValueError("%s is not a valid expression" % expr)
-
+    except Exception, e:
+        import sys
+        exc_info = sys.exc_info()
+        raise ValueError('"%s" while compiling\n%r' % (ustr(e), expr), exc_info[2])
     assert_valid_codeobj(allowed_codes, code_obj, expr)
     return code_obj
 
 
 def const_eval(expr):
     """const_eval(expression) -> value
-
     Safe Python constant evaluation
-
     Evaluates a string that contains an expression describing
     a Python constant. Strings that are not valid Python expressions
     or that contain other code besides the constant raise ValueError.
-
     >>> const_eval("10")
     10
     >>> const_eval("[1,2, (3,4), {'foo':'bar'}]")
@@ -192,15 +187,13 @@ def const_eval(expr):
     c = test_expr(expr, _CONST_OPCODES)
     return eval(c)
 
+
 def expr_eval(expr):
     """expr_eval(expression) -> value
-
     Restricted Python expression evaluation
-
     Evaluates a string that contains an expression that only
     uses Python constants. This can be used to e.g. evaluate
     a numerical expression from an untrusted source.
-
     >>> expr_eval("1+2")
     3
     >>> expr_eval("[1,2]*2")
@@ -213,6 +206,7 @@ def expr_eval(expr):
     c = test_expr(expr, _EXPR_OPCODES)
     return eval(c)
 
+
 def _import(name, globals=None, locals=None, fromlist=None, level=-1):
     if globals is None:
         globals = {}
@@ -224,18 +218,15 @@ def _import(name, globals=None, locals=None, fromlist=None, level=-1):
         return __import__(name, globals, locals, level)
     raise ImportError(name)
 
+
 def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False):
     """safe_eval(expression[, globals[, locals[, mode[, nocopy]]]]) -> result
-
     System-restricted Python expression evaluation
-
     Evaluates a string that contains an expression that mostly
     uses Python constants, arithmetic expressions and the
     objects directly provided in context.
-
     This can be used to e.g. evaluate
     an OpenERP domain expression from an untrusted source.
-
     :throws TypeError: If the expression provided is a code object
     :throws SyntaxError: If the expression provided is not valid Python
     :throws NameError: If the expression provided accesses forbidden names
@@ -262,36 +253,63 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
             locals_dict = dict(locals_dict)
 
     globals_dict.update(
-            __builtins__ = {
-                '__import__': _import,
-                'True': True,
-                'False': False,
-                'None': None,
-                'str': str,
-                'bool': bool,
-                'dict': dict,
-                'list': list,
-                'tuple': tuple,
-                'map': map,
-                'abs': abs,
-                'min': min,
-                'max': max,
-                'reduce': reduce,
-                'filter': filter,
-                'round': round,
-                'len': len,
-                'set' : set,
-                'Exception': Exception,
-            }
+        __builtins__={
+            '__import__': _import,
+            'True': True,
+            'False': False,
+            'None': None,
+            'str': str,
+            'unicode': unicode,
+            'bool': bool,
+            'int': int,
+            'float': float,
+            'long': long,
+            'enumerate': enumerate,
+            'dict': dict,
+            'list': list,
+            'tuple': tuple,
+            'map': map,
+            'abs': abs,
+            'min': min,
+            'max': max,
+            'sum': sum,
+            'reduce': reduce,
+            'filter': filter,
+            'round': round,
+            'len': len,
+            'repr': repr,
+            'set': set,
+            'all': all,
+            'any': any,
+            'ord': ord,
+            'chr': chr,
+            'cmp': cmp,
+            'divmod': divmod,
+            'isinstance': isinstance,
+            'range': range,
+            'xrange': xrange,
+            'zip': zip,
+            'Exception': Exception,
+        }
     )
+    c = test_expr(expr, _SAFE_OPCODES, mode=mode)
     try:
-        return eval(test_expr(expr, _SAFE_OPCODES, mode=mode), globals_dict, locals_dict)
+        return eval(c, globals_dict, locals_dict)
+    except openerp.osv.orm.except_orm:
+        raise
+    except openerp.exceptions.Warning:
+        raise
+    except openerp.exceptions.AccessDenied:
+        raise
+    except openerp.exceptions.AccessError:
+        raise
     except OperationalError:
         # Do not hide PostgreSQL low-level exceptions, to let the auto-replay
         # of serialized transactions work its magic
         raise
-    except Exception:
-        _logger.exception('Cannot eval %r', expr)
-        raise
+    except Exception, e:
+        import sys
+        exc_info = sys.exc_info()
+        raise ValueError('"%s" while evaluating\n%r' % (ustr(e), expr), exc_info[2])
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
