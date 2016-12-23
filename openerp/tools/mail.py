@@ -160,6 +160,12 @@ def html_email_clean(html):
     br_div_tags = re.compile(r'(<div>\s*<br\s*\/>\s*<\/div>)')
     html = _replace_matching_regex(br_div_tags, html, '<br />')
 
+    # 7. Fix missing open or closed tags
+    # - When there are missing open or closed tags sometimes ClEditor enters in
+    #   a max recursion error trying to fix them.
+    html = lxml.html.document_fromstring(html)
+    html = lxml.html.tostring(html)
+
     return html
 
 
