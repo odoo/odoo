@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- account.bank.statement inherit form view -->
+        <record model="ir.ui.view" id="account_bank_statement_form">
+            <field name="name">Account bank statement</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_form"/>
+            <field name="priority" eval="90"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='coda_note']" position="before">
+                    <group attrs="{'invisible': [('external_number', '=', False)]}">
+                        <group>
+                            <field name="external_number"/>
+                        </group>
+                        <group></group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- account.bank.statement inherit tree view -->
+        <record model="ir.ui.view" id="account_bank_statement_tree">
+            <field name="name">Account bank statement</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_tree"/>
+            <field name="priority" eval="90"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="external_number"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- account.bank.statement inherit search view -->
+        <record id="account_bank_statement_search" model="ir.ui.view">
+            <field name="name">Account bank statement</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_search" />
+            <field name="priority" eval="90"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="external_number"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

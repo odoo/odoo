@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- account.journal inherit form view -->
+        <record model="ir.ui.view" id="account_journal_form">
+            <field name="name">Account journal</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="priority" eval="90"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='sequence_id']" position="after">
+                    <field name="force_sequence" attrs="{'invisible': [('type', '!=', 'bank')]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

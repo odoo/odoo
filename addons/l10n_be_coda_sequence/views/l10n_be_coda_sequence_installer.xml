@@ -1,0 +1,53 @@
+<openerp>
+    <data>
+        <record id="configuration_installer_wizard" model="ir.ui.view">
+            <field name="name">Compatibility checker</field>
+            <field name="model">l10n_be_coda_sequence.installer</field>
+            <field name="inherit_id" ref="base.res_config_installer"/>
+            <field name="arch" type="xml">
+                <form position="attributes">
+                    <attribute name="string">Module compatibility</attribute>
+                </form>
+                <footer position="replace">
+                    <footer>
+                      <button name="action_next" type="object" string="Continue" class="oe_highlight"/>
+                    </footer>
+                </footer>
+                <separator string="title" position="replace">
+                    <p class="oe_grey">
+                        <p>We've checked the compatibility of this module with your current Odoo System.</p>
+                        <p>This module implies that a <strong>Bank Account</strong> must be linked at <strong>only one Account Journal.</strong></p>
+
+                    </p>
+                    <group></group>
+                    <group string="Error" style="color: red; font-weight: bold;" attrs="{'invisible': [('message', '=', False)]}">
+                        <field name="problem" invisible="True"/>
+                        <field name="message" nolabel="1" colspan="2"/>
+                        <p colspan="2">This installation is not aborted. You can use it but it may <strong>not operate normally.</strong></p>
+                        <p colspan="2">Please contact your Administrator for more information</p>
+                    </group>
+                    <group style="color: green; font-weight: bold;" attrs="{'invisible': [('message', '!=', False)]}">
+                        <p colspan="2"><span icon="fa-check-circle-o">Everything is Ok, you can continue</span></p>
+                    </group>
+                </separator>
+            </field>
+        </record>
+
+        <record id="configuration_installer_action" model="ir.actions.act_window">
+            <field name="name">Compatibility checker</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_be_coda_sequence.installer</field>
+            <field name="view_id" ref="configuration_installer_wizard"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="configuration_installer_act_todo" model="ir.actions.todo">
+            <field name="action_id" ref="configuration_installer_action"/>
+            <field name="sequence">3</field>
+            <field name="type">automatic</field>
+        </record>
+
+    </data>
+</openerp>
