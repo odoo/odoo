@@ -45,7 +45,8 @@ CREATE TABLE ir_model_fields (
   relation_table varchar,
   column1 varchar,
   column2 varchar,
-  primary key(id)
+  primary key(id),
+  on_delete varchar
 );
 
 CREATE TABLE res_lang (
