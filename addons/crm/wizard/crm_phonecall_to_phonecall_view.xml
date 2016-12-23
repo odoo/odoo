@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    
+
     <!-- Phonecall to Phonecall view -->
-    
+
         <record model="ir.ui.view" id="phonecall_to_phonecall_view">
             <field name="name">crm.phonecall2phonecall.form</field>
             <field name="model">crm.phonecall2phonecall</field>
@@ -36,7 +36,8 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="phonecall_to_phonecall_view"/>
             <field name="target">new</field>
+            <field name="context">{"default_state": "pending"}</field>
         </record>
 
     </data>
-</openerp>   
+</openerp>
