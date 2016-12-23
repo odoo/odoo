@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright: (C) 2012 - Mentis d.o.o., Dravograd
+#    Odoo, Open Source Management Solution
+#    Copyright: (C) 2012 - TODAY Mentis d.o.o.
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,23 +20,24 @@
 ##############################################################################
 
 {
-    "name" : "Slovenian - Accounting",
-    "version" : "1.2",
-    "author" : "Mentis d.o.o.",
-    "website" : "http://www.mentis.si",
-    "category" : "Localization/Account Charts",
-    "description" : " ",
-    "depends" : ["account", "base_iban", "base_vat", "account_chart", "account_cancel"],
-    "description" : "Kontni načrt za gospodarske družbe",
-    "data" : [
-        "data/account.account.type.csv", 
-        "data/account.account.template.csv",
-        "data/account.tax.code.template.csv",
-        "data/account.chart.template.csv",
-        "data/account.tax.template.csv",
-        "data/account.fiscal.position.template.csv",
-        "data/account.fiscal.position.account.template.csv",
-        "data/account.fiscal.position.tax.template.csv",
+    "name": "Slovenian - Accounting",
+    "version": "1.0",
+    "author": "Mentis d.o.o.",
+    "website": "http://www.mentis.si",
+    "category": "Localization/Account Charts",
+    "description": " ",
+    "depends": ["account", "base_iban", "base_vat", "account_chart", "account_cancel"],
+    "description": "Kontni načrt, davki in davčni obrazec za gospodarske družbe",
+    "data": [
+        "data/account.account.type.xml",
+        "data/account.account.template.xml",
+        "data/account.tax.code.template.xml",
+        "data/account.chart.template.xml",
+        "data/account.tax.template.xml",
+        "data/account.fiscal.position.template.xml",
+        "data/account.fiscal.position.account.template.xml",
+        "data/account.fiscal.position.tax.template.xml",
+        "data/res.bank.xml",
         "l10n_si_wizard.xml"
     ],
     'auto_install': False,
