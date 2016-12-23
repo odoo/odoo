@@ -1413,8 +1413,8 @@ msgid ""
 "Account that will be set on invoice tax lines for refunds. Leave empty to "
 "use the expense account."
 msgstr ""
-"Compte utilisé sur les lignes de taxes des notes de crédit. Laissez vide "
-"pour utiliser le compte de dépense."
+"Compte utilisé sur les lignes de taxes des avoirs. Laissez vide pour "
+"utiliser le compte de dépense."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_dest_id
@@ -5333,7 +5333,7 @@ msgstr "Taxe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_invoice_id
 msgid "Invoice for which this invoice is the refund"
-msgstr ""
+msgstr "Facture source de cet avoir."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_invoice_id
@@ -7444,6 +7444,12 @@ msgstr ""
 #, python-format
 msgid "Please create some invoice lines."
 msgstr "Merci de créer des lignes de facture."
+
+#. module: account
+#: code:addons/account/models/account_move.py:140
+#, python-format
+msgid "Please define a sequence for the refunds"
+msgstr "Spécifiez une séquence pour les avoirs"
 
 #. module: account
 #: code:addons/account/models/account_move.py:141
@@ -9853,16 +9859,13 @@ msgstr "Total hors-taxe"
 msgid ""
 "Total amount in the currency of the company, negative for credit notes."
 msgstr ""
-"Montant total dans la devise de l'entreprise, négatifs pour les notes de "
-"crédit. "
+"Montant total dans la devise de l'entreprise, négatifs pour les avoirs."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_amount_total_signed
 msgid ""
 "Total amount in the currency of the invoice, negative for credit notes."
-msgstr ""
-"Montant total dans la devise de la facture, néagatif pour les notes de "
-"crédit."
+msgstr "Montant total dans la devise de la facture, néagatif pour les avoirs."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_credit
@@ -10125,7 +10128,7 @@ msgid ""
 "                                so that you can edit it."
 msgstr ""
 "Utilisez cette option si vous voulez annuler une facture et en créer une nouvelle.\n"
-"La note de crédit sera créée, validé et réconciliée. Une nouvelle facture brouillon sera créée\n"
+"L'avoir sera créée, validé et réconciliée. Une nouvelle facture brouillon sera créée\n"
 "que vous pourrez éditer."
 
 #. module: account

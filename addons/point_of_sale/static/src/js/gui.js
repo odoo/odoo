@@ -114,7 +114,7 @@ var Gui = core.Class.extend({
                 this.current_screen.hide();
             }
             this.current_screen = screen;
-            this.current_screen.show();
+            this.current_screen.show(refresh);
         }
     },
     

@@ -4,10 +4,10 @@
 # 
 # Translators:
 # Clemilton Clementino <clemylton@hotmail.com>, 2016
-# Grazziano Duarte <gra.negocia@gmail.com>, 2016
+# grazziano <gra.negocia@gmail.com>, 2016
 # Mateus Lopes <mateus1@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2016
+# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2016
 # Adriel Kotviski <kotviski@gmail.com>, 2016
@@ -152,7 +152,7 @@ msgstr "Criado em"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
 msgid "Delivery Type"
-msgstr ""
+msgstr "Tipo de Entrega"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -277,6 +277,9 @@ msgid ""
 "                having a vendor defined on the product, and products to\n"
 "                manufacture without having a bill of materials."
 msgstr ""
+"Exceções mais comuns são os produtos a serem adquiridos sem ter um "
+"fornecedor definido no produto e produtos para fabricar sem ter uma lista de"
+" materiais."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -426,6 +429,8 @@ msgid ""
 "Reference of the document that created this Procurement. This is "
 "automatically completed by Odoo."
 msgstr ""
+"Referência do documento que criou esta Aquisição.\n"
+"Ela é automaticamente lançada pelo Odoo."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -524,12 +529,16 @@ msgid ""
 "                creates the necessary operations to fulfill the need: purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
+"Quando a ordem de aquisição for confirmada, automaticamente\n"
+"criará as operações necessárias a cumprir a necessidade: proposição de\n"
+"ordem de compra, ordem de produção, etc."
 
 #. module: procurement
 #: code:addons/procurement/models/procurement.py:144
 #, python-format
 msgid "You cannot delete procurements that are in cancel state."
 msgstr ""
+"Não é possível excluir aquisições que estejam no estado de cancelamento."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form

@@ -8,13 +8,14 @@
 # francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016
 # Mateus Lopes <mateus1@gmail.com>, 2016
 # Wagner Pereira <wagner@wagner.pereira.nom.br>, 2016
+# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:55+0000\n"
 "PO-Revision-Date: 2016-11-14 15:55+0000\n"
-"Last-Translator: Wagner Pereira <wagner@wagner.pereira.nom.br>, 2016\n"
+"Last-Translator: Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,6 +43,12 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* O status \"Rascunho\" é usado quando um usuário está codificando uma ordem de reparo nova e não confirmada.\n"
+"* O status 'Confirmado' é usado quando um usuário confirma a ordem de reparo.\n"
+"* O status \"pronto para reparar\" é usado para começar a reparar, o usuário pode começar a reparar somente após a ordem de reparo ser confirmada.\n"
+"* O status 'Para ser faturado' é usado para gerar a fatura antes ou depois de reparar feito.\n"
+"* O status 'Concluído' é definido quando a reparação é concluída.\n"
+"* O status \"Cancelado\" é usado quando o usuário cancela a ordem de reparo."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -81,7 +88,7 @@ msgstr "<strong>Produto a Reparar:</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Shipping address :</strong>"
-msgstr ""
+msgstr "<strong>Endereço de envio:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -229,7 +236,7 @@ msgstr "Local Atual"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
 msgid "Default address id"
-msgstr ""
+msgstr "Id padrão do endereço"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -700,7 +707,7 @@ msgstr "Ordens de Reparo"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "Pesquisar Ordens de Reparo"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -793,6 +800,8 @@ msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
+"O status de uma linha de reparo é definido automaticamente para o da ordem "
+"de reparo vinculada"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -892,3 +901,5 @@ msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
+"Você precisa selecionar uma lista de preço no formulário de Reparo!\n"
+"Por favor escolha uma lista de preço antes de escolher um produto."

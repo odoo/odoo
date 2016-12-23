@@ -43,7 +43,7 @@ msgstr "待機数"
 msgid ""
 "A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
-msgstr ""
+msgstr "メンバーシップを関連付けるメンバー。 関連するメンバーのメンバーシップ状態を検討します。"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
@@ -95,7 +95,7 @@ msgstr "取消"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_cancel
 msgid "Cancel Membership Date"
-msgstr ""
+msgstr "会員のキャンセル日"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_cancel
@@ -325,6 +325,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"メンバーシップの状態を示します。\n"
+"- 非会員：いかなる会員資格も申請していないパートナー。\n"
+"- キャンセル済会員：メンバーシップをキャンセルした会員。\n"
+"- 古い会員：会員期限が切れた会員。\n"
+"- 入会待ち会員：メンバーシップを申請し、請求書を作成する会員。\n"
+"- 請求済会員：請求書が作成された会員。\n"
+"- 支払い会員：会費を支払った会員。"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
@@ -629,4 +636,4 @@ msgstr "待機会員"
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "membership.membership_line"
-msgstr ""
+msgstr "membership.membership_line"

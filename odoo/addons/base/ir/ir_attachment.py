@@ -138,8 +138,17 @@ class IrAttachment(models.Model):
         if self._storage() != 'file':
             return
 
-        # prevent all concurrent updates on ir_attachment while collecting!
+        # Continue in a new transaction. The LOCK statement below must be the
+        # first one in the current transaction, otherwise the database snapshot
+        # used by it may not contain the most recent changes made to the table
+        # ir_attachment! Indeed, if concurrent transactions create attachments,
+        # the LOCK statement will wait until those concurrent transactions end.
+        # But this transaction will not see the new attachements if it has done
+        # other requests before the LOCK (like the method _storage() above).
         cr = self._cr
+        cr.commit()
+
+        # prevent all concurrent updates on ir_attachment while collecting!
         cr.execute("LOCK ir_attachment IN SHARE MODE")
 
         # retrieve the file names from the checklist
@@ -168,6 +177,8 @@ class IrAttachment(models.Model):
             with tools.ignore(OSError):
                 os.unlink(filepath)
 
+        # commit to release the lock
+        cr.commit()
         _logger.info("filestore gc %d checked, %d removed", len(checklist), removed)
 
     @api.depends('store_fname', 'db_datas')

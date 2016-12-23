@@ -229,6 +229,11 @@ class Employee(models.Model):
                 user_field_lst.append(name)
         return user_field_lst
 
+    @api.multi
+    def _message_auto_subscribe_notify(self, partner_ids):
+        # Do not notify user it has been marked as follower of its employee.
+        return
+
 
 class Department(models.Model):
 

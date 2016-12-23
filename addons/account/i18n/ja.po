@@ -15,13 +15,14 @@
 # kent_ocean <ke.tanabe@gmail.com>, 2016
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2016
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
+# Kazuki Eda <edak1209@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
 "PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
+"Last-Translator: Kazuki Eda <edak1209@gmail.com>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,7 +97,7 @@ msgstr "桁数"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_code_digits
 msgid "# of Digits *"
-msgstr ""
+msgstr "桁数 *"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
@@ -111,7 +112,7 @@ msgstr "取引数"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} 発注 (Ref ${object.name or 'n/a' })"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_notification_email_account_invoice
@@ -151,7 +152,7 @@ msgstr "、会計または購買がインストールされている場合"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr ""
+msgstr "-> 消込"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -1724,7 +1725,7 @@ msgstr ""
 #. module: account
 #: selection:account.config.settings,group_warning_account:0
 msgid "An informative or blocking warning can be set on a partner"
-msgstr "有益な警告またはブロッキング警告をパートナーに設定できます"
+msgstr "情報またはブロック警告を取引先に設定"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -7032,6 +7033,12 @@ msgstr ""
 #, python-format
 msgid "Please create some invoice lines."
 msgstr "いくらかの請求書行を作成して下さい。"
+
+#. module: account
+#: code:addons/account/models/account_move.py:140
+#, python-format
+msgid "Please define a sequence for the refunds"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:141

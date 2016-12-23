@@ -6,6 +6,7 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Matjaž Mozetič <m.mozetic@matmoz.si>, 2016
 # Vida Potočnik <vida.potocnik@mentis.si>, 2016
+# Simon Gorše <simon@gorse.org>, 2016
 # Dejan Sraka <dejan.sraka@picolabs.si>, 2016
 # Simon Hohler <simon.hohler@gmail.com>, 2016
 # Borut Jures <inactive+borut@transifex.com>, 2016
@@ -337,7 +338,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Barcode</strong>"
-msgstr ""
+msgstr "<strong>Črtna koda</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -653,7 +654,7 @@ msgstr "Vse operacije"
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
 #: model:ir.ui.menu,name:stock.all_picking
 msgid "All Transfers"
-msgstr ""
+msgstr "Vsi prenosi"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -917,7 +918,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_barcode
 msgid "Barcode scanner support"
-msgstr ""
+msgstr "Podpora za čitalca črtnih kod"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1089,7 +1090,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move_scrapped
 msgid ""
 "Check this box to allow using this location to put scrapped/damaged goods."
-msgstr "Označite , če želite to lokacijo uporabljati za izmet."
+msgstr "Označite, če želite to lokacijo uporabljati za izmet."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_qty
@@ -1182,12 +1183,12 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_scrap
 msgid "Click to scrap products."
-msgstr ""
+msgstr "Klikni za odpis izdelkov."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
 msgid "Click to start an inventory."
-msgstr ""
+msgstr "Začni inverturo."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_incoterms_code
@@ -1993,12 +1994,12 @@ msgstr "Opravljeno"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done
 msgid "Done Transfers"
-msgstr "Opravljene premestitve"
+msgstr "Opravljeni prenosi"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done_grouped
 msgid "Done Transfers by Date"
-msgstr "Opravljene premestitve po datumu"
+msgstr "Opravljeni prenosi po datumu"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2765,7 +2766,7 @@ msgstr "Interni sklic"
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
-msgstr "Interne premestitve"
+msgstr "Interni prenosi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company_internal_transit_location_id
@@ -2846,7 +2847,7 @@ msgstr "Popravek inventarja"
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustments"
-msgstr "Popravki inventarja"
+msgstr "Inventura"
 
 #. module: stock
 #: model:web.planner,tooltip_planner:stock.planner_inventory
@@ -3114,7 +3115,7 @@ msgstr "Zamuja"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr "Zamujene premestitve"
+msgstr "Zamujeni prenosi"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
@@ -3568,7 +3569,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
 msgid "More Info"
-msgstr ""
+msgstr "Več informacij"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree
@@ -5356,7 +5357,7 @@ msgstr "Načrtovalec"
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Scrap"
-msgstr "Zavrži"
+msgstr "Odpis"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_scrap_location_id
@@ -5367,7 +5368,7 @@ msgstr "Lokacija odpada"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_move_id
 msgid "Scrap Move"
-msgstr "Odpad"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_scrapped
@@ -5378,7 +5379,7 @@ msgstr "Odpisano"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Scraps"
-msgstr ""
+msgstr "Odpisi"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
@@ -5388,7 +5389,7 @@ msgstr "Iskanje"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
 msgid "Search Scrap"
-msgstr ""
+msgstr "Išči po odpisih"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
@@ -6368,7 +6369,7 @@ msgstr "Za narediti"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Receive"
-msgstr ""
+msgstr "Za prejem"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6779,7 +6780,7 @@ msgstr "Premiki v čakanju"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_waiting
 msgid "Waiting Transfers"
-msgstr ""
+msgstr "Čakajoči prenosi"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse

@@ -301,6 +301,8 @@ class Pricelist(models.Model):
 
         p = Partner.browse(partner_id)
         pl = Property.get('property_product_pricelist', Partner._name, '%s,%s' % (Partner._name, p.id))
+        if pl:
+            pl = pl[0].id
 
         if not pl:
             if p.country_id.code:

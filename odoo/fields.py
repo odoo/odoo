@@ -1575,6 +1575,7 @@ class Datetime(Field):
 class Binary(Field):
     type = 'binary'
     _slots = {
+        'prefetch': False,              # not prefetched by default
         'attachment': False,            # whether value is stored in attachment
     }
 
@@ -2403,6 +2404,9 @@ class Many2many(_RelationalMulti):
 class Serialized(Field):
     """ Serialized fields provide the storage for sparse fields. """
     type = 'serialized'
+    _slots = {
+        'prefetch': False,              # not prefetched by default
+    }
     column_type = ('text', 'text')
 
     def convert_to_column(self, value, record):

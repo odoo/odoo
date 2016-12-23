@@ -4,15 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +30,14 @@ msgid ""
 "<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Hallo,</p>\n"
+"<p>U heeft aangevraagd om te worden ingeschreven voor de mailinglijst\n"
+"<strong>${object.name}</strong></p>\n"
+"<p>Om te bevestigen, volg de volgende link:</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>Als u deze aanvraag niet zelf hebt gedaan dan kunt u dit bericht negeren</p>\n"
+"</data>"
 
 #. module: website_mail_channel
 #: model:mail.template,body_html:website_mail_channel.mail_template_list_unsubscribe
@@ -43,6 +50,11 @@ msgid ""
 "<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
 "</data>"
 msgstr ""
+"<data>\n"
+"<p>Hallo,</p> \n"
+"<p>U heeft aangevraagd om te worden ingeschreven voor de mailinglijst <strong>${object.name}</strong></p> \n"
+"<p>Om te bevestigen, volg de volgende link:</p> <p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p> \n"
+"<p>Als u deze aanvraag niet zelf hebt gedaan dan kunt u dit bericht negeren</p> </data>"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
