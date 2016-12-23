@@ -45,7 +45,7 @@ class ir_filters(osv.osv):
         # only global ones
         return [('action_id', '=', False)]
 
-    def get_filters(self, cr, uid, model, action_id=None):
+    def get_filters(self, cr, uid, model, action_id=None, context=None):
         """Obtain the list of filters available for the user on the given model.
 
         :param action_id: optional ID of action to restrict filters to this action
