@@ -23,7 +23,7 @@ import time
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-
+from datetime import datetime
 class hr_action_reason(osv.osv):
     _name = "hr.action.reason"
     _description = "Action Reason"
@@ -48,7 +48,8 @@ class hr_attendance(osv.osv):
     def _day_compute(self, cr, uid, ids, fieldnames, args, context=None):
         res = dict.fromkeys(ids, '')
         for obj in self.browse(cr, uid, ids, context=context):
-            res[obj.id] = time.strftime('%Y-%m-%d', time.strptime(obj.name, '%Y-%m-%d %H:%M:%S'))
+            date_start = fields.datetime.context_timestamp(cr, uid, datetime.strptime(obj.name, '%Y-%m-%d %H:%M:%S'), context=context)
+            res[obj.id] = date_start.strftime('%Y-%m-%d')
         return res
 
     _columns = {
