@@ -42,6 +42,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.has_been_loaded = $.Deferred();
         this.search_domain = this.search_context = this.search_group_by = null;
         this.currently_dragging = {};
+        this.kanban_group = instance.web_kanban.KanbanGroup;
         this.limit = options.limit || 40;
         this.add_group_mutex = new $.Mutex();
     },
@@ -221,7 +222,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     length: 0,
                     aggregates: {},
                 };
-                var new_group = new instance.web_kanban.KanbanGroup(self, [], datagroup, dataset);
+                var new_group = new (self.kanban_group)(self, [], datagroup, dataset);
                 self.do_add_groups([new_group]).done(function() {
                     $(window).scrollTo(self.groups.slice(-1)[0].$el, { axis: 'x' });
                 });
@@ -277,7 +278,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 return def.then(function(records) {
                         self.nb_records += records.length;
                         self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
-                        groups_array[index] = new instance.web_kanban.KanbanGroup(self, records, group, dataset);
+                        groups_array[index] = new (self.kanban_group)(self, records, group, dataset);
                 });
             })).then(function () {
                 if (self.dataset.index >= self.nb_records){
@@ -294,7 +295,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             var def = $.Deferred();
             self.do_clear_groups();
             self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).done(function(records) {
-                var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
+                var kgroup = new (self.kanban_group)(self, records, null, self.dataset);
                 if (!_.isEmpty(self.dataset.ids) && (self.dataset.index === null || self.dataset.index >= self.dataset.ids.length)) {
                     self.dataset.index = 0;
                 } else if (_.isEmpty(self.dataset.ids)){
