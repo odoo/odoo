@@ -2,7 +2,7 @@
 <odoo>
 
     <template id="report_template_background">
-        <div class="header o_noboxed_header row">
+        <div class="header o_background_header row">
             <div class="col-xs-3 mb8">
                 <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"/>
             </div>
@@ -19,7 +19,7 @@
 
         <t t-raw="0"/>
 
-        <div class="footer o_noboxed_footer row">
+        <div class="footer o_background_footer row">
             <div class="col-xs-12 text-center">
                 <ul t-if="not company.custom_footer" class="list-inline">
                     <li t-if="company.phone"><i class="fa fa-phone"></i> <span t-field="company.phone"/></li>

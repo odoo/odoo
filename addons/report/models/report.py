@@ -241,6 +241,7 @@ class Report(models.Model):
                         reportid = False
 
                 # Extract the body
+                node.attrib['class'] = node.attrib['class']+" o_template_"+self.env.user.company_id.default_report_template+"_body"
                 body = lxml.html.tostring(node)
                 reportcontent = render_minimal(dict(subst=False, body=body, base_url=base_url))
 
