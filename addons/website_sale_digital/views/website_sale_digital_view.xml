@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_product_form_expiry">
+            <field name="name">product.normal.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view" />
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                        <field name="digital_content" />
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
+

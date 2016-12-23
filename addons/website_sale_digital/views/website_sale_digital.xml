@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="product_attachments" name="Product Attachments" inherit_id="website_sale.confirmation">
+    <xpath expr="//div[@class='oe_website_sale_tx_status']" position="after">
+        <t t-if="digital">
+            <div> Your order contains downloadable content, it will soon be available for download.</div>
+            <div style="margin-left: 50px;">
+                <a href="/shop/downloads">
+                    <button class="btn btn-primary btn-sm">
+                        <i class="fa fa-arrow-right"></i> Go to the Downloads page
+                    </button>
+                </a>
+            </div>
+        </t>
+    </xpath>
+</template>
+
+<template id="downloads" name="Downloads">
+    <title>Odoo - Downloads</title>
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure">
+                <h1 class="text-center">
+                Odoo Downloads
+            </h1>
+            <h2 class="text-center text-muted">
+                Download your purchased products
+            </h2>
+            </div>
+            <div class="container mt32 mb32">
+                <t t-if="products">
+                    <t t-call="website_sale_digital.products_attachments"/>
+                </t>
+                <t t-if="not products">
+                    <h4 class="text-muted text-center mt64 mb64">
+                        You have no digital purchase to download, <br/>or your payment has yet to be confirmed.
+                    </h4>
+                </t>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="products_attachments" name="Display Products Attachments">
+    <t t-foreach="products" t-as="p">
+        <div class="media row">
+            <div class="col-md-1 mt8" style="text-align:center">
+                <a t-att-href="'/shop/product/' + str(p.product_tmpl_id.id)">
+                    <span t-field="p.image_medium" t-field-options='{"widget": "image", "class": "img-rounded"}'/>
+                    <!-- If we ever want to do a dirty hack to display the image even if website_published is False -->
+                    <!-- <img t-att-src="'data:image;base64,' + p.image" style="max-width: 64px; max-height: 64px;"/> -->
+                </a>
+            </div>
+            <div class="media-body col-md-10">
+                <!-- <h4 class="media-heading">Media heading</h4> -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a t-att-href="'/shop/product/' + str(p.product_tmpl_id.id)">
+                                <t t-esc="names[p.id]"/>
+                            </a>
+                        </h3> <!-- TODO: Link to product -->
+                    </div>
+                    <t t-foreach="attachments[p.id]" t-as="a">
+                        <div class="panel-body">
+                            <t t-esc="a['name']"/>
+                            <span class="pull-right">
+                                <!-- <small><t class="text-muted" t-esc="a['create_date'].split(' ')[0]"/></small> -->
+                                <a t-att-href="'/shop/attachment?attachment_id=%i' % a['id']">
+                                    <button class="btn btn-primary btn-xs" type="button" >
+                                        Download
+                                    </button>
+                                </a>
+                            </span>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="downloads_page_link" name="Download Page Link from User Account" inherit_id="website.layout">
+    <xpath expr="//li[@class='dropdown']/ul/li[contains(.,'My Account')]" position="after">
+        <li><a href="/shop/downloads" role="menuitem">My Downloads</a></li>
+    </xpath>
+</template>
+
+</data>
+</openerp>
