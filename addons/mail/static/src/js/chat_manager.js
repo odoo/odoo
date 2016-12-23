@@ -667,7 +667,7 @@ var chat_manager = {
         // to linkify the urls we end up with double linkification a bit everywhere.
         // Ideally we want to keep the content as text internally and only make html
         // enrichment at display time but the current design makes this quite hard to do.
-        var body = utils.linkify(_.str.trim(data.content));
+        var body = utils.parse_and_transform(_.str.trim(data.content), utils.add_link);
 
         var msg = {
             partner_ids: data.partner_ids,
