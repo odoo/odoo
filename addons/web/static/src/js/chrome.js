@@ -900,15 +900,18 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.$secondary_menus.parent('.oe_leftbar').toggle(!!$sub_menu.children().length);
 
         // Activate current menu item and show parents
-        this.$secondary_menus.find('.active').removeClass('active');
-        if ($main_menu !== $clicked_menu) {
+        if ($clicked_menu.is('.oe_menu_leaf')) {
+            this.$secondary_menus.find('.active').removeClass('active');
+            $clicked_menu.parent().addClass('active');
             $clicked_menu.parents().show();
-            if ($clicked_menu.is('.oe_menu_toggler')) {
-                $clicked_menu.toggleClass('oe_menu_opened').siblings('.oe_secondary_submenu:first').toggle();
-            } else {
-                $clicked_menu.parent().addClass('active');
-            }
         }
+        // Toggle the menu arrow of clicked menu
+        if ($clicked_menu.is('.oe_menu_toggler')) {
+            $clicked_menu.toggleClass('oe_menu_opened').siblings('.oe_secondary_submenu:first').toggle();
+        } else if ($clicked_menu.is('.oe_menu_leaf')) {
+            this.$secondary_menus.find('.active').parents().siblings('.oe_menu_toggler').addClass('oe_menu_opened');
+        }
+
         // add a tooltip to cropped menu items
         this.$secondary_menus.find('.oe_secondary_submenu li a span').each(function() {
             $(this).tooltip(this.scrollWidth > this.clientWidth ? {title: $(this).text().trim(), placement: 'right'} :'destroy');
