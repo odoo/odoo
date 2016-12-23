@@ -52,4 +52,14 @@ class stock_picking(osv.osv):
             res['analytics_id'] = move_line.purchase_line_id.analytics_id.id
         return res
 
+class account_invoice_line(osv.osv):
+    _inherit = "account.invoice.line"
+    _description = "Invoice Line"
+
+    def product_id_change(self, cr, uid, ids, product, uom_id, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
+        res = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom_id, qty, name, type, partner_id, fposition_id, price_unit, currency_id=currency_id, context=context, company_id=company_id)
+        if type=='in_invoice':
+            res['value'].has_key('account_analytic_id') and res['value'].pop('account_analytic_id')
+        return res
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
