@@ -238,7 +238,7 @@ class Cursor(object):
             raise
         except Exception:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.exception("bad query: %s", self._obj.query or query)
+                _logger.warning("bad query: %s", self._obj.query or query)
             raise
 
         # simple query count is always computed
