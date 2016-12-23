@@ -1,0 +1,1 @@
+import respartner_quote

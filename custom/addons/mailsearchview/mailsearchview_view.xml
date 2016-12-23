@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="my_crm_view_crm_filter" model="ir.ui.view">
+            <field name="name">crm.view_crm_case_opportunities_filter</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="field[@name='lost_reason']" position="after">
+                    <field name="message_search" string="Recent Activities"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="my_crm_view_crm_lead_filter" model="ir.ui.view">
+            <field name="name">crm.view_crm_case_leads_filter</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.view_crm_case_leads_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="field[@name='country_id']" position="after">
+                    <field name="message_search" string="Recent Activities"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

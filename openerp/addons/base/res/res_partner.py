@@ -127,7 +127,7 @@ def _lang_get(self):
     languages = self.env['res.lang'].search([])
     return [(language.code, language.name) for language in languages]
 
-ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
+ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id', 'mom_company_id')
 
 
 class res_partner(osv.Model, format_address):
@@ -225,6 +225,7 @@ class res_partner(osv.Model, format_address):
         'fax': fields.char('Fax'),
         'mobile': fields.char('Mobile'),
         'birthdate': fields.char('Birthdate'),
+        'mom_company_id': fields.many2one('res.partner', 'Mother Company'),
         'is_company': fields.boolean(
             'Is a Company',
             help="Check if the contact is a company, otherwise it is a person"),
@@ -245,7 +246,6 @@ class res_partner(osv.Model, format_address):
         'color': fields.integer('Color Index'),
         'user_ids': fields.one2many('res.users', 'partner_id', 'Users', auto_join=True),
         'contact_address': fields.function(_address_display,  type='char', string='Complete Address'),
-
         # technical field used for managing commercial fields
         'commercial_partner_id': fields.function(_commercial_partner_id, type='many2one', relation='res.partner', string='Commercial Entity', store=_commercial_partner_store_triggers, index=True)
     }
@@ -353,7 +353,7 @@ class res_partner(osv.Model, format_address):
                 address_fields = self._address_fields(cr, uid, context=context)
                 if any(parent[key] for key in address_fields):
                     result['value'] = dict((key, value_or_id(parent[key])) for key in address_fields)
-        return result
+            return result
 
     @api.multi
     def onchange_state(self, state_id):
@@ -537,6 +537,8 @@ class res_partner(osv.Model, format_address):
         partner = super(res_partner, self).create(vals)
         self._fields_sync(partner, vals)
         self._handle_first_contact_creation(partner)
+        if not partner.mom_company_id.id:
+            partner.write({'mom_company_id': partner.id})
         return partner
 
     def open_commercial_entity(self, cr, uid, ids, context=None):

@@ -91,17 +91,23 @@ class ReportController(Controller):
                 if '/' in reportname:
                     reportname, docids = reportname.split('/')
 
+                cr, uid = request.cr, request.uid
+                report_obj = request.registry['report']
+                report = report_obj._get_report_from_name(cr, uid, reportname)
+                filename = "%s.%s" % (report.name, "pdf")
+
                 if docids:
                     # Generic report:
                     response = self.report_routes(reportname, docids=docids, converter='pdf')
+                    docids = [int(i) for i in docids.split(',')]
+                    if report.attachment:
+                        obj = report_obj.pool[report.model].browse(cr, uid, docids[0])
+                        filename = eval(report.attachment, {'object': obj})
                 else:
                     # Particular report:
                     data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON
                     response = self.report_routes(reportname, converter='pdf', **dict(data))
 
-                cr, uid = request.cr, request.uid
-                report = request.registry['report']._get_report_from_name(cr, uid, reportname)
-                filename = "%s.%s" % (report.name, "pdf")
                 response.headers.add('Content-Disposition', content_disposition(filename))
                 response.set_cookie('fileToken', token)
                 return response

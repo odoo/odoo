@@ -129,23 +129,15 @@
             <field name="arch" type="xml">
                 <form string="Sales Order">
                 <header>
-                    <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
-                        type="action" class="btn-primary"
-                        attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}"/>
-                    <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
-                        type="action" context="{'default_advance_payment_method': 'percentage'}"
-                        attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
-                    <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
-                    <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale"/>
-                    <button name="print_quotation" string="Print" type="object" states="draft" class="btn-primary"/>
-                    <button name="print_quotation" string="Print" type="object" states="sent,sale"/>
-                    <button name="action_confirm" states="sent" string="Confirm Sale" class="btn-primary" type="object" context="{'show_sale': True}"/>
-                    <button name="action_confirm" states="draft" string="Confirm Sale" type="object" context="{'show_sale': True}"/>
-                    <button name="action_cancel" states="draft,sent,sale" type="object" string="Cancel"/>
+                    <button name="print_quotation" string="Print" type="object" states="draft,approve,sent,sale"/>
+                    <button name="action_quotation_approve" string="Approve" type="object" states="draft"/>
+                    <button name="action_quotation_send" string="Send by Email" type="object" states="sent,sale,approve"/>
+                    <button name="action_confirm" states="approve,sent" string="Confirm Sale" type="object" context="{'show_sale': True}"/>
+                    <button type="object" name="copy_button" states="approve,sent,sale" string="Save As..." />
                     <button name="action_draft" states="cancel" type="object" string="Set to Quotation"/>
                     <button name="action_done" type="object" string="Set to Done" states="sale"
                         help="If a sale order is done, you cannot modify it manually anymore. However, you will still be able to invoice or deliver. This is used to freeze the sale order."/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale,done"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approve,sent,sale,done"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
