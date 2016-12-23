@@ -59,3 +59,23 @@ class Task(models.Model):
     subtask_count = fields.Integer(compute='_get_subtask_count', type='integer', string="Sub-task count")
 
     _constraints = [(osv.osv._check_recursion, 'Circular references are not permitted between tasks and sub-tasks', ['parent_id'])]
+
+class account_analytic_line(models.Model):
+    _inherit = "account.analytic.line"
+
+    @api.multi
+    def unlink(self):
+        for line in self:
+            if self.env.context.get("from_post"):
+                break
+            so_line = line.so_line
+            if not so_line and not so_line.state == 'sale' and not so_line.product_id.track_service in ['task']:
+                continue
+            so_line = line.so_line
+            uom = line.product_uom_id
+            if so_line.product_uom.category_id == uom.category_id:
+                qty = self.env['product.uom']._compute_qty_obj(uom, line.unit_amount, so_line.product_uom)
+            else:
+                qty = line.unit_amount
+            so_line.qty_delivered -= qty
+        super(account_analytic_line, self).unlink()
