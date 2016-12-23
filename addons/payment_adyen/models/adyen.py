@@ -81,7 +81,7 @@ class AcquirerAdyen(osv.Model):
         adyen_tx_values = dict(tx_values)
         adyen_tx_values.update({
             'merchantReference': tx_values['reference'],
-            'paymentAmount': '%d' % int(float_round(tx_values['amount'], 2) * 100),
+            'paymentAmount': 'd%' % float_round(value, precision_rounding=0.01),
             'currencyCode': tx_values['currency'] and tx_values['currency'].name or '',
             'shipBeforeDate': tmp_date,
             'skinCode': acquirer.adyen_skin_code,
