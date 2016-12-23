@@ -91,7 +91,11 @@ class product_product(osv.osv):
         stock_input_acc = datas.get('stock_input_account', False)
         journal_id = datas.get('stock_journal', False)
         move_ids = []
-        loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
+        # get only location where product is/was
+        sm_ids = self.pool.get('stock.move').search(cr, uid, [('product_id', 'in', ids)])
+        search_loc_product_ids = self.pool.get('stock.move').read(cr, uid, sm_ids, ['location_dest_id'])
+        loc_product_ids = [loc_product_id['location_dest_id'][0] for loc_product_id in search_loc_product_ids]
+        loc_ids = location_obj.search(cr, uid, [('usage', '=', 'internal'), ('id', 'in', loc_product_ids)])
         for product in self.browse(cr, uid, ids, context=context):
             if product.valuation != 'real_time':
                 continue
@@ -151,12 +155,14 @@ class product_product(osv.osv):
                                     'account_id': stock_input_acc,
                                     'debit': amount_diff,
                                     'move_id': move_id,
+                                    'product_id': product.id,
                                     })
                         move_line_obj.create(cr, uid, {
                                     'name': product.categ_id.name,
                                     'account_id': account_valuation_id,
                                     'credit': amount_diff,
-                                    'move_id': move_id
+                                    'move_id': move_id,
+                                    'product_id': product.id,
                                     })
                     elif diff < 0:
                         if not stock_output_acc:
@@ -176,13 +182,15 @@ class product_product(osv.osv):
                                         'name': product.name,
                                         'account_id': stock_output_acc,
                                         'credit': amount_diff,
-                                        'move_id': move_id
+                                        'move_id': move_id,
+                                        'product_id': product.id,
                                     })
                         move_line_obj.create(cr, uid, {
                                         'name': product.categ_id.name,
                                         'account_id': account_valuation_id,
                                         'debit': amount_diff,
-                                        'move_id': move_id
+                                        'move_id': move_id,
+                                        'product_id': product.id,
                                     })
         self.write(cr, uid, ids, {'standard_price': new_price})
 
