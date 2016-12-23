@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Nicolas Schmitt sathors@free.fr https://github.com/Sathors
+Nicolas Schmitt sathors@free.fr Sathors@users.noreply.github.com https://github.com/Sathors
