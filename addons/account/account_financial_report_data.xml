@@ -51,7 +51,8 @@
             <field name="parent_id" ref="account_financial_report_liabilitysum0"/>
             <field name="display_detail">no_detail</field>
             <field name="type">account_report</field>
-            <field name="account_report_id" ref="account_financial_report_profitandloss0"/>
+            <field name="account_report_ids"
+                   eval="[(6,0,[ref('account_financial_report_profitandloss0')])]"/>
         </record>
     </data>
 </openerp>
