@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="account.tax.template" id="tva_normale">
+            <field name="chart_template_id" ref="dz_chart_template"/>
+            <field name="name">TVA collectée (vente) 17,0%</field>
+            <field name="description">17.0</field>
+            <field name="amount" eval="0.170"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="tax_col_170_ht"/>
+            <field name="base_sign" eval="1"/>
+            <field name="tax_code_id" ref="tax_col_170"/>
+            <field name="tax_sign" eval="1"/>
+
+            <field name="account_collected_id" ref="pcg_44551"/>
+            <field name="account_paid_id" ref="pcg_44584"/>
+
+            <field name="ref_base_code_id" ref="tax_col_170_ht"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_code_id" ref="tax_col_170"/>
+            <field name="ref_tax_sign" eval="-1"/>
+            <field name="sequence" eval="1"/>
+            <field name="type_tax_use">sale</field>
+        </record>
+
+        <record model="account.tax.template" id="tva_reduite">
+            <field name="chart_template_id" ref="dz_chart_template"/>
+            <field name="name">TVA collectée réduite (vente) 7,0%</field>
+            <field name="description">7.0</field>
+            <field name="amount" eval="0.070"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="tax_col_070_ht"/>
+            <field name="base_sign" eval="1"/>
+            <field name="tax_code_id" ref="tax_col_070"/>
+            <field name="tax_sign" eval="1"/>
+
+            <field name="account_collected_id" ref="pcg_44551"/>
+            <field name="account_paid_id" ref="pcg_44584"/>
+
+            <field name="ref_base_code_id" ref="tax_col_070_ht"/>
+            <field name="ref_base_sign" eval="-1"/>
+            <field name="ref_tax_code_id" ref="tax_col_070"/>
+            <field name="ref_tax_sign" eval="-1"/>
+            <field name="sequence" eval="2"/>
+            <field name="type_tax_use">sale</field>
+        </record>
+
+        <record model="account.tax.template" id="tva_acq_normale">
+            <field name="chart_template_id" ref="dz_chart_template"/>
+            <field name="name">TVA déductible (achat) 17,0%</field>
+            <field name="description">ACH-17.0</field>
+            <field name="amount" eval="0.170"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="tax_acq_170_ht"/>
+            <field name="base_sign" eval="-1"/>
+            <field name="tax_code_id" ref="tax_acq_170"/>
+            <field name="tax_sign" eval="-1"/>
+
+            <field name="account_collected_id" ref="pcg_44551"/>
+            <field name="account_paid_id" ref="pcg_44584"/>
+
+            <field name="ref_base_code_id" ref="tax_acq_170_ht"/>
+            <field name="ref_base_sign" eval="1"/>
+            <field name="ref_tax_code_id" ref="tax_acq_170"/>
+            <field name="ref_tax_sign" eval="1"/>
+            <field name="sequence" eval="1"/>
+            <field name="type_tax_use">purchase</field>
+        </record>
+        <record model="account.tax.template" id="tva_acq_reduite">
+            <field name="chart_template_id" ref="dz_chart_template"/>
+            <field name="name">TVA déductible réduite (achat) 7,0%</field>
+            <field name="description">ACH-7.0</field>
+            <field name="amount" eval="0.070"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="tax_acq_070_ht"/>
+            <field name="base_sign" eval="-1"/>
+            <field name="tax_code_id" ref="tax_acq_070"/>
+            <field name="tax_sign" eval="-1"/>
+
+            <field name="account_collected_id" ref="pcg_44551"/>
+            <field name="account_paid_id" ref="pcg_44584"/>
+
+            <field name="ref_base_code_id" ref="tax_acq_070_ht"/>
+            <field name="ref_base_sign" eval="1"/>
+            <field name="ref_tax_code_id" ref="tax_acq_070"/>
+            <field name="ref_tax_sign" eval="1"/>
+            <field name="sequence" eval="2"/>
+            <field name="type_tax_use">purchase</field>
+        </record>
+    </data>
+</openerp>
