@@ -1,0 +1,310 @@
+<openerp>
+    <data>
+
+<template id="website_less.snippets" inherit_id="website.snippets">
+
+    <!-- Add name attributes to snippets -->
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Banner']]" position="attributes">
+        <attribute name="name">Banner</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Text-Image']]" position="attributes">
+        <attribute name="name">Text-Image</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Image-Text']]" position="attributes">
+        <attribute name="name">Image-Text</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Image-Floating']]" position="attributes">
+        <attribute name="name">Image-Floating</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Big Message']]" position="attributes">
+        <attribute name="name">Big Message</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Text Block']]" position="attributes">
+        <attribute name="name">Text Block</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Title']]" position="attributes">
+        <attribute name="name">Title</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Features']]" position="attributes">
+        <attribute name="name">Features</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Big Picture']]" position="attributes">
+        <attribute name="name">Big Picture</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Three Columns']]" position="attributes">
+        <attribute name="name">Three Columns</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Well']]" position="attributes">
+        <attribute name="name">Well</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Quote']]" position="attributes">
+        <attribute name="name">Quote</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Panel']]" position="attributes">
+        <attribute name="name">Panel</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Image Floating']]" position="attributes">
+        <attribute name="name">Image Floating</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Separator']]" position="attributes">
+        <attribute name="name">Separator</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Share']]" position="attributes">
+        <attribute name="name">Share</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Image Gallery']]" position="attributes">
+        <attribute name="name">Image Gallery</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Comparisons']]" position="attributes">
+        <attribute name="name">Comparisons</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Button']]" position="attributes">
+        <attribute name="name">Button</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='FAQ']]" position="attributes">
+        <attribute name="name">FAQ</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='References']]" position="attributes">
+        <attribute name="name">References</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Quotes Slider']]" position="attributes">
+        <attribute name="name">Quotes Slider</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Feature Grid']]" position="attributes">
+        <attribute name="name">Feature Grid</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Parallax']]" position="attributes">
+        <attribute name="name">Parallax</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Parallax Slider']]" position="attributes">
+        <attribute name="name">Parallax Slider</attribute>
+    </xpath>
+
+    <!-- Add class names on snippets and remove margins classes -->
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Banner']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body carousel slide s_banner</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Text-Image']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body s_text_image</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Image-Text']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body s_image_text</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Image-Floating']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body para_large s_image_floating</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Big Message']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body jumbotron s_big_message</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Text Block']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body s_text_block</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Title']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body s_title</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Features']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body s_features</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Big Picture']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body oe_dark s_big_picture</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Three Columns']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body s_three_columns</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Well']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body well s_well</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Quote']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body s_quote</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Panel']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body panel panel-default s_panel</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Image Floating']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body o_image_floating o_margin_l pull-right s_image_floating</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Separator']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body s_separator</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Share']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body oe_share s_share</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Image Gallery']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body s_image_gallery</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Comparisons']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body s_comparisons</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Button']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body jumbotron s_button</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='FAQ']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body s_faq</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='References']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body s_references</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Quotes Slider']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body carousel quotecarousel slide s_quotes_slider</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Feature Grid']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body s_feature_grid</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Parallax']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body parallax s_parallax</attribute>
+    </xpath>
+
+    <xpath expr="//div[span[@class='oe_snippet_thumbnail_title']][span='Parallax Slider']/following-sibling::*[1]" position="attributes">
+        <attribute name="class">oe_snippet_body parallax s_parallax_slider</attribute>
+    </xpath>
+
+    <!-- Remove inline background images -->
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Banner']]/div/div/div" position="attributes">
+        <attribute name="style"></attribute>
+        <attribute name="class">item active bg-img-01</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Parallax']]/section" position="attributes">
+        <attribute name="style"></attribute>
+        <attribute name="class">oe_snippet_body parallax bg-img-02</attribute>
+    </xpath>
+
+    <xpath expr="//div[div[span[@class='oe_snippet_thumbnail_title']][span='Parallax Slider']]/section" position="attributes">
+        <attribute name="style"></attribute>
+        <attribute name="class">oe_snippet_body parallax bg-img-03</attribute>
+    </xpath>
+
+</template>
+
+<template id="website_less.snippet_options" inherit_id="website.snippet_options">
+
+    <!-- Add new snippet options API attributes to old snippet options -->
+    <xpath expr="//div[@data-snippet-option-id='blog-style']" position="attributes">
+        <attribute name="data-js">blog-style</attribute>
+    </xpath>
+    <xpath expr="//div[@data-snippet-option-id='background']" position="attributes">
+        <attribute name="data-js">background</attribute>
+    </xpath>
+    <xpath expr="//div[@data-snippet-option-id='carousel']" position="attributes">
+        <attribute name="data-js">carousel</attribute>
+    </xpath>
+    <xpath expr="//div[@data-snippet-option-id='margin-y']" position="attributes">
+        <attribute name="data-js">margin-y</attribute>
+    </xpath>
+    <xpath expr="//div[@data-snippet-option-id='resize']" position="attributes">
+        <attribute name="data-js">resize</attribute>
+    </xpath>
+    <xpath expr="//div[@data-snippet-option-id='margin-x']" position="attributes">
+        <attribute name="data-js">margin-x</attribute>
+    </xpath>
+    <xpath expr="//div[@data-snippet-option-id='content']" position="attributes">
+        <attribute name="data-js">content</attribute>
+    </xpath>
+    <xpath expr="//div[@data-snippet-option-id='separator']" position="attributes">
+        <attribute name="data-js">separator</attribute>
+    </xpath>
+    <xpath expr="//div[@data-snippet-option-id='image_floating_margin']" position="attributes">
+        <attribute name="data-js">image_floating_margin</attribute>
+    </xpath>
+    <xpath expr="//div[@data-snippet-option-id='image_floating_hidelink']" position="attributes">
+        <attribute name="data-js">image_floating_hidelink</attribute>
+    </xpath>
+    <xpath expr="//div[@data-snippet-option-id='image_floating_side']" position="attributes">
+        <attribute name="data-js">image_floating_side</attribute>
+    </xpath>
+    <xpath expr="//div[@data-snippet-option-id='parallax']" position="attributes">
+        <attribute name="data-js">parallax</attribute>
+    </xpath>
+    <xpath expr="//div[@data-snippet-option-id='media']" position="attributes">
+        <attribute name="data-js">media</attribute>
+    </xpath>
+    <xpath expr="//div[@data-snippet-option-id='transform']" position="attributes">
+        <attribute name="data-js">transform</attribute>
+    </xpath>
+
+    <xpath expr="//div[@data-js='background']//ul[@class='dropdown-menu']" position="replace">
+        <ul class="dropdown-menu">
+            <li data-background="/website/static/src/img/parallax/parallax_bg.jpg"><a>Sunflower</a></li>
+            <li data-background="/website/static/src/img/banner/business_guy.jpg"><a>Business Guy</a></li>
+            <li data-background="/website/static/src/img/banner/flower_field.jpg"><a>Flowers Field</a></li>
+            <li data-background="/website/static/src/img/banner/landscape.jpg"><a>Landscape</a></li>
+            <li data-background="/website/static/src/img/banner/mountains.jpg"><a>Mountains</a></li>
+            <li data-background="/website/static/src/img/banner/greenfields.jpg"><a>Greenfields</a></li>
+            <li data-background="/website/static/src/img/banner/aqua.jpg"><a>Aqua</a></li>
+            <li data-background="/website/static/src/img/banner/baby_blue.jpg"><a>Baby Blue</a></li>
+            <li data-background="/website/static/src/img/banner/black.jpg"><a>Black</a></li>
+            <li data-background="/website/static/src/img/banner/color_splash.jpg"><a>Color Splash</a></li>
+            <li data-background="/website/static/src/img/banner/mango.jpg"><a>Mango</a></li>
+            <li data-background="/website/static/src/img/banner/orange_red.jpg"><a>Orange Red</a></li>
+            <li data-background="/website/static/src/img/banner/flower.jpg"><a>Purple</a></li>
+            <li data-background="/website/static/src/img/banner/velour.jpg"><a>Velour</a></li>
+            <li data-background="/website/static/src/img/banner/wood.jpg"><a>Wood</a></li>
+            <li data-background="/website/static/src/img/banner/yellow_green.jpg"><a>Yellow Green</a></li>
+            <li data-background="/website/static/src/img/parallax/quote.png"><a>Quote</a></li>
+            <li data-background=""><a>None</a></li>
+            <li><a style="background: none; padding: 5px; border-top: 1px solid #ddd;"></a></li>
+            <li data-choose_image="choose_image" data-background=""><a><b>Choose an image...</b></a></li>
+        </ul>
+    </xpath>
+
+    <xpath expr="//div[@data-js='background']" position="after">
+        <div data-js='colorpicker' data-selector="section, .carousel, .parallax">
+            <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">Color</a>
+                <ul class="dropdown-menu">
+                    <li></li>
+                </ul>
+            </li>
+        </div>
+    </xpath>
+</template>
+
+    </data>
+</openerp>

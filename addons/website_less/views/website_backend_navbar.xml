@@ -1,0 +1,16 @@
+<openerp>
+    <data>
+
+<template id="website_less.user_navbar" inherit_id="website.user_navbar">
+    <xpath expr="//ul[@class='dropdown-menu' and @role='menu']" position="replace">
+        <ul class="dropdown-menu" role="menu">
+            <li id="html_editor"><a href="#advanced-view-editor" data-action='ace'>HTML Editor</a></li>
+            <li id="theme_customize"><a href="#">Customize Theme</a></li>
+            <li id="install_apps"><a href="/web#return_label=Website&amp;action=website.action_module_website">Install Apps</a></li>
+            <li class="divider"></li>
+        </ul>
+    </xpath>
+</template>
+
+    </data>
+</openerp>
