@@ -75,7 +75,8 @@
                     <field name="state" invisible="1"/>
                     <field name="type" invisible="1"/>
                     <button name="send" string="Send Now" type="object" icon="gtk-media-play" states='outgoing'/>
-                    <button name="mark_outgoing" string="Retry" type="object" icon="gtk-redo" states='exception,cancel'/>
+                    <button name="get_partners_to_notify" string="Resend" type="object" icon="gtk-media-play" states='exception'/>
+                    <button name="mark_outgoing" string="Retry" type="object" icon="gtk-redo" states='cancel'/>
                     <button name="cancel" string="Cancel Email" type="object" icon="terp-gtk-stop" states='outgoing'/>
                 </tree>
             </field>
