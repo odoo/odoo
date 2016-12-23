@@ -2268,7 +2268,7 @@ instance.web.list.Binary = instance.web.list.Column.extend({
         var text = _t("Download");
         var value = row_data[this.id].value;
         var download_url;
-        if (value && value.substr(0, 10).indexOf(' ') == -1) {
+        if (value && value.substr(0, 10).indexOf(' ') == -1 && instance.web.BufferedDataSet.virtual_id_regex.test(options.id)) {
             download_url = "data:application/octet-stream;base64," + value;
         } else {
             download_url = instance.session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
@@ -2280,7 +2280,8 @@ instance.web.list.Binary = instance.web.list.Column.extend({
             text = _.str.sprintf(_t("Download \"%s\""), instance.web.format_value(
                     row_data[this.filename].value, {type: 'char'}));
         }
-        return _.template('<a href="<%-href%>"><%-text%></a> (<%-size%>)', {
+        return _.template('<a download="<%-filename%>" href="<%-href%>"><%-text%></a> (<%-size%>)', {
+            filename: row_data.datas_fname.value,
             text: text,
             href: download_url,
             size: instance.web.binary_to_binsize(value),
