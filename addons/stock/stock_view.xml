@@ -922,7 +922,7 @@
         </record>
         <record id="view_picking_out_search" model="ir.ui.view">
             <field name="name">stock.picking.out.search</field>
-            <field name="model">stock.picking</field>
+            <field name="model">stock.picking.out</field>
             <field name="arch" type="xml">
                 <search string="Picking list">
                     <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
