@@ -678,11 +678,11 @@ class BaseModel(object):
                 else:
                     raise except_orm('Error',
                         ('Invalid function definition %s in object %s !\nYou must use the definition: store={object:(fnct, fields, priority, time length)}.' % (fname, cls._name)))
-                pool._store_function.setdefault(model, [])
+                pool._store_function.setdefault(cls._name, [])
                 t = (cls._name, fname, fnct, tuple(fields2) if fields2 else None, order, length)
-                if t not in pool._store_function[model]:
-                    pool._store_function[model].append(t)
-                    pool._store_function[model].sort(key=lambda x: x[4])
+                if t not in pool._store_function[cls._name]:
+                    pool._store_function[cls._name].append(t)
+                    pool._store_function[cls._name].sort(key=lambda x: x[4])
 
     @classmethod
     def _init_manual_fields(cls, cr, partial):
