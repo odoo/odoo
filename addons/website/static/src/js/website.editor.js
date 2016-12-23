@@ -794,6 +794,9 @@
                         }, 0);
                     });
 
+                // cke change address tag and add a contentEditable true. Need to avoid edition
+                $('[data-oe-type="contact"]').attr('contentEditable', false);
+
                 self.trigger('rte:ready');
                 def.resolve();
             });
@@ -1286,10 +1289,14 @@
 
             this.imageDialog = new website.editor.RTEImageDialog(this, this.editor, this.media);
             this.imageDialog.appendTo(this.$("#editor-media-image"));
-            this.iconDialog = new website.editor.FontIconsDialog(this, this.editor, this.media);
-            this.iconDialog.appendTo(this.$("#editor-media-icon"));
-            this.videoDialog = new website.editor.VideoDialog(this, this.editor, this.media);
-            this.videoDialog.appendTo(this.$("#editor-media-video"));
+            if ($(this.media).is("[data-oe-model]") || $(this.media).parent().is("[data-oe-model]")) {
+                this.iconDialog = new website.editor.FontIconsDialog(this, this.editor, this.media);
+                this.iconDialog.appendTo(this.$("#editor-media-icon"));
+                this.videoDialog = new website.editor.VideoDialog(this, this.editor, this.media);
+                this.videoDialog.appendTo(this.$("#editor-media-video"));
+            } else {
+                this.$('li:not(.active):not(.search)').hide();
+            }
 
             this.active = this.imageDialog;
 
@@ -1330,10 +1337,10 @@
                 if (this.active !== this.imageDialog) {
                     this.imageDialog.clear();
                 }
-                if (this.active !== this.iconDialog) {
+                if (this.active !== this.iconDialog && this.iconDialog) {
                     this.iconDialog.clear();
                 }
-                if (this.active !== this.videoDialog) {
+                if (this.active !== this.videoDialog && this.videoDialog) {
                     this.videoDialog.clear();
                 }
             } else {
