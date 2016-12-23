@@ -3,7 +3,6 @@
 
     <template id="report_template_background">
         <div class="header o_noboxed_header row">
-        <t t-set="cfacss"><style>* {background-color:red !important;}</style></t>
             <div class="col-xs-3 mb8">
                 <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"/>
             </div>
@@ -18,7 +17,7 @@
             </div>
         </div>
 
-        <t t-raw="0" />
+        <t t-raw="0"/>
 
         <div class="footer o_noboxed_footer row">
             <div class="col-xs-12 text-center">
