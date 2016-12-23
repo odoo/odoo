@@ -12,6 +12,15 @@
             parent="sales_team.menu_base_partner" sequence="5" />
         <menuitem id="menu_invoiced" name="Invoicing" parent="menu_aftersale" sequence="1"/>
 
+        <report
+            string="Commercial Invoice"
+            id="action_commercial_invoice"
+            model="stock.picking"
+            report_type="qweb-pdf"
+            name="sale_stock.report_commercial_invoice"
+            file="sale_stock.report_commercial_invoice"
+        />
+        
         <record id="stock_location_route_form_view_inherit_sale_stock" model="ir.ui.view">
             <field name="name">stock.location.route.form</field>
             <field name="inherit_id" ref="stock.stock_location_route_form_view"/>

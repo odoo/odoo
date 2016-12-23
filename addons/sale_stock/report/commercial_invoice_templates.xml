@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_commercial_invoice">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
+                <div class="page">
+                    <h3 class="text-center"><strong>COMMERCIAL INVOICE</strong></h3>
+                    <table class="table table-bordered">
+                        <tr>
+                            <td colspan="2"><strong>Date: </strong><span t-field="o.date_done"/></td>
+                            <td colspan="5"><strong>Invoice No: </strong><span t-field="o.origin"/>/<span t-field="o.name"/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <strong>Exporter: </strong><br></br>
+                                <span>Name: </span><span t-field="res_company.name"/><br></br>
+                                <span>City/State/ZIP Code: </span><span t-field="res_company.city"/> <span t-field="res_company.state_id.code"/> <span t-field="res_company.zip"/><br></br>
+                                <span>Country: </span><span t-field="res_company.country_id.name"/>
+                                <span t-if='res_company.phone'><br></br>Phone: <span t-field="res_company.phone"/></span>
+                                <span t-if='res_company.fax'><br></br>Fax: <span t-field="res_company.fax"/></span><br></br>
+                                <span>E-mail: </span><span t-field="res_company.email"/><br></br>
+                                <span>Contact Person: </span><span t-field="res_company.partner_id.name"/><br></br>
+                                <span>Tax ID No (EIN): </span><span t-field="res_company.vat"/>
+                            </td>
+                            <td colspan="5">
+                                <strong>Consignee: </strong><br></br>
+                                <span>Name: </span><span t-field="o.sale_id.partner_shipping_id"/><br></br>
+                                <span>City/State/ZIP Code: </span><span t-field="o.sale_id.partner_shipping_id.city"/> <span t-field="o.sale_id.partner_shipping_id.state_id.code"/> <span t-field="o.sale_id.partner_shipping_id.zip"/><br></br>
+                                <span>Country: </span><span t-field="o.sale_id.partner_shipping_id.country_id.name"/>
+                                <span t-if='o.sale_id.partner_shipping_id.phone'><br></br>Phone: <span t-field="o.sale_id.partner_shipping_id.phone"/></span>
+                                <span t-if='o.sale_id.partner_shipping_id.fax'><br></br>Fax: <span t-field="o.sale_id.partner_shipping_id.fax"/></span><br></br>
+                                <span>E-mail: </span><span t-field="o.sale_id.partner_shipping_id.email"/><br></br>
+                                <span>Contact Person: </span><span t-field="o.sale_id.partner_shipping_id.name"/><br></br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1" name="incoterm">
+                                <strong>Terms of Trade (Incoterm):</strong><br/>
+                                <span t-field="o.sale_id.incoterm"/>
+                            </td>
+                            <td colspan="3"><strong>Transportation:</strong><br/>
+                                <span name="transport"></span><br/>
+                            AWB/BL #:
+                            </td>
+                            <td colspan="3">
+                                <t t-set="weight_total" t-value="0.0"/>
+                                <t t-foreach="o.pack_operation_product_ids" t-as="l">
+                                    <t t-set="weight_total" t-value="weight_total + l.product_id.weight"/>
+                                </t>
+                                <strong>Total Gross Weight:</strong><br/>
+                                <span t-esc="'%.3f' % weight_total"/> Kgs
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="1">
+                                <strong>Other</strong>
+                            </td>
+                            <td colspan="2">
+                                <strong>Currency:</strong>
+                                <span t-field="o.sale_id.currency_id"/>
+                            </td>
+                            <td colspan="4">
+                                <t t-set="qty_total" t-value="0"/>
+                                <t t-foreach="o.pack_operation_product_ids" t-as="l">
+                                    <t t-set="qty_total" t-value="qty_total + l.product_qty"/>
+                                </t>
+                                <strong>Total # of Pieces:</strong>
+                                <span t-esc="'%.3f' % qty_total"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Commodity Description</th>
+                            <th width="20%">HS</th>
+                            <th width="20%">Country of Manufacture</th>
+                            <th class="text-center">Qty</th>
+                            <th>UOM</th>
+                            <th class="text-right">Unit Price</th>
+                            <th class="text-right">Total Amount</th>
+                        </tr>
+                        <t t-set="sum_of_amount_total" t-value="0"/>
+                        <t t-set="not_in_order_line" t-value="[]"/>
+                        <tr t-foreach="o.pack_operation_product_ids" t-as="l">
+                        <!-- Calculation -->
+                            <t t-set="sale_unit_price" t-value="0"/>
+                            <t t-set="sale_product_id" t-value="o.sale_id.order_line.filtered(lambda r, l=l: r.product_id.id == l.product_id.id)"/>
+
+                            <t t-foreach="sale_product_id" t-as="sale_product">
+                                <t t-set="sale_unit_price" t-value="sale_product.price_unit-(sale_product.price_unit * 
+                                    sale_product.discount/100)"/>
+                            </t>
+
+                            <t t-if="not sale_product_id">
+                                <t t-set="not_in_order_line" t-value="not_in_order_line + [l.product_id.id]"/>
+                            </t>
+
+                            <t t-if="sale_product_id">
+                                <t t-set="amount_total" t-value="sale_unit_price*l.product_qty"/>
+                                <t t-set="sum_of_amount_total" t-value="sum_of_amount_total+amount_total"/>
+                                <td><span t-field="l.product_id"/><br/>
+                                    <span t-field="l.product_id.description_sale"/>
+                                </td>
+                                <td><span t-field="l.product_id.hs_code"/></td>
+                                <td>
+                                    <span />
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="l.product_qty"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="l.product_uom_id"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="sale_unit_price" t-options='{"widget": "monetary", "display_currency": o.sale_id.currency_id}'/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="amount_total" t-options='{"widget": "monetary", "display_currency": o.sale_id.currency_id}'/>
+                                </td>
+                            </t>
+                        </tr>
+                        <t t-if="not_in_order_line">
+                            <!-- Find the Line with BOM from Sale Order Line-->
+                            <t t-set="lines_with_BOM" t-value="o.sale_id.order_line.filtered(lambda l: l.product_id.bom_ids)"/>
+                            <!-- Loop on it/order_line -->
+                            <t t-foreach="lines_with_BOM" t-as="line_with_BOM">
+                                <!-- Check that all product ids from that BOM are exist in not_in_order_line -->
+                                <tr t-if="set(line_with_BOM.product_id.bom_ids.bom_line_ids.mapped('product_id').ids).issubset(not_in_order_line)">
+                                    <!-- You can also check this way that a is substring of b or not: set(a)<set(main) -->
+                                    <t t-set="sale_unit_price" t-value="line_with_BOM.price_unit-(line_with_BOM.price_unit * 
+                                            line_with_BOM.discount/100)"/>
+                                    <t t-set="amount_total" t-value="sale_unit_price*line_with_BOM.product_uom_qty"/>
+                                    <t t-set="sum_of_amount_total" t-value="sum_of_amount_total+amount_total"/>
+                                    <td><span t-field="line_with_BOM.product_id"/><br/>
+                                        <span t-field="line_with_BOM.product_id.description_sale"/>
+                                    </td>
+                                    <td><span t-field="line_with_BOM.product_id.hs_code"/></td>
+                                    <td>
+                                        <span />
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line_with_BOM.product_uom_qty"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line_with_BOM.product_uom"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="sale_unit_price" t-options='{"widget": "monetary", "display_currency": o.sale_id.currency_id}'/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="amount_total" t-options='{"widget": "monetary", "display_currency": o.sale_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                        <tr>
+                            <td rowspan="4" colspan="3">
+                                These commodities, technologies, or softwares were exported from the United States in accordance with export administration regulations. Diversion contrary to United States law prohibited. We certify that this commercial invoice is true and correct.
+                            </td>
+                            <td colspan="3"><strong>Subtotal</strong></td>
+                            <td class="text-right">
+                                <span t-esc="sum_of_amount_total" t-options='{"widget": "monetary", "display_currency": o.sale_id.currency_id}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><strong>Freight Cost</strong></td>
+                            <td class="text-right">
+                                <span name='freight_cost' t-esc="freight_cost" t-options='{"widget": "monetary", "display_currency": o.sale_id.currency_id}'/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><strong>Insurance Cost</strong></td>
+                            <td class="text-right">
+                                <span />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><strong>Total Invoice Value</strong></td>
+                            <td class="text-right">
+                                <span name='total_value' t-esc="total_value" t-options='{"widget": "monetary", "display_currency": o.sale_id.currency_id}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="7">
+                                I/we hereby certify that the information on this invoice is true and correct and that the contents of this shipment are as stated above.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <strong>Name</strong>
+                            </td>
+                            <td colspan="2">
+                                <strong>Signature</strong>
+                            </td>
+                            <td colspan="3">
+                                <strong>Date</strong>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
