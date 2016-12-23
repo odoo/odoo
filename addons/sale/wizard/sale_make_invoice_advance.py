@@ -106,9 +106,23 @@ class sale_advance_payment_inv(osv.osv_memory):
                 raise osv.except_osv(_('Incorrect Data'),
                     _('The value of Advance Amount must be positive.'))
             if wizard.advance_payment_method == 'percentage':
-                inv_amount = sale.amount_untaxed * wizard.amount / 100
-                if not res.get('name'):
-                    res['name'] = self._translate_advance(cr, uid, percentage=True, context=dict(context, lang=sale.partner_id.lang)) % (wizard.amount)
+                inv_lines_values = []
+                for sale_line in sale.order_line :
+                    name = self._translate_advance(cr, uid, percentage=True, context=dict(context, lang=sale.partner_id.lang)) % (wizard.amount)
+                    # create the invoice line
+                    inv_line_values = {
+                        'name': name + '\n' + sale_line.name,
+                        'origin': sale.name,
+                        'account_id': res['account_id'],
+                        'price_unit': (sale_line.product_uos_qty * sale_line.price_unit * wizard.amount) / 100,
+                        'quantity': 1.0,
+                        'discount': sale_line.discount,
+                        'uos_id': res.get('uos_id', False),
+                        'product_id': False,
+                        'invoice_line_tax_id': [(6, 0, sale_line.tax_id.ids)],
+                        'account_analytic_id': sale.project_id.id or False,
+                    }
+                    inv_lines_values.append((0, 0, inv_line_values))
             else:
                 inv_amount = wizard.amount
                 if not res.get('name'):
@@ -120,25 +134,27 @@ class sale_advance_payment_inv(osv.osv_memory):
                         symbol_order = (symbol, inv_amount)
                     res['name'] = self._translate_advance(cr, uid, context=dict(context, lang=sale.partner_id.lang)) % symbol_order
 
-            # determine taxes
-            if res.get('invoice_line_tax_id'):
-                res['invoice_line_tax_id'] = [(6, 0, res.get('invoice_line_tax_id'))]
-            else:
-                res['invoice_line_tax_id'] = False
+                # determine taxes
+                if res.get('invoice_line_tax_id'):
+                    res['invoice_line_tax_id'] = [(6, 0, res.get('invoice_line_tax_id'))]
+                else:
+                    res['invoice_line_tax_id'] = False
 
-            # create the invoice
-            inv_line_values = {
-                'name': res.get('name'),
-                'origin': sale.name,
-                'account_id': res['account_id'],
-                'price_unit': inv_amount,
-                'quantity': wizard.qtty or 1.0,
-                'discount': False,
-                'uos_id': res.get('uos_id', False),
-                'product_id': wizard.product_id.id,
-                'invoice_line_tax_id': res.get('invoice_line_tax_id'),
-                'account_analytic_id': sale.project_id.id or False,
-            }
+                # create the invoice
+                inv_line_values = {
+                    'name': res.get('name'),
+                    'origin': sale.name,
+                    'account_id': res['account_id'],
+                    'price_unit': inv_amount,
+                    'quantity': wizard.qtty or 1.0,
+                    'discount': False,
+                    'uos_id': res.get('uos_id', False),
+                    'product_id': wizard.product_id.id,
+                    'invoice_line_tax_id': res.get('invoice_line_tax_id'),
+                    'account_analytic_id': sale.project_id.id or False,
+                }
+                inv_lines_values = [(0, 0, inv_line_values)]
+
             inv_values = {
                 'name': sale.client_order_ref or sale.name,
                 'origin': sale.name,
@@ -146,7 +162,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 'reference': False,
                 'account_id': sale.partner_id.property_account_receivable.id,
                 'partner_id': sale.partner_invoice_id.id,
-                'invoice_line': [(0, 0, inv_line_values)],
+                'invoice_line': inv_lines_values,
                 'currency_id': sale.pricelist_id.currency_id.id,
                 'comment': sale.note,
                 'payment_term': sale.payment_term.id,
