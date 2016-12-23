@@ -715,6 +715,7 @@ class mrp_production(osv.osv):
         if context is None:
             context = {}
         move_obj = self.pool.get('stock.move')
+        return_move_obj = self.pool.get('stock.return.picking')
         for production in self.browse(cr, uid, ids, context=context):
             if production.state == 'confirmed' and production.picking_id.state not in ('draft', 'cancel'):
                 raise osv.except_osv(
@@ -723,6 +724,16 @@ class mrp_production(osv.osv):
             if production.move_created_ids:
                 move_obj.action_cancel(cr, uid, [x.id for x in production.move_created_ids])
             move_obj.action_cancel(cr, uid, [x.id for x in production.move_lines])
+            if production.picking_id and production.picking_id.state == 'done':
+                ctx = {'active_id':production.picking_id.id}
+                for move in production.move_lines2:
+                    move_obj.copy(cr, uid, move.id, {
+                                'name':_('%s-return') % (move.name),
+                                'location_id': move.location_dest_id.id, 
+                                'location_dest_id': move.location_id.id,
+                                'state':'done'})
+                return_move_id = return_move_obj.create(cr, uid, {}, ctx)
+                return_move_obj.create_returns(cr, uid, [return_move_id], ctx)
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
 
