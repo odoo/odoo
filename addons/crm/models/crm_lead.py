@@ -53,7 +53,7 @@ class Lead(models.Model):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority desc,activity_date_deadline,id desc"
-    _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin', 'format.address.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin']
     _mail_mass_mailing = _('Leads / Opportunities')
 
     def _default_probability(self):
