@@ -29,6 +29,17 @@ class account_invoice_report(osv.osv):
     _auto = False
     _rec_name = 'date'
 
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False, lazy=True):
+        if 'price_average' in fields:
+            fields.append('product_qty')
+            if 'price_total' not in fields:
+                fields.append('price_total')
+        res = super(account_invoice_report, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context, orderby, lazy)
+        if 'price_average' in fields:
+            for r in res:
+                r['price_average'] = r['price_total'] / r['product_qty']
+        return res
+
     def _compute_amounts_in_user_currency(self, cr, uid, ids, field_names, args, context=None):
         """Compute the amounts in the currency of the user
         """
