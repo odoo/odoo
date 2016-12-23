@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+        <record id="res_partner_form_do" model="ir.ui.view">
+            <field name="name">res.partner.form.do</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <field name="website" position="before">
+                    <field name="x_rnc" />
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
