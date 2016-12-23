@@ -31,10 +31,10 @@ class AccountChartTemplate(models.Model):
         taxes_acc = {
             'ITAX_010-IN': account_obj.search([('code', '=', '208.01.01')]),
             'ITAX_160-IN': account_obj.search([('code', '=', '208.01.01')]),
-            'ITAXR_04-OUT': account_obj.search([('code', '=', '216.13.01')]),
-            'ITAXR_10-OUT': account_obj.search([('code', '=', '216.13.01')]),
-            'ITAX_1067-OUT': account_obj.search([('code', '=', '216.13.01')]),
-            'ITAX_167-OUT': account_obj.search([('code', '=', '216.13.01')]),
+            'ITAXR_04-OUT': account_obj.search([('code', '=', '216.10.20')]),
+            'ITAXR_10-OUT': account_obj.search([('code', '=', '216.10.20')]),
+            'ITAX_1067-OUT': account_obj.search([('code', '=', '216.10.20')]),
+            'ITAX_167-OUT': account_obj.search([('code', '=', '216.10.20')]),
             'ITAX_010-OUT': account_obj.search([('code', '=', '208.01.01')]),
             'ITAX_160-OUT': account_obj.search([('code', '=', '208.01.01')])}
 
