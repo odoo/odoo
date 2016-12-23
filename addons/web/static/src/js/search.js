@@ -1637,7 +1637,8 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         this.$el.on('click', 'h4', function () {
             self.$el.toggleClass('oe_opened');
         });
-        return this.model.call('get_filters', [this.view.model])
+        return this.model.call('get_filters', [this.view.model], {
+                context: this.model.context()})
             .then(this.proxy('set_filters'))
             .done(function () { self.is_ready.resolve(); })
             .fail(function () { self.is_ready.reject.apply(self.is_ready, arguments); });
