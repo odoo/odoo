@@ -72,8 +72,8 @@ class procurement_order(osv.osv):
     def _get_date_planned(self, cr, uid, procurement, context=None):
         format_date_planned = datetime.strptime(procurement.date_planned,
                                                 DEFAULT_SERVER_DATETIME_FORMAT)
-        date_planned = format_date_planned - relativedelta(days=procurement.product_id.produce_delay or 0.0)
-        date_planned = date_planned - relativedelta(days=procurement.company_id.manufacturing_lead)
+        date_planned = format_date_planned + relativedelta(days=procurement.product_id.produce_delay or 0.0)
+        date_planned = date_planned + relativedelta(days=procurement.company_id.manufacturing_lead)
         return date_planned
 
     def _prepare_mo_vals(self, cr, uid, procurement, context=None):
