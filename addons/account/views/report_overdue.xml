@@ -3,37 +3,64 @@
 <data>
 <template id="account.report_overdue_document">
     <t t-call="report.external_layout">
-        <div class="page">
+  <div class="page">
             <div class="row">
                 <div class="col-xs-5 col-xs-offset-7">
-                    <span t-field="o.name"/><br/>
-                    <span t-raw="addresses[o.id].replace('\n\n', '\n').replace('\n', '&lt;br&gt;')"/>
-                     <span t-field="o.vat"/>
-                 </div>
+                    <h4>
+                        <span>Customer Statement</span>
+                    </h4>
+                </div>
             </div>
-
-            <p>
-                Document: Customer account statement<br/>
-                Date: <span t-esc="formatLang(time.strftime('%Y-%m-%d'), date=True)"/><br/>
-                Customer ref: <span t-field="o.ref"/>
-            </p>
+            <div class="row mt32 mb32">
+                <div class="col-xs-5 col-xs-offset-1">
+                    <h5>
+                        <div t-field="o.name"/>
+                        <div t-raw="addresses[o.id].replace('\n\n', '\n').replace('\n', '&lt;br&gt;')"/>
+                        
+                    </h5>
+                </div>
+                <div class="col-xs-5 col-xs-offset-1">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Date</th>
+                                <th class="text-center">Account</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">
+                              <span t-esc="formatLang(time.strftime('%Y-%m-%d'), date=True)"/><br/>
+                                </td>
+                            
+                                <td class="text-center">
+                                <span t-field="o.ref"/>
+                                </td>
+                                
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
             <p t-if="getLines(o)">
                 <t t-foreach="message(o, res_company)" t-as="messageline">
-                    <p t-esc="messageline"/>
+                    <span t-esc="messageline"/>
                 </t>
             </p>
 
             <table class="table table-condensed" t-if="getLines(o)">
-                <thead>
+                <thead>      <p>
+               
+            </p>
+
                     <tr>
                         <th>Date</th>
-                        <th>Description</th>
-                        <th class="text-center">Ref</th>
-                        <th class="text-center">Maturity Date</th>
+                        <th class="text-center">Invoice / Ref</th>        
+                      <th class="text-center">Due Date</th>
                         <th class="text-right">Due</th>
                         <th class="text-right">Paid</th>
-                        <th class="text-right">Maturity</th>
+                        <th class="text-right">Overdue</th>
                         <th class="text-center">Li.</th>
                     </tr>
                 </thead>
@@ -42,11 +69,9 @@
                         <span t-field="line.date"/>
                     </td>
                     <td>
-                        <span t-field="line.name"/>
+                        <span t-field="line.invoice"/>
                     </td>
-                    <td>
-                        <span t-field="line.ref"/>
-                    </td>
+                        
                     <td>
                         <span t-field="line.date_maturity"/>
                     </td>
@@ -76,22 +101,22 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3"></td>
+                    <td colspan="2"/>
                     <td><strong>Sub-Total :</strong></td>
                     <td class="text-right"><span t-esc="formatLang(due[o.id])"/></td>
                     <td class="text-right"><span t-esc="formatLang(paid[o.id])"/></td>
                     <td class="text-right"><span t-esc="formatLang(mat[o.id])"/></td>
-                    <td></td>
+                    <td/>
                 </tr>
                 <tr>
-                    <td colspan="3"></td>
+                    <td colspan="2"/>
                     <td><strong>Balance :</strong></td>
                     <td class="text-right">
                         <span t-esc="formatLang(due[o.id] - paid[o.id], currency_obj=res_company.currency_id)"/>
                     </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td/>
+                    <td/>
+                    <td/>
                 </tr>
             </table>
 
@@ -105,6 +130,8 @@
             </p>
         </div>
     </t>
+
+
 </template>
 
 <template id="report_overdue">

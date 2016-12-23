@@ -60,7 +60,6 @@ Dashboard / Reports for Warehouse Management will include:
         'procurement_demo.xml',
         'stock_orderpoint.xml',
         'stock_orderpoint.yml',
-        'stock_demo.yml',
         'stock_location_demo_cpu1.xml',
         'stock_location_demo_cpu3.yml',
     ],
