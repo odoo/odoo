@@ -1864,3 +1864,32 @@ Examples can be easily adapted from XML-RPC to JSON-RPC.
 .. _twitter bootstrap: http://getbootstrap.com
 
 .. _wkhtmltopdf: http://wkhtmltopdf.org
+
+
+
+
+
+
+
+
+
+
+import xmlrpclib
+
+root = 'http://%s:%d/xmlrpc/' % (HOST, PORT)
+
+uid = xmlrpclib.ServerProxy(root + 'common').login(DB, USER, PASS)
+print "Logged in as %s (uid: %d)" % (USER, uid)
+
+# Create a new note
+sock = xmlrpclib.ServerProxy(root + 'object')
+args = {
+    'color' : 8,
+    'memo' : 'This is a note',
+    'create_uid': uid,
+}
+note_id = sock.execute(DB, uid, PASS, 'note.note', 'create', args)
+
+
+
+
