@@ -69,7 +69,7 @@ class ResCompany(models.Model):
         string='Certificate Password',
         help='Password for the Certificate Key')
     l10n_mx_edi_pac = fields.Selection(
-        selection=[('solfact', 'Solucion Factible')], 
+        selection=[('finkok', 'Finkok'), ('solfact', 'Solucion Factible')], 
         string='PAC',
         help='The PAC that will sign/cancel the invoices')
     l10n_mx_edi_pac_test_env = fields.Boolean(

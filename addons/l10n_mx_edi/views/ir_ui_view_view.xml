@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_l10n_mx_edi_ir_ui_view_form_inherit" model="ir.ui.view">
+            <field name="name">l10n_mx_edi.view.form.inherit</field>
+            <field name="model">ir.ui.view</field>
+            <field name="inherit_id" ref="base.view_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook[last()]" position="inside">
+                    <page string="MX parameters">
+                        <group>
+                            <field name="l10n_mx_edi_addenda_flag"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
