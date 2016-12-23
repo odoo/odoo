@@ -59,3 +59,13 @@ class Task(models.Model):
     subtask_count = fields.Integer(compute='_get_subtask_count', type='integer', string="Sub-task count")
 
     _constraints = [(osv.osv._check_recursion, 'Circular references are not permitted between tasks and sub-tasks', ['parent_id'])]
+
+class account_analytic_line(models.Model):
+    _inherit = "account.analytic.line"
+
+    @api.multi
+    def unlink(self):
+        so_lines = self.mapped('so_line')
+        res = super(account_analytic_line, self).unlink()
+        so_lines.sudo()._compute_analytic()
+        return res

@@ -18,11 +18,12 @@ class SaleOrderLine(models.Model):
             domain,
             ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
         )
+        for line in self:
+            lines.setdefault(line, 0.0)
         for d in data:
             if not d['product_uom_id']:
                 continue
             line = self.browse(d['so_line'][0])
-            lines.setdefault(line, 0.0)
             uom = self.env['product.uom'].browse(d['product_uom_id'][0])
             if line.product_uom.category_id == uom.category_id:
                 qty = self.env['product.uom']._compute_qty_obj(uom, d['unit_amount'], line.product_uom)
@@ -38,6 +39,13 @@ class SaleOrderLine(models.Model):
 class AccountAnalyticLine(models.Model):
     _inherit = "account.analytic.line"
     so_line = fields.Many2one('sale.order.line', string='Sale Order Line')
+
+    @api.multi
+    def _get_so_line(self):
+        res = super(AccountAnalyticLine, self)._get_so_line()
+        for line in self:
+            if line.so_line:
+                return line.so_line.id
 
     def _get_invoice_price(self, order):
         if self.product_id.expense_policy == 'sales_price':
@@ -116,5 +124,6 @@ class AccountAnalyticLine(models.Model):
         line = super(AccountAnalyticLine, self).create(values)
         res = line.sudo()._get_sale_order_line(vals=values)
         line.with_context(create=True).write(res)
-        line.mapped('so_line').sudo()._compute_analytic()
+        domain = (self.env.context.get('from_post') and [('so_line', 'in', line.mapped('so_line').ids)]) or None
+        line.mapped('so_line').sudo()._compute_analytic(domain)
         return line
