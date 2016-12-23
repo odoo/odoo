@@ -134,9 +134,6 @@ class Partner(models.Model):
     _name = "res.partner"
     _order = "display_name"
 
-    def _default_country(self):
-        return self.env.user.company_id.country_id.id
-
     def _default_category(self):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
 
@@ -193,7 +190,7 @@ class Partner(models.Model):
     zip = fields.Char(change_default=True)
     city = fields.Char()
     state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict')
-    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict', default=_default_country)
+    country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
     email = fields.Char()
     email_formatted = fields.Char(
         'Formatted Email', compute='_compute_email_formatted',

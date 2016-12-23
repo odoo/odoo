@@ -50,7 +50,7 @@ class Partner(models.Model):
                 '%(street_number)s/%(street_number2)s %(street_name)s')
             previous_field = None
             previous_pos = 0
-            street_vals = ""
+            street_value = ""
             separator = ""
             # iter on fields in street_format, detected as '%(<field_name>)s'
             for re_match in re.finditer(r'%\(\w+\)s', street_format):
@@ -62,26 +62,28 @@ class Partner(models.Model):
                 if not previous_field:
                     # first iteration: add heading chars in street_format
                     if partner[field_name]:
-                        street_vals += street_format[0:field_pos] + partner[field_name]
+                        street_value += street_format[0:field_pos] + partner[field_name]
                 else:
                     # get the substring between 2 fields, to be used as separator
                     separator = street_format[previous_pos:field_pos]
-                    if street_vals and partner[field_name]:
-                        street_vals += separator
+                    if street_value and partner[field_name]:
+                        street_value += separator
                     if partner[field_name]:
-                        street_vals += partner[field_name]
+                        street_value += partner[field_name]
                 previous_field = field_name
                 previous_pos = re_match.end()
 
             # add trailing chars in street_format
-            street_vals += street_format[previous_pos:]
+            street_value += street_format[previous_pos:]
 
             # /!\ Note that we must use a sql query to bypass the orm as it would call _split_street()
             # that would try to set the fields we just modified.
-            self._cr.execute('UPDATE res_partner SET street = %s WHERE ID = %s', (street_vals, partner.id))
+            self._cr.execute('UPDATE res_partner SET street = %s WHERE ID = %s', (street_value, partner.id))
+            #invalidate the cache for the field we manually set
+            self.invalidate_cache(['street'], [partner.id])
 
     @api.multi
-    @api.depends('street', 'country_id.street_format')
+    @api.depends('street')
     def _split_street(self):
         """Splits street value into sub-fields.
         Recomputes the fields of STREET_FIELDS when `street` of a partner is updated"""
@@ -102,6 +104,10 @@ class Partner(models.Model):
             # iter on fields in street_format, detected as '%(<field_name>)s'
             for re_match in re.finditer(r'%\(\w+\)s', street_format):
                 field_pos = re_match.start()
+                if not field_name:
+                    #first iteration: remove the heading chars
+                    street_raw = street_raw[field_pos:]
+
                 # get the substring between 2 fields, to be used as separator
                 separator = street_format[previous_pos:field_pos]
                 field_value = None
@@ -123,7 +129,11 @@ class Partner(models.Model):
                 previous_pos = re_match.end()
 
             # last field value is what remains in street_raw minus trailing chars in street_format
-            vals[field_name] = street_raw.rstrip(street_format[previous_pos:])
+            trailing_chars = street_format[previous_pos:]
+            if trailing_chars and street_raw.endswith(trailing_chars):
+                vals[field_name] = street_raw[:-len(trailing_chars)]
+            else:
+                vals[field_name] = street_raw
             # assign the values to the fields
             # /!\ Note that a write(vals) would cause a recursion since it would bypass the cache
             for k, v in vals.items():
