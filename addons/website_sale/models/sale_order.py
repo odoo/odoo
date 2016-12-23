@@ -326,6 +326,8 @@ class website(orm.Model):
                     'partner_shipping_id': addr['delivery'],
                     'user_id': salesperson_id or w.salesperson_id.id,
                 }
+                if 'company_id' in context:
+                    values.update(company_id=context['company_id'])
                 sale_order_id = sale_order_obj.create(cr, SUPERUSER_ID, values, context=context)
                 request.session['sale_order_id'] = sale_order_id
                 sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
