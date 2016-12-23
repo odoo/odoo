@@ -141,7 +141,7 @@ class stock_picking(osv.osv):
                     invoice_obj.button_compute(cursor, user, [invoice_id])
         return super(stock_picking, self)._invoice_hook(cursor, user, picking, invoice_id)
 
-# Redefinition of the new field in order to update the model stock.picking.out in the orm
+# Redefinition of the new field in order to update the models stock.picking.out and stock.picking.in in the orm
 # FIXME: this is a temporary workaround because of a framework bug (ref: lp996816). It should be removed as soon as
 #        the bug is fixed
 class stock_picking_out(osv.osv):
@@ -150,4 +150,12 @@ class stock_picking_out(osv.osv):
         'sale_id': fields.many2one('sale.order', 'Sale Order',
             ondelete='set null', select=True),
     }
+class stock_picking_in(osv.osv):
+    _inherit = 'stock.picking.in'
+    _columns = {
+        'sale_id': fields.many2one('sale.order', 'Sale Order',
+            ondelete='set null', select=True),
+    }
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
