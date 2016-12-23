@@ -33,7 +33,7 @@
                                 <field name="min_date"/>
                                 <field name="state"/>
                                 <button name="action_assign" string="Confirm picking" type="object" icon="gtk-apply" attrs="{'invisible': [('state', 'in', ('done', 'cancel', 'confirmed', 'assigned'))]}"/>
-                                <button name="force_assign" string="Force availability" type="object" icon="gtk-go-forward" attrs="{'invisible': [('state', 'in', ('done', 'cancel', 'draft', 'assigned'))]}"/>
+                                <button name="action_assign" string="Check Availability" type="object" icon="gtk-go-forward" attrs="{'invisible': [('state', 'in', ('done', 'cancel', 'draft', 'assigned'))]}"/>
                                 <button name="action_cancel" string="Cancel picking" type="object" icon="gtk-cancel" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
                             </tree>
                         </field>
