@@ -19,14 +19,7 @@ class Event(models.Model):
     _inherit = ['event.event', 'website.seo.metadata', 'website.published.mixin']
 
     website_published = fields.Boolean(track_visibility='onchange')
-    website_message_ids = fields.One2many(
-        'mail.message', 'res_id',
-        domain=lambda self: [
-            '&', ('model', '=', self._name), ('message_type', '=', 'comment')
-        ],
-        string='Website Messages',
-        help="Website communication history",
-    )
+
     is_participating = fields.Boolean("Is Participating", compute="_compute_is_participating")
 
     website_menu = fields.Boolean(
