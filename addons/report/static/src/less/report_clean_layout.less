@@ -1,0 +1,79 @@
+.o_clean_footer, .o_clean_header, .o_clean_body {
+    font-family: 'Lato';
+    color: #000;
+    font-size: 12px;
+}
+.o_clean_header {
+    img {
+        max-height: 100px;
+        max-width: 300px;
+    }
+}
+.o_clean_footer {
+    font-size: 10px;
+    margin: 0 3px;
+    border-top: 3px solid #000;
+    div[class^="col-"] {
+        padding-left: 0;
+    }
+    div:nth-child(3) {
+        padding-left: 15px;
+    }
+    .pagenumber {
+        width: 35px;
+        height: 35px;
+        border: 3px solid #000;
+        padding-top: 6px;
+        margin-righ
+        t: -15px;
+    }
+}
+.o_clean_body {
+    table {
+        thead {
+            tr th {
+                text-align: left !important;
+                border-top: 3px solid #000 !important;
+                text-transform: uppercase;
+            }
+            tr th:last-child {
+                text-align: right !important;
+            }
+            tr th:first-child {
+                width: 48%;
+            }
+        }
+        tbody {
+            color: #000;
+            tr:first-child td {
+                border-top: none;
+            }
+            tr:last-child td {
+                border-bottom: 3px solid #000;
+            }
+            tr {
+                td {
+                    padding: 15px 5px;
+                    text-align: left !important;
+                }
+                td:last-child {
+                    text-align: right !important;
+                }
+            }
+        }
+    }
+    /*Total table*/
+    .row > .col-xs-4 {
+            width: 43%;
+            margin-top: -20px;
+            > table {
+            tr:last-child td {
+                border-top: 1px solid @gray-lighter !important;
+            }
+            tr:first-child td {
+                /*we could get rid of this rule if .border-black td would be terminated in report.less*/
+                border-top: none !important;
+            }
+        }
+    }
+}
