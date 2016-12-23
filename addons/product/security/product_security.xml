@@ -35,6 +35,13 @@
 </data>
 <data noupdate="1">
 
+    <record id="product_category_comp_rule" model="ir.rule">
+        <field name="name" >Product Category multi-company</field>
+        <field name="model_id" ref="model_product_category"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force"> ['|',('company_id','=',user.company_id.id),('company_id','=',False)]</field>
+    </record>
+
     <record id="product_comp_rule" model="ir.rule">
         <field name="name" >Product multi-company</field>
         <field name="model_id" ref="model_product_template"/>
