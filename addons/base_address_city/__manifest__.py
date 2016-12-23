@@ -13,6 +13,7 @@ City Management in Addresses
 This module allows to enforce users to choose the city of a partner inside a given list instead of a free text field.
         """,
     'data': [
+        'security/ir.model.access.csv',
         'views/res_city_view.xml',
         'views/res_country_view.xml',
     ],
