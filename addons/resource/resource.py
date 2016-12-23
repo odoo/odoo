@@ -431,6 +431,8 @@ class resource_calendar(osv.osv):
         """
         if day_dt is None:
             day_dt = datetime.datetime.now()
+        day_dt = fields.datetime.context_timestamp(cr, uid, day_dt, context=context)
+        tz_info = day_dt.tzinfo
         backwards = (hours < 0)
         hours = abs(hours)
         intervals = []
@@ -473,7 +475,7 @@ class resource_calendar(osv.osv):
             # avoid infinite loops
             iterations += 1
 
-        return intervals
+        return [tuple(inter.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None) for inter in interv) for interv in intervals]
 
     def schedule_hours_get_date(self, cr, uid, id, hours, day_dt=None,
                                 compute_leaves=False, resource_id=None,
