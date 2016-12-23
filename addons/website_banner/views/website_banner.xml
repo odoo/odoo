@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="assets_frontend" inherit_id="website.assets_frontend" name="Website Bounceexchange Theme">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/website_banner/static/src/css/website_banner.css"/>
+                <script type="text/javascript" src="/website_banner/static/src/js/website_banner.js"/>
+            </xpath>
+        </template>
+        <template id="layout_banner_show" inherit_id="website.layout" customize_show="True" name="Show Bounce Banner">
+            <xpath expr="//main" position="inside">
+                <div class="modal fade fade-custom" id="banner_modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span aria-hidden="true">&amp;times;</span>
+                                    <span class="sr-only">Close</span>
+                                </button>
+                                <h2 class="modal-title">Odoo</h2>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="banner">
+                                            <div type="button" data-dismiss="modal" data-toggle="modal" data-target="#accept_banner" class="banner_box accept">
+                                                Yes
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="banner">
+                                            <div type="button" class="banner_box decline" data-dismiss="modal">
+                                                No
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade fade-custom" id="accept_banner" role="dialog">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span></button>
+                                <h2 class="modal-title" id="myModalLabel">Odoo</h2>
+                            </div>
+                            <div class="modal-body text-center">
+                                <h1>Grow Your Business With Odoo Apps</h1>
+                                <h3>One need, one app. Integration has never been so smooth.</h3>
+                                <a type="button" href="#demo" data-dismiss="modal" class="btn btn-primary btn-block">Request a Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</openerp>
