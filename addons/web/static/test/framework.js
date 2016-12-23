@@ -563,12 +563,6 @@ odoo.define_section('server-formats', ['web.time'], function (test) {
         var wDate = window.Date;
 
         try {
-            window.Date = function (v) {
-                if (_.isUndefined(v)) {
-                    v = '2013-10-31 12:34:56';
-                }
-                return new wDate(v);
-            };
             var date = time.str_to_date('2013-11-21');
 
             assert.deepEqual(
@@ -612,7 +606,13 @@ odoo.define_section('server-formats', ['web.time'], function (test) {
         date.setUTCHours(0);
         date.setUTCMinutes(0);
         date.setUTCSeconds(0);
-        assert.equal(time.date_to_str(date), "2009-05-04");
+        if (date.getTimezoneOffset() > 0) {
+            // date_to_str() returns local timezone, previous day in GMT-XX timezones (Americas)
+            assert.equal(time.date_to_str(date), "2009-05-03");
+        }
+        else {
+            assert.equal(time.date_to_str(date), "2009-05-04");
+        }
     });
 
     test('Format server time', function (assert, time) {

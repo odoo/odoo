@@ -68,6 +68,12 @@ Tour.register({
             waitFor:   'form[action="/shop/confirm_order"] .has-error',
             element:   'form[action="/shop/confirm_order"] .btn:contains("Confirm")',
             onload: function (tour) {
+                // SLC - added for microcom_student
+                if ($("input[name='firstname']").val() === "")
+                    $("input[name='firstname']").val("website_sale-test-shoptest");
+                if ($("input[name='lastname']").val() === "")
+                    $("input[name='lastname']").val("website_sale-test-shoptest");
+                // SLC - end
                 if ($("input[name='name']").val() === "")
                     $("input[name='name']").val("website_sale-test-shoptest");
                 if ($("input[name='email']").val() === "")
