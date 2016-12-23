@@ -8,13 +8,19 @@ class BaseConfigSettings(models.TransientModel):
     _inherit = 'base.config.settings'
 
     paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format *')
-    report_footer_default = fields.Html(related="company_id.report_footer_default")
+
+    def _prepare_report_view_action(self, template):
+        template_id = self.env.ref(template)
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'ir.ui.view',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_id': template_id.id,
+        }
 
     def edit_external_header(self):
-        return self.company_id.edit_external_header()
-
-    def edit_external_footer(self):
-        return self.company_id.edit_external_footer()
+        return self._prepare_report_view_action('report.report_template_default')
 
     def edit_internal_header(self):
-        return self.company_id.edit_internal_header()
+        return self._prepare_report_view_action('report.internal_layout')
