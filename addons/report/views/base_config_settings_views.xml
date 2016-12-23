@@ -10,10 +10,12 @@
                     <label for="paperformat_id"/>
                     <div>
                         <field name="paperformat_id" class="oe_inline"/>
-                        <button name="%(action_report_internalpreview)d" string="Preview Internal Report" type="action" groups="base.group_no_one"/>
+                    </div>
+                    <label for="default_report_template"/>
+                    <div>
+                        <field name="default_report_template" class="oe_inline"/>
                         <button name="%(action_report_externalpreview)d" string="Preview External Report" type="action"/>
                         <button name="edit_external_header" string="Edit Header" type="object" class="oe_link"/>
-                        <button name="edit_internal_header" string="Edit Internal Header" type="object" class="oe_link" groups="base.group_no_one"/>
                     </div>
                 </xpath>
             </data>

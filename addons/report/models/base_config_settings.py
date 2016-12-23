@@ -7,7 +7,8 @@ from odoo import fields, models
 class BaseConfigSettings(models.TransientModel):
     _inherit = 'base.config.settings'
 
-    paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format *')
+    paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format')
+    default_report_template = fields.Selection(related="company_id.default_report_template")
 
     def _prepare_report_view_action(self, template):
         template_id = self.env.ref(template)
@@ -20,7 +21,6 @@ class BaseConfigSettings(models.TransientModel):
         }
 
     def edit_external_header(self):
-        return self._prepare_report_view_action('report.report_template_default')
-
-    def edit_internal_header(self):
-        return self._prepare_report_view_action('report.internal_layout')
+        template = self.default_report_template
+        if template=='standard': template='default'
+        return self._prepare_report_view_action('report.report_template_'+template)

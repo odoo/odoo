@@ -7,12 +7,17 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
 
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format')
+    default_report_template = fields.Selection([
+        ('default', 'Choose later'),
+        ('boxed', 'Boxed'),
+        ('clean', 'Clean'),
+        ('standard', 'Standard'),
+        ('background', 'Background'),
+    ], string='Default Report Template', required=True, default='default')
 
     @api.model_cr
     def init(self):
-
         # set a default paperformat based on rml one.
-
         for company in self.search([('paperformat_id', '=', False)]):
             paperformat_euro = self.env.ref('report.paperformat_euro', False)
             paperformat_us = self.env.ref('report.paperformat_us', False)

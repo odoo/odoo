@@ -92,9 +92,19 @@
         <t t-set="company" t-value="res_company"></t>
     </t>
 
-    <t t-call="report.report_template_default">
-        <t t-raw="0" />
+    <t t-if="company.default_report_template in ('default','standard')">
+        <t t-call="report.report_template_default"><t t-raw="0"/></t>
     </t>
+    <t t-if="company.default_report_template == 'clean'">
+        <t t-call="report.report_template_clean"><t t-raw="0"/></t>
+    </t>
+    <t t-if="company.default_report_template == 'background'">
+        <t t-call="report.report_template_background"><t t-raw="0"/></t>
+    </t>
+    <t t-if="company.default_report_template == 'boxed'">
+        <t t-call="report.report_template_boxed"><t t-raw="0"/></t>
+    </t>
+
 </template>
 
 

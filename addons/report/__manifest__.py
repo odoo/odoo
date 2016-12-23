@@ -17,11 +17,10 @@ Report
         'views/report_templates.xml',
         'views/base_config_settings_views.xml',
         'views/ir_actions_report_views.xml',
-        #Layouts
-        'views/template_default.xml',
-        'views/template_not_boxed.xml',
-        'views/template_boxed.xml',
-        'views/template_clean.xml',
+        'views/layouts/template_default.xml',
+        'views/layouts/template_background.xml',
+        'views/layouts/template_boxed.xml',
+        'views/layouts/template_clean.xml',
     ],
     'qweb' : [
         'static/src/xml/*.xml',
