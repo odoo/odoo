@@ -115,7 +115,7 @@ class ProductProduct(models.Model):
         digits=dp.get_precision('Product Price'),
         help="This is the sum of the extra price of all attributes")
     lst_price = fields.Float(
-        'Sale Price', compute='_compute_product_lst_price',
+        'Sale Price', compute='_compute_product_lst_price', track_visibility=False,
         digits=dp.get_precision('Product Price'), inverse='_set_product_lst_price',
         help="The sale price is managed from the product template. Click on the 'Variant Prices' button to set the extra attribute prices.")
 
@@ -150,7 +150,7 @@ class ProductProduct(models.Model):
         help="Image of the product variant (Medium-sized image of product template if false).")
 
     standard_price = fields.Float(
-        'Cost', company_dependent=True,
+        'Cost', company_dependent=True, track_visibility='onchange',
         digits=dp.get_precision('Product Price'),
         groups="base.group_user",
         help="Cost of the product template used for standard stock valuation in accounting and used as a base price on purchase orders. "

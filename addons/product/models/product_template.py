@@ -60,15 +60,15 @@ class ProductTemplate(models.Model):
         'Price', compute='_compute_template_price', inverse='_set_template_price',
         digits=dp.get_precision('Product Price'))
     list_price = fields.Float(
-        'Sale Price', default=1.0,
+        'Sale Price', default=1.0, track_visibility='onchange',
         digits=dp.get_precision('Product Price'),
         help="Base price to compute the customer price. Sometimes called the catalog price.")
     lst_price = fields.Float(
-        'Public Price', related='list_price',
+        'Public Price', related='list_price', track_visibility=False,
         digits=dp.get_precision('Product Price'))
     standard_price = fields.Float(
         'Cost', compute='_compute_standard_price',
-        inverse='_set_standard_price', search='_search_standard_price',
+        inverse='_set_standard_price', search='_search_standard_price', track_visibility='onchange',
         digits=dp.get_precision('Product Price'), groups="base.group_user",
         help="Cost of the product, in the default unit of measure of the product.")
 
