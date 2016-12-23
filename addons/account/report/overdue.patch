@@ -1,0 +1,18 @@
+diff --git a/addons/account/report/account_print_overdue.py b/addons/account/report/account_print_overdue.py
+index 26192d3..6d4a279 100644
+--- a/addons/account/report/account_print_overdue.py
++++ b/addons/account/report/account_print_overdue.py
+@@ -42,6 +42,13 @@ class Overdue(report_sxw.rml_parse):
+             mat[partner.id] = reduce(lambda x, y: x + (y['debit'] - y['credit']), filter(lambda x: x['date_maturity'] < time.strftime('%Y-%m-%d'), self._lines_get(partner)), 0)
+ 
+         addresses = self.pool['res.partner']._address_display(cr, uid, ids, None, None)
++        for pid in ids:
++            partner_add =  partner_obj.address_get(cr, uid, pid, ["invoice"])
++            if 'invoice' in partner_add.keys():
++                rec  = partner_obj.browse(cr, uid, partner_add['invoice'])
++                adx = partner_obj._display_address(cr, uid, rec, without_company=True)
++                adx = rec.name +"\n"+adx
++                addresses.update({pid: adx})
+         self.localcontext.update({
+             'docs': docs,
+             'time': time,
