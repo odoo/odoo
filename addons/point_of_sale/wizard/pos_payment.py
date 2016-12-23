@@ -106,6 +106,17 @@ class pos_make_payment(osv.osv_memory):
                 return journal.id
         return False
 
+    def _get_default_session(self, cr, uid, context=None):
+        session = False
+        order_obj = self.pool.get('pos.order')
+        active_id = context and context.get('active_id', False)
+        if active_id:
+            order = order_obj.browse(cr, uid, active_id, context=context)
+            session = order.session_id
+        if session:
+            return session.id
+        return False
+
     def _default_amount(self, cr, uid, context=None):
         order_obj = self.pool.get('pos.order')
         active_id = context and context.get('active_id', False)
@@ -119,11 +130,13 @@ class pos_make_payment(osv.osv_memory):
         'amount': fields.float('Amount', digits=(16,2), required= True),
         'payment_name': fields.char('Payment Reference'),
         'payment_date': fields.date('Payment Date', required=True),
+        'session_id': fields.many2one('pos.session', 'Session'),
     }
     _defaults = {
         'journal_id' : _default_journal,
         'payment_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'amount': _default_amount,
+        'session_id': _get_default_session,
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
