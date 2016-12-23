@@ -84,6 +84,12 @@ class base_stage(object):
                              'state_id': address.state_id and address.state_id.id or False,
                              'zip': address and address.zip or False,
                              'country_id': address.country_id and address.country_id.id or False,
+                             'mobile': address and address.mobile or False,
+                             'fax': address and address.fax or False,
+                             'function': address and address.function or False,
+                             'title': address and address.title and address.title.id or False,
+                             'opt_out': address and address.opt_out or False,
+                             'section_id': address and address.section_id and address.section_id.id or False,
                              }
         fields = self.fields_get(cr, uid, context=context or {})
         for key in data['value'].keys():
