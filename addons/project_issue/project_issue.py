@@ -389,7 +389,7 @@ class project_issue(osv.Model):
             return stage_ids[0]
         return False
 
-    def case_escalate(self, cr, uid, ids, context=None):        # FIXME rename this method to issue_escalate
+    def issue_escalate(self, cr, uid, ids, context=None):
         for issue in self.browse(cr, uid, ids, context=context):
             data = {}
             esc_proj = issue.project_id.project_escalation_id
