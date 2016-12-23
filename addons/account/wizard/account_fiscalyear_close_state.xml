@@ -6,9 +6,26 @@
             <field name="model">account.fiscalyear.close.state</field>
             <field name="arch" type="xml">
                 <form string="Close states of Fiscal year and periods">
-	                <group>
-	                    <field name="fy_id"  domain="[('state','=','draft')]"/>
-	                </group>
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Closing a fiscal year cannot be undone.</strong><br/>
+                        Please read the following advice before completing this action:
+                        <ul>
+                            <li>
+                                Make sure you have generated the opening entries of the following fiscal year.
+                            </li>
+                            <li>
+                                It is absolutely possible to work on the following fiscal year before closing the previous one.<br/>
+                                A fiscal year should only be closed once the accounts have been sent to the statutory authorities.
+                            </li>
+                            <li>
+                                Create a backup of your database before closing a fiscal year.
+                            </li>
+                        </ul>
+                    </div>
+                    <newline/>
+                    <group>
+                        <field name="fy_id"  domain="[('state','=','draft')]"/>
+                    </group>
                     <footer>
                         <button icon="terp-locked" string="Close Fiscal Year" name="data_save" type="object" class="oe_highlight"/>
                         or
