@@ -368,8 +368,15 @@ class stock_quant(osv.osv):
         '''
         toreserve = []
         reserved_availability = move.reserved_availability
+        rounding = move.product_id.uom_id.rounding
         #split quants if needed
         for quant, qty in quants:
+            if move.product_id.track_outgoing and float_compare(move.availability, 0, precision_rounding=rounding) < 1:
+                continue
+            # move.availability can be larger than qty when tracking on the product is activated.
+            # Indeed, a negative quant will compensate the qty.
+            if move.product_id.track_outgoing and float_compare(move.availability, qty, precision_rounding=rounding) == -1:
+                qty = move.availability
             if qty <= 0.0 or (quant and quant.qty <= 0.0):
                 raise osv.except_osv(_('Error!'), _('You can not reserve a negative quantity or a negative quant.'))
             if not quant:
@@ -377,14 +384,17 @@ class stock_quant(osv.osv):
             self._quant_split(cr, uid, quant, qty, context=context)
             toreserve.append(quant.id)
             reserved_availability += quant.qty
+            # This will update move.availability
+            if move.product_id.track_outgoing:
+                self.write(cr, SUPERUSER_ID, quant.id, {'reservation_id': move.id}, context=context)
         #reserve quants
         if toreserve:
-            self.write(cr, SUPERUSER_ID, toreserve, {'reservation_id': move.id}, context=context)
+            if not move.product_id.track_outgoing:
+                self.write(cr, SUPERUSER_ID, toreserve, {'reservation_id': move.id}, context=context)
             #if move has a picking_id, write on that picking that pack_operation might have changed and need to be recomputed
             if move.picking_id:
                 self.pool.get('stock.picking').write(cr, uid, [move.picking_id.id], {'recompute_pack_op': True}, context=context)
         #check if move'state needs to be set as 'assigned'
-        rounding = move.product_id.uom_id.rounding
         if float_compare(reserved_availability, move.product_qty, precision_rounding=rounding) == 0 and move.state in ('confirmed', 'waiting')  :
             self.pool.get('stock.move').write(cr, uid, [move.id], {'state': 'assigned'}, context=context)
         elif float_compare(reserved_availability, 0, precision_rounding=rounding) > 0 and not move.partially_available:
