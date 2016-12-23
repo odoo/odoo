@@ -346,7 +346,7 @@ class account_journal(osv.osv):
     }
 
     _defaults = {
-        'cashbox_line_ids' : _default_cashbox_line_ids,
+        'cashbox_line_ids' : '_default_cashbox_line_ids',
     }
 
 
