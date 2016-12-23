@@ -282,6 +282,7 @@ class project(osv.osv):
                     'previous_phase_ids': [],
                     'next_phase_ids': [],
                     'task_ids': [],
+                    'name': phase.name,
                 }
                 # adding relationships with already copied phases
                 for previous_phase in phase.previous_phase_ids:
