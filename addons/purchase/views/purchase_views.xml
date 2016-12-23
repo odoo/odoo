@@ -289,7 +289,7 @@
                                 <group>
                                     <field name="invoice_status"/>
                                     <field name="payment_term_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
-                                    <field name="fiscal_position_id" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
+                                    <field name="fiscal_position_id" options="{'no_create': True}" attrs="{'readonly': ['|', ('invoice_status','=', 'invoiced'), ('state', '=', 'done')]}"/>
                                     <field name="date_approve" groups="base.group_no_one"/>
                                 </group>
                             </group>
@@ -298,6 +298,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
@@ -320,6 +321,18 @@
                     <filter name="not_invoiced" string="Waiting Bills" domain="[('invoice_status','=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
                     <filter name="invoiced" string="Bills Received" domain="[('invoice_status','=', 'invoiced')]" help="Purchase orders that have been invoiced."/>
                     <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <separator/>
+                    <filter string="My Activities" name="activities_my"
+                        domain="[('activity_ids.user_id', '=', uid)]"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Upcoming Activities (7 days)" name="activities_week"
+                        domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                 ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                        ]"/>
+                    <filter string="Overdue Activities" name="activities_overdue"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
                     <group expand="0" string="Group By">
                         <filter string="Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Order Date" domain="[]" context="{'group_by':'date_order'}"/>
@@ -556,18 +569,19 @@
                 <field name="uom_po_id" position="after">
                     <field name="purchase_method" widget="radio" groups="purchase.group_purchase_manager"/>
                 </field>
-                <group name="description" position="after">
-                    <group string="Warning when Purchasing this Product" colspan="2" groups="purchase.group_warning_purchase">
+                <group name="warning" position="inside">
+                    <group string="Warning when Purchasing this Product" groups="purchase.group_warning_purchase">
                         <field name="purchase_line_warn" nolabel="1"/>
                         <field name="purchase_line_warn_msg" colspan="3" nolabel="1"
                                 attrs="{'required':[('purchase_line_warn','!=','no-message')],'readonly':[('purchase_line_warn','=','no-message')]}"/>
                     </group>
                 </group>
-                <field name="description_sale" position="after">
-                    <separator string="Description for Vendors" colspan="4"/>
-                    <field name="description_purchase" nolabel="1"
-                        placeholder="This note will be displayed on requests for quotation." colspan="4"/>
-                </field>
+                <group name="description" position="inside">
+                    <group string="Description for Vendors">
+                       <field name="description_purchase" nolabel="1"
+                            placeholder="This note will be displayed for vendors."/>
+                    </group>
+                </group>
             </field>
         </record>
 
@@ -610,12 +624,12 @@
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="arch" type="xml">
-                <div name="button_box" position="inside">
+                <button name="toggle_active" position="before">
                    <button class="oe_stat_button" name="%(purchase.action_purchase_line_product_tree)d"
                        type="action" icon="fa-shopping-cart">
                        <field string="Purchases" name="purchase_count" widget="statinfo"/>
                    </button>
-                </div>
+                </button>
             </field>
         </record>
 

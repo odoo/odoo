@@ -452,7 +452,7 @@ class Alarm(models.Model):
 
     name = fields.Char('Name', required=True)
     type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], 'Type', required=True, default='email')
-    duration = fields.Integer('Amount', required=True, default=1)
+    duration = fields.Integer('Remind Before', required=True, default=1)
     interval = fields.Selection(list(_interval_selection.iteritems()), 'Unit', required=True, default='hours')
     duration_minutes = fields.Integer('Duration in minutes', compute='_compute_duration_minutes', store=True, help="Duration in minutes")
 
@@ -509,7 +509,7 @@ class Meeting(models.Model):
     _name = 'calendar.event'
     _description = "Event"
     _order = "id desc"
-    _inherit = ["mail.thread", "ir.needaction_mixin"]
+    _inherit = ["mail.thread"]
 
     @api.model
     def _default_partners(self):
@@ -648,6 +648,13 @@ class Meeting(models.Model):
                 return round(duration, 2)
             return 0.0
 
+    def _compute_is_highlighted(self):
+        if self.env.context.get('active_model') == 'res.partner':
+            partner_id = self.env.context.get('active_id')
+            for event in self:
+                if event.partner_ids.filtered(lambda s: s.id == partner_id):
+                    event.is_highlighted = True
+
     name = fields.Char('Meeting Subject', required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([('draft', 'Unconfirmed'), ('open', 'Confirmed')], string='Status', readonly=True, track_visibility='onchange', default='draft')
 
@@ -725,6 +732,7 @@ class Meeting(models.Model):
     attendee_ids = fields.One2many('calendar.attendee', 'event_id', 'Participant', ondelete='cascade')
     partner_ids = fields.Many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees', states={'done': [('readonly', True)]}, default=_default_partners)
     alarm_ids = fields.Many2many('calendar.alarm', 'calendar_alarm_calendar_event_rel', string='Reminders', ondelete="restrict", copy=False)
+    is_highlighted = fields.Boolean(compute='_compute_is_highlighted', string='# Meetings Highlight')
 
     @api.multi
     def _compute_attendee(self):
@@ -1128,8 +1136,8 @@ class Meeting(models.Model):
             data['rrule_type'] = 'weekly'
         #repeat monthly by nweekday ((weekday, weeknumber), )
         if rule._bynweekday:
-            data['week_list'] = day_list[rule._bynweekday[0][0]].upper()
-            data['byday'] = str(rule._bynweekday[0][1])
+            data['week_list'] = day_list[list(rule._bynweekday)[0][0]].upper()
+            data['byday'] = str(list(rule._bynweekday)[0][1])
             data['month_by'] = 'day'
             data['rrule_type'] = 'monthly'
 
@@ -1248,15 +1256,6 @@ class Meeting(models.Model):
     # Messaging
     ####################################################
 
-    # shows events of the day for this user
-    @api.model
-    def _needaction_domain_get(self):
-        return [
-            ('stop', '<=', time.strftime(DEFAULT_SERVER_DATE_FORMAT + ' 23:59:59')),
-            ('start', '>=', time.strftime(DEFAULT_SERVER_DATE_FORMAT + ' 00:00:00')),
-            ('user_id', '=', self.env.user.id),
-        ]
-
     @api.multi
     def _get_message_unread(self):
         id_map = {x: calendar_id2real_id(x) for x in self.ids}
@@ -1372,7 +1371,7 @@ class Meeting(models.Model):
             if not self._context.get('dont_notify'):
                 if len(meeting.alarm_ids) > 0 or values.get('alarm_ids'):
                     partners_to_notify = meeting.partner_ids.ids
-                    event_attendees_changes = attendees_create and attendees_create[real_ids[0]]
+                    event_attendees_changes = attendees_create and real_ids and attendees_create[real_ids[0]]
                     if event_attendees_changes:
                         partners_to_notify.append(event_attendees_changes['removed_partners'].ids)
                     self.env['calendar.alarm_manager'].notify_next_alarm(partners_to_notify)

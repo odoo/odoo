@@ -29,7 +29,7 @@
         <div class="oe_structure"/>
         <div class="container">
             <div class="row mt8">
-                <div class="col-sm-5">
+                <div class="col-sm-12">
                     <ol class="breadcrumb mb0">
                         <li>
                             <a href="/event">Our Events</a>
@@ -38,10 +38,11 @@
                         <li t-if="current_type"><t t-esc="current_type.name"/></li>
                         <li t-if="current_country"><t t-esc="current_country.name"/></li>
                     </ol>
-                </div><div class="col-sm-7">
-                    <t t-call="website.pager" >
-                        <t t-set="classname">pull-right</t>
-                    </t>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-xs-offset-3">
+                    <t t-call="website.pager"/>
                 </div>
             </div>
             <div class="row mt32 mb32">
@@ -77,6 +78,11 @@
                             </div>
                         </li>
                     </ul>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-xs-offset-3">
+                        <t t-call="website.pager"/>
+                    </div>
                 </div>
                 <div class="col-md-3 oe_structure" id="right_column">
                 </div>
@@ -241,7 +247,7 @@
         <h4 class="text-center text-muted"
             t-field="event.address_id" t-options='{
                 "widget": "contact",
-                "fields": ["address", "phone", "mobile", "fax"]
+                "fields": ["name", "address", "phone", "mobile", "fax"]
             }'/>
     </t>
 </template>
@@ -342,7 +348,7 @@
                     </t>
                     <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
                         "widget": "contact",
-                        "fields": ["address", "phone", "mobile", "fax", "email"]
+                        "fields": ["name", "address", "phone", "mobile", "fax", "email"]
                         }'/>
                 </div>
             </div>
@@ -422,7 +428,7 @@
                     <td>Event Registration</td>
                     <td>
                         <t t-if="event.date_begin">
-                            <span t-esc="event.date_begin_located[:-3]"/>
+                            <span t-esc="event.date_begin_located"/>
                         </t>
                         <t t-if="not event.date_begin">
                             <span>Unlimited</span>
@@ -498,8 +504,8 @@
                     </div>
                     <div class="modal-footer">
                         <div class="pull-left">
-                            <button type="submit" class="btn btn-primary">Continue</button> or
-                            <a class="js_goto_event" style="cursor: pointer;"> Cancel Registration</a>
+                            <button type="submit" class="btn btn-primary">Continue</button>
+                            <button type="button" class="btn btn-default js_goto_event" data-dismiss="modal">Cancel Registration</button>
                         </div>
                     </div>
                 </div>
@@ -518,10 +524,10 @@
                 </div>
                 <div class="col-md-9 mt16">
                     <h4><a t-attf-href="/event/#{slug(event)}"><t t-esc="event.name"/></a></h4>
-                    <i class="fa fa-clock-o"/> <span itemprop="startDate" t-esc="event.date_begin_located[:-3]"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located[:-3]"> </span>
+                    <i class="fa fa-clock-o"/> <span itemprop="startDate" t-esc="event.date_begin_located"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located"> </span>
                     <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
                             "widget": "contact",
-                            "fields": ["address", "phone", "mobile", "fax", "email"]
+                            "fields": ["name", "address", "phone", "mobile", "fax", "email"]
                             }'/>
                 </div>
                 <div class="col-md-3 mt16">

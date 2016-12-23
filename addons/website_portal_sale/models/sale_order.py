@@ -12,11 +12,11 @@ class SaleOrder(models.Model):
     def get_access_action(self):
         """ Instead of the classic form view, redirect to the online quote for
         portal users that have access to a confirmed order. """
-        # TDE note: read access on sale order to portal users granted to followed sale orders
+        # TDE note: read access on sales order to portal users granted to followed sales orders
         self.ensure_one()
         if self.state == 'cancel' or (self.state == 'draft' and not self.env.context.get('mark_so_as_sent')):
             return super(SaleOrder, self).get_access_action()
-        if self.env.user.share:
+        if self.env.user.share or self.env.context.get('force_website'):
             try:
                 self.check_access_rule('read')
             except exceptions.AccessError:
@@ -47,3 +47,11 @@ class SaleOrder(models.Model):
                 line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
             else:
                 line.qty_to_invoice = 0
+
+    @api.multi
+    def get_signup_url(self):
+        self.ensure_one()
+        return self.partner_id.with_context(signup_valid=True)._get_signup_url_for_action(
+            action='/mail/view',
+            model=self._name,
+            res_id=self.id)[self.partner_id.id]

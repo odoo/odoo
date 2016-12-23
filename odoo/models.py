@@ -308,7 +308,7 @@ class BaseModel(object):
         Fields = self.env['ir.model.fields']
 
         # sparse fields should be created at the end, as they depend on their serialized field
-        model_fields = sorted(self._fields.itervalues(), key=lambda field: field.type == 'sparse')
+        model_fields = sorted(self._fields.itervalues(), key=lambda field: bool(field.sparse))
         for field in model_fields:
             vals = {
                 'model_id': model.id,
@@ -332,11 +332,11 @@ class BaseModel(object):
                 'column1': field.column1 if field.type == 'many2many' else None,
                 'column2': field.column2 if field.type == 'many2many' else None,
             }
-            if getattr(field, 'serialization_field', None):
+            if field.sparse:
                 # resolve link to serialization_field if specified by name
-                serialization_field = Fields.search([('model', '=', vals['model']), ('name', '=', field.serialization_field)])
+                serialization_field = Fields.search([('model', '=', vals['model']), ('name', '=', field.sparse)])
                 if not serialization_field:
-                    raise UserError(_("Serialization field `%s` not found for sparse field `%s`!") % (field.serialization_field, field.name))
+                    raise UserError(_("Serialization field `%s` not found for sparse field `%s`!") % (field.sparse, field.name))
                 vals['serialization_field_id'] = serialization_field.id
 
             if field.name not in cols:
@@ -664,8 +664,11 @@ class BaseModel(object):
         cls = type(self)
         methods = []
         for attr, func in getmembers(cls, is_constraint):
-            if not all(name in cls._fields for name in func._constrains):
-                _logger.warning("@constrains%r parameters must be field names", func._constrains)
+            for name in func._constrains:
+                if name not in cls._fields:
+                    _logger.warning("method %s.%s: @constrains parameter %r is not a field name", cls._name, attr, name)
+                if not cls._fields[name].store:
+                    _logger.warning("method %s.%s: @constrains parameter %r is not stored", cls._name, attr, name)
             methods.append(func)
 
         # optimization: memoize result on cls, it will not be recomputed
@@ -3311,51 +3314,6 @@ class BaseModel(object):
                     self.browse(sub_ids)._check_record_rules_result_count(returned_ids, operation)
 
     @api.multi
-    def create_workflow(self):
-        """ Create a workflow instance for the given records. """
-        from odoo import workflow
-        for res_id in self.ids:
-            workflow.trg_create(self._uid, self._name, res_id, self._cr)
-        return True
-
-    @api.multi
-    def delete_workflow(self):
-        """ Delete the workflow instances bound to the given records. """
-        from odoo import workflow
-        for res_id in self.ids:
-            workflow.trg_delete(self._uid, self._name, res_id, self._cr)
-        self.invalidate_cache()
-        return True
-
-    @api.multi
-    def step_workflow(self):
-        """ Reevaluate the workflow instances of the given records. """
-        from odoo import workflow
-        for res_id in self.ids:
-            workflow.trg_write(self._uid, self._name, res_id, self._cr)
-        return True
-
-    @api.multi
-    def signal_workflow(self, signal):
-        """ Send the workflow signal, and return a dict mapping ids to workflow results. """
-        from odoo import workflow
-        result = {}
-        for res_id in self.ids:
-            result[res_id] = workflow.trg_validate(self._uid, self._name, res_id, signal, self._cr)
-        return result
-
-    @api.model
-    def redirect_workflow(self, old_new_ids):
-        """ Rebind the workflow instance bound to the given 'old' record IDs to
-            the given 'new' IDs. (``old_new_ids`` is a list of pairs ``(old, new)``.
-        """
-        from odoo import workflow
-        for old_id, new_id in old_new_ids:
-            workflow.trg_redirect(self._uid, self._name, old_id, new_id, self._cr)
-        self.invalidate_cache()
-        return True
-
-    @api.multi
     def unlink(self):
         """ unlink()
 
@@ -3383,8 +3341,6 @@ class BaseModel(object):
 
         # Delete the records' properties.
         self.env['ir.property'].search([('res_id', 'in', refs)]).unlink()
-
-        self.delete_workflow()
 
         self.check_access_rule('unlink')
 
@@ -3516,8 +3472,7 @@ class BaseModel(object):
           ``(6, _, ids)``
               replaces all existing records in the set by the ``ids`` list,
               equivalent to using the command ``5`` followed by a command
-              ``4`` for each ``id`` in ``ids``. Can not be used on
-              :class:`~odoo.fields.One2many`.
+              ``4`` for each ``id`` in ``ids``.
 
           .. note:: Values marked as ``_`` in the list above are ignored and
                     can be anything, generally ``0`` or ``False``.
@@ -3759,7 +3714,6 @@ class BaseModel(object):
         if self.env.recompute and self._context.get('recompute', True):
             self.recompute()
 
-        self.step_workflow()
         return True
 
     #
@@ -3973,7 +3927,6 @@ class BaseModel(object):
                 self.recompute()
 
         self.check_access_rule('create')
-        self.create_workflow()
         return id_new
 
     # TODO: ameliorer avec NULL

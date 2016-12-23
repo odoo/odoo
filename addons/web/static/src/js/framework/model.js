@@ -54,19 +54,6 @@ var Model = Class.extend({
             kwargs: kwargs
         }, options);
     },
-    /**
-     * Executes a signal on the designated workflow, on the bound OpenERP model
-     *
-     * @param {Number} id workflow identifier
-     * @param {String} signal signal to trigger on the workflow
-     */
-    exec_workflow: function (id, signal) {
-        return session.rpc('/web/dataset/exec_workflow', {
-            model: this.name,
-            id: id,
-            signal: signal
-        });
-    },
 });
 
 return Model;

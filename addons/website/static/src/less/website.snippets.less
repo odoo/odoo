@@ -393,22 +393,8 @@ div.carousel {
 
 .parallax {
     position: relative;
-    min-height: 200px;
 
-    &::before {
-        content: "";
-        display: inline-block;
-        width: 0;
-        min-height: inherit;
-        height: 100%;
-        vertical-align: middle;
-    }
-
-    > .oe_structure {
-        display: inline-block;
-        width: 100%;
-        vertical-align: middle;
-
+    .oe_structure {
         > :first-child {
             margin-top: 32px;
         }
@@ -416,4 +402,23 @@ div.carousel {
             margin-bottom: 32px;
         }
     }
+
+    > .s_parallax_bg {
+        .o-position-absolute(0, 0, 0, 0);
+        background-size: cover;
+        background-attachment: scroll;
+        pointer-events: none;
+        z-index: -1;
+    }
+    &.s_parallax_is_fixed > .s_parallax_bg {
+        background-attachment: fixed;
+    }
+}
+
+.s_parallax {
+    min-height: 200px;
+}
+
+.s_big_message { // TO REMOVE IN MASTER > 10.0
+    background-size: cover;
 }

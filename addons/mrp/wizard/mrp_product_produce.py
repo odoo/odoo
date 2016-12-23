@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
@@ -87,7 +89,10 @@ class MrpProductProduce(models.TransientModel):
                 move.quantity_done_store += quantity * move.unit_factor
         self.check_finished_move_lots()
         if self.production_id.state == 'confirmed':
-            self.production_id.state = 'progress'
+            self.production_id.write({
+                'state': 'progress',
+                'date_start': datetime.now(),
+            })
         return {'type': 'ir.actions.act_window_close'}
 
     @api.multi

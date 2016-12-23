@@ -1,6 +1,6 @@
 {%- set mod= name|snake -%}
 {%- set model = "%s.%s"|format(mod, mod) -%}
-<openerp>
+<odoo>
     <data>
         <!-- {% for item in range(5) %} -->
         <!--   <record id="object{{ item }}" model="{{ model }}"> -->
@@ -9,4 +9,4 @@
         <!--   </record> -->
         <!-- {% endfor %} -->
     </data>
-</openerp>
+</odoo>

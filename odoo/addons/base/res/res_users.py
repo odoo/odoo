@@ -356,7 +356,7 @@ class Users(models.Model):
         if 'company_id' in values:
             for user in self:
                 # if partner is global we keep it that way
-                if user.partner_id.company_id.id != values['company_id']:
+                if user.partner_id.company_id and user.partner_id.company_id.id != values['company_id']:
                     user.partner_id.write({'company_id': user.company_id.id})
             # clear default ir values when company changes
             self.env['ir.values'].get_defaults_dict.clear_cache(self.env['ir.values'])
@@ -564,6 +564,11 @@ class Users(models.Model):
         return bool(self._cr.fetchone())
     # for a few places explicitly clearing the has_group cache
     has_group.clear_cache = _has_group.clear_cache
+
+    @api.multi
+    def _is_system(self):
+        self.ensure_one()
+        return self.has_group('base.group_system')
 
     @api.multi
     def _is_admin(self):
@@ -877,8 +882,6 @@ class UsersView(models.Model):
     def fields_get(self, allfields=None, attributes=None):
         res = super(UsersView, self).fields_get(allfields, attributes=attributes)
         # add reified groups fields
-        if not self.env.user._is_admin():
-            return res
         for app, kind, gs in self.env['res.groups'].sudo().get_groups_by_application():
             if kind == 'selection':
                 # selection group field

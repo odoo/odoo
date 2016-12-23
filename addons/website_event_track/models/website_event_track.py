@@ -34,7 +34,7 @@ class Track(models.Model):
     _name = "event.track"
     _description = 'Event Track'
     _order = 'priority, date'
-    _inherit = ['mail.thread', 'ir.needaction_mixin', 'website.seo.metadata', 'website.published.mixin']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
 
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
@@ -85,7 +85,8 @@ class Track(models.Model):
     def _compute_website_url(self):
         super(Track, self)._compute_website_url()
         for track in self:
-            track.website_url = '/event/%s/track/%s' % (slug(track.event_id), slug(track))
+            if not isinstance(track.id, models.NewId):
+                track.website_url = '/event/%s/track/%s' % (slug(track.event_id), slug(track))
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):

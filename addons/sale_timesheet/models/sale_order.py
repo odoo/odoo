@@ -52,7 +52,7 @@ class SaleOrder(models.Model):
                 if line.product_id.track_service == 'timesheet':
                     count += 1
                 if count > 1:
-                    raise ValidationError(_("You can use only one product on timesheet within the same sale order. You should split your order to include only one contract based on time and material."))
+                    raise ValidationError(_("You can use only one product on timesheet within the same sales order. You should split your order to include only one contract based on time and material."))
         return {}
 
     @api.multi
@@ -104,7 +104,7 @@ class SaleOrder(models.Model):
             'help': action.help,
             'type': action.type,
             'views': [(form_view_id, 'form')],
-            'target': action.target,
+            'target': 'current',
             'context': action.context,
             'res_model': action.res_model,
             'res_id': self.project_project_id.id,

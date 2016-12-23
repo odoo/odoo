@@ -14,7 +14,7 @@ class MrpProduction(models.Model):
     _name = 'mrp.production'
     _description = 'Manufacturing Order'
     _date_name = 'date_planned_start'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_planned_start asc,id'
 
     @api.model
@@ -249,7 +249,7 @@ class MrpProduction(models.Model):
 
     @api.model
     def create(self, values):
-        if not values.get('name', False) or values['name'] == 'New':
+        if not values.get('name', False) or values['name'] == _('New'):
             values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
         if not values.get('procurement_group_id'):
             values['procurement_group_id'] = self.env["procurement.group"].create({'name': values['name']}).id

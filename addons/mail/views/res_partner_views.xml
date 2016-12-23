@@ -2,8 +2,8 @@
 <odoo>
     <data>
 
-        <record id="view_emails_partner_info_form" model="ir.ui.view">
-            <field name="name">res.partner.emails.info.inherit</field>
+        <record id="res_partner_view_form_inherit_mail" model="ir.ui.view">
+            <field name="name">res.partner.view.form.inherit.mail</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
@@ -15,14 +15,15 @@
                 <xpath expr="//sheet" position="after">
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </xpath>
             </field>
         </record>
 
-       <record model="ir.ui.view" id="res_partner_opt_out_search">
-            <field name="name">res.partner.opt_out.search</field>
+       <record id="res_partner_view_search_inherit_mail" model="ir.ui.view">
+            <field name="name">res.partner.view.search.inherit.mail</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_res_partner_filter"/>
             <field name="arch" type="xml">
@@ -31,6 +32,19 @@
                         <filter string="Available for mass mailing"
                                 name='not_opt_out' domain="[('opt_out', '=', False)]"
                                 help="Partners that did not ask not to be included in mass mailing campaigns" />
+                        <separator/>
+                        <filter string="My Activities" name="activities_my"
+                                domain="[('activity_ids.user_id', '=', uid)]"/>
+                        <filter string="Today Activities" name="activities_today"
+                                domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        <filter string="Upcoming Activities (7 days)" name="activities_week"
+                                domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                         ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                                ]"/>
+                        <filter string="Overdue Activities" name="activities_overdue"
+                                domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                                help="Show all records which has next action date is before today"/>
+                        <separator/>
                     </filter>
             </field>
         </record>

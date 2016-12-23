@@ -7,12 +7,12 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="stock.view_template_property_form"/>
             <field name="arch" type="xml">
-                <group name="sale_condition" position="inside">
+                <xpath expr="//field[@name='route_ids']" position="after">
                     <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
                     <div attrs="{'invisible':[('type','=','service')]}">
                         <field name="produce_delay" class="oe_inline"/> days
                     </div>
-                </group>
+                </xpath>
             </field>
         </record>
         <record id="product_template_search_view_procurment" model="ir.ui.view">
@@ -22,7 +22,7 @@
              <field name="arch" type="xml">
                  <xpath expr="//filter[@name='consumable']" position="after">
                      <separator/>
-                    <filter string="Components" name="components" domain="[('bom_ids','not in',[])]"/>
+                    <filter string="BoM Components" name="components" domain="[('bom_ids','not in',[])]"/>
                  </xpath>
              </field>
         </record>
@@ -44,7 +44,7 @@
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
-                <div name="button_box" position="inside">
+                <button name="toggle_active" position="before">
                     <button class="oe_stat_button" name="%(template_open_bom)d" type="action"
                         attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
@@ -53,7 +53,7 @@
                         attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-list-alt">
                         <field string="Manufacturing" name="mo_count" widget="statinfo" />
                     </button>
-                </div>
+                </button>
             </field>
         </record>
 
@@ -63,7 +63,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
-                <div name="button_box" position="inside">
+                <button name="toggle_active" position="before">
                     <button class="oe_stat_button" name="action_view_bom" type="object"
                         attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-flask">
                         <field string="Bill of Materials" name="bom_count" widget="statinfo" />
@@ -72,7 +72,7 @@
                         attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}" icon="fa-list-alt">
                         <field string="Manufacturing" name="mo_count" widget="statinfo" />
                     </button>
-                </div>
+                </button>
             </field>
         </record>
     </data>

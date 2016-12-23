@@ -64,7 +64,7 @@ var DebugManager = Widget.extend({
         // whether group is currently enabled for current user
         this._has_features = false;
         // whether the current user is an administrator
-        this._is_admin = session.is_admin;
+        this._is_admin = session.is_system;
         return $.when(
             new Model('res.users').call('check_access_rights', {operation: 'write', raise_exception: false}),
             session.user_has_group('base.group_no_one'),
@@ -185,15 +185,6 @@ var DebugManager = Widget.extend({
             target: 'new',
             type: 'ir.actions.act_url',
             url: '/web/tests?mod=*'
-        });
-    },
-    toggle_technical_features: function () {
-        if (!this._features_group) { return; }
-        var command = this._has_features ? REMOVE(this._features_group) : ADD(this._features_group);
-        new Model('res.users').call('write', [session.uid, {
-            groups_id: [command]
-        }]).then(function () {
-            window.location.reload();
         });
     },
     split_assets: function() {

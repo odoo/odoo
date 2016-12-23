@@ -33,7 +33,7 @@
             text-align: left;
         }
     }
-    
+
 
     @media (min-width: @screen-sm-min) {
         .modal-dialog {
@@ -52,6 +52,23 @@
 
                 .modal-body {
                     overflow: auto;
+                    min-height: 0;
+
+                    &.o_dialog_error {
+                        overflow: visible;
+                        .o-flex-display();
+                        .o-flex-flow(column, nowrap);
+
+                        > .alert, > button {
+                            .o-flex(0, 0, auto);
+                        }
+
+                        > .o_error_detail {
+                            .o-flex(1, 1, auto);
+                            min-height: 0;
+                            overflow: auto;
+                        }
+                    }
                 }
             }
         }

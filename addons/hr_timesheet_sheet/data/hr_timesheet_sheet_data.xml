@@ -7,7 +7,7 @@
             <field name="state">code</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_hr_timesheet_current_open"/>
-            <field name="code">action = env.get('hr.timesheet.current.open').open_timesheet()</field>
+            <field name="code">action = model.open_timesheet()</field>
             <field name="condition">True</field>
             <field name="name">My Timesheet</field>
         </record>

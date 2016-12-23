@@ -8,6 +8,9 @@
             report_type="qweb-pdf"
             name="product.report_productlabel"
             file="product.report_productlabel"/>
+        <record id="report_product_label" model="ir.actions.report.xml">
+            <field name="print_report_name">'Products Labels'+'-'+(object.name)</field>
+        </record>
 
         <report
             id="report_product_template_label"
@@ -16,6 +19,9 @@
             report_type="qweb-pdf"
             name="product.report_producttemplatelabel"
             file="product.report_producttemplatelabel"/>
+        <record id="report_product_template_label" model="ir.actions.report.xml">
+            <field name="print_report_name">'Products Labels'+'-'+(object.name)</field>
+        </record>
 
         <report 
             id="action_report_pricelist" 

@@ -134,12 +134,15 @@ class account_register_payments(models.TransientModel):
             raise UserError(_("In order to pay multiple invoices at once, they must use the same currency."))
 
         total_amount = sum(inv.residual * MAP_INVOICE_TYPE_PAYMENT_SIGN[inv.type] for inv in invoices)
+        communication = ' '.join([ref for ref in invoices.mapped('reference') if ref])
+
         rec.update({
             'amount': abs(total_amount),
             'currency_id': invoices[0].currency_id.id,
             'payment_type': total_amount > 0 and 'inbound' or 'outbound',
             'partner_id': invoices[0].commercial_partner_id.id,
             'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
+            'communication': communication,
         })
         return rec
 
@@ -189,7 +192,7 @@ class account_payment(models.Model):
     company_id = fields.Many2one(store=True)
 
     name = fields.Char(readonly=True, copy=False, default="Draft Payment") # The name is attributed upon post()
-    state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled')], readonly=True, default='draft', copy=False, string="Status")
+    state = fields.Selection([('draft', 'Draft'), ('posted', 'Posted'), ('sent', 'Sent'), ('reconciled', 'Reconciled'), ('cancel', 'Cancelled')], readonly=True, default='draft', copy=False, string="Status")
 
     payment_type = fields.Selection(selection_add=[('transfer', 'Internal Transfer')])
     payment_reference = fields.Char(copy=False, readonly=True, help="Reference of the document used to issue this payment. Eg. check number, file name, etc.")
@@ -312,7 +315,7 @@ class account_payment(models.Model):
                     move.line_ids.remove_move_reconcile()
                 move.button_cancel()
                 move.unlink()
-            rec.state = 'draft'
+            rec.state = 'cancel'
 
     @api.multi
     def unlink(self):
@@ -366,6 +369,10 @@ class account_payment(models.Model):
                 (transfer_credit_aml + transfer_debit_aml).reconcile()
 
             rec.write({'state': 'posted', 'move_name': move.name})
+
+    @api.multi
+    def action_draft(self):
+        return self.write({'state': 'draft'})
 
     def _create_payment_entry(self, amount):
         """ Create a journal entry corresponding to a payment, if the payment references invoice(s) they are reconciled.

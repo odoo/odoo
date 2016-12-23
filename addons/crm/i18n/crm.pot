@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.0alpha1c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-10-10 08:42+0000\n"
+"POT-Creation-Date: 2016-09-05 14:09+0000\n"
+"PO-Revision-Date: 2016-09-05 14:09+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgid "\n"
 "                            <img src=\"web/static/src/img/logo.png\"/>\n"
 "                        </td>\n"
 "                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
-"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #a24689;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
 "                        </td>\n"
 "                    </tr>\n"
 "                </tbody>\n"
@@ -37,7 +37,7 @@ msgid "\n"
 "                <tbody>\n"
 "                    <tr>\n"
 "                        <td style=\"padding:15px 10px;font-size:20px\">\n"
-"                            <p style=\"color:#875A7B;margin:0\" >Hooray!</p><br>\n"
+"                            <p style=\"color:#a24689;margin:0\" >Hooray!</p><br>\n"
 "                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
 "                                <span>Your Odoo CRM application is up and running.</span></p><br>\n"
 "                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
@@ -62,7 +62,7 @@ msgid "\n"
 "                                <span><a href=\"/web#view_type=list&model=crm.lead&action=crm.crm_lead_all_leads\">\n"
 "                                    <span style=\"font-weight:bold; text-decoration:underline;\">CRM planner</span></a></span>\n"
 "                                <span> to activate extra features</span>\n"
-"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_crm')}% done)</span>\n"
+"                                <span style=\"color:#a24689;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_crm')}% done)</span>\n"
 "                            </p>\n"
 "                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
 "                                <li dir=\"ltr\">\n"
@@ -173,11 +173,6 @@ msgid "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "<i class=\"fa fa-envelope-o\"/> Ask Our Experts"
-msgstr ""
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "<i class=\"fa fa-envelope-o\"/>&amp;nbsp;"
 msgstr ""
@@ -192,17 +187,6 @@ msgstr ""
 #: code:addons/crm/static/src/js/tour.js:61
 #, python-format
 msgid "<p><b>Send messages</b> to your prospect and get replies automatically attached to this opportunity.</p><p class=\"mb0\">Type <i>'@'</i> to mention people - it's like cc-ing on emails.</p>"
-msgstr ""
-
-#. module: crm
-#: model:ir.actions.server,body_html:crm.action_email_reminder_lead
-msgid "<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>The opportunity <strong>${object.name}</strong> did not have any activity since at least 5 days.</p>\n"
-"%if object.description:\n"
-"<p>Here is the description about the opportunity : </p><p><i>${object.description}</i>\n"
-"%endif\n"
-"</p><p>Thank you!</p>\n"
-""
 msgstr ""
 
 #. module: crm
@@ -257,6 +241,13 @@ msgid "<span class=\"fa fa-lightbulb-o fa-lg\"/>\n"
 "                        creating such templates can be a huge effort.\n"
 "                        We recommend to start with standard quotations\n"
 "                        and upgrade later."
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid "<span class=\"fa fa-lightbulb-o fa-lg\"/>\n"
+"                        <strong>Tip:</strong>\n"
+"                        You can also use our API to load data automatically through scripts: read this"
 msgstr ""
 
 #. module: crm
@@ -332,7 +323,7 @@ msgstr ""
 msgid "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n"
 "                                        <strong>Import a file</strong><br/>\n"
-"                                        <span class=\"small\">Recommended if &gt;50 items</span>\n"
+"                                        <span class=\"small\">Recommended if &gt;100 products</span>\n"
 "                                    </span>"
 msgstr ""
 
@@ -368,7 +359,7 @@ msgstr ""
 msgid "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n"
 "                                        <strong> Create manually</strong><br/>\n"
-"                                        <span class=\"small\">Recommended if &lt;50 items</span>\n"
+"                                        <span class=\"small\">Recommended if &lt;100 products</span>\n"
 "                                    </span>"
 msgstr ""
 
@@ -384,6 +375,13 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"panel-title\">\n"
+"                                        <strong> Price per Customer</strong>\n"
+"                                    </span>"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid "<span class=\"panel-title\">\n"
 "                                        <strong> Rules &amp; Formulas</strong>\n"
 "                                    </span>"
 msgstr ""
@@ -391,14 +389,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"panel-title\">\n"
-"                                        <strong>Specific Price per Audience</strong>\n"
-"                                    </span>"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "<span class=\"panel-title\">\n"
-"                                        <strong>Unique Price (default)</strong>\n"
+"                                        <strong>Unique price</strong>\n"
 "                                    </span>"
 msgstr ""
 
@@ -475,11 +466,6 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "<strong>For complex imports</strong> (&gt;5000 items, product variants, pictures, etc.):"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Forecast future revenues</strong><br/>\n"
 "                                    You can assess the maturity of a sales team by its ability to forecasts future revenues\n"
 "                                    for the coming months or quarters. Train the team to forecast efficiently by having\n"
@@ -501,11 +487,6 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>New:</strong>"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "<strong>Next actions:</strong>"
 msgstr ""
 
 #. module: crm
@@ -788,7 +769,7 @@ msgid "All contacts must have the same email. Only the Administrator can merge c
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:864
+#: code:addons/crm/models/crm_lead.py:880
 #, python-format
 msgid "All email incoming to %s will automatically\n"
 "                    create new opportunity. Update your business card, phone book, social media,...\n"
@@ -808,11 +789,6 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_deduplicate
 msgid "Apply deduplication"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "Apply multi-currencies"
 msgstr ""
 
 #. module: crm
@@ -900,11 +876,6 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "Basic, Premium"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Better structure the sales process"
 msgstr ""
 
@@ -950,18 +921,6 @@ msgid "Call"
 msgstr ""
 
 #. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,name:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for Demo"
-msgstr ""
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_call_demo
-#: model:mail.message.subtype,description:crm.crm_activity_demo_call_demo_mail_message_subtype
-msgid "Call for a demo"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_campaign_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -991,6 +950,11 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_on_change
 msgid "Change Probability Automatically"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid "Change the <i>Sale Price</i> option in"
 msgstr ""
 
 #. module: crm
@@ -1042,7 +1006,7 @@ msgid "Click on an opportunity to zoom to it."
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:867
+#: code:addons/crm/models/crm_lead.py:883
 #, python-format
 msgid "Click to add a new opportunity"
 msgstr ""
@@ -1100,11 +1064,6 @@ msgid "Color Index"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "Community &amp; Enterprise users:"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_company_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_company_id
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_company_id
@@ -1117,6 +1076,11 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 msgid "Company Name"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid "Company XYZ"
 msgstr ""
 
 #. module: crm
@@ -1138,17 +1102,12 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "Configure your pricelists"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Congratulations, you're done!"
 msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "Consumers, Retailers"
+msgid "Consumers"
 msgstr ""
 
 #. module: crm
@@ -1212,11 +1171,9 @@ msgid "Convert to opportunities"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1038
 #: selection:crm.lead2opportunity.partner,name:0
 #: selection:crm.lead2opportunity.partner.mass,name:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
-#, python-format
 msgid "Convert to opportunity"
 msgstr ""
 
@@ -1277,11 +1234,6 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "Create and combine rules:<br/>"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Create sleek and attractive event pages. Sell online and organize on site."
 msgstr ""
 
@@ -1300,7 +1252,7 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "Create your product items"
+msgid "Create your products"
 msgstr ""
 
 #. module: crm
@@ -1375,7 +1327,7 @@ msgid "Current Line"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1073
+#: code:addons/crm/models/crm_lead.py:1101
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2projectissue_wizard_partner_id
@@ -1391,7 +1343,7 @@ msgid "Customer"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1075
+#: code:addons/crm/models/crm_lead.py:1103
 #, python-format
 msgid "Customer Email"
 msgstr ""
@@ -1562,19 +1514,15 @@ msgid "Download the"
 msgstr ""
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_draft_lead
-msgid "Draft Leads"
-msgstr ""
-
-#. module: crm
 #: selection:sale.config.settings,group_use_lead:0
 msgid "Each mail sent to the alias creates a new opportunity"
 msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "Each product has only one price.\n"
-"                                        <br/>"
+msgid "Each product can only have one price. (but you can change it when doing a quotation)\n"
+"                                        <br/>\n"
+"                                        Note: your product needs to be marked as 'Can be Sold' to have a Sale Price."
 msgstr ""
 
 #. module: crm
@@ -1740,18 +1688,6 @@ msgid "Folded in Pipeline"
 msgstr ""
 
 #. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up Quote"
-msgstr ""
-
-#. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_followup_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_followup_quote_mail_message_subtype
-msgid "Follow-up quote"
-msgstr ""
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "For every deal, review the next action, the expected closing, the pain points, the expected revenues, the buying process, etc."
 msgstr ""
@@ -1774,7 +1710,7 @@ msgid "Force assignation"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:538
+#: code:addons/crm/models/crm_lead.py:554
 #, python-format
 msgid "From %s : %s"
 msgstr ""
@@ -1965,7 +1901,7 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "In Odoo, there are 3 different ways to manage your prices.<br/>"
+msgid "In Odoo, there are 3 different ways to manage your products prices.<br/>"
 msgstr ""
 
 #. module: crm
@@ -2083,7 +2019,7 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:841
+#: code:addons/crm/models/crm_lead.py:857
 #: selection:crm.activity.report,lead_type:0
 #: selection:crm.lead,type:0
 #: selection:crm.opportunity.report,type:0
@@ -2200,11 +2136,6 @@ msgid "Leads by Source"
 msgstr ""
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_usa_lead
-msgid "Leads from USA"
-msgstr ""
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are assigned to me"
 msgstr ""
@@ -2291,11 +2222,9 @@ msgid "Log an Activity"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1044
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-#, python-format
 msgid "Lost"
 msgstr ""
 
@@ -2320,12 +2249,6 @@ msgstr ""
 #: selection:crm.lead,priority:0
 #: selection:crm.opportunity.report,priority:0
 msgid "Low"
-msgstr ""
-
-#. module: crm
-#: model:crm.activity,name:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,name:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Make Quote"
 msgstr ""
 
 #. module: crm
@@ -2366,7 +2289,7 @@ msgid "Medium"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:883
+#: code:addons/crm/models/crm_lead.py:899
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr ""
@@ -2443,25 +2366,25 @@ msgid "Merge with existing opportunities"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:486
+#: code:addons/crm/models/crm_lead.py:502
 #, python-format
 msgid "Merged lead"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:520
+#: code:addons/crm/models/crm_lead.py:536
 #, python-format
 msgid "Merged leads"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:520
+#: code:addons/crm/models/crm_lead.py:536
 #, python-format
 msgid "Merged opportunities"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:486
+#: code:addons/crm/models/crm_lead.py:502
 #, python-format
 msgid "Merged opportunity"
 msgstr ""
@@ -2611,7 +2534,7 @@ msgid "Next activity late"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1095
+#: code:addons/crm/models/crm_lead.py:1123
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -2732,11 +2655,6 @@ msgid "Once you’ve deployed your CRM, it’s time to grow your revenues. Start
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "Online users: we do it for you!"
-msgstr ""
-
-#. module: crm
 #: code:addons/crm/wizard/base_partner_merge.py:323
 #, python-format
 msgid "Only the destination contact may be linked to existing Journal Items. Please ask the Administrator if you need to merge several contacts linked to existing Journal Items."
@@ -2795,7 +2713,7 @@ msgid "Opportunities that are assigned to me"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:816
+#: code:addons/crm/models/crm_lead.py:832
 #: selection:crm.activity.report,lead_type:0
 #: selection:crm.lead,type:0
 #: selection:crm.opportunity.report,type:0
@@ -2991,7 +2909,7 @@ msgid "Planner"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:592
+#: code:addons/crm/models/crm_lead.py:608
 #, python-format
 msgid "Please select more than one element (lead or opportunity) from the list view."
 msgstr ""
@@ -3017,7 +2935,13 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "Pricing &amp; Discounts"
+msgid "Prices"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid "Prices can be computed using advanced formulas.<br/>\n"
+"                                        Example: 15% discount when buying more than 3 t-shirts."
 msgstr ""
 
 #. module: crm
@@ -3078,11 +3002,6 @@ msgid "Rating"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "Read the documentation about pricing &amp; discounts"
-msgstr ""
-
-#. module: crm
 #. openerp-web
 #: code:addons/crm/static/src/js/tour.js:13
 #, python-format
@@ -3128,12 +3047,6 @@ msgid "Relation field"
 msgstr ""
 
 #. module: crm
-#: model:ir.actions.server,name:crm.action_email_reminder_lead
-msgid "Reminder to User"
-msgstr ""
-
-#. module: crm
-#: model:ir.actions.server,subject:crm.action_email_reminder_lead
 #: model:mail.template,subject:crm.email_template_opportunity_reminder_mail
 msgid "Reminder: Lead ${object.name} from ${object.partner_id != False and object.partner_id.name or object.contact_name}"
 msgstr ""
@@ -3147,6 +3060,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_stage_requirements
 #: model:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Requirements"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid "Retailers"
 msgstr ""
 
 #. module: crm
@@ -3263,11 +3181,6 @@ msgid "Select the list of fields used to search for\n"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "Select your pricing preference and allow discounts"
-msgstr ""
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Selected contacts will be merged together.\n"
 "                                All documents linked to one of these contacts\n"
@@ -3281,12 +3194,6 @@ msgid "Selection"
 msgstr ""
 
 #. module: crm
-#: model:crm.activity,description:crm.crm_activity_demo_make_quote
-#: model:mail.message.subtype,description:crm.crm_activity_demo_make_quote_mail_message_subtype
-msgid "Send a quotation"
-msgstr ""
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Send an email to all opportunities in the \"Qualified\" stage for more than 20 days"
 msgstr ""
@@ -3295,11 +3202,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_activity_sequence
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
-msgstr ""
-
-#. module: crm
-#: model:ir.actions.server,name:crm.action_set_team_sales_department
-msgid "Set team to Sales Department"
 msgstr ""
 
 #. module: crm
@@ -3381,7 +3283,7 @@ msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_team_id
-msgid "Specific team that uses this stage. Other teams will not be able to see or use this stage."
+msgid "Specific team that uses this stage. Other teams will not ne able to see or use this stage."
 msgstr ""
 
 #. module: crm
@@ -3650,7 +3552,7 @@ msgid "This stage is folded in the kanban view when there are no records in that
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1010
+#: code:addons/crm/models/crm_lead.py:1026
 #, python-format
 msgid "This target does not exist."
 msgstr ""
@@ -3670,11 +3572,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Title"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "To stimulate your customers, show them the public price and the discount applied to it. This is settable in the pricelist configuration if you allow discounts."
 msgstr ""
 
 #. module: crm
@@ -3709,11 +3606,6 @@ msgstr ""
 #: model:ir.model.fields,help:crm.field_crm_lead_type
 #: model:ir.model.fields,help:crm.field_crm_opportunity_report_type
 msgid "Type is used to separate Leads and Opportunities"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "USD, EUR, GBP"
 msgstr ""
 
 #. module: crm
@@ -3782,11 +3674,6 @@ msgstr ""
 #: model:ir.actions.act_window,help:crm.relate_partner_opportunities
 msgid "Use opportunities to keep track of your sales pipeline, follow\n"
 "                up potential sales and better forecast your future revenues."
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "Use our import templates to get your catalog ready in no time!"
 msgstr ""
 
 #. module: crm
@@ -3898,6 +3785,14 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
+msgid "We can handle the whole import process\n"
+"                                        for you: simply send your Odoo project\n"
+"                                        manager a CSV file containing all your\n"
+"                                        products."
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "We can implement custom reports for you based on your Word templates, for example:"
 msgstr ""
 
@@ -3961,14 +3856,12 @@ msgid "Wizard"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1043
 #: model:crm.stage,name:crm.stage_lead4
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
-#, python-format
 msgid "Won"
 msgstr ""
 
@@ -3985,6 +3878,19 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_resource_calendar_id
 msgid "Working Time"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid "You can also combine several rules into a sequence.<br/>\n"
+"                                        Example: additional 10% discount during summer sales"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid "You can change the pricing method at anytime. We\n"
+"                            recommend you to select the easiest option that\n"
+"                            suits your needs for now on."
 msgstr ""
 
 #. module: crm
@@ -4005,6 +3911,12 @@ msgstr ""
 #: code:addons/crm/wizard/base_partner_merge.py:398
 #, python-format
 msgid "You have to specify a filter for your selection"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid "You may have a different sale price for different\n"
+"                                        groups of customers:"
 msgstr ""
 
 #. module: crm
@@ -4082,11 +3994,6 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "additional 10% during summer sales"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "app."
 msgstr ""
 
@@ -4111,11 +4018,6 @@ msgid "browse the documentation"
 msgstr ""
 
 #. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "e.g. 15% discount when buying more than 3 t-shirts"
-msgstr ""
-
-#. module: crm
 #: model:ir.ui.view,arch_db:crm.view_create_opportunity_simplified
 msgid "e.g. Customer Deal"
 msgstr ""
@@ -4133,7 +4035,7 @@ msgid "e.g. Product Pricing"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:871
+#: code:addons/crm/models/crm_lead.py:887
 #, python-format
 msgid "opportunities"
 msgstr ""
@@ -4166,7 +4068,17 @@ msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
+msgid "technical documentation"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "the list of customers"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.crm_planner
+msgid "the list of products"
 msgstr ""
 
 #. module: crm
@@ -4196,14 +4108,9 @@ msgid "to setup your own domain\n"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:877
+#: code:addons/crm/models/crm_lead.py:893
 #, python-format
 msgid "unknown"
-msgstr ""
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.crm_planner
-msgid "use Odoo API to import through scripts"
 msgstr ""
 
 #. module: crm

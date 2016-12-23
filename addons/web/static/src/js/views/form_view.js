@@ -88,6 +88,9 @@ var FormView = View.extend(common.FieldManagerMixin, {
         });
     },
     start: function() {
+        if (this.$pager) {
+            this.$pager.off();
+        }
         var self = this;
 
         this.rendering_engine.set_fields_registry(this.fields_registry);
@@ -653,7 +656,6 @@ var FormView = View.extend(common.FieldManagerMixin, {
             self.trigger("save", result);
             return self.reload().then(function() {
                 self.to_view_mode();
-                core.bus.trigger('do_reload_needaction');
                 core.bus.trigger('form_view_saved', self);
             });
         }).always(function(){

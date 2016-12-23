@@ -6,7 +6,7 @@ from odoo import api, fields, models, _
 
 
 class SaleOrder(models.Model):
-    """Add several date fields to Sale Orders, computed or user-entered"""
+    """Add several date fields to Sales Orders, computed or user-entered"""
     _inherit = 'sale.order'
 
     commitment_date = fields.Datetime(compute='_compute_commitment_date', string='Commitment Date', store=True,
@@ -46,7 +46,7 @@ class SaleOrder(models.Model):
             for pick in order.picking_ids:
                 dates_list.append(fields.Datetime.from_string(pick.date))
             if dates_list:
-                order.write({'effective_date': fields.Datetime.to_string(min(dates_list))})
+                order.effective_date = fields.Datetime.to_string(min(dates_list))
 
     @api.onchange('requested_date')
     def onchange_requested_date(self):

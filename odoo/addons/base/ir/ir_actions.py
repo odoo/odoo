@@ -9,7 +9,7 @@ import time
 from pytz import timezone
 
 import odoo
-from odoo import api, fields, models, tools, workflow, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import MissingError, UserError, ValidationError
 from odoo.report.report_sxw import report_sxw, report_rml
 from odoo.tools.safe_eval import safe_eval, test_python_expr
@@ -428,7 +428,6 @@ class IrActionsServer(models.Model):
     The available actions are :
 
     - 'Execute Python Code': a block of python code that will be executed
-    - 'Trigger a Workflow Signal': send a signal to a workflow
     - 'Run a Client Action': choose a client action to launch
     - 'Create or Copy a new Record': create a new record with new values, or
       copy an existing record in your database
@@ -442,6 +441,16 @@ class IrActionsServer(models.Model):
     _sequence = 'ir_actions_id_seq'
     _order = 'sequence,name'
 
+    DEFAULT_PYTHON_CODE = """# Available variables:
+#  - time, datetime, dateutil, timezone: Python libraries
+#  - env: Odoo Environement
+#  - model: Model of the record on which the action is triggered
+#  - record: Record on which the action is triggered if there is one, otherwise None
+#  - records: Records on which the action is triggered if there is one, otherwise None
+#  - log : log(message), function to log debug information in logging table
+#  - Warning: Warning Exception to use with raise
+# To return an action, assign: action = {...}\n\n\n\n"""
+
     @api.model
     def _select_objects(self):
         records = self.env['ir.model'].search([])
@@ -453,7 +462,6 @@ class IrActionsServer(models.Model):
         note that the added key length should not be higher than already-existing
         ones. """
         return [('code', 'Execute Python Code'),
-                ('trigger', 'Trigger a Workflow Signal'),
                 ('client_action', 'Run a Client Action'),
                 ('object_create', 'Create or Copy a new Record'),
                 ('object_write', 'Write on a Record'),
@@ -465,14 +473,13 @@ class IrActionsServer(models.Model):
     condition = fields.Char(default="True",
                             help="Condition verified before executing the server action. If it "
                                  "is not verified, the action will not be executed. The condition is "
-                                 "a Python expression, like 'object.list_price > 5000'. A void "
+                                 "a Python expression, like 'record.list_price > 5000'. A void "
                                  "condition is considered as always True. Help about python expression "
                                  "is given in the help tab.")
     state = fields.Selection(selection=lambda self: self._get_states(),
                              string='Action To Do', default='code', required=True,
                              help="Type of server action. The following values are available:\n"
                                   "- 'Execute Python Code': a block of python code that will be executed\n"
-                                  "- 'Trigger a Workflow Signal': send a signal to a workflow\n"
                                   "- 'Run a Client Action': choose a client action to launch\n"
                                   "- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
                                   "- 'Write on a Record': update the values of a record\n"
@@ -492,28 +499,9 @@ class IrActionsServer(models.Model):
                                 help="Select the client action that has to be executed.")
     # Python code
     code = fields.Text(string='Python Code',
-                       default="""# Available locals:
-                                  #  - time, datetime, dateutil: Python libraries
-                                  #  - env: Odoo Environement
-                                  #  - model: Model of the record on which the action is triggered
-                                  #  - object: Record on which the action is triggered if there is one, otherwise None
-                                  #  - workflow: Workflow engine
-                                  #  - log : log(message), function to log debug information in logging table
-                                  #  - Warning: Warning Exception to use with raise
-                                  # To return an action, assign: action = {...}""",
+                       default=DEFAULT_PYTHON_CODE,
                        help="Write Python code that the action will execute. Some variables are "
                             "available for use; help about pyhon expression is given in the help tab.")
-    # Workflow signal
-    use_relational_model = fields.Selection([('base', 'Use the base model of the action'),
-                                             ('relational', 'Use a relation field on the base model')],
-                                            string='Relational Target Model', default='base', required=True)
-    wkf_transition_id = fields.Many2one('workflow.transition', string='Signal to Trigger',
-                                        help="Select the workflow signal to trigger.")
-    wkf_model_id = fields.Many2one('ir.model', string='Target Model',
-                                   help="The model that will receive the workflow signal. Note that it should have a workflow associated with it.")
-    wkf_model_name = fields.Char(string='Target Model Name', related='wkf_model_id.model', store=True, readonly=True)
-    wkf_field_id = fields.Many2one('ir.model.fields', string='Relation Field',
-                                   oldname='trigger_obj_id', help="The field on the current object that links to the target object record (must be a many2one, or an integer field with the record ID)")
     # Multi
     child_ids = fields.Many2many('ir.actions.server', 'rel_server_actions', 'server_id', 'action_id',
                                  string='Child Actions', help='Child server actions that will be executed. Note that the last return returned action value will be used as global return value.')
@@ -546,7 +534,7 @@ class IrActionsServer(models.Model):
                                               "If it is a relationship field you will be able to select "
                                               "a target field at the destination of the relationship.")
     sub_object = fields.Many2one('ir.model', string='Sub-model', readonly=True,
-                                 help="When a relationship field is selected as first field, "
+                                 help="fWhen a relationship field is selected as first field, "
                                       "this field shows the document model the relationship goes to.")
     sub_model_object_field = fields.Many2one('ir.model.fields', string='Sub-field',
                                              help="When a relationship field is selected as first field, "
@@ -573,8 +561,8 @@ class IrActionsServer(models.Model):
         # transform expression into a path that should look like 'object.many2onefield.many2onefield'
         path = expression.split('.')
         initial = path.pop(0)
-        if initial not in ['obj', 'object']:
-            return (False, None, 'Your expression should begin with obj or object.\nAn expression builder is available in the help tab.')
+        if initial not in ['obj', 'object', 'record']:
+            return (False, None, 'Your expression should begin with obj, object, record.\nAn expression builder is available in the help tab.')
         # analyze path
         while path:
             step = path.pop(0)
@@ -613,33 +601,11 @@ class IrActionsServer(models.Model):
 
     @api.onchange('model_id')
     def _onchange_model_id(self):
-        """ When changing the action base model, reset workflow and crud config
+        """ When changing the action base model, reset crud config
         to ease value coherence. """
         self.use_create = 'new'
         self.use_write = 'current'
-        self.use_relational_model = 'base'
-        self.wkf_model_id = self.model_id
-        self.wkf_field_id = False
         self.crud_model_id = self.model_id
-
-    @api.onchange('use_relational_model', 'wkf_field_id')
-    def _onchange_wkf_config(self):
-        """ Update workflow type configuration
-
-         - update the workflow model (for base (model_id) /relational (field.relation))
-         - update wkf_transition_id to False if workflow model changes, to force
-           the user to choose a new one
-        """
-        if self.use_relational_model == 'relational' and self.wkf_field_id:
-            field = self.wkf_field_id
-            self.wkf_model_id = self.env['ir.model'].search([('model', '=', field.relation)])
-        else:
-            self.wkf_model_id = self.model_id
-
-    @api.onchange('wkf_model_id')
-    def _onchange_wkf_model_id(self):
-        """ When changing the workflow model, update its stored name also """
-        self.wkf_transition_id = False
 
     @api.onchange('use_create', 'use_write', 'ref_object')
     def _onchange_crud_config(self):
@@ -795,23 +761,6 @@ class IrActionsServer(models.Model):
             return eval_context['action']
 
     @api.model
-    def run_action_trigger(self, action, eval_context=None):
-        """ Trigger a workflow signal, depending on the use_relational_model:
-
-         - `base`: base_model_pool.signal_workflow(cr, uid, context.get('active_id'), <TRIGGER_NAME>)
-         - `relational`: find the related model and object, using the relational
-           field, then target_model_pool.signal_workflow(cr, uid, target_id, <TRIGGER_NAME>)
-        """
-        # weird signature and calling -> no self.env, use action param's
-        record = action.env[action.model_id.model].browse(self._context['active_id'])
-        if action.use_relational_model == 'relational':
-            record = getattr(record, action.wkf_field_id.name)
-            if not isinstance(record, models.BaseModel):
-                record = action.env[action.wkf_model_id.model].browse(record)
-
-        record.signal_workflow(action.wkf_transition_id.signal)
-
-    @api.model
     def run_action_multi(self, action, eval_context=None):
         res = False
         for act in action.child_ids:
@@ -897,32 +846,27 @@ class IrActionsServer(models.Model):
             self._cr.execute("""
                 INSERT INTO ir_logging(create_date, create_uid, type, dbname, name, level, message, path, line, func)
                 VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """, ('server', self._cr.dbname, __name__, level, message, "action", action.id, action.name))
+            """, (self.env.uid, 'server', self._cr.dbname, __name__, level, message, "action", action.id, action.name))
 
         eval_context = super(IrActionsServer, self)._get_eval_context(action=action)
         model = self.env[action.model_id.model]
-        obj = None
+        record = None
+        records = None
         if self._context.get('active_model') == action.model_id.model and self._context.get('active_id'):
-            obj = model.browse(self._context['active_id'])
+            record = model.browse(self._context['active_id'])
+        if self._context.get('active_model') == action.model_id.model and self._context.get('active_ids'):
+            records = model.browse(self._context['active_ids'])
         if self._context.get('onchange_self'):
-            obj = self._context['onchange_self']
+            record = self._context['onchange_self']
         eval_context.update({
             # orm
             'env': self.env,
             'model': model,
-            'workflow': workflow,
             # Exceptions
             'Warning': odoo.exceptions.Warning,
             # record
-            # TODO: When porting to master move badly named obj and object to
-            # deprecated and define record (active_id) and records (active_ids)
-            'object': obj,
-            'obj': obj,
-            # Deprecated use env or model instead
-            'pool': self.pool,
-            'cr': self._cr,
-            'context': self._context,
-            'user': self.env.user,
+            'record': record,
+            'records': records,
             # helpers
             'log': log,
         })
@@ -959,7 +903,7 @@ class IrActionsServer(models.Model):
                 if not expr:
                     continue
                 # call the multi method
-                run_self = self.with_context(eval_context['context'])
+                run_self = self.with_context(eval_context['env'].context)
                 func = getattr(run_self, 'run_action_%s_multi' % action.state)
                 res = func(action, eval_context=eval_context)
 
@@ -969,7 +913,7 @@ class IrActionsServer(models.Model):
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id
                     run_self = self.with_context(active_ids=[active_id], active_id=active_id)
-                    eval_context["context"] = run_self._context
+                    eval_context["env"].context = run_self._context
                     expr = safe_eval(str(condition), eval_context)
                     if not expr:
                         continue

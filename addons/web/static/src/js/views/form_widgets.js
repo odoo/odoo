@@ -639,7 +639,7 @@ var FieldBooleanButton = common.AbstractField.extend({
                 this.string_true = _t("Active");
                 this.hover_true = _t("Archive");
                 this.string_false = _t("Archived");
-                this.hover_false = _t("Unarchive");
+                this.hover_false = _t("Restore");
                 break;
             default:
                 var terms = typeof this.options["terminology"] === 'string' ? {} : this.options["terminology"];
@@ -1584,8 +1584,8 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
         if (!window.ace && !this.loadJS_def) {
             this.loadJS_def = ajax.loadJS('/web/static/lib/ace/ace.odoo-custom.js').then(function () {
                 return $.when(ajax.loadJS('/web/static/lib/ace/mode-python.js'),
-                    ajax.loadJS('/web/static/lib/ace/mode-xml.js'),
-                    ajax.loadJS('/web/static/lib/ace/theme-monokai.js'));
+                    ajax.loadJS('/web/static/lib/ace/mode-xml.js')
+                );
             });
         }
         return $.when(this._super(), this.loadJS_def);
@@ -1596,7 +1596,6 @@ var AceEditor = common.AbstractField.extend(common.ReinitializeFieldMixin, {
 
             this.aceEditor = ace.edit(this.$('.ace-view-editor')[0]);
             this.aceEditor.setOptions({"maxLines": Infinity});
-            this.aceEditor.setTheme("ace/theme/monokai");
             this.aceEditor.$blockScrolling = true;
 
             var scrollIntoViewIfNeeded = _.throttle(function () {

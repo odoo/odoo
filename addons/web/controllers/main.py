@@ -786,16 +786,6 @@ class Session(http.Controller):
         request.session.logout(keep_db=True)
         return werkzeug.utils.redirect(redirect, 303)
 
-class Menu(http.Controller):
-
-    @http.route('/web/menu/load_needaction', type='json', auth="user")
-    def load_needaction(self, menu_ids):
-        """ Loads needaction counters for specific menu ids.
-
-            :return: needaction data
-            :rtype: dict(menu_id: {'needaction_enabled': boolean, 'needaction_counter': int})
-        """
-        return request.env['ir.ui.menu'].browse(menu_ids).get_needaction_data()
 
 class DataSet(http.Controller):
 
@@ -867,11 +857,6 @@ class DataSet(http.Controller):
         if isinstance(action, dict) and action.get('type') != '':
             return clean_action(action)
         return False
-
-    @http.route('/web/dataset/exec_workflow', type='json', auth="user")
-    def exec_workflow(self, model, id, signal):
-        request.session.check_security()
-        return request.env[model].browse(id).signal_workflow(signal)[id]
 
     @http.route('/web/dataset/resequence', type='json', auth="user")
     def resequence(self, model, ids, field='sequence', offset=0):

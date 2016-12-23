@@ -10,6 +10,9 @@ from odoo import api, fields, models, registry, _
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
 
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
@@ -172,8 +175,6 @@ class ProcurementOrder(models.Model):
             'propagate': self.rule_id.propagate,
             'priority': self.priority,
         }
-    # compatibility
-    _run_move_create = _get_stock_move_values
 
     @api.multi
     def _run(self):

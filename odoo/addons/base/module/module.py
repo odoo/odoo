@@ -708,7 +708,7 @@ class Module(models.Model):
             to_install = self.search([('name', 'in', urls.keys()), ('state', '=', 'uninstalled')])
             post_install_action = to_install.button_immediate_install()
 
-            if installed:
+            if installed or to_install:
                 # in this case, force server restart to reload python code...
                 self._cr.commit()
                 odoo.service.server.restart()

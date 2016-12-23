@@ -17,6 +17,7 @@ var Model = require('web.Model');
 
 var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
+var session = require('web.session');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
@@ -77,6 +78,9 @@ var PartnerInviteDialog = Dialog.extend({
                     var names = _.escape(_.pluck(data, 'text').join(', '));
                     var notification = _.str.sprintf(_t('You added <b>%s</b> to the conversation.'), names);
                     self.do_notify(_t('New people'), notification);
+                    // Clear the members_deferred to fetch again the partner
+                    // when get_mention_partner_suggestions from the chat_manager is triggered
+                    delete chat_manager.get_channel(self.channel_id).members_deferred;
                 });
         }
     },
@@ -196,7 +200,17 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                                  'channel_inbox';
         var default_channel = chat_manager.get_channel(default_channel_id) ||
                               chat_manager.get_channel('channel_inbox');
-
+        var mention_filter = {
+            tag: 'filter',
+            children: [],
+            attrs:{
+                name: 'mentions',
+                string: _t('Has Mentions'),
+                domain: "[('partner_ids', 'in', " + session.partner_id + ")]"
+            }
+        };
+        this.fields_view = $.extend(true, {}, this.fields_view);
+        this.fields_view.arch.children.push(mention_filter);
         this.searchview = new SearchView(this, this.dataset, this.fields_view, options);
         this.searchview.on('search_data', this, this.on_search);
 
@@ -661,6 +675,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             views: [[false, 'form']],
             target: 'current'
         });
+    },
+    destroy: function() {
+        this.$buttons.off().destroy();
+        this._super.apply(this, arguments);
     },
 });
 

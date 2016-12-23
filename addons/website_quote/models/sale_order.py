@@ -103,6 +103,8 @@ class SaleOrder(models.Model):
                 'state': 'draft',
                 'customer_lead': self._get_customer_lead(line.product_id.product_tmpl_id),
             }
+            if self.pricelist_id:
+                data.update(self.env['sale.order.line']._get_purchase_price(self.pricelist_id, line.product_id, line.product_uom_id, fields.Date.context_today(self)))
             order_lines.append((0, 0, data))
 
         self.order_line = order_lines
@@ -193,7 +195,7 @@ class SaleOrderOption(models.Model):
     _description = "Sale Options"
     _order = 'sequence, id'
 
-    order_id = fields.Many2one('sale.order', 'Sale Order Reference', ondelete='cascade', index=True)
+    order_id = fields.Many2one('sale.order', 'Sales Order Reference', ondelete='cascade', index=True)
     line_id = fields.Many2one('sale.order.line', on_delete="set null")
     name = fields.Text('Description', required=True)
     product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)])

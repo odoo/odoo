@@ -402,7 +402,7 @@ class ResPartner(models.Model):
         help="The fiscal position will determine taxes and accounts used for the partner.", oldname="property_account_position")
     property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Customer Payment Terms',
-        help="This payment term will be used instead of the default one for sale orders and customer invoices", oldname="property_payment_term")
+        help="This payment term will be used instead of the default one for sales orders and customer invoices", oldname="property_payment_term")
     property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
          string='Vendor Payment Terms',
          help="This payment term will be used instead of the default one for purchase orders and vendor bills", oldname="property_supplier_payment_term")
@@ -445,5 +445,5 @@ class ResPartner(models.Model):
         '''
         action = self.env.ref('account.action_invoice_refund_out_tree')
         result = action.read()[0]
-        result['domain'] = "[('id','in',[" + ','.join(map(str, self.ids)) + "])]"
+        result['domain'] = [('partner_id', 'in', self.ids)]
         return result

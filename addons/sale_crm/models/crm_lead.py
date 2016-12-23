@@ -4,13 +4,13 @@
 from datetime import date
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class CrmLead(models.Model):
     _inherit = 'crm.lead'
 
-    sale_amount_total= fields.Monetary(compute='_compute_sale_amount_total', string="Sum of Orders", currency_field='company_currency')
+    sale_amount_total = fields.Monetary(compute='_compute_sale_amount_total', string="Sum of Orders", currency_field='company_currency')
     sale_number = fields.Integer(compute='_compute_sale_amount_total', string="Number of Quotations")
     order_ids = fields.One2many('sale.order', 'opportunity_id', string='Orders')
 
@@ -40,15 +40,15 @@ class CrmLead(models.Model):
         account_invoice_domain = [
             ('state', 'in', ['open', 'paid']),
             ('user_id', '=', self.env.uid),
-            ('date', '>=', date_today.replace(day=1) - relativedelta(months=+1)),
+            ('date_invoice', '>=', date_today.replace(day=1) - relativedelta(months=+1)),
             ('type', 'in', ['out_invoice', 'out_refund'])
         ]
 
-        invoice_data = self.env['account.invoice'].search_read(account_invoice_domain, ['date', 'amount_untaxed_signed'])
+        invoice_data = self.env['account.invoice'].search_read(account_invoice_domain, ['date_invoice', 'amount_untaxed_signed'])
 
         for invoice in invoice_data:
-            if invoice['date']:
-                invoice_date = fields.Date.from_string(invoice['date'])
+            if invoice['date_invoice']:
+                invoice_date = fields.Date.from_string(invoice['date_invoice'])
                 if invoice_date <= date_today and invoice_date >= date_today.replace(day=1):
                     res['invoiced']['this_month'] += invoice['amount_untaxed_signed']
                 elif invoice_date < date_today.replace(day=1) and invoice_date >= date_today.replace(day=1) - relativedelta(months=+1):

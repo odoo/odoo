@@ -34,7 +34,7 @@
 	                    <field name="value_integer" string="Value" attrs="{'invisible' : [('type', 'not in', ('integer', 'boolean'))]}"/>
 	                    <field name="value_float" string="Value" attrs="{'invisible' : [('type', '!=', 'float')]}"/>
 	                    <field name="value_datetime" string="Value" attrs="{'invisible' : [('type', 'not in', ('date', 'datetime'))]}"/>
-	                    <field name="value_text" string="Value" attrs="{'invisible' : [('type', 'not in', ('char', 'text'))]}"/>
+	                    <field name="value_text" string="Value" attrs="{'invisible' : [('type', 'not in', ('char', 'text', 'selection'))]}"/>
 	                    <field name="value_reference" string="Value" attrs="{'invisible' : [('type', '!=', 'many2one')]}"/>
 	                    <field name="value_binary" string="Value" attrs="{'invisible' : [('type', '!=', 'binary')]}"/>
                     </group>

@@ -8,13 +8,13 @@
 
     <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries" inherit_id="website_portal.portal_layout" priority="25">
         <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
-            <li>
+            <li t-att-class="page_name == 'quote' and 'active'">
                 <a href="/my/quotes">Quotes</a>
             </li>
-            <li>
+            <li t-att-class="page_name == 'order' and 'active'">
                 <a href="/my/orders">Orders</a>
             </li>
-            <li>
+            <li t-att-class="page_name == 'invoice' and 'active'">
                 <a href="/my/invoices">Invoices</a>
             </li>
         </xpath>
@@ -63,15 +63,19 @@
 
     <template id="portal_my_quotations" name="My Quotations">
       <t t-call="website_portal.portal_layout">
-        <h3 class="page-header">Your Quotes</h3>
+        <div class="page-header">
+            <span class="h3">Your Quotes</span>
+            <t t-call="website_portal.portal_searchbar"/>
+        </div>
         <t t-if="not quotations">
             <p>There are currently no quotes for your account.</p>
         </t>
         <t t-if="quotations">
-            <table class="table table-hover o_my_status_table">
+            <div class="table-responsive"><table class="table table-hover o_my_status_table">
                 <thead>
                   <tr class="active">
                       <th>Quotation #</th>
+                      <th>Order Date</th>
                       <th>Valid Until</th>
                       <th></th>
                       <th>Total</th>
@@ -82,6 +86,7 @@
                         <td>
                             <a t-attf-href="/my/orders/#{quotation.id}?#{keep_query()}"><t t-esc="quotation.name"/></a>
                         </td>
+                        <td><span t-field="quotation.date_order"/></td>
                         <td><span t-field="quotation.validity_date"/></td>
                         <td>
                           <t t-if="quotation.state == 'cancel'">
@@ -95,7 +100,7 @@
                         </td>
                     </tr>
                 </t>
-            </table>
+            </table></div>
             <div t-if="pager" class="o_portal_pager text-center">
               <t t-call="website.pager"/>
             </div>
@@ -105,15 +110,18 @@
 
     <template id="portal_my_orders" name="My Sales Orders">
       <t t-call="website_portal.portal_layout">
-        <h3 class="page-header">Your Orders</h3>
+        <div class="page-header">
+            <span class="h3">Your Orders</span>
+            <t t-call="website_portal.portal_searchbar"/>
+        </div>
         <t t-if="not orders">
             <p>There are currently no orders for your account.</p>
         </t>
         <t t-if="orders">
-            <table class="table table-hover o_my_status_table">
+            <div class="table-responsive"><table class="table table-hover o_my_status_table">
                 <thead>
                   <tr class="active">
-                    <th>Sale Order #</th>
+                    <th>Sales Order #</th>
                     <th>Order Date</th>
                     <th></th>
                     <th>Total</th>
@@ -139,7 +147,7 @@
                         <td><span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/></td>
                     </tr>
                 </t>
-            </table>
+            </table></div>
             <div t-if="pager" class="o_portal_pager text-center">
               <t t-call="website.pager"/>
             </div>
@@ -149,12 +157,15 @@
 
     <template id="portal_my_invoices" name="My Invoices and Payments">
       <t t-call="website_portal.portal_layout">
-        <h3 class="page-header">Your Invoices and Payments</h3>
+        <div class="page-header">
+            <span class="h3">Your Invoices and Payments</span>
+            <t t-call="website_portal.portal_searchbar"/>
+        </div>
         <t t-if="not invoices">
             <p>There are currently no invoices for your account.</p>
         </t>
         <t t-if="invoices">
-            <table class="table table-hover o_my_status_table">
+            <div class="table-responsive"><table class="table table-hover o_my_status_table">
                 <thead>
                   <tr class="active">
                     <th>Invoice #</th>
@@ -189,7 +200,7 @@
                         <td><span t-field="invoice.residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
                     </tr>
                 </t>
-            </table>
+            </table></div>
             <div t-if="pager" class="o_portal_pager text-center">
                 <t t-call="website.pager"/>
             </div>

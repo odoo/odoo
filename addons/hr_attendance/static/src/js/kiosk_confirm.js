@@ -55,7 +55,7 @@ var KioskConfirm = Widget.extend({
 
     init: function (parent, action) {
         this._super.apply(this, arguments);
-        this.next_action = { type: "ir.actions.client", name: "Attendances", tag: 'hr_attendance_kiosk_mode', target: "fullscreen", params: {} };
+        this.next_action = 'hr_attendance.hr_attendance_action_kiosk_mode';
         this.employee_id = action.employee_id;
         this.employee_name = action.employee_name;
         this.employee_state = action.employee_state;

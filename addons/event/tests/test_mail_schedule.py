@@ -28,8 +28,8 @@ class TestMailSchedule(TestEventCommon):
                     'interval_unit': 'now',
                     'interval_type': 'after_sub',
                     'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_subscription')}),
-                (0, 0, {  # 2 days before event
-                    'interval_nbr': 2,
+                (0, 0, {  # 1 days before event
+                    'interval_nbr': 1,
                     'interval_unit': 'days',
                     'interval_type': 'before_event',
                     'template_id': self.env['ir.model.data'].xmlid_to_res_id('event.event_reminder')}),
@@ -65,7 +65,7 @@ class TestMailSchedule(TestEventCommon):
         # check before event scheduler
         schedulers = self.EventMail.search([('event_id', '=', test_event.id), ('interval_type', '=', 'before_event')])
         self.assertEqual(len(schedulers), 1, 'event: wrong scheduler creation')
-        self.assertEqual(schedulers[0].scheduled_date, datetime.datetime.strftime(event_date_begin + relativedelta(days=-2), tools.DEFAULT_SERVER_DATETIME_FORMAT), 'event: incorrect scheduled date')
+        self.assertEqual(schedulers[0].scheduled_date, datetime.datetime.strftime(event_date_begin + relativedelta(days=-1), tools.DEFAULT_SERVER_DATETIME_FORMAT), 'event: incorrect scheduled date')
 
         # execute event reminder scheduler explicitly
         schedulers[0].execute()
@@ -73,7 +73,7 @@ class TestMailSchedule(TestEventCommon):
         self.assertTrue(schedulers[0].mail_sent, 'event: reminder scheduler should have sent an email')
         self.assertTrue(schedulers[0].done, 'event: reminder scheduler should be done')
 
-        mails = self.env['mail.mail'].search([('subject', 'ilike', 'reminder'), ('date', '>=', datetime.datetime.strftime(now, tools.DEFAULT_SERVER_DATETIME_FORMAT))], order='date DESC', limit=3)
-        self.assertEqual(len(mails), 2, 'event: wrong number of reminders in outgoing mail queue')
+        mails = self.env['mail.mail'].search([('subject', 'ilike', 'TestEventMail'), ('date', '>=', datetime.datetime.strftime(now, tools.DEFAULT_SERVER_DATETIME_FORMAT))], order='date DESC', limit=3)
+        self.assertEqual(len(mails), 3, 'event: wrong number of reminders in outgoing mail queue')
 
 

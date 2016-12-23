@@ -39,7 +39,7 @@ loaded = []
 class AddonsHook(object):
     """ Makes modules accessible through openerp.addons.* and odoo.addons.* """
 
-    def find_module(self, name, path):
+    def find_module(self, name, path=None):
         if name.startswith(('odoo.addons.', 'openerp.addons.'))\
                 and name.count('.') == 2:
             return self

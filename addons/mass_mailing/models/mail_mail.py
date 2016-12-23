@@ -43,7 +43,13 @@ class MailMail(models.Model):
         url = urlparse.urljoin(
             base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
                 'mailing_id': self.mailing_id.id,
-                'params': werkzeug.url_encode({'db': self.env.cr.dbname, 'res_id': self.res_id, 'email': email_to})
+                'params': werkzeug.url_encode({
+                    'db': self.env.cr.dbname,
+                    'res_id': self.res_id,
+                    'email': email_to,
+                    'token': self.mailing_id._unsubscribe_token(
+                        self.res_id, email_to),
+                }),
             }
         )
         return url

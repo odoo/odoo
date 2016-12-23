@@ -14,13 +14,13 @@ class TestMailFeatures(TestMail):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_needaction(self):
-        na_emp1_base = self.env['mail.message'].sudo(self.user_employee)._needaction_count(domain=[])
-        na_emp2_base = self.env['mail.message'].sudo()._needaction_count(domain=[])
+        na_emp1_base = self.group_pigs.sudo(self.user_employee).message_needaction_counter
+        na_emp2_base = self.group_pigs.sudo().message_needaction_counter
 
         self.group_pigs.message_post(body='Test', message_type='comment', subtype='mail.mt_comment', partner_ids=[self.user_employee.partner_id.id])
 
-        na_emp1_new = self.env['mail.message'].sudo(self.user_employee)._needaction_count(domain=[])
-        na_emp2_new = self.env['mail.message'].sudo()._needaction_count(domain=[])
+        na_emp1_new = self.group_pigs.sudo(self.user_employee).message_needaction_counter
+        na_emp2_new = self.group_pigs.sudo().message_needaction_counter
         self.assertEqual(na_emp1_new, na_emp1_base + 1)
         self.assertEqual(na_emp2_new, na_emp2_base)
 
@@ -261,6 +261,7 @@ class TestMessagePost(TestMail):
         self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'mass_mail',
             'default_model': 'mail.channel',
+            'default_use_active_domain': True,
             'active_ids': [self.group_pigs.id],
             'active_domain': [('name', 'in', ['%s' % self.group_pigs.name, '%s' % self.group_public.name])],
         }).sudo(self.user_employee).create({
@@ -270,3 +271,20 @@ class TestMessagePost(TestMail):
 
         self.assertEqual(self.group_pigs.message_ids[0].subject, 'From Composer Test')
         self.assertEqual(self.group_public.message_ids[0].subject, 'From Composer Test')
+
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_message_compose_mass_mail_no_active_domain(self):
+        self.env['mail.compose.message'].with_context({
+            'default_composition_mode': 'mass_mail',
+            'default_model': 'mail.channel',
+            'default_use_active_domain': False,
+            'active_ids': [self.group_pigs.id],
+            'active_domain': [('name', 'in', ['%s' % self.group_pigs.name, '%s' % self.group_public.name])],
+        }).sudo(self.user_employee).create({
+            'subject': 'From Composer Test',
+            'body': '${object.description}',
+        }).send_mail()
+
+        self.assertEqual(self.group_pigs.message_ids[0].subject, 'From Composer Test')
+        self.assertFalse(self.group_public.message_ids.ids)

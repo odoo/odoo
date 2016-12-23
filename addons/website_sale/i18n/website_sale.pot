@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:43+0000\n"
-"PO-Revision-Date: 2016-10-10 08:43+0000\n"
+"POT-Creation-Date: 2016-09-29 13:59+0000\n"
+"PO-Revision-Date: 2016-09-29 13:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -76,20 +76,13 @@ msgid "<i class=\"fa fa-shopping-cart\"/>\n"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.terms
-msgid "<small class=\"text-muted pull-right\">Source: https://termsfeed.com/blog/sample-terms-and-conditions-template</small>"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
-msgid "<span class=\"btn btn-primary pull-right btn-lg o_website_form_send o_default_snippet_text\">\n"
-"                                    <span>Next </span><span class=\"fa fa-long-arrow-right\"/>\n"
-"                                </span>\n"
+msgid "<span class=\"btn btn-primary btn-lg o_website_form_send o_default_snippet_text\">Send</span>\n"
 "                                <span id=\"o_website_form_result\" class=\"text-danger ml8\"/>"
 msgstr ""
 
@@ -111,7 +104,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "<span class=\"fa fa-2x fa-credit-card\"/>\n"
-"                                                Saved Cards"
+"                                        Saved Cards"
 msgstr ""
 
 #. module: website_sale
@@ -426,26 +419,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<strong>Variants</strong> like size or color"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.terms
-msgid "A <b>Governing Law</b> will inform users which laws govern the agreement. This should the country in which your company is headquartered or the country from which you operate your web site and mobile app."
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.terms
-msgid "A <b>Limit What Users Can Do</b> clause can inform users that by agreeing to use your service, they’re also agreeing to not do certain things. This can be part of a very long and thorough list in your Terms and Conditions agreements so as to encompass the most amount of negative uses."
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.terms
-msgid "A <b>Links To Other Web Sites</b> clause will inform users that you are not responsible for any third party web sites that you link to. This kind of clause will generally inform users that they are responsible for reading and agreeing (or disagreeing) with the Terms and Conditions or Privacy Policies of these third parties."
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.terms
-msgid "A <b>Termination</b> clause will inform that users’ accounts on your website and mobile app or users’ access to your website and mobile (if users can’t have an account with you) can be terminated in case of abuses or at your sole discretion."
 msgstr ""
 
 #. module: website_sale
@@ -868,12 +841,8 @@ msgid "Delivery methods are selectable on the website: the customer pays for shi
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_quote_description
-msgid "Description for the quote"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_description
+#: model:ir.model.fields,field_description:website_sale.field_product_template_website_description
 msgid "Description for the website"
 msgstr ""
 
@@ -952,15 +921,6 @@ msgid "Enter a name for your new product"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_split_method
-msgid "Equal : Cost will be equally divided.\n"
-"By Quantity : Cost will be divided according to product's quantity.\n"
-"By Current cost : Cost will be divided according to product's current cost.\n"
-"By Weight : Cost will be divided depending on its weight.\n"
-"By Volume : Cost will be divided depending on its volume."
-msgstr ""
-
-#. module: website_sale
 #: code:addons/website_sale/models/product.py:89
 #, python-format
 msgid "Error ! You cannot create recursive categories."
@@ -1029,11 +989,6 @@ msgid "Gives the sequence order when displaying a list of product categories."
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_hs_code
-msgid "HS Code"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_style_html_class
 msgid "HTML Classes"
 msgstr ""
@@ -1074,11 +1029,6 @@ msgid "Hidden"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.payment_sale_note
-msgid "I agree to the"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_id
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_id
 #: model:ir.model.fields,field_description:website_sale.field_product_style_id
@@ -1088,11 +1038,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "If you deal with a major shipper (UPS, FedEx, DHL, etc.), activate the related connector in Odoo to compute accurate costs and print labels."
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.terms
-msgid "If your website or mobile apps allows users to create content and make that content public to other users, a <b>Content</b> section will inform users that they own the rights to the content they have created.<br/>The “Content” clause usually mentions that users must give you (the website or mobile app developer) a license so that you can share this content on your website/mobile app and to make it available to other users.<br/>Because the content created by users is public to other users, a DMCA notice clause (or Copyright Infringement ) section is helpful to inform users and copyright authors that, if any content is found to be a copyright infringement, you will respond to any DMCA take down notices received and you will take down the content."
 msgstr ""
 
 #. module: website_sale
@@ -1164,11 +1109,6 @@ msgstr ""
 #. module: website_sale
 #: model:product.public.category,name:website_sale.Keyboard_Mouse
 msgid "Keyboard / Mouse"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_landed_cost_ok
-msgid "Landed Costs"
 msgstr ""
 
 #. module: website_sale
@@ -1253,6 +1193,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_image_name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_name
 #: model:ir.ui.view,arch_db:website_sale.address
+#: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Name"
 msgstr ""
 
@@ -1263,7 +1204,7 @@ msgstr ""
 
 #. module: website_sale
 #. openerp-web
-#: code:addons/website_sale/controllers/main.py:958
+#: code:addons/website_sale/controllers/main.py:953
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:18
 #: model:ir.ui.view,arch_db:website_sale.content_new_product
 #, python-format
@@ -1483,6 +1424,16 @@ msgid "Price"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.sort
+msgid "Price <i class=\"fa fa-arrow-down\" aria-hidden=\"true\"/>"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.sort
+msgid "Price <i class=\"fa fa-arrow-up\" aria-hidden=\"true\"/>"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_pricelist_ids
 msgid "Price list available for this Ecommerce/Website"
 msgstr ""
@@ -1511,11 +1462,6 @@ msgstr ""
 #. module: website_sale
 #: model:product.public.category,name:website_sale.printer
 msgid "Printer"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_purchase_requisition
-msgid "Procurement"
 msgstr ""
 
 #. module: website_sale
@@ -1964,16 +1910,6 @@ msgid "Specific prices per customer segment, currency, etc.: new pricing table a
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_split_method
-msgid "Split Method"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_hs_code
-msgid "Standardized code for international shipping and goods declaration"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Start your online shop by creating 3 products pages.<br/>"
 msgstr ""
@@ -2063,18 +1999,8 @@ msgid "Temando integration"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.terms
-msgid "Terms &amp;amp; Conditions"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Thank you for your order."
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.terms
-msgid "The <b>Intellectual Property</b> disclosure will inform users that the contents, logo and other visual media you created is your property and is protected by copyright laws."
 msgstr ""
 
 #. module: website_sale
@@ -2440,11 +2366,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_style
 msgid "product.style"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.payment_sale_note
-msgid "terms &amp; conditions"
 msgstr ""
 
 #. module: website_sale

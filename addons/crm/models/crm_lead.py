@@ -45,14 +45,14 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'date_action_next',
     'email_from',
     'email_cc',
+    'website',
     'partner_name']
 
 
 class Lead(models.Model):
-
     _name = "crm.lead"
     _description = "Lead/Opportunity"
-    _order = "priority desc,date_action,id desc"
+    _order = "priority desc,activity_date_deadline,id desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin', 'format.address.mixin']
     _mail_mass_mailing = _('Leads / Opportunities')
 
@@ -73,6 +73,7 @@ class Lead(models.Model):
     date_action_last = fields.Datetime('Last Action', readonly=True)
     date_action_next = fields.Datetime('Next Action', readonly=True)
     email_from = fields.Char('Email', help="Email address of the contact", index=True)
+    website = fields.Char('Website', index=True, help="Website of the contact")
     team_id = fields.Many2one('crm.team', string='Sales Team', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
         index=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales team.')
     kanban_state = fields.Selection([('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
@@ -112,12 +113,6 @@ class Lead(models.Model):
     probability = fields.Float('Probability', group_operator="avg", default=lambda self: self._default_probability())
     planned_revenue = fields.Float('Expected Revenue', track_visibility='always')
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
-
-    # CRM Actions
-    next_activity_id = fields.Many2one("crm.activity", string="Next Activity", index=True)
-    date_action = fields.Date('Next Activity Date', index=True)
-    title_action = fields.Char('Next Activity Summary')
-
     color = fields.Integer('Color Index', default=0)
     partner_address_name = fields.Char('Partner Contact Name', related='partner_id.name', readonly=True)
     partner_address_email = fields.Char('Partner Contact Email', related='partner_id.email', readonly=True)
@@ -165,13 +160,13 @@ class Lead(models.Model):
     def _compute_kanban_state(self):
         today = date.today()
         for lead in self:
-            kanban_state = 'red'
-            if lead.date_action:
-                lead_date = fields.Date.from_string(lead.date_action)
+            kanban_state = 'grey'
+            if lead.activity_date_deadline:
+                lead_date = fields.Date.from_string(lead.activity_date_deadline)
                 if lead_date >= today:
                     kanban_state = 'green'
                 else:
-                    kanban_state = 'grey'
+                    kanban_state = 'red'
             lead.kanban_state = kanban_state
 
     @api.depends('date_open')
@@ -236,6 +231,7 @@ class Lead(models.Model):
                 'fax': partner.fax,
                 'zip': partner.zip,
                 'function': partner.function,
+                'website': partner.website,
             }
         return {}
 
@@ -264,18 +260,6 @@ class Lead(models.Model):
     def _onchange_state(self):
         if self.state_id:
             self.country_id = self.state_id.country_id.id
-
-    @api.onchange('next_activity_id')
-    def _onchange_next_activity_id(self):
-        values = {
-            'title_action': False,
-            'date_action': False,
-        }
-        if self.next_activity_id:
-            values['title_action'] = self.next_activity_id.description
-            if self.next_activity_id.days:
-                values['date_action'] = fields.Datetime.to_string(datetime.now() + timedelta(days=self.next_activity_id.days))
-        self.update(values)
 
     # ----------------------------------------
     # ORM override (CRUD, fields_view_get, ...)
@@ -308,7 +292,7 @@ class Lead(models.Model):
             vals.update(self._onchange_stage_id_values(vals.get('stage_id')))
         if vals.get('probability') >= 100 or not vals.get('active', True):
             vals['date_closed'] = fields.Datetime.now()
-        elif vals.get('probability') < 100:
+        elif 'probability' in vals and vals['probability'] < 100:
             vals['date_closed'] = False
         return super(Lead, self).write(vals)
 
@@ -372,7 +356,6 @@ class Lead(models.Model):
         if self.partner_id:
             partner_ids.append(self.partner_id.id)
         action['context'] = {
-            'search_default_opportunity_id': self.id if self.type == 'opportunity' else False,
             'default_opportunity_id': self.id if self.type == 'opportunity' else False,
             'default_partner_id': self.partner_id.id,
             'default_partner_ids': partner_ids,
@@ -518,7 +501,7 @@ class Lead(models.Model):
         merge_message = _('Merged leads') if result_type == 'lead' else _('Merged opportunities')
         subject = merge_message + ": " + ", ".join(opportunities.mapped('name'))
         # message bodies
-        message_bodies = opportunities._mail_body(CRM_LEAD_FIELDS_TO_MERGE)
+        message_bodies = opportunities._mail_body(list(CRM_LEAD_FIELDS_TO_MERGE))
         message_body = "\n\n".join(message_bodies)
         return self.message_post(body=message_body, subject=subject)
 
@@ -605,7 +588,7 @@ class Lead(models.Model):
 
         # merge all the sorted opportunity. This means the value of
         # the first (head opp) will be a priority.
-        merged_data = opportunities._merge_data(CRM_LEAD_FIELDS_TO_MERGE)
+        merged_data = opportunities._merge_data(list(CRM_LEAD_FIELDS_TO_MERGE))
 
         # force value for saleperson and sales team
         if user_id:
@@ -654,6 +637,8 @@ class Lead(models.Model):
         domain = partner_match_domain
         if not include_lost:
             domain += ['&', ('active', '=', True), ('probability', '<', 100)]
+        else:
+            domain += ['|', '&', ('type', '=', 'lead'), ('active', '=', True), ('type', '=', 'opportunity')]
         return self.search(domain)
 
     @api.multi
@@ -725,6 +710,7 @@ class Lead(models.Model):
             'city': self.city,
             'country_id': self.country_id.id,
             'state_id': self.state_id.id,
+            'website': self.website,
             'is_company': is_company,
             'type': 'contact'
         }
@@ -927,13 +913,13 @@ class Lead(models.Model):
                 if date_deadline < date.today():
                     result['closing']['overdue'] += 1
             # Next activities
-            if opp.next_activity_id and opp.date_action:
-                date_action = fields.Date.from_string(opp.date_action)
-                if date_action == date.today():
+            for activity in opp.activity_ids:
+                date_deadline = fields.Date.from_string(activity.date_deadline)
+                if date_deadline == date.today():
                     result['activity']['today'] += 1
-                if date.today() <= date_action <= date.today() + timedelta(days=7):
+                if date.today() <= date_deadline <= date.today() + timedelta(days=7):
                     result['activity']['next_7_days'] += 1
-                if date_action < date.today():
+                if date_deadline < date.today():
                     result['activity']['overdue'] += 1
             # Won in Opportunities
             if opp.date_closed:
@@ -950,19 +936,19 @@ class Lead(models.Model):
         # crm.activity is a very messy model so we need to do that in order to retrieve the actions done.
         self._cr.execute("""
             SELECT
-                m.id,
-                m.subtype_id,
-                m.date,
-                l.user_id,
-                l.type
-            FROM mail_message M
-                LEFT JOIN crm_lead L ON (M.res_id = L.id)
-                INNER JOIN crm_activity A ON (M.subtype_id = A.subtype_id)
+                mail_message.id,
+                mail_message.subtype_id,
+                mail_message.mail_activity_type_id,
+                mail_message.date,
+                crm_lead.user_id,
+                crm_lead.type
+            FROM mail_message
+                LEFT JOIN crm_lead  ON (mail_message.res_id = crm_lead.id)
+                INNER JOIN mail_activity_type activity_type ON (mail_message.mail_activity_type_id = activity_type.id)
             WHERE
-                (M.model = 'crm.lead') AND (L.user_id = %s) AND (L.type = 'opportunity')
+                (mail_message.model = 'crm.lead') AND (crm_lead.user_id = %s) AND (crm_lead.type = 'opportunity')
         """, (self._uid,))
         activites_done = self._cr.dictfetchall()
-
         for activity in activites_done:
             if activity['date']:
                 date_act = fields.Date.from_string(activity['date'])
@@ -1142,7 +1128,7 @@ class Tag(models.Model):
     _name = "crm.lead.tag"
     _description = "Category of lead"
 
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Name', required=True, translate=True)
     color = fields.Integer('Color Index')
 
     _sql_constraints = [

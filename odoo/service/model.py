@@ -30,7 +30,7 @@ def dispatch(method, params):
     params = params[3:]
     if method == 'obj_list':
         raise NameError("obj_list has been discontinued via RPC as of 6.0, please query ir.model directly!")
-    if method not in ['execute', 'execute_kw', 'exec_workflow']:
+    if method not in ['execute', 'execute_kw']:
         raise NameError("Method not available %s" % method)
     security.check(db,uid,passwd)
     registry = odoo.registry(db).check_signaling()
@@ -183,13 +183,3 @@ def execute(db, uid, obj, method, *args, **kw):
         if res is None:
             _logger.info('The method %s of the object %s can not return `None` !', method, obj)
         return res
-
-def exec_workflow_cr(cr, uid, obj, signal, *args):
-    res_id = args[0]
-    return execute_cr(cr, uid, obj, 'signal_workflow', [res_id], signal)[res_id]
-
-
-@check
-def exec_workflow(db, uid, obj, signal, *args):
-    with odoo.registry(db).cursor() as cr:
-        return exec_workflow_cr(cr, uid, obj, signal, *args)

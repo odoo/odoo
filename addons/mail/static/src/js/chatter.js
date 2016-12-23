@@ -9,7 +9,10 @@ var utils = require('mail.utils');
 var config = require('web.config');
 var core = require('web.core');
 var form_common = require('web.form_common');
+var framework = require('web.framework');
+var Model = require("web.Model");
 var web_utils = require('web.utils');
+var Widget = require('web.Widget');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -277,8 +280,9 @@ var Chatter = form_common.AbstractField.extend({
     template: 'mail.Chatter',
 
     events: {
-        "click .o_chatter_button_new_message": "on_open_composer_new_message",
-        "click .o_chatter_button_log_note": "on_open_composer_log_note",
+        'click .o_chatter_button_new_message': 'on_open_composer_new_message',
+        'click .o_chatter_button_log_note': 'on_open_composer_log_note',
+        'click .o_activity_schedule': 'on_activity_schedule',
     },
 
     init: function () {
@@ -287,6 +291,10 @@ var Chatter = form_common.AbstractField.extend({
         this.res_id = undefined;
         this.context = this.options.context || {};
         this.dp = new web_utils.DropPrevious();
+        // extends display options
+        this.options = _.extend(this.options || {}, {
+            'display_activity_button': this.field_manager.fields.activity_ids
+        });
     },
 
     willStart: function () {
@@ -312,6 +320,12 @@ var Chatter = form_common.AbstractField.extend({
             this.$('.o_chatter_topbar').append(this.followers.$el);
             this.followers.on('redirect', chat_manager, chat_manager.redirect);
             this.followers.on('followers_update', this, this.on_followers_update);
+        }
+
+        // Move the activities widget (if any) inside the chatter
+        this.activities = this.field_manager.fields.activity_ids
+        if (this.activities) {
+            this.$('.o_chatter_topbar').after(this.activities.$el);
         }
 
         this.thread = new ChatThread(this, {
@@ -430,7 +444,14 @@ var Chatter = form_common.AbstractField.extend({
     },
 
     load_more_messages: function () {
-        this.fetch_and_render_thread(this.msg_ids, {force_fetch: true});
+        var self = this;
+        var top_msg_id = this.$('.o_thread_message').first().data('messageId');
+        var top_msg_selector = '.o_thread_message[data-message-id="' + top_msg_id + '"]';
+        var offset = -framework.getPosition(document.querySelector(top_msg_selector)).top;
+        this.fetch_and_render_thread(this.msg_ids, {force_fetch: true}).then(function(){
+            offset += framework.getPosition(document.querySelector(top_msg_selector)).top;
+            self.thread.scroll_to({offset: offset});
+        });
     },
 
     /**
@@ -468,6 +489,13 @@ var Chatter = form_common.AbstractField.extend({
             this.followers.read_value();
         }
     },
+
+    on_activity_schedule: function (event) {
+        if (this.activities) {
+            this.activities.on_activity_schedule(event);
+        }
+    },
+
     // composer toggle
     on_open_composer_new_message: function () {
         this.open_composer();
@@ -493,7 +521,7 @@ var Chatter = form_common.AbstractField.extend({
         this.composer.on('input_focused', this, function () {
             this.composer.mention_set_prefetched_partners(this.mention_suggestions || []);
         });
-        this.composer.insertBefore(this.$('.o_mail_thread')).then(function () {
+        this.composer.insertAfter(this.$('.o_chatter_topbar')).then(function () {
             // destroy existing composer
             if (old_composer) {
                 old_composer.destroy();

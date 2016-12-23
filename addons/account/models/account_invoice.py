@@ -12,6 +12,9 @@ from odoo.tools.misc import formatLang
 from odoo.exceptions import UserError, RedirectWarning, ValidationError
 
 import odoo.addons.decimal_precision as dp
+import logging
+
+_logger = logging.getLogger(__name__)
 
 # mapping invoice type to journal type
 TYPE2JOURNAL = {
@@ -34,7 +37,7 @@ MAGIC_COLUMNS = ('id', 'create_uid', 'create_date', 'write_uid', 'write_date')
 
 class AccountInvoice(models.Model):
     _name = "account.invoice"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Invoice"
     _order = "date_invoice desc, number desc, id desc"
 
@@ -46,7 +49,7 @@ class AccountInvoice(models.Model):
         self.amount_total = self.amount_untaxed + self.amount_tax
         amount_total_company_signed = self.amount_total
         amount_untaxed_signed = self.amount_untaxed
-        if self.currency_id and self.currency_id != self.company_id.currency_id:
+        if self.currency_id and self.company_id and self.currency_id != self.company_id.currency_id:
             currency_id = self.currency_id.with_context(date=self.date_invoice)
             amount_total_company_signed = currency_id.compute(self.amount_total, self.company_id.currency_id)
             amount_untaxed_signed = currency_id.compute(self.amount_untaxed, self.company_id.currency_id)
@@ -238,9 +241,9 @@ class AccountInvoice(models.Model):
     date_due = fields.Date(string='Due Date',
         readonly=True, states={'draft': [('readonly', False)]}, index=True, copy=False,
         help="If you use payment terms, the due date will be computed automatically at the generation "
-             "of accounting entries. The payment term may compute several due dates, for example 50% "
+             "of accounting entries. The Payment terms may compute several due dates, for example 50% "
              "now and 50% in one month, but if you want to force a due date, make sure that the payment "
-             "term is not set on the invoice. If you keep the payment term and the due date empty, it "
+             "term is not set on the invoice. If you keep the Payment terms and the due date empty, it "
              "means direct payment.")
     partner_id = fields.Many2one('res.partner', string='Partner', change_default=True,
         required=True, readonly=True, states={'draft': [('readonly', False)]},
@@ -248,8 +251,8 @@ class AccountInvoice(models.Model):
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term',
         readonly=True, states={'draft': [('readonly', False)]},
         help="If you use payment terms, the due date will be computed automatically at the generation "
-             "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. "
-             "The payment term may compute several due dates, for example 50% now, 50% in one month.")
+             "of accounting entries. If you keep the payment terms and the due date empty, it means direct payment. "
+             "The payment terms may compute several due dates, for example 50% now, 50% in one month.")
     date = fields.Date(string='Accounting Date',
         copy=False,
         help="Keep empty to use the invoice date.",
@@ -276,10 +279,10 @@ class AccountInvoice(models.Model):
         store=True, readonly=True, compute='_compute_amount')
     amount_total_signed = fields.Monetary(string='Total in Invoice Currency', currency_field='currency_id',
         store=True, readonly=True, compute='_compute_amount',
-        help="Total amount in the currency of the invoice, negative for credit notes.")
+        help="Total amount in the currency of the invoice, negative for refunds.")
     amount_total_company_signed = fields.Monetary(string='Total in Company Currency', currency_field='company_currency_id',
         store=True, readonly=True, compute='_compute_amount',
-        help="Total amount in the currency of the company, negative for credit notes.")
+        help="Total amount in the currency of the company, negative for refunds.")
     currency_id = fields.Many2one('res.currency', string='Currency',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         default=_default_currency, track_visibility='always')
@@ -519,7 +522,7 @@ class AccountInvoice(models.Model):
         if not date_invoice:
             date_invoice = fields.Date.context_today(self)
         if not self.payment_term_id:
-            # When no payment term defined
+            # When no payment terms defined
             self.date_due = self.date_due or self.date_invoice
         else:
             pterm = self.payment_term_id
@@ -592,6 +595,33 @@ class AccountInvoice(models.Model):
         else:
             return self.env.ref('account.invoice_form').id
 
+    def _prepare_tax_line_vals(self, line, tax):
+        """ Prepare values to create an account.invoice.tax line
+
+        The line parameter is an account.invoice.line, and the
+        tax parameter is the output of account.tax.compute_all().
+        """
+        vals = {
+            'invoice_id': self.id,
+            'name': tax['name'],
+            'tax_id': tax['id'],
+            'amount': tax['amount'],
+            'base': tax['base'],
+            'manual': False,
+            'sequence': tax['sequence'],
+            'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
+            'account_id': self.type in ('out_invoice', 'in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id),
+        }
+
+        # If the taxes generate moves on the same financial account as the invoice line,
+        # propagate the analytic account from the invoice line to the tax line.
+        # This is necessary in situations were (part of) the taxes cannot be reclaimed,
+        # to ensure the tax move is allocated to the proper analytic account.
+        if not vals.get('account_analytic_id') and line.account_analytic_id and vals['account_id'] == line.account_id.id:
+            vals['account_analytic_id'] = line.account_analytic_id.id
+
+        return vals
+
     @api.multi
     def get_taxes_values(self):
         tax_grouped = {}
@@ -599,30 +629,14 @@ class AccountInvoice(models.Model):
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
             taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id)['taxes']
             for tax in taxes:
-                val = {
-                    'invoice_id': self.id,
-                    'name': tax['name'],
-                    'tax_id': tax['id'],
-                    'amount': tax['amount'],
-                    'manual': False,
-                    'sequence': tax['sequence'],
-                    'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
-                    'account_id': self.type in ('out_invoice', 'in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id),
-                }
-
-                # If the taxes generate moves on the same financial account as the invoice line,
-                # propagate the analytic account from the invoice line to the tax line.
-                # This is necessary in situations were (part of) the taxes cannot be reclaimed,
-                # to ensure the tax move is allocated to the proper analytic account.
-                if not val.get('account_analytic_id') and line.account_analytic_id and val['account_id'] == line.account_id.id:
-                    val['account_analytic_id'] = line.account_analytic_id.id
-
+                val = self._prepare_tax_line_vals(line, tax)
                 key = self.env['account.tax'].browse(tax['id']).get_grouping_key(val)
 
                 if key not in tax_grouped:
                     tax_grouped[key] = val
                 else:
                     tax_grouped[key]['amount'] += val['amount']
+                    tax_grouped[key]['base'] += val['base']
         return tax_grouped
 
     @api.multi
@@ -880,10 +894,16 @@ class AccountInvoice(models.Model):
                 'move_name': move.name,
             }
             inv.with_context(ctx).write(vals)
+            move.message_post_with_view('mail.message_origin_link',
+                    values={'self': move, 'origin': inv},
+                    subtype_id=self.env.ref('mail.mt_note').id)
         return True
 
     @api.multi
     def invoice_validate(self):
+        for invoice in self.filtered(lambda invoice: invoice.partner_id not in invoice.message_partner_ids):
+            invoice.message_subscribe([invoice.partner_id.id])
+
         for invoice in self:
             #refuse to validate a vendor bill/refund if there already exists one with the same reference for the same partner,
             #because it's probably a double encoding of the same bill/refund
@@ -1138,7 +1158,7 @@ class AccountInvoiceLine(models.Model):
         if self.invoice_line_tax_ids:
             taxes = self.invoice_line_tax_ids.compute_all(price, currency, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
         self.price_subtotal = price_subtotal_signed = taxes['total_excluded'] if taxes else self.quantity * price
-        if self.invoice_id.currency_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
+        if self.invoice_id.currency_id and self.invoice_id.company_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
             price_subtotal_signed = self.invoice_id.currency_id.compute(price_subtotal_signed, self.invoice_id.company_id.currency_id)
         sign = self.invoice_id.type in ['in_refund', 'out_refund'] and -1 or 1
         self.price_subtotal_signed = price_subtotal_signed * sign
@@ -1171,7 +1191,7 @@ class AccountInvoiceLine(models.Model):
         store=True, readonly=True, compute='_compute_price')
     price_subtotal_signed = fields.Monetary(string='Amount Signed', currency_field='company_currency_id',
         store=True, readonly=True, compute='_compute_price',
-        help="Total amount in the currency of the company, negative for credit notes.")
+        help="Total amount in the currency of the company, negative for refunds.")
     quantity = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'),
         required=True, default=1)
     discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'),
@@ -1331,16 +1351,23 @@ class AccountInvoiceTax(models.Model):
     _description = "Invoice Tax"
     _order = 'sequence'
 
+    @api.depends('invoice_id.invoice_line_ids')
     def _compute_base_amount(self):
+        tax_grouped = {}
+        for invoice in self.mapped('invoice_id'):
+            tax_grouped[invoice.id] = invoice.get_taxes_values()
         for tax in self:
-            base = 0.0
-            for line in tax.invoice_id.invoice_line_ids:
-                if tax.tax_id in line.invoice_line_tax_ids:
-                    price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-                    base += (line.invoice_line_tax_ids - tax.tax_id).compute_all(
-                        price_unit, line.invoice_id.currency_id, line.quantity, line.product_id, line.invoice_id.partner_id
-                    )['base']
-            tax.base = base
+            tax.base = 0.0
+            if tax.tax_id:
+                key = tax.tax_id.get_grouping_key({
+                    'tax_id': tax.tax_id.id,
+                    'account_id': tax.account_id.id,
+                    'account_analytic_id': tax.account_analytic_id.id,
+                })
+                if tax.invoice_id and key in tax_grouped[tax.invoice_id.id]:
+                    tax.base = tax_grouped[tax.invoice_id.id][key]['base']
+                else:
+                    _logger.warning('Tax Base Amount not computable probably due to a change in an underlying tax (%s).', tax.tax_id.name)
 
     invoice_id = fields.Many2one('account.invoice', string='Invoice', ondelete='cascade', index=True)
     name = fields.Char(string='Tax Description', required=True)
@@ -1352,21 +1379,21 @@ class AccountInvoiceTax(models.Model):
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of invoice tax.")
     company_id = fields.Many2one('res.company', string='Company', related='account_id.company_id', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', related='invoice_id.currency_id', store=True, readonly=True)
-    base = fields.Monetary(string='Base', compute='_compute_base_amount')
+    base = fields.Monetary(string='Base', compute='_compute_base_amount', store=True)
 
 
 
 
 class AccountPaymentTerm(models.Model):
     _name = "account.payment.term"
-    _description = "Payment Term"
+    _description = "Payment Terms"
     _order = "name"
 
     def _default_line_ids(self):
         return [(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 9, 'days': 0, 'option': 'day_after_invoice_date'})]
 
     name = fields.Char(string='Payment Terms', translate=True, required=True)
-    active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment term without removing it.")
+    active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment terms without removing it.")
     note = fields.Text(string='Description on the Invoice', translate=True)
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True, default=_default_line_ids)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
@@ -1376,10 +1403,10 @@ class AccountPaymentTerm(models.Model):
     def _check_lines(self):
         payment_term_lines = self.line_ids.sorted()
         if payment_term_lines and payment_term_lines[-1].value != 'balance':
-            raise ValidationError(_('A Payment Term should have its last line of type Balance.'))
+            raise ValidationError(_('A Payment Terms should have its last line of type Balance.'))
         lines = self.line_ids.filtered(lambda r: r.value == 'balance')
         if len(lines) > 1:
-            raise ValidationError(_('A Payment Term should have only one line of type Balance.'))
+            raise ValidationError(_('A Payment Terms should have only one line of type Balance.'))
 
     @api.one
     def compute(self, value, date_ref=False):
@@ -1421,7 +1448,7 @@ class AccountPaymentTerm(models.Model):
 
 class AccountPaymentTermLine(models.Model):
     _name = "account.payment.term.line"
-    _description = "Payment Term Line"
+    _description = "Payment Terms Line"
     _order = "sequence, id"
 
     value = fields.Selection([
@@ -1429,7 +1456,7 @@ class AccountPaymentTermLine(models.Model):
             ('percent', 'Percent'),
             ('fixed', 'Fixed Amount')
         ], string='Type', required=True, default='balance',
-        help="Select here the kind of valuation related to this payment term line.")
+        help="Select here the kind of valuation related to this payment terms line.")
     value_amount = fields.Float(string='Value', digits=dp.get_precision('Payment Terms'), help="For percent enter a ratio between 0-100.")
     days = fields.Integer(string='Number of Days', required=True, default=0)
     option = fields.Selection([
@@ -1441,7 +1468,7 @@ class AccountPaymentTermLine(models.Model):
         default='day_after_invoice_date', required=True, string='Options'
         )
     payment_id = fields.Many2one('account.payment.term', string='Payment Terms', required=True, index=True, ondelete='cascade')
-    sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of payment term lines.")
+    sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of payment terms lines.")
 
     @api.one
     @api.constrains('value', 'value_amount')

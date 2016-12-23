@@ -17,6 +17,9 @@
             name="hr_payroll.report_payslip" 
             file="hr_payroll.report_payslip"
         />
+        <record id="action_report_payslip" model="ir.actions.report.xml">
+            <field name="print_report_name">(object.employee_id.name)+'-'+'Payslip'</field>
+        </record>
         <report
             id="payslip_details_report"
             model="hr.payslip"
@@ -25,4 +28,7 @@
             name="hr_payroll.report_payslipdetails" 
             file="hr_payroll.report_payslipdetails"
         />
+        <record id="payslip_details_report" model="ir.actions.report.xml">
+            <field name="print_report_name">(object.name)</field>
+        </record>
 </odoo>

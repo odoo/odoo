@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <group name="first" position="after">
                     <group string="Logistics">
-                        <field name="route_ids" widget="many2many_tags"/>
+                        <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
                         <div colspan="2" attrs="{'invisible': [('parent_id', '=', False)]}">
                             The following routes will apply to the products in this category taking into account parent categories: 
                             <field name="total_route_ids" nolabel="1" widget="many2many_tags"/>
@@ -152,10 +152,19 @@
                         </group>
                     </page>
                 </page>
-                <field name="description_sale" position="after">
-                    <separator string="Description for Pickings" colspan="4"/>
-                    <field name="description_picking" placeholder="Description for Pickings (Rack, Row and Case Information)" nolabel="1" colspan="4"/>
-                </field>
+                <group name="description" position="after">
+                    <group>
+                        <group string="Description for Internal Transfers">
+                            <field name="description_picking" placeholder="Description for Internal Transfers (Rack, Row and Case Information)" nolabel="1"/>
+                        </group>
+                        <group string="Description for Delivery Orders">
+                            <field name="description_pickingout" nolabel="1" placeholder="This note will be displayed on Delivery orders."/>
+                        </group>
+                    </group>
+                    <group string="Description for Receptions">
+                        <field name="description_pickingin" nolabel="1" placeholder="This note will be displayed on the Receptions."/>
+                    </group>
+                </group>
                 <group name="email_template_and_project" position="before">
                     <group name="sale_condition" string="Sale Conditions">
                         <label for="warranty" groups="stock.group_stock_production_lot"/>
@@ -255,7 +264,7 @@
                             name="%(stock.act_make_procurement)d"
                             attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
-                    <div name="button_box" position="inside">
+                    <button name="toggle_active" position="before">
                         <button class="oe_stat_button"
                                name="%(product_open_quants)d"
                                icon="fa-building-o"
@@ -289,7 +298,7 @@
                             <field name="nbr_reordering_rules" widget="statinfo"/>
                         </button>
                         <button name="%(product_open_orderpoint)d" type="action"
-                            attrs="{'invisible':['|',('type', '!=', ['product', 'consu']),('nbr_reordering_rules', '!=', 1)]}"
+                            attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']),('nbr_reordering_rules', '!=', 1)]}"
                             class="oe_stat_button" icon="fa-refresh">
                             <div class="o_form_field o_stat_info mr4">
                                 <span class="o_stat_text">Min :</span>
@@ -304,7 +313,7 @@
                             name="action_view_routes"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
                             class="oe_stat_button" icon="fa-cogs" groups="stock.group_adv_location"/>
-                    </div>
+                    </button>
                 </data>
             </field>
         </record>
@@ -319,7 +328,7 @@
                         <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                         <button string="Procurement Request" name="%(stock.act_make_procurement)d" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
-                    <div name="button_box" position="inside">
+                    <button name="toggle_active" position="before">
                         <button type="object"
                             name="action_open_quants"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
@@ -369,7 +378,7 @@
                             attrs="{'invisible':[('type', '!=', 'product')]}"
                             class="oe_stat_button" icon="fa-cogs"
                             groups="stock.group_adv_location"/>
-                    </div>
+                    </button>
                 </data>
             </field>
         </record>

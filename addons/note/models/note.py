@@ -22,7 +22,7 @@ class Tag(models.Model):
     _name = "note.tag"
     _description = "Note Tag"
 
-    name = fields.Char('Tag Name', required=True)
+    name = fields.Char('Tag Name', required=True, translate=True)
     color = fields.Integer('Color Index')
 
     _sql_constraints = [
@@ -33,7 +33,7 @@ class Tag(models.Model):
 class Note(models.Model):
 
     _name = 'note.note'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Note"
     _order = 'sequence'
 
@@ -119,15 +119,6 @@ class Note(models.Model):
                     result = []
             return result
         return super(Note, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
-
-    @api.multi
-    def _notification_recipients(self, message, groups):
-        """ All users can create a new note. """
-        groups = super(Note, self)._notification_recipients(message, groups)
-        new_action_id = self.env['ir.model.data'].xmlid_to_res_id('note.action_note_note')
-        new_action = self._notification_link_helper('new', action_id=new_action_id)
-        groups['user']['actions'] = [{'url': new_action, 'title': _('New Note')}]
-        return groups
 
     @api.multi
     def action_close(self):

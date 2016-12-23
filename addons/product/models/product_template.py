@@ -37,7 +37,7 @@ class ProductTemplate(models.Model):
     description_sale = fields.Text(
         'Sale Description', translate=True,
         help="A description of the Product that you want to communicate to your customers. "
-             "This description will be copied to every Sale Order, Delivery Order and Customer Invoice/Refund")
+             "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Refund")
     type = fields.Selection([
         ('consu', _('Consumable')),
         ('service', _('Service'))], string='Product Type', default='consu', required=True,
@@ -151,7 +151,7 @@ class ProductTemplate(models.Model):
         except ValueError:
             main_company = self.env['res.company'].sudo().search([], limit=1, order="id")
         for template in self:
-            template.currency_id = template.company_id.currency_id.id or main_company.currency_id.id
+            template.currency_id = template.company_id.sudo().currency_id.id or main_company.currency_id.id
 
     @api.multi
     def _compute_template_price(self):
@@ -160,7 +160,7 @@ class ProductTemplate(models.Model):
         if pricelist_id_or_name:
             pricelist = None
             partner = self._context.get('partner')
-            quantity = self._context.get('quantity')
+            quantity = self._context.get('quantity', 1.0)
 
             # Support context pricelists specified as display_name or ID for compatibility
             if isinstance(pricelist_id_or_name, basestring):
@@ -245,6 +245,11 @@ class ProductTemplate(models.Model):
     def _set_default_code(self):
         if len(self.product_variant_ids) == 1:
             self.product_variant_ids.default_code = self.default_code
+
+    @api.constrains('categ_id')
+    def _check_category(self):
+        if self.categ_id.type == 'view':
+            raise ValidationError(_("You cannot create a product with an Internal Category set as View. Please change the category or the category type."))
 
     @api.constrains('uom_id', 'uom_po_id')
     def _check_uom(self):

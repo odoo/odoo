@@ -6,6 +6,10 @@ from odoo.tools.translate import _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import UserError
 
+import logging
+
+_logger = logging.getLogger(__name__)
+
 
 class Quant(models.Model):
     """ Quants are the smallest unit of stock physical instances """
@@ -261,8 +265,6 @@ class Quant(models.Model):
 
         # create the quant as superuser, because we want to restrict the creation of quant manually: we should always use this method to create quants
         return self.sudo().create(vals)
-    # compatibility method
-    _quant_create = _quant_create_from_move
 
     @api.multi
     def _quant_update_from_move(self, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False):
@@ -275,8 +277,6 @@ class Quant(models.Model):
         if not entire_pack:
             vals.update({'package_id': dest_package_id})
         self.write(vals)
-    # compatibility method
-    move_quants_write = _quant_update_from_move
 
     @api.one
     def _quant_reconcile_negative(self, move):
@@ -559,10 +559,7 @@ class QuantPackage(models.Model):
     """ Packages containing quants and/or other packages """
     _name = "stock.quant.package"
     _description = "Physical Packages"
-    _parent_name = "parent_id"
-    _parent_store = True
-    _parent_order = 'name'
-    _order = 'parent_left'
+    _order = 'name'
 
     name = fields.Char(
         'Package Reference', copy=False, index=True,
@@ -575,19 +572,17 @@ class QuantPackage(models.Model):
     ancestor_ids = fields.One2many('stock.quant.package', string='Ancestors', compute='_compute_ancestor_ids')
     children_quant_ids = fields.One2many('stock.quant', string='All Bulk Content', compute='_compute_children_quant_ids')
     children_ids = fields.One2many('stock.quant.package', 'parent_id', 'Contained Packages', readonly=True)
-    parent_left = fields.Integer('Left Parent', index=True)
-    parent_right = fields.Integer('Right Parent', index=True)
     packaging_id = fields.Many2one(
         'product.packaging', 'Package Type', index=True,
         help="This field should be completed only if everything inside the package share the same product, otherwise it doesn't really makes sense.")
     location_id = fields.Many2one(
-        'stock.location', 'Location', compute='_compute_package_info',
+        'stock.location', 'Location', compute='_compute_package_info', search='_search_location',
         index=True, readonly=True)
     company_id = fields.Many2one(
-        'res.company', 'Company', compute='_compute_package_info',
+        'res.company', 'Company', compute='_compute_package_info', search='_search_company',
         index=True, readonly=True)
     owner_id = fields.Many2one(
-        'res.partner', 'Owner', compute='_compute_package_info',
+        'res.partner', 'Owner', compute='_compute_package_info', search='_search_owner',
         index=True, readonly=True)
 
     @api.one
@@ -595,24 +590,21 @@ class QuantPackage(models.Model):
     def _compute_ancestor_ids(self):
         self.ancestor_ids = self.env['stock.quant.package'].search(['id', 'parent_of', self.id]).ids
 
-    @api.one
+    @api.multi
     @api.depends('parent_id', 'children_ids', 'quant_ids.package_id')
     def _compute_children_quant_ids(self):
-        res = dict.fromkeys(self.ids, self.env['stock.quant'])
-        children_quants = self.env['stock.quant'].search(['package_id', 'child_of', self.ids])
-        for quant in children_quants:
-            res[quant.package_id.id] |= quant
         for package in self:
-            package.children_quant_ids = res[package.id].ids
+            if package.id:
+                package.children_quant_ids = self.env['stock.quant'].search([('package_id', 'child_of', package.id)]).ids
 
     @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id', 'ancestor_ids')
     def _compute_package_info(self):
-        res = {}
-        quants = self.env['stock.quant'].search([('package_id', 'in', self.ids)])  # TDE FIXME: was child_od
-        for quant in quants:
-            res[quant.package_id.id] = {'location_id': quant.location_id.id, 'owner_id': quant.owner_id.id, 'company_id': quant.company_id.id}
         for package in self:
-            values = res.get(package.id, {'location_id': False, 'company_id': self.env.user.company_id.id, 'owner_id': False})
+            quants = package.children_quant_ids
+            if quants:
+                values = quants[0]
+            else:
+                values = {'location_id': False, 'company_id': self.env.user.company_id.id, 'owner_id': False}
             package.location_id = values['location_id']
             package.company_id = values['company_id']
             package.owner_id = values['owner_id']
@@ -632,6 +624,36 @@ class QuantPackage(models.Model):
                 current = current.parent_id
             res[package.id] = name
         return res
+
+    def _search_location(self, operator, value):
+        if value:
+            packs = self.search([('quant_ids.location_id', operator, value)])
+        else:
+            packs = self.search([('quant_ids', operator, value)])
+        if packs:
+            return [('id', 'parent_of', packs.ids)]
+        else:
+            return [('id', '=', False)]
+
+    def _search_company(self, operator, value):
+        if value:
+            packs = self.search([('quant_ids.company_id', operator, value)])
+        else:
+            packs = self.search([('quant_ids', operator, value)])
+        if packs:
+            return [('id', 'parent_of', packs.ids)]
+        else:
+            return [('id', '=', False)]
+
+    def _search_owner(self, operator, value):
+        if value:
+            packs = self.search([('quant_ids.owner_id', operator, value)])
+        else:
+            packs = self.search([('quant_ids', operator, value)])
+        if packs:
+            return [('id', 'parent_of', packs.ids)]
+        else:
+            return [('id', '=', False)]
 
     def _check_location_constraint(self):
         '''checks that all quants in a package are stored in the same location. This function cannot be used
@@ -653,8 +675,13 @@ class QuantPackage(models.Model):
             # TDE FIXME: why superuser ?
             package.mapped('quant_ids').sudo().write({'package_id': package.parent_id.id})
             package.mapped('children_ids').write({'parent_id': package.parent_id.id})
-        self.unlink()
         return self.env['ir.actions.act_window'].for_xml_id('stock', 'action_package_view')
+
+    def action_view_picking(self):
+        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+        pickings = self.env['stock.pack.operation'].search([('result_package_id', 'in', self.ids)]).mapped('picking_id')
+        action['domain'] = [('id', 'in', pickings.ids)]
+        return action
 
     @api.multi
     def view_content_package(self):

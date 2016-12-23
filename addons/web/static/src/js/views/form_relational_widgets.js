@@ -7,6 +7,7 @@ var data = require('web.data');
 var Dialog = require('web.Dialog');
 var common = require('web.form_common');
 var ListView = require('web.ListView');
+require('web.ListEditor'); // one must be sure that the include of ListView are done (for eg: add start_edition methods)
 var Model = require('web.DataModel');
 var session = require('web.session');
 var utils = require('web.utils');
@@ -99,6 +100,9 @@ var FieldMany2One = common.AbstractField.extend(common.CompletionFieldMixin, com
             delete this.$dropdown;
         }
         if (this.$input) {
+            if (this.$input.data('ui-autocomplete')) {
+                this.$input.autocomplete("destroy");
+            }
             this.$input.closest(".modal .modal-content").off('scroll');
             this.$input.off('keyup blur autocompleteclose autocompleteopen ' +
                             'focus focusout change keydown');
@@ -1205,7 +1209,7 @@ var One2ManyListView = X2ManyListView.extend({
         this.dataset.x2m.internal_dataset_changed = false;
 
         var self = this;
-        return this.save_edition().done(function () {
+        return this.save_edition(true).done(function () {
             if (self._dataset_changed) {
                 self.dataset.trigger('dataset_changed');
             }
@@ -1274,6 +1278,9 @@ var FieldOne2Many = FieldX2Many.extend({
             }
             return self.mutex.def;
         });
+    },
+    is_false: function() {
+        return false;
     },
 });
 

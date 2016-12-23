@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 from ast import literal_eval
 
 from odoo import models, fields, api
@@ -29,7 +29,7 @@ class pos_cache(models.Model):
         prod_ctx = prod_ctx.sudo(self.compute_user_id.id)
         res = prod_ctx.read(self.get_product_fields())
         datas = {
-            'cache': cPickle.dumps(res),
+            'cache': base64.encodestring(cPickle.dumps(res)),
         }
 
         self.write(datas)
@@ -49,7 +49,8 @@ class pos_cache(models.Model):
             self.product_fields = str(fields)
             self.refresh_cache()
 
-        return cPickle.loads(self.cache)
+        cache = base64.decodestring(self.cache)
+        return cPickle.loads(cache)
 
 
 class pos_config(models.Model):

@@ -374,7 +374,7 @@ class IrAttachment(models.Model):
                 continue
             # filter ids according to what access rules permit
             target_ids = list(targets)
-            allowed = self.env[res_model].search([('id', 'in', target_ids)])
+            allowed = self.env[res_model].with_context(active_test=False).search([('id', 'in', target_ids)])
             for res_id in set(target_ids).difference(allowed.ids):
                 ids.difference_update(targets[res_id])
 

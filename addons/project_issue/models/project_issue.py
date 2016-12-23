@@ -9,7 +9,7 @@ from odoo.tools.safe_eval import safe_eval
 class ProjectIssue(models.Model):
     _name = "project.issue"
     _description = "Project Issue"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = "priority desc, create_date desc"
     _mail_post_access = 'read'
 
@@ -28,12 +28,15 @@ class ProjectIssue(models.Model):
     partner_id = fields.Many2one('res.partner', string='Contact', index=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     description = fields.Text('Private Note')
-    kanban_state = fields.Selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')], string='Kanban State',
-                                    track_visibility='onchange', required=True, default='normal',
-                                    help="""An Issue's kanban state indicates special situations affecting it:\n
-                                           * Normal is the default situation\n
-                                           * Blocked indicates something is preventing the progress of this issue\n
-                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage""")
+    kanban_state = fields.Selection([
+        ('normal', 'Grey'),
+        ('blocked', 'Red'),
+        ('done', 'Green')], string='Kanban State',
+        copy=False, default='normal', required=True, track_visibility='onchange',
+        help="An Issue's kanban state indicates special situations affecting it:\n"
+             " * Grey is the default situation\n"
+             " * Red indicates something is preventing the progress of this issue\n"
+             " * Green indicates the issue is ready to be pulled to the next stage")
     email_from = fields.Char(string='Email', help="These people will receive email.", index=True)
     email_cc = fields.Char(string='Watchers Emails', help="""These email addresses will be added to the CC field of all inbound
         and outbound emails for this record before being sent. Separate multiple email addresses with a comma""")
@@ -120,14 +123,16 @@ class ProjectIssue(models.Model):
 
     @api.onchange('project_id')
     def _onchange_project_id(self):
+        default_partner_id = self.env.context.get('default_partner_id')
+        default_partner = self.env['res.partner'].browse(default_partner_id) if default_partner_id else self.env['res.partner']
         if self.project_id:
             if not self.partner_id and not self.email_from:
                 self.partner_id = self.project_id.partner_id.id
                 self.email_from = self.project_id.partner_id.email
             self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
         else:
-            self.partner_id = False
-            self.email_from = False
+            self.partner_id = default_partner
+            self.email_from = default_partner.email
             self.stage_id = False
 
     @api.onchange('task_id')
@@ -236,9 +241,7 @@ class ProjectIssue(models.Model):
             take_action = self._notification_link_helper('assign')
             project_actions = [{'url': take_action, 'title': _('I take it')}]
         else:
-            new_action_id = self.env.ref('project_issue.project_issue_categ_act0').id
-            new_action = self._notification_link_helper('new', action_id=new_action_id)
-            project_actions = [{'url': new_action, 'title': _('New Issue')}]
+            project_actions = []
 
         new_group = (
             'group_project_user', lambda partner: bool(partner.user_ids) and any(user.has_group('project.group_project_user') for user in partner.user_ids), {

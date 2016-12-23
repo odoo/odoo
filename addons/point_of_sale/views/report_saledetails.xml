@@ -7,7 +7,7 @@
         <div class="page">
 
             <div class="text-center">
-                <h2>Sale Details</h2>
+                <h2>Sales Details</h2>
 
                 <strong><t t-esc="date_start"/> - <t t-esc="date_stop"/></strong>
             </div>
@@ -61,12 +61,14 @@
             <table  class="table table-condensed">
                 <thead><tr>
                     <th>Name</th>
-                    <th>Total</th>
+                    <th>Tax Amount</th>
+                    <th>Base Amount</th>
                 </tr></thead>
                 <tbody>
                 <tr t-foreach='taxes' t-as='tax'>
                     <td><t t-esc="tax['name']" /></td>
-                    <td><t t-esc="tax['total']" /></td>
+                    <td><t t-esc="tax['tax_amount']" /></td>
+                    <td><t t-esc="tax['base_amount']" /></td>
                 </tr>
                 </tbody>
             </table>

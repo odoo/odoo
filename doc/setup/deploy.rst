@@ -221,7 +221,7 @@ HTTPS
 =====
 
 Whether it's accessed via website/web client or the webservice, Odoo transmits
-authentication information in cleatext. This means a secure deployment of
+authentication information in cleartext. This means a secure deployment of
 Odoo must use HTTPS\ [#switching]_. SSL termination can be implemented via
 just about any SSL termination proxy, but requires the following setup:
 
@@ -312,8 +312,8 @@ Odoo as a WSGI Application
 ==========================
 
 It is also possible to mount Odoo as a standard WSGI_ application. Odoo
-provides the base for a WSGI launcher script as ``odoo-wsgi.py``. That
-script should be customized (possibly after copying it) to correctly set the
+provides the base for a WSGI launcher script as ``odoo-wsgi.example.py``. That
+script should be customized (possibly after copying it from the setup directory) to correctly set the
 configuration directly in :mod:`odoo.tools.config` rather than through the
 command-line or a configuration file.
 

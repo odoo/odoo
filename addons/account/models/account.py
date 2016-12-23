@@ -46,48 +46,6 @@ class AccountAccount(models.Model):
     _description = "Account"
     _order = "code"
 
-    #@api.multi
-    #def _compute_has_unreconciled_entries(self):
-    #    print "ici dedans"
-    #    account_ids = self.ids
-    #    for account in self:
-    #        # Avoid useless work if has_unreconciled_entries is not relevant for this account
-    #        if account.deprecated or not account.reconcile:
-    #            account.has_unreconciled_entries = False
-    #            account_ids = account_ids - account
-    #    if account_ids:
-    #        res = dict.fromkeys([x.id for x in account_ids], False)
-    #        self.env.cr.execute(
-    #            """ SELECT s.account_id FROM(
-    #                    SELECT
-    #                        a.id as account_id, a.last_time_entries_checked AS last_time_entries_checked,
-    #                        MAX(l.write_date) AS max_date
-    #                    FROM
-    #                        account_move_line l
-    #                        RIGHT JOIN account_account a ON (a.id = l.account_id)
-    #                    WHERE
-    #                        a.id in %s
-    #                        AND EXISTS (
-    #                            SELECT 1
-    #                            FROM account_move_line l
-    #                            WHERE l.account_id = a.id
-    #                            AND l.amount_residual > 0
-    #                        )
-    #                        AND EXISTS (
-    #                            SELECT 1
-    #                            FROM account_move_line l
-    #                            WHERE l.account_id = a.id
-    #                            AND l.amount_residual < 0
-    #                        )
-    #                    GROUP BY a.id, a.last_time_entries_checked
-    #                ) as s
-    #                WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
-    #            """ % (account_ids,))
-    #        res.update(self.env.cr.dictfetchall())
-    #        for account in self.browse(res.keys()):
-    #            if res[account.id]:
-    #                account.has_unreconciled_entries = True
-
     @api.multi
     @api.constrains('internal_type', 'reconcile')
     def _check_reconcile(self):
@@ -97,7 +55,7 @@ class AccountAccount(models.Model):
 
     name = fields.Char(required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency',
-        help="Forces all moves for this account to have this account currency.")
+        help="Forces all moves for this account to have this secondary currency.")
     code = fields.Char(size=64, required=True, index=True)
     deprecated = fields.Boolean(index=True, default=False)
     user_type_id = fields.Many2one('account.account.type', string='Type', required=True, oldname="user_type", 
@@ -285,7 +243,7 @@ class AccountJournal(models.Model):
     # Bank journals fields
     bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict', copy=False)
     display_on_footer = fields.Boolean("Show in Invoices Footer", help="Display this bank account on the footer of printed documents like invoices and sales orders.")
-    bank_statements_source = fields.Selection([('manual', 'Record Manually')], string='Bank Feeds')
+    bank_statements_source = fields.Selection([('no_feeds', 'No Feeds'),('manual', 'Record Manually')], string='Bank Feeds', default='no_feeds')
     bank_acc_number = fields.Char(related='bank_account_id.acc_number')
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id')
 
@@ -579,6 +537,15 @@ class AccountTax(models.Model):
     analytic = fields.Boolean(string="Include in Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
     tag_ids = fields.Many2many('account.account.tag', 'account_tax_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
     tax_group_id = fields.Many2one('account.tax.group', string="Tax Group", default=_default_tax_group, required=True)
+    use_cash_basis = fields.Boolean(
+        'Use Cash Basis',
+        help="Select this if the tax should use cash basis,"
+        "which will create an entry for this tax on a given account during reconciliation")
+    cash_basis_account = fields.Many2one(
+        'account.account',
+        string='Tax Received Account',
+        domain=[('deprecated', '=', False)],
+        help='Account use when creating entry for tax cash basis')
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
@@ -745,7 +712,12 @@ class AccountTax(models.Model):
 
         if not round_tax:
             prec += 5
-        total_excluded = total_included = base = round(price_unit * quantity, prec)
+
+        base_values = self.env.context.get('base_values')
+        if not base_values:
+            total_excluded = total_included = base = round(price_unit * quantity, prec)
+        else:
+            total_excluded, total_included, base = base_values
 
         # Sorting key is mandatory in this case. When no key is provided, sorted() will perform a
         # search. However, the search method is overridden in account.tax in order to add a domain
@@ -753,9 +725,10 @@ class AccountTax(models.Model):
         # case of group taxes.
         for tax in self.sorted(key=lambda r: r.sequence):
             if tax.amount_type == 'group':
-                ret = tax.children_tax_ids.compute_all(price_unit, currency, quantity, product, partner)
+                children = tax.children_tax_ids.with_context(base_values=(total_excluded, total_included, base))
+                ret = children.compute_all(price_unit, currency, quantity, product, partner)
                 total_excluded = ret['total_excluded']
-                base = ret['base']
+                base = ret['base'] if tax.include_base_amount else base
                 total_included = ret['total_included']
                 tax_amount = total_included - total_excluded
                 taxes += ret['taxes']
@@ -773,6 +746,9 @@ class AccountTax(models.Model):
             else:
                 total_included += tax_amount
 
+            # Keep base amount used for the current tax
+            tax_base = base
+
             if tax.include_base_amount:
                 base += tax_amount
 
@@ -780,6 +756,7 @@ class AccountTax(models.Model):
                 'id': tax.id,
                 'name': tax.with_context(**{'lang': partner.lang} if partner else {}).name,
                 'amount': tax_amount,
+                'base': tax_base,
                 'sequence': tax.sequence,
                 'account_id': tax.account_id.id,
                 'refund_account_id': tax.refund_account_id.id,

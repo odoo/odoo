@@ -812,7 +812,7 @@ function createVideoNode(url, options) {
             class: 'vine-embed'
         });
     } else if (vimMatch && vimMatch[3].length) {
-        $video = $('<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen>', {
+        $video = $('<iframe>', {
             src: '//player.vimeo.com/video/' + vimMatch[3],
             width: '640',
             height: '360'
@@ -824,14 +824,14 @@ function createVideoNode(url, options) {
             height: '360'
         });
     } else if (youkuMatch && youkuMatch[1].length) {
-        $video = $('<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen>', {
+        $video = $('<iframe>', {
             height: '498',
             width: '510',
             src: '//player.youku.com/embed/' + youkuMatch[1]
         });
     } else {
         // this is not a known video link. Now what, Cat? Now what?
-        $video = $('<iframe webkitallowfullscreen mozallowfullscreen allowfullscreen>', {
+        $video = $('<iframe>', {
             width: '640',
             height: '360',
             src: url

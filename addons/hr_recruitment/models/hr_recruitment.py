@@ -88,7 +88,7 @@ class Applicant(models.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _mail_mass_mailing = _('Applicants')
 
     def _default_stage_id(self):
@@ -135,8 +135,6 @@ class Applicant(models.Model):
     date_closed = fields.Datetime("Closed", readonly=True, index=True)
     date_open = fields.Datetime("Assigned", readonly=True, index=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
-    date_action = fields.Date("Next Action Date")
-    title_action = fields.Char("Next Action", size=64)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')
     job_id = fields.Many2one('hr.job', "Applied Job")
     salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages")

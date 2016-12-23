@@ -76,6 +76,10 @@ var ControlPanel = Widget.extend({
 
         return this._super();
     },
+    destroy: function() {
+        this._clear_breadcrumbs_handlers();
+        return this._super.apply(this, arguments);
+    },
     /**
      * @return {Object} the Bus the ControlPanel is listening on
      */
@@ -108,7 +112,9 @@ var ControlPanel = Widget.extend({
 
             // Render the breadcrumbs
             if (status.breadcrumbs) {
-                new_cp_content.$breadcrumbs = this._render_breadcrumbs(status.breadcrumbs);
+                this._clear_breadcrumbs_handlers();
+                this.$breadcrumbs = this._render_breadcrumbs(status.breadcrumbs);
+                new_cp_content.$breadcrumbs = this.$breadcrumbs;
             }
 
             // Detach control_panel old content and attach new elements
@@ -206,6 +212,17 @@ var ControlPanel = Widget.extend({
             });
         }
         return $bc;
+    },
+    /**
+     * Private function that removes event handlers attached on the currently
+     * displayed breadcrumbs.
+     */
+    _clear_breadcrumbs_handlers: function () {
+        if (this.$breadcrumbs) {
+            _.each(this.$breadcrumbs, function ($bc) {
+                $bc.off();
+            });
+        }
     },
     /**
      * Private function that updates the SearchView's visibility and extend the

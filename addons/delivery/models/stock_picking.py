@@ -78,7 +78,7 @@ class StockPicking(models.Model):
     def _compute_shipping_weight(self):
         self.shipping_weight = self.weight_bulk + sum([pack.shipping_weight for pack in self.package_ids])
 
-    carrier_price = fields.Float(string="Shipping Cost", readonly=True)
+    carrier_price = fields.Float(string="Shipping Cost")
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
     carrier_id = fields.Many2one("delivery.carrier", string="Carrier")
     volume = fields.Float(copy=False)
@@ -89,6 +89,15 @@ class StockPicking(models.Model):
     package_ids = fields.Many2many('stock.quant.package', compute='_compute_packages', string='Packages')
     weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight')
     shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight')
+
+    @api.onchange('carrier_id')
+    def onchange_carrier(self):
+        if self.carrier_id.delivery_type in ['fixed', 'base_on_rule']:
+            order = self.sale_id
+            if order:
+                self.carrier_price = self.carrier_id.get_price_available(order)
+            else:
+                self.carrier_price = self.carrier_id.price
 
     @api.depends('product_id', 'move_lines')
     def _cal_weight(self):
@@ -144,7 +153,7 @@ class StockPicking(models.Model):
         self.carrier_price = res['exact_price']
         self.carrier_tracking_ref = res['tracking_number']
         order_currency = self.sale_id.currency_id or self.company_id.currency_id
-        msg = _("Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost: %.2f %s") % (self.carrier_id.name, self.carrier_tracking_ref, self.carrier_price, order_currency.name)
+        msg = _("Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: %.2f %s") % (self.carrier_id.name, self.carrier_tracking_ref, self.carrier_price, order_currency.name)
         self.message_post(body=msg)
 
     @api.multi

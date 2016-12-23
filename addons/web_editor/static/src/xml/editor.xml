@@ -31,14 +31,14 @@
     <!-- Alt Dialog (allows to change alt and title of page images) -->
     <form t-name="web_editor.dialog.alt" action="#" class="form-horizontal">
         <div class="form-group">
-            <label class="col-sm-2 control-label" for="alt">Description</label>
-            <div class="col-sm-9">
+            <label class="col-sm-3 control-label" for="alt">Description (alt tag)</label>
+            <div class="col-sm-8">
                 <input class="form-control" id="alt" required="required" t-att-value="widget.alt" type="text"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label" for="title">Tooltip</label>
-            <div class="col-sm-9">
+            <label class="col-sm-3 control-label" for="title">Tooltip</label>
+            <div class="col-sm-8">
                 <input class="form-control" id="title" required="required" t-att-value="widget.title" type="text"/>
             </div>
         </div>

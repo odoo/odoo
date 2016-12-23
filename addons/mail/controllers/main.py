@@ -202,6 +202,7 @@ class MailController(http.Controller):
 
     @http.route('/mail/new', type='http', auth='user')
     def mail_action_new(self, model, res_id, action_id):
+        # TDE NOTE: this controller is deprecated and will disappear before v11.
         if model not in request.env:
             return self._redirect_to_messaging()
         params = {'view_type': 'form', 'model': model}

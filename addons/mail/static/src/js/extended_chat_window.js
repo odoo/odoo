@@ -1,13 +1,17 @@
 odoo.define('mail.ExtendedChatWindow', function (require) {
 "use strict";
 
+var core = require('web.core');
+
 var chat_manager = require('mail.chat_manager');
 var ChatWindow = require('mail.ChatWindow');
 var composer = require('mail.composer');
 
 return ChatWindow.extend({
     template: "mail.ExtendedChatWindow",
-
+    events: _.extend({}, ChatWindow.prototype.events, {
+        "click .o_chat_window_expand": "on_click_expand",
+    }),
     start: function () {
         var self = this;
         var def;
@@ -44,6 +48,13 @@ return ChatWindow.extend({
     on_keydown: function (event) {
         event.stopPropagation();
     },
+    on_click_expand: _.debounce(function (event) {
+        event.preventDefault();
+        var options = {clear_breadcrumbs: true, active_id: this.channel_id};
+        this.do_action('mail.mail_channel_action_client_chat', options).then(function () {
+            core.bus.trigger('change_menu_section', chat_manager.get_discuss_menu_id());
+        });
+    }, 1000, true),
 });
 
 });

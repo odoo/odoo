@@ -73,7 +73,6 @@ class MailComposer(models.TransientModel):
             result['composition_mode'] = 'comment'
         vals = {}
         if 'active_domain' in self._context:  # not context.get() because we want to keep global [] domains
-            vals['use_active_domain'] = True
             vals['active_domain'] = '%s' % self._context.get('active_domain')
         if result['composition_mode'] == 'comment':
             vals.update(self.get_record_data(result))
@@ -294,6 +293,7 @@ class MailComposer(models.TransientModel):
                 'record_name': self.record_name,
                 'no_auto_thread': self.no_auto_thread,
                 'mail_server_id': self.mail_server_id.id,
+                'mail_activity_type_id': self.mail_activity_type_id.id,
             }
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:

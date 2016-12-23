@@ -938,12 +938,19 @@ $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDi
   var dimension = sDim.split('x');
   var r = range.create();
   if (!r) return;
-  r = r.deleteContents();
+  r = r.deleteContents(true);
 
-  var isBodyContainer = dom.isBodyContainer;
-  dom.isBodyContainer = dom.isNotBreakable;
-  r.insertNode(editor.table.createTable(dimension[0], dimension[1]));
-  dom.isBodyContainer = isBodyContainer;
+  var table = editor.table.createTable(dimension[0], dimension[1]);
+  var parent = r.sc;
+  while (dom.isText(parent.parentNode) || dom.isRemovableEmptyNode(parent.parentNode)) {
+    parent = parent.parentNode;
+  }
+  var node = dom.splitTree(parent, {'node': r.sc, 'offset': r.so}) || r.sc;
+  node.parentNode.insertBefore(table, node);
+
+  if ($(node).text() === '' || node.textContent === '\u00A0') {
+    node.parentNode.removeChild(node);
+  }
 
   editor.afterCommand($editable);
   event.preventDefault();
@@ -2302,13 +2309,16 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
     }
 };
 
-options.onPaste = function (e) {
-    e.preventDefault(); // FIXME this does not work with our custom out-dated summernote.
-    document.execCommand("undo"); // FIXME ... so use this hack until we decide to do something about it.
-
-    var pastedText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
-    var formattedText = pastedText.replace(/([^.!?:;])\r?\n/g, "$1").trim(); // Remove linebreaks which are not at the end of a sentence
-    document.execCommand("insertText", false, formattedText);
+// override summernote clipboard functionality
+eventHandler.modules.clipboard.attach = function(layoutInfo) {
+    var $editable = layoutInfo.editable();
+    $editable.on('paste', function(e) {
+        e.preventDefault();
+        $editable.data('NoteHistory').recordUndo($editable);
+        var pastedText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+        var formattedText = pastedText.replace(/([^.!?:;])\r?\n/g, "$1").trim(); // Remove linebreaks which are not at the end of a sentence
+        document.execCommand("insertText", false, formattedText);
+    });
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////

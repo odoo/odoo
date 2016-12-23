@@ -47,7 +47,7 @@ var LivechatButton = Widget.extend({
             });
         } else {
             var channel = JSON.parse(cookie);
-            ready = session.rpc("/im_livechat/history", {channel_id: channel.id, limit: 100}).then(function (history) {
+            ready = session.rpc("/mail/chat_history", {uuid: channel.uuid, limit: 100}).then(function (history) {
                 self.history = history;
             });
         }

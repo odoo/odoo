@@ -661,6 +661,9 @@ var CalendarView = View.extend({
         } else { // if form all, get color -1
             r.className = 'o_calendar_color_'+ (self.all_filters[-1] ? self.all_filters[-1].color : 1);
         }
+        if (evt.is_highlighted) {
+            r.className += ' o_event_hightlight';
+        }
         return r;
     },
     
@@ -911,9 +914,9 @@ var CalendarView = View.extend({
             var index = this.dataset.get_id_index(id);
             this.dataset.index = index;
             if (this.write_right) {
-                this.do_switch_view('form', null, { mode: "edit" });
+                this.do_switch_view('form', { mode: "edit" });
             } else {
-                this.do_switch_view('form', null, { mode: "view" });
+                this.do_switch_view('form', { mode: "view" });
             }
         }
         else {
@@ -927,7 +930,7 @@ var CalendarView = View.extend({
                 buttons: [
                     {text: _t("Edit"), classes: 'btn-primary', close: true, click: function() {
                         self.dataset.index = self.dataset.get_id_index(id);
-                        self.do_switch_view('form', null, { mode: "edit" });
+                        self.do_switch_view('form', { mode: "edit" });
                     }},
 
                     {text: _t("Delete"), close: true, click: function() {

@@ -48,7 +48,7 @@ class AccountInvoice(models.Model):
             if mod == int(bbacomm[-2:]):
                 return True
 
-    @api.onchange('partner_id')
+    @api.onchange('partner_id', 'type')
     def _onchange_partner_id(self):
         result = super(AccountInvoice, self)._onchange_partner_id()
         reference = False

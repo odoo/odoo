@@ -170,21 +170,31 @@ class StockMove(models.Model):
         ''' Creates an extra move if necessary depending on extra quantities than foreseen or extra moves'''
         self.ensure_one()
         quantity_to_split = 0
+        uom_qty_to_split = 0
         extra_move = self.env['stock.move']
         rounding = self.product_uom.rounding
         link_procurement = False
+        # If more produced than the procurement linked, you should create an extra move
         if self.procurement_id and self.production_id and float_compare(self.production_id.qty_produced, self.procurement_id.product_qty, precision_rounding=rounding) > 0:
             done_moves_total = sum(self.production_id.move_finished_ids.filtered(lambda x: x.product_id == self.product_id and x.state == 'done').mapped('product_uom_qty'))
+            # If you depassed the quantity before, you don't need to split anymore, but adapt the quantities
             if float_compare(done_moves_total, self.procurement_id.product_qty, precision_rounding=rounding) >= 0:
                 quantity_to_split = 0
-                self.product_uom_qty = self.quantity_done #TODO: could change qty on move_dest_id also (in case of 2-step in/out)
+                if float_compare(self.product_uom_qty, self.quantity_done, precision_rounding=rounding) < 0:
+                    self.product_uom_qty = self.quantity_done #TODO: could change qty on move_dest_id also (in case of 2-step in/out)
             else:
                 quantity_to_split = done_moves_total + self.quantity_done - self.procurement_id.product_qty
+                uom_qty_to_split = self.product_uom_qty - (self.quantity_done - quantity_to_split)#self.product_uom_qty - (self.procurement_id.product_qty + done_moves_total)
+                if float_compare(uom_qty_to_split, quantity_to_split, precision_rounding=rounding) < 0:
+                    uom_qty_to_split = quantity_to_split
+                self.product_uom_qty = self.quantity_done - quantity_to_split
+        # You split also simply  when the quantity done is bigger than foreseen
         elif float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) > 0:
-            quantity_to_split = self.quantity_done - self.product_uom_qty 
+            quantity_to_split = self.quantity_done - self.product_uom_qty
+            uom_qty_to_split = quantity_to_split # + no need to change existing self.product_uom_qty 
             link_procurement = True
         if quantity_to_split:
-            extra_move = self.copy(default={'quantity_done': quantity_to_split, 'product_uom_qty': quantity_to_split, 'production_id': self.production_id.id, 
+            extra_move = self.copy(default={'quantity_done': quantity_to_split, 'product_uom_qty': uom_qty_to_split, 'production_id': self.production_id.id, 
                                             'raw_material_production_id': self.raw_material_production_id.id, 
                                             'procurement_id': link_procurement and self.procurement_id.id or False})
             extra_move.action_confirm()
@@ -203,8 +213,7 @@ class StockMove(models.Model):
                         else:
                             movelot.move_id = extra_move.id
             else:
-                self.quantity_done = self.product_uom_qty
-            self.product_uom_qty = self.quantity_done - quantity_to_split
+                self.quantity_done -= quantity_to_split
         return extra_move
 
     @api.multi

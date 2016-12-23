@@ -15,13 +15,13 @@ class StockMove(models.Model):
 
     to_refund_so = fields.Boolean(
         "To Refund in SO", default=False,
-        help='Trigger a decrease of the delivered quantity in the associated Sale Order')
+        help='Trigger a decrease of the delivered quantity in the associated Sales Order')
 
     @api.multi
     def action_done(self):
         result = super(StockMove, self).action_done()
 
-        # Update delivered quantities on sale order lines
+        # Update delivered quantities on sales order lines
         sale_order_lines = self.filtered(lambda move: move.procurement_id.sale_line_id and move.product_id.expense_policy == 'no').mapped('procurement_id.sale_line_id')
         for line in sale_order_lines:
             line.qty_delivered = line._get_delivered_qty()
@@ -44,7 +44,7 @@ class StockMove(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    sale_id = fields.Many2one('sale.order', "Sale Order", compute='_compute_sale_id', search='_search_sale_id')
+    sale_id = fields.Many2one('sale.order', "Sales Order", compute='_compute_sale_id', search='_search_sale_id')
 
     @api.one
     @api.depends('move_lines.procurement_id.sale_line_id.order_id')
@@ -91,4 +91,4 @@ class StockReturnPicking(models.TransientModel):
 class StockReturnPickingLine(models.TransientModel):
     _inherit = "stock.return.picking.line"
 
-    to_refund_so = fields.Boolean(string="To Refund", help='Trigger a decrease of the delivered quantity in the associated Sale Order')
+    to_refund_so = fields.Boolean(string="To Refund", help='Trigger a decrease of the delivered quantity in the associated Sales Order')

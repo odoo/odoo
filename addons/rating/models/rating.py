@@ -92,8 +92,10 @@ class RatingMixin(models.AbstractModel):
     def rating_send_request(self, template, partner=None, rated_partner=None, reuse_rating=True, force_send=True):
         """ This method send rating request by email, using a template given
         in parameter. """
+        partner = (partner or self.env['res.partner']).sudo()
         for record in self:
-            template.send_mail(record.id, force_send=force_send)
+            lang = partner.lang or 'en_US'
+            template.with_context(lang=lang).send_mail(record.id, force_send=force_send)
 
     @api.multi
     def rating_apply(self, rate, token=None, feedback=None, subtype=None):

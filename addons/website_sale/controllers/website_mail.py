@@ -21,6 +21,7 @@ class WebsiteMailController(WebsiteMail):
                 'res_model': res_model,
                 'res_id': res_id,
                 'message_id': message_data['id'],
+                'consumed': True,
             })
             message_data.update({
                 'rating_default_value': rating.rating,
@@ -42,6 +43,7 @@ class WebsiteMailController(WebsiteMail):
                     'res_model': res_model,
                     'res_id': res_id,
                     'message_id': message_id,
+                    'consumed': True,
                 })
             except Exception:
                 pass

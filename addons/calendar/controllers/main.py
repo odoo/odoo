@@ -41,22 +41,23 @@ class CalendarController(http.Controller):
             env = Environment(cr, SUPERUSER_ID, {})
             attendee = env['calendar.attendee'].search([('access_token', '=', token)])
             timezone = attendee.partner_id.tz
-            event = env['calendar.event'].with_context(tz=timezone).browse(int(id))
+            lang = attendee.partner_id.lang or 'en_US'
+            event = env['calendar.event'].with_context(tz=timezone, lang=lang).browse(int(id))
 
             # If user is logged, redirect to form view of event
             # otherwise, display the simplifyed web page with event informations
             if request.session.uid:
                 return werkzeug.utils.redirect('/web?db=%s#id=%s&view_type=form&model=calendar.event' % (db, id))
 
-            # NOTE : calling render return a lazy response. The rendering result will be done when the
-            # cursor will be closed. So it is requried to call `flatten` to make the redering before
-            # existing the `with` clause
-            response = request.render('calendar.invitation_page_anonymous', {
-                'event': event,
-                'attendee': attendee,
-            })
-            response.flatten()
-            return response
+            # NOTE : we don't use request.render() since:
+            # - we need a template rendering which is not lazy, to render before cursor closing
+            # - we need to display the template in the language of the user (not possible with
+            #   request.render())
+            return env['ir.ui.view'].with_context(lang=lang).render_template(
+                'calendar.invitation_page_anonymous', {
+                    'event': event,
+                    'attendee': attendee,
+                })
 
     # Function used, in RPC to check every 5 minutes, if notification to do for an event or not
     @http.route('/calendar/notify', type='json', auth="user")

@@ -31,12 +31,12 @@
                         <field name="account_asset_id" nolabel="1" attrs="{'invisible': [('type','=', False)]}"/>
                         <div>
                             <label for="account_depreciation_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
-                            <label for="account_depreciation_id" string="Recognition Account" attrs="{'invisible': [('type','!=','sale')]}"/>
+                            <label for="account_depreciation_id" string="Recognition Income Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
                         <field name="account_depreciation_id" nolabel="1"/>
                         <div>
                             <label for="account_depreciation_expense_id" attrs="{'invisible': [('type','!=','purchase')]}"/>
-                            <label for="account_depreciation_expense_id" string="Recognition Income Account" attrs="{'invisible': [('type','!=','sale')]}"/>
+                            <label for="account_depreciation_expense_id" string="Recognition Account" attrs="{'invisible': [('type','!=','sale')]}"/>
                         </div>
                         <field name="account_depreciation_expense_id" nolabel="1"/>
                         <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>

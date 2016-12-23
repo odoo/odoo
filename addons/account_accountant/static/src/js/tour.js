@@ -13,6 +13,14 @@ tour.register('account_accountant_tour', {
     content: _t('Ready to discover your new favorite <b>accounting app</b>? Get started by clicking here.'),
     position: 'bottom',
 }, {
+    trigger: ".o_menu_systray div.progress",
+    content:  _t("Make your system ready to invoice in a few steps."),
+    position: "bottom"
+}, {
+    trigger: ".o_planner_dialog .o_planner_close_block .fa-close",
+    content:  _t("When you're ready, close this planner to continue the tour."),
+    position: "right"
+}, {
     trigger: ".o_invoice_new",
     extra_trigger: '.o_account_kanban',
     content:  _t("Let\'s start with a new customer invoice."),

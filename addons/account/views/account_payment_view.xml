@@ -6,13 +6,13 @@
             <field name="name">account.payment.tree</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state=='draft'" decoration-muted="state=='reconciled'" edit="false">
+                <tree decoration-info="state == 'draft'" decoration-muted="state in ['reconciled', 'cancel']" edit="false">
                     <field name="payment_date"/>
                     <field name="name"/>
                     <field name="journal_id"/>
                     <field name="payment_method_id"/>
                     <field name="partner_id" string="Customer"/>
-                    <field name="amount"/>
+                    <field name="amount" sum="Amount"/>
                     <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="currency_id" invisible="1"/>
@@ -25,13 +25,13 @@
             <field name="name">account.supplier.payment.tree</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state=='draft'" decoration-muted="state=='reconciled'" edit="false">
+                <tree decoration-info="state == 'draft'" decoration-muted="state in ['reconciled', 'cancel']" edit="false">
                     <field name="payment_date"/>
                     <field name="name"/>
                     <field name="journal_id"/>
                     <field name="payment_method_id"/>
                     <field name="partner_id" string="Vendor"/>
-                    <field name="amount"/>
+                    <field name="amount" sum="Amount"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="state"/>
                     <field name="currency_id" invisible="1"/>
@@ -76,6 +76,7 @@
                 <form string="Register Payment" version="7">
                     <header>
                         <button name="post" class="oe_highlight" states="draft" string="Confirm" type="object"/>
+                        <button name="action_draft" states="cancel" string="Set to Draft" type="object"/>
                         <field name="state" widget="statusbar" statusbar_visible="posted,reconciled"/>
                     </header>
                     <sheet>
@@ -149,7 +150,7 @@
                 </p>
             </field>
         </record>
-        
+
         <record id="action_account_payments_payable" model="ir.actions.act_window">
             <field name="name">Payments</field>
             <field name="res_model">account.payment</field>

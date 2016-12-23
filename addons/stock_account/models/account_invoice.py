@@ -73,11 +73,15 @@ class AccountInvoiceLine(models.Model):
 
     def _get_anglo_saxon_price_unit(self):
         self.ensure_one()
-        return self.product_id.standard_price
+        price = self.product_id.standard_price
+        if not self.uom_id or self.product_id.uom_id == self.uom_id:
+            return price
+        else:
+            return self.product_id.uom_id._compute_price(price, self.uom_id)
 
     def _get_price(self, company_currency, price_unit):
-        if self.invoice_id.currency_id.id != company_currency:
-            price = company_currency.with_context(date=self.invoice_id.date_invoice).compute(price_unit * self.quantity, self.invoice_id.currency_id.id)
+        if self.invoice_id.currency_id.id != company_currency.id:
+            price = company_currency.with_context(date=self.invoice_id.date_invoice).compute(price_unit * self.quantity, self.invoice_id.currency_id)
         else:
             price = price_unit * self.quantity
         return round(price, self.invoice_id.currency_id.decimal_places)
@@ -85,5 +89,6 @@ class AccountInvoiceLine(models.Model):
     def get_invoice_line_account(self, type, product, fpos, company):
         if company.anglo_saxon_accounting and type in ('in_invoice', 'in_refund') and product and product.type == 'product':
             accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
-            return accounts['stock_input']
+            if accounts['stock_input']:
+                return accounts['stock_input']
         return super(AccountInvoiceLine, self).get_invoice_line_account(type, product, fpos, company)

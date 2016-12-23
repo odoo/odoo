@@ -40,6 +40,33 @@ if(!$('.website_forum').length) {
             $(this).find('.o_forum_tag_follow_box').stop().fadeOut().css('display','none');
     });
 
+    $('.o_forum_profile_pic_edit').on('click', function(ev) {
+        ev.preventDefault();
+        $(this).closest('form').find('.o_forum_file_upload').trigger('click');
+    });
+
+    $('.o_forum_file_upload').on('change', function() {
+        if (this.files.length) {
+            var $form = $(this).closest('form');
+            var reader = new FileReader();
+            reader.onload = function(ev) {
+                $form.find('.o_forum_avatar_img').attr('src', ev.target.result);
+            };
+            reader.readAsDataURL(this.files[0]);
+            $form.find('#forum_clear_image').remove();
+        }
+    });
+
+    $('.o_forum_profile_pic_clear').click(function() {
+        var $form = $(this).closest('form');
+        $form.find('.o_forum_avatar_img').attr("src", "/web/static/src/img/placeholder.png");
+        $form.append($('<input/>', {
+            name: 'clear_image',
+            id: 'forum_clear_image',
+            type: 'hidden',
+        }));
+    });
+
     // Extended user biography toogle
     $('.o_forum_user_info').hover(
         function () {
@@ -138,7 +165,7 @@ if(!$('.website_forum').length) {
             });
     });
 
-    $('.o_js_validation_queue a').on('click', function (ev) {
+    $(".o_js_validation_queue a[href*='/validate']").on('click', function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
         var self = $(this);

@@ -401,7 +401,7 @@ class WebsiteSale(http.Controller):
     # ------------------------------------------------------
 
     def checkout_redirection(self, order):
-        # must have a draft sale order with lines at this point, otherwise reset
+        # must have a draft sales order with lines at this point, otherwise reset
         if not order or order.state != 'draft':
             request.session['sale_order_id'] = None
             request.session['sale_transaction_id'] = None
@@ -692,7 +692,7 @@ class WebsiteSale(http.Controller):
         """ Payment step. This page proposes several payment means based on available
         payment.acquirer. State at this point :
 
-         - a draft sale order with lines; otherwise, clean context / session and
+         - a draft sales order with lines; otherwise, clean context / session and
            back to the shop
          - no transaction in context / session, or only a draft one, if the customer
            did go to a payment.acquirer website but closed the tab without
@@ -753,7 +753,10 @@ class WebsiteSale(http.Controller):
                 valid_state = 'authorized' if tx.acquirer_id.auto_confirm == 'authorize' else 'done'
                 if not s2s_result or tx.state != valid_state:
                     return dict(success=False, error=_("Payment transaction failed (%s)") % tx.state_message)
-                return dict(success=True, url='/shop/payment/validate')
+                else:
+                    # Auto-confirm SO if necessary
+                    tx._confirm_so()
+                    return dict(success=True, url='/shop/payment/validate')
             except Exception, e:
                 _logger.warning(_("Payment transaction (%s) failed : <%s>") % (tx.id, str(e)))
                 return dict(success=False, error=_("Payment transaction failed (Contact Administrator)"))
@@ -771,7 +774,7 @@ class WebsiteSale(http.Controller):
             return request.redirect("/shop/payment?error=no_token_or_missmatch_tx")
 
     @http.route(['/shop/payment/transaction/<int:acquirer_id>'], type='json', auth="public", website=True)
-    def payment_transaction(self, acquirer_id, tx_type='form', token=None):
+    def payment_transaction(self, acquirer_id, tx_type='form', token=None, **kwargs):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button. After having
         created the transaction, the event continues and the user is redirected
@@ -781,7 +784,16 @@ class WebsiteSale(http.Controller):
                                 user is redirected to the checkout page
         """
         Transaction = request.env['payment.transaction'].sudo()
-        order = request.website.sale_get_order()
+
+        # In case the route is called directly from the JS (as done in Stripe payment method)
+        so_id = kwargs.get('so_id')
+        so_token = kwargs.get('so_token')
+        if so_id and so_token:
+            order = request.env['sale.order'].sudo().search([('id', '=', so_id), ('access_token', '=', so_token)])
+        elif so_id:
+            order = request.env['sale.order'].search([('id', '=', so_id)])
+        else:
+            order = request.website.sale_get_order()
         if not order or not order.order_line or acquirer_id is None:
             return request.redirect("/shop/checkout")
 

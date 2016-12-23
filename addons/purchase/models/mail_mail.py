@@ -14,5 +14,5 @@ class MailMail(models.Model):
             if mail_sent and mail.model == 'purchase.order':
                 purchase_order = self.env['purchase.order'].browse(mail.res_id)
                 if purchase_order.state == 'draft':
-                    self.env['purchase.order'].signal_workflow([mail.res_id], 'send_rfq')
+                    purchase_order.state = 'sent'
         return super(MailMail, self)._postprocess_sent_message(mail_sent=mail_sent)

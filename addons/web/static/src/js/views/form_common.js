@@ -245,7 +245,6 @@ var CompletionFieldMixin = {
                 values.push({
                     label: _t("No results to show..."),
                     action: function() {},
-                    classname: 'o_m2o_dropdown_option'
                 });
             }
 
@@ -430,6 +429,7 @@ var FormWidget = Widget.extend(InvisibilityChangerMixin, {
         this.process_modifiers();
         this._super();
         this.$el.addClass(this.node.attrs["class"] || "");
+        this.$el.attr('style', this.node.attrs.style);
     },
     destroy: function() {
         $.fn.tooltip('destroy');

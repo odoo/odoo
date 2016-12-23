@@ -131,7 +131,7 @@ TRANSLATED_ATTRS_RE = re.compile(r"@(%s)\b" % "|".join(TRANSLATED_ATTRS))
 
 class View(models.Model):
     _name = 'ir.ui.view'
-    _order = "priority,name"
+    _order = "priority,name,id"
 
     # Holds the RNG schema
     _relaxng_validator = None
@@ -157,7 +157,8 @@ class View(models.Model):
     inherit_id = fields.Many2one('ir.ui.view', string='Inherited View', ondelete='restrict', index=True)
     inherit_children_ids = fields.One2many('ir.ui.view', 'inherit_id', string='Views which inherit from this one')
     field_parent = fields.Char(string='Child Field')
-    model_data_id = fields.Many2one('ir.model.data', compute='_compute_model_data_id', string="Model Data", store=True)
+    model_data_id = fields.Many2one('ir.model.data', string="Model Data",
+                                    compute='_compute_model_data_id', search='_search_model_data_id')
     xml_id = fields.Char(string="External ID", compute='_compute_xml_id',
                          help="ID of the view defined in xml file")
     groups_id = fields.Many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
@@ -229,12 +230,19 @@ actual arch.
         for view, view_wo_lang in zip(self, self.with_context(lang=None)):
             view_wo_lang.arch = view.arch_base
 
+    @api.depends('write_date')
     def _compute_model_data_id(self):
-        # get the last ir_model_data record corresponding to self
+        # get the first ir_model_data record corresponding to self
         domain = [('model', '=', 'ir.ui.view'), ('res_id', 'in', self.ids)]
-        for data in self.env['ir.model.data'].search_read(domain, ['res_id']):
+        for data in self.env['ir.model.data'].search_read(domain, ['res_id'], order='id desc'):
             view = self.browse(data['res_id'])
             view.model_data_id = data['id']
+
+    def _search_model_data_id(self, operator, value):
+        name = 'name' if isinstance(value, basestring) else 'id'
+        domain = [('model', '=', 'ir.ui.view'), (name, operator, value)]
+        data = self.env['ir.model.data'].search(domain)
+        return [('id', 'in', data.mapped('res_id'))]
 
     def _compute_xml_id(self):
         xml_ids = collections.defaultdict(list)
@@ -270,7 +278,7 @@ actual arch.
                         self.raise_view_error(message, self.id)
         return True
 
-    @api.constrains('arch', 'arch_base')
+    @api.constrains('arch_db')
     def _check_xml(self):
         # Sanity checks: the view should not break anything upon rendering!
         # Any exception raised below will cause a transaction rollback.
@@ -796,31 +804,6 @@ actual arch.
         return arch
 
     @api.model
-    def _disable_workflow_buttons(self, model, node):
-        """ Set the buttons in node to readonly if the user can't activate them. """
-        if model is None or self.env.user.id == SUPERUSER_ID:
-            # admin user can always activate workflow buttons
-            return node
-
-        # TODO handle the case of more than one workflow for a model or multiple
-        # transitions with different groups and same signal
-        user_group_ids = set(self.env.user.groups_id.ids)
-        buttons = (n for n in node.getiterator('button') if n.get('type') != 'object')
-        for button in buttons:
-            query = """SELECT DISTINCT t.group_id
-                         FROM wkf
-                   INNER JOIN wkf_activity a ON a.wkf_id = wkf.id
-                   INNER JOIN wkf_transition t ON (t.act_to = a.id)
-                        WHERE wkf.osv = %s
-                          AND t.signal = %s
-                          AND t.group_id is NOT NULL"""
-            self._cr.execute(query, (model, button.get('name')))
-            group_ids = set(row[0] for row in self._cr.fetchall() if row[0])
-            can_click = not group_ids or bool(user_group_ids & group_ids)
-            button.set('readonly', str(int(not can_click)))
-        return node
-
-    @api.model
     def postprocess_and_fields(self, model, node, view_id):
         """ Return an architecture and a description of all the fields.
 
@@ -856,7 +839,6 @@ actual arch.
 
         node = self.add_on_change(model, node)
         fields_def = self.postprocess(model, node, view_id, False, fields)
-        node = self._disable_workflow_buttons(model, node)
         if node.tag in ('kanban', 'tree', 'form', 'gantt'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
                 if (not node.get(action) and

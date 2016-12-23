@@ -701,7 +701,8 @@ var ActionManager = Widget.extend({
             this.dialog = new Dialog(this, {
                 title: executor.action.name,
                 dialogClass: executor.klass,
-                buttons: []
+                buttons: [],
+                size: executor.action.context.dialog_size,
             });
 
             // chain on_close triggers with previous dialog, if any

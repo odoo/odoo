@@ -47,7 +47,7 @@
                                 </group>
                                 <group name="group_standard_price">
                                     <field name="list_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                                    <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}"/>
+                                    <label for="standard_price" groups="base.group_user"/>
                                     <div name="standard_price_uom" groups="base.group_user">
                                         <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}" class="oe_inline"/>
                                     </div>
@@ -80,10 +80,11 @@
                         </page>
                         <page string="Notes" name="notes">
                             <group name="description">
-                                <separator string="Description for Quotations" colspan="4"/>
-                                <field name="description_sale" colspan="4" nolabel="1"
-                                    placeholder="This note will be displayed on the quotations."/>
+                                <group string="Description for Quotations">
+                                    <field name="description_sale" nolabel="1" placeholder="This note will be displayed on the quotations."/>
+                                </group>
                             </group>
+                            <group name="warning"/>
                          </page>
                     </notebook>
                 </sheet>
@@ -104,7 +105,7 @@
                 <field name="categ_id" domain="[('categ_id', 'child_of', self)]"/>
                 <separator/>
                 <filter string="Services" name="services" domain="[('type','=','service')]"/>
-                <filter string="Products" name="consumable" domain="[('type', 'in', ['consu', 'product'])]" help="Products your store in the inventory"/>
+                <filter string="Products" name="consumable" domain="[('type', 'in', ['consu', 'product'])]"/>
                 <separator/>
                 <filter string="Can be Sold" name="filter_to_sell" domain="[('sale_ok','=',1)]"/>
                 <filter string="Can be Purchased" name="filter_to_purchase" domain="[('purchase_ok', '=', 1)]"/>
@@ -182,7 +183,7 @@
                             <p>All general settings about this product are managed on <button name="open_product_template" type="object" string="the product template" class="oe_link"/></p>
                         </group>
                         <group string="Attributes">
-                            <field name="attribute_value_ids" widget="many2many_tags"/>
+                            <field name="attribute_value_ids" widget="many2many_tags" readonly="1"/>
                         </group>
                         <group>
                             <group name="codes" string="Codes">

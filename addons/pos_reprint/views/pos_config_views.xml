@@ -5,8 +5,8 @@
             <field name="model">pos.config</field>
             <field name="inherit_id" ref="point_of_sale.view_pos_config_form" />
             <field name="arch" type="xml">
-                <xpath expr="//group[@name='receipt']" position="inside">
-                    <field string="Reprinting" name='iface_reprint' />
+                <xpath expr="//field[@name='iface_print_auto']" position="after">
+                    <field string="Reprint Receipt" name='iface_reprint'/>
                 </xpath>
             </field>
         </record>

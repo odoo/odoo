@@ -259,7 +259,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         // Check if the user is authenticated and has the right to make API calls
         if (!gapi.analytics.auth.getAuthResponse()) {
             this.display_unauthorized_message($analytics_components, 'not_connected');
-        } else if (gapi.analytics.auth.getAuthResponse() && gapi.analytics.auth.getAuthResponse().scope.indexOf('https://www.googleapis.com/auth/analytics ') === -1) {
+        } else if (gapi.analytics.auth.getAuthResponse() && gapi.analytics.auth.getAuthResponse().scope.indexOf('https://www.googleapis.com/auth/analytics') === -1) {
             this.display_unauthorized_message($analytics_components, 'no_right');
         } else {
             this.make_analytics_calls($analytics_components);

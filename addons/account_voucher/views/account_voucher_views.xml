@@ -100,8 +100,7 @@
             <field name="model">account.voucher.line</field>
             <field name="arch" type="xml">
                 <tree string="Voucher Lines" editable="bottom">
-                    <field name="product_id"
-                        on_change="product_id_change(product_id, parent.partner_id, price_unit, company_id, parent.currency_id, parent.voucher_type)" />
+                    <field name="product_id"/>
                     <field name="name"/>
                     <field name="account_id"/>
                     <field name="account_analytic_id" domain="[('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
@@ -248,8 +247,7 @@
                         <page string="Sales Information">
                             <field name="line_ids">
                                 <tree string="Voucher Lines" editable="bottom">
-                                    <field name="product_id"
-                                        on_change="product_id_change(product_id, parent.partner_id, price_unit, company_id, parent.currency_id, parent.voucher_type)" />
+                                    <field name="product_id"/>
                                     <field name="name"/>
                                     <field name="account_id"/>
                                     <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
@@ -365,8 +363,7 @@
                         <page string="Bill Information">
                             <field name="line_ids">
                                 <tree string="Voucher Lines" editable="bottom">
-                                    <field name="product_id"
-                                        on_change="product_id_change(product_id, parent.partner_id, price_unit, company_id, parent.currency_id, parent.voucher_type)" />
+                                    <field name="product_id"/>
                                     <field name="name"/>
                                     <field name="account_id"/>
                                     <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>

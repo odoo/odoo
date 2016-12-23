@@ -146,10 +146,10 @@ class DeliveryCarrier(models.Model):
     # TODO define and handle exceptions that could be thrown by providers
 
     def get_shipping_price_from_so(self, orders):
-        ''' For every sale order, compute the price of the shipment
+        ''' For every sales order, compute the price of the shipment
 
-        :param orders: A recordset of sale orders
-        :return list: A list of floats, containing the estimated price for the shipping of the sale order
+        :param orders: A recordset of sales orders
+        :return list: A list of floats, containing the estimated price for the shipping of the sales order
         '''
         self.ensure_one()
         if hasattr(self, '%s_get_shipping_price_from_so' % self.delivery_type):

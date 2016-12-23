@@ -143,13 +143,6 @@
             res_model="account.move.line"
             context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_payable':1}"
             src_model="res.partner"/>
-        <act_window
-            id="act_account_partner_ledger_payable_no_partner"
-            name="Unknown Partner Ledger"
-            res_model="account.move.line"
-            context="{'search_default_unreconciled':1, 'search_default_payable':1}"
-            domain="[('partner_id', '=', False)]"
-            src_model="res.partner"/>
 
         <act_window
             id="act_account_partner_ledger_receivable"
@@ -157,14 +150,6 @@
             res_model="account.move.line"
             context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_receivable':1}"
             src_model="res.partner"/>
-        <act_window
-            id="act_account_partner_ledger_receivable_no_partner"
-            name="Unknown Partner Ledger"
-            res_model="account.move.line"
-            context="{'search_default_unreconciled':1, 'search_default_receivable':1}"
-            domain="[('partner_id', '=', False)]"
-            src_model="res.partner"/>
-
 
         <act_window
             id="act_account_acount_move_line_open_unreconciled"
@@ -249,8 +234,8 @@
             <field name="arch" type="xml">
                 <search string="Search Account Journal">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Journal"/>
-                    <filter domain="[('type', '=', 'sale')]" string="Sale"/>
-                    <filter domain="[('type', '=', 'purchase')]" string="Purchase"/>
+                    <filter domain="[('type', '=', 'sale')]" string="Sales"/>
+                    <filter domain="[('type', '=', 'purchase')]" string="Purchases"/>
                     <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity"/>
                     <filter domain="[('type', 'not in', ['sale', 'purchase', 'cash', 'bank'])]" string="Miscellaneous"/>
                     <filter name="dashboard" string="Favorites" domain="[('show_on_dashboard', '=', True)]"/>
@@ -283,7 +268,7 @@
                                         <field name="code"/>
                                         <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}" groups="base.group_no_one"/>
                                         <field name="sequence_id" required="0" attrs="{'readonly': 1}" groups="base.group_no_one"/>
-                                        <field name="refund_sequence_id" attrs="{'invisible': ['|',('type', 'not in', ['sale', 'purchase']), ('refund_sequence', '!=', True)], 'required': [('type', 'in', ['sale', 'purchase']), ('refund_sequence', '=', True)]}" groups="base.group_no_one"/>
+                                        <field name="refund_sequence_id" attrs="{'invisible': ['|',('type', 'not in', ['sale', 'purchase']), ('refund_sequence', '!=', True)], 'required': [('type', 'in', ['sale', 'purchase']), ('refund_sequence', '=', True)]}"/>
                                     </group>
                                     <group>
                                         <field name="default_debit_account_id" domain="[('deprecated', '=', False)]" />
@@ -393,7 +378,7 @@
                 related to the day-to-day business.
               </p><p>
                 A typical company may use one journal per payment method (cash,
-                bank accounts, checks), one purchase journal, one sale journal
+                bank accounts, checks), one purchase journal, one sales journal
                 and one for miscellaneous information.
               </p>
             </field>
@@ -848,7 +833,7 @@
 
         <menuitem
             id="account_report_folder"
-            name="Reports"
+            name="Reporting"
             parent="account_account_menu"
             groups="account.group_account_manager"
             sequence="4"/>
@@ -997,6 +982,8 @@
                                     <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     <field name="tax_adjustment"/>
+                                    <field name="use_cash_basis" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                    <field name="cash_basis_account" attrs="{'invisible': [('use_cash_basis', '=', False)], 'required': [('use_cash_basis', '=', True)]}"/>
                                 </group>
                             </group>
                         </page>
@@ -1349,6 +1336,10 @@
                         </page>
                     </notebook>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -1443,7 +1434,7 @@
         </record>
 
 
-        <!-- Payment Terms -->
+        <!--Payment Terms -->
         <record id="view_payment_term_line_tree" model="ir.ui.view">
             <field name="name">account.payment.term.line.tree</field>
             <field name="model">account.payment.term.line</field>
@@ -1507,7 +1498,7 @@
                         <field name="company_id" invisible="1"/>
                     </group>
                     <label for="note"/>
-                    <field name="note" placeholder="Payment term explanation for the customer..."/>
+                    <field name="note" placeholder="Payment terms explanation for the customer..."/>
                     <separator string="Terms"/>
                     <p class="text-muted">
                         The last line's computation type should be "Balance" to ensure that the whole amount will be allocated.
@@ -1906,6 +1897,32 @@
         <menuitem id="menu_account_customer" name="Customers"
             parent="menu_finance_receivables"
             action="base.action_partner_customer_form" sequence="100"/>
+
+        <record id="product_product_view_tree" model="ir.ui.view">
+            <field name="name">product.product.tree</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <tree string="Products">
+                    <field name="default_code"/>
+                    <field name="name"/>
+                    <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
+                    <field name="lst_price"/>
+                    <field name="taxes_id" widget="many2many_tags"/>
+                    <field name="supplier_taxes_id" widget="many2many_tags"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_product_action" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="product_product_view_tree"/>
+        </record>
+
+        <menuitem id="menu_product_product_action" name="Products" action="product_product_action" parent="account.menu_finance_configuration" sequence="1"/>
 
         <menuitem id="menu_product_template_action" name="Sellable Products"
             parent="menu_finance_receivables"

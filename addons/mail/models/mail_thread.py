@@ -7,7 +7,6 @@ import dateutil
 import email
 import hashlib
 import hmac
-import json
 import lxml
 import logging
 import pytz
@@ -512,12 +511,6 @@ class MailThread(models.AbstractModel):
     #------------------------------------------------------
 
     @api.model
-    def _needaction_domain_get(self):
-        if self._needaction:
-            return [('message_needaction', '=', True)]
-        return []
-
-    @api.model
     def _garbage_collect_attachments(self):
         """ Garbage collect lost mail attachments. Those are attachments
             - linked to res_model 'mail.compose.message', the composer wizard
@@ -579,9 +572,10 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def _notification_link_helper(self, link_type, **kwargs):
+        local_kwargs = dict(kwargs)  # do not modify in-place, modify copy instead
         if kwargs.get('message_id'):
             base_params = {
-                'message_id': kwargs.pop('message_id')
+                'message_id': kwargs['message_id']
             }
         else:
             base_params = {
@@ -589,21 +583,22 @@ class MailThread(models.AbstractModel):
                 'res_id': kwargs.get('res_id', self.ids and self.ids[0] or False),
             }
 
+        local_kwargs.pop('message_id', None)
+        local_kwargs.pop('model', None)
+        local_kwargs.pop('res_id', None)
+
         if link_type in ['view', 'assign', 'follow', 'unfollow']:
             params = dict(base_params)
             base_link = '/mail/%s' % link_type
-        elif link_type == 'new':
-            params = dict(base_params, action_id=kwargs.get('action_id', ''))
-            base_link = '/mail/new'
         elif link_type == 'controller':
-            controller = kwargs.pop('controller')
-            params = dict(base_params)
+            controller = local_kwargs.pop('controller')
+            params = dict(base_params, **local_kwargs)
             params.pop('model')
             base_link = '%s' % controller
         else:
             return ''
 
-        if link_type not in ['view', 'new']:
+        if link_type not in ['view']:
             token = self._generate_notification_token(base_link, params)
             params['token'] = token
 
@@ -1098,7 +1093,12 @@ class MailThread(models.AbstractModel):
                          message_id, email_from, email_to)
             return []
 
-        # 1. message is a reply to an existing message (exact match of message_id or compat-mode)
+        # 1. Check if message is a reply on a thread
+        msg_references = [ref for ref in tools.mail_header_msgid_re.findall(thread_references) if 'reply_to' not in ref]
+        mail_messages = MailMessage.sudo().search([('message_id', 'in', msg_references)], limit=1)
+        is_a_reply = bool(mail_messages)
+
+        # 1.1 Handle forward to an alias with a different model: do not consider it as a reply
         if reply_model and reply_thread_id:
             other_alias = Alias.search([
                 '&',
@@ -1106,35 +1106,30 @@ class MailThread(models.AbstractModel):
                 ('alias_name', '=', email_to_localpart)
             ])
             if other_alias and other_alias.alias_model_id.model != reply_model:
-                reply_match = False
+                is_a_reply = False
 
-        if reply_match:
-            msg_references = tools.mail_header_msgid_re.findall(thread_references)
-            mail_messages = MailMessage.sudo().search([('message_id', 'in', msg_references)], limit=1)
+        if is_a_reply:
+            model, thread_id = mail_messages.model, mail_messages.res_id
+            if not reply_private:  # TDE note: not sure why private mode as no alias search, copying existing behavior
+                dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)], limit=1)
 
-            if mail_messages:
-                model, thread_id = mail_messages.model, mail_messages.res_id
-                if not reply_private:  # TDE note: not sure why private mode as no alias search, copying existing behavior
-                    dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)], limit=1)
+            route = self.message_route_verify(
+                message, message_dict,
+                (model, thread_id, custom_values, self._uid, dest_aliases),
+                update_author=True, assert_model=reply_private, create_fallback=True,
+                allow_private=reply_private, drop_alias=True)
+            if route:
+                _logger.info(
+                    'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
+                    email_from, email_to, message_id, model, thread_id, custom_values, self._uid)
+                return [route]
+            elif route is False:
+                return []
 
-                route = self.message_route_verify(
-                    message, message_dict,
-                    (model, thread_id, custom_values, self._uid, dest_aliases),
-                    update_author=True, assert_model=reply_private, create_fallback=True,
-                    allow_private=reply_private, drop_alias=True)
-                if route:
-                    _logger.info(
-                        'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                        email_from, email_to, message_id, model, thread_id, custom_values, self._uid)
-                    return [route]
-                elif route is False:
-                    return []
-
-        # no route found for a matching reference (or reply), so parent is invalid
-        message_dict.pop('parent_id', None)
-
-        # 4. Look for a matching mail.alias entry
+        # 2. Look for a matching mail.alias entry
         if rcpt_tos_localparts:
+            # no route found for a matching reference (or reply), so parent is invalid
+            message_dict.pop('parent_id', None)
             dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)])
             if dest_aliases:
                 routes = []
@@ -1161,6 +1156,8 @@ class MailThread(models.AbstractModel):
 
         # 5. Fallback to the provided parameters, if they work
         if fallback_model:
+            # no route found for a matching reference (or reply), so parent is invalid
+            message_dict.pop('parent_id', None)
             route = self.message_route_verify(
                 message, message_dict,
                 (fallback_model, thread_id, custom_values, self._uid, None),
@@ -2046,6 +2043,10 @@ class MailThread(models.AbstractModel):
         """
         if not partner_ids:
             return
+
+        if self.env.context.get('mail_auto_subscribe_no_notify'):
+            return
+
         for record in self:
             record.message_post_with_view(
                 'mail.message_user_assigned',
@@ -2089,16 +2090,6 @@ class MailThread(models.AbstractModel):
         relation_fields = set([subtype.relation_field for subtype in subtypes if subtype.relation_field is not False])
         if not any(relation in updated_fields for relation in relation_fields) and not user_field_lst:
             return True
-
-        # legacy behavior: if values is not given, compute the values by browsing
-        # @TDENOTE: remove me in 8.0
-        if values is None:
-            record = self[0]
-            for updated_field in updated_fields:
-                field_value = getattr(record, updated_field)
-                if isinstance(field_value, models.BaseModel):
-                    field_value = field_value.id
-                values[updated_field] = field_value
 
         # find followers of headers, update structure for new followers
         headers = set()

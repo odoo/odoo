@@ -185,7 +185,7 @@ class HrPayslip(models.Model):
                 \n* If the payslip is confirmed then status is set to \'Done\'.
                 \n* When user cancel payslip the status is \'Rejected\'.""")
     line_ids = fields.One2many('hr.payslip.line', 'slip_id', string='Payslip Lines', readonly=True,
-        states={'draft': [('readonly', False)]}, domain=[('appears_on_payslip', '=', True)])
+        states={'draft': [('readonly', False)]})
     company_id = fields.Many2one('res.company', string='Company', readonly=True, copy=False,
         default=lambda self: self.env['res.company']._company_default_get(),
         states={'draft': [('readonly', False)]})
@@ -388,9 +388,10 @@ class HrPayslip(models.Model):
             return localdict
 
         class BrowsableObject(object):
-            def __init__(self, employee_id, dict):
+            def __init__(self, employee_id, dict, env):
                 self.employee_id = employee_id
                 self.dict = dict
+                self.env = env
 
             def __getattr__(self, attr):
                 return attr in self.dict and self.dict.__getitem__(attr) or 0.0
@@ -455,11 +456,11 @@ class HrPayslip(models.Model):
         for input_line in payslip.input_line_ids:
             inputs_dict[input_line.code] = input_line
 
-        categories = BrowsableObject(payslip.employee_id.id, {})
-        inputs = InputLine(payslip.employee_id.id, inputs_dict)
-        worked_days = WorkedDays(payslip.employee_id.id, worked_days_dict)
-        payslips = Payslips(payslip.employee_id.id, payslip)
-        rules = BrowsableObject(payslip.employee_id.id, rules_dict)
+        categories = BrowsableObject(payslip.employee_id.id, {}, self.env)
+        inputs = InputLine(payslip.employee_id.id, inputs_dict, self.env)
+        worked_days = WorkedDays(payslip.employee_id.id, worked_days_dict, self.env)
+        payslips = Payslips(payslip.employee_id.id, payslip, self.env)
+        rules = BrowsableObject(payslip.employee_id.id, rules_dict, self.env)
 
         baselocaldict = {'categories': categories, 'rules': rules, 'payslip': payslips, 'worked_days': worked_days, 'inputs': inputs}
         #get the ids of the structures on the contracts and their parent id as well

@@ -5,7 +5,7 @@
     'name': 'Sales and Warehouse Management',
     'version': '1.0',
     'category': 'Hidden',
-    'summary': 'Quotation, Sale Orders, Delivery & Invoicing Control',
+    'summary': 'Quotation, Sales Orders, Delivery & Invoicing Control',
     'description': """
 Manage sales quotations and orders
 ==================================

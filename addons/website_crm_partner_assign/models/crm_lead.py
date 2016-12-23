@@ -33,25 +33,19 @@ class CrmLead(models.Model):
         if not partner_assigned:
             self.date_assign = False
         else:
-            self.write({
-                'date_assign': fields.Date.context_today(self),
-                'user_id': partner_assigned.user_id,
-            })
+            self.date_assign = fields.Date.context_today(self)
+            self.user_id = partner_assigned.user_id
 
     @api.multi
     def assign_salesman_of_assigned_partner(self):
         salesmans_leads = {}
         for lead in self:
             if (lead.stage_id.probability > 0 and lead.stage_id.probability < 100) or lead.stage_id.sequence == 1:
-                partner_assigned_related_user = self.env['res.users'].search([('partner_id', '=', lead.partner_assigned_id.id)], limit=1)
-                if lead.partner_assigned_id and partner_assigned_related_user and partner_assigned_related_user != lead.user_id:
-                    salesman_id = partner_assigned_related_user.id
-                    if salesmans_leads.get(salesman_id):
-                        salesmans_leads[salesman_id].append(lead.id)
-                    else:
-                        salesmans_leads[salesman_id] = lead.ids
-        for salesman_id, lead_ids in salesmans_leads.items():
-            leads = self.browse(lead_ids)
+                if lead.partner_assigned_id and lead.partner_assigned_id.user_id != lead.user_id:
+                    salesmans_leads.setdefault(lead.partner_assigned_id.user_id.id, []).append(lead.id)
+
+        for salesman_id, leads_ids in salesmans_leads.items():
+            leads = self.browse(leads_ids)
             leads.write({'user_id': salesman_id})
             for lead in leads:
                 lead._onchange_user_id()
@@ -99,6 +93,14 @@ class CrmLead(models.Model):
                                                     city=lead.city,
                                                     state=lead.state_id.name,
                                                     country=lead.country_id.name))
+
+                if result is None:
+                    result = geo_find(geo_query_address(
+                        city=lead.city,
+                        state=lead.state_id.name,
+                        country=lead.country_id.name
+                    ))
+
                 if result:
                     lead.write({
                         'partner_latitude': result[0],
@@ -197,12 +199,12 @@ class CrmLead(models.Model):
             lead.sudo().convert_opportunity(lead.partner_id.id)
 
     @api.multi
-    def partner_desinterested(self, comment=False, contacted=False):
+    def partner_desinterested(self, comment=False, contacted=False, spam=False):
         self.check_access_rights('write')
         if contacted:
-            message = _('<p>I am not interested by this lead. I contacted the lead.</p>')
+            message = '<p>%s</p>' % _('I am not interested by this lead. I contacted the lead.')
         else:
-            message = _('<p>I am not interested by this lead. I have not contacted the lead.</p>')
+            message = '<p>%s</p>' % _('I am not interested by this lead. I have not contacted the lead.')
         partner_ids = self.env['res.partner'].search(
             [('id', 'child_of', self.env.user.partner_id.commercial_partner_id.id)])
         self.sudo().message_unsubscribe(partner_ids=partner_ids.ids)
@@ -210,37 +212,71 @@ class CrmLead(models.Model):
             message += '<p>%s</p>' % comment
         self.message_post(body=message, subtype="mail.mt_note")
         values = {
-            'partner_assigned_id': False
+            'partner_assigned_id': False,
         }
+
+        if spam:
+            tag_spam = self.env.ref('website_crm_partner_assign.tag_portal_lead_is_spam', False)
+            if tag_spam and tag_spam not in self.tag_ids:
+                values['tag_ids'] = [(4, tag_spam.id, False)]
         if partner_ids:
             values['partner_declined_ids'] = map(lambda p: (4, p, 0), partner_ids.ids)
         self.sudo().write(values)
 
     @api.multi
     def update_lead_portal(self, values):
-        # YTI FIXME : Use the standard workflow defined in crm_activity
         self.check_access_rights('write')
+
         for lead in self:
-            if values['date_action'] == '':
-                values['date_action'] = False
-            if lead.next_activity_id.id != values['activity_id'] or lead.title_action != values['title_action']\
-               or lead.date_action != values['date_action']:
-                activity = lead.sudo().next_activity_id
-                body_html = "<div><b>%(title)s</b>: %(next_activity)s</div>%(description)s" % {
-                    'title': _('Activity Done'),
-                    'next_activity': activity.name,
-                    'description': lead.title_action and '<p><em>%s</em></p>' % lead.title_action or '',
-                }
-                lead.message_post(
-                    body=body_html,
-                    subject=lead.title_action,
-                    subtype="mail.mt_note")
-            lead.write({
+            lead_values = {
                 'planned_revenue': values['planned_revenue'],
                 'probability': values['probability'],
-                'next_activity_id': values['activity_id'],
-                'title_action': values['title_action'],
-                'date_action': values['date_action'] if values['date_action'] else False,
                 'priority': values['priority'],
-                'date_deadline': values['date_deadline'] if values['date_deadline'] else False,
-            })
+            }
+            # As activities may belong to several users, only the current portal user activity
+            # will be modified by the portal form. If no activity exist we create a new one instead
+            # that we assign to the portal user.
+            user_activity = lead.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
+            if user_activity:
+                user_activity.sudo().write({
+                    'activity_type_id': values['activity_type_id'],
+                    'summary': values['activity_summary'],
+                    'date_deadline': values['activity_date_deadline'],
+                })
+            else:
+                self.env['mail.activity'].sudo().create({
+                    'res_model_id': self.env.ref('crm.model_crm_lead').id,
+                    'res_id': lead.id,
+                    'user_id': self.env.user.id,
+                    'activity_type_id': values['activity_type_id'],
+                    'summary': values['activity_summary'],
+                    'date_deadline': values['activity_date_deadline'],
+                })
+            lead.write(lead_values)
+
+    @api.model
+    def create_opp_portal(self, values):
+        if self.env.user.partner_id.grade_id or self.env.user.commercial_partner_id.grade_id:
+            user = self.env.user
+            self = self.sudo()
+        if not (values['contact_name'] and values['description'] and values['title']):
+            return {
+                'errors': _('All fields are required !')
+            }
+        tag_own = self.env.ref('website_crm_partner_assign.tag_portal_lead_own_opp', False)
+        values = {
+            'contact_name': values['contact_name'],
+            'name': values['title'],
+            'description': values['description'],
+            'priority': '2',
+            'partner_assigned_id': user.partner_id.id,
+        }
+        if tag_own:
+            values['tag_ids'] = [(4, tag_own.id, False)]
+
+        lead = self.create(values)
+        lead.assign_salesman_of_assigned_partner()
+        lead.convert_opportunity(lead.partner_id.id)
+        return {
+            'id': lead.id
+        }

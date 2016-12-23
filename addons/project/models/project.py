@@ -26,16 +26,16 @@ class ProjectTaskType(models.Model):
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
         default=_get_default_project_ids)
     legend_priority = fields.Char(
-        string='Priority Management Explanation', translate=True,
-        help='Explanation text to help users using the star and priority mechanism on stages or issues that are in this stage.')
+        string='Starred Explanation', translate=True,
+        help='Explanation text to help users using the star on tasks or issues in this stage.')
     legend_blocked = fields.Char(
-        string='Kanban Blocked Explanation', translate=True,
+        'Red Kanban Label', default='Blocked', translate=True,
         help='Override the default value displayed for the blocked state for kanban selection, when the task or issue is in that stage.')
     legend_done = fields.Char(
-        string='Kanban Valid Explanation', translate=True,
+        'Green Kanban Label', default='Ready for Next Stage', translate=True,
         help='Override the default value displayed for the done state for kanban selection, when the task or issue is in that stage.')
     legend_normal = fields.Char(
-        string='Kanban Ongoing Explanation', translate=True,
+        'Grey Kanban Label', default='In Progress', translate=True,
         help='Override the default value displayed for the normal state for kanban selection, when the task or issue is in that stage.')
     mail_template_id = fields.Many2one(
         'mail.template',
@@ -49,7 +49,7 @@ class ProjectTaskType(models.Model):
 class Project(models.Model):
     _name = "project.project"
     _description = "Project"
-    _inherit = ['mail.alias.mixin', 'mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.alias.mixin', 'mail.thread']
     _inherits = {'account.analytic.account': "analytic_account_id"}
     _order = "sequence, name, id"
     _period_number = 5
@@ -288,7 +288,7 @@ class Task(models.Model):
     _name = "project.task"
     _description = "Task"
     _date_name = "date_start"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _mail_post_access = 'read'
     _order = "priority desc, sequence, date_start, name, id"
 
@@ -325,9 +325,9 @@ class Task(models.Model):
     name = fields.Char(string='Task Title', track_visibility='always', required=True, index=True)
     description = fields.Html(string='Description')
     priority = fields.Selection([
-            ('0','Normal'),
-            ('1','High')
-        ], default='0', index=True)
+            ('0','Non Starred'),
+            ('1','Starred')
+        ], default='0', index=True, string="Starred")
     sequence = fields.Integer(string='Sequence', index=True, default=10,
         help="Gives the sequence order when displaying a list of tasks.")
     stage_id = fields.Many2one('project.task.type', string='Stage', track_visibility='onchange', index=True,
@@ -335,17 +335,14 @@ class Task(models.Model):
         domain="[('project_ids', '=', project_id)]", copy=False)
     tag_ids = fields.Many2many('project.tags', string='Tags', oldname='categ_ids')
     kanban_state = fields.Selection([
-            ('normal', 'In Progress'),
-            ('done', 'Ready for next stage'),
-            ('blocked', 'Blocked')
-        ], string='Kanban State',
-        default='normal',
-        track_visibility='onchange',
-        required=True, copy=False,
+        ('normal', 'Grey'),
+        ('done', 'Green'),
+        ('blocked', 'Red')], string='Kanban State',
+        copy=False, default='normal', required=True, track_visibility='onchange',
         help="A task's kanban state indicates special situations affecting it:\n"
-             " * Normal is the default situation\n"
-             " * Blocked indicates something is preventing the progress of this task\n"
-             " * Ready for next stage indicates the task is ready to be pulled to the next stage")
+             " * Grey is the default situation\n"
+             " * Red indicates something is preventing the progress of this task\n"
+             " * Green indicates the task is ready to be pulled to the next stage")
     create_date = fields.Datetime(index=True)
     write_date = fields.Datetime(index=True)  #not displayed in the view but it might be useful with base_action_rule module (and it needs to be defined first for that)
     date_start = fields.Datetime(string='Starting Date',
@@ -383,18 +380,20 @@ class Task(models.Model):
     user_email = fields.Char(related='user_id.email', string='User Email', readonly=True)
     attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=lambda self: [('res_model', '=', self._name)], auto_join=True, string='Attachments')
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
-    displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Displayed Image')
+    displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Cover Image')
     legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True)
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True)
 
     @api.onchange('project_id')
     def _onchange_project(self):
+        default_partner_id = self.env.context.get('default_partner_id')
+        default_partner = self.env['res.partner'].browse(default_partner_id) if default_partner_id else None
         if self.project_id:
-            self.partner_id = self.project_id.partner_id
+            self.partner_id = self.project_id.partner_id or default_partner
             self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
         else:
-            self.partner_id = False
+            self.partner_id = default_partner
             self.stage_id = False
 
     @api.onchange('user_id')
@@ -415,7 +414,7 @@ class Task(models.Model):
     @api.constrains('date_start', 'date_end')
     def _check_dates(self):
         if any(self.filtered(lambda task: task.date_start and task.date_end and task.date_start > task.date_end)):
-            return ValidationError(_('Error ! Task starting date must be lower than its ending date.'))
+            raise ValidationError(_('Error ! Task starting date must be lower than its ending date.'))
 
     # Override view according to the company definition
     @api.model
@@ -566,9 +565,7 @@ class Task(models.Model):
             take_action = self._notification_link_helper('assign')
             project_actions = [{'url': take_action, 'title': _('I take it')}]
         else:
-            new_action_id = self.env.ref('project.action_view_task').id
-            new_action = self._notification_link_helper('new', action_id=new_action_id)
-            project_actions = [{'url': new_action, 'title': _('New Task')}]
+            project_actions = []
 
         new_group = (
             'group_project_user', lambda partner: bool(partner.user_ids) and any(user.has_group('project.group_project_user') for user in partner.user_ids), {

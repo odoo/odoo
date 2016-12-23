@@ -118,17 +118,13 @@ var View = Widget.extend({
                 }
             }
             args.push(context);
-            return dataset.call_button(action_data.name, args).then(handler).then(function () {
-                core.bus.trigger('do_reload_needaction');
-            });
+            return dataset.call_button(action_data.name, args).then(handler);
         } else if (action_data.type === "action") {
             return data_manager.load_action(action_data.name, _.extend(pyeval.eval('context', context), {
                 active_model: dataset.model,
                 active_ids: dataset.ids,
                 active_id: record_id
             })).then(handler);
-        } else  {
-            return dataset.exec_workflow(record_id, action_data.name).then(handler);
         }
     },
     do_show: function () {
@@ -195,6 +191,12 @@ var View = Widget.extend({
     },
     get_context: function () {
         return {};
+    },
+    destroy: function () {
+        if (this.$buttons) {
+            this.$buttons.off();
+        }
+        return this._super.apply(this, arguments);
     },
     set_scrollTop: function(scrollTop) {
         this.scrollTop = scrollTop;

@@ -28,12 +28,12 @@
                     <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
                 </group>
             </group>
-            <div name="button_box" position="inside">
+            <button name="toggle_active" position="before">
                 <button class="oe_stat_button" name="website_publish_button"
                     type="object" icon="fa-globe">
                     <field name="website_published" widget="website_button"/>
                 </button>
-            </div>
+            </button>
             <xpath expr="//notebook[last()]" position="inside">
                 <page string="Images" groups="website_sale.group_website_multi_image">
                     <field name="product_image_ids" mode="kanban" context="{'default_name': name, 'default_product_tmpl_id': active_id}">

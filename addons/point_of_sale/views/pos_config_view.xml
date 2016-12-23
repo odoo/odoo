@@ -42,17 +42,25 @@
                         </group>
                         <group>
                             <field name="iface_big_scrollbars" />
-                            <field name="iface_print_auto" />
                             <field name="iface_display_categ_images" />
-                            <field name="iface_print_skip_screen"  attrs="{'invisible' : [('iface_print_auto', '=', False)]}" />
                         </group>
                     </group>
                     <group string="Hardware Proxy / PosBox" >
                         <field name="proxy_ip" />
-                        <field name="iface_print_via_proxy" string="Receipt Printer"/>
                         <field name="iface_scan_via_proxy" string="Barcode Scanner"/>
                         <field name="iface_electronic_scale" />
                         <field name="iface_cashdrawer" />
+                        <field name="iface_print_via_proxy" string="Receipt Printer"/>
+                    </group>
+                    <group name="receipt" string="Receipt">
+                        <group>
+                            <field name="iface_print_auto"/>
+                        </group>
+                        <group>
+                            <field name="iface_print_skip_screen"  attrs="{'invisible' : [('iface_print_auto', '=', False)]}"/>
+                        </group>
+                        <field name="receipt_header" string="Header" placeholder="A custom receipt header message"/>
+                        <field name="receipt_footer" string="Footer" placeholder="A custom receipt footer message"/>
                     </group>
                     <group string="Cash Control">
                         <field name="cash_control"/>
@@ -63,10 +71,6 @@
                                 <field name="subtotal"/>
                             </tree>
                         </field>
-                    </group>
-                    <group name="receipt" string="Receipt" >
-                        <field name="receipt_header" string="Header" placeholder="A custom receipt header message"/>
-                        <field name="receipt_footer" string="Footer" placeholder="A custom receipt footer message"/>
                     </group>
                 </sheet>
 

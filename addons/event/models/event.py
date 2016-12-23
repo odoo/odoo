@@ -29,7 +29,7 @@ class EventEvent(models.Model):
     """Event"""
     _name = 'event.event'
     _description = 'Event'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _order = 'date_begin'
 
     name = fields.Char(
@@ -61,12 +61,12 @@ class EventEvent(models.Model):
             'interval_type': 'after_sub',
             'template_id': self.env.ref('event.event_subscription')
         }), (0, 0, {
-            'interval_nbr': 2,
+            'interval_nbr': 1,
             'interval_unit': 'days',
             'interval_type': 'before_event',
             'template_id': self.env.ref('event.event_reminder')
         }), (0, 0, {
-            'interval_nbr': 15,
+            'interval_nbr': 10,
             'interval_unit': 'days',
             'interval_type': 'before_event',
             'template_id': self.env.ref('event.event_reminder')
@@ -140,8 +140,8 @@ class EventEvent(models.Model):
     date_end = fields.Datetime(
         string='End Date', required=True,
         track_visibility='onchange', states={'done': [('readonly', True)]})
-    date_begin_located = fields.Datetime(string='Start Date Located', compute='_compute_date_begin_tz')
-    date_end_located = fields.Datetime(string='End Date Located', compute='_compute_date_end_tz')
+    date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
+    date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
 
     @api.model
     def _tz_get(self):
@@ -151,9 +151,7 @@ class EventEvent(models.Model):
     @api.depends('date_tz', 'date_begin')
     def _compute_date_begin_tz(self):
         if self.date_begin:
-            self_in_tz = self.with_context(tz=(self.date_tz or 'UTC'))
-            date_begin = fields.Datetime.from_string(self.date_begin)
-            self.date_begin_located = fields.Datetime.to_string(fields.Datetime.context_timestamp(self_in_tz, date_begin))
+            self.date_begin_located = format_tz(self.with_context({'use_babel': True}).env, self.date_begin, tz=self.date_tz)
         else:
             self.date_begin_located = False
 
@@ -161,9 +159,7 @@ class EventEvent(models.Model):
     @api.depends('date_tz', 'date_end')
     def _compute_date_end_tz(self):
         if self.date_end:
-            self_in_tz = self.with_context(tz=(self.date_tz or 'UTC'))
-            date_end = fields.Datetime.from_string(self.date_end)
-            self.date_end_located = fields.Datetime.to_string(fields.Datetime.context_timestamp(self_in_tz, date_end))
+            self.date_end_located = format_tz(self.with_context({'use_babel': True}).env, self.date_end, tz=self.date_tz)
         else:
             self.date_end_located = False
 
@@ -280,12 +276,12 @@ class EventEvent(models.Model):
 class EventRegistration(models.Model):
     _name = 'event.registration'
     _description = 'Attendee'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _order = 'name, create_date desc'
 
     origin = fields.Char(
         string='Source Document', readonly=True,
-        help="Reference of the document that created the registration, for example a sale order")
+        help="Reference of the document that created the registration, for example a sales order")
     event_id = fields.Many2one(
         'event.event', string='Event', required=True,
         readonly=True, states={'draft': [('readonly', False)]})
@@ -333,7 +329,7 @@ class EventRegistration(models.Model):
     @api.model
     def _prepare_attendee_values(self, registration):
         """ Method preparing the values to create new attendees based on a
-        sale order line. It takes some registration data (dict-based) that are
+        sales order line. It takes some registration data (dict-based) that are
         optional values coming from an external input like a web page. This method
         is meant to be inherited in various addons that sell events. """
         partner_id = registration.pop('partner_id', self.env.user.partner_id)
@@ -430,15 +426,15 @@ class EventRegistration(models.Model):
         today = fields.Datetime.from_string(fields.Datetime.now())
         event_date = fields.Datetime.from_string(self.event_begin_date)
         diff = (event_date.date() - today.date())
-        if diff.days == 0:
-            return _('Today')
+        if diff.days <= 0:
+            return _('today')
         elif diff.days == 1:
-            return _('Tomorrow')
-        elif event_date.isocalendar()[1] == today.isocalendar()[1]:
-            return _('This week')
-        elif today.month == event_date.month:
-            return _('This month')
-        elif event_date.month == (today + relativedelta(months=+1)):
-            return _('Next month')
+            return _('tomorrow')
+        elif (diff.days < 7):
+            return _('in %d days') % (diff.days, )
+        elif (diff.days < 14):
+            return _('next week')
+        elif event_date.month == (today + relativedelta(months=+1)).month:
+            return _('next month')
         else:
-            return format_tz(self.env, self.event_begin_date, tz='UTC', format='%Y%m%dT%H%M%SZ')
+            return _('on ') + format_tz(self.with_context({'use_babel': True}).env, self.event_begin_date, tz=self.event_id.date_tz or 'UTC')

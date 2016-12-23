@@ -106,8 +106,6 @@ class AccountConfigSettings(models.TransientModel):
              'Once the master budgets and the budgets are defined, '
              'the project managers can set the planned amount on each analytic account.\n'
              '-This installs the module account_budget.')
-    module_account_tax_cash_basis = fields.Boolean(string="Allow Tax Cash Basis",
-                                        help='Generate tax cash basis entrie when reconciliating entries')
 
     group_proforma_invoices = fields.Boolean(string='Allow pro-forma invoices',
         implied_group='account.group_proforma_invoices',
@@ -115,6 +113,10 @@ class AccountConfigSettings(models.TransientModel):
     module_account_reports_followup = fields.Boolean("Enable payment followup management",
         help='This allows to automate letters for unpaid invoices, with multi-level recalls.\n'
              '-This installs the module account_reports_followup.')
+    tax_cash_basis_journal_id = fields.Many2one(
+        'account.journal',
+        related='company_id.tax_cash_basis_journal_id',
+        string="Tax Cash Basis Journal",)
 
     default_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", help="This sale tax will be assigned by default on new products.", oldname="default_sale_tax")
     default_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", help="This purchase tax will be assigned by default on new products.", oldname="default_purchase_tax")
@@ -143,6 +145,9 @@ class AccountConfigSettings(models.TransientModel):
     module_account_bank_statement_import_csv = fields.Boolean("Import in .csv format",
         help='Get your bank statements from your bank and import them in Odoo in the .CSV format.\n'
             '-This installs the module account_bank_statement_import_csv.')
+    module_account_bank_statement_import_camt = fields.Boolean("Import in CAMT.053 format",
+        help='Get your bank statements from your bank and import them in Odoo in the CAMT format.\n'
+            '-This installs the module account_bank_statement_import_camt.')
     overdue_msg = fields.Text(related='company_id.overdue_msg', string='Overdue Payments Message *')
 
 
@@ -264,6 +269,11 @@ class AccountConfigSettings(models.TransientModel):
     def onchange_analytic_accounting(self):
         if self.group_analytic_accounting:
             self.module_account_accountant = True
+
+    @api.onchange('module_account_budget')
+    def onchange_module_account_budget(self):
+        if self.module_account_budget:
+            self.group_analytic_accounting = True
 
     @api.multi
     def open_company(self):

@@ -47,7 +47,7 @@ class ProcurementOrder(models.Model):
 
     def _get_project(self):
         Project = self.env['project.project']
-        project = self.product_id.project_id
+        project = self.product_id.with_context(force_company=self.company_id.id).project_id
         if not project and self.sale_line_id:
             # find the project corresponding to the analytic account of the sales order
             account = self.sale_line_id.order_id.project_id

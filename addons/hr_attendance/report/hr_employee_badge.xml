@@ -7,6 +7,9 @@
         report_type="qweb-html"
         name="hr_attendance.print_employee_badge"
         file="hr_attendance.print_employee_badge"/>
+    <record id="hr_employee_print_badge" model="ir.actions.report.xml">
+        <field name="print_report_name">'Print Badge'+'-'+(object.name)</field>
+    </record>
 
     <template id="print_employee_badge">
         <t t-call="report.html_container">

@@ -1,29 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * anonymization
-# 
+#
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2016
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
-# hoxhe aits <hoxhe0@gmail.com>, 2016
-# Ali zuaby <ali@zuaby.net>, 2016
-# amrnegm <amrnegm.01@gmail.com>, 2016
-# Mohammed Albasha <m.albasha.ma@gmail.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Mohammed Albasha <m.albasha.ma@gmail.com>, 2016\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-09-12 22:29+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"#-#-#-#-#  ar.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_history_tree
@@ -63,22 +61,22 @@ msgid "Anonymized Fields"
 msgstr "حقول التجاهل"
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:194
+#: code:addons/anonymization/anonymization.py:434
 #, python-format
 msgid "Anonymized value can not be empty."
 msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:69
+#: code:addons/anonymization/anonymization.py:284
 #, python-format
 msgid ""
-"Before executing the anonymization process, you should make a backup of your"
-" database."
+"Before executing the anonymization process, you should make a backup of your "
+"database."
 msgstr ""
 "قبل بدء عملية إخفاء الهوية، يجب أن تحتفظ بنسخة احتياطية من قاعدة البيانات."
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:191
+#: code:addons/anonymization/anonymization.py:430
 #, python-format
 msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
@@ -143,8 +141,8 @@ msgid "Done"
 msgstr "منتهي"
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:139
-#: code:addons/anonymization/wizard/anonymize_wizard.py:263
+#: code:addons/anonymization/anonymization.py:373
+#: code:addons/anonymization/anonymization.py:434
 #, python-format
 msgid "Error !"
 msgstr "خطأ !"
@@ -167,8 +165,8 @@ msgstr "حقل"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_field_name
-msgid "Field name"
-msgstr ""
+msgid "Field Name"
+msgstr "اسم الحقل"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_field_ids
@@ -200,7 +198,7 @@ msgid "Import"
 msgstr "استيراد"
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:263
+#: code:addons/anonymization/anonymization.py:521
 #, python-format
 msgid ""
 "It is not possible to reverse the anonymization process without supplying "
@@ -250,12 +248,6 @@ msgid "New"
 msgstr "جديد"
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:153
-#, python-format
-msgid "No fields are going to be anonymized."
-msgstr ""
-
-#. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 msgid "Not Existing"
 msgstr "غير موجود"
@@ -293,10 +285,9 @@ msgstr "بدأت"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_state
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_state
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_state
 msgid "Status"
-msgstr "الحاله "
+msgstr "الحالة"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_summary
@@ -309,7 +300,7 @@ msgid "Target Version"
 msgstr "النسخة المستهدفة"
 
 #. module: anonymization
-#: code:addons/anonymization/models/anonymization.py:55
+#: code:addons/anonymization/anonymization.py:75
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
@@ -321,7 +312,7 @@ msgstr ""
 "المشكلة قبل محاولة إنشاء، تغيير أو حذف أي حقول."
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:120
+#: code:addons/anonymization/anonymization.py:342
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
@@ -330,11 +321,11 @@ msgid ""
 msgstr ""
 "إخفاء الهوية في قاعدة البيانات حالياً في وضع غير مستقر. بعض الحقول تم إخفاء "
 "الهوية فيها بينما البعض الآخر لم يجري عليه الأمر. يجدر بك محاولة حل هذه "
-"المشكلة قبل أن تحاول فعل أي شيء آخر."
+"المشكلة قبل محاولة إنشاء، تغيير أو حذف أي حقول."
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:143
-#: code:addons/anonymization/wizard/anonymize_wizard.py:259
+#: code:addons/anonymization/anonymization.py:375
+#: code:addons/anonymization/anonymization.py:514
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
@@ -346,14 +337,14 @@ msgstr ""
 "المشكلة قبل أن تحاول فعل أي شيء."
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:141
+#: code:addons/anonymization/anonymization.py:373
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
 msgstr ""
 "تم إخفاء الهوية في قاعدة البيانات الحالية، ولا يمكنك تكرار الأمر عليها."
 
 #. module: anonymization
-#: code:addons/anonymization/models/anonymization.py:53
+#: code:addons/anonymization/anonymization.py:73
 #, python-format
 msgid ""
 "The database is currently anonymized, you cannot create, modify or delete "
@@ -361,7 +352,7 @@ msgid ""
 msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/wizard/anonymize_wizard.py:257
+#: code:addons/anonymization/anonymization.py:512
 #, python-format
 msgid ""
 "The database is not currently anonymized, you cannot reverse the "
@@ -371,11 +362,11 @@ msgstr ""
 #. module: anonymization
 #: model:ir.model.fields,help:anonymization.field_ir_model_fields_anonymize_wizard_file_import
 msgid ""
-"This is the file created by the anonymization process. It should have the "
-"'.pickle' extention."
+"This is the file created by the anonymization process. It should have the '."
+"pickle' extention."
 msgstr ""
-"هذا هو الملف التي تم إنشاؤه بواسطة عملية إخفاء الهوية. يجب أن يكون امتداده "
-".pickle"
+"هذا هو الملف التي تم إنشاؤه بواسطة عملية إخفاء الهوية. يجب أن يكون امتداده ."
+"pickle"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymize.wizard,state:0
@@ -383,7 +374,7 @@ msgid "Unstable"
 msgstr "متحول-غير مستقر"
 
 #. module: anonymization
-#: code:addons/anonymization/models/anonymization.py:32
+#: code:addons/anonymization/anonymization.py:49
 #: sql_constraint:ir.model.fields.anonymization:0
 #, python-format
 msgid "You cannot have two fields with the same name on the same object!"
@@ -428,3 +419,8 @@ msgstr "python"
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
 msgid "sql"
 msgstr "sql"
+
+#. module: anonymization
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_state
+msgid "unknown"
+msgstr "غير معروف"

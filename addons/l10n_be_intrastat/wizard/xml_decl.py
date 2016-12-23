@@ -180,7 +180,7 @@ class XmlDeclaration(models.TransientModel):
             #Check region
             #If purchase, comes from purchase order, linked to a location,
             #which is linked to the warehouse
-            #if sales, the sale order is linked to the warehouse
+            #if sales, the sales order is linked to the warehouse
             #if sales, from a delivery order, linked to a location,
             #which is linked to the warehouse
             #If none found, get the company one.

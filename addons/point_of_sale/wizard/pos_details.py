@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 class PosDetails(models.TransientModel):
     _name = 'pos.details.wizard'
-    _description = 'Open Sale Details Report'
+    _description = 'Open Sales Details Report'
 
     start_date = fields.Datetime(required=True, default=fields.Datetime.now)
     end_date = fields.Datetime(required=True, default=fields.Datetime.now)

@@ -213,5 +213,5 @@ class Employee(models.Model):
             ('date_from', '<=', today_end),
             ('date_to', '>=', today_start),
             ('type', '=', 'remove')
-        ], ['employee_id'])
+        ])
         return [('id', 'in', holidays.mapped('employee_id').ids)]

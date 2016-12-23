@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.activity_items">
+        <div t-if="activities.length" class="o_thread_date_separator o_border_dashed">
+            <span class="o_thread_date">Planned</span>
+        </div>
+        <t t-foreach="activities" t-as="activity">
+            <div class="o_thread_message">
+                <div class="o_thread_message_sidebar">
+                    <img t-attf-src="/web/image/res.users/#{activity.user_id[0]}/image_small"
+                        class="o_thread_message_avatar mb8"/>
+                    <a href="#" class="o_activity_done o_activity_link" t-att-data-activity-id="activity.id"><span class="fa fa-check-circle fa-2x" /></a>
+                </div>
+                <div class="o_thread_message_core o_mail_note">
+                    <div class="o_mail_info">
+                        <strong>
+                            <span t-attf-class="fa #{activity.icon}" />
+                            <t t-esc="activity.activity_type_id[1]" />
+                        </strong> planned by <strong><t t-esc="activity.user_id[1]" /></strong>
+                        <span class="fa fa-clock-o ml8" />
+                        <span t-attf-class="o_activity_date o_activity_color_#{activity.state}"><t t-esc="activity.label_delay" /></span>
+                        <div class="pull-right">
+                            <a href="#" class="o_activity_edit o_activity_link" t-att-data-activity-id="activity.id">Edit</a> |
+                            <a href="#" class="o_activity_unlink o_activity_link" t-att-data-activity-id="activity.id">Remove</a>
+                        </div>
+                    </div>
+                    <div t-if="activity.summary">
+                        <strong><i><t t-esc="activity.summary"/></i></strong>
+                    </div>
+                    <div t-if="activity.note">
+                        <t t-raw="activity.note"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>

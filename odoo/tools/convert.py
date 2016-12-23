@@ -475,25 +475,6 @@ form: module.record_id""" % (xml_id,)
             elif res['key'] == 'action':
                 ir_values.set_action(res['name'], action_slot=res['key2'], model=model, action=res['value'], res_id=res_id)
 
-    def _tag_workflow(self, rec, data_node=None, mode=None):
-        if self.isnoupdate(data_node) and self.mode != 'init':
-            return
-        model = rec.get('model').encode('ascii')
-        w_ref = rec.get('ref')
-        if w_ref:
-            id = self.id_get(w_ref)
-        else:
-            number_children = len(rec)
-            assert number_children > 0,\
-                'You must define a child node if you dont give a ref'
-            assert number_children == 1,\
-                'Only one child node is accepted (%d given)' % number_children
-            id = _eval_xml(self, rec[0], self.env)
-
-        uid = self.get_uid(data_node, rec)
-        record = self.env(user=uid)[model].browse(id)
-        record.signal_workflow(rec.get('action').encode('ascii'))
-
     def _tag_menuitem(self, rec, data_node=None, mode=None):
         rec_id = rec.get("id",'').encode('ascii')
         self._test_xml_id(rec_id)
@@ -824,7 +805,6 @@ form: module.record_id""" % (xml_id,)
             'function': self._tag_function,
             'menuitem': self._tag_menuitem,
             'template': self._tag_template,
-            'workflow': self._tag_workflow,
             'report': self._tag_report,
             'ir_set': self._tag_ir_set, # deprecated:: 9.0
             'act_window': self._tag_act_window,

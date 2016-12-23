@@ -182,7 +182,6 @@ To declare a record in XML, the **record** notation (using *<record>*) is recomm
 Odoo supports custom tags acting as syntactic sugar:
 
 - menuitem: use it as a shortcut to declare a ``ir.ui.menu``
-- workflow: the <workflow> tag sends a signal to an existing workflow.
 - template: use it to declare a QWeb View requiring only the ``arch`` section of the view.
 - report: use to declare a :ref:`report action <reference/actions/report>`
 - act_window: use it if the record notation can't do what you want
@@ -409,7 +408,7 @@ Idiomatics Python Programming
 .. code-block:: python
 
     value = my_dict.get('key', None) # very very redundant
-    value= my_dict.get('key') # good
+    value = my_dict.get('key') # good
 
 Also, ``if 'key' in my_dict`` and ``if my_dict.get('key')`` have very different
 meaning, be sure that you're using the right one.

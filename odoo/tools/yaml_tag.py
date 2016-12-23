@@ -47,15 +47,6 @@ class Menuitem(YamlTag):
         self.name = name
         super(Menuitem, self).__init__(**kwargs)
 
-class Workflow(YamlTag):
-    def __init__(self, model, action, ref=None, **kwargs):
-        self.model = model
-        self.action = action
-        self.ref = ref
-        super(Workflow, self).__init__(**kwargs)
-    def __str__(self):
-        return '!workflow {model: %s, action: %s, ref: %s}' % (str(self.model,), str(self.action,), str(self.ref,))
-
 class ActWindow(YamlTag):
     def __init__(self, **kwargs):
         super(ActWindow, self).__init__(**kwargs)
@@ -122,10 +113,6 @@ def menuitem_constructor(loader, node):
     kwargs = loader.construct_mapping(node)
     return Menuitem(**kwargs)
 
-def workflow_constructor(loader, node):
-    kwargs = loader.construct_mapping(node)
-    return Workflow(**kwargs)
-
 def act_window_constructor(loader, node):
     kwargs = loader.construct_mapping(node)
     return ActWindow(**kwargs)
@@ -173,7 +160,6 @@ def add_constructors():
     yaml.add_constructor(u"!record", record_constructor)
     yaml.add_constructor(u"!python", python_constructor)
     yaml.add_constructor(u"!menuitem", menuitem_constructor)
-    yaml.add_constructor(u"!workflow", workflow_constructor)
     yaml.add_constructor(u"!act_window", act_window_constructor)
     yaml.add_constructor(u"!function", function_constructor)
     yaml.add_constructor(u"!report", report_constructor)

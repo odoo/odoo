@@ -64,9 +64,6 @@ def is_function(node):
 def is_report(node):
     return isinstance(node, yaml_tag.Report)
 
-def is_workflow(node):
-    return isinstance(node, yaml_tag.Workflow)
-
 def is_act_window(node):
     return isinstance(node, yaml_tag.ActWindow)
 
@@ -618,36 +615,6 @@ class YamlInterpreter(object):
         else:
             self.assertion_report.record_success()
 
-    def process_workflow(self, node):
-        workflow, values = node.items()[0]
-        if self.isnoupdate(workflow) and self.mode != 'init':
-            return
-        if workflow.ref:
-            id = self.get_id(workflow.ref)
-        else:
-            if not values:
-                raise YamlImportException('You must define a child node if you do not give a ref.')
-            if not len(values) == 1:
-                raise YamlImportException('Only one child node is accepted (%d given).' % len(values))
-            value = values[0]
-            if not 'model' in value and (not 'eval' in value or not 'search' in value):
-                raise YamlImportException('You must provide a "model" and an "eval" or "search" to evaluate.')
-            value_model = self.env[value['model']]
-            local_context = {'obj': value_model.browse}
-            local_context.update(self.id_map)
-            id = safe_eval(value['eval'], self.eval_context, local_context)
-
-        if workflow.uid is not None:
-            uid = workflow.uid
-        else:
-            uid = self.uid
-        self.cr.execute('select distinct signal, sequence, id from wkf_transition ORDER BY sequence,id')
-        signals=[x['signal'] for x in self.cr.dictfetchall()]
-        if workflow.action not in signals:
-            raise YamlImportException('Incorrect action %s. No such action defined' % workflow.action)
-        record = self.env(user=uid)[workflow.model].browse(id)
-        record.signal_workflow(workflow.action)
-
     def _eval_params(self, model, params):
         args = []
         for i, param in enumerate(params):
@@ -907,11 +874,6 @@ class YamlInterpreter(object):
             self.process_act_window(node)
         elif is_report(node):
             self.process_report(node)
-        elif is_workflow(node):
-            if isinstance(node, types.DictionaryType):
-                self.process_workflow(node)
-            else:
-                self.process_workflow({node: []})
         elif is_function(node):
             if isinstance(node, types.DictionaryType):
                 self.process_function(node)

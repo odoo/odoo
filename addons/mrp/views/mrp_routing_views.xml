@@ -84,7 +84,7 @@
                                 <field name="name"/>
                             </group>
                             <group>
-                                <field name="location_id"/>
+                                <field name="location_id" groups="stock.group_adv_location"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                            </group>
                         </group>
@@ -108,7 +108,7 @@
                     <field name="code"/>
                     <field name="name"/>
                     <field name="active" invisible="1"/>
-                    <field name="location_id"/>
+                    <field name="location_id" groups="stock.group_adv_location"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>

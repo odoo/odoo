@@ -13,7 +13,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class HrTimesheetSheet(models.Model):
     _name = "hr_timesheet_sheet.sheet"
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
     _table = 'hr_timesheet_sheet_sheet'
     _order = "id desc"
     _description = "Timesheet"
@@ -87,14 +87,11 @@ class HrTimesheetSheet(models.Model):
                 if any(self.env.cr.fetchall()):
                     raise ValidationError('You cannot have 2 timesheets that overlap!\nPlease use the menu \'My Current Timesheet\' to avoid this problem.')
 
-    @api.multi
     @api.onchange('employee_id')
-    def onchange_employee_id(self, employee_id):
-        employee = self.env['hr.employee'].browse(employee_id)
-        for sheet in self:
-            if employee_id:
-                sheet.department_id = employee.department_id
-                sheet.user_id = employee.user_id
+    def onchange_employee_id(self):
+        if self.employee_id:
+            self.department_id = self.employee_id.department_id
+            self.user_id = self.employee_id.user_id
 
     def copy(self, *args, **argv):
         raise UserError(_('You cannot duplicate a timesheet.'))
@@ -173,13 +170,6 @@ class HrTimesheetSheet(models.Model):
             elif 'state' in init_values and record.state == 'done':
                 return 'hr_timesheet_sheet.mt_timesheet_approved'
         return super(HrTimesheetSheet, self)._track_subtype(init_values)
-
-    @api.model
-    def _needaction_domain_get(self):
-        empids = self.env['hr.employee'].search([('parent_id.user_id', '=', self.env.uid)])
-        if not empids:
-            return False
-        return ['&', ('state', '=', 'confirm'), ('employee_id', 'in', empids.ids)]
 
 
 class HrTimesheetSheetSheetAccount(models.Model):

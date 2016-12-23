@@ -28,6 +28,7 @@
         <field name="priority">99</field>
         <field name="arch" type="xml">
             <kanban class="o_hr_employee_attendance_kanban" create="false">
+                <field name="attendance_state"/>
                 <templates>
                     <t t-name="kanban-box">
                     <div class="oe_kanban_global_click">
@@ -36,13 +37,15 @@
                         </div>
                         <div class="oe_kanban_details">
                             <div id="textbox">
-                                <div class="col-xs-11" style="padding:0px">
-                                    <strong>
-                                        <field name="name"/>
-                                    </strong>
-                                </div><div class="col-xs-1" style="padding:0px">
-                                    <field name="attendance_state" widget="hr_attendance_kanban_presence_indicator"/>
+                                <div class="pull-right" t-if="record.attendance_state.raw_value == 'checked_in'">
+                                    <span class="oe_kanban_status oe_kanban_status_green"></span>
                                 </div>
+                                <div class="pull-right" t-if="record.attendance_state.raw_value == 'checked_out'">
+                                    <span class="oe_kanban_status oe_kanban_status_red"></span>
+                                </div>
+                                <strong>
+                                    <field name="name"/>
+                                </strong>
                             </div>
                             <ul>
                                 <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
@@ -62,16 +65,20 @@
         <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
         <field name="priority">1</field>
         <field name="arch" type="xml">
+            <templates position="before">
+                <field name="attendance_state"/>
+            </templates>
             <field name="name" position="replace">
-                <div id="row">
-                    <div class="col-xs-11" style="padding:0px">
-                        <strong>
-                            <field name="name" placeholder="Employee's Name"/>
-                        </strong>
+                <div>
+                    <div class="pull-right" t-if="record.attendance_state.raw_value == 'checked_in'">
+                        <span class="oe_kanban_status oe_kanban_status_green"></span>
                     </div>
-                    <div class="col-xs-1" style="padding:0px">
-                        <field name="attendance_state" widget="hr_attendance_kanban_presence_indicator"/>
+                    <div class="pull-right" t-if="record.attendance_state.raw_value == 'checked_out'">
+                        <span class="oe_kanban_status oe_kanban_status_red"></span>
                     </div>
+                    <strong>
+                        <field name="name" placeholder="Employee's Name"/>
+                    </strong>
                 </div>
             </field>
         </field>

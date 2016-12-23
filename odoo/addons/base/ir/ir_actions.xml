@@ -295,25 +295,6 @@
                                 <field name="code" widget="ace" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
                             </page>
 
-                            <page string="Worflow Signal" autofocus="autofocus"
-                                    attrs="{'invisible': [('state', '!=', 'trigger')]}">
-                                <p attrs="{'invisible': [('model_id', '!=', False)]}">
-                                    Please set the Base Model before setting the action details.
-                                </p>
-                                <group attrs="{'invisible': [('model_id', '=', False)]}">
-                                    <field name="use_relational_model" widget="radio"
-                                            attrs="{'readonly': [('model_id', '=', False)]}"/>
-                                    <field name="wkf_field_id" context="{'key': ''}"
-                                            attrs="{'required': [('state', '=', 'trigger'), ('use_relational_model', '=', 'relational')],
-                                                    'invisible': [('use_relational_model', '=', 'base')]}"
-                                            domain="[('model_id', '=', model_id), ('ttype', 'in', ['many2one'])]"/>
-                                    <field name="wkf_model_id" invisible="1"/>
-                                    <field name="wkf_model_name" invisible="1"/>
-                                    <field name="wkf_transition_id" attrs="{'required': [('state', '=', 'trigger')]}"
-                                            domain="[('wkf_id.osv', '=', wkf_model_name)]"/>
-                                </group>
-                            </page>
-
                             <page string="Client" autofocus="autofocus"
                                     attrs="{'invisible': [('state', '!=', 'client_action')]}">
                                 <group>
@@ -367,11 +348,11 @@
                                     <label for="link_new_record" attrs="{'invisible': ['|', ('state', '!=', 'object_write'), ('use_write', '!=', 'expression')]}"/>
                                     <div attrs="{'invisible': ['|', ('state', '!=', 'object_write'), ('use_write', '!=', 'expression')]}">
                                         <p class="oe_grey oe_edit_only" style="margin: 0px;">
-                                            Write a python expression, beginning with object, that gives the record to update. An expression builder is available in the help tab. Examples:
+                                            Write a python expression, beginning with record, that gives the record to update. An expression builder is available in the help tab. Examples:
                                         </p>
                                         <ul class="oe_grey oe_edit_only">
-                                            <li>object.partner_id</li>
-                                            <li>object.partner_id.currency_id</li>
+                                            <li>record.partner_id</li>
+                                            <li>record.partner_id.currency_id</li>
                                         </ul>
                                         <field name="write_expression"
                                                 attrs="{'required': [('state', '=', 'object_write'), ('use_write', '=', 'expression')]}"/>
@@ -410,29 +391,24 @@
                                         <h3>Help with Python expressions.</h3>
                                         <p>Various fields may use Python code or Python expressions. The following variables can be used:</p>
                                         <ul>
-                                            <li>self: ORM model of the record on which the action is triggered</li>
-                                            <li>object or obj: browse_record of the record on which the action is triggered</li>
-                                            <li>pool: ORM model pool (i.e. self.pool)</li>
-                                            <li>time: Python time module</li>
-                                            <li>cr: database cursor</li>
-                                            <li>uid: current user id</li>
-                                            <li>context: current context</li>
-                                            <li>workflow: Workflow engine</li>
+                                            <li>env: Odoo Environement on which the action is triggered</li>
+                                            <li>record: browse_record of the record on which the action is triggered</li>
+                                            <li>time, datetime, timezone: Python module</li>
                                             <li>log(message, level='info'): a logging function to create ir_logging records</li>
                                         </ul>
                                         <div>
                                             <p>Example of condition expression using Python</p>
                                             <ul>
                                                 <li>condition: True</li>
-                                                <li>condition: object.list_price > 5000</li>
+                                                <li>condition: record.list_price > 5000</li>
                                             </ul>
                                         </div>
                                         <div attrs="{'invisible': [('state', '!=', 'code')]}">
                                             <p>Example of python code</p>
-                                            <code>
-                                                partner_name = obj.name + '_code'
-                                                env["res.partner"].create({"name": partner_name})
-                                            </code>
+<code style='white-space: pre-wrap'>
+partner_name = record.name + '_code'
+env["res.partner"].create({"name": partner_name})
+</code>
                                         </div>
                                     </div>
                                     <group>
@@ -469,7 +445,6 @@
                     <field name="name"/>
                     <field name="state"/>
                     <field name="model_id"/>
-                    <field name="sequence"/>
                 </tree>
             </field>
         </record>
@@ -572,7 +547,7 @@
             <field name="model_id" ref="model_res_config"/>
             <field name="state">code</field>
             <field name="code">
-config = self.next(cr, uid, [], context=context) or {}
+config = model.next() or {}
 if config.get('type') not in ('ir.actions.act_window_close',):
     action = config
 </field>

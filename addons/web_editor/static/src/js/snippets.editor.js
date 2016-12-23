@@ -1032,12 +1032,12 @@ data.Editor = Class.extend({
         if($parent.closest(":data(\"snippet-editor\")").length) {
             while (!$parent.data("snippet-editor")) {
                 var $nextParent = $parent.parent();
-                if ($parent.children().length === 0 && $parent.text().trim() === "") {
+                if ($parent.children().length === 0 && $parent.text().trim() === "" && !$parent.hasClass("oe_structure")) {
                     $parent.remove();
                 }
                 $parent = $nextParent;
             }
-            if ($parent.children().length === 0 && $parent.text().trim() === "") {
+            if ($parent.children().length === 0 && $parent.text().trim() === "" && !$parent.hasClass("oe_structure")) {
                 _.defer(function () {
                     $parent.data("snippet-editor").on_remove();
                 });
@@ -1148,7 +1148,6 @@ editor.Class.include({
  */
 editor.Class.include({
     start: function () {
-        animation.stop();
         return this._super.apply(this, arguments).then(function () {
             animation.start(true);
         });
