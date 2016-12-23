@@ -331,10 +331,10 @@ class Lead(models.Model):
             action = opportunity.get_formview_action()
             if action.get('views') and any(view_id for view_id in action['views'] if view_id[1] == view_type):
                 view_id = next(view_id[0] for view_id in action['views'] if view_id[1] == view_type)
-        res, base_model = super(Lead, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        res = super(Lead, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             res['arch'] = self._fields_view_get_address(res['arch'])
-        return res, base_model
+        return res
 
     # ----------------------------------------
     # Actions Methods

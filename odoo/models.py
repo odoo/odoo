@@ -1335,7 +1335,6 @@ class BaseModel(object):
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         View = self.env['ir.ui.view']
-        base_model = self._name
         result = {
             'model': self._name,
             'field_parent': False,
@@ -1371,7 +1370,7 @@ class BaseModel(object):
             result['type'] = root_view['type']
             result['view_id'] = root_view['id']
             result['field_parent'] = root_view['field_parent']
-            base_model = root_view['model']
+            result['base_model'] = root_view['model']
         else:
             # fallback on default views methods if no ir.ui.view could be found
             try:
@@ -1381,7 +1380,7 @@ class BaseModel(object):
                 result['name'] = 'default'
             except AttributeError:
                 raise UserError(_("No default view of type '%s' could be found !") % view_type)
-        return result, base_model
+        return result
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -1402,11 +1401,11 @@ class BaseModel(object):
         View = self.env['ir.ui.view']
 
         # Get the view arch and all other attributes describing the composition of the view
-        result, base_model = self._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        result = self._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
         # Override context for postprocessing
-        if view_id and base_model != self._name:
-            View = View.with_context(base_model_name=base_model)
+        if view_id and result.get('base_model', self._name) != self._name:
+            View = View.with_context(base_model_name=result['base_model'])
 
         # Apply post processing, groups and modifiers etc...
         xarch, xfields = View.postprocess_and_fields(self._name, etree.fromstring(result['arch']), view_id)
