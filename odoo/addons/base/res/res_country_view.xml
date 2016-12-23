@@ -20,6 +20,8 @@
             <field name="model">res.country</field>
             <field name="arch" type="xml">
                 <form>
+                    <div class="oe_button_box">
+                    </div>
                     <field name="image" widget="image" class="oe_avatar"/>
                     <group>
                         <group>
@@ -28,8 +30,11 @@
                             <field name="code"/>
                         </group>
                         <group>
-                            <field name="address_format" groups="base.group_no_one" placeholder="Address format..."/>                            
                             <field name="phone_code"/>
+                        </group>
+                        <group string="Advanced Address Formatting" groups="base.group_no_one" >
+                            <field name="address_format" placeholder="Address format..."/>
+                            <field name="address_view_id"/>
                         </group>
                     </group>
                     <label for="state_ids"/>
