@@ -88,7 +88,7 @@ class dav_dir_property(osv.osv):
         'namespace': fields.char('Namespace', size=127, required=True),
         'name': fields.char('Name', size=64, required=True),
         'value': fields.text('Value'),
-        'do_subst': fields.boolean('Substitute', required=True),
+        'do_subst': fields.boolean('Substitute'),
         }
 
     _defaults = {
@@ -116,7 +116,7 @@ class dav_file_property(osv.osv):
         'namespace': fields.char('Namespace', size=127, required=True),
         'name': fields.char('Name', size=64, required=True),
         'value': fields.text('Value'),
-        'do_subst': fields.boolean('Substitute', required=True),
+        'do_subst': fields.boolean('Substitute'),
         }
 
     _defaults = {
