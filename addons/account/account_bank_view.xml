@@ -11,11 +11,13 @@
         <field name="model">res.partner.bank</field>
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
+            <field name="company_id" position="after">
+				<field name="currency_id" groups="base.group_multi_currency"/>
+            </field>
             <group name="bank" position="after">
                 <group name="accounting" col="2" colspan="2" attrs="{'invisible': [('company_id','=', False)]}">
                     <separator string="Accounting Information" colspan="2"/>
-                    <field name="journal_id"/>
-                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="journal_id"/>                    
                 </group>
             </group>
         </field>
