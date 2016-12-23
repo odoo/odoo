@@ -42,11 +42,7 @@ def _tz_get(self):
 class FormatAddressMixin(models.AbstractModel):
     _name = "format.address.mixin"
 
-    def fields_view_get_address(self, arch):
-
-        # TODO: if self._name != 'res.partner': call ir.ui.view.postprocess_and_fields()
-        # and catch ValueError -> return arch
-
+    def _fields_view_get_address(self, arch):
         # consider the country of the user, not the country of the partner we want to display
         address_view_id = self.env.user.company_id.country_id.address_view_id
         if address_view_id and not self._context.get('no_address_format'):
@@ -57,6 +53,8 @@ class FormatAddressMixin(models.AbstractModel):
                 sub_view = Partner.fields_view_get(
                     view_id=address_view_id.id, view_type='form', toolbar=False, submenu=False)
                 sub_view_node = etree.fromstring(sub_view['arch'])
+                #if the model is different than res.partner, there are chances that the view won't work
+                #(e.g fields not present on the model). In that case we just return arch
                 if self._name != 'res.partner':
                     try:
                         self.env['ir.ui.view'].postprocess_and_fields(self._name, sub_view_node, None)
@@ -314,7 +312,7 @@ class Partner(models.Model):
             view_id = self.env.ref('base.view_partner_simple_form').id
         res = super(Partner, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
-            res['arch'] = self.fields_view_get_address(res['arch'])
+            res['arch'] = self._fields_view_get_address(res['arch'])
         return res
 
     @api.constrains('parent_id')
