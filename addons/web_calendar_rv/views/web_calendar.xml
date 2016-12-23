@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<openerp>
+    <data>
+        <template id="assets_backend" name="calendar_resource_views assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/web_calendar/static/src/css/web_fullcalendar.css"/>
+                <link rel="stylesheet" href="/web_calendar_rv/static/lib/fullcalendar/fullcalendar.css"/>
+
+                <script type="text/javascript" src="/web_calendar_rv/static/lib/moment/moment.min.js"></script>
+                <script type="text/javascript" src="/web_calendar_rv/static/lib/fullcalendar/fullcalendar.min.js"></script>
+                <script type="text/javascript" src="/web_calendar_rv/static/lib/moment/moment.min.js"></script>
+
+                <script type="text/javascript" src="/web_calendar_rv/static/src/js/web_calendar_rv.js"></script>
+            </xpath>
+        </template>
+    </data>
+</openerp>
