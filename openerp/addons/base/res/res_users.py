@@ -32,6 +32,7 @@ from openerp.osv import fields,osv, expression
 from openerp.osv.orm import browse_record
 from openerp.service.security import check_super
 from openerp.tools.translate import _
+from openerp.service.security import check_super
 
 _logger = logging.getLogger(__name__)
 
