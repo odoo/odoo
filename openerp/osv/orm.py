@@ -1550,16 +1550,21 @@ class BaseModel(object):
     def get_invalid_fields(self, cr, uid):
         return list(self._invalids)
 
-    def _validate(self, cr, uid, ids, context=None):
+    def _validate(self, cr, uid, ids, context=None, field_names = []):
+        #Convert to set value
+        field_names = set(field_names)
+        
         context = context or {}
         lng = context.get('lang')
         trans = self.pool.get('ir.translation')
         error_msgs = []
         for constraint in self._constraints:
             fun, msg, fields = constraint
+            # Fields in python constraint and fields in write or create
+            valid = fields and (set(fields) & field_names)
             # We don't pass around the context here: validation code
             # must always yield the same results.
-            if not fun(self, cr, uid, ids):
+            if valid and not fun(self, cr, uid, ids):
                 # Check presence of __call__ directly instead of using
                 # callable() because it will be deprecated as of Python 3.0
                 if hasattr(msg, '__call__'):
@@ -4327,7 +4332,7 @@ class BaseModel(object):
             _logger.warning(
                 'No such field(s) in model %s: %s.',
                 self._name, ', '.join(unknown_fields))
-        self._validate(cr, user, ids, context)
+        self._validate(cr, user, ids, context, vals.keys())
 
         # TODO: use _order to set dest at the right position and not first node of parent
         # We can't defer parent_store computation because the stored function
@@ -4598,7 +4603,7 @@ class BaseModel(object):
         result = []
         for field in upd_todo:
             result += self._columns[field].set(cr, self, id_new, field, vals[field], user, rel_context) or []
-        self._validate(cr, user, [id_new], context)
+        self._validate(cr, user, [id_new], context, vals.keys())
 
         if not context.get('no_store_function', False):
             result += self._store_get_values(cr, user, [id_new],
