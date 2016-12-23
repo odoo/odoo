@@ -73,7 +73,23 @@ class ImBus(osv.Model):
         channels = [json_dump(c) for c in channels]
         domain.append(('channel','in',channels))
         notifications = self.search_read(cr, openerp.SUPERUSER_ID, domain)
-        return [{"id":notif["id"], "channel": simplejson.loads(notif["channel"]), "message":simplejson.loads(notif["message"])} for notif in notifications]
+        res = []
+        for notif in notifications:
+            if 'notify_at' in notif["message"]:
+                message = simplejson.loads(notif["message"])
+                if message["user_id"] == uid:
+                    timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT)
+                    timeout_after = datetime.datetime.utcnow()+datetime.timedelta(seconds=TIMEOUT)
+                    notify_at = openerp.fields.Datetime.from_string(message["notify_at"])
+                    if notify_at >= timeout_ago and notify_at <= timeout_after:
+                        res.append({"id":notif["id"], "channel": simplejson.loads(notif["channel"]), "message":simplejson.loads(notif["message"])})
+                    else:
+                        if last == 0:
+                            self.unlink(cr, uid, notif["id"])
+                            self.sendone(cr, uid, (cr.dbname, 'calendar.alarm'), simplejson.loads(notif["message"]))
+            else:
+                res.append({"id":notif["id"], "channel": simplejson.loads(notif["channel"]), "message":simplejson.loads(notif["message"])})
+        return res
 
 class ImDispatch(object):
     def __init__(self):
