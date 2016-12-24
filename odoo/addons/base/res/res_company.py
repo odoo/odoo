@@ -220,7 +220,6 @@ class Company(models.Model):
                 self.vat              and '%s: %s' % (_('TIN'), self.vat),
                 self.company_registry and '%s: %s' % (_('Reg'), self.company_registry),
             ]))
-            self.rml_footer_readonly = res
             self.rml_footer = res
 
     @api.onchange('state_id')
