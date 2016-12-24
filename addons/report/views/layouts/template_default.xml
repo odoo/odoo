@@ -34,7 +34,7 @@
 
     <div class="footer">
         <div class="text-center" style="border-top: 1px solid black;">
-            <ul t-if="not company.custom_footer" class="list-inline">
+            <ul class="list-inline">
                 <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
 
                 <li t-if="company.fax and company.phone">&amp;bull;</li>
@@ -47,13 +47,9 @@
                 <li t-if="company.website">Website: <span t-field="company.website"/></li>
             </ul>
 
-            <ul t-if="not company.custom_footer" class="list-inline" name="financial_infos">
+            <ul class="list-inline" name="financial_infos">
                 <li t-if="company.vat">TIN: <span t-field="company.vat"/></li>
             </ul>
-
-            <t t-if="company.custom_footer">
-                <span t-raw="company.rml_footer"/>
-            </t>
 
             <ul class="list-inline">
                 <li>Page:</li>

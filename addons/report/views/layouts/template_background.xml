@@ -21,22 +21,16 @@
 
         <div class="footer o_background_footer row">
             <div class="col-xs-12 text-center">
-                <ul t-if="not company.custom_footer" class="list-inline">
+                <ul class="list-inline">
                     <li t-if="company.phone"><i class="fa fa-phone"></i> <span t-field="company.phone"/></li>
                     <li t-if="company.fax"><i class="fa fa-fax"></i> <span t-field="company.fax"/></li>
                     <li t-if="company.email"><i class="fa fa-at"></i> <span t-field="company.email"/></li>
                     <li t-if="company.website"><i class="fa fa-globe"></i> <span t-field="company.website"/></li>
                 </ul>
 
-                <ul t-if="not company.custom_footer" class="list-inline text-center" name="financial_infos">
+                <ul class="list-inline text-center" name="financial_infos">
                     <li t-if="company.vat"><small>TIN: <span t-field="company.vat"/></small></li>
                 </ul>
-
-                <t t-if="company.custom_footer">
-                    <div class="col-xs-12 text-center">
-                        <span t-raw="company.rml_footer"/>
-                    </div>
-                </t>
 
                 <ul class="list-inline">
                     <li>Page:</li>

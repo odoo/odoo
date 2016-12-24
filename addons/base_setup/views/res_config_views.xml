@@ -111,13 +111,10 @@
                         </div>
                     </group>
                     <group string="Report Configuration" name="report">
-                        <label for="custom_footer"/>
+                        <label for="rml_footer"/>
                         <div>
-                            <field name="custom_footer" class="oe_inline" widget="radio"/>
-                        </div>
-                        <label for="rml_footer" attrs="{'invisible':[('custom_footer','=', False)]}"/>
-                        <div>
-                            <field name="rml_footer" class="oe_inline" attrs="{'invisible':[('custom_footer','=', False)]}"/>
+                            <field name="rml_footer" class="oe_inline"
+                                placeholder="E.G. Your bank accounts here..."/>
                         </div>
                     </group>
                     <group string="RML Report Configuration" groups="base.group_no_one">
