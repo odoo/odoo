@@ -4,10 +4,10 @@
 <template id="report_template_default">
     <div class="header">
         <div class="row">
-            <div class="col-xs-3">
+            <div class="col-xs-3 mb4">
                 <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 45px;"/>
             </div>
-            <div class="col-xs-9 text-right" style="margin-top:20px;" t-field="company.rml_header1"/>
+            <div class="col-xs-9 text-right" style="margin-top:22px;" t-field="company.rml_header1"/>
         </div>
         <div t-if="company.logo or company.rml_header1" class="row zero_min_height">
             <div class="col-xs-12">
@@ -34,29 +34,21 @@
 
     <div class="footer">
         <div class="text-center" style="border-top: 1px solid black;">
-            <ul class="list-inline">
+            <ul class="list-inline mb4">
                 <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
-
-                <li t-if="company.fax and company.phone">&amp;bull;</li>
                 <li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
-
-                <li t-if="company.email and company.fax or company.email and company.phone">&amp;bull;</li>
                 <li t-if="company.email">Email: <span t-field="company.email"/></li>
-
-                <li t-if="company.website and company.email or company.website and company.fax or company.website and company.phone">&amp;bull;</li>
-                <li t-if="company.website">Website: <span t-field="company.website"/></li>
+                <li t-if="company.website">Web: <span t-field="company.website"/></li>
+                <li t-if="company.vat">VAT: <span t-field="company.vat"/></li>
             </ul>
 
-            <ul class="list-inline" name="financial_infos">
-                <li t-if="company.vat">TIN: <span t-field="company.vat"/></li>
-            </ul>
+            <div name="financial_infos">
+                <span t-field="company.rml_footer"/>
+            </div>
 
-            <ul class="list-inline">
-                <li>Page:</li>
-                <li><span class="page"/></li>
-                <li>/</li>
-                <li><span class="topage"/></li>
-            </ul>
+            <div class="text-muted">
+                Page: <span class="page"/> / <span class="topage"/>
+            </div>
         </div>
     </div>
 </template>

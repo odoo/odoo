@@ -88,6 +88,14 @@
                                 t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                         </td>
                     </tr>
+                    <tr t-foreach="range(max(4-len(o.invoice_line_ids),0))" t-as="l">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
                 </tbody>
             </table>
 

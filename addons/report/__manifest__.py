@@ -17,6 +17,7 @@ Report
         'views/report_templates.xml',
         'views/base_config_settings_views.xml',
         'views/ir_actions_report_views.xml',
+        'views/res_company_view.xml',
         'views/layouts/template_default.xml',
         'views/layouts/template_background.xml',
         'views/layouts/template_boxed.xml',

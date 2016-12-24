@@ -8,12 +8,20 @@ class ResCompany(models.Model):
 
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format')
     default_report_template = fields.Selection([
-        ('default', 'Choose later'),
+        ('background', 'Background'),
         ('boxed', 'Boxed'),
         ('clean', 'Clean'),
         ('standard', 'Standard'),
-        ('background', 'Background'),
-    ], string='Default Report Template', required=True, default='default')
+    ], string='Report Template')
+
+    def set_report_template(self):
+        self.ensure_one()
+        if self.env.context.get('report_template', False):
+            self.default_report_template = self.env.context['report_template']
+        if self.env.context.get('default_report_name'):
+            document = self.env.get(self.env.context['active_model']).browse(self.env.context['active_id'])
+            return self.env['report'].get_action(document, self.env.context['default_report_name'])
+        return False
 
     @api.model_cr
     def init(self):

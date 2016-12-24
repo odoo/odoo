@@ -34,8 +34,6 @@ class AccountConfigSettings(models.TransientModel):
         help='Check this box if this company is a legal entity.')
     currency_id = fields.Many2one('res.currency', compute='_get_currency_id', inverse='_set_currency_id', required=True,
         string='Default company currency', help="Main currency of the company.")
-    company_footer = fields.Text(related='company_id.rml_footer', string='Bank accounts footer preview',
-        readonly=True, help="Bank accounts as printed in the footer of each printed document")
 
     has_chart_of_accounts = fields.Boolean(string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Template',
@@ -168,7 +166,6 @@ class AccountConfigSettings(models.TransientModel):
             self.expects_chart_of_accounts = company.expects_chart_of_accounts
             self.currency_id = company.currency_id
             self.transfer_account_id = company.transfer_account_id
-            self.company_footer = company.rml_footer
             self.tax_calculation_rounding_method = company.tax_calculation_rounding_method
             self.bank_account_code_prefix = company.bank_account_code_prefix
             self.cash_account_code_prefix = company.cash_account_code_prefix

@@ -125,11 +125,11 @@ class Company(models.Model):
     rml_header1 = fields.Text(string='Company Tagline', help="Appears by default on the top right corner of your printed documents (report header).")
     rml_header2 = fields.Text(string='RML Internal Header', required=True, default=_header2)
     rml_header3 = fields.Text(string='RML Internal Header for Landscape Reports', required=True, default=_header3)
-    rml_footer = fields.Text(string='Custom Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
+    rml_footer = fields.Text(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
     font = fields.Many2one('res.font', string="Font", default=lambda self: self._get_font(),
                            domain=[('mode', 'in', ('Normal', 'Regular', 'all', 'Book'))],
                            help="Set the font into the report header, it will be used as default font in the RML reports of the user company")
-    logo = fields.Binary(related='partner_id.image', default=_get_logo)
+    logo = fields.Binary(related='partner_id.image', default=_get_logo, string="Company Logo")
     # logo_web: do not store in attachments, since the image is retrieved in SQL for
     # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
     logo_web = fields.Binary(compute='_compute_logo_web', store=True)
