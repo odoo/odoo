@@ -29,8 +29,7 @@ class AccountChartTemplate(models.Model):
         account_tax_obj = self.env['account.tax']
         account_obj = self.env['account.account']
         taxes_acc = {
-            'ITAX_010-IN': account_obj.search([('code', '=', '208.01.01')]),
-            'ITAX_160-IN': account_obj.search([('code', '=', '208.01.01')]),
+            'IVA': account_obj.search([('code', '=', '208.01.01')]),
             'ITAXR_04-OUT': account_obj.search([('code', '=', '216.10.20')]),
             'ITAXR_10-OUT': account_obj.search([('code', '=', '216.10.20')]),
             'ITAX_1067-OUT': account_obj.search([('code', '=', '216.10.20')]),
