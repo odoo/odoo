@@ -122,7 +122,7 @@ class Company(models.Model):
     child_ids = fields.One2many('res.company', 'parent_id', string='Child Companies')
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
     rml_header = fields.Text(required=True, default=_get_header)
-    rml_header1 = fields.Char(string='Company Tagline', help="Appears by default on the top right corner of your printed documents (report header).")
+    rml_header1 = fields.Text(string='Company Tagline', help="Appears by default on the top right corner of your printed documents (report header).")
     rml_header2 = fields.Text(string='RML Internal Header', required=True, default=_header2)
     rml_header3 = fields.Text(string='RML Internal Header for Landscape Reports', required=True, default=_header3)
     rml_footer = fields.Text(string='Custom Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")

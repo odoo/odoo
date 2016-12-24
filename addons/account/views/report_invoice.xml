@@ -63,7 +63,7 @@
                         <th class="text-right">Unit Price</th>
                         <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
                         <th class="text-right">Taxes</th>
-                        <th class="text-right">Tax Excluded Price</th>
+                        <th class="text-right">Subtotal</th>
                     </tr>
                 </thead>
                 <tbody class="invoice_tbody">
@@ -119,14 +119,12 @@
             </div>
             
             <p t-if="o.comment">
-                <strong>Comment:</strong>
                 <span t-field="o.comment"/>
             </p>
             <p t-if="o.payment_term_id">
                 <span t-field="o.payment_term_id.note"/>
             </p>
             <p t-if="o.fiscal_position_id.note">
-                <strong>Fiscal Position Remark:</strong>
                 <span t-field="o.fiscal_position_id.note"/>
             </p>
         </div>
