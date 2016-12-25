@@ -11,8 +11,8 @@
 # Fatma Reda <alex.fatma@gmail.com>, 2016
 # Khaled Menof <kifcaliph@hotmail.com>, 2016
 # aymen rahmani <aymen.isims@gmail.com>, 2016
-# hamza tayseer atieh <hamza.atieh@minervadata.com>, 2016
 # mohammed rabea <moh.rabea@gmail.com>, 2016
+# hamza tayseer atieh <hamza.atieh@minervadata.com>, 2016
 # Ali zuaby <ali@zuaby.net>, 2016
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2016
 # Akram Alfusayal <akram_ma@hotmail.com>, 2016
@@ -23,8 +23,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 13:59+0000\n"
-"PO-Revision-Date: 2016-09-29 13:59+0000\n"
+"POT-Creation-Date: 2016-12-22 13:48+0000\n"
+"PO-Revision-Date: 2016-12-22 13:48+0000\n"
 "Last-Translator: Hossam Esam <hossamesam17@gmail.com>, 2016\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -58,6 +58,12 @@ msgstr "% خصم"
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:72
+#, python-format
+msgid "(RESCUE FOR %(session)s)"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -281,11 +287,6 @@ msgstr "يوميه المحاسبه المستخدمة لإضافة قيود ا�
 #: model:product.template,name:point_of_sale.partner_product_5_product_template
 msgid "Acsone.eu"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_activation
-msgid "Activation"
-msgstr "تنشيط"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_active
@@ -545,8 +546,10 @@ msgid "Carrots"
 msgstr "الجزر"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:285
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_cash_control
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
+#, python-format
 msgid "Cash Control"
 msgstr "التحكم بالنقدية"
 
@@ -1274,13 +1277,6 @@ msgid "General Information"
 msgstr "المعلومات العامة"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_partner_weight
-msgid ""
-"Gives the probability to assign a lead to this partner. (0 means no "
-"assignation.)"
-msgstr "ويعطي احتمالية لتخصيص مصدر اساسي لذلك الشريك. (0 تعني لا يوجد تخصيص.)"
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_sequence
 msgid "Gives the sequence order when displaying a list of product categories."
 msgstr "يعطي ترتيب التسلسل عند عرض قائمة من فئات المنتجات"
@@ -1386,16 +1382,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image
 msgid "Image"
 msgstr "الصورة"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_implemented_partner_ids
-msgid "Implementation References"
-msgstr "تفضيلات التنفيذ "
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_assigned_partner_id
-msgid "Implemented by"
-msgstr "طبقت ب"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1589,16 +1575,6 @@ msgid "Lemon"
 msgstr "الليمون"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_grade_id
-msgid "Level"
-msgstr "مستوى"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_partner_weight
-msgid "Level Weight"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_name
 msgid "Line No"
 msgstr "السطر رقم"
@@ -1774,12 +1750,7 @@ msgid "Next Order"
 msgstr "الأمر التالي"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_date_review_next
-msgid "Next Partner Review"
-msgstr "مراجعة الشريك المقبلة"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:136
+#: code:addons/point_of_sale/models/pos_order.py:129
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
@@ -2103,11 +2074,6 @@ msgstr "شريك"
 #: model:pos.category,name:point_of_sale.partner_services
 msgid "Partner Services"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_date_partnership
-msgid "Partnership Date"
-msgstr "تاريخ الشراكة"
 
 #. module: point_of_sale
 #. openerp-web

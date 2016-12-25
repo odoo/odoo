@@ -20,12 +20,13 @@
 # Lionel Sausin <ls@numerigraphe.com>, 2016
 # Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
-# Frédéric LIETART <stuff@thelinuxfr.org>, 2016
+# Frédéric LIETART <stuff@tifred.fr>, 2016
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2016
 # Loic <loic.richard2@gmail.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
 # Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
 # Sylvain LE GAL <sylvain.legal@grap.coop>, 2016
+# Alexis de Lattre <alexis@via.ecp.fr>, 2016
 # Henri Cornuau <hcornuau@gmail.com>, 2016
 # Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2016
 # ShevAbam <shevabam@gmail.com>, 2016
@@ -1957,7 +1958,7 @@ msgstr "Route de livraison"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_delivery
 msgid "Delivery Slip"
-msgstr "Bon de préparation"
+msgstr "Bon de livraison"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
@@ -7533,6 +7534,12 @@ msgstr ""
 #: code:addons/stock/wizard/stock_picking_return.py:43
 #, python-format
 msgid "You may only return Done pickings"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:21
+#, python-format
+msgid "You must define a warehouse for the company: %s."
 msgstr ""
 
 #. module: stock

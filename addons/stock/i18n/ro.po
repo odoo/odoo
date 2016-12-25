@@ -2663,7 +2663,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_exhausted
 msgid "Include Exhausted Products"
-msgstr ""
+msgstr "Include produse fără stoc"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
@@ -2887,7 +2887,7 @@ msgstr "Linie Inventar"
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template_property_stock_inventory
 msgid "Inventory Location"
-msgstr "Locație Inventar"
+msgstr "Locație diferențe inventar"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
@@ -7028,6 +7028,10 @@ msgid ""
 "Please first validatethe first inventory adjustement with this product "
 "before creating another one."
 msgstr ""
+"Nu puteți să aveți două inventare în starea 'În desfășurare' cu același "
+"produs (%s), în aceeași locație(%s), același pachet, același proprietar și "
+"același lot. Vă rog să validați mai întâi inventarul cu aceste produse "
+"înainte de a face altul."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:176
@@ -7130,6 +7134,12 @@ msgstr ""
 #: code:addons/stock/wizard/stock_picking_return.py:43
 #, python-format
 msgid "You may only return Done pickings"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:21
+#, python-format
+msgid "You must define a warehouse for the company: %s."
 msgstr ""
 
 #. module: stock
