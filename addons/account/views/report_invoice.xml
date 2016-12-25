@@ -88,11 +88,12 @@
                                 t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                         </td>
                     </tr>
-                    <tr t-foreach="range(max(4-len(o.invoice_line_ids),0))" t-as="l">
+                    <tr t-foreach="range(max(6-len(o.invoice_line_ids),0))" t-as="l">
+                        <td>&amp;nbsp;</td>
+                        <td class="hidden"></td>
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td></td>
+                        <td t-if="display_discount" groups="sale.group_discount_per_so_line"></td>
                         <td></td>
                         <td></td>
                     </tr>
@@ -125,7 +126,6 @@
                     </table>
                 </div>
             </div>
-            
             <p t-if="o.comment">
                 <span t-field="o.comment"/>
             </p>

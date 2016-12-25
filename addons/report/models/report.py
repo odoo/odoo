@@ -267,13 +267,13 @@ class Report(models.Model):
         )
 
     @api.noguess
-    def get_action(self, docids, report_name, data=None):
+    def get_action(self, docids, report_name, data=None, config=True):
         """Return an action of type ir.actions.report.xml.
 
         :param docids: id/ids/browserecord of the records to print (if not used, pass an empty list)
         :param report_name: Name of the template to generate an action for
         """
-        if (not self.env.user.company_id.default_report_template) or (not self.env.user.company_id.logo):
+        if ((not self.env.user.company_id.default_report_template) or (not self.env.user.company_id.logo)) and config:
             template = self.env.ref('report.view_company_report_form', False)
             return {
                 'name': _('Choose Your Report Layout'),

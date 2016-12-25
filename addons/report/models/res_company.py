@@ -14,13 +14,17 @@ class ResCompany(models.Model):
         ('standard', 'Standard'),
     ], string='Report Template')
 
+    def open_company_edit_report(self):
+        self.ensure_one()
+        return self.env['base.config.settings'].open_company()
+
     def set_report_template(self):
         self.ensure_one()
         if self.env.context.get('report_template', False):
             self.default_report_template = self.env.context['report_template']
         if self.env.context.get('default_report_name'):
             document = self.env.get(self.env.context['active_model']).browse(self.env.context['active_id'])
-            return self.env['report'].get_action(document, self.env.context['default_report_name'])
+            return self.env['report'].get_action(document, self.env.context['default_report_name'], config=False)
         return False
 
     @api.model_cr

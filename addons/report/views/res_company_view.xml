@@ -1,57 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <record id="view_company_report_data_form" model="ir.ui.view">
-        <field name="name">res.company.report.form</field>
-        <field name="model">res.company</field>
-        <field name="priority">1024</field>
-        <field name="arch" type="xml">
-            <form string="Company">
-                <group>
-                    <group>
-                        <field name="name"/>
-                        <label for="street" string="Address"/>
-                        <div class="o_address_format">
-                            <field name="street" placeholder="Street..." class="o_address_street"/>
-                            <field name="street2" placeholder="Street 2..." class="o_address_street"/>
-                            <field name="city" placeholder="City" class="o_address_city"/>
-                            <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
-                            <field name="zip" placeholder="ZIP" class="o_address_zip"/>
-                            <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}'/>
-                        </div>
-                        <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
-                        <field name="logo" widget="image"/>
-                    </group>
-                    <group>
-                        <field name="phone"/>
-                        <field name="fax"/>
-                        <field name="email"/>
-                        <field name="vat"/>
-                    </group>
-                </group>
-                <hr/>
-                <group>
-                    <field name="rml_header1" placeholder="e.g. Global Business Solutions"/>
-                    <field name="rml_footer" placeholder="e.g. Your Bank Accounts, one per line"/>
-                </group>
-                <footer>
-                    <button string="Save" name="print_report" type="object" class="btn-primary"/>
-                    <button string="Discard" class="btn-default" special="cancel"/>
-                </footer>
-            </form>
-        </field>
-    </record>
-    <record id="action_company_edit_report" model="ir.actions.act_window">
-        <field name="name">Edit Company Data</field>
-        <field name="res_model">res.company</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="view_company_report_data_form"/>
-        <field name="target">new</field>
-    </record>
-
-
-
     <record id="view_company_report_form" model="ir.ui.view">
         <field name="name">res.company.report.form</field>
         <field name="model">res.company</field>
@@ -66,7 +15,7 @@
                         company data: upload a logo, set
                         bank accounts, phone numbers, etc.
                     </p>
-                    <button name="%(action_company_edit_report)d" type="action" string="⇒ Review Company Data" class="btn-link"/>
+                    <button name="open_company_edit_report" type="object" string="⇒ Review Company Data" class="btn-link"/>
                 </div>
                 <div class="row mt16">
                     <div class="col-xs-3 text-center">
@@ -76,19 +25,19 @@
                         <a href="/report/static/src/pdf/preview_background.pdf" target="_blank">preview</a>
                     </div><div class="col-xs-3 text-center">
                         <button type="object" name="set_report_template" context="{'report_template': 'boxed'}">
-                            <img src="/report/static/src/img/preview_background.png" class="img img-responsive img-thumbnail" alt="Preview Boxed Template"/>
+                            <img src="/report/static/src/img/preview_boxed.png" class="img img-responsive img-thumbnail" alt="Preview Boxed Template"/>
                         </button>
-                        <a href="/report/static/src/pdf/preview_background.pdf" target="_blank">preview</a>
+                        <a href="/report/static/src/pdf/preview_boxed.pdf" target="_blank">preview</a>
                     </div><div class="col-xs-3 text-center">
                         <button type="object" name="set_report_template" context="{'report_template': 'clean'}">
-                            <img src="/report/static/src/img/preview_background.png" class="img img-responsive img-thumbnail" alt="Preview Clean Template"/>
+                            <img src="/report/static/src/img/preview_clean.png" class="img img-responsive img-thumbnail" alt="Preview Clean Template"/>
                         </button>
-                        <a href="/report/static/src/pdf/preview_background.pdf" target="_blank">preview</a>
+                        <a href="/report/static/src/pdf/preview_clean.pdf" target="_blank">preview</a>
                     </div><div class="col-xs-3 text-center">
                         <button type="object" name="set_report_template" context="{'report_template': 'standard'}">
-                            <img src="/report/static/src/img/preview_background.png" class="img img-responsive img-thumbnail" alt="Preview Minimalist Template"/>
+                            <img src="/report/static/src/img/preview_standard.png" class="img img-responsive img-thumbnail" alt="Preview Minimalist Template"/>
                         </button>
-                        <a href="/report/static/src/pdf/preview_background.pdf" target="_blank">preview</a>
+                        <a href="/report/static/src/pdf/preview_standard.pdf" target="_blank">preview</a>
                     </div>
                 </div>
                 <footer>
