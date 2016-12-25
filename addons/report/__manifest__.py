@@ -9,6 +9,9 @@
 Report
         """,
     'depends': ['base', 'web', 'base_setup'],
+    'demo': [
+        'data/report_demo.xml',
+    ],
     'data': [
         'data/report_paperformat_data.xml',
         'security/ir.model.access.csv',
