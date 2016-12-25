@@ -6,7 +6,6 @@
 # Максим Дронь <dronmax@gmail.com>, 2016
 # KingOPl Slav <87slava13@gmail.com>, 2016
 # Masha Koc <mariya.kos.ua@gmail.com>, 2016
-# artur kov <arturlevinkov@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
 # Viktor Pogrebniak <vp@aifil.ru>, 2016
@@ -25,13 +24,14 @@
 # Алексей Билькевич (belskiy) <mmmbrsk@gmail.com>, 2016
 # Mikhail - <expromt.core@gmail.com>, 2016
 # Andrey Samorukov <andrey.samorukov@me.com>, 2016
+# Denis Baranov <baranov@itlibertas.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 13:59+0000\n"
-"PO-Revision-Date: 2016-09-29 13:59+0000\n"
-"Last-Translator: Andrey Samorukov <andrey.samorukov@me.com>, 2016\n"
+"POT-Creation-Date: 2016-12-22 13:48+0000\n"
+"PO-Revision-Date: 2016-12-22 13:48+0000\n"
+"Last-Translator: Denis Baranov <baranov@itlibertas.com>, 2016\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,6 +64,12 @@ msgstr "% скидка"
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:72
+#, python-format
+msgid "(RESCUE FOR %(session)s)"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -139,7 +145,7 @@ msgstr "<span>Вид</span>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Company</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Компания</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
@@ -287,11 +293,6 @@ msgstr ""
 #: model:product.template,name:point_of_sale.partner_product_5_product_template
 msgid "Acsone.eu"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_activation
-msgid "Activation"
-msgstr "Активация"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_active
@@ -551,8 +552,10 @@ msgid "Carrots"
 msgstr "Морковь"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:285
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_cash_control
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
+#, python-format
 msgid "Cash Control"
 msgstr "Контроль купюр"
 
@@ -1276,14 +1279,6 @@ msgid "General Information"
 msgstr "Общая информация"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_res_users_partner_weight
-msgid ""
-"Gives the probability to assign a lead to this partner. (0 means no "
-"assignation.)"
-msgstr ""
-"Дает вероятность назначения инициативы этому партнёру. (0 — нет назначения.)"
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_sequence
 msgid "Gives the sequence order when displaying a list of product categories."
 msgstr ""
@@ -1390,16 +1385,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image
 msgid "Image"
 msgstr "Изображение"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_implemented_partner_ids
-msgid "Implementation References"
-msgstr "Рекомендации по реализации"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_assigned_partner_id
-msgid "Implemented by"
-msgstr "Реализовано"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1593,16 +1578,6 @@ msgid "Lemon"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_grade_id
-msgid "Level"
-msgstr "Уровень"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_partner_weight
-msgid "Level Weight"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_name
 msgid "Line No"
 msgstr ""
@@ -1778,12 +1753,7 @@ msgid "Next Order"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_date_review_next
-msgid "Next Partner Review"
-msgstr "Обзор следующего контрагента"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:136
+#: code:addons/point_of_sale/models/pos_order.py:129
 #, python-format
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
@@ -2107,11 +2077,6 @@ msgstr "Партнёр"
 #: model:pos.category,name:point_of_sale.partner_services
 msgid "Partner Services"
 msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_date_partnership
-msgid "Partnership Date"
-msgstr "Дата сотрудничества"
 
 #. module: point_of_sale
 #. openerp-web

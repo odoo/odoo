@@ -2954,7 +2954,7 @@ msgstr "是一个退货位置？"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_scrap_location
 msgid "Is a Scrap Location?"
-msgstr "是一个废品位置？"
+msgstr "是一个报废位置？"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3281,7 +3281,7 @@ msgstr "批次拆分"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "批次/序列"
+msgstr "批次/序列号"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_lot_id
@@ -7123,6 +7123,12 @@ msgstr ""
 #, python-format
 msgid "You may only return Done pickings"
 msgstr "你只能退回已完成的分拣"
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:21
+#, python-format
+msgid "You must define a warehouse for the company: %s."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:553

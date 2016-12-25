@@ -1380,7 +1380,7 @@ msgstr "Bedrijven"
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Company"
-msgstr "Bedijf"
+msgstr "Bedrijf"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_date_done
@@ -7631,6 +7631,12 @@ msgstr ""
 #, python-format
 msgid "You may only return Done pickings"
 msgstr "Je kunt alleen leveringen welke gereed zijn retourneren"
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:21
+#, python-format
+msgid "You must define a warehouse for the company: %s."
+msgstr "U moet een magazijn aanmaken voor het bedrijf: %s."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:553
