@@ -1,7 +1,6 @@
 .o_clean_footer, .o_clean_header, .o_template_clean_body {
     font-family: 'Lato';
     color: #000;
-    font-size: 12px;
 }
 .o_clean_header {
     img {
@@ -11,21 +10,35 @@
 }
 .o_clean_footer {
     margin: 0 3px;
-    border-top: 3px solid #000;
+    border-top: 3px solid @odoo-brand-primary;
+    h4 {
+        color: @odoo-brand-primary;
+        font-weight: bolder;
+    }
     .pagenumber {
         width: 35px;
         height: 35px;
-        border: 3px solid #000;
+        border: 3px solid @odoo-brand-primary;
+        background-color: @odoo-brand-optional;
+        color: white;
         padding-top: 6px;
         text-align: center;
     }
 }
 .o_template_clean_body {
+    h1, h2, h3 {
+        color: @odoo-brand-optional;
+        font-weight: bolder;
+    }
+    strong {
+        color: @odoo-brand-primary;
+    }
     table {
         thead {
+            color: @odoo-brand-primary;
             tr th {
                 text-align: left !important;
-                border-top: 3px solid #000 !important;
+                border-top: 3px solid @odoo-brand-primary !important;
                 text-transform: uppercase;
             }
             tr th:last-child {
@@ -41,7 +54,7 @@
                 border-top: none;
             }
             tr:last-child td {
-                border-bottom: 3px solid #000;
+                border-bottom: 3px solid @odoo-brand-primary;
             }
             tr {
                 td {
