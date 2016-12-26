@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from lxml import etree
+from odoo.tools.misc import file_open
 
 def dict_to_obj(dictionary):
     ''' This method is usefull to bring more genericity during the rendering.
@@ -33,3 +34,14 @@ def get_parent_node(node):
     ''' Return the parent of the node
     '''
     return next(node.iterancestors())
+
+def check_with_xsd(tree_or_str, xsd_path):
+    if not isinstance(tree_or_str, etree._Element):
+        tree_or_str = str_as_tree(tree_or_str)
+    xml_schema_doc = etree.parse(file_open(xsd_path))
+    xsd_schema = etree.XMLSchema(xml_schema_doc)
+    try:
+        xsd_schema.assertValid(tree_or_str)
+        return []
+    except etree.DocumentInvalid, xml_errors:
+        return [e.message for e in xml_errors.error_log]

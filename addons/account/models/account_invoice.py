@@ -399,7 +399,6 @@ class AccountInvoice(models.Model):
             # Mark the invoice as sent, no documents to generate
             self.sent = True
             return []
-
         if self.sent:
             # Look for already generated documents
             domain = [
@@ -431,9 +430,10 @@ class AccountInvoice(models.Model):
         invoice.
         '''
         metadata = super(AccountInvoice, self).prepare_pdf(values=values)
-        to_embed = metadata.get('to_embed', [])
+        to_embed = metadata.pop('to_embed', [])
         for record in self:
             to_embed.extend(record._get_edi_attachments())
+        metadata['to_embed'] = to_embed
         return metadata
 
 
