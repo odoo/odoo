@@ -29,6 +29,7 @@ from operator import attrgetter
 from openerp.exceptions import Warning
 from openerp import tools
 from openerp.osv import fields, osv
+from openerp.tools import float_compare
 from openerp.tools.translate import _
 
 
@@ -460,7 +461,8 @@ class hr_holidays(osv.osv):
             if record.holiday_type != 'employee' or record.type != 'remove' or not record.employee_id or record.holiday_status_id.limit:
                 continue
             leave_days = self.pool.get('hr.holidays.status').get_days(cr, uid, [record.holiday_status_id.id], record.employee_id.id, context=context)[record.holiday_status_id.id]
-            if leave_days['remaining_leaves'] < 0 or leave_days['virtual_remaining_leaves'] < 0:
+            if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1 or \
+              float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
                 # Raising a warning gives a more user-friendly feedback than the default constraint error
                 raise Warning(_('The number of remaining leaves is not sufficient for this leave type.\n'
                                 'Please verify also the leaves waiting for validation.'))
