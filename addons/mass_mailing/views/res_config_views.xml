@@ -6,18 +6,68 @@
             <field name="arch" type="xml">
                 <form string="Configure Mass Mailing" class="oe_form_configuration">
                     <header>
-                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        <button string="Save" type="object" name="execute" class="oe_highlight"/>
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
-                    <group string="Mass Mailing" name="mass_mailing_group">
-                        <field name="group_mass_mailing_campaign" widget="radio"/>
-                        <label for="module_mass_mailing_themes" string="Mass mailing themes"/>
-                        <div>
-                            <field name="module_mass_mailing_themes" widget="upgrade_boolean"/>
-                            <label for="module_mass_mailing_themes" invisible="1"/>
-                            <a href="https://www.odoo.com/page/email-marketing" target="_blank"> More Info </a>
+                    <sheet>
+                      <h2>Design</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-md-6 o_setting_box col-xs-12">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_mass_mailing_themes" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_mass_mailing_themes"/>
+                                    <div class="text-muted">
+                                        Choose among multiple email templates and styles
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 o_setting_box col-xs-12" title="This tool is advised if your marketing campaign is composed of several emails.">
+                                <div class="o_setting_left_pane" title="This is useful if your marketing campaigns are composed of several emails.">
+                                    <field name="group_mass_mailing_campaign"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_mass_mailing_campaign"/>
+                                    <div class="text-muted">
+                                        Manage campaigns of mass emails with process stages
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('group_mass_mailing_campaign', '=', False)]}">
+                                        <div class="mt16">
+                                            <button name="%(mass_mailing.action_view_mass_mailing_stages)d"
+                                                icon="fa-arrow-right" type="action" string="Campaign Stages"
+                                                class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </group>
+                        <h2>Mailing Lists</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-md-6 o_setting_box col-xs-12" id="module_website_mass_mailing" title="This adds a new Newsletter snippet to drag &amp; drop on on your website pages. This call-to-action prompts visitors to enter their email address to join a mailing list.">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_website_mass_mailing"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_website_mass_mailing"/>
+                                    <div class="text-muted">
+                                        Encourage to subscribe to mailing lists with a call-to-action
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 o_setting_box col-xs-12">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_crm"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_crm"/>
+                                    <div class="text-muted">
+                                        Manage mailing campaigns with your prospects
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </sheet>
                 </form>
             </field>
         </record>
