@@ -81,3 +81,30 @@ class SaleCoupon(models.Model):
             if self.program_id not in applicable_programs and self.program_id.promo_applicability == 'on_current_order':
                 message = {'error': _('At least one of the required conditions is not met to get the reward!')}
         return message
+
+    @api.multi
+    def action_coupon_sent(self):
+        """ Open a window to compose an email, with the edi invoice template
+            message loaded by default
+        """
+        self.ensure_one()
+        template = self.env.ref('sale_coupon.mail_template_sale_coupon', False)
+        compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
+        ctx = dict(
+            default_model='sale.coupon',
+            default_res_id=self.id,
+            default_use_template=bool(template),
+            default_template_id=template.id,
+            default_composition_mode='comment',
+        )
+        return {
+            'name': _('Compose Email'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form.id, 'form')],
+            'view_id': compose_form.id,
+            'target': 'new',
+            'context': ctx,
+        }
