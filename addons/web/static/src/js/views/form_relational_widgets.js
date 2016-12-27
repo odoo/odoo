@@ -1537,7 +1537,10 @@ var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.Reinitializ
         'change .o_form_input_file': function(e) {
             e.stopPropagation();
 
+            self = this;
+            var attachments = [];
             var $target = $(e.target);
+            var fileslist = $target["0"].files;
             var value = $target.val();
 
             if(value !== '') {
@@ -1563,13 +1566,15 @@ var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.Reinitializ
                 this.$('form.o_form_binary_form').submit();
                 this.$(".oe_fileupload").hide();
                 // add file on data result
-                this.data[0] = {
-                    id: 0,
-                    name: filename,
-                    filename: filename,
-                    url: '',
-                    upload: true,
-                };
+                _.each(fileslist, function(file,index) {
+                    attachments.push({
+                        id: index,
+                        name: file.name,
+                        filename: file.name,
+                        url: '',
+                        upload: true,
+                    });
+                });
             }
         },
         'click .oe_delete': function(e) {
@@ -1598,8 +1603,8 @@ var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.Reinitializ
         this.fileupload_id = _.uniqueId('oe_fileupload_temp');
         $(window).on(this.fileupload_id, _.bind(this.on_file_loaded, this));
     },
-    get_file_url: function(attachment) {
-        return '/web/content/' + attachment.id + '?download=true';
+    get_file_url: function(attachment_id) {
+        return '/web/content/' + attachment_id + '?download=true';
     },
     read_name_values : function() {
         var self = this;
@@ -1647,7 +1652,6 @@ var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.Reinitializ
         if(this.node.attrs.blockui > 0) { // unblock UI
             framework.unblockUI();
         }
-
         if(result.error || !result.id) {
             this.do_warn(_t('Uploading Error'), result.error);
             delete this.data[0];
@@ -1655,10 +1659,10 @@ var FieldMany2ManyBinaryMultiFiles = AbstractManyField.extend(common.Reinitializ
             if(this.data[0] && this.data[0].filename === result.filename && this.data[0].upload) {
                 delete this.data[0];
             }
-            result.url = this.get_file_url(result);
-            this.data[result.id] = result;
             var values = _.clone(this.get('value'));
-            values.push(result.id);
+            _.each(result.id, function(res){
+                values.push(res);
+            });
             this.set({value: values});
         }
         this.render_value();

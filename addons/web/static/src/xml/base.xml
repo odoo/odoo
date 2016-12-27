@@ -857,7 +857,7 @@
             <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
             <input type="hidden" name="session_id" value="" t-if="widget.session.override_session"/>
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
-            <input t-if="widget.widget!='image'" type="file" class="o_form_input_file" name="ufile"/>
+            <input t-if="widget.widget!='image'" type="file" class="o_form_input_file" name="ufile" multiple = "multiple" />
             <input t-if="widget.widget=='image'" type="file" class="o_form_input_file" name="ufile" accept="image/*"/>
             <t t-raw="0"/>
         </form>
