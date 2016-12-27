@@ -55,7 +55,8 @@
                                         options="{'no_create': True}"/>
                                     <field name="uom_id" groups="product.group_uom" options="{'no_create': True}"/>
                                     <field name="uom_po_id" groups="product.group_uom" options="{'no_create': True}"/>
-                                    <field name="currency_id" invisible="1"/> 
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="product_variant_id" invisible="1"/>
                                 </group>
                             </group>
                         </page>
@@ -64,7 +65,7 @@
                                 colspan="4"
                                 attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1)]}"
                                 groups="product.group_stock_packaging">
-                                <field name="packaging_ids" nolabel="1"/>
+                                <field name="packaging_ids" nolabel="1" context="{'default_product_id': product_variant_id}"/>
                             </group>
                         </page>
                         <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
@@ -182,6 +183,7 @@
             <field name="arch" type="xml">
                 <form string="Variant Information">
                     <sheet>
+                        <field name="id" invisible="1"/>
                         <field name="image_medium" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <label class="oe_edit_only" for="name" string="Product Name"/>
@@ -443,6 +445,7 @@
         <record model="ir.actions.act_window" id="action_packaging_view">
             <field name="name">Packagings</field>
             <field name="res_model">product.packaging</field>
+            <field name="domain">[('product_id', '!=', False)]</field>
         </record>
 
         <record id="product_packaging_tree_view" model="ir.ui.view">
@@ -468,6 +471,10 @@
                             <field name="name"/>
                         </h1>
                         <group>
+                            <field name="id" invisible='1'/>
+                            <group>
+                                <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            </group>
                             <group name="qty">
                                 <field name="qty"/>
                                 <field name="barcode"/>
