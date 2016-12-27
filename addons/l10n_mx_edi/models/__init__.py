@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from . import certificate
 from . import pac_mixin
 from . import account_invoice
 from . import ir_view

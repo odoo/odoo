@@ -43,15 +43,6 @@ def create_list_html(array):
         msg += '<li>' + item + '</li>'
     return '<ul>' + msg + '</ul>'
 
-def check_with_xsd(cfdi_tree):
-    xml_schema_doc = etree.parse(tools.file_open(CFDI_XSD))
-    xsd_schema = etree.XMLSchema(xml_schema_doc)
-    try:
-        xsd_schema.assertValid(cfdi_tree)
-        return []
-    except etree.DocumentInvalid, xml_errors:
-        return [e.message for e in xml_errors.error_log]
-
 class AccountInvoice(models.Model):
     _name = 'account.invoice'
     _inherit = ['account.invoice', 'l10n_mx_edi.pacmixin']
@@ -92,7 +83,8 @@ class AccountInvoice(models.Model):
             # not 'if node_uuid': due to the python future tag in this etree version
             if node_uuid is not None:
                 values['uuid'] = node_uuid.attrib['UUID']
-            values['certificate'] = tree.attrib['certificado']
+            cer_domain = [('serial_number', '=', tree.attrib['noCertificado'])]
+            values['certificate_id'] = self.env['l10n_mx_edi.certificate'].search(cer_domain, limit=1)
             xml = tools.tree_as_str(tree, pretty_print=False, xml_declaration=False)
             values['cfdi'] = base64.encodestring(xml)
         return values
@@ -243,10 +235,8 @@ class AccountInvoice(models.Model):
         service = 'cancelar'
         values = self._l10n_mx_edi_get_pac_values()
         uuids = [values['uuid']]
-        certificate = self.company_id.l10n_mx_edi_cer
-        certificate_key = self.company_id.l10n_mx_edi_cer_key
-        certificate_pwd = self.company_id.l10n_mx_edi_cer_password
-        params = [username, password, uuids, certificate, certificate_key, certificate_pwd]
+        certificate_id = values['certificate_id']
+        params = [username, password, uuids, certificate_id.content, certificate_id.key, certificate_id.password]
         response_values = self.l10n_mx_edi_get_pac_response(service, params, client)
         error = response_values.pop('error', None)
         response = response_values.pop('response', None)
@@ -298,9 +288,10 @@ class AccountInvoice(models.Model):
         invoices_list = client.factory.create("UUIDS")
         invoices_list.uuids.string = [values['uuid']]
         company_id = self.company_id
+        certificate_id = values['certificate_id']
         certificate = company_id.l10n_mx_edi_cer
         certificate_key = company_id.l10n_mx_edi_cer_key
-        params = [invoices_list, username, password, certificate, company_id.vat, certificate, certificate_key]
+        params = [invoices_list, username, password, company_id.vat, certificate_id.content, certificate_id.key]
         response_values = self.l10n_mx_edi_get_pac_response(service, params, client)
         error = response_values.pop('error', None)
         response = response_values.pop('response', None)
@@ -395,25 +386,21 @@ class AccountInvoice(models.Model):
     @api.multi
     def _l10n_mx_edi_create_cfdi(self):
         self.ensure_one()
+        qweb = self.env['ir.qweb']
+        error_log = []
+        company_id = self.company_id
+        values = self._l10n_mx_edi_create_cfdi_values()
+
         # -----------------------
         # Check the configuration
         # -----------------------
-        error_log = []
-        values = self._l10n_mx_edi_create_cfdi_values()
-        company_id = self.company_id
+        # -Check certificate
+        certificate_ids = company_id.l10n_mx_edi_certificate_ids
+        certificate_id = certificate_ids.get_valid_certificate()
+        if not certificate_id:
+            error_log.append(_('No valid certificate found'))
 
-        # -Check if the certificate is present
-        if not company_id.l10n_mx_edi_cer or\
-            not company_id.l10n_mx_edi_cer_key or\
-            not company_id.l10n_mx_edi_cer_password:
-            error_log.append(_('Certificate file/key and/or password is/are missing.'))
-        else:
-            try:
-                pem, certificate = company_id.l10n_mx_edi_load_certificate()
-            except Exception as e:
-                error_log.append(_('Error loading certificate: %s') % e)
-
-        # -Check if a PAC is specified
+        # -Check PAC
         if company_id.l10n_mx_edi_pac:
             pac_test_env = company_id.l10n_mx_edi_pac_test_env
             pac_username = company_id.l10n_mx_edi_pac_username
@@ -423,64 +410,30 @@ class AccountInvoice(models.Model):
         else:
             error_log.append(_('No PAC specified.'))
 
-        # -Check if the certificate is valid
-        if certificate:
-            default_timezone = self._context.get('tz')
-            default_timezone = timezone(default_timezone) if default_timezone else pytz.UTC
-            mx_timezone = timezone('America/Mexico_City')
-            date_invoice_mx = default_timezone.localize(datetime.now())
-            # Set date_invoice_mx aware with mexican timezone
-            date_invoice_mx = date_invoice_mx.astimezone(mx_timezone)
-            # Extract date range from certificate
-            before = mx_timezone.localize(
-            datetime.strptime(certificate.get_notBefore(), CERTIFICATE_DATE_FORMAT))
-            after = mx_timezone.localize(
-            datetime.strptime(certificate.get_notAfter(), CERTIFICATE_DATE_FORMAT))
-            # Normalize to a more readable format
-            if date_invoice_mx < before:
-                str_before = before.strftime(ERROR_LOG_DATE_FORMAT)
-                error_log.append(_('The certificate is not yet available. (%s)') % str_before)
-            if date_invoice_mx > after:
-                str_after = after.strftime(ERROR_LOG_DATE_FORMAT)
-                error_log.append(_('The certificate is expired. (%s)') % str_after)
-
         if error_log:
             return {'error': _('Please check your configuration: ') + create_list_html(error_log)}
         
         # -----------------------
         # Create the EDI document
         # -----------------------
-        # -Compute date
-        values['date'] = date_invoice_mx.strftime(ISO_8601_DATE_FORMAT)
-
-        # -Compute certificate_number
-        values['certificate_number'] = ('%x' % certificate.get_serial_number())[1::2]
-
-        # -Compute certificate
-        for to_del in ['\n', ssl.PEM_HEADER, ssl.PEM_FOOTER]:
-            pem = pem.replace(to_del, '')
-        values['certificate'] = pem
+        # -Compute certificate data
+        values['date'] = certificate_id.get_mx_current_datetime().strftime(ISO_8601_DATE_FORMAT)
+        values['certificate_number'] = certificate_id.serial_number
+        values['certificate'] = base64.decodestring(certificate_id.data)
 
         # -Compute cfdi
-        # Create unsigned cfdi
-        qweb = self.env['ir.qweb']
-        content = qweb.render(CFDI_TEMPLATE, values=values)
+        cfdi = qweb.render(CFDI_TEMPLATE, values=values)
         # TEMP: refactoring namespaces
         for key, value in MX_NS_REFACTORING.items():
-            content = content.replace(key, value + ':')
+            cfdi = cfdi.replace(key, value + ':')
 
         # -Compute cadena
-        tree = tools.str_as_tree(content)
+        tree = tools.str_as_tree(cfdi)
         xslt_root = etree.parse(tools.file_open(CFDI_XSLT_CADENA))
         cadena = str(etree.XSLT(xslt_root)(tree))
-        try:
-            cadena_crypted = company_id.l10n_mx_edi_create_encrypted_cadena(cadena)
-        except Exception as e:
-            return {'error': _('Failed to generate the cadena' + create_list_html([str(e)]))}
         
         # Post append cadena
-        values['cadena'] = cadena_crypted
-        tree.attrib['sello'] = cadena_crypted
+        tree.attrib['sello'] = certificate_id.get_encrypted_cadena(cadena)
 
         # Check with xsd
         error_log = tools.check_with_xsd(tree, CFDI_XSD)

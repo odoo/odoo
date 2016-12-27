@@ -14,12 +14,14 @@ This module allows the creation of the EDI documents and the communication with 
     """,
     'depends': ['account', 'base_vat'],
     'data': [
+        'security/ir.model.access.csv',
         'data/templates/mx_invoice.xml',
         'data/account_data.xml',
         'views/account_invoice_view.xml',
         'views/res_config_view.xml',
         'views/res_partner_view.xml',
         'views/ir_ui_view_view.xml',
+        'views/certificate_view.xml',
     ],
     'demo': [
         'demo/ir_ui_views.xml',

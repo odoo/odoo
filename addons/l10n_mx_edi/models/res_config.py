@@ -5,15 +5,6 @@ from odoo import api, fields, models, _
 class AccountConfigSettings(models.TransientModel):
     _inherit = 'account.config.settings'
 
-    l10n_mx_edi_cer = fields.Binary(
-        related='company_id.l10n_mx_edi_cer',
-        string='MX Certificate*')
-    l10n_mx_edi_cer_key = fields.Binary(
-        related='company_id.l10n_mx_edi_cer_key',
-        string='MX Certificate Key*')
-    l10n_mx_edi_cer_password = fields.Char(
-        related='company_id.l10n_mx_edi_cer_password',
-        string='MX Certificate Password*')
     l10n_mx_edi_pac = fields.Selection(
         related='company_id.l10n_mx_edi_pac',
         string='MX PAC*')
@@ -26,3 +17,6 @@ class AccountConfigSettings(models.TransientModel):
     l10n_mx_edi_pac_password = fields.Char(
         related='company_id.l10n_mx_edi_pac_password',
         string='MX PAC password*')
+    l10n_mx_edi_certificate_ids = fields.Many2many(
+        related='company_id.l10n_mx_edi_certificate_ids',
+        string='MX Certificates*')
