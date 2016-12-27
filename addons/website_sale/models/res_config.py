@@ -3,7 +3,6 @@
 
 from odoo import api, models, fields
 
-
 class WebsiteConfigSettings(models.TransientModel):
     _inherit = 'website.config.settings'
 
@@ -16,7 +15,7 @@ class WebsiteConfigSettings(models.TransientModel):
     salesperson_id = fields.Many2one('res.users', related='website_id.salesperson_id', string='Salesperson')
     salesteam_id = fields.Many2one('crm.team', related='website_id.salesteam_id', string='Sales Team')
     module_delivery = fields.Boolean("Manage shipping internally")
-    module_website_sale_delivery = fields.Boolean("Add Delivery Costs to Online Sales")
+    module_website_sale_delivery = fields.Boolean("Shipping Costs")
     # field used to have a nice radio in form view, resuming the 2 fields above
     sale_delivery_settings = fields.Selection([
         ('none', 'No shipping management on website'),
@@ -28,36 +27,50 @@ class WebsiteConfigSettings(models.TransientModel):
     module_delivery_temando = fields.Boolean("Temando integration")
     module_delivery_ups = fields.Boolean("UPS integration")
     module_delivery_usps = fields.Boolean("USPS integration")
+
     module_sale_ebay = fields.Boolean("eBay connector")
-    group_website_multiimage = fields.Selection([
-        (0, 'One image per product'),
-        (1, 'Several images per product')
-        ], string='Multi Images', implied_group='website_sale.group_website_multi_image', group='base.group_portal,base.group_user,base.group_public')
-    module_website_sale_options = fields.Selection([
-        (0, 'One-step "add to cart"'),
-        (1, 'Suggest optional products when adding to cart (e.g. for a computer: warranty, software, etc.)')
-        ], "Optional Products", help='Installs *e-Commerce Optional Products*')
+
+    group_website_multiimage = fields.Boolean(string='Multi-Images', implied_group='website_sale.group_website_multi_image')
+    group_discount_per_so_line = fields.Boolean(string="Discounted Prices", implied_group='sale.group_discount_per_so_line')
+    group_delivery_invoice_address = fields.Boolean(string="Shipping Address", implied_group='sale.group_delivery_invoice_address')
+
+    module_website_sale_options = fields.Boolean("Optional Products", help='Installs *e-Commerce Optional Products*')
+    module_website_sale_digital = fields.Boolean("Digital Content")
+
+    module_sale_stock = fields.Boolean("Delivery Orders")
+    module_account_taxcloud = fields.Boolean("TaxCloud")
     module_portal = fields.Boolean("Activate the customer portal", help="""Give your customers access to their documents.""")
+
     # the next 2 fields represent sale_pricelist_setting from sale.config.settings, they are split here for the form view, to improve usability
-    sale_pricelist_setting_split_1 = fields.Selection([
-        (0, 'A single sale price per product'),
-        (1, 'Several prices selectable through a drop-down list or applied automatically via Geo-IP'),
-        ], default=0, string="Pricing Strategy")
+    sale_pricelist_setting_split_1 = fields.Boolean(default=0, string="Multiple Prices per Products")
     sale_pricelist_setting_split_2 = fields.Selection([
-        (0, 'Specific prices per customer segment, currency, etc.'),
-        (1, 'Advanced pricing based on formulas (discounts, margins, rounding)')
-        ], default=0, string="Sale Price",
-        help='Specific prices per customer segment, currency, etc.: new pricing table available in product detail form (Sales tab).\n'
-             'Advanced pricing based on formulas (discounts, margins, rounding): apply price rules from a new *Pricelists* menu in Configuration.')
+        (0, 'Multiple prices per product (e.g. customer segments, currencies)'),
+        (1, 'Prices computed from formulas (discounts, margins, roundings)')
+        ], default=0, string="Sales Price")
     group_sale_pricelist = fields.Boolean("Use pricelists to adapt your price per customers",
-        implied_group='product.group_sale_pricelist',
-        help="""Allows to manage different prices based on rules per category of customers.
-                Example: 10% for retailers, promotion of 5 EUR on this product, etc.""")
+        implied_group='product.group_sale_pricelist')
+
+    group_product_variant = fields.Boolean("Attributes and Variants", implied_group='product.group_sale_pricelist')
     group_pricelist_item = fields.Boolean("Show pricelists to customers",
         implied_group='product.group_pricelist_item')
     group_product_pricelist = fields.Boolean("Show pricelists On Products",
         implied_group='product.group_product_pricelist')
-    order_mail_template = fields.Many2one('mail.template', string='Order Confirmation Email', readonly=True, default=_default_order_mail_template, help="Email sent to customer at the end of the checkout process")
+
+    order_mail_template = fields.Many2one('mail.template', string='Order Confirmation Email', default=_default_order_mail_template, help="Email sent to customer at the end of the checkout process")
+    group_show_price_subtotal = fields.Boolean("Show subtotal", implied_group='sale.group_show_price_subtotal')
+    group_show_price_total = fields.Boolean("Show total", implied_group='sale.group_show_price_total')
+
+    default_invoice_policy = fields.Selection([
+        ('order', 'Ordered quantities'),
+        ('delivery', 'Delivered quantities or service hours')
+        ], 'Invoicing Policy', default='order')
+
+    group_multi_currency = fields.Boolean(string='Multi-Currencies', implied_group='base.group_multi_currency')
+
+    sale_show_tax = fields.Selection([
+        ('total', 'Tax-Included Prices'),
+        ('subtotal', 'Tax-Excluded Prices')],
+        "Product Prices", default='total')
 
     @api.model
     def get_default_sale_delivery_settings(self, fields):
@@ -83,6 +96,11 @@ class WebsiteConfigSettings(models.TransientModel):
         return self.env['ir.values'].sudo().set_default(
             'sale.config.settings', 'sale_pricelist_setting', sale_pricelist_setting)
 
+    @api.multi
+    def set_sale_tax_defaults(self):
+        return self.env['ir.values'].sudo().set_default(
+            'website.config.settings', 'sale_show_tax', self.sale_show_tax)
+
     @api.onchange('sale_delivery_settings')
     def _onchange_sale_delivery_settings(self):
         if self.sale_delivery_settings == 'none':
@@ -99,6 +117,13 @@ class WebsiteConfigSettings(models.TransientModel):
             self.update({
                 'module_delivery': True,
                 'module_website_sale_delivery': True,
+            })
+
+    @api.onchange('group_discount_per_so_line')
+    def _onchange_group_discount_per_so_line(self):
+        if self.group_discount_per_so_line:
+            self.update({
+                'sale_pricelist_setting_split_1': True,
             })
 
     @api.onchange('sale_pricelist_setting_split_1', 'sale_pricelist_setting_split_2')
@@ -122,3 +147,16 @@ class WebsiteConfigSettings(models.TransientModel):
                     'group_sale_pricelist': True,
                     'group_pricelist_item': True,
                 })
+
+    @api.onchange('sale_show_tax')
+    def _onchange_sale_tax(self):
+        if self.sale_show_tax == "subtotal":
+            self.update({
+                'group_show_price_total': False,
+                'group_show_price_subtotal': True,
+            })
+        else:
+            self.update({
+                'group_show_price_total': True,
+                'group_show_price_subtotal': False,
+            })
