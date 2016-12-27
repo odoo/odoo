@@ -58,7 +58,7 @@ class AccountAccount(models.Model):
         help="Forces all moves for this account to have this secondary currency.")
     code = fields.Char(size=64, required=True, index=True)
     deprecated = fields.Boolean(index=True, default=False)
-    user_type_id = fields.Many2one('account.account.type', string='Type', required=True, oldname="user_type", 
+    user_type_id = fields.Many2one('account.account.type', string='Type', required=True, oldname="user_type",
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
     internal_type = fields.Selection(related='user_type_id.type', string="Internal Type", store=True, readonly=True)
     #has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
@@ -242,7 +242,6 @@ class AccountJournal(models.Model):
 
     # Bank journals fields
     bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict', copy=False)
-    display_on_footer = fields.Boolean("Show in Invoices Footer", help="Display this bank account on the footer of printed documents like invoices and sales orders.")
     bank_statements_source = fields.Selection([('no_feeds', 'No Feeds'),('manual', 'Record Manually')], string='Bank Feeds', default='no_feeds')
     bank_acc_number = fields.Char(related='bank_account_id.acc_number')
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id')
