@@ -24,7 +24,7 @@
                              <field name="internal_type" invisible="1" readonly="1"/>
                              <label for="reconcile"/>
                              <div>
-                                <field name="reconcile"/> 
+                                <field name="reconcile"/>
                                 <button name="action_open_reconcile" class="oe_link" type="object" string=" -> Reconcile" attrs="{'invisible': [('reconcile', '=', False)]}"/>
                              </div>
                              <field name="deprecated"/>
@@ -299,7 +299,6 @@
                                     <group>
                                         <field name="bank_acc_number"/>
                                         <field name="bank_id"/>
-                                        <field name="display_on_footer"/>
                                     </group>
                                     <group >
                                         <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')]}"/>
@@ -338,7 +337,6 @@
                         </div>
                         <group col="4">
                             <field name="bank_id"/>
-                            <field name="display_on_footer"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                             <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
@@ -356,7 +354,7 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('view_account_bank_journal_tree')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('view_account_bank_journal_form')})]"/>
             <field name="domain">[('type', '=', 'bank')]</field>
-            <field name="context">{'default_type': 'bank', 'default_display_on_footer': True}</field>
+            <field name="context">{'default_type': 'bank'}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a bank account.
@@ -1205,7 +1203,7 @@
                     <field name="move_id" string="Number (Move)"/>
                     <field name="account_id"/>
                     <field name="partner_id"/>
-                    <field name="journal_id"/> 
+                    <field name="journal_id"/>
                     <group expand="0" string="Group By">
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
