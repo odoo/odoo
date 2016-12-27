@@ -336,6 +336,8 @@ class FleetVehicle(models.Model):
 
             return super(FleetVehicle, self).write(vals)
 
+    # TODO: Split models in hr_payroll and fleet into several files (this is a real pain in the arse)
+
     @api.multi
     def return_action_to_open(self):
         """ This opens the xml view specified in xml_id for the current vehicle """

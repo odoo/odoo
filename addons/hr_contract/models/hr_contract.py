@@ -16,6 +16,7 @@ class Employee(models.Model):
     medic_exam = fields.Date(string='Medical Examination Date')
     place_of_birth = fields.Char('Place of Birth')
     children = fields.Integer(string='Number of Children')
+    # TODO make a many2one
     vehicle = fields.Char(string='Company Vehicle')
     vehicle_distance = fields.Integer(string='Home-Work Dist.', help="In kilometers")
     contract_ids = fields.One2many('hr.contract', 'employee_id', string='Contracts')

@@ -5,11 +5,12 @@
             <field name="name">Developer's Contract (Belgium payroll C.P. 218)</field>
             <field name="struct_id" ref="hr_payroll_salary_structure_employee"/>
             <field eval="2500.0" name="wage"/>
-            <field eval="6.0" name="meal_voucher_amount"/>
-            <field eval="1.09" name="meal_voucher_employee_deduction"/>
-            <field eval="250.0" name="car_company_amount"/>
-            <field eval="110" name="car_employee_deduction"/>
-            <field eval="50.0" name="additional_net_amount"/>
+            <field name="advantage_ids" eval="[
+                (0, 0, {'name': 'meal_voucher_amount', 'value': 6.0}),
+                (0, 0, {'name': 'meal_voucher_employee_deduction', 'value': 1.09}),
+                (0, 0, {'name': 'additional_net_amount', 'value': 50.0}),
+                ]"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
         </record>
 
         <record id="hr_payroll.hr_employee_payroll" model="hr.employee">
@@ -31,4 +32,31 @@
             <field name="country_id" ref="base.cn"/>
             <field name="email">fiscal@yourcompany.example.com</field>
         </record>
-</odoo>
+<!-- 
+        <record id="res_partner_yannick" model="res.partner">
+            <field name="name">Yannick</field>
+        </record>
+
+        <record id="hr_employee_yannick" model="hr.employee">
+            <field name="name">Yannick</field>
+            <field name="gender">male</field>
+            <field name="marital">single</field>
+            <field name="address_home_id" eval="ref('l10n_be_hr_payroll.res_partner_yannick')"/>
+        </record>
+
+        <record id="hr_contract_cdi_yannick" model="hr.contract">
+            <field name="name">CDI Yannick</field>
+            <field name="employee_id" eval="ref('l10n_be_hr_payroll.hr_employee_yannick')"/>
+            <field name="has_internet" eval="True"/>
+            <field name="has_mobile" eval="True"/>
+            <field name="resource_calendar_id" eval="ref('resource.resource_calendar_std')"/>
+            <field name="wage">3100</field>
+            <field name="struct_id" eval="ref('l10n_be_hr_payroll.hr_payroll_salary_structure_employee')"/>
+        </record>
+
+        <function model="hr.contract" name="_onchange_company_id" eval="[ref('l10n_be_hr_payroll.hr_contract_cdi_yannick')]"/>
+        <function model="hr.contract" name="_onchange_transport_mode" eval="[ref('l10n_be_hr_payroll.hr_contract_cdi_yannick')]"/>
+        <function model="hr.contract" name="_onchange_has_internet" eval="[ref('l10n_be_hr_payroll.hr_contract_cdi_yannick')]"/>
+        <function model="hr.contract" name="_onchange_has_mobile" eval="[ref('l10n_be_hr_payroll.hr_contract_cdi_yannick')]"/>
+        <function model="hr.contract" name="_onchange_has_commission_on_target" eval="[ref('l10n_be_hr_payroll.hr_contract_cdi_yannick')]"/>
+ --></odoo>
