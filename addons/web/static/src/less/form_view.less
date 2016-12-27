@@ -502,3 +502,46 @@
     float: left; // Unfortunately needed for the bounce effect
     margin-right: 4px;
 }
+
+// Light labels (not in bold) for settings forms
+label.o_light_label, .o_light_label label {
+    font-weight: normal;
+}
+
+.o_settings_container {
+    .o-flex-display();
+    .o-flex(0, 1, auto);
+    .o-flex-flow(row, wrap);
+    .o_setting_box:visible:nth-child(odd) {
+        clear: left;
+    }
+    .text-muted {
+        color: #aaaaaa;
+    }
+    .o_setting_box {
+        margin-bottom: 8px;
+        margin-top: 8px;
+        .o_setting_left_pane {
+            width: 24px;
+            float: left;
+        }
+        .o_setting_right_pane {
+            margin-left: 30px;
+            border-left: 1px solid #bbbbbb;
+            padding-left: 10px;
+            .o_form_input_dropdown > .o_form_input {
+                width: 100%;
+            }
+            .o_form_input {
+                width: 50%;
+            }
+            button.btn-link {
+                padding: 0;
+            }
+        }
+    }
+}
+
+.oe_form_configuration h2 {
+    margin-top: 32px !important;
+}
