@@ -720,6 +720,12 @@ class IrModelConstraint(models.Model):
 
         self.unlink()
 
+    @api.multi
+    def copy(self, default=None):
+        default = dict(default or {})
+        default['name'] = self.name + '_copy'
+        return super(IrModelConstraint, self).copy(default)
+
 
 class IrModelRelation(models.Model):
     """
