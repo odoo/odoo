@@ -1071,7 +1071,7 @@ class Meeting(models.Model):
                 if self.month_by == 'date' and (self.day < 1 or self.day > 31):
                     raise UserError(_("Please select a proper day of the month."))
 
-                if self.month_by == 'day':  # Eg : Second Monday of the month
+                if self.month_by == 'day' and self.byday and self.week_list:  # Eg : Second Monday of the month
                     return ';BYDAY=' + self.byday + self.week_list
                 elif self.month_by == 'date':  # Eg : 16th of the month
                     return ';BYMONTHDAY=' + str(self.day)
