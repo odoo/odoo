@@ -347,9 +347,12 @@ $('.oe_website_sale').each(function () {
         $('input.js_variant_change, select.js_variant_change', this).first().trigger('change');
     });
 
-    var state_options = $("select[name='state_id']:visible option:not(:first)");
+    $("select[name='state_id']").each(function(){
+        $(this).data('options', $(this).find('option:not(:first)'));
+    });
     $(oe_website_sale).on('change', "select[name='country_id']", function () {
-        var select = $("select[name='state_id']:visible");
+        var select = $("select[name='state_id']:enabled");
+        var state_options = select.data('options');
         var selected_state = select.val();
         state_options.detach();
         var displayed_state = state_options.filter("[data-country_id="+($(this).val() || 0)+"]");
