@@ -234,6 +234,8 @@ class ResPartner(models.Model):
     def _credit_debit_get(self):
         tables, where_clause, where_params = self.env['account.move.line']._query_get()
         where_params = [tuple(self.ids)] + where_params
+        if where_clause:
+            where_clause = 'AND ' + where_clause
         self._cr.execute("""SELECT account_move_line.partner_id, act.type, SUM(account_move_line.amount_residual)
                       FROM account_move_line
                       LEFT JOIN account_account a ON (account_move_line.account_id=a.id)
@@ -241,7 +243,7 @@ class ResPartner(models.Model):
                       WHERE act.type IN ('receivable','payable')
                       AND account_move_line.partner_id IN %s
                       AND account_move_line.reconciled IS FALSE
-                      AND """ + where_clause + """
+                      """ + where_clause + """
                       GROUP BY account_move_line.partner_id, act.type
                       """, where_params)
         for pid, type, val in self._cr.fetchall():
