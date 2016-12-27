@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError
 from odoo.sql_db import TestCursor
 from odoo.tools import config
@@ -273,7 +273,7 @@ class Report(models.Model):
         :param docids: id/ids/browserecord of the records to print (if not used, pass an empty list)
         :param report_name: Name of the template to generate an action for
         """
-        if ((not self.env.user.company_id.default_report_template) or (not self.env.user.company_id.logo)) and config:
+        if (self.env.uid==SUPERUSER_ID) and ((not self.env.user.company_id.default_report_template) or (not self.env.user.company_id.logo)) and config:
             template = self.env.ref('report.view_company_report_form', False)
             return {
                 'name': _('Choose Your Report Layout'),
