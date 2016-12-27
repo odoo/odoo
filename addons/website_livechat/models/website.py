@@ -15,4 +15,4 @@ class WebsiteConfigSettings(models.TransientModel):
 
     _inherit = 'website.config.settings'
 
-    channel_id = fields.Many2one('im_livechat.channel', string='Website Live Chat Channel', related='website_id.channel_id')
+    channel_id = fields.Many2one('im_livechat.channel', string='Website Live Channel', related='website_id.channel_id')
