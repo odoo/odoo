@@ -30,6 +30,7 @@
         <field name="arch" type="xml">
             <form string="Coupons" create="false" edit="false" delete="false">
                 <header>
+                     <button name="action_coupon_sent" type="object" string="Send by Email" class="oe_highlight"/>
                     <field name="state" widget="statusbar" statusbar_visible="new,used,expired" context="{'state': state}"/>
                 </header>
                 <sheet>

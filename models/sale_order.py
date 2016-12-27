@@ -155,12 +155,9 @@ class SaleOrder(models.Model):
             'discount_line_product_id': program.discount_line_product_id.id
         })
         self.generated_coupon_ids |= coupon
-        subject = '%s, a coupon has been generated from your order %s' % (self.partner_id.name, self.name)
-        body = self.env.ref('sale_coupon.sale_coupon_created_coupon_email_template').render({
-            'code': coupon.code,
-            'reward_description': coupon.program_id.discount_line_product_id.name
-            })
-        self.message_post(body=body, subject=subject, subtype='mail.mt_comment', partner_ids=[(4, self.partner_id.id)])
+        template = self.env.ref('sale_coupon.mail_template_sale_coupon', raise_if_not_found=False)
+        if template:
+            self.message_post_with_template(template.id, composition_mode='comment')
         return coupon
 
     def _get_applicable_programs(self):

@@ -1,0 +1,173 @@
+<?xml version="1.0" ?>
+<odoo>
+   <data>
+      <record id="sale_coupon.mail_template_sale_coupon" model="mail.template">
+         <field name="name">Coupon - Send by Email</field>
+         <field name="email_from">${object.program_id.company_id.email|safe}</field>
+         <field name="subject">Your reward coupon from ${object.program_id.company_id.name} </field>
+         <field name="partner_to">${object.partner_id.id}</field>
+         <field name="model_id" ref="sale_coupon.model_sale_coupon"/>
+         <field name="auto_delete" eval="True"/>
+         <field name="report_template" ref="report_coupon_code"/>
+         <field name="report_name">Your Coupon Code</field>
+         <field name="lang">${object.partner_id.lang}</field>
+         <field name="body_html" type="xml">
+            <div style="margin:auto;background-color:rgb(255, 255, 255);border: 1px solid rgb(240, 240, 240);max-width:600px;width:100%;">
+                <table align="center" style="text-align: center;" cellspacing="0" cellpadding="0" border="0" width="100%">
+                    <tbody>
+                        <tr>
+                            <td width="70%" style="padding:20px 20px 20px 20px;vertical-align:middle;text-align: left;border-bottom: 3px solid rgb(255, 255, 255)">
+                                <img src="/logo?company=${object.program_id.company_id.id}" alt="${object.program_id.company_id.name}" style="border:0px solid transparent; height: auto; max-width: 150px;" height="29"/>
+                            </td>
+                        </tr>
+                        % if object.partner_id.name:
+                        <tr>
+                            <td style="padding: 5px 0px 0px 0px;">
+                                <span>
+                                    <b> Congratulations </b> ${object.partner_id.name},
+                                </span>
+                            </td>
+                        </tr>
+                        % endif
+                        <tr>
+                            <td>
+                                <div>Here is your reward from ${object.program_id.company_id.name}.</div>
+                                <p class="oe_mt16"></p>
+                            </td>
+                        </tr>
+                        % if object.program_id.reward_type == 'discount':
+                            % if object.program_id.discount_type == 'fixed_amount':
+                                <tr>
+                                    <td>
+                                        <div style="font-size: 50px; color: rgb(153, 51, 102);font-weight: bold;">
+                                            ${'%s' % (format_amount(object.program_id.discount_fixed_amount, object.program_id.currency_id))}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="font-size: 24px;">
+                                            OFF ON YOUR NEXT ORDER !
+                                        </div>
+                                    </td>
+                                </tr>
+                            %else
+                                <tr>
+                                    <td>
+                                        <div style="font-size: 50px; color: rgb(153, 51, 102);font-weight: bold;">
+                                            ${object.program_id.discount_percentage} %
+                                        </div>
+                                    </td>
+                                </tr>
+                                % if object.program_id.discount_apply_on == 'specific_product':
+                                    <tr>
+                                        <td>
+                                            <div style="font-size: 24px;">
+                                                ${'ON %s' % (object.program_id.discount_specific_product_id.name.upper())}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                % elif object.program_id.discount_apply_on == 'cheapest_product':
+                                    <tr>
+                                        <td>
+                                            <div style="font-size: 24px;">
+                                                OFF ON THE CHEAPEST PRODUCT !
+                                            </div>
+                                        </td>
+                                    </tr>
+                                % else
+                                    <tr>
+                                        <td>
+                                            <div style="font-size: 24px;">
+                                                OFF ON YOUR NEXT ORDER !
+                                            </div>
+                                        </td>
+                                    </tr>
+                                % endif
+                            % endif
+                        % elif object.program_id.reward_type == 'product':
+                            <tr>
+                                <td>
+                                    <div style="font-size: 24px;">
+                                        ${'GET %s FREE %s ON YOUR NEXT ORDER !' % (object.program_id.reward_product_quantity, object.program_id.reward_product_id.name.upper())}
+                                    </div>
+                                </td>
+                            </tr>
+                        % elif object.program_id.reward_type == 'free_shipping':
+                            <tr>
+                                <td>
+                                    <div style="font-size: 24px;">
+                                        ${'GET FREE SHIPPING ON YOUR NEXT ORDER !'}
+                                    </div>
+                                </td>
+                            </tr>
+                        % endif
+                        <tr>
+                            <td>
+                                <span>
+                                    <font style="font-size: 18px;">
+                                        Use this promo code
+                                    </font>
+                                    % if object.expiration_date:
+                                        <font style="font-size: 18px;">
+                                            before ${object.expiration_date}
+                                        </font>
+                                    % endif
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>
+                                    <font style="font-size: 20px;">CODE:</font>
+                                    <strong style="padding: 5px;border-radius: 3px;background-color:#D9EAD3;font-size:18px;color:rgb(70, 70, 70);font-family:monospace;font-weight: bold;">
+                                        ${object.code}
+                                    </strong>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                % if object.program_id.rule_min_quantity not in [0, 1]
+                                <span>
+                                    <font style="font-size: 14px;">
+                                      Minimum purchase of ${object.program_id.rule_min_quantity} products
+                                    </font>
+                                </span>
+                                % endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                % if object.program_id.rule_minimum_amount != 0.00
+                                <span>
+                                    <font style="font-size: 14px;">
+                                      Valid for purchase above ${object.program_id.company_id.currency_id.symbol}${'%0.2f' % object.program_id.rule_minimum_amount |float}
+                                    </font>
+                                </span>
+                                % endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 20px 0px 20px 0px; border-top: 3px solid rgb(255, 255, 255);">
+                                % if object.program_id.company_id.name:
+                                    <span style="font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;color: rgb(147, 147, 147);">
+                                        <strong>
+                                            ${object.program_id.company_id.name}
+                                        </strong>
+                                    </span>
+                                    <div>
+                                        <p style="font-family:&quot;Lucida Grande&quot;, Helvetica, Verdana, Arial, sans-serif;text-align: center;color: rgb(147, 147, 147);font-weight: bold;font-size: 9px;">
+                                            Copyright © All Rights Reserved
+                                        </p>
+                                    </div>
+                                % endif
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+         </field>
+      </record>
+   </data>
+</odoo>

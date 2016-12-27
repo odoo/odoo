@@ -31,13 +31,6 @@ class SaleCouponGenerate(models.TransientModel):
                 vals.update({'partner_id': partner.id})
                 coupon = self.env['sale.coupon'].create(vals)
                 subject = '%s, a coupon has been generated for you' % (partner.name)
-                body = self.env.ref('sale_coupon.sale_coupon_created_coupon_email_template').render({
-                    'code': coupon.code,
-                    'reward_description': coupon.program_id.discount_line_product_id.name
-                    })
-                self.env['mail.mail'].create({
-                    'subject': subject,
-                    'body': body,
-                    'email_from': self.env.user.email or '',
-                    'email_to': partner.email,
-                })
+                template = self.env.ref('sale_coupon.mail_template_sale_coupon', raise_if_not_found=False)
+                if template:
+                    template.send_mail(coupon.id, email_values={'email_to': partner.email, 'email_from': self.env.user.email or '', 'subject': subject,})
