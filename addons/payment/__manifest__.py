@@ -12,6 +12,7 @@
         'data/payment_acquirer_data.xml',
         'views/payment_views.xml',
         'views/account_payment_views.xml',
+        'views/account_journal_views.xml',
         'views/payment_templates.xml',
         'views/res_partner_views.xml',
         'security/ir.model.access.csv',
