@@ -68,14 +68,6 @@ CREATE TABLE res_users (
     primary key(id)
 );
 
-create table wkf (
-    id serial,
-    name varchar(64),
-    osv varchar(64),
-    on_create bool default false,
-    primary key(id)
-);
-
 CREATE TABLE ir_module_category (
     id serial NOT NULL,
     create_uid integer, -- references res_users on delete set null,
