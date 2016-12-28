@@ -15,6 +15,10 @@ from odoo.tests.common import TransactionCase
 from odoo.addons.base.ir.ir_qweb import QWebException
 
 
+def dedent_and_strip(string):
+    return ''.join([line.strip() for line in string.splitlines()])
+
+
 class TestQWebTField(TransactionCase):
     def setUp(self):
         super(TestQWebTField, self).setUp()
@@ -63,6 +67,106 @@ class TestQWebTField(TransactionCase):
 
         with self.assertRaisesRegexp(QWebException, r'^t-field can not be used on a t element'):
             self.engine.render(field, {'company': None})
+
+
+class TestQWebNS(TransactionCase):
+    def test_render_static_xml_with_namespace(self):
+        """ Test the rendering on a namespaced view with no static content. The resulting string should be untouched.
+        """
+        expected_result = """
+            <root>
+                <h:table xmlns:h="http://www.example.org/table">
+                    <h:tr>
+                        <h:td xmlns:h="http://www.w3.org/TD/html4/">Apples</h:td>
+                        <h:td>Bananas</h:td>
+                    </h:tr>
+                </h:table>
+                <f:table xmlns:f="http://www.example.org/furniture">
+                    <f:width>80</f:width>
+                </f:table>
+            </root>
+        """
+
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">%s</t>
+            """ % expected_result
+        })
+
+        self.assertEquals(dedent_and_strip(view1.render()), dedent_and_strip(expected_result))
+
+    def test_render_static_xml_with_namespace_2(self):
+        """ Test the rendering on a namespaced view with no static content. The resulting string should be untouched.
+        """
+        expected_result = """
+            <html xmlns="http://www.w3.org/HTML/1998/html4" xmlns:xdc="http://www.xml.com/books">
+                <head>
+                    <title>Book Review</title>
+                </head>
+                <body>
+                    <xdc:bookreview>
+                        <xdc:title>XML: A Primer</xdc:title>
+                        <table>
+                            <tr align="center">
+                                <td>Author</td><td>Price</td>
+                                <td>Pages</td><td>Date</td>
+                            </tr>
+                            <tr align="left">
+                                <td><xdc:author>Simon St. Laurent</xdc:author></td>
+                                <td><xdc:price>31.98</xdc:price></td>
+                                <td><xdc:pages>352</xdc:pages></td>
+                                <td><xdc:date>1998/01</xdc:date></td>
+                            </tr>
+                        </table>
+                    </xdc:bookreview>
+                </body>
+            </html>
+        """
+
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">%s</t>
+            """ % expected_result
+        })
+
+        self.assertEquals(dedent_and_strip(view1.render()), dedent_and_strip(expected_result))
+
+    def test_render_static_xml_with_useless_distributed_namespace(self):
+        """ Test that redundant namespaces are stripped upon rendering.
+        """
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">
+                    <root>
+                        <h:table xmlns:h="http://www.example.org/table">
+                            <h:tr xmlns:h="http://www.example.org/table">
+                                <h:td xmlns:h="http://www.w3.org/TD/html4/">Apples</h:td>
+                                <h:td xmlns:h="http://www.example.org/table">Bananas</h:td>
+                            </h:tr>
+                        </h:table>
+                    </root>
+                </t>
+            """
+        })
+
+        expected_result = """
+            <root>
+                <h:table xmlns:h="http://www.example.org/table">
+                    <h:tr>
+                        <h:td xmlns:h="http://www.w3.org/TD/html4/">Apples</h:td>
+                        <h:td>Bananas</h:td>
+                    </h:tr>
+                </h:table>
+            </root>
+        """
+
+        self.assertEquals(dedent_and_strip(view1.render()), dedent_and_strip(expected_result))
 
 
 from copy import deepcopy

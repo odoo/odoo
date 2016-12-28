@@ -8,7 +8,7 @@ from itertools import count
 from textwrap import dedent
 import werkzeug
 from werkzeug.utils import escape as _escape
-from itertools import izip, tee
+from itertools import chain, izip, tee
 import __builtin__
 builtin_defaults = {name: getattr(__builtin__, name) for name in dir(__builtin__)}
 
@@ -269,6 +269,7 @@ class QWeb(object):
         _options['ast_calls'] = []
         _options['root'] = element.getroottree()
         _options['last_path_node'] = None
+        _options['nsmap'] = {}
 
         # generate ast
 
@@ -700,14 +701,42 @@ class QWeb(object):
 
     def _compile_static_node(self, el, options):
         """ Compile a purely static element into a list of AST nodes. """
-        content = self._compile_directive_content(el, options)
-        if el.tag == 't':
+        extra_attrib = {}
+        if not el.nsmap:
+            unqualified_el_tag = el_tag = el.tag
+            content = self._compile_directive_content(el, options)
+        else:
+            # Etree will remove the ns prefixes indirection by inlining the corresponding
+            # nsmap definition into the tag attribute. Restore the tag and prefix here.
+            unqualified_el_tag = etree.QName(el.tag).localname
+            el_tag = unqualified_el_tag
+            if el.prefix:
+                el_tag = '%s:%s' % (el.prefix, el_tag)
+
+            # If `el` introduced new namespaces, write them as attribute by using the
+            # `extra_attrib` dict.
+            for ns_prefix, ns_definition in set(el.nsmap.items()) - set(options['nsmap'].items()):
+                if ns_prefix is None:
+                    extra_attrib['xmlns'] = ns_definition
+                else:
+                    extra_attrib['xmlns:%s' % ns_prefix] = ns_definition
+
+            # Update the dict of inherited namespaces before continuing the recursion. Note:
+            # since `options['nsmap']` is a dict (and therefore mutable) and we do **not**
+            # want changes done in deeper recursion to bevisible in earlier ones, we'll pass
+            # a copy before continuing the recursion and restore the original afterwards.
+            original_nsmap = options['nsmap']
+            options['nsmap'] = dict(options['nsmap'], **el.nsmap)
+            content = self._compile_directive_content(el, options)
+            options['nsmap'] = original_nsmap
+
+        if unqualified_el_tag == 't':
             return content
-        tag = u'<%s%s' % (el.tag, u''.join([u' %s="%s"' % (name, escape(unicodifier(value))) for name, value in el.attrib.iteritems()]))
-        if el.tag in self._void_elements:
+        tag = u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(unicodifier(value))) for name, value in chain(el.attrib.iteritems(), extra_attrib.iteritems())]))
+        if unqualified_el_tag in self._void_elements:
             return [self._append(ast.Str(tag + '/>'))] + content
         else:
-            return [self._append(ast.Str(tag + '>'))] + content + [self._append(ast.Str('</%s>' % el.tag))]
+            return [self._append(ast.Str(tag + '>'))] + content + [self._append(ast.Str('</%s>' % el_tag))]
 
     def _compile_static_attributes(self, el, options):
         """ Compile the static attributes of the given element into a list of
