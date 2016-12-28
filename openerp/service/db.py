@@ -73,6 +73,29 @@ def dispatch(method, params):
     return fn(*params)
 
 def _create_empty_database(name):
+    wf = openerp.tools.config.get('webfaction', default=False) 
+    if wf:
+        _logger.info("WebFaction: Creating database '%s'...", name)
+        db_base = openerp.tools.config["webfaction_db_base"]
+        db_user = openerp.tools.config["db_user"]
+        res = exec_webfaction_sql(db_base, db_user, "SELECT datname FROM pg_database WHERE datname = %s", (name,))
+        if res!=[]:
+            raise DatabaseExists("database %r already exists!" % (name,))
+       
+        db_password = openerp.tools.config["db_password"]
+       
+        import xmlrpclib
+        server = xmlrpclib.ServerProxy(openerp.tools.config['webfaction_url'])
+        session_id, _ = server.login(openerp.tools.config['webfaction_user'], openerp.tools.config['webfaction_password'])
+        dbus = [ y['username'] for y in filter(lambda x: x['db_type']=='postgresql', server.list_db_users(session_id))]
+        
+        server.create_db(session_id, name, 'postgresql', db_password)
+        server.make_user_owner_of_db(session_id, db_user, name, 'postgresql')
+        if name not in dbus:
+            server.delete_db_user(session_id, name, 'postgresql')
+        _logger.info("WebFaction: Database '%s' created.", name)
+        return
+
     db = openerp.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         chosen_template = openerp.tools.config['db_template']
@@ -92,6 +115,10 @@ def exp_create_database(db_name, demo, lang, user_password='admin'):
     return True
 
 def exp_duplicate_database(db_original_name, db_name):
+    wf = openerp.tools.config.get('webfaction', default=False) 
+    if wf:
+        raise Exception("A WebFaction database duplication is not yet implemented")
+
     _logger.info('Duplicate database `%s` to `%s`.', db_original_name, db_name)
     openerp.sql_db.close_db(db_original_name)
     db = openerp.sql_db.db_connect('postgres')
@@ -129,6 +156,16 @@ def exp_drop(db_name):
     openerp.modules.registry.RegistryManager.delete(db_name)
     openerp.sql_db.close_db(db_name)
 
+    wf = openerp.tools.config.get('webfaction', default=False) 
+    if wf:
+        _logger.info("WebFaction: Dropping database '%s'...", db_name)
+        import xmlrpclib
+        server = xmlrpclib.ServerProxy(openerp.tools.config['webfaction_url'])
+        session_id, _ = server.login(openerp.tools.config['webfaction_user'], openerp.tools.config['webfaction_password'])
+        server.delete_db(session_id, db_name, 'postgresql')
+        _logger.info("WebFaction: Database '%s' dropped.", db_name)
+        return True
+        
     db = openerp.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         cr.autocommit(True) # avoid transaction block
@@ -279,6 +316,10 @@ def restore_db(db, dump_file, copy=False):
     _logger.info('RESTORE DB: %s', db)
 
 def exp_rename(old_name, new_name):
+    wf = openerp.tools.config.get('webfaction', default=False) 
+    if wf:
+        raise Exception("A WebFaction database cannot be renamed. Not supported by Webfaction API")
+
     openerp.modules.registry.RegistryManager.delete(old_name)
     openerp.sql_db.close_db(old_name)
 
@@ -304,11 +345,59 @@ def exp_db_exist(db_name):
     ## Not True: in fact, check if connection to database is possible. The database may exists
     return bool(openerp.sql_db.db_connect(db_name))
 
+def exec_webfaction_sql(db_base, db_user, sql, params=()):
+    db = openerp.sql_db.db_connect(db_base)
+    ok = False
+    while not ok:
+        try:
+            with closing(db.cursor()) as cr:
+                cr.execute(sql, params)
+                res = cr.fetchall()
+            ok = True
+        except psycopg2.OperationalError as e:
+            # The next use of regular expressions is just a temporary solution. It's dirty, unelegant, unstable but fast to implement, really fast.
+            # Of course, it needs to be corrected ASAP and implement an elegant solution.
+            import re
+            m = re.search('^FATAL:  no pg_hba.conf entry for host "[0-9.]+", user "%(db_user)s", database "%(db_base)s", SSL on\nFATAL:  no pg_hba.conf entry for host "[0-9.]+", user "%(db_user)s", database "%(db_base)s", SSL off\n$' % dict(db_user=db_user, db_base=db_base), unicode(e))
+            if m is None:
+                m = re.search('^FATAL:  permission denied for database "%s"\nDETAIL:  User does not have CONNECT privilege.$' % db_base, unicode(e))
+                if m is not None:
+                    _logger.info('WebFaction: Base database "%s" already created but user "%s" has no permissions -> Granting full access...' % (db_base, db_user))
+                    import xmlrpclib
+                    server = xmlrpclib.ServerProxy(openerp.tools.config['webfaction_url'])
+                    session_id, _ = server.login(openerp.tools.config['webfaction_user'], openerp.tools.config['webfaction_password'])
+                    server.grant_db_permissions(session_id, db_user, db_base, 'postgresql')
+                    _logger.info('WebFaction: User "%s" permissions to base database "%s" granted successfully.' % (db_user, db_base))
+                else:
+                    raise Exception("Unexpected error message string '%s'" % unicode(e))
+            else:
+                _logger.info('WebFaction: Base database "%s" does not exist -> Creating...' % db_base)
+                import xmlrpclib
+                server = xmlrpclib.ServerProxy(openerp.tools.config['webfaction_url'])
+                session_id, _ = server.login(openerp.tools.config['webfaction_user'], openerp.tools.config['webfaction_password'])
+                server.create_db(session_id, db_base, 'postgresql', db_base)
+                server.make_user_owner_of_db(session_id, db_user, db_base, 'postgresql')
+                server.delete_db_user(session_id, db_base, 'postgresql')
+                _logger.info('WebFaction: Base database "%s" created successfully.' % db_base)
+    return res
+    
 def exp_list(document=False):
     if not openerp.tools.config['list_db'] and not document:
         raise openerp.exceptions.AccessDenied()
     chosen_template = openerp.tools.config['db_template']
     templates_list = tuple(set(['template0', 'template1', 'postgres', chosen_template]))
+
+    wf = openerp.tools.config.get('webfaction', default=False) 
+    if wf:
+        _logger.info("WebFaction: Listing databases (document=%s)..." % document) 
+        db_base = openerp.tools.config["webfaction_db_base"]
+        templates_list = tuple(list(templates_list) + [db_base])
+        db_user = openerp.tools.config["db_user"]
+        res = exec_webfaction_sql(db_base, db_user, "select datname from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in %s order by datname", (db_user, templates_list))
+        res = [openerp.tools.ustr(name) for (name,) in res]
+        _logger.info("WebFaction: Database listing done. %s" % res)
+        return res
+
     db = openerp.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         try:
