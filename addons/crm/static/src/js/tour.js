@@ -10,7 +10,7 @@ tour.register('crm_tour', {
     url: "/web",
 }, [tour.STEPS.MENU_MORE, {
     trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
-    content: _t("Ready to boost you sales? Your <b>sales pipeline</b> can be found here, under this app."),
+    content: _t("Ready to boost your sales? Your <b>sales pipeline</b> can be found here, under this app."),
     position: 'bottom',
 }, {
     trigger: ".o_sales_dashboard .o_dashboard_action[name=\"crm.action_your_pipeline\"]:last",
