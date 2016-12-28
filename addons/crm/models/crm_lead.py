@@ -10,8 +10,6 @@ from odoo.tools.translate import _
 from odoo.tools import email_re, email_split
 from odoo.exceptions import UserError, AccessError
 
-from odoo.addons.base.res.res_partner import FormatAddress
-
 from . import crm_stage
 
 _logger = logging.getLogger(__name__)
@@ -51,11 +49,11 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'partner_name']
 
 
-class Lead(FormatAddress, models.Model):
+class Lead(models.Model):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority desc,activity_date_deadline,id desc"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin', 'format.address.mixin']
     _mail_mass_mailing = _('Leads / Opportunities')
 
     def _default_probability(self):
@@ -311,15 +309,15 @@ class Lead(FormatAddress, models.Model):
         return super(Lead, self.with_context(context)).copy(default=default)
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         if self._context.get('opportunity_id'):
             opportunity = self.browse(self._context['opportunity_id'])
             action = opportunity.get_formview_action()
             if action.get('views') and any(view_id for view_id in action['views'] if view_id[1] == view_type):
                 view_id = next(view_id[0] for view_id in action['views'] if view_id[1] == view_type)
-        res = super(Lead, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        res = super(Lead, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
-            res['arch'] = self.fields_view_get_address(res['arch'])
+            res['arch'] = self._fields_view_get_address(res['arch'])
         return res
 
     # ----------------------------------------
