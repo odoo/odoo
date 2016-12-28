@@ -103,7 +103,6 @@ class StockSettings(models.TransientModel):
     module_stock_barcode = fields.Boolean("Barcode scanner support")
     module_delivery_dhl = fields.Boolean("DHL integration")
     module_delivery_fedex = fields.Boolean("Fedex integration")
-    module_delivery_temando = fields.Boolean("Temando integration")
     module_delivery_ups = fields.Boolean("UPS integration")
     module_delivery_usps = fields.Boolean("USPS integration")
     # Warehouse and location usage_level
