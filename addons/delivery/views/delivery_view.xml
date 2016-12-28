@@ -254,30 +254,6 @@
             </field>
         </record>
 
-
-        <record id="view_quant_package_form_save" model="ir.ui.view">
-            <field name="name">stock.quant.package.form.save</field>
-            <field name="model">stock.quant.package</field>
-            <field eval="99" name="priority"/>
-            <field name="arch" type="xml">
-                <form string="Package">
-                    <group>
-                        <field name="packaging_id" domain="[('package_carrier_type', '=', context.get('current_package_carrier_type'))]"/>
-                        <label for="shipping_weight"/>
-                        <div class="o_row">
-                            <field name="shipping_weight"/>
-                            <span>kg</span>
-                        </div>
-                    </group>
-                    <footer>
-                        <button name="write" type="object" string="Save" class="btn btn-sm btn-primary"/>
-                        <button string="Discard" special="cancel" class="btn btn-sm btn-default"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
-
         <record id="view_move_withweight_form" model="ir.ui.view">
             <field name="name">stock.move.form.weight</field>
             <field name="model">stock.move</field>

@@ -987,7 +987,7 @@ class Picking(models.Model):
         return backorders
 
     @api.multi
-    def put_in_pack(self):
+    def _put_in_pack(self):
         # TDE FIXME: reclean me
         QuantPackage = self.env["stock.quant.package"]
         package = False
@@ -1018,6 +1018,11 @@ class Picking(models.Model):
             else:
                 raise UserError(_('Please process some quantities to put in the pack first!'))
         return package
+
+
+    @api.multi
+    def put_in_pack(self):
+        return self._put_in_pack()
 
     @api.multi
     def button_scrap(self):

@@ -31,17 +31,19 @@ class StockPackOperation(models.Model):
     @api.multi
     def manage_package_type(self):
         self.ensure_one()
+        view_id = self.env.ref('delivery.choose_delivery_package_view_form').id;
         return {
             'name': _('Package Details'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
-            'res_model': 'stock.quant.package',
-            'view_id': self.env.ref('delivery.view_quant_package_form_save').id,
+            'res_model': 'choose.delivery.package',
+            'view_id': view_id,
+            'views': [(view_id, 'form')],
             'target': 'new',
-            'res_id': self.result_package_id.id,
             'context': {
+                'default_stock_quant_package_id': self.result_package_id.id,
                 'current_package_carrier_type': self.picking_id.carrier_id.delivery_type if self.picking_id.carrier_id.delivery_type not in ['base_on_rule', 'fixed'] else 'none',
-            },
+                }
         }
 
 
@@ -120,30 +122,18 @@ class StockPicking(models.Model):
 
     @api.multi
     def put_in_pack(self):
-        # TDE FIXME: work in batch, please
-        self.ensure_one()
-        package = super(StockPicking, self).put_in_pack()
-
-        current_package_carrier_type = self.carrier_id.delivery_type if self.carrier_id.delivery_type not in ['base_on_rule', 'fixed'] else 'none'
-        count_packaging = self.env['product.packaging'].search_count([('package_carrier_type', '=', current_package_carrier_type)])
-        if not count_packaging:
-            return False
-        # By default, sum the weights of all package operations contained in this package
-        pack_operation_ids = self.env['stock.pack.operation'].search([('result_package_id', '=', package.id)])
-        package_weight = sum([x.qty_done * x.product_id.weight for x in pack_operation_ids])
-        package.shipping_weight = package_weight
-
+        view_id = self.env.ref('delivery.choose_delivery_package_view_form').id;
         return {
             'name': _('Package Details'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
-            'res_model': 'stock.quant.package',
-            'view_id': self.env.ref('delivery.view_quant_package_form_save').id,
+            'res_model': 'choose.delivery.package',
+            'view_id': view_id,
+            'views': [(view_id, 'form')],
             'target': 'new',
-            'res_id': package.id,
             'context': {
-                'current_package_carrier_type': current_package_carrier_type,
-            },
+                'current_package_carrier_type': self.carrier_id.delivery_type if self.carrier_id.delivery_type not in ['base_on_rule', 'fixed'] else 'none',
+            }
         }
 
     @api.multi
