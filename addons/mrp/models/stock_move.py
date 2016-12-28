@@ -120,7 +120,7 @@ class StockMove(models.Model):
     @api.multi
     def action_cancel(self):
         if any(move.quantity_done for move in self):
-            raise exceptions.UserError(_('You cannot cancel a move move having already consumed material'))
+            raise exceptions.UserError(_('You cannot cancel a stock move having already consumed material'))
         return super(StockMove, self).action_cancel()
 
     @api.multi
