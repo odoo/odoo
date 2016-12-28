@@ -65,7 +65,7 @@ def str_to_datetime(dt_str, tz=timezone('America/Mexico_City')):
 
 class Certificate(models.Model):
     _name = 'l10n_mx_edi.certificate'
-    _description = 'Mexican PAC certificate'
+    _description = 'SAT Digital Sail'
     _order = "available_date desc, id desc"
 
     content = fields.Binary(

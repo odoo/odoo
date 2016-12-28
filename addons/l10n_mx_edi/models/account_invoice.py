@@ -60,9 +60,9 @@ class AccountInvoice(models.Model):
         readonly=True,
         copy=False,
         stored=True)
-    l10n_mx_edi_cfdi = fields.Binary(
-        string='CFDI',
-        help='The attachment content of the CFDI.',
+    l10n_mx_edi_cfdi_name = fields.Char(
+        string='CFDI name',
+        help='The attachment name of the CFDI.',
         stored=True)
 
     #---------------------------------------------------------------------------            
@@ -75,9 +75,13 @@ class AccountInvoice(models.Model):
         '''
         self.ensure_one()
         values = {}
-        # Set collapsed cfdi:
-        if self.l10n_mx_edi_cfdi:
-            xml = base64.decodestring(self.l10n_mx_edi_cfdi)
+        domain = [
+            ('res_id','=', self.id),
+            ('res_model', '=', self._name),
+            ('name', '=', self.l10n_mx_edi_cfdi_name)]
+        attachment_id = self.env['ir.attachment'].search(domain, limit=1)
+        if attachment_id:
+            xml = base64.decodestring(attachment_id.datas)
             tree = tools.str_as_tree(xml)
             node_uuid = tree.find('.//{http://www.sat.gob.mx/TimbreFiscalDigital}TimbreFiscalDigital')
             # not 'if node_uuid': due to the python future tag in this etree version
@@ -140,8 +144,18 @@ class AccountInvoice(models.Model):
         '''
         self.ensure_one()
         if xml_signed:
-            self.l10n_mx_edi_cfdi = xml_signed
+            domain = [
+                ('res_id','=', self.id),
+                ('res_model', '=', self._name),
+                ('name', '=', self.l10n_mx_edi_cfdi_name)]
+            attachment_id = self.env['ir.attachment'].search(domain, limit=1)
+            attachment_id.write({
+                'datas': xml_signed,
+                'mimetype': 'application/xml' 
+            })
             self.l10n_mx_edi_pac_status = 'signed'
+            msg = create_list_html([_('The content of the attachment has been updated')])
+            self.message_post(body=SUCCESS_SIGN_MSG + msg, subtype='mt_invoice_l10n_mx_edi_msg')
         else:
             if msg:
                 if code:
@@ -289,8 +303,6 @@ class AccountInvoice(models.Model):
         invoices_list.uuids.string = [values['uuid']]
         company_id = self.company_id
         certificate_id = values['certificate_id']
-        certificate = company_id.l10n_mx_edi_cer
-        certificate_key = company_id.l10n_mx_edi_cer_key
         params = [invoices_list, username, password, company_id.vat, certificate_id.content, certificate_id.key]
         response_values = self.l10n_mx_edi_get_pac_response(service, params, client)
         error = response_values.pop('error', None)
@@ -360,27 +372,15 @@ class AccountInvoice(models.Model):
     @api.model
     def l10n_mx_edi_filenames(self):
         self.ensure_one()
-        if not self.number:
+        if not self.l10n_mx_edi_cfdi_name:
             return []
-        return [('%s-MX-Invoice-2.1.xml' % self.number).replace('/', '')]
+        return [self.l10n_mx_edi_cfdi_name]
 
     @api.model
     def l10n_mx_edi_generate(self):
-        '''Generate the EDI attachment.
+        '''Do nothing because the document is generated in an asynchronous way during
+        the 'validate' process and by the 'retry' action. 
         '''
-        self.ensure_one()
-        if self.l10n_mx_edi_cfdi and self.l10n_mx_edi_pac_status == 'signed':
-            # Create attachment
-            filename = self.l10n_mx_edi_filenames()[0]
-            return self.env['ir.attachment'].create({
-                'name': filename,
-                'res_id': self.id,
-                'res_model': unicode(self._name),
-                'datas': self.l10n_mx_edi_cfdi,
-                'datas_fname': filename,
-                'type': 'binary',
-                'description': 'Mexican invoice',
-                })
         return []
 
     @api.multi
@@ -444,19 +444,32 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def _l10n_mx_edi_retry(self):
-        self.ensure_one()
-        cfdi_values = self._l10n_mx_edi_create_cfdi()
-        error = cfdi_values.pop('error', None)
-        cfdi = cfdi_values.pop('cfdi', None)
-        if error:
-            # cfdi failed to be generated
-            self.l10n_mx_edi_pac_status = 'retry'
-            self.message_post(body=error, subtype='mt_invoice_l10n_mx_edi_msg')
-        else:
-            # cfdi has been successfully generated
-            self.l10n_mx_edi_pac_status = 'to_sign'
-            self.l10n_mx_edi_cfdi = base64.encodestring(cfdi)
-            self._l10n_mx_edi_sign()
+        for record in self:
+            cfdi_values = record._l10n_mx_edi_create_cfdi()
+            error = cfdi_values.pop('error', None)
+            cfdi = cfdi_values.pop('cfdi', None)
+            if error:
+                # cfdi failed to be generated
+                record.l10n_mx_edi_pac_status = 'retry'
+                record.message_post(body=error, subtype='mt_invoice_l10n_mx_edi_msg')
+            else:
+                # cfdi has been successfully generated
+                record.l10n_mx_edi_pac_status = 'to_sign'
+                filename = record.l10n_mx_edi_filenames()[0]
+                attachment_id = self.env['ir.attachment'].create({
+                    'name': filename,
+                    'res_id': record.id,
+                    'res_model': unicode(record._name),
+                    'datas': base64.encodestring(cfdi),
+                    'datas_fname': filename,
+                    'type': 'binary',
+                    'description': 'Mexican invoice',
+                    })
+                record.message_post(
+                    body=_('CFDI document generated (may be not signed)'),
+                    attachment_ids=[attachment_id.id],
+                    subtype='account.mt_invoice_edi_created')
+                record._l10n_mx_edi_sign()
 
     @api.multi
     def invoice_validate(self):
@@ -464,6 +477,7 @@ class AccountInvoice(models.Model):
         for record in self:
             country_code = record.company_id.country_id.code
             if country_code == 'MX':
+                record.l10n_mx_edi_cfdi_name = ('%s-MX-Invoice-2.1.xml' % self.number).replace('/', '')
                 record._l10n_mx_edi_retry()
         return result
 
