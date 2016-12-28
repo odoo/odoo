@@ -876,17 +876,37 @@ class QWeb(object):
 
     def _compile_tag(self, el, content, options, attr_already_created=False):
         """ Compile the tag of the given element into a list of AST nodes. """
-        if el.tag == 't':
+        extra_attrib = {}
+        if not el.nsmap:
+            unqualified_el_tag = el_tag = el.tag
+        else:
+            # Etree will remove the ns prefixes indirection by inlining the corresponding
+            # nsmap definition into the tag attribute. Restore the tag and prefix here.
+            unqualified_el_tag = etree.QName(el.tag).localname
+            el_tag = unqualified_el_tag
+            if el.prefix:
+                el_tag = '%s:%s' % (el.prefix, el_tag)
+
+            # If `el` introduced new namespaces, write them as attribute by using the
+            # `extra_attrib` dict.
+            for ns_prefix, ns_definition in set(el.nsmap.items()) - set(options['nsmap'].items()):
+                if ns_prefix is None:
+                    extra_attrib['xmlns'] = ns_definition
+                else:
+                    extra_attrib['xmlns:%s' % ns_prefix] = ns_definition
+
+        if unqualified_el_tag == 't':
             return content
-        body = [self._append(ast.Str(u'<%s' % el.tag))]
+
+        body = [self._append(ast.Str(u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(unicodifier(value))) for name, value in extra_attrib.iteritems()]))))]
         body.extend(self._compile_all_attributes(el, options, attr_already_created))
-        if el.tag in self._void_elements:
+        if unqualified_el_tag in self._void_elements:
             body.append(self._append(ast.Str(u'/>')))
             body.extend(content)
         else:
             body.append(self._append(ast.Str(u'>')))
             body.extend(content)
-            body.append(self._append(ast.Str(u'</%s>' % el.tag)))
+            body.append(self._append(ast.Str(u'</%s>' % el_tag)))
         return body
 
     # compile directives
@@ -902,7 +922,17 @@ class QWeb(object):
 
     def _compile_directive_tag(self, el, options):
         el.attrib.pop('t-tag', None)
+
+        # Update the dict of inherited namespaces before continuing the recursion. Note:
+        # since `options['nsmap']` is a dict (and therefore mutable) and we do **not**
+        # want changes done in deeper recursion to bevisible in earlier ones, we'll pass
+        # a copy before continuing the recursion and restore the original afterwards.
+        if el.nsmap:
+            original_nsmap = options['nsmap']
+            options['nsmap'] = dict(options['nsmap'], **el.nsmap)
         content = self._compile_directives(el, options)
+        if el.nsmap:
+            options['nsmap'] = original_nsmap
         return self._compile_tag(el, content, options, False)
 
     def _compile_directive_set(self, el, options):
