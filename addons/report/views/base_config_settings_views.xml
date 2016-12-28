@@ -10,15 +10,13 @@
                     <label for="paperformat_id"/>
                     <div>
                         <field name="paperformat_id" class="oe_inline"/>
-                        <button name="%(action_report_internalpreview)d" string="Preview Internal Report" type="action"/>
-                        <button name="%(action_report_externalpreview)d" string="Preview External Report" type="action"/>
-                        <button name="edit_external_header" string="Edit external header" type="object" class="oe_link"/>
-                        <button name="edit_external_footer" string="Edit external footer" type="object" class="oe_link"/>
-                        <button name="edit_internal_header" string="Edit internal header" type="object" class="oe_link"/>
                     </div>
-                </xpath>
-                <xpath expr="//label[@for='rml_footer']" position="before">
-                    <field name="report_footer_default" class="oe_inline"/>
+                    <label for="default_report_template"/>
+                    <div>
+                        <button name="change_report_template" string="Change Report Template" type="object" class="oe_link"/>
+                        <button name="edit_external_header" string="Edit Header" type="object" class="oe_link" groups="base.group_no_one"/>
+                        <button name="%(action_report_externalpreview)d" string="Preview Report" type="action" class="oe_link" groups="base.group_no_one"/>
+                    </div>
                 </xpath>
             </data>
         </field>

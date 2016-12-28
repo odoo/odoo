@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- NOBOXED HEADER -->
+    <template id="report_template_boxed">
+        <div class="header o_boxed_header">
+            <div class="row mb8">
+                <div class="col-xs-6">
+                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"/>
+                </div>
+                <div class="col-xs-6 text-right mb4">
+                    <h4 class="mt0" t-field="company.rml_header1"/>
+                    <div name="company_address" class="mb4">
+                        <span class="company_address" t-field="company.partner_id"
+                            t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <t t-raw="0" />
+
+        <div class="footer o_boxed_footer">
+            <div class="text-center">
+                <ul class="list-inline">
+                    <li t-if="company.phone">Tel: <span t-field="company.phone"/></li>
+                    <li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
+                    <li t-if="company.email">Mail: <span t-field="company.email"/></li>
+                    <li t-if="company.website">Web: <span t-field="company.website"/></li>
+                    <li t-if="company.vat">VAT: <span t-field="company.vat"/></li>
+                </ul>
+                <div t-field="company.rml_footer"/>
+                <div>
+                    Page: <span class="page"/> / <span class="topage"/>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

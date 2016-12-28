@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
 <template id="report.assets_common">
     <t t-call="web.less_helpers"/>
 
@@ -12,8 +13,15 @@
     <link href="/website/static/src/less/website.wrapwrap.less" rel="stylesheet" type="text/less"/>
     <link href="/website/static/src/less/website.snippets.less" rel="stylesheet" type="text/less"/>
 
-    <link href="/report/static/src/less/report.less" rel="stylesheet" type="text/less"/>
+    <!-- TODO: Put in the right report ..? -->
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:thin,light,regular,medium,bold,semi-bold" rel="stylesheet"/>
+
     <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
+
+    <link href="/report/static/src/less/report.less" rel="stylesheet" type="text/less"/>
+    <link href="/report/static/src/less/report_background_layout.less" rel="stylesheet" type="text/less"/>
+    <link href="/report/static/src/less/report_clean_layout.less" rel="stylesheet" type="text/less"/>
+    <link href="/report/static/src/less/report_boxed_layout.less" rel="stylesheet" type="text/less"/>
 </template>
 
 <template id="report.assets_pdf">
@@ -87,81 +95,20 @@
         <t t-set="company" t-value="res_company"></t>
     </t>
 
-    <t t-call="report.external_layout_header" />
-    <t t-raw="0" />
-    <t t-call="report.external_layout_footer" />
+    <t t-if="res_company.default_report_template in (False,'standard')">
+        <t t-call="report.report_template_default"><t t-raw="0"/></t>
+    </t>
+    <t t-if="res_company.default_report_template == 'clean'">
+        <t t-call="report.report_template_clean"><t t-raw="0"/></t>
+    </t>
+    <t t-if="res_company.default_report_template == 'background'">
+        <t t-call="report.report_template_background"><t t-raw="0"/></t>
+    </t>
+    <t t-if="res_company.default_report_template == 'boxed'">
+        <t t-call="report.report_template_boxed"><t t-raw="0"/></t>
+    </t>
 </template>
 
-<template id="external_layout_header">
-    <div class="header">
-        <div class="row">
-            <div class="col-xs-3">
-                <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 45px;"/>
-            </div>
-            <div class="col-xs-9 text-right" style="margin-top:20px;" t-field="company.rml_header1"/>
-        </div>
-        <div t-if="company.logo or company.rml_header1" class="row zero_min_height">
-            <div class="col-xs-12">
-                <div style="border-bottom: 1px solid black;"></div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-6" name="company_address">
-                <t t-if="company.street and company.zip">
-                <span t-field="company.partner_id"
-                    t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
-                    style="border-bottom: 1px solid black; display:inline-block;"/>
-                </t>
-                <t t-if="not (company.street and company.zip)">
-                    <p name="report_company_data_warning">
-                        <i class="fa fa-warning"/> Company address is not defined. Please, got to <i>Settings > General Settings > configure your company data </i>, to set the missing informations.
-                    </p>
-                </t>
-            </div>
-        </div>
-    </div>
-</template>
-
-<template id="external_layout_footer_default">
-    <ul class="list-inline">
-                <t t-set="company" t-value="company.sudo()"/>
-                <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
-
-                <li t-if="company.fax and company.phone">&amp;bull;</li>
-                <li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
-
-                <li t-if="company.email and company.fax or company.email and company.phone">&amp;bull;</li>
-                <li t-if="company.email">Email: <span t-field="company.email"/></li>
-
-                <li t-if="company.website and company.email or company.website and company.fax or company.website and company.phone">&amp;bull;</li>
-                <li t-if="company.website">Website: <span t-field="company.website"/></li>
-            </ul>
-
-    <ul class="list-inline" name="financial_infos">
-                <li t-if="company.vat">TIN: <span t-field="company.vat"/></li>
-            </ul>
-</template>
-
-<template id="external_layout_footer">
-    <div class="footer">
-        <div class="text-center" style="border-top: 1px solid black;">
-            <t t-if="not company.custom_footer">
-                <t t-call="report.external_layout_footer_default"/>
-            </t>
-
-            <t t-if="company.custom_footer">
-                <span t-raw="company.rml_footer" style="white-space: pre-wrap;"/>
-            </t>
-
-            <ul class="list-inline">
-                <li>Page:</li>
-                <li><span class="page"/></li>
-                <li>/</li>
-                <li><span class="topage"/></li>
-            </ul>
-        </div>
-    </div>
-</template>
 
 <template id="internal_layout">
     <!-- Multicompany -->

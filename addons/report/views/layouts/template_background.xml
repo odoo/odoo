@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_template_background">
+        <div class="header o_background_header">
+            <div class="pull-right">
+                <h3 class="mt0 text-right" t-field="company.rml_header1"/>
+            </div>
+            <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" class="pull-left"/>
+            <div class="pull-left company_address">
+                <div>
+                    <strong t-field="company.partner_id.name"/>
+                </div>
+                <span t-field="company.partner_id"
+                    t-field-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+            </div>
+            <div class="clearfix mb8"/>
+        </div>
+
+        <t t-raw="0"/>
+
+        <div class="footer o_background_footer">
+            <div class="text-center">
+                <ul class="list-inline">
+                    <li t-if="company.phone"><i class="fa fa-phone"></i> <span t-field="company.phone"/></li>
+                    <li t-if="company.fax"><i class="fa fa-fax"></i> <span t-field="company.fax"/></li>
+                    <li t-if="company.email"><i class="fa fa-at"></i> <span t-field="company.email"/></li>
+                    <li t-if="company.website"><i class="fa fa-globe"></i> <span t-field="company.website"/></li>
+                    <li t-if="company.vat"><i class="fa fa-building-o"></i> VAT: <span t-field="company.vat"/></li>
+                </ul>
+                <div t-field="company.rml_footer"/>
+                <div class="text-muted">
+                    Page:
+                    <span class="page"/>
+                    of
+                    <span class="topage"/>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

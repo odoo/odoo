@@ -122,18 +122,14 @@ class Company(models.Model):
     child_ids = fields.One2many('res.company', 'parent_id', string='Child Companies')
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
     rml_header = fields.Text(required=True, default=_get_header)
-    rml_header1 = fields.Char(string='Company Tagline', help="Appears by default on the top right corner of your printed documents (report header).")
+    rml_header1 = fields.Text(string='Company Tagline', help="Appears by default on the top right corner of your printed documents (report header).")
     rml_header2 = fields.Text(string='RML Internal Header', required=True, default=_header2)
     rml_header3 = fields.Text(string='RML Internal Header for Landscape Reports', required=True, default=_header3)
-    rml_footer = fields.Text(string='Custom Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
-    custom_footer = fields.Selection([
-        (0, 'Use standard footer'),
-        (1, 'Use custom footer')
-    ], "Report Footer", default=0, help="""Set to 'custom' this to define the report footer manually. Otherwise it will be filled in automatically.""")
+    rml_footer = fields.Text(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
     font = fields.Many2one('res.font', string="Font", default=lambda self: self._get_font(),
                            domain=[('mode', 'in', ('Normal', 'Regular', 'all', 'Book'))],
                            help="Set the font into the report header, it will be used as default font in the RML reports of the user company")
-    logo = fields.Binary(related='partner_id.image', default=_get_logo)
+    logo = fields.Binary(related='partner_id.image', default=_get_logo, string="Company Logo")
     # logo_web: do not store in attachments, since the image is retrieved in SQL for
     # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
     logo_web = fields.Binary(compute='_compute_logo_web', store=True)
@@ -207,21 +203,6 @@ class Company(models.Model):
     def _compute_logo_web(self):
         for company in self:
             company.logo_web = tools.image_resize_image(company.partner_id.image, (180, None))
-
-    @api.onchange('custom_footer', 'phone', 'fax', 'email', 'website', 'vat', 'company_registry')
-    def onchange_footer(self):
-        if not self.custom_footer:
-            # first line (notice that missing elements are filtered out before the join)
-            res = ' | '.join(filter(bool, [
-                self.phone            and '%s: %s' % (_('Phone'), self.phone),
-                self.fax              and '%s: %s' % (_('Fax'), self.fax),
-                self.email            and '%s: %s' % (_('Email'), self.email),
-                self.website          and '%s: %s' % (_('Website'), self.website),
-                self.vat              and '%s: %s' % (_('TIN'), self.vat),
-                self.company_registry and '%s: %s' % (_('Reg'), self.company_registry),
-            ]))
-            self.rml_footer_readonly = res
-            self.rml_footer = res
 
     @api.onchange('state_id')
     def _onchange_state(self):
