@@ -269,7 +269,8 @@ class QWeb(object):
         _options['ast_calls'] = []
         _options['root'] = element.getroottree()
         _options['last_path_node'] = None
-        _options['nsmap'] = {}
+        if not options.get('nsmap'):
+            _options['nsmap'] = {}
 
         # generate ast
 
@@ -1296,6 +1297,7 @@ class QWeb(object):
         tmpl = el.attrib.pop('t-call')
         _values = self._make_name('values_copy')
         call_options = el.attrib.pop('t-call-options', None)
+        nsmap = options.get('nsmap')
 
         _values = self._make_name('values_copy')
 
@@ -1362,9 +1364,10 @@ class QWeb(object):
                 )
             )
 
-        if call_options:
+        if nsmap or call_options:
+            # copy the original dict of options to pass to the callee
             name_options = self._make_name('options')
-            content.extend([
+            content.append(
                 # options_ = options.copy()
                 ast.Assign(
                     targets=[ast.Name(id=name_options, ctx=ast.Store())],
@@ -1376,18 +1379,56 @@ class QWeb(object):
                         ),
                         args=[], keywords=[], starargs=None, kwargs=None
                     )
-                ),
-                # options_.update(template options)
-                ast.Expr(ast.Call(
-                    func=ast.Attribute(
-                        value=ast.Name(id=name_options, ctx=ast.Load()),
-                        attr='update',
-                        ctx=ast.Load()
-                    ),
-                    args=[self._compile_expr(call_options)],
-                    keywords=[], starargs=None, kwargs=None
-                ))
-            ])
+                )
+            )
+
+            if call_options:
+            # update this dict with the content of `t-call-options`
+                content.extend([
+                    # options_.update(template options)
+                    ast.Expr(ast.Call(
+                        func=ast.Attribute(
+                            value=ast.Name(id=name_options, ctx=ast.Load()),
+                            attr='update',
+                            ctx=ast.Load()
+                        ),
+                        args=[self._compile_expr(call_options)],
+                        keywords=[], starargs=None, kwargs=None
+                    ))
+                ])
+
+            if nsmap:
+                # update this dict with the current nsmap so that the callee know
+                # if he outputting the xmlns attributes is relevenat or not
+
+                # make the nsmap an ast dict
+                keys = []
+                values = []
+                for key, value in options['nsmap'].items():
+                    if isinstance(key, basestring):
+                        keys.append(ast.Str(s=key))
+                    elif key is None:
+                        keys.append(ast.Name(id='None', ctx=ast.Load()))
+                    values.append(ast.Str(s=value))
+
+                # {'nsmap': {None: 'xmlns def'}}
+                nsmap_ast_dict = ast.Dict(
+                    keys=[ast.Str(s='nsmap')],
+                    values=[ast.Dict(keys=keys, values=values)]
+                )
+
+                # options_.update(nsmap_ast_dict)
+                content.append(
+                    ast.Expr(ast.Call(
+                        func=ast.Attribute(
+                            value=ast.Name(id=name_options, ctx=ast.Load()),
+                            attr='update',
+                            ctx=ast.Load()
+                        ),
+                        args=[nsmap_ast_dict],
+                        keywords=[], starargs=None, kwargs=None
+                    ))
+                )
         else:
             name_options = 'options'
 

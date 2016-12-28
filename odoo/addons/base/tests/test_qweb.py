@@ -373,6 +373,9 @@ class TestQWebNS(TransactionCase):
         self.assertEquals(len(cac_lines), 2)
         self.assertEquals(result.count('Appel'), 2)
 
+        # check that the t-call dit not output again the xmlns declaration
+        self.assertEquals(result.count('xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"'), 1)
+
     def test_render_static_xml_with_extension(self):
         """ Test the extension of a view by an xpath expression on a ns prefixed element.
         """
