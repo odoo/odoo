@@ -21,8 +21,8 @@ ISO_8601_DATE_FORMAT = '%Y-%m-%dT%H:%M:%S'
 ERROR_LOG_DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
 
 CFDI_TEMPLATE = 'l10n_mx_edi.mx_invoice'
-CFDI_XSD = 'l10n_mx_edi/data/xsd/mx_invoice.xsd'
-CFDI_XSLT_CADENA = 'l10n_mx_edi/data/xslt/cadenaoriginal_3_2.xslt'
+CFDI_XSD = 'l10n_mx_edi/data/xsd/%s/mx_invoice.xsd'
+CFDI_XSLT_CADENA = 'l10n_mx_edi/data/xslt/%s/cadenaoriginal_3_2.xslt'
 
 SUCCESS_SIGN_MSG = _('The sign service has been called with success')
 ERROR_SIGN_MSG = _('The sign service requested failed')
@@ -118,16 +118,16 @@ class AccountInvoice(models.Model):
             # Create the client
             client_values = self.l10n_mx_edi_get_pac_client(company_id, service_type)
             error = client_values.pop('error', None)
-            client = client_values.pop('client', None)
-            username = client_values.pop('username', None)
-            password = client_values.pop('password', None)
-            multi = client_values.pop('multi', False)
             if error:
                 for record in records:
                     record.message_post(
                         body=error_msg + create_list_html([error]), 
                         subtype='mt_invoice_l10n_mx_edi_msg')
                 continue
+            client = client_values['client']
+            username = client_values['username']
+            password = client_values['password']
+            multi = client_values['multi']
             # If multi is set to true, the method is called with the whole subset.
             # else, we process the service for each record
             if multi:
@@ -389,6 +389,8 @@ class AccountInvoice(models.Model):
         qweb = self.env['ir.qweb']
         error_log = []
         company_id = self.company_id
+        pac_name = company_id.l10n_mx_edi_pac
+        version = self.l10n_mx_edi_get_pac_version(pac_name)
         values = self._l10n_mx_edi_create_cfdi_values()
 
         # -----------------------
@@ -401,7 +403,7 @@ class AccountInvoice(models.Model):
             error_log.append(_('No valid certificate found'))
 
         # -Check PAC
-        if company_id.l10n_mx_edi_pac:
+        if pac_name:
             pac_test_env = company_id.l10n_mx_edi_pac_test_env
             pac_username = company_id.l10n_mx_edi_pac_username
             pac_password = company_id.l10n_mx_edi_pac_password
@@ -429,14 +431,14 @@ class AccountInvoice(models.Model):
 
         # -Compute cadena
         tree = tools.str_as_tree(cfdi)
-        xslt_root = etree.parse(tools.file_open(CFDI_XSLT_CADENA))
+        xslt_root = etree.parse(tools.file_open(CFDI_XSLT_CADENA % version))
         cadena = str(etree.XSLT(xslt_root)(tree))
         
         # Post append cadena
         tree.attrib['sello'] = certificate_id.get_encrypted_cadena(cadena)
 
         # Check with xsd
-        error_log = tools.check_with_xsd(tree, CFDI_XSD)
+        error_log = tools.check_with_xsd(tree, CFDI_XSD % version)
         if error_log:
             return {'error': _('Failed to generate the cadena') + create_list_html(error_log)}
 

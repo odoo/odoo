@@ -8,4 +8,5 @@ class ResPartner(models.Model):
     l10n_mx_edi_addenda = fields.Many2one('ir.ui.view',
         string='Addenda',
         help='A view representing the addenda',
-        domain=[('l10n_mx_edi_addenda_flag', '=', True)])
+        domain=[('l10n_mx_edi_addenda_flag', '=', True)],
+        stored=True)
