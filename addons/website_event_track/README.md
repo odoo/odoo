@@ -3,7 +3,7 @@ Organize Events, Trainings & Webinars
 
 ### Schedule, Promote, Sell, Organize
 
-Get extra features per event; multiple pages, sponsors, multiple talks, talk proposal form, agenda, event-related news, documents (slides of presentations), event-specific menus.
+Get extra features per event; multiple pages, sponsors, multiple talks, talk proposal form, schedule, event-related news, documents (slides of presentations), event-specific menus.
 
 Organize Your Tracks
 --------------------
@@ -14,12 +14,12 @@ Add a talk proposal form on your events to allow visitors to submit talks and sp
 
 Odoo's unique frontend and backend integration makes organization and publication so easy. Easily design beautiful speaker biographies and talks description.
 
-Agenda and List of Talks
+Schedule and List of Talks
 ------------------------
 
 ### A strong user interface
 
-Get a beautiful agenda for each event published automatically on your website. Allow your visitors to easily search and browse talks, filter by tags, locations or speakers.
+Get a beautiful schedule for each event published automatically on your website. Allow your visitors to easily search and browse talks, filter by tags, locations or speakers.
 
 Manage Sponsors
 ---------------

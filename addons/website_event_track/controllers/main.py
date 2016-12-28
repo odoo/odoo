@@ -65,8 +65,8 @@ class WebsiteEventTrackController(http.Controller):
             'dates': dates
         }
 
-    @http.route(['''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/agenda'''], type='http', auth="public", website=True)
-    def event_agenda(self, event, tag=None, **post):
+    @http.route(['''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/schedule'''], type='http', auth="public", website=True)
+    def event_schedule(self, event, tag=None, **post):
         days_tracks = collections.defaultdict(lambda: [])
         for track in event.track_ids.sorted(lambda track: (track.date, bool(track.location_id))):
             if not track.date:
@@ -83,7 +83,7 @@ class WebsiteEventTrackController(http.Controller):
         for track in event.sudo().track_ids:
             speakers[track.id] = track.speaker_id.name
 
-        return request.render("website_event_track.agenda", {
+        return request.render("website_event_track.schedule", {
             'event': event,
             'days': days,
             'tracks_by_days': tracks_by_days,
