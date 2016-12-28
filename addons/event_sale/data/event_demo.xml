@@ -56,7 +56,8 @@
         <field name="name">Standard</field>
         <field name="event_id" ref="event.event_0"/>
         <field name="product_id" ref="event_0_product"/>
-        <field name="deadline" eval="(DateTime.today() + timedelta(90)).strftime('%Y-%m-%d')"/>
+        <field name="start_date" eval="(DateTime.today() + timedelta(50)).strftime('%Y-%m-%d')"/>
+        <field name="deadline" eval="(DateTime.today() + timedelta(60)).strftime('%Y-%m-%d')"/>
         <field name="price">1000.0</field>
         <field name="seats_max">50</field>
     </record>
@@ -65,7 +66,8 @@
         <field name="name">VIP</field>
         <field name="event_id" ref="event.event_0"/>
         <field name="product_id" ref="event_0_product"/>
-        <field name="deadline" eval="(DateTime.today() + timedelta(60)).strftime('%Y-%m-%d')"/>
+        <field name="start_date" eval="(DateTime.today() + timedelta(20)).strftime('%Y-%m-%d')"/>
+        <field name="deadline" eval="(DateTime.today() + timedelta(30)).strftime('%Y-%m-%d')"/>
         <field name="price">1500.0</field>
         <field name="seats_max">10</field>
     </record>
@@ -75,7 +77,8 @@
         <field name="name">Standard</field>
         <field name="event_id" ref="event.event_1"/>
         <field name="product_id" ref="event_1_product"/>
-        <field name="deadline" eval="(DateTime.today() + timedelta(90)).strftime('%Y-%m-%d')"/>
+        <field name="start_date" eval="(DateTime.today() + timedelta(50)).strftime('%Y-%m-%d')"/>
+        <field name="deadline" eval="(DateTime.today() + timedelta(60)).strftime('%Y-%m-%d')"/>
         <field name="price">1000.0</field>
         <field name="seats_max">60</field>
     </record>
@@ -85,7 +88,8 @@
         <field name="name">Standard</field>
         <field name="event_id" ref="event.event_2"/>
         <field name="product_id" ref="event_2_product"/>
-        <field name="deadline" eval="(DateTime.today() + timedelta(90)).strftime('%Y-%m-%d')"/>
+        <field name="start_date" eval="(DateTime.today() + timedelta(50)).strftime('%Y-%m-%d')"/>
+        <field name="deadline" eval="(DateTime.today() + timedelta(60)).strftime('%Y-%m-%d')"/>
         <field name="price">1000.0</field>
         <field name="seats_max">50</field>
     </record>
@@ -94,7 +98,8 @@
         <field name="name">VIP</field>
         <field name="event_id" ref="event.event_2"/>
         <field name="product_id" ref="event_2_product"/>
-        <field name="deadline" eval="(DateTime.today() + timedelta(60)).strftime('%Y-%m-%d')"/>
+        <field name="start_date" eval="(DateTime.today() + timedelta(20)).strftime('%Y-%m-%d')"/>
+        <field name="deadline" eval="(DateTime.today() + timedelta(30)).strftime('%Y-%m-%d')"/>
         <field name="price">1500.0</field>
         <field name="seats_max">5</field>
     </record>
@@ -103,7 +108,8 @@
         <field name="name">Standard</field>
         <field name="event_id" ref="event.event_3"/>
         <field name="product_id" ref="event_3_product"/>
-        <field name="deadline" eval="(DateTime.today() + timedelta(90)).strftime('%Y-%m-%d')"/>
+        <field name="start_date" eval="(DateTime.today() + timedelta(50)).strftime('%Y-%m-%d')"/>
+        <field name="deadline" eval="(DateTime.today() + timedelta(60)).strftime('%Y-%m-%d')"/>
         <field name="price">1000.0</field>
         <field name="seats_max">20</field>
     </record>
@@ -112,7 +118,8 @@
         <field name="name">VIP</field>
         <field name="event_id" ref="event.event_3"/>
         <field name="product_id" ref="event_3_product"/>
-        <field name="deadline" eval="(DateTime.today() + timedelta(60)).strftime('%Y-%m-%d')"/>
+        <field name="start_date" eval="(DateTime.today() + timedelta(20)).strftime('%Y-%m-%d')"/>
+        <field name="deadline" eval="(DateTime.today() + timedelta(30)).strftime('%Y-%m-%d')"/>
         <field name="price">1500.0</field>
         <field name="seats_max">5</field>
     </record>

@@ -41,6 +41,7 @@ class EventTicket(models.Model):
         default=_default_product_id)
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', string='Registrations')
     price = fields.Float(string='Price', digits=dp.get_precision('Product Price'))
+    start_date = fields.Date(string="Sales Start")
     deadline = fields.Date(string="Sales End")
     is_expired = fields.Boolean(string='Is Expired', compute='_compute_is_expired')
 
@@ -107,6 +108,18 @@ class EventTicket(models.Model):
         for record in self:
             if record.seats_max and record.seats_available < 0:
                 raise ValidationError(_('No more available seats for the ticket'))
+
+    @api.constrains('start_date', 'deadline')
+    def _check_closing_date(self):
+        for ticket in self:
+            if ticket.deadline < ticket.start_date:
+                raise ValidationError(_('Ticket Closing Date cannot be set before Beginning Date.'))
+
+    @api.constrains('deadline', 'event_id')
+    def _check_deadline(self):
+        for ticket in self:
+            if ticket.deadline > ticket.event_id.date_end:
+                raise ValidationError(_('Ticket selling date cannot be set after Event End Date'))
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

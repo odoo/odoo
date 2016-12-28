@@ -128,10 +128,10 @@
                     </t>
                 </div>
                 <div class="col-sm-10">
-                    <h3 class="mt0 mb0">
+                    <h4 class="mt0 mb0">
                         <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }"><span t-field="track.name"> </span></a>
-                        <small t-if="not track.website_published" class="label label-danger">unpublished</small>
-                    </h3>
+                        <small t-if="not track.website_published" class="label label-danger">Unpublished</small>
+                    </h4>
                     <ul class="list-inline mb0">
                         <li t-if="track.speaker_id" class="text-muted fa fa-user">
                             <t t-esc="track.speaker_id.sudo().name"></t>

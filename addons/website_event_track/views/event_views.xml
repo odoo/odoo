@@ -23,12 +23,10 @@
                 </button>
                 <xpath expr="//div[@class='oe_title']" position="inside">
                     <div name="event_checkboxes">
-                        <field name="show_menu"/>
-                        <label for="show_menu"/>
-                        <field name="show_tracks" attrs="{'invisible': [('show_menu', '=', False)]}"/>
-                        <label for="show_tracks" attrs="{'invisible': [('show_menu', '=', False)]}"/>
-                        <field name="show_track_proposal" attrs="{'invisible': [('show_menu', '=', False)]}"/>
-                        <label for="show_track_proposal" attrs="{'invisible': [('show_menu', '=', False)]}"/>
+                        <field name="show_tracks"/>
+                        <label for="show_tracks"/>
+                        <field name="show_track_proposal"/>
+                        <label for="show_track_proposal"/>
                     </div>
                 </xpath>
             </field>

@@ -13,12 +13,45 @@
             <field name="arch" type="xml">
                 <form string="Event Type">
                     <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Event Type" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                        </div>
                         <group>
-                            <field name="name"/>
-                            <field name="default_reply_to"/>
-                            <field name="default_registration_min"/>
-                            <field name="default_registration_max"/>
+                            <group>
+                                <field name="default_registration_min" string="Minimum Registration"/>
+                            </group>
+                            <group>
+                                <field name="default_registration_max" string="Maximum Registration"/>
+                            </group>
                         </group>
+                        <notebook>
+                        <page string="Email Schedule">
+                            <field name="event_type_mail_ids">
+                                <form string="Event Email Schedule Lines">
+                                    <group>
+                                        <group>
+                                            <field name="template_id"/>
+                                            <label for="interval_nbr"/>
+                                            <div class="o_row">
+                                                <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}"/><field name="interval_unit"/>
+                                            </div>
+                                            <field name="interval_type" string="Trigger"/>
+                                            <field name="sent"/>
+                                        </group>
+                                    </group>
+                                </form>
+                                <tree string="Email Schedule">
+                                    <field name="template_id"/>
+                                    <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}" invisible="1"/>
+                                        <field name="interval_unit" invisible="1"/>
+                                    <field name="interval"/>
+                                    <field name="interval_type" string="Trigger"/>
+                                    <field name="sent" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                     </sheet>
                 </form>
             </field>
@@ -120,16 +153,20 @@
                             </page>
                             <page string="Email Schedule">
                                 <group>
-                                    <field name="reply_to"/>
+                                    <div class="oe_inline" name="edit_alias" style="display: inline;" >
+                                        <label for="alias_id" string="Email Alias  " style="font-weight: bold;"/>
+                                        <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                    </div>
                                 </group>
                                 <field name="event_mail_ids">
-                                    <tree string="Email Schedule" editable="bottom">
+                                    <tree string="Email Schedule">
                                         <field name="sequence" widget="handle"/>
                                         <field name="template_id" />
-                                        <field name="interval_nbr" attrs="{'readonly':[('interval_unit','=','now')]}"/>
-                                        <field name="interval_unit"/>
-                                        <field name="interval_type"/>
-                                        <field name="done"/>
+                                        <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}" invisible="1"/>
+                                        <field name="interval_unit" invisible="1"/>
+                                        <field name="interval"/>
+                                        <field name="interval_type" string="Trigger"/>
+                                        <field name="done" invisible="1"/>
                                     </tree>
                                 </field>
                             </page>
@@ -351,10 +388,10 @@
                     <sheet string="Registration">
                         <group>
                             <group string="Attendee" name="attendee">
+                                <field name="partner_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
                                 <field name="name"/>
                                 <field name="phone"/>
                                 <field name="email"/>
-                                <field name="partner_id" attrs="{'readonly':[('state', '!=', 'draft')]}"/>
                             </group>
                             <group string="Event Information" name="event">
                                 <field name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -446,28 +483,32 @@
             <field name="model">event.mail</field>
             <field name="arch" type="xml">
                 <form string="Event Mail Scheduler">
-                    <group>
-                        <field name="event_id"/>
-                        <field name="template_id"/>
-                        <field name="mail_sent"/>
-                    </group>
-                    <group>
-                        <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}"/>
-                        <field name="interval_unit"/>
-                        <field name="interval_type"/>
-                        <field name="scheduled_date"/>
-                    </group>
-                    <notebook>
-                        <page string="Registration Mails">
-                            <field name="mail_registration_ids">
-                                <tree string="Registration mail" editable="bottom">
-                                    <field name="registration_id"/>
-                                    <field name="scheduled_date"/>
-                                    <field name="mail_sent"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
+                    <sheet>
+                        <group>
+                            <field name="event_id"/>
+                            <field name="template_id"/>
+                            <field name="mail_sent"/>
+                        </group>
+                        <group>
+                            <label for="interval_nbr"/>
+                            <div class="o_row">
+                                <field name="interval_nbr" attrs="{'readonly':[('interval_unit', '=', 'now')]}"/><field name="interval_unit"/>
+                            </div>
+                            <field name="interval_type" string="Trigger"/>
+                            <field name="scheduled_date"/>
+                        </group>
+                        <notebook>
+                            <page string="Registration Mails">
+                                <field name="mail_registration_ids">
+                                    <tree string="Registration mail" editable="bottom">
+                                        <field name="registration_id"/>
+                                        <field name="scheduled_date"/>
+                                        <field name="mail_sent"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>

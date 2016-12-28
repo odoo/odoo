@@ -10,8 +10,8 @@ class Event(models.Model):
 
     track_ids = fields.One2many('event.track', 'event_id', 'Tracks')
     sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsors')
-    show_track_proposal = fields.Boolean('Tracks Proposals', compute='_get_show_menu', inverse='_set_show_menu', store=True)
-    show_tracks = fields.Boolean('Show Tracks on Website', compute='_get_show_menu', inverse='_set_show_menu', store=True)
+    show_track_proposal = fields.Boolean('Tracks Proposals')
+    show_tracks = fields.Boolean('Show Tracks on Website')
     count_tracks = fields.Integer('Tracks', compute='_count_tracks')
     allowed_track_tag_ids = fields.Many2many('event.track.tag', relation='event_allowed_track_tags_rel', string='Available Track Tags')
     tracks_tag_ids = fields.Many2many('event.track.tag', relation='event_track_tags_rel', string='Track Tags', compute='_get_tracks_tag_ids', store=True)
@@ -21,7 +21,17 @@ class Event(models.Model):
     @api.multi
     def _get_new_menu_pages(self):
         self.ensure_one()
-        result = super(Event, self)._get_new_menu_pages()
+        todo = [
+            (_('Introduction'), 'website_event.template_intro'),
+            (_('Location'), 'website_event.template_location')
+        ]
+        result = []
+        for name, path in todo:
+            complete_name = name + ' ' + self.name
+            newpath = self.env['website'].new_page(complete_name, path, ispage=False)
+            url = "/event/" + slug(self) + "/page/" + newpath
+            result.append((name, url))
+        result.append((_('Register'), '/event/%s/register' % slug(self)))
         if self.show_tracks:
             result.append((_('Talks'), '/event/%s/track' % slug(self)))
             result.append((_('Agenda'), '/event/%s/agenda' % slug(self)))
@@ -30,14 +40,42 @@ class Event(models.Model):
         return result
 
     @api.multi
-    def _set_show_menu(self):
+    def root_menu_create(self):
         for event in self:
-            # if the number of menu items have changed, then menu items must be regenerated
+            root_menu = self.env['website.menu'].create({'name': event.name})
+            to_create_menus = event._get_new_menu_pages()
+            seq = 0
+            for name, url in to_create_menus:
+                self.env['website.menu'].create({
+                    'name': name,
+                    'url': url,
+                    'parent_id': root_menu.id,
+                    'sequence': seq,
+                })
+                seq += 1
+            event.menu_id = root_menu
+
+    @api.model
+    def create(self, vals):
+        event = super(Event, self).create(vals)
+        if event.menu_id:
+            event.menu_id.unlink()
+        if not event.menu_id:
+            event.root_menu_create()
+        return event
+
+    @api.multi
+    def write(self, vals):
+        res = super(Event, self).write(vals)
+        for event in self:
             if event.menu_id:
                 nbr_menu_items = len(event._get_new_menu_pages())
                 if nbr_menu_items != len(event.menu_id.child_id):
                     event.menu_id.unlink()
-        return super(Event, self)._set_show_menu()
+
+            if (not event.menu_id and (self.show_tracks or self.show_track_proposal or not self.show_tracks or not self.show_track_proposal)):
+                event.root_menu_create()
+        return res
 
     @api.multi
     def _count_tracks(self):
