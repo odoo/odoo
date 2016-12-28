@@ -83,13 +83,21 @@ class account_invoice(osv.osv):
             cacc = accounts['expense'].id
             if dacc and cacc:
                 price_unit = i_line._get_anglo_saxon_price_unit()
+                if inv.currency_id.id != company_currency:
+                    currency_id = inv.currency_id.id
+                    amount_currency = self.env['account.invoice.line']._get_price(inv, company_currency, i_line, price_unit)
+                else:
+                    currency_id = False
+                    amount_currency = False
                 return [
                     {
                         'type':'src',
                         'name': i_line.name[:64],
                         'price_unit': price_unit,
                         'quantity': i_line.quantity,
-                        'price': self.env['account.invoice.line']._get_price(inv, company_currency, i_line, price_unit),
+                        'price': price_unit * i_line.quantity,
+                        'currency_id': currency_id,
+                        'amount_currency': amount_currency,
                         'account_id':dacc,
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
@@ -101,7 +109,9 @@ class account_invoice(osv.osv):
                         'name': i_line.name[:64],
                         'price_unit': price_unit,
                         'quantity': i_line.quantity,
-                        'price': -1 * self.env['account.invoice.line']._get_price(inv, company_currency, i_line, price_unit),
+                        'price': -1 * price_unit * i_line.quantity,
+                        'currency_id': currency_id,
+                        'amount_currency': -1 * amount_currency,
                         'account_id':cacc,
                         'product_id':i_line.product_id.id,
                         'uom_id':i_line.uom_id.id,
