@@ -3087,6 +3087,9 @@ class stock_inventory(osv.osv):
         location_ids = location_obj.search(cr, uid, [('id', 'child_of', [inventory.location_id.id])], context=context)
         domain = ' location_id in %s'
         args = (tuple(location_ids),)
+        if inventory.company_id.id:
+            domain += ' and company_id = %s'
+            args += (inventory.company_id.id,)
         if inventory.partner_id:
             domain += ' and owner_id = %s'
             args += (inventory.partner_id.id,)
