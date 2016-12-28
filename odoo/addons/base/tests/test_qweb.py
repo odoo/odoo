@@ -373,6 +373,52 @@ class TestQWebNS(TransactionCase):
         self.assertEquals(len(cac_lines), 2)
         self.assertEquals(result.count('Appel'), 2)
 
+    def test_render_static_xml_with_extension(self):
+        """ Test the extension of a view by an xpath expression on a ns prefixed element.
+        """
+        # primary view
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">
+                    <root>
+                        <h:table xmlns:h="http://www.example.org/table">
+                            <h:tr>
+                                <h:td xmlns:h="http://www.w3.org/TD/html4/">Apples</h:td>
+                                <h:td>Bananas</h:td>
+                            </h:tr>
+                        </h:table>
+                    </root>
+                </t>
+            """
+        })
+        # extension patching the primary view
+        view2 = self.env['ir.ui.view'].create({
+            'name': "dummy_ext",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """
+                <xpath expr="//{http://www.example.org/table}table/{http://www.example.org/table}tr">
+                        <h:td xmlns:h="http://www.example.org/table">Oranges</h:td>
+                </xpath>
+            """
+        })
+
+        expected_result = """
+            <root>
+                <h:table xmlns:h="http://www.example.org/table">
+                    <h:tr>
+                        <h:td xmlns:h="http://www.w3.org/TD/html4/">Apples</h:td>
+                        <h:td>Bananas</h:td>
+                        <h:td>Oranges</h:td>
+                    </h:tr>
+                </h:table>
+            </root>
+        """
+
+        self.assertEquals(dedent_and_strip(view1.with_context(check_view_ids=[view1.id, view2.id]).render()), dedent_and_strip(expected_result))
+
 
 from copy import deepcopy
 class FileSystemLoader(object):
