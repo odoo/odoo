@@ -24,6 +24,7 @@ class PacMixin(models.Model):
         return {
             'url': url,
             'multi': False, # TODO: implement multi
+            'version': 3.2,
             'username': 'testing@solucionfactible.com' if test else username,
             'password': 'timbrado.SF.16672' if test else password,
         }
@@ -42,6 +43,7 @@ class PacMixin(models.Model):
         return {
             'url': url,
             'multi': False, # TODO: implement multi
+            'version': 3.2,
             'username': 'cfdi@vauxoo.com' if test else username,
             'password': 'vAux00__' if test else password,
         }
@@ -67,6 +69,7 @@ class PacMixin(models.Model):
         username = infos.pop('username', None)
         password = infos.pop('password', None)
         multi = infos.pop('multi', False)
+        version = infos.pop('version', 3.2)
         error = infos.pop('error', None)
         if error:
             return {'error': error}
@@ -74,7 +77,7 @@ class PacMixin(models.Model):
             return {'error': _('Some credentials are missing')}
         try:
             client = Client(url, timeout=20)
-            return {'client': client, 'username': username, 'password': password, 'multi': multi}
+            return {'client': client, 'username': username, 'password': password, 'multi': multi, 'version': version}
         except Exception as e:
             return {'error': _('Failed to call the suds client: %s' % str(e))}
 

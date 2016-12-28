@@ -55,8 +55,8 @@ class AccountInvoice(models.Model):
             ('to_cancel', 'To cancel'),
             ('cancelled', 'Cancelled')
         ],
-        string='SAT status',
-        help='The invoice odoo status must be synchronized with the SAT.',
+        string='PAC status',
+        help='The invoice odoo status must be synchronized with the PAC.',
         readonly=True,
         copy=False,
         stored=True)
