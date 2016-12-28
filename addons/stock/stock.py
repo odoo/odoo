@@ -3011,6 +3011,11 @@ class stock_inventory(osv.osv):
         'filter': 'none',
     }
 
+    @api.onchange('location_id')
+    def onchange_location_id(self):
+        if self.location_id.company_id:
+            self.company_id = self.location_id.company_id
+
     def reset_real_qty(self, cr, uid, ids, context=None):
         inventory = self.browse(cr, uid, ids[0], context=context)
         line_ids = [line.id for line in inventory.line_ids]
@@ -3082,6 +3087,9 @@ class stock_inventory(osv.osv):
         location_ids = location_obj.search(cr, uid, [('id', 'child_of', [inventory.location_id.id])], context=context)
         domain = ' location_id in %s'
         args = (tuple(location_ids),)
+        if inventory.company_id.id:
+            domain += ' and company_id = %s'
+            args += (inventory.company_id.id,)
         if inventory.partner_id:
             domain += ' and owner_id = %s'
             args += (inventory.partner_id.id,)
