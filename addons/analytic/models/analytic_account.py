@@ -59,30 +59,6 @@ class AccountAnalyticAccount(models.Model):
 
     currency_id = fields.Many2one(related="company_id.currency_id", string="Currency", readonly=True)
 
-    @api.multi
-    def name_get(self):
-        res = []
-        for analytic in self:
-            name = analytic.name
-            if analytic.code:
-                name = '['+analytic.code+'] '+name
-            if analytic.partner_id:
-                name = name +' - '+analytic.partner_id.commercial_partner_id.name
-            res.append((analytic.id, name))
-        return res
-
-    @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
-        if operator not in ('ilike', 'like', '=', '=like', '=ilike'):
-            return super(AccountAnalyticAccount, self).name_search(name, args, operator, limit)
-        args = args or []
-        domain = ['|', ('code', operator, name), ('name', operator, name)]
-        partners = self.env['res.partner'].search([('name', operator, name)], limit=limit)
-        if partners:
-            domain = ['|'] + domain + [('partner_id', 'in', partners.ids)]
-        recs = self.search(domain + args, limit=limit)
-        return recs.name_get()
-
 
 class AccountAnalyticLine(models.Model):
     _name = 'account.analytic.line'
