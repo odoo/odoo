@@ -100,7 +100,7 @@ class AccountAccount(models.Model):
         help="Forces all moves for this account to have this account currency.")
     code = fields.Char(size=64, required=True, index=True)
     deprecated = fields.Boolean(index=True, default=False)
-    user_type_id = fields.Many2one('account.account.type', string='Type', required=True, oldname="user_type", 
+    user_type_id = fields.Many2one('account.account.type', string='Type', required=True, oldname="user_type",
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
     internal_type = fields.Selection(related='user_type_id.type', string="Internal Type", store=True, readonly=True)
     #has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
@@ -856,7 +856,7 @@ class AccountTax(models.Model):
                 elif tax.amount_type == 'percent':
                     incl_percent_amount += tax.amount
         # Start the computation of accumulated amounts at the total_excluded value.
-        total_excluded = total_included = base = recompute_base(base, incl_fixed_amount, incl_percent_amount)
+        total_excluded = total_included = total_void = base = recompute_base(base, incl_fixed_amount, incl_percent_amount)
 
         # 5) Iterate the taxes in the sequence order to fill missing base/amount values.
         #      tax  |  base  |  amount  |
@@ -891,6 +891,9 @@ class AccountTax(models.Model):
 
             # The total_included amount is computed as the sum of total_excluded with all tax_amount
             total_included += tax_amount
+            # The total_void amount is computed as the sum of total_excluded with all tax_amount, where tax has no account set
+            if not tax.account_id:
+                total_void += tax_amount
 
             taxes_vals.append({
                 'id': tax.id,
@@ -907,6 +910,7 @@ class AccountTax(models.Model):
             'taxes': taxes_vals,
             'total_excluded': sign * (currency.round(total_excluded) if round_total else total_excluded),
             'total_included': sign * (currency.round(total_included) if round_total else total_included),
+            'total_void':     sign * (currency.round(total_void)     if round_total else total_void),
             'base': round(sign * base, prec),
         }
 
