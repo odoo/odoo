@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="mx_invoice">
+            <cfdi__Comprobante
+                t-att="{
+                    'xsi:schemaLocation': 'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd',
+                    'xmlns:cfdi': 'http://www.sat.gob.mx/cfd/3',
+                    'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance'
+                    }"
+                version="3.2"
+                sello=""
+                t-att-folio="number"
+                t-att-fecha="date"
+                t-att-certificado="certificate"
+                t-att-formaDePago="payment_policy"
+                t-att-noCertificado="certificate_number"
+                t-att-subTotal="amount_untaxed"
+                t-att-Moneda="currency_name"
+                t-att-total="amount_total"
+                t-att-metodoDePago="pay_method"
+                t-att-tipoDeComprobante="document_type"
+                t-att-LugarExpedicion="domicile">
+                <cfdi__Emisor
+                    t-att-rfc="rfc(supplier) if supplier.vat else None"
+                    t-att-nombre="supplier.name">
+                    <cfdi__DomicilioFiscal
+                        t-att-calle="supplier.street if supplier.street else None"
+                        t-att-municipio="todo"
+                        t-att-estado="supplier.state_id.name if supplier.state_id else None"
+                        t-att-pais="supplier.country_id.name if supplier.country_id else None"
+                        t-att-codigoPostal="supplier.zip if supplier.zip else None"/>
+                    <cfdi__RegimenFiscal
+                        Regimen="Parsona Fisica con Actividad Empresarial"/>
+                </cfdi__Emisor>
+                <cfdi__Receptor
+                    t-att-rfc="rfc(customer) if customer.vat else None"
+                    t-att-nombre="customer.name">
+                    <cfdi__Domicilio
+                        t-att-calle="customer.street if customer.street else None"
+                        t-att-municipio="todo"
+                        t-att-estado="customer.state_id.name if customer.state_id else None"
+                        t-att-pais="customer.country_id.name if customer.country_id else None"
+                        t-att-codigoPostal="customer.zip if customer.zip else None"/>
+                </cfdi__Receptor>
+                <cfdi__Conceptos>
+                    <t t-foreach="self.invoice_line_ids" t-as="line">
+                        <cfdi__Concepto
+                            t-att-cantidad="line.quantity"
+                            t-att-descripcion="line.edi_description"
+                            t-att-importe="subtotal_wo_discount(line)"
+                            t-att-noIdentificacion="line.product_id.default_code or 'S\N'"
+                            t-att-unidad="line.uom_id.name or 'NA'"
+                            t-att-valorUnitario="line.price_unit"/>
+                    </t>
+                </cfdi__Conceptos>
+                <cfdi__Impuestos
+                    t-att-totalImpuestosTrasladados="total_tax_amount"
+                    t-att-totalImpuestosRetenidos="total_tax_amount"/>
+                <cfdi__Addenda/>
+            </cfdi__Comprobante>
+        </template>
+    </data>
+</odoo>

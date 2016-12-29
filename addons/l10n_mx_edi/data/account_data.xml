@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Account-mx-related subtypes for messaging / Chatter -->
+        <record id="mt_invoice_l10n_mx_edi_msg" model="mail.message.subtype">
+            <field name="name">mx.edi.msg</field>
+            <field name="res_model">account.invoice</field>
+            <field name="default" eval="False"/>
+            <field name="description">EDI document message for MX</field>
+        </record>
+
+        <!-- Actions update_pac_status for multi -->
+        <record id="l10n_mx_edi_action_update_pac_status" model="ir.actions.server">
+            <field name="name">Update PAC status</field>
+            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="state">code</field>
+            <field name="code">
+ids = context.get('active_ids', None) or context.get('active_id', None)
+env['account.invoice'].browse(ids).l10n_mx_edi_update_pac_status()
+            </field>
+        </record>
+
+<!--         <act_window
+            id="l10n_mx_edi_action_invoice_update_pac_status"
+            name="Update PAC status"
+            res_model="account.invoice"
+            src_model="account.invoice"
+            multi="True"
+            target="new"
+            key2="client_action_multi"/> -->
+    </data>
+</odoo>

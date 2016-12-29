@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_mx_edi_addenda_autozone" model="ir.ui.view">
+            <field name="name">Addenda Autozone</field>
+            <field name="type">qweb</field>
+            <field name="l10n_mx_edi_addenda_flag">True</field>
+            <field name="arch" type="xml">
+                <Addenda>
+                    <ADDENDA10 
+                        t-attr="{'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance'}" 
+                        DEPTID="DEPTID" 
+                        VERSION="VERSION" 
+                        BUYER="BUYER" 
+                        VENDOR_ID="VENDOR_ID" 
+                        POID="POID" 
+                        PODATE="PODATE" 
+                        EMAIL="EMAIL"/>
+                </Addenda>
+            </field>
+        </record>
+    </data>
+</odoo>
