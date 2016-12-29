@@ -326,6 +326,19 @@ class Partner(models.Model):
         default = dict(default or {}, name=_('%s (copy)') % self.name)
         return super(Partner, self).copy(default)
 
+    @api.onchange('state_id')
+    def onchange_state_id(self):
+        self.country_id = self.state_id.country_id
+
+    @api.onchange('country_id')
+    def onchange_country_id(self):
+        if not self.country_id:
+            return {'domain': {'state_id': []}}
+        if self.state_id:
+            if self.country_id != self.state_id.country_id:
+                self.state_id = False
+        return {'domain': {'state_id': [('country_id', '=', self.country_id.id)]}}
+
     @api.onchange('parent_id')
     def onchange_parent_id(self):
         # return values in result, as this method is used by _fields_sync()
