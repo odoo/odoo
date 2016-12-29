@@ -50,7 +50,7 @@ class ProductProduct(models.Model):
         """
             Inherit read_group to calculate the sum of the non-stored fields, as it is not automatically done anymore through the XML.
         """
-        res = super(ProductProduct, self).read_group(fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        res = super(ProductProduct, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
         fields_list = ['turnover', 'sale_avg_price', 'sale_purchase_price', 'sale_num_invoiced', 'purchase_num_invoiced',
                        'sales_gap', 'purchase_gap', 'total_cost', 'sale_expected', 'normal_cost', 'total_margin',
                        'expected_margin', 'total_margin_rate', 'expected_margin_rate']
@@ -66,7 +66,7 @@ class ProductProduct(models.Model):
                     for prod in products:
                         prod_re[prod] = re_ind
                 re_ind += 1
-            res_val = tot_products._compute_product_margin_fields_values([x for x in fields if fields in fields_list], '')
+            res_val = tot_products._compute_product_margin_fields_values(field_names=[x for x in fields if fields in fields_list])
             for key in res_val.keys():
                 for l in res_val[key].keys():
                     re = res[prod_re[key]]
