@@ -326,6 +326,9 @@ class website(orm.Model):
                     'partner_shipping_id': addr['delivery'],
                     'user_id': salesperson_id or w.salesperson_id.id,
                 }
+                company_id = w.company_id or self.pool['product.pricelist'].browse(cr, SUPERUSER_ID, [pricelist_id], context=context).company_id
+                if company_id:
+                    values['company_id'] = company_id.id
                 sale_order_id = sale_order_obj.create(cr, SUPERUSER_ID, values, context=context)
                 request.session['sale_order_id'] = sale_order_id
                 sale_order = sale_order_obj.browse(cr, SUPERUSER_ID, sale_order_id, context=context)
