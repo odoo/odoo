@@ -10,12 +10,23 @@ class BomStructureReport(models.AbstractModel):
     def get_children(self, object, level=0):
         result = []
 
-        def _get_rec(object, level, qty=1.0):
+        def _get_rec(object, level, qty=1.0, uom=False):
             for l in object:
                 res = {}
                 res['pname'] = l.product_id.name_get()[0][1]
                 res['pcode'] = l.product_id.default_code
-                res['pqty'] = l.product_qty * qty
+                qty_per_bom = l.bom_id.product_qty
+                if uom and uom != l.product_uom_id:
+                    qty = uom._compute_quantity(qty, l.product_uom_id)
+                if uom and  l.product_uom_id != l.bom_id.product_uom_id:
+                    qty_per_bom = l.bom_id.product_uom_id._compute_quantity(qty_per_bom, l.product_uom_id)
+                    res['pqty'] = (l.product_qty *qty)/ qty_per_bom
+                elif uom:
+                    res['pqty'] = (l.product_qty *qty)/ qty_per_bom
+                else:
+                    #for the first case, the ponderation is right
+                    res['pqty'] = (l.product_qty *qty)
+                res['puom'] = l.product_uom_id
                 res['uname'] = l.product_uom_id.name
                 res['level'] = level
                 res['code'] = l.bom_id.code
@@ -23,7 +34,7 @@ class BomStructureReport(models.AbstractModel):
                 if l.child_line_ids:
                     if level < 6:
                         level += 1
-                    _get_rec(l.child_line_ids, level, qty=res['pqty'])
+                    _get_rec(l.child_line_ids, level, qty=res['pqty'], uom=res['puom'])
                     if level > 0 and level < 6:
                         level -= 1
             return result
