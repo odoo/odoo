@@ -1506,6 +1506,7 @@ exports.Orderline = Backbone.Model.extend({
         base = recompute_base(base, incl_fixed_amount, incl_percent_amount);
         var total_excluded = base;
         var total_included = base;
+        var total_void = base;
 
         // 5) Iterate the taxes in the sequence order to fill missing base/amount values.
 
@@ -1521,6 +1522,10 @@ exports.Orderline = Backbone.Model.extend({
 
             total_included += tax_amount;
 
+            // The total_void amount is computed as the sum of total_excluded with all tax_amount, where tax has an account set
+            if(not tax.account_id)
+                total_void += tax_amount;
+
             var tax_vals = {
                 id: tax.id,
                 amount: sign * tax_amount,
@@ -1532,7 +1537,8 @@ exports.Orderline = Backbone.Model.extend({
         return {
             taxes: taxes_vals,
             total_excluded: round_pr(total_excluded, currency_rounding_bak),
-            total_included: round_pr(total_included, currency_rounding_bak)
+            total_included: round_pr(total_included, currency_rounding_bak),
+            total_void: round_pr(total_void, currency_rounding_bak)
         };
     },
     get_all_prices: function(){
@@ -1560,6 +1566,7 @@ exports.Orderline = Backbone.Model.extend({
         return {
             "priceWithTax": all_taxes.total_included,
             "priceWithoutTax": all_taxes.total_excluded,
+            "priceSumTaxVoid": all_taxes.total_void,
             "tax": taxtotal,
             "taxDetails": taxdetail,
         };

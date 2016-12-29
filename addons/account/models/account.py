@@ -892,7 +892,7 @@ class AccountTax(models.Model):
 
             # The total_included amount is computed as the sum of total_excluded with all tax_amount
             total_included += tax_amount
-            # The total_void amount is computed as the sum of total_excluded with all tax_amount, where tax has no account set
+            # The total_void amount is computed as the sum of total_excluded with all tax_amount, where tax has an account set
             if not tax.account_id:
                 total_void += tax_amount
 
