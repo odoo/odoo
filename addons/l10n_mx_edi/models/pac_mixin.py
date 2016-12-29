@@ -48,21 +48,29 @@ class PacMixin(models.Model):
 
     #---------------------------------------------------------------------------            
     # Common methods
-    #---------------------------------------------------------------------------   
+    #---------------------------------------------------------------------------
 
     @api.multi
-    def l10n_mx_edi_get_pac_client(self, company_id, service_type):
+    def l10n_mx_edi_get_service_client(self, service_type, company_id=None):
         '''Try to call the PAC as suds client. This method is usefull to handle several errors
         during the process. The returned values contains the client, the username, the password and
         the 'multi' boolean.
+        :company_id: the company_id containing the pac
+        :service_type: 'sign', 'cancel' or 'sat_inv'
         '''
-        pac_name = company_id.l10n_mx_edi_pac
-        if not pac_name:
-            return {'error': _('No PAC specified')}
-        infos_func = '_l10n_mx_edi_get_pac_infos_' + pac_name
-        if not hasattr(self, infos_func):
-            return {'error': _('Method %s not found') % infos_func}
-        infos = getattr(self, infos_func)(company_id, service_type)
+        sat_flag = service_type == 'sat_inv'
+        if sat_flag:
+            infos = {'url': 'https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc?wsdl'}
+        else:
+            if not company_id:
+                company_id = self.env.user.company_id            
+            pac_name = company_id.l10n_mx_edi_pac
+            if not pac_name:
+                return {'error': _('No PAC specified')}
+            infos_func = '_l10n_mx_edi_get_pac_infos_' + pac_name
+            if not hasattr(self, infos_func):
+                return {'error': _('Method %s not found') % infos_func}
+            infos = getattr(self, infos_func)(company_id, service_type)
         url = infos.pop('url', None)
         username = infos.pop('username', None)
         password = infos.pop('password', None)
@@ -70,8 +78,6 @@ class PacMixin(models.Model):
         error = infos.pop('error', None)
         if error:
             return {'error': error}
-        if not url or not username or not password:
-            return {'error': _('Some credentials are missing')}
         try:
             client = Client(url, timeout=20)
             return {'client': client, 'username': username, 'password': password, 'multi': multi}
@@ -79,7 +85,7 @@ class PacMixin(models.Model):
             return {'error': _('Failed to call the suds client: %s' % str(e))}
 
     @api.multi
-    def l10n_mx_edi_get_pac_response(self, service, params, client):
+    def l10n_mx_edi_get_service_response(self, service, params, client):
         '''Try to get the response from a client's service.
         '''
         if not hasattr(client.service, service):

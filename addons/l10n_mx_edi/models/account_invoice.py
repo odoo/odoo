@@ -56,10 +56,23 @@ class AccountInvoice(models.Model):
             ('cancelled', 'Cancelled')
         ],
         string='PAC status',
-        help='The invoice odoo status must be synchronized with the PAC.',
+        help='Refers to the status of the invoice inside the PAC.',
         readonly=True,
         copy=False,
         stored=True)
+    l10n_mx_edi_sat_status = fields.Selection(
+        selection=[
+            ('undefined', 'Undefined'),
+            ('not_available', 'Not available'),
+            ('available', 'Available')
+        ],
+        string='SAT status',
+        help='Refers to the status of the invoice inside the SAT system.',
+        readonly=True,
+        copy=False,
+        stored=True,
+        required=True,
+        default='undefined')
     l10n_mx_edi_cfdi_name = fields.Char(
         string='CFDI name',
         help='The attachment name of the CFDI.',
@@ -70,7 +83,7 @@ class AccountInvoice(models.Model):
     #---------------------------------------------------------------------------
 
     @api.multi
-    def _l10n_mx_edi_get_pac_values(self):
+    def _l10n_mx_edi_get_cfdi_values(self):
         '''Create values that will be used as parameters to request the PAC sign/cancel services.
         '''
         self.ensure_one()
@@ -83,10 +96,15 @@ class AccountInvoice(models.Model):
         if attachment_id:
             xml = base64.decodestring(attachment_id.datas)
             tree = tools.str_as_tree(xml)
+            node_sup = tree.find('.//{http://www.sat.gob.mx/cfd/3}Emisor')
+            node_cus = tree.find('.//{http://www.sat.gob.mx/cfd/3}Receptor')
             node_uuid = tree.find('.//{http://www.sat.gob.mx/TimbreFiscalDigital}TimbreFiscalDigital')
             # not 'if node_uuid': due to the python future tag in this etree version
             if node_uuid is not None:
                 values['uuid'] = node_uuid.attrib['UUID']
+            values['supplier_rfc'] = node_sup.attrib['rfc']
+            values['customer_rfc'] = node_cus.attrib['rfc']
+            values['total'] = tree.attrib['total']
             cer_domain = [('serial_number', '=', tree.attrib['noCertificado'])]
             values['certificate_id'] = self.env['l10n_mx_edi.certificate'].search(cer_domain, limit=1)
             xml = tools.tree_as_str(tree, pretty_print=False, xml_declaration=False)
@@ -116,7 +134,7 @@ class AccountInvoice(models.Model):
                         subtype='mt_invoice_l10n_mx_edi_msg')
                 continue
             # Create the client
-            client_values = self.l10n_mx_edi_get_pac_client(company_id, service_type)
+            client_values = self.l10n_mx_edi_get_service_client(service_type, company_id)
             error = client_values.pop('error', None)
             if error:
                 for record in records:
@@ -125,9 +143,9 @@ class AccountInvoice(models.Model):
                         subtype='mt_invoice_l10n_mx_edi_msg')
                 continue
             client = client_values['client']
+            multi = client_values['multi']
             username = client_values['username']
             password = client_values['password']
-            multi = client_values['multi']
             # If multi is set to true, the method is called with the whole subset.
             # else, we process the service for each record
             if multi:
@@ -225,9 +243,9 @@ class AccountInvoice(models.Model):
         # TODO: Do it on multi
         self.ensure_one()
         service = 'timbrar'
-        values = self._l10n_mx_edi_get_pac_values()
+        values = self._l10n_mx_edi_get_cfdi_values()
         params = [username, password, values['cfdi'], False]
-        response_values = self.l10n_mx_edi_get_pac_response(service, params, client)
+        response_values = self.l10n_mx_edi_get_service_response(service, params, client)
         error = response_values.pop('error', None)
         response = response_values.pop('response', None)
         if error:
@@ -247,11 +265,11 @@ class AccountInvoice(models.Model):
         # TODO: Do it on multi
         self.ensure_one()
         service = 'cancelar'
-        values = self._l10n_mx_edi_get_pac_values()
+        values = self._l10n_mx_edi_get_cfdi_values()
         uuids = [values['uuid']]
         certificate_id = values['certificate_id']
         params = [username, password, uuids, certificate_id.content, certificate_id.key, certificate_id.password]
-        response_values = self.l10n_mx_edi_get_pac_response(service, params, client)
+        response_values = self.l10n_mx_edi_get_service_response(service, params, client)
         error = response_values.pop('error', None)
         response = response_values.pop('response', None)
         if error:
@@ -271,9 +289,9 @@ class AccountInvoice(models.Model):
         # TODO: Do it on multi
         self.ensure_one()
         service = 'stamp'
-        values = self._l10n_mx_edi_get_pac_values()
+        values = self._l10n_mx_edi_get_cfdi_values()
         params = [[values['cfdi']], username, password]
-        response_values = self.l10n_mx_edi_get_pac_response(service, params, client)
+        response_values = self.l10n_mx_edi_get_service_response(service, params, client)
         error = response_values.pop('error', None)
         response = response_values.pop('response', None)
         if error:
@@ -298,13 +316,13 @@ class AccountInvoice(models.Model):
         # TODO: Do it on multi
         self.ensure_one()
         service = 'cancel'
-        values = self._l10n_mx_edi_get_pac_values()
+        values = self._l10n_mx_edi_get_cfdi_values()
         invoices_list = client.factory.create("UUIDS")
         invoices_list.uuids.string = [values['uuid']]
         company_id = self.company_id
         certificate_id = values['certificate_id']
         params = [invoices_list, username, password, company_id.vat, certificate_id.content, certificate_id.key]
-        response_values = self.l10n_mx_edi_get_pac_response(service, params, client)
+        response_values = self.l10n_mx_edi_get_service_response(service, params, client)
         error = response_values.pop('error', None)
         response = response_values.pop('response', None)
         if error:
@@ -503,3 +521,45 @@ class AccountInvoice(models.Model):
                 record._l10n_mx_edi_cancel()
             elif record.l10n_mx_edi_pac_status == 'retry':
                 record._l10n_mx_edi_retry()
+
+    @api.multi
+    def l10n_mx_edi_update_sat_status(self):
+        '''Synchronize both systems: Odoo & SAT to make sure the invoice is valid.
+        '''
+        client_values = self.l10n_mx_edi_get_service_client('sat_inv')
+        error = client_values.pop('error', None)
+        if error:
+            error_msg = _('Errors while requesting the SAT')
+            for record in self:
+                record.message_post(
+                    body=error_msg + create_list_html([error]), 
+                    subtype='mt_invoice_l10n_mx_edi_msg')
+            return
+        client = client_values['client']
+        error_resp = _('The SAT service failed to be requested')
+        error_msg = _('The SAT service has responded: %s')
+        for record in self:
+            country_code = record.company_id.country_id.code
+            if country_code == 'MX'\
+                and record.l10n_mx_edi_pac_status == 'signed'\
+                and not record.l10n_mx_edi_sat_status == 'available':
+                values = record._l10n_mx_edi_get_cfdi_values()
+                arg = '"?re=%s&rr=%s&tt=%s&id=%s' % (
+                    values['supplier_rfc'], values['customer_rfc'], values['total'], values['uuid']) 
+                response_values = record.l10n_mx_edi_get_service_response('Consulta', [arg], client)
+                error = response_values.pop('error', None)
+                response = response_values.pop('response', None)
+                if error:
+                    record.message_post(
+                        body=error_resp + create_list_html([error]), 
+                        subtype='mt_invoice_l10n_mx_edi_msg')
+                    continue
+                msg = response.CodigoEstatus
+                available = False #TODO change
+                if available:
+                    record.l10n_mx_edi_sat_status = 'available'
+                else:
+                    record.l10n_mx_edi_sat_status = 'not_available'
+                    record.message_post(
+                        body=error_msg % msg,
+                        subtype='mt_invoice_l10n_mx_edi_msg')

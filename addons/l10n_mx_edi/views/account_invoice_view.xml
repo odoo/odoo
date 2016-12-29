@@ -7,10 +7,15 @@
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//sheet/group//group[last()]" position="inside">
-                    <label for="l10n_mx_edi_pac_status"/>
+                    <label for="l10n_mx_edi_pac_status" states="open,paid,cancel"/>
                     <div class="o_row">
-                        <field name="l10n_mx_edi_pac_status"/>
-                        <button name="l10n_mx_edi_update_pac_status" string="Retry" class="oe_link" type="object" groups="account.group_account_invoice"/>
+                        <field name="l10n_mx_edi_pac_status" states="open,paid,cancel"/>
+                        <button name="l10n_mx_edi_update_pac_status" string="Retry" class="oe_link" type="object" groups="account.group_account_invoice" states="open,paid,cancel"/>
+                    </div>
+                    <label for="l10n_mx_edi_sat_status" states="open,paid,cancel"/>
+                    <div class="o_row">
+                        <field name="l10n_mx_edi_sat_status" states="open,paid,cancel"/>
+                        <button name="l10n_mx_edi_update_sat_status" string="Retry" class="oe_link" type="object" groups="account.group_account_invoice" states="open,paid,cancel"/>
                     </div>
                 </xpath>
             </field>
