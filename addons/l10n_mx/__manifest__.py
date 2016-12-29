@@ -33,7 +33,6 @@ With this module you will have:
     "depends": [
         "account",
         "base_vat",
-        "account_tax_cash_basis",
     ],
     "data": [
         "data/account_tag_data.xml",
