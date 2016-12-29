@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Library:           OASIS Universal Business Language (UBL) 2.1 OS
+                     http://docs.oasis-open.org/ubl/os-UBL-2.1/
+  Release Date:      04 November 2013
+  Module:            xsd/maindoc/UBL-GuaranteeCertificate-2.1.xsd
+  Generated on:      2013-10-31 17:17z
+  Copyright (c) OASIS Open 2013. All Rights Reserved.
+-->
+<xsd:schema xmlns="urn:oasis:names:specification:ubl:schema:xsd:GuaranteeCertificate-2"
+            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+            xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:ccts="urn:un:unece:uncefact:documentation:2"
+            targetNamespace="urn:oasis:names:specification:ubl:schema:xsd:GuaranteeCertificate-2"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified"
+            version="2.1">
+   <!-- ===== Imports ===== -->
+   <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               schemaLocation="../common/UBL-CommonAggregateComponents-2.1.xsd"/>
+   <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+               schemaLocation="../common/UBL-CommonBasicComponents-2.1.xsd"/>
+   <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+               schemaLocation="../common/UBL-CommonExtensionComponents-2.1.xsd"/>
+   <!-- ===== Element Declarations ===== -->
+   <xsd:element name="GuaranteeCertificate" type="GuaranteeCertificateType">
+      <xsd:annotation>
+         <xsd:documentation>This element MUST be conveyed as the root element in any instance document based on this Schema expression</xsd:documentation>
+      </xsd:annotation>
+   </xsd:element>
+   <!-- ===== Type Definitions ===== -->
+   <!-- ===== Aggregate Business Information Entity Type Definitions ===== -->
+   <xsd:complexType name="GuaranteeCertificateType">
+      <xsd:annotation>
+         <xsd:documentation>
+            <ccts:Component>
+               <ccts:ComponentType>ABIE</ccts:ComponentType>
+               <ccts:DictionaryEntryName>Guarantee Certificate. Details</ccts:DictionaryEntryName>
+               <ccts:Definition>A document to notify the deposit of a bid bond guarantee.</ccts:Definition>
+               <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+            </ccts:Component>
+         </xsd:documentation>
+      </xsd:annotation>
+      <xsd:sequence>
+           <xsd:element ref="ext:UBLExtensions" minOccurs="0" maxOccurs="1">
+              <xsd:annotation>
+                 <xsd:documentation>A container for all extensions present in the document.</xsd:documentation>
+              </xsd:annotation>
+           </xsd:element>
+          <xsd:element ref="cbc:UBLVersionID" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. UBL Version Identifier. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>Identifies the earliest version of the UBL 2 schema for this document type that defines all of the elements that might be encountered in the current instance.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTerm>UBL Version Identifier</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+                     <ccts:DataType>Identifier. Type</ccts:DataType>
+                     <ccts:Examples>2.0.5</ccts:Examples>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:CustomizationID" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Customization Identifier. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>Identifies a user-defined customization of UBL for a specific use.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Customization Identifier</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+                     <ccts:DataType>Identifier. Type</ccts:DataType>
+                     <ccts:Examples>NES</ccts:Examples>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:ProfileID" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Profile Identifier. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>Identifies a user-defined profile of the customization of UBL being used.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Profile Identifier</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+                     <ccts:DataType>Identifier. Type</ccts:DataType>
+                     <ccts:Examples>BasicProcurementProcess</ccts:Examples>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:ProfileExecutionID" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Profile Execution Identifier. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>Identifies an instance of executing a profile, to associate all transactions in a collaboration.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Profile Execution Identifier</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+                     <ccts:DataType>Identifier. Type</ccts:DataType>
+                     <ccts:Examples>BPP-1001</ccts:Examples>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:ID" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>An identifier for this document, assigned by the sender.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Identifier</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+                     <ccts:DataType>Identifier. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:CopyIndicator" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Copy_ Indicator. Indicator</ccts:DictionaryEntryName>
+                     <ccts:Definition>Indicates whether this document is a copy (true) or not (false).</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTermQualifier>Copy</ccts:PropertyTermQualifier>
+                     <ccts:PropertyTerm>Indicator</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Indicator</ccts:RepresentationTerm>
+                     <ccts:DataType>Indicator. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:UUID" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. UUID. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>A universally unique identifier for an instance of this document.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTerm>UUID</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+                     <ccts:DataType>Identifier. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:ContractFolderID" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Contract Folder Identifier. Identifier</ccts:DictionaryEntryName>
+                     <ccts:Definition>An identifier, assigned by the sender, for the process file (i.e., record) to which this document belongs.</ccts:Definition>
+                     <ccts:Cardinality>1</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Contract Folder Identifier</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+                     <ccts:DataType>Identifier. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:IssueDate" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Issue Date. Date</ccts:DictionaryEntryName>
+                     <ccts:Definition>The date, assigned by the sender, on which this document was issued.</ccts:Definition>
+                     <ccts:Cardinality>1</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Issue Date</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Date</ccts:RepresentationTerm>
+                     <ccts:DataType>Date. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:IssueTime" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Issue Time. Time</ccts:DictionaryEntryName>
+                     <ccts:Definition>The time, assigned by the sender, at which this document was issued.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Issue Time</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Time</ccts:RepresentationTerm>
+                     <ccts:DataType>Time. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:GuaranteeTypeCode" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Guarantee Type Code. Code</ccts:DictionaryEntryName>
+                     <ccts:Definition>A code signifying the type of the guarantee.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Guarantee Type Code</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+                     <ccts:DataType>Code. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:Purpose" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Purpose. Text</ccts:DictionaryEntryName>
+                     <ccts:Definition>A textual description of the purpose of the bid bond guarantee.</ccts:Definition>
+                     <ccts:Cardinality>0..n</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Purpose</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Text</ccts:RepresentationTerm>
+                     <ccts:DataType>Text. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:LiabilityAmount" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Liability. Amount</ccts:DictionaryEntryName>
+                     <ccts:Definition>The liability amount (a monetary value) in the bid bond guarantee.</ccts:Definition>
+                     <ccts:Cardinality>1</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Liability</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Amount</ccts:RepresentationTerm>
+                     <ccts:DataType>Amount. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:ConstitutionCode" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Constitution Code. Code</ccts:DictionaryEntryName>
+                     <ccts:Definition>The code stating the constitution means of the guarantee.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Constitution Code</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+                     <ccts:DataType>Code. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cbc:Note" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>BBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Note. Text</ccts:DictionaryEntryName>
+                     <ccts:Definition>Free-form text pertinent to this document, conveying information that is not contained explicitly in other structures.</ccts:Definition>
+                     <ccts:Cardinality>0..n</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Note</ccts:PropertyTerm>
+                     <ccts:RepresentationTerm>Text</ccts:RepresentationTerm>
+                     <ccts:DataType>Text. Type</ccts:DataType>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:ApplicablePeriod" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Applicable_ Period. Period</ccts:DictionaryEntryName>
+                     <ccts:Definition>The specified period in the tendering process for which this bid bond guarantee is effective</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTermQualifier>Applicable</ccts:PropertyTermQualifier>
+                     <ccts:PropertyTerm>Period</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Period</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Period</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:ApplicableRegulation" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Applicable_ Regulation. Regulation</ccts:DictionaryEntryName>
+                     <ccts:Definition>A reference to an applicable regulation.</ccts:Definition>
+                     <ccts:Cardinality>0..n</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTermQualifier>Applicable</ccts:PropertyTermQualifier>
+                     <ccts:PropertyTerm>Regulation</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Regulation</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Regulation</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:GuaranteeDocumentReference"
+                      minOccurs="0"
+                      maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Guarantee_ Document Reference. Document Reference</ccts:DictionaryEntryName>
+                     <ccts:Definition>A reference to a legal document.</ccts:Definition>
+                     <ccts:Cardinality>0..n</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTermQualifier>Guarantee</ccts:PropertyTermQualifier>
+                     <ccts:PropertyTerm>Document Reference</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Document Reference</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Document Reference</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:ImmobilizedSecurity" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Immobilized Security</ccts:DictionaryEntryName>
+                     <ccts:Definition>Details of an immobilized security.</ccts:Definition>
+                     <ccts:Cardinality>0..n</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Immobilized Security</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Immobilized Security</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Immobilized Security</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:Signature" minOccurs="1" maxOccurs="unbounded">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Signature</ccts:DictionaryEntryName>
+                     <ccts:Definition>A signature applied to this document.</ccts:Definition>
+                     <ccts:Cardinality>1..n</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTerm>Signature</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Signature</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Signature</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:GuarantorParty" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Guarantor_ Party. Party</ccts:DictionaryEntryName>
+                     <ccts:Definition>The guarantee creditor organization that has the authority to charge bid bond guarantee credit.</ccts:Definition>
+                     <ccts:Cardinality>1</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTermQualifier>Guarantor</ccts:PropertyTermQualifier>
+                     <ccts:PropertyTerm>Party</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Party</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Party</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:InterestedParty" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Interested_ Party. Party</ccts:DictionaryEntryName>
+                     <ccts:Definition>The party depositing the bid bond guarantee.</ccts:Definition>
+                     <ccts:Cardinality>1</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTermQualifier>Interested</ccts:PropertyTermQualifier>
+                     <ccts:PropertyTerm>Party</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Party</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Party</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+         <xsd:element ref="cac:BeneficiaryParty" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+               <xsd:documentation>
+                  <ccts:Component>
+                     <ccts:ComponentType>ASBIE</ccts:ComponentType>
+                     <ccts:DictionaryEntryName>Guarantee Certificate. Beneficiary_ Party. Party</ccts:DictionaryEntryName>
+                     <ccts:Definition>The beneficiary of the bid bond guarantee.</ccts:Definition>
+                     <ccts:Cardinality>0..1</ccts:Cardinality>
+                     <ccts:ObjectClass>Guarantee Certificate</ccts:ObjectClass>
+                     <ccts:PropertyTermQualifier>Beneficiary</ccts:PropertyTermQualifier>
+                     <ccts:PropertyTerm>Party</ccts:PropertyTerm>
+                     <ccts:AssociatedObjectClass>Party</ccts:AssociatedObjectClass>
+                     <ccts:RepresentationTerm>Party</ccts:RepresentationTerm>
+                  </ccts:Component>
+               </xsd:documentation>
+            </xsd:annotation>
+         </xsd:element>
+      </xsd:sequence>
+   </xsd:complexType>
+</xsd:schema>
+<!-- ===== Copyright Notice ===== --><!--
+  OASIS takes no position regarding the validity or scope of any 
+  intellectual property or other rights that might be claimed to pertain 
+  to the implementation or use of the technology described in this 
+  document or the extent to which any license under such rights 
+  might or might not be available; neither does it represent that it has 
+  made any effort to identify any such rights. Information on OASIS's 
+  procedures with respect to rights in OASIS specifications can be 
+  found at the OASIS website. Copies of claims of rights made 
+  available for publication and any assurances of licenses to be made 
+  available, or the result of an attempt made to obtain a general 
+  license or permission for the use of such proprietary rights by 
+  implementors or users of this specification, can be obtained from 
+  the OASIS Executive Director.
+
+  OASIS invites any interested party to bring to its attention any 
+  copyrights, patents or patent applications, or other proprietary 
+  rights which may cover technology that may be required to 
+  implement this specification. Please address the information to the 
+  OASIS Executive Director.
+  
+  This document and translations of it may be copied and furnished to 
+  others, and derivative works that comment on or otherwise explain 
+  it or assist in its implementation may be prepared, copied, 
+  published and distributed, in whole or in part, without restriction of 
+  any kind, provided that the above copyright notice and this 
+  paragraph are included on all such copies and derivative works. 
+  However, this document itself may not be modified in any way, 
+  such as by removing the copyright notice or references to OASIS, 
+  except as needed for the purpose of developing OASIS 
+  specifications, in which case the procedures for copyrights defined 
+  in the OASIS Intellectual Property Rights document must be 
+  followed, or as required to translate it into languages other than 
+  English. 
+
+  The limited permissions granted above are perpetual and will not be 
+  revoked by OASIS or its successors or assigns. 
+
+  This document and the information contained herein is provided on 
+  an "AS IS" basis and OASIS DISCLAIMS ALL WARRANTIES, 
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY 
+  WARRANTY THAT THE USE OF THE INFORMATION HEREIN 
+  WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED 
+  WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A 
+  PARTICULAR PURPOSE.    
+-->

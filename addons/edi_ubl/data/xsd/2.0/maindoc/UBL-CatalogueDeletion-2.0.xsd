@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Document Type:     CatalogueDeletion
+  Generated On:      Tue Oct 03 2:26:38 P3 2006
+
+-->
+<!-- ===== xsd:schema Element With Namespaces Declarations ===== -->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:oasis:names:specification:ubl:schema:xsd:CatalogueDeletion-2"
+    xmlns="urn:oasis:names:specification:ubl:schema:xsd:CatalogueDeletion-2"
+    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+    xmlns:udt="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2"
+    xmlns:ccts="urn:un:unece:uncefact:documentation:2"
+    xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
+    xmlns:qdt="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    version="2.0">
+<!-- ===== Imports ===== -->
+  <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" schemaLocation="../common/UBL-CommonAggregateComponents-2.0.xsd"/>
+  <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" schemaLocation="../common/UBL-CommonBasicComponents-2.0.xsd"/>
+  <xsd:import namespace="urn:un:unece:uncefact:data:specification:UnqualifiedDataTypesSchemaModule:2" schemaLocation="../common/UnqualifiedDataTypeSchemaModule-2.0.xsd"/>
+  <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" schemaLocation="../common/UBL-CommonExtensionComponents-2.0.xsd"/>
+  <xsd:import namespace="urn:oasis:names:specification:ubl:schema:xsd:QualifiedDatatypes-2" schemaLocation="../common/UBL-QualifiedDatatypes-2.0.xsd"/>
+<!-- ===== Root Element ===== -->
+  <xsd:element name="CatalogueDeletion" type="CatalogueDeletionType">
+    <xsd:annotation>
+      <xsd:documentation>This element MUST be conveyed as the root element in any instance document based on this Schema expression</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:complexType name="CatalogueDeletionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <ccts:Component>
+          <ccts:ComponentType>ABIE</ccts:ComponentType>
+          <ccts:DictionaryEntryName>Catalogue Deletion. Details</ccts:DictionaryEntryName>
+          <ccts:Definition>The document used to cancel an entire Catalogue.</ccts:Definition>
+          <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+        </ccts:Component>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element ref="ext:UBLExtensions" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>A container for all extensions present in the document.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:UBLVersionID" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. UBL Version Identifier. Identifier</ccts:DictionaryEntryName>
+              <ccts:Definition>The earliest version of the UBL 2 schema for this document type that defines all of the elements that might be encountered in the current instance.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTerm>UBL Version Identifier</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+              <ccts:DataType>Identifier. Type</ccts:DataType>
+              <ccts:Examples>2.0.5</ccts:Examples>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:CustomizationID" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. Customization Identifier. Identifier</ccts:DictionaryEntryName>
+              <ccts:Definition>Identifies a user-defined customization of UBL for a specific use.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTerm>Customization Identifier</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+              <ccts:DataType>Identifier. Type</ccts:DataType>
+              <ccts:Examples>NES</ccts:Examples>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:ProfileID" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. Profile Identifier. Identifier</ccts:DictionaryEntryName>
+              <ccts:Definition>Identifies a user-defined profile of the customization of UBL being used.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTerm>Profile Identifier</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+              <ccts:DataType>Identifier. Type</ccts:DataType>
+              <ccts:Examples>BasicProcurementProcess</ccts:Examples>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:ID" minOccurs="1" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. Identifier</ccts:DictionaryEntryName>
+              <ccts:Definition>An identifier for the Catalogue Deletion assigned by the Seller.</ccts:Definition>
+              <ccts:Cardinality>1</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTerm>Identifier</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+              <ccts:DataType>Identifier. Type</ccts:DataType>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:UUID" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. UUID. Identifier</ccts:DictionaryEntryName>
+              <ccts:Definition>A universally unique identifier for an instance of this ABIE.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTerm>UUID</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+              <ccts:DataType>Identifier. Type</ccts:DataType>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:Name" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. Name</ccts:DictionaryEntryName>
+              <ccts:Definition>A name given to a Catalogue Deletion.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTerm>Name</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Name</ccts:RepresentationTerm>
+              <ccts:DataType>Name. Type</ccts:DataType>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:IssueDate" minOccurs="1" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. Issue Date. Date</ccts:DictionaryEntryName>
+              <ccts:Definition>The date assigned by the Seller on which the Catalogue was deleted.</ccts:Definition>
+              <ccts:Cardinality>1</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTerm>Issue Date</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Date</ccts:RepresentationTerm>
+              <ccts:DataType>Date. Type</ccts:DataType>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:IssueTime" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. Issue Time. Time</ccts:DictionaryEntryName>
+              <ccts:Definition>The time assigned by the Seller at which the Catalogue was deleted.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTerm>Issue Time</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Time</ccts:RepresentationTerm>
+              <ccts:DataType>Time. Type</ccts:DataType>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:Note" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. Note. Text</ccts:DictionaryEntryName>
+              <ccts:Definition>Free-form text applying to the Catalogue Deletion. This element may contain notes or any other similar information that is not contained explicitly in another structure.</ccts:Definition>
+              <ccts:Cardinality>0..n</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTerm>Note</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Text</ccts:RepresentationTerm>
+              <ccts:DataType>Text. Type</ccts:DataType>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:VersionID" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. Version. Identifier</ccts:DictionaryEntryName>
+              <ccts:Definition>Indicates the current version of the Catalogue.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTerm>Version</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+              <ccts:DataType>Identifier. Type</ccts:DataType>
+              <ccts:Examples>"1.1"</ccts:Examples>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cbc:Description" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>BBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. Description. Text</ccts:DictionaryEntryName>
+              <ccts:Definition>Describes the Catalogue Deletion.</ccts:Definition>
+              <ccts:Cardinality>0..n</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTerm>Description</ccts:PropertyTerm>
+              <ccts:RepresentationTerm>Text</ccts:RepresentationTerm>
+              <ccts:DataType>Text. Type</ccts:DataType>
+              <ccts:Examples>"stock no longer provided"</ccts:Examples>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cac:ValidityPeriod" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>ASBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. Validity_ Period. Period</ccts:DictionaryEntryName>
+              <ccts:Definition>The period during which the deletion of the catalogue becomes effective.  This may be given as start (after date) and end dates (before date).</ccts:Definition>
+              <ccts:Cardinality>0..n</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTermQualifier>Validity</ccts:PropertyTermQualifier>
+              <ccts:PropertyTerm>Period</ccts:PropertyTerm>
+              <ccts:AssociatedObjectClass>Period</ccts:AssociatedObjectClass>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cac:DeletedCatalogueReference" minOccurs="1" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>ASBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. Deleted_ Catalogue Reference. Catalogue Reference</ccts:DictionaryEntryName>
+              <ccts:Definition>An association to the Catalogue being deleted.</ccts:Definition>
+              <ccts:Cardinality>1</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTermQualifier>Deleted</ccts:PropertyTermQualifier>
+              <ccts:PropertyTerm>Catalogue Reference</ccts:PropertyTerm>
+              <ccts:AssociatedObjectClass>Catalogue Reference</ccts:AssociatedObjectClass>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cac:ReferencedContract" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>ASBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. Referenced_ Contract. Contract</ccts:DictionaryEntryName>
+              <ccts:Definition>An association to a framework agreement or contract.</ccts:Definition>
+              <ccts:Cardinality>0..n</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTermQualifier>Referenced</ccts:PropertyTermQualifier>
+              <ccts:PropertyTerm>Contract</ccts:PropertyTerm>
+              <ccts:AssociatedObjectClass>Contract</ccts:AssociatedObjectClass>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cac:Signature" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>ASBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. Signature</ccts:DictionaryEntryName>
+              <ccts:Definition>One or more signatures applied to the document.</ccts:Definition>
+              <ccts:Cardinality>0..n</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTerm>Signature</ccts:PropertyTerm>
+              <ccts:AssociatedObjectClass>Signature</ccts:AssociatedObjectClass>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cac:ReceiverParty" minOccurs="1" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>ASBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. Receiver_ Party. Party</ccts:DictionaryEntryName>
+              <ccts:Definition>An association to the Catalogue Receiver Party.</ccts:Definition>
+              <ccts:Cardinality>1</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTermQualifier>Receiver</ccts:PropertyTermQualifier>
+              <ccts:PropertyTerm>Party</ccts:PropertyTerm>
+              <ccts:AssociatedObjectClass>Party</ccts:AssociatedObjectClass>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cac:ProviderParty" minOccurs="1" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>ASBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. Provider_ Party. Party</ccts:DictionaryEntryName>
+              <ccts:Definition>An association to the Catalogue Provider Party.</ccts:Definition>
+              <ccts:Cardinality>1</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTermQualifier>Provider</ccts:PropertyTermQualifier>
+              <ccts:PropertyTerm>Party</ccts:PropertyTerm>
+              <ccts:AssociatedObjectClass>Party</ccts:AssociatedObjectClass>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cac:SellerSupplierParty" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>ASBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. Seller_ Supplier Party. Supplier Party</ccts:DictionaryEntryName>
+              <ccts:Definition>The Supplier Party responsible for the contract to which the Catalogue relates.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTermQualifier>Seller</ccts:PropertyTermQualifier>
+              <ccts:PropertyTerm>Supplier Party</ccts:PropertyTerm>
+              <ccts:AssociatedObjectClass>Supplier Party</ccts:AssociatedObjectClass>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element ref="cac:ContractorCustomerParty" minOccurs="0" maxOccurs="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <ccts:Component>
+              <ccts:ComponentType>ASBIE</ccts:ComponentType>
+              <ccts:DictionaryEntryName>Catalogue Deletion. Contractor_ Customer Party. Customer Party</ccts:DictionaryEntryName>
+              <ccts:Definition>The Customer Party responsible for the contract to which the Catalogue relates.</ccts:Definition>
+              <ccts:Cardinality>0..1</ccts:Cardinality>
+              <ccts:ObjectClass>Catalogue Deletion</ccts:ObjectClass>
+              <ccts:PropertyTermQualifier>Contractor</ccts:PropertyTermQualifier>
+              <ccts:PropertyTerm>Customer Party</ccts:PropertyTerm>
+              <ccts:AssociatedObjectClass>Customer Party</ccts:AssociatedObjectClass>
+            </ccts:Component>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+<!-- ===== Element Declarations ===== -->
+<!-- ===== Type Definitions ===== -->
+<!-- ===== Basic Business Information Entity Type Definitions ===== -->
+</xsd:schema>
+<!-- ===== Copyright Notice ===== -->
+<!--
+  OASIS takes no position regarding the validity or scope of any 
+  intellectual property or other rights that might be claimed to pertain 
+  to the implementation or use of the technology described in this 
+  document or the extent to which any license under such rights 
+  might or might not be available; neither does it represent that it has 
+  made any effort to identify any such rights. Information on OASIS's 
+  procedures with respect to rights in OASIS specifications can be 
+  found at the OASIS website. Copies of claims of rights made 
+  available for publication and any assurances of licenses to be made 
+  available, or the result of an attempt made to obtain a general 
+  license or permission for the use of such proprietary rights by 
+  implementors or users of this specification, can be obtained from 
+  the OASIS Executive Director.
+
+  OASIS invites any interested party to bring to its attention any 
+  copyrights, patents or patent applications, or other proprietary 
+  rights which may cover technology that may be required to 
+  implement this specification. Please address the information to the 
+  OASIS Executive Director.
+  
+  Copyright (C) OASIS Open 2001-2006. All Rights Reserved.
+
+  This document and translations of it may be copied and furnished to 
+  others, and derivative works that comment on or otherwise explain 
+  it or assist in its implementation may be prepared, copied, 
+  published and distributed, in whole or in part, without restriction of 
+  any kind, provided that the above copyright notice and this 
+  paragraph are included on all such copies and derivative works. 
+  However, this document itself may not be modified in any way, 
+  such as by removing the copyright notice or references to OASIS, 
+  except as needed for the purpose of developing OASIS 
+  specifications, in which case the procedures for copyrights defined 
+  in the OASIS Intellectual Property Rights document must be 
+  followed, or as required to translate it into languages other than 
+  English. 
+
+  The limited permissions granted above are perpetual and will not be 
+  revoked by OASIS or its successors or assigns. 
+
+  This document and the information contained herein is provided on 
+  an "AS IS" basis and OASIS DISCLAIMS ALL WARRANTIES, 
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY 
+  WARRANTY THAT THE USE OF THE INFORMATION HEREIN 
+  WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED 
+  WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A 
+  PARTICULAR PURPOSE.
+-->
