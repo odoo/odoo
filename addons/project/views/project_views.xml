@@ -306,8 +306,8 @@
             </field>
         </record>
 
-        <record id="activate_sample_project" model="ir.actions.server">
-            <field name="name">Activate Sample Project</field>
+        <record id="ir_actions_server_project_sample" model="ir.actions.server">
+            <field name="name">Project: Activate Sample Project</field>
             <field name="model_id" ref="project.model_project_project"/>
             <field name="code">
 action = model.activate_sample_project()
@@ -325,7 +325,7 @@ action = model.activate_sample_project()
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to create a new project.<br/>
-                    <i>Or <a type="action" name="%(project.activate_sample_project)d">activate a sample project</a> to play with.</i>
+                    <i>Or <a type="action" name="%(project.ir_actions_server_project_sample)d">activate a sample project</a> to play with.</i>
                 </p>
             </field>
         </record>
