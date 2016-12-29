@@ -168,7 +168,9 @@ $('.oe_website_sale').each(function () {
         num = (negative ? num.slice(1) : num);
 
         return (negative ? '-' : '') + intersperse(
-            num, l10n.grouping, l10n.thousands_sep);
+            num,
+            Array.isArray(l10n.grouping) ? l10n.grouping : JSON.parse(l10n.grouping),
+            l10n.thousands_sep);
     }
 
     function price_to_str(price) {
