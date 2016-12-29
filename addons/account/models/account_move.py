@@ -417,7 +417,7 @@ class AccountMoveLine(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
     user_type_id = fields.Many2one('account.account.type', related='account_id.user_type_id', index=True, store=True, oldname="user_type")
     tax_exigible = fields.Boolean(string='Appears in VAT report', default=True,
-        help="Technical field used to mark a tax line as exigible in the vat report or not (only exigible journal items are displayed). By default all new journal items are directly exigible, but with the module account_tax_cash_basis, some will become exigible only when the payment is recorded.")
+        help="Technical field used to mark a tax line as exigible in the vat report or not (only exigible journal items are displayed). By default all new journal items are directly exigible, but with the feature cash_basis on taxes, some will become exigible only when the payment is recorded.")
 
     _sql_constraints = [
         ('credit_debit1', 'CHECK (credit*debit=0)', 'Wrong credit or debit value in accounting entry !'),
@@ -1461,6 +1461,7 @@ class AccountPartialReconcile(models.Model):
                             'amount_currency': self.amount_currency and line.currency_id.round(-line.amount_currency * amount / line.balance) or 0.0,
                             'currency_id': line.currency_id.id,
                             'move_id': newly_created_move.id,
+                            'partner_id': line.partner_id.id,
                             })
                         # Group by cash basis account and tax
                         self.env['account.move.line'].with_context(check_move_validity=False).create({
@@ -1473,6 +1474,7 @@ class AccountPartialReconcile(models.Model):
                             'amount_currency': self.amount_currency and line.currency_id.round(line.amount_currency * amount / line.balance) or 0.0,
                             'currency_id': line.currency_id.id,
                             'move_id': newly_created_move.id,
+                            'partner_id': line.partner_id.id,
                         })
                         if line.account_id.reconcile:
                             #setting the account to allow reconciliation will help to fix rounding errors
@@ -1492,6 +1494,7 @@ class AccountPartialReconcile(models.Model):
                                 'move_id': newly_created_move.id,
                                 'currency_id': line.currency_id.id,
                                 'amount_currency': self.amount_currency and line.currency_id.round(line.amount_currency * amount / line.balance) or 0.0,
+                                'partner_id': line.partner_id.id,
                             })
                             self.env['account.move.line'].with_context(check_move_validity=False).create({
                                 'name': line.name,
@@ -1502,6 +1505,7 @@ class AccountPartialReconcile(models.Model):
                                 'move_id': newly_created_move.id,
                                 'currency_id': line.currency_id.id,
                                 'amount_currency': self.amount_currency and line.currency_id.round(-line.amount_currency * amount / line.balance) or 0.0,
+                                'partner_id': line.partner_id.id,
                             })
             if newly_created_move:
                 if move_date > self.company_id.period_lock_date and newly_created_move.date != move_date:
