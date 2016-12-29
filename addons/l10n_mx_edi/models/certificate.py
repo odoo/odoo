@@ -91,18 +91,15 @@ class Certificate(models.Model):
         string='Serial number',
         help='The serial number to add to electronic documents',
         readonly=True,
-        required=True,
         index=True)
     available_date = fields.Datetime(
         string='Available date',
         help='The date on which the certificate will be valid',
-        readonly=True,
-        required=True)
+        readonly=True)
     expiration_date = fields.Datetime(
         string='Expiration date',
         help='The date on which the certificate will be expired',
-        readonly=True,
-        required=True)
+        readonly=True)
 
     @api.multi
     def get_mx_current_datetime(self):
