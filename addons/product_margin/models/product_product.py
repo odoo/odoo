@@ -144,4 +144,6 @@ class ProductProduct(models.Model):
                 res[val.id]['total_margin_rate'] = res[val.id]['turnover'] and res[val.id]['total_margin'] * 100 / res[val.id]['turnover'] or 0.0
             if 'expected_margin_rate' in field_names:
                 res[val.id]['expected_margin_rate'] = res[val.id]['sale_expected'] and res[val.id]['expected_margin'] * 100 / res[val.id]['sale_expected'] or 0.0
+            for k, v in res[val.id].items():
+                setattr(val, k, v)
         return res
