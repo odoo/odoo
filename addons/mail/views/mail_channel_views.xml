@@ -128,6 +128,7 @@
                                     </tree>
                                 </field>
                             </page>
+                            <page string="Integrations" invisible="0" name="mail_channel_integrations"></page>
                         </notebook>
                         <div class="oe_chatter" groups="base.group_no_one">
                             <field name="message_follower_ids" widget="mail_followers"/>
@@ -190,6 +191,16 @@
         web_icon="mail,static/description/icon.png"
         groups="base.group_user"
         sequence="1"/>
+
+    <!--
+        This menuitem will be activated by integrations modules (like github, twitter, ...). It
+        is a hook to ease other modules to plug into mail.
+    -->
+    <record id="mail.mail_channel_integrations_menu" model="ir.ui.menu">
+        <field name="name">Integrations</field>
+        <field name="parent_id" ref="mail.mail_channel_menu_root_chat"></field>
+        <field name="active" eval="False"></field>
+    </record>
 
     </data>
 </odoo>
