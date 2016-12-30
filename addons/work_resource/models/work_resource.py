@@ -593,15 +593,26 @@ class ResourceResource(models.Model):
                                       days (inclusive)
         :rtype: list(datetime.date)
         """
-        working_intervals = self.calendar_id._get_day_work_intervals
+        calendar = self.calendar_id
+        if not calendar:
+            calendar = self.env.user.company_id.resource_calendar_id
+        if not calendar:
+            yield  # tde fixme: iterable thingy
+
         # rrule coerces date inputs to datetimes (with time=0) and yields
         # datetimes (with time=0 if freq >= daily)
         for dt in rrule.rrule(rrule.DAILY, dtstart=from_date, until=to_date):
-            intervals = working_intervals(dt, compute_leaves=True, resource_id=self.id)
-
+            intervals = calendar._get_day_work_intervals(dt, compute_leaves=True, resource_id=self.id)
             # FIXME: get_working_intervals is new-API mapped to return a list of lists of intervals
             if intervals and intervals[0]:
                 yield dt.date()
+
+    def get_work_days(self, from_datetime, to_datetime):
+        return self._iter_work_days(from_datetime, to_datetime)
+
+    def get_work_days_count(self, from_datetime, to_datetime):
+        return len([dt for dt in self.get_work_days(from_datetime, to_datetime)])
+
 
 class ResourceCalendarLeaves(models.Model):
     _name = "work.calendar.leave"
