@@ -106,8 +106,20 @@ class CountryState(models.Model):
                help='Administrative divisions of a country. E.g. Fed. State, Departement, Canton')
     code = fields.Char(string='State Code', help='The state code.', required=True)
 
-    name_search = location_name_search
-
     _sql_constraints = [
         ('name_code_uniq', 'unique(country_id, code)', 'The code of the state must be unique by country !')
     ]
+
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        if args is None:
+            args = []
+        if self.env.context.get('country_id'):
+            args = args + [('country_id', '=', self.env.context.get('country_id'))]
+        firsts_records = self.search([('code', '=ilike', name)] + args, limit=limit)
+        search_domain = [('name', operator, name)]
+        search_domain.append(('id', 'not in', firsts_records.ids))
+        records = firsts_records + self.search(search_domain + args, limit=limit)
+        return [(record.id, record.display_name) for record in records]
+
+
