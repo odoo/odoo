@@ -411,6 +411,14 @@ class StockMove(models.Model):
         type (moves should already have them identical). Otherwise, create a new
         picking to assign them to. """
         Picking = self.env['stock.picking']
+
+        # If this method is called in batch by a write on a one2many and
+        # at some point had to create a picking, some next iterations could
+        # try to find back the created picking. As we look for it by searching
+        # on some computed fields, we have to force a recompute, else the
+        # record won't be found.
+        self.recompute()
+
         for move in self:
             picking = Picking.search([
                 ('group_id', '=', move.group_id.id),

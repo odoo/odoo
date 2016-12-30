@@ -26,9 +26,10 @@ class Blog(models.Model):
         if 'active' in vals:
             # archiving/unarchiving a blog does it on its posts, too
             post_ids = self.env['blog.post'].with_context(active_test=False).search([
-                ('blog_id', 'in', self)
+                ('blog_id', 'in', self.ids)
             ])
-            post_ids.write({'active': vals['active']})
+            for blog_post in post_ids:
+                blog_post.active = vals['active']
         return res
 
     @api.multi

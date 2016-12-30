@@ -50,15 +50,14 @@ class WebsiteCustomer(http.Controller):
 
         if country_id:
             domain += [('country_id', '=', country_id)]
-            if not any(x['country_id'][0] == country_id for x in countries if x['country_id']):
-                country = Country.browse(country_id).read(['name'])
-                if country:
+            curr_country = Country.browse(country_id)
+            if country_id not in (x['country_id'][0] for x in countries if x['country_id']):
+                if curr_country.exists():
                     countries.append({
                         'country_id_count': 0,
-                        'country_id': (country_id, country['name'])
+                        'country_id': (curr_country.id, curr_country.name)
                     })
                 countries.sort(key=lambda d: d['country_id'] and d['country_id'][1])
-            curr_country = Country.browse(country_id)
 
         countries.insert(0, {
             'country_id_count': country_count,

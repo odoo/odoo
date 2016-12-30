@@ -12,10 +12,8 @@ odoo.define('website_sale.rating', function (require) {
 
     website_mail_thread.WebsiteMailThread.include({
         prepend_message: function(message_data){
-            var rating_enabled = this.$el.data('rating-enabled');
-            message_data['rating_enabled'] = rating_enabled;
             var $elem = this._super.call(this, message_data);
-            if(message_data['rating_enabled']){
+            if(message_data['rating_default_value']){
                 var rating_star = new rating.RatingStarWidget(this, {
                     'rating_default_value': message_data['rating_default_value'],
                     'rating_disabled': message_data['rating_disabled'],
