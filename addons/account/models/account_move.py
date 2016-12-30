@@ -1486,6 +1486,8 @@ class AccountPartialReconcile(models.Model):
                             to_clear_aml.reconcile()
 
                     if any([tax.use_cash_basis for tax in line.tax_ids]):
+                        if not newly_created_move:
+                            newly_created_move = self._create_tax_basis_move()
                         #create cash basis entry for the base
                         for tax in line.tax_ids:
                             self.env['account.move.line'].with_context(check_move_validity=False).create({
