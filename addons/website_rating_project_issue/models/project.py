@@ -27,39 +27,92 @@ class Project(models.Model):
             project.website_url = "/project/rating/%s" % project.id
 
 
-class ProjectTask(models.Model):
-    _inherit = 'project.task'
+class ProjectTask(models.AbstractModel):
+    _name = 'project.rating'
 
-    def _get_top_five_rated_partners_task(self, project_id):
-        current_project_id = project_id
-        self.env.cr.execute("""SELECT project_id,rating_rating.rated_partner_id,count(rating_rating.rating) as partner_id_count,res_partner.name,
-            count (rating_rating.rating) * 100.00/(select count(rating_rating.rating) from rating_rating,project_task where project_task.project_id=%s and project_task.id = rating_rating.res_id) as rating_percentage,
-            sum(CASE WHEN rating_rating.rating=1 then 1 END) as unhappy,
-            sum(CASE WHEN rating_rating.rating=5 then 1 END) as okay,
-            sum(CASE WHEN rating_rating.rating=10 then 1 END) as happy
-            from project_task left join rating_rating on project_task.id = rating_rating.res_id
-            left join res_partner on rating_rating.rated_partner_id = res_partner.id
-            where rating_last_value != 0 and project_id=%s and rating_rating.write_date > current_date - interval '15' day
-            GROUP BY project_id,rating_rating.rated_partner_id,res_partner.name
-            ORDER BY partner_id_count desc, res_partner.name asc limit 5;""" % (current_project_id, current_project_id))
+    def _get_partner_rating(self, table, model, project_id):
+        self.env.cr.execute("""
+            SELECT
+                RATING.partner_id,
+                array_agg(rating) as rating,
+                array_agg(RATING.id) as rating_ids,
+                CASE
+                    WHEN now()::date - RATING.create_date::date BETWEEN 0 AND 6 Then 'week'
+                    WHEN now()::date - RATING.create_date::date BETWEEN 0 AND 15 Then '15 days'
+                    WHEN now()::date - RATING.create_date::date BETWEEN 0 AND 30  Then '1 month'
+                    WHEN now()::date - RATING.create_date::date BETWEEN 0 AND 90  Then '3 month'
+                END AS days
+            FROM
+                rating_rating as RATING
+            LEFT JOIN
+                %s as TASK ON RATING.res_id = TASK.id
+            WHERE
+                RATING.res_model = '%s' AND RATING.partner_id IS NOT NULL AND RATING.create_date >= current_date - interval '90' day AND TASK.project_id = %s
+            GROUP BY
+                RATING.partner_id, days
+        """ % (table, model, project_id))
+
         all_record = self.env.cr.dictfetchall()
-        return {'all_record': all_record}
+        rating_ids = []
+        partner_ids = map(lambda x: x['partner_id'], all_record)
+        partner_ratings = [{
+            'partner_id': self.env['res.partner'].sudo().browse(partner_id),
+            'week': {'happy': 0, 'avg': 0, 'unhappy': 0, 'total': 0},
+            '15 days': {'happy': 0, 'avg': 0, 'unhappy': 0, 'total': 0},
+            '1 month': {'happy': 0, 'avg': 0, 'unhappy': 0, 'total': 0},
+            '3 month': {'happy': 0, 'avg': 0, 'unhappy': 0, 'total': 0},
+        } for partner_id in set(partner_ids)]
 
+        def increment_rating(partner, days, rating):
+            if rating == 10:
+                partner[days]['happy'] += 1
+            if rating == 5:
+                partner[days]['avg'] += 1
+            if rating == 1:
+                partner[days]['unhappy'] += 1
+            partner[days]['total'] += 1
 
-class ProjectIssue(models.Model):
-    _inherit = 'project.issue'
+        for record in all_record:
+            partner = filter(lambda x: x['partner_id'].id == record['partner_id'], partner_ratings)[0]
+            if record['days'] == 'week':
+                for rating in record['rating']:
+                    increment_rating(partner, '15 days', rating)
+                    increment_rating(partner, '1 month', rating)
+                    increment_rating(partner, '3 month', rating)
+            if record['days'] == '15 days':
+                for rating in record['rating']:
+                    increment_rating(partner, '1 month', rating)
+                    increment_rating(partner, '3 month', rating)
+            if record['days'] == '1 month':
+                for rating in record['rating']:
+                    increment_rating(partner, '3 month', rating)
 
-    def _get_top_five_rated_partners_issue(self, project_id):
-        current_project_id = project_id
-        self.env.cr.execute("""SELECT project_id,rating_rating.rated_partner_id,count(rating_rating.rating) as partner_id_count,res_partner.name,
-            count (rating_rating.rating) * 100.00/(select count(rating_rating.rating) from rating_rating,project_issue where project_issue.project_id=%s and project_issue.id =rating_rating.res_id) as rating_percentage,
-            sum(CASE WHEN rating_rating.rating=1 then 1 END) as unhappy,
-            sum(CASE WHEN rating_rating.rating=5 then 1 END) as okay,
-            sum(CASE WHEN rating_rating.rating=10 then 1 END) as happy
-            from project_issue left join rating_rating on project_issue.id = rating_rating.res_id
-            left join res_partner on rating_rating.rated_partner_id = res_partner.id
-            where rating_last_value != 0 and project_id=%s and rating_rating.write_date > current_date - interval '15' day
-            GROUP BY project_id,rating_rating.rated_partner_id,res_partner.name
-            ORDER BY partner_id_count desc, res_partner.name asc limit 5;""" % (current_project_id, current_project_id))
-        all_record = self.env.cr.dictfetchall()
-        return {'all_record': all_record}
+        for record in all_record:
+            rating_ids += record['rating_ids']
+            partner = filter(lambda x: x['partner_id'].id == record['partner_id'], partner_ratings)[0]
+            for rating in record['rating']:
+                increment_rating(partner, record['days'], rating)
+
+        statistic = {
+            'week': {'avg': 0, 'happy': 0, 'unhappy': 0, 'total': 0},
+            '1 month': {'avg': 0, 'happy': 0, 'unhappy': 0, 'total': 0},
+            '3 month': {'avg': 0, 'happy': 0, 'unhappy': 0, 'total': 0},
+        }
+        days = ['week', '1 month', '3 month']
+        ratings = ['avg', 'happy', 'unhappy']
+        matrix = [(x, y) for x in days for y in ratings]
+        for partner in partner_ratings:
+            for day, rating in matrix:
+                statistic[day][rating] += partner[day][rating]
+                statistic[day]['total'] += partner[day][rating]
+        for day, rating in matrix:
+            total = statistic[day]['total']
+            percentage = 'percentage_%s' % rating
+            statistic[day][percentage] = total and round(statistic[day][rating] * 100 / float(total)) or 0.0
+
+        partner_ratings = sorted(partner_ratings, key=lambda k: k['15 days']['total'], reverse=True)
+        return {
+            'partner_rating': partner_ratings,
+            'statistic': statistic,
+            'ratings': self.env['rating.rating'].sudo().browse(rating_ids)
+        }

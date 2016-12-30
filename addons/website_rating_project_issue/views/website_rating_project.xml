@@ -74,38 +74,35 @@
         <!-- Page : Rating of a particular project -->
         <template id="project_rating_data" name="Project Issue Rating Page">
             <div class="progress">
-                <div class="progress-bar progress-bar-success" t-attf-style="width: #{stats[duration][10]}%;" title="Happy">
-                    <t t-esc="int(stats[duration][10])"/>%
+                <div class="progress-bar progress-bar-success" t-attf-style="width: #{stats['percentage_happy']}%;" title="Happy">
+                    <t t-esc="stats['percentage_happy']"/>%
                 </div>
-                <div class="progress-bar progress-bar-warning" t-attf-style="width: #{stats[duration][5]}%;" title="Average">
-                    <t t-esc="int(stats[duration][5])"/>%
+                <div class="progress-bar progress-bar-warning" t-attf-style="width: #{stats['percentage_avg']}%;" title="Average">
+                    <t t-esc="stats['percentage_avg']"/>%
                 </div>
-                <div class="progress-bar progress-bar-danger" t-attf-style="width: #{stats[duration][1]}%;" title="Bad">
-                    <t t-esc="int(stats[duration][1])"/>%
+                <div class="progress-bar progress-bar-danger" t-attf-style="width: #{stats['percentage_unhappy']}%;" title="Bad">
+                    <t t-esc="stats['percentage_unhappy']"/>%
                 </div>
             </div>
         </template>
         <!-- Top rated partner details view -->
         <template id="project_rating_data_top_partner">
-            <t t-foreach="topdata['all_record']" t-as='i'>
-                <div class="row mt8">
+            <t t-foreach="topdata['partner_rating']" t-as='partner'>
+                <div class="row mt8" t-if="partner['15 days']['total']">
                     <div class="col-sm-2">
-                        <img class="o-top-partner-image" t-attf-src='/rating/partner/#{i["rated_partner_id"]}/avatar'/>
-                    </div> 
+                        <img t-if="partner['partner_id'].image" class="o-top-partner-image" t-attf-src="data:image/png;base64,#{partner['partner_id'].image}"/>
+                        <img  t-if="not partner['partner_id'].image" class="o-top-partner-image" src='/web/static/src/img/placeholder.png'/>
+                    </div>
                     <div class="col-sm-10">
-                        <t t-esc="i['name']"/>
-                        <span class="pull-right">
-                            <t t-esc="int(i['rating_percentage'])"/>%
-                        </span>
+                        <span t-esc="partner['partner_id'].name"/>
                         <div>
-                            <t t-if="i['happy']">
-                                <img class="o-top-rating-image" src='/rating/static/src/img/rating_10.png'/> <t t-esc="i['happy']"/>
-                            </t>
-                            <t t-if="i['okay']">
-                                <img class="o-top-rating-image" src='/rating/static/src/img/rating_5.png'/> <t t-esc="i['okay']"/>
-                            </t>
-                            <t t-if="i['unhappy']">
-                                <img class="o-top-rating-image" src='/rating/static/src/img/rating_1.png'/> <t t-esc="i['unhappy']"/>
+                            <t t-foreach="partner['15 days']" t-as="rating">
+                                <span t-if="partner['15 days'][rating] and rating != 'total'">
+                                    <img t-if="rating == 'avg'" title="average" class="o-top-rating-image" src='/rating/static/src/img/rating_5.png'/>
+                                    <img t-if="rating == 'happy'" title="happy" class="o-top-rating-image" src='/rating/static/src/img/rating_10.png'/>
+                                    <img t-if="rating == 'unhappy'" title="unhappy"  class="o-top-rating-image" src='/rating/static/src/img/rating_0.png'/>
+                                    <t t-esc="partner['15 days'][rating]"/>
+                                </span>
                             </t>
                         </div>
                     </div>
@@ -118,30 +115,31 @@
             <div t-attf-id="rating_#{rating.id}" class="container hidden">
                 <div class="row">
                     <div class="col-md-3">
-                        <img class="responsive o-top-partner-image" t-attf-src="/rating/partner/#{rating.rated_partner_id.id}/avatar" />
+                        <img t-if="rating.partner_id.image" class="o-top-partner-image" t-attf-src="data:image/png;base64,#{rating.partner_id.image}"/>
+                        <img  t-if="not rating.partner_id.image" class="o-top-partner-image" src='/web/static/src/img/placeholder.png'/>
                     </div>
                     <div class="col-md-9">
                         <div class="mt4">
-                            <t t-esc="rating.sudo().rated_partner_id.name"/>-<span class="rating-timeduration"><t t-esc="rating.sudo().write_date"/></span>
+                            <t t-esc="rating.partner_id.name"/>-<span class="rating-timeduration"><t t-esc="rating.create_date"/></span>
                         </div>
                         <div>
-                            <strong>Rated By: </strong><t t-esc="rating.sudo().partner_id.name"/>
+                            <strong>Rated By: </strong><t t-esc="rating.partner_id.name"/>
                         </div>
                     </div>
                 </div>
                 <div class="row" t-if="rating.feedback">
                     <div class="col-md-12">
-                        <strong>Description: </strong><t t-esc="rating.sudo().feedback" />
+                        <strong>Description: </strong><t t-esc="rating.feedback" />
                     </div>
                 </div>
             </div>
         </template>
 
         <template id="project_data_satisfaction">
-            <h3 class="page-header"><t t-esc="project.name"/>:<t t-esc="type"/></h3>
+            <h3 class="page-header"><t t-esc="type"/></h3>
             <div class="row">
                 <div class="col-md-8">
-                    <t t-foreach="data['ratings']" t-as="rating">
+                    <t t-foreach="topdata['ratings']" t-as="rating">
                         <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png' class="mt4 o-rating-image" t-att-data-id="rating.id" t-att-data-rating-date="rating.write_date"/>
                         <t t-call="website_rating_project_issue.rating_popover"/>
                     </t>
@@ -150,20 +148,17 @@
                 <div class="col-md-4">
                     <div>
                         <h5>Last 7 days</h5>
-                        <t t-set="duration" t-value="7"/>
-                        <t t-set="stats" t-value="data['stats']"/>
+                        <t t-set="stats" t-value="topdata['statistic']['week']"/>
                         <t t-call="website_rating_project_issue.project_rating_data"/>
                     </div>
                     <div>
                         <h5>Last 30 days</h5>
-                        <t t-set="duration" t-value="30"/>
-                        <t t-set="stats" t-value="data['stats']"/>
+                        <t t-set="stats" t-value="topdata['statistic']['1 month']"/>
                         <t t-call="website_rating_project_issue.project_rating_data"/>
                     </div>
                     <div>
                         <h5>Last 3 months</h5>
-                        <t t-set="duration" t-value="90"/>
-                        <t t-set="stats" t-value="data['stats']"/>
+                        <t t-set="stats" t-value="topdata['statistic']['3 month']"/>
                         <t t-call="website_rating_project_issue.project_rating_data"/>
                     </div>
                     <div>
@@ -189,12 +184,10 @@
                             </div>
                             <div>
                                 <t t-set="type" t-value="'Tasks'"/>
-                                <t t-set="data" t-value="task_data"/>
-                                <t t-set="topdata" t-value="top_rated_partner_task"/>
+                                <t t-set="topdata" t-value="partner_task_rating"/>
                                 <t t-call="website_rating_project_issue.project_data_satisfaction"/>
                                 <t t-set="type" t-value="'Issues'"/>
-                                <t t-set="data" t-value="issue_data"/>
-                                <t t-set="topdata" t-value="top_rated_partner_issue"/>
+                                <t t-set="topdata" t-value="partner_issue_rating"/>
                                 <t t-call="website_rating_project_issue.project_data_satisfaction"/>
                             </div>
                         </div>
