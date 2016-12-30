@@ -81,8 +81,33 @@ odoo.define_section = function (name, section_deps) {
         section_body = arguments[3];
     }
 
-    QUnit.module(name, options);
+    mock = new odoo.testing.MockRPC();
 
+    function dummyfunc ()  {};
+
+    function beforeEach(assert) {
+        var services = odoo.testing.start_services();
+        this.deps = services;
+        this.getServiceDeps = function getServiceDeps(dep_names) {
+            return _.map(dep_names, function (name) { return services[name]; })
+        }
+        services['web.core'].qweb.add_template(odoo.testing.templates);
+        this.mock = mock;
+        this.mock.interceptRPC(services['web.session']);
+        this.assert = assert;
+        (options.beforeEach || dummyfunc).apply(this, [assert].concat(this.getServiceDeps(section_deps)));
+    }
+    function afterEach(assert) {
+        (options.afterEach || dummyfunc).apply(this, [assert].concat(this.getServiceDeps(section_deps)));
+        this.mock.clear();
+    }
+
+    QUnit.module(name, {
+        before: options.before,
+        beforeEach: beforeEach,
+        afterEach: afterEach,
+        after: options.after
+    });
 
     function test () { 
         var name = arguments[0], 
@@ -90,21 +115,11 @@ odoo.define_section = function (name, section_deps) {
             body = arguments[arguments.length - 1];
 
         QUnit.test(name, function (assert) {
-            var services = odoo.testing.start_services();
-            var deps = _.map(section_deps.concat(dep_names), function (name) { return services[name]; });
-            services['web.core'].qweb.add_template(odoo.testing.templates);
-            mock.clear();
-            mock.interceptRPC(services['web.session']);
-            var info = {
-                assert: assert,
-                mock: mock,
-                deps: _.pick.apply(null, [services].concat(section_deps).concat(dep_names)),
-            }
-            return body.apply(info, [assert].concat(deps));
+            var deps = this.getServiceDeps(section_deps.concat(dep_names));
+            return body.apply(this, [assert].concat(deps));
         });
     }
 
-    var mock = new odoo.testing.MockRPC();
     section_body(test, mock);
 };
 
