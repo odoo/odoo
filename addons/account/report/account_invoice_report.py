@@ -58,7 +58,7 @@ class AccountInvoiceReport(models.Model):
         ('proforma', 'Pro-forma'),
         ('proforma2', 'Pro-forma'),
         ('open', 'Open'),
-        ('paid', 'Done'),
+        ('paid', 'Paid'),
         ('cancel', 'Cancelled')
         ], string='Invoice Status', readonly=True)
     date_due = fields.Date(string='Due Date', readonly=True)
