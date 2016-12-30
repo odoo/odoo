@@ -33,8 +33,10 @@ With this module you will have:
     "depends": [
         "account",
         "base_vat",
+        "base_address_city",
     ],
     "data": [
+        "data/mexican_cities.xml",
         "data/account_tag_data.xml",
         "data/l10n_mx_chart_data.xml",
         "data/account_data.xml",
