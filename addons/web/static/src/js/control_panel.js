@@ -129,7 +129,9 @@ var ControlPanel = Widget.extend({
             this._attach_content(new_cp_content);
 
             // Update the searchview and switch buttons
-            this._update_search_view(status.searchview, status.search_view_hidden);
+            if ('searchview' in status || 'search_view_hidden' in status) {
+                this._update_search_view(status.searchview, status.search_view_hidden);
+            }
             if (status.active_view_selector) {
                 this._update_switch_buttons(status.active_view_selector);
             }
