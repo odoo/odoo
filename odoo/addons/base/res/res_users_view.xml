@@ -297,7 +297,12 @@
                             groups="base.group_multi_company"/>
                     </group>
                     <group string="Email Preferences">
-                        <field name="email" widget="email" readonly="0"/>
+                        <group name="preference_email">
+                            <field name="email" widget="email" readonly="0"/>
+                        </group>
+                        <group name="preference_contact"></group>
+                    </group>
+                    <group>
                         <field name="signature" readonly="0"/>
                     </group>
                     <footer>

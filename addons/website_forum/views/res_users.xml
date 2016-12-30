@@ -20,5 +20,18 @@
             </field>
         </record>
 
+        <record id="res_users_view_form_preference" model="ir.ui.view">
+            <field name="name">res.users.form.preference.forum</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//group[@name='preference_contact']" position="inside">
+                        <field name="karma" string="Forum Karma" readonly="1"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
     </data>
 </odoo>
