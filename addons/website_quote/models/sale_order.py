@@ -81,11 +81,10 @@ class SaleOrder(models.Model):
     def onchange_template_id(self):
         if not self.template_id:
             return
-        if self.partner_id:
-            self = self.with_context(lang=self.partner_id.lang)
+        template = self.template_id.with_context(lang=self.partner_id.lang)
 
         order_lines = [(5, 0, 0)]
-        for line in self.template_id.quote_line:
+        for line in template.quote_line:
             if self.pricelist_id:
                 price = self.pricelist_id.with_context(uom=line.product_uom_id.id).get_product_price(line.product_id, 1, False)
             else:
@@ -111,7 +110,7 @@ class SaleOrder(models.Model):
         self.order_line._compute_tax_id()
 
         option_lines = []
-        for option in self.template_id.options:
+        for option in template.options:
             if self.pricelist_id:
                 price = self.pricelist_id.with_context(uom=option.uom_id.id).get_product_price(option.product_id, 1, False)
             else:
@@ -129,14 +128,14 @@ class SaleOrder(models.Model):
             option_lines.append((0, 0, data))
         self.options = option_lines
 
-        if self.template_id.number_of_days > 0:
-            self.validity_date = fields.Date.to_string(datetime.now() + timedelta(self.template_id.number_of_days))
+        if template.number_of_days > 0:
+            self.validity_date = fields.Date.to_string(datetime.now() + timedelta(template.number_of_days))
 
-        self.website_description = self.template_id.website_description
-        self.require_payment = self.template_id.require_payment
+        self.website_description = template.website_description
+        self.require_payment = template.require_payment
 
-        if self.template_id.note:
-            self.note = self.template_id.note
+        if template.note:
+            self.note = template.note
 
     @api.multi
     def open_quotation(self):

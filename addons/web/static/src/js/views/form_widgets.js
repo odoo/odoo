@@ -955,7 +955,8 @@ var FieldRadio = common.AbstractField.extend(common.ReinitializeFieldMixin, {
     },
     get_value: function () {
         var value = this.get('value');
-        return ((value instanceof Array)? value[0] : value) || false;
+        value = ((value instanceof Array)? value[0] : value);
+        return  _.isUndefined(value) ? false : value;
     },
     render_value: function () {
         var self = this;
@@ -1006,6 +1007,7 @@ var FieldReference = common.AbstractField.extend(common.ReinitializeFieldMixin, 
         this.m2o = new FieldMany2One(this.fm, { attrs: {
             name: 'Referenced Document',
             modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
+            context: this.build_context().eval(),
         }});
         this.m2o.on("change:value", this, this.data_changed);
         this.m2o.appendTo(this.$el);

@@ -435,6 +435,12 @@ class IrModelFields(models.Model):
             model = self.env[record.model]
             field = model._fields[record.name]
             if field.type == 'many2one' and model._field_inverses.get(field):
+                if self._context.get(MODULE_UNINSTALL_FLAG):
+                    # automatically unlink the corresponding one2many field(s)
+                    inverses = self.search([('relation', '=', field.model_name),
+                                            ('relation_field', '=', field.name)])
+                    inverses.unlink()
+                    continue
                 msg = _("The field '%s' cannot be removed because the field '%s' depends on it.")
                 raise UserError(msg % (field, model._field_inverses[field][0]))
 
@@ -713,6 +719,12 @@ class IrModelConstraint(models.Model):
                     _logger.info('Dropped CONSTRAINT %s@%s', name, data.model.model)
 
         self.unlink()
+
+    @api.multi
+    def copy(self, default=None):
+        default = dict(default or {})
+        default['name'] = self.name + '_copy'
+        return super(IrModelConstraint, self).copy(default)
 
 
 class IrModelRelation(models.Model):

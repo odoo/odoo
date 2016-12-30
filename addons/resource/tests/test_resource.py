@@ -162,6 +162,38 @@ class TestResource(TestResourceCommon):
         self.assertEqual(intervals[1][0], Datetime.from_string('2013-02-19 12:00:00'), 'resource_calendar: wrong working intervals')
         self.assertEqual(intervals[1][1], Datetime.from_string('2013-02-19 15:45:30'), 'resource_calendar: wrong working intervals')
 
+    def test_21_calendar_working_intervals_limited_attendances(self):
+        """ Test attendances limited in time. """
+        self.env['resource.calendar.attendance'].browse(self.att3_id).write({
+            'date_from': self.date2 + relativedelta(days=7),
+            'date_to': False,
+        })
+        intervals = self.calendar.get_working_intervals_of_day(start_dt=self.date2)
+        self.assertEqual(intervals, [(Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00'))])
+
+        self.env['resource.calendar.attendance'].browse(self.att3_id).write({
+            'date_from': False,
+            'date_to': self.date2 - relativedelta(days=7),
+        })
+        intervals = self.calendar.get_working_intervals_of_day(start_dt=self.date2)
+        self.assertEqual(intervals, [(Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00'))])
+
+        self.env['resource.calendar.attendance'].browse(self.att3_id).write({
+            'date_from': self.date2 + relativedelta(days=7),
+            'date_to': self.date2 - relativedelta(days=7),
+        })
+        intervals = self.calendar.get_working_intervals_of_day(start_dt=self.date2)
+        self.assertEqual(intervals, [(Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00'))])
+
+        self.env['resource.calendar.attendance'].browse(self.att3_id).write({
+            'date_from': self.date2,
+            'date_to': self.date2,
+        })
+        intervals = self.calendar.get_working_intervals_of_day(start_dt=self.date2)
+        self.assertEqual(len(intervals), 2)
+        self.assertEqual(intervals[0], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
+        self.assertEqual(intervals[1], (Datetime.from_string('2013-02-15 16:00:00'), Datetime.from_string('2013-02-15 23:00:00')))
+
     def test_30_calendar_working_days(self):
         """ Testing calendar hours computation on a working day """
 

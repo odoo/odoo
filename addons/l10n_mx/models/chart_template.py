@@ -29,12 +29,11 @@ class AccountChartTemplate(models.Model):
         account_tax_obj = self.env['account.tax']
         account_obj = self.env['account.account']
         taxes_acc = {
-            'ITAX_010-IN': account_obj.search([('code', '=', '208.01.01')]),
-            'ITAX_160-IN': account_obj.search([('code', '=', '208.01.01')]),
-            'ITAXR_04-OUT': account_obj.search([('code', '=', '216.13.01')]),
-            'ITAXR_10-OUT': account_obj.search([('code', '=', '216.13.01')]),
-            'ITAX_1067-OUT': account_obj.search([('code', '=', '216.13.01')]),
-            'ITAX_167-OUT': account_obj.search([('code', '=', '216.13.01')]),
+            'IVA': account_obj.search([('code', '=', '208.01.01')]),
+            'ITAXR_04-OUT': account_obj.search([('code', '=', '216.10.20')]),
+            'ITAXR_10-OUT': account_obj.search([('code', '=', '216.10.20')]),
+            'ITAX_1067-OUT': account_obj.search([('code', '=', '216.10.20')]),
+            'ITAX_167-OUT': account_obj.search([('code', '=', '216.10.20')]),
             'ITAX_010-OUT': account_obj.search([('code', '=', '208.01.01')]),
             'ITAX_160-OUT': account_obj.search([('code', '=', '208.01.01')])}
 
@@ -67,15 +66,14 @@ class AccountChartTemplate(models.Model):
             acc_template_ref, company, journals_dict=journals_dict)
         if not self == self.env.ref('l10n_mx.mx_coa'):
             return res
+        account = self.env.ref('l10n_mx.1_cuenta118_01')
         res.append({
             'type': 'general',
             'name': _('Effectively Paid'),
             'code': 'CBMX',
             'company_id': company.id,
-            'default_credit_account_id': acc_template_ref.get(
-                self.income_currency_exchange_account_id.id),
-            'default_debit_account_id': acc_template_ref.get(
-                self.expense_currency_exchange_account_id.id),
+            'default_credit_account_id': account.id,
+            'default_debit_account_id': account.id,
             'show_on_dashboard': True,
         })
         return res

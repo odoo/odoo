@@ -129,7 +129,7 @@ class MrpUnbuild(models.Model):
                 produce_move.quantity_done = produce_move.product_uom_qty
         produce_moves.move_validate()
         produced_quant_ids = produce_moves.mapped('quant_ids').filtered(lambda quant: quant.qty > 0)
-        consume_move.quant_ids.write({'produced_quant_ids': [(6, 0, produced_quant_ids.ids)]})
+        consume_move.quant_ids.sudo().write({'produced_quant_ids': [(6, 0, produced_quant_ids.ids)]})
 
         self.write({'state': 'done'})
 
