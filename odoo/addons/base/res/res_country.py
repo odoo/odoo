@@ -9,6 +9,23 @@ from odoo.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 
+@api.model
+def location_name_search(self, name='', args=None, operator='ilike', limit=100):
+    if args is None:
+        args = []
+
+    records = self.browse()
+    if len(name) == 2:
+        records = self.search([('code', 'ilike', name)] + args, limit=limit)
+
+    search_domain = [('name', operator, name)]
+    if records:
+        search_domain.append(('id', 'not in', records.ids))
+    records += self.search(search_domain + args, limit=limit)
+
+    # the field 'display_name' calls name_get() to get its value
+    return [(record.id, record.display_name) for record in records]
+
 
 class Country(models.Model):
     _name = 'res.country'
@@ -50,23 +67,7 @@ class Country(models.Model):
             'The code of the country must be unique !')
     ]
 
-    @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
-        if args is None:
-            args = []
-
-        records = self.browse()
-        if len(name) == 2:
-            records = self.search([('code', '=ilike', name)] + args, limit=limit)
-
-        search_domain = [('name', operator, name)]
-        if records:
-            search_domain.append(('id', 'not in', records.ids))
-        records += self.search(search_domain + args, limit=limit-len(records))
-
-        # the field 'display_name' calls name_get() to get its value
-        return [(record.id, record.display_name) for record in records]
-
+    name_search = location_name_search
 
     @api.model
     def create(self, vals):
@@ -114,12 +115,11 @@ class CountryState(models.Model):
         if args is None:
             args = []
         if self.env.context.get('country_id'):
-            args = args + [('country_id', '=', self.env.context['country_id'])]
+            args = args + [('country_id', '=', self.env.context.get('country_id'))]
         firsts_records = self.search([('code', '=ilike', name)] + args, limit=limit)
         search_domain = [('name', operator, name)]
-        if len(firsts_records):
-            search_domain.append(('id', 'not in', firsts_records.ids))
-        records = firsts_records + self.search(search_domain + args, limit=limit-len(firsts_records))
+        search_domain.append(('id', 'not in', firsts_records.ids))
+        records = firsts_records + self.search(search_domain + args, limit=limit)
         return [(record.id, record.display_name) for record in records]
 
 
