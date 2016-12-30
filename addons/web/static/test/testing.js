@@ -16,7 +16,7 @@ odoo.testing.start_services = function () {
 };
 
 odoo.testing.MockRPC = function (session) {
-    this.responses = {};
+    this.clear();
 };
 
 odoo.testing.MockRPC.prototype.clear = function () {
