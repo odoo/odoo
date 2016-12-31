@@ -131,7 +131,7 @@ class account_common_report(osv.osv_memory):
             company_id = self.pool.get('account.account').browse(cr, uid, ids[0], context=context).company_id.id
         else:  # use current company id
             company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        domain = [('company_id', '=', company_id), ('date_start', '<', now), ('date_stop', '>', now)]
+        domain = [('company_id', '=', company_id), ('date_start', '<=', now), ('date_stop', '>=', now)]
         fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, domain, limit=1)
         return fiscalyears and fiscalyears[0] or False
 
