@@ -6,14 +6,14 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
 # Kari Lindgren <karisatu@gmail.com>, 2016
 # salmemik <salmemik@gmail.com>, 2016
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2016
-# Marko Happonen <marko.happonen@sprintit.fi>, 2016
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2016
+# Marko Happonen <marko.happonen@sprintit.fi>, 2016
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2016
 # Miku Laitinen <miku.laitinen@gmail.com>, 2016
 # Tommi Rintala <tommi.rintala@gmail.com>, 2016
@@ -78,7 +78,7 @@ msgstr "+ Tapahtumat"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:287
 #, python-format
 msgid "123.14 €"
-msgstr "123.14 €"
+msgstr "123,14 €"
 
 #. module: point_of_sale
 #. openerp-web
@@ -191,7 +191,7 @@ msgstr "= Teoreettinen loppusaldo"
 #: code:addons/point_of_sale/static/src/js/screens.js:1909
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
-msgstr "? Valitsemalla \"Vahvista\" validoi maksun."
+msgstr "? Painamalla \"Vahvista\" hyväksyt maksun."
 
 #. module: point_of_sale
 #. openerp-web
@@ -204,17 +204,17 @@ msgstr "Asiakkaan nimi vaaditaan"
 #: model:ir.model.fields,help:point_of_sale.field_res_users_pos_security_pin
 msgid ""
 "A Security PIN used to protect sensible functionality in the Point of Sale"
-msgstr "PIN koodia käytetään suojaaman arkaluontoisia tietoja POS -laitteessa"
+msgstr "PIN koodia käytetään suojaamaan toimintoja kassalaitteessa"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "A custom receipt footer message"
-msgstr "Asiakaskohtaisen kuitin alatunniste"
+msgstr "Mukautettu kuitin alatunniste"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "A custom receipt header message"
-msgstr "Asiakaskohtaisen kuitin ylätunniste"
+msgstr "Mukautettu kuitin ylätunniste"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_uuid
@@ -222,6 +222,8 @@ msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data"
 msgstr ""
+"Yksilöllinen tunniste tätä kassajärjestelmää varten. Tätä käytetään estämään"
+" päällekkäisiä tietoja kassojen välillä."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_login_number
@@ -229,11 +231,12 @@ msgid ""
 "A sequence number that is incremented each time a user resumes the pos "
 "session"
 msgstr ""
+"Järjestysnumero, joka kasvaa joka kerta käyttäjän jatkaessa kassaistuntoa."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_sequence_number
 msgid "A sequence number that is incremented with each order"
-msgstr "Järjestysnumero jota kasvatetaan jokaisen tilauksen yhteydessä"
+msgstr "Järjestysnumero, joka kasvaa joka kerta tilauksen yhteydessä"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -243,6 +246,8 @@ msgid ""
 "                currencies in your cash registers at the beginning and the end\n"
 "                of each session."
 msgstr ""
+"Istunto on yhtenäinen kausi, yleensä päivä, minkä aikana myyt "
+"kassajärjestelmällä. Istunnon alussa ja lopussa täsmäytät kassan."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_sequence_number
@@ -296,12 +301,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_active
 msgid "Active"
-msgstr "Active"
+msgstr "Aktiivinen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal_journal_user
 msgid "Active in Point of Sale"
-msgstr "Aktiivinen myyntipisteessä"
+msgstr "Käytössä kassajärjestelmässä"
 
 #. module: point_of_sale
 #. openerp-web
@@ -321,7 +326,7 @@ msgstr "Lisää yleisalennus (tulee mukaan kaikkiin tilauksiin)."
 #: code:addons/point_of_sale/static/src/xml/pos.xml:470
 #, python-format
 msgid "Address"
-msgstr "Dirección"
+msgstr "Osoite"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
@@ -381,7 +386,7 @@ msgstr "Summa yhteensä"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_name
 msgid "An internal identification of the point of sale"
-msgstr ""
+msgstr "Sisäinen tunniste kassapäätteelle"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
@@ -409,7 +414,7 @@ msgstr "Automaattinen kuittien tulostus"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_cashdrawer
 msgid "Automatically open the cashdrawer"
-msgstr "Avaa kassalipas automaattisesti"
+msgstr "Avaa kassalaatikko automaattisesti"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_journal_ids
@@ -530,7 +535,7 @@ msgstr "TAKAISIN"
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
 #, python-format
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr "Peru"
 
 #. module: point_of_sale
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
@@ -886,7 +891,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #, python-format
 msgid "Customer"
-msgstr "Partner"
+msgstr "Asiakas"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:418
@@ -1169,7 +1174,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_invoicing
 msgid "Enables invoice generation from the Point of Sale"
-msgstr ""
+msgstr "Salli laskun luonti kassapäätteellä"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_end_date
@@ -1184,7 +1189,7 @@ msgstr "Päätä istunto"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_end_real
 msgid "Ending Balance"
-msgstr "Ending Balance"
+msgstr "Loppusaldo"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_category.py:13
@@ -1448,7 +1453,7 @@ msgstr "Sisäiset kommentit"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
 msgid "Invoice"
-msgstr "Invoice"
+msgstr "Lasku"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_invoice_journal_id
@@ -2032,7 +2037,7 @@ msgstr "Kassapääte tilaukset"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree_all_sales_lines
 msgid "POS Orders lines"
-msgstr "Myyntipisteen tilausrivit"
+msgstr "Kassapäätteen tilausrivit"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -2059,7 +2064,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_paid
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "Paid"
-msgstr "Pagado"
+msgstr "Maksettu"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_parent_id
@@ -2125,7 +2130,7 @@ msgstr "Maksun viite"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_payment_terminal
 msgid "Payment Terminal"
-msgstr "Maksuterminaali"
+msgstr "Maksupääte"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_account_journal_form
@@ -2276,18 +2281,18 @@ msgstr "Kassapäätteen kategoria"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
 msgid "Point of Sale Config"
-msgstr ""
+msgstr "Kassapäätteen asetukset"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_tree
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "Kassapäätteen asetukset"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pos_manager_id
 msgid "Point of Sale Manager Group"
-msgstr ""
+msgstr "Kassapäätteen esimiesten käyttäjäryhmä"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_name
@@ -2303,12 +2308,12 @@ msgstr "Kassapäätteen tilaukset"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
 msgid "Point of Sale Orders Statistics"
-msgstr "Myyntipisteen tilastot"
+msgstr "Kassapäätteen tilastot"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
-msgstr "Myyntipisteen maksu"
+msgstr "Kassapäätteen maksu"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -2320,12 +2325,12 @@ msgstr "Kassapäätteen istunto"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pos_user_id
 msgid "Point of Sale User Group"
-msgstr ""
+msgstr "Kassapäätteen käyttäjien käyttäjäryhmä"
 
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_restaurant:0
 msgid "Point of sale for shops"
-msgstr ""
+msgstr "Kassapääte vähittäiskaupoille"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
@@ -2453,7 +2458,7 @@ msgstr "Tuote"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_product_categ_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Product Category"
-msgstr "Tuote kategoria"
+msgstr "Tuotekategoria"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
@@ -2574,7 +2579,7 @@ msgstr "Uudelleentulostus"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1295
 #, python-format
 msgid "Reset"
-msgstr "Tyhjenn'"
+msgstr "Tyhjennä"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_user_id
@@ -2589,7 +2594,7 @@ msgstr "Ravintola"
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_restaurant:0
 msgid "Restaurant: activate table management"
-msgstr "Ravintola: aktivoituna pöytien ja paikkojen hallinta"
+msgstr "Ravintola: ota käyttöön pöytien ja paikkojen hallinta"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2793,7 +2798,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Session:"
-msgstr "Istunnot:"
+msgstr "Istunto:"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_config_sessions
@@ -2878,7 +2883,7 @@ msgstr "Aloituspäivä"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_start
 msgid "Starting Balance"
-msgstr "Starting Balance"
+msgstr "Alkusaldo"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.action_report_account_statement
@@ -2934,7 +2939,7 @@ msgstr "Välisumma"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_subtotal
 msgid "Subtotal w/o Tax"
-msgstr "Alasumma ilman veroa"
+msgstr "Välisumma ilman veroa"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_price_sub_total
@@ -3200,7 +3205,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_pos_mercury
 msgid "The transactions are processed by MercuryPay"
-msgstr "Kaikki tapahtumat käsittelee MercuryPay"
+msgstr "Tapahtumat käsitellään MercuryPay-palvelun kautta."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:243
@@ -3623,7 +3628,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot create two active sessions related to the same point of sale!"
-msgstr ""
+msgstr "Et voi luoda kahta yhtäaikaista istuntoa samalle kassapäätteelle."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:127
@@ -3655,8 +3660,8 @@ msgid ""
 "You cannot use the session of another users. This session is owned by %s. "
 "Please first close this one to use this point of sale."
 msgstr ""
-"Et voi käyttää samaa istuntoa muiden käyttäjien kanssa. Tämän istunnon "
-"omistaa %s. Sulje ensin tämä käyttääksesi myyntipäätettä."
+"Et voi käyttää toisen käyttäjän istuntoa. Tämän istunnon omistaa %s. Sulje "
+"ensin tämä käyttääksesi kassapäätettä."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:18
@@ -3674,7 +3679,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:658
 #, python-format
 msgid "You have to open at least one cashbox."
-msgstr "Sinun on avattava vähintään yksi kassalipas."
+msgstr "Sinun on avattava vähintään yksi kassalaatikko."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:763
@@ -3868,7 +3873,7 @@ msgstr "report.point_of_sale.report_invoice"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_saledetails
 msgid "report.point_of_sale.report_saledetails"
-msgstr ""
+msgstr "report.point_of_sale.report_saledetails"
 
 #. module: point_of_sale
 #. openerp-web

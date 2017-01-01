@@ -3,6 +3,7 @@
 # * base_vat
 # 
 # Translators:
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
@@ -31,9 +32,9 @@ msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
 msgstr ""
-"Jos valittuna, niin kumppanin alv-numero varmistetaan EU:n VIES-"
-"järjestelmästä. Muutoin tehdään pelkkä numeron tarkistussumman lasekenta. "
-"Tarkista aina erikseen alv-numeron ja kumppanin nimen yhteenkuuluvuus."
+"Jos valittuna, alv-numero tarkistetaan EU:n VIES-järjestelmästä. Muuten "
+"tarkistetaan vain tarkistussumma. Tarkista aina erikseen alv-numeron ja "
+"kumppanin nimen yhteenkuuluvuus."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -47,7 +48,7 @@ msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
-"ALV numero [%s] kumppanille [%s] ei ilmeisesti ole voimassa.\n"
+"ALV-numero [%s] kumppanille [%s] ei ilmeisesti ole oikein.\n"
 "Huom! Odotettu muotoilu on %s"
 
 #. module: base_vat
@@ -57,8 +58,8 @@ msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
-"ALV numero [%s] kumppanille [%s] ei läpäissyt ALV-numeron "
-"oikeellisuustarkistusta tai ei ole vaaditun  muotoilun %s mukainen."
+"ALV-numero [%s] kumppanille [%s] ei läpäissyt ALV-numeron VIES-tarkistusta "
+"tai ei ole vaaditun  muotoilun %s mukainen."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
@@ -68,4 +69,4 @@ msgstr "VIES ALV tarkistus"
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "e.g. BE0477472701"
-msgstr "e.g. FI25782977"
+msgstr "esim. FI27731217"
