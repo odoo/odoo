@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-11-09 21:10+0000\n"
+"PO-Revision-Date: 2016-12-30 12:57+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-8/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgid ""
 "               will automatically create and validate allocation requests.\n"
 "             </p>\n"
 "           "
-msgstr ""
+msgstr "<p>\n              Du kan tilldela sparade dagar till varje anställd, Odoo kommer automatiskt att skapa och kontrollera tilldelningar.\n             </p>\n           "
 
 #. module: hr_holidays
 #: field:hr.holidays.status,active:0
@@ -51,7 +51,7 @@ msgstr "Aktiv"
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
 msgid "Active Types"
-msgstr ""
+msgstr "Aktiva typer"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.allocation_company_new
@@ -262,7 +262,7 @@ msgstr "Aktuell frånvarutyp"
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
 msgid "Current Year Leaves"
-msgstr ""
+msgstr "Årets frånvaro"
 
 #. module: hr_holidays
 #: help:hr.holidays,message_last_post:0
@@ -361,12 +361,12 @@ msgstr "Gruppera efter"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_dept
 msgid "HR Leaves Summary Report By Department"
-msgstr ""
+msgstr "Frånvarorapport per avdelning"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
 msgid "HR Leaves Summary Report By Employee"
-msgstr ""
+msgstr "Frånvarorapport per anställd"
 
 #. module: hr_holidays
 #: help:hr.holidays,message_summary:0
@@ -549,7 +549,7 @@ msgstr "Frånvaro per typ"
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2015"
-msgstr ""
+msgstr "Sem (2015)"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -615,7 +615,7 @@ msgstr "Maximal tillåten ledighet - Semestern är redan förbrukad"
 #: help:hr.holidays.status,virtual_remaining_leaves:0
 msgid ""
 "Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
-msgstr ""
+msgstr "Maximalt tillåtna dagar - Uttagna dagar - Dagar för godkännande"
 
 #. module: hr_holidays
 #: field:hr.holidays,meeting_id:0
@@ -661,12 +661,12 @@ msgstr "Min avdelnings frånvaro"
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
 msgid "My Leave Requests"
-msgstr ""
+msgstr "Mina frånvaroförfrågningar"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
 msgid "My Requests"
-msgstr ""
+msgstr "Mina förfrågningar"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
@@ -685,7 +685,7 @@ msgstr "Antal dagar"
 msgid ""
 "Once a leave is validated, Odoo will create a corresponding meeting of this "
 "type in the calendar."
-msgstr ""
+msgstr "Så snart en dag är godkänd, skapar Odoo ett inlägg av denna typ i kalendern."
 
 #. module: hr_holidays
 #: field:hr.holidays,parent_id:0
@@ -762,7 +762,7 @@ msgstr "Förfrågan godkänd, väntar sekundär validering."
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_holidays_confirmed
 msgid "Request confirmed and waiting approval"
-msgstr ""
+msgstr "Bekräftade förfrågningar som väntar på godkännande"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_holidays_refused
@@ -772,7 +772,7 @@ msgstr "Önskemål tillbakavisat"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.request_approve_holidays
 msgid "Requests to Approve"
-msgstr ""
+msgstr "Förfrågningar att godkänna"
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.allocation_company_new
@@ -840,7 +840,7 @@ msgstr "Sammandrag"
 msgid ""
 "The employee or employee category of this request is missing. Please make "
 "sure that your user login is linked to an employee."
-msgstr ""
+msgstr "Den anställda eller kategorin för denna förfrågan saknas. Vänligen säkerställ att din inloggning är knuten till en anställd."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:503
@@ -853,12 +853,12 @@ msgstr "Funktionen bakom fältet 'Kvarvarande semester' kan endast användas nä
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "The number of days must be greater than 0."
-msgstr ""
+msgstr "Antal dagar måste överstiga 0"
 
 #. module: hr_holidays
 #: constraint:hr.holidays:0
 msgid "The number of remaining leaves is not sufficient for this leave type"
-msgstr ""
+msgstr "Antal sparade dagar är inte tillräckligt för denna frånvarotyp"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:453
@@ -866,7 +866,7 @@ msgstr ""
 msgid ""
 "The number of remaining leaves is not sufficient for this leave type.\n"
 "Please verify also the leaves waiting for validation."
-msgstr ""
+msgstr "Antalet sparade dagar är inte tillräckligt för denna frånvarotyp.\nVänligen kontrollera att det inte finns ytterligare dagar för godkännande."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:286
@@ -901,7 +901,7 @@ msgstr "Detta område fylls automatiskt i av användaren som bekräftar ledighet
 msgid ""
 "This color will be used in the leaves summary located in Reporting\\Leaves "
 "by Department."
-msgstr ""
+msgstr "Denna färg används i frånvarosummeringen i Rapporter/Frånvaro per avdelning"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,leaves_taken:0
@@ -996,7 +996,7 @@ msgstr "Violett"
 #. module: hr_holidays
 #: field:hr.holidays.status,virtual_remaining_leaves:0
 msgid "Virtual Remaining Leaves"
-msgstr ""
+msgstr "Virtuellt sparad frånvaro"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
@@ -1030,7 +1030,7 @@ msgstr "Vete"
 msgid ""
 "When selected, the Allocation/Leave Requests for this type require a second "
 "validation to be approved."
-msgstr ""
+msgstr "När valt, krävs dubbla godkännanden av tilldelning/frånvaroförfrågan av denna typ "
 
 #. module: hr_holidays
 #: view:hr.holidays:hr_holidays.view_hr_holidays_filter
