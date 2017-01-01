@@ -13,12 +13,12 @@
 # Miku Laitinen <miku.laitinen@gmail.com>, 2016
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2016
 # Kari Lindgren <karisatu@gmail.com>, 2016
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
 # Mika Karvinen <karvinenm@gmail.com>, 2016
 # Timo Koukkari <timo.koukkari@seamk.fi>, 2016
 # salmemik <salmemik@gmail.com>, 2016
 # Sanna Edelman <direct@generare.com>, 2016
 # Marko Happonen <marko.happonen@sprintit.fi>, 2016
-# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
 # Jan-Erik Finlander <janerik.finlander@gmail.com>, 2016
 # Timo Soronen <tisonen@gmail.com>, 2016
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2016
@@ -566,7 +566,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr "<span title=\"Balance in Odoo\">Pääkirjan saldo</span>"
+msgstr "<span title=\"Odoon saldo\">Pääkirjan saldo</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2939,7 +2939,7 @@ msgstr "Yritykset"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_ref_company_ids
 msgid "Companies that refers to partner"
-msgstr "Yritykset jotka viittaavat kumppaniin"
+msgstr "Yritykset, jotka viittaavat kumppaniin"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_company_id
@@ -7807,7 +7807,7 @@ msgstr "Viitenumero"
 #: model:ir.model.fields,help:account.field_account_invoice_line_origin
 #: model:ir.model.fields,help:account.field_account_invoice_origin
 msgid "Reference of the document that produced this invoice."
-msgstr "Viite dokumenttiin joka on luonut tämän laskun."
+msgstr "Viite dokumenttiin, joka on luonut tämän laskun."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_payment_reference
@@ -8210,6 +8210,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Valitse 'Myynti' asiakaslaskujen päiväkirjoille. \n"
+"Valitse 'Osto' ostolaskujen päiväkirjoille. \n"
+"Valitse 'Käteinen' tai 'Pankki' päiväkirjoille, joilla käsitellään asiakkaiden ja toimittajien maksuja.\n"
+"Valitse 'Yleinen' muille päiväkirjatapahtumille. "
 
 #. module: account
 #. openerp-web
@@ -8439,7 +8443,7 @@ msgstr "Alkupäivä"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_start
 msgid "Starting Balance"
-msgstr "Starting Balance"
+msgstr "Alkusaldo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_start_id
