@@ -3,14 +3,15 @@
 # * procurement
 # 
 # Translators:
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-09-07 12:10+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-12-30 12:32+0000\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-8/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,7 +81,7 @@ msgstr "Avbryt"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Cancel Procurement"
-msgstr "Ta bort beställning"
+msgstr "Avbryt anskaffning"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -91,12 +92,12 @@ msgstr "Avbruten"
 #: code:addons/procurement/procurement.py:156
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr "Kan inte radera inköp som är i process stadiet."
+msgstr "Kan inte radera anskaffningar som är i %s."
 
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Check Procurement"
-msgstr "kontrollera inköp"
+msgstr "kontrollera anskaffning"
 
 #. module: procurement
 #: help:procurement.order,rule_id:0
@@ -104,7 +105,7 @@ msgid ""
 "Chosen rule for the procurement resolution. Usually chosen by the system but"
 " can be manually set by the procurement manager to force an unusual "
 "behavior."
-msgstr "Regler för beställningen väljs vanligen av systemet, men kan manuellt ändras av behörig person för att ställa in annorlunda regler."
+msgstr "Regler för anskaffningen väljs vanligen av systemet, men kan manuellt ändras av behörig person för att ställa in annorlunda regler."
 
 #. module: procurement
 #: field:procurement.order,company_id:0 field:procurement.rule,company_id:0
@@ -114,7 +115,7 @@ msgstr "Bolag"
 #. module: procurement
 #: view:procurement.order.compute.all:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr "Beräkna alla inköp i bakgrunden."
+msgstr "Beräkna alla anskaffningar i bakgrunden."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -188,7 +189,7 @@ msgstr "Fast"
 #. module: procurement
 #: field:procurement.rule,group_id:0
 msgid "Fixed Procurement Group"
-msgstr "låst inköpsgrupp."
+msgstr "låst anskaffningsgrupp."
 
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
@@ -209,7 +210,7 @@ msgstr "Gruppera enligt"
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Group's Procurements"
-msgstr "Gruppens beställningar"
+msgstr "Gruppens anskaffningar"
 
 #. module: procurement
 #: help:procurement.order,message_summary:0
@@ -277,7 +278,7 @@ msgstr "Lämnas tom"
 #. module: procurement
 #: view:res.company:procurement.mrp_company
 msgid "Logistics"
-msgstr "Logistik."
+msgstr "Logistik"
 
 #. module: procurement
 #: field:procurement.order,message_ids:0
@@ -298,7 +299,7 @@ msgstr "Namn"
 #: code:addons/procurement/procurement.py:212
 #, python-format
 msgid "No rule matching this procurement"
-msgstr "Ingen regel som matchar detta inköp."
+msgstr "Ingen regel som matchar denna anskaffning."
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -356,7 +357,7 @@ msgstr "Anskaffningsorders"
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_group
 msgid "Procurement Requisition"
-msgstr "Inköpsrekvisition"
+msgstr "Anskaffningsrekvisition"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_rule
@@ -399,17 +400,17 @@ msgstr "Produkt försäljningsenhet"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Propagate"
-msgstr "Sprida."
+msgstr "Sprida"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
 msgid "Propagation Options"
-msgstr "Spridningsalternativ."
+msgstr "Spridningsalternativ"
 
 #. module: procurement
 #: field:procurement.rule,group_propagation_option:0
 msgid "Propagation of Procurement Group"
-msgstr "Ordergruppens spridning."
+msgstr "Anskaffningsgruppens spridning"
 
 #. module: procurement
 #: view:procurement.rule:procurement.view_procurement_rule_form
@@ -429,7 +430,7 @@ msgstr "Antal"
 #. module: procurement
 #: view:procurement.order:procurement.procurement_form_view
 msgid "Reconfirm Procurement"
-msgstr "Återbekräfta inköp."
+msgstr "Återbekräfta anskaffning."
 
 #. module: procurement
 #: field:procurement.group,name:0
@@ -441,7 +442,7 @@ msgstr "Referens"
 msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by Odoo."
-msgstr "En hänvisning till det dokument som skapade denna upphandling.\nDetta avslutas automatiskt av Odoo. "
+msgstr "En hänvisning till det dokument som skapade denna anskaffning.\nDetta avslutas automatiskt av Odoo. "
 
 #. module: procurement
 #: field:procurement.order,rule_id:0
