@@ -647,7 +647,7 @@ class QWeb(object):
                 if hasattr(self, interpret_handler):
                     _logger.warning(
                         "Directive '%s' must be AST-compiled. Dynamic interpreter %s will ignored",
-                        name, interpret_handler
+                        mname, interpret_handler
                     )
 
                 return compile_handler(el, options)
