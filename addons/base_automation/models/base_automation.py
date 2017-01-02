@@ -30,17 +30,19 @@ class BaseAutomation(models.Model):
     _description = 'Automated Action'
     _order = 'sequence'
 
-    name = fields.Char(string='Rule Name', required=True)
-    model_id = fields.Many2one('ir.model', string='Related Document Model', required=True, domain=[('transient', '=', False)])
-    model = fields.Char(related='model_id.model', readonly=True)
+    action_server_id = fields.Many2one(
+        'ir.actions.server', 'Server Actions',
+        domain="[('model_id', '=', model_id)]",
+        delegate=True, required=True, ondelete='restrict')
     active = fields.Boolean(default=True, help="When unchecked, the rule is hidden and will not be executed.")
-    sequence = fields.Integer(help="Gives the sequence order when displaying a list of rules.")
-    kind = fields.Selection([('on_create', 'On Creation'),
-                             ('on_write', 'On Update'),
-                             ('on_create_or_write', 'On Creation & Update'),
-                             ('on_unlink', 'On Deletion'),
-                             ('on_change', 'Based on Form Modification'),
-                             ('on_time', 'Based on Timed Condition')], string='When to Run', required=True)
+    trigger = fields.Selection([
+        ('on_create', 'On Creation'),
+        ('on_write', 'On Update'),
+        ('on_create_or_write', 'On Creation & Update'),
+        ('on_unlink', 'On Deletion'),
+        ('on_change', 'Based on Form Modification'),
+        ('on_time', 'Based on Timed Condition')
+        ], string='Trigger condition', required=True, oldname="kind")
     trg_date_id = fields.Many2one('ir.model.fields', string='Trigger Date',
                                   help="""When should the condition be triggered.
                                   If present, will be checked by the scheduler. If empty, will be checked at creation and update.""",
@@ -53,34 +55,33 @@ class BaseAutomation(models.Model):
                                            string='Delay type', default='day')
     trg_date_calendar_id = fields.Many2one("resource.calendar", string='Use Calendar',
                                             help="When calculating a day-based timed condition, it is possible to use a calendar to compute the date based on working days.")
-    act_user_id = fields.Many2one('res.users', string='Set Responsible')
-    act_followers = fields.Many2many("res.partner", string="Add Followers")
-    server_action_ids = fields.Many2many('ir.actions.server', string='Server Actions', domain="[('model_id', '=', model_id)]",
-                                         help="Examples: email reminders, call object service, etc.")
-    filter_pre_id = fields.Many2one("ir.filters", string='Before Update Filter', ondelete='restrict', domain="[('model_id', '=', model_id.model)]",
+    filter_pre_id = fields.Many2one("ir.filters", string='Before Update Filter', ondelete='restrict',
+                                    domain="[('model_id', '=', model_name)]",
                                     help="If present, this condition must be satisfied before the update of the record.")
     filter_pre_domain = fields.Char(string='Before Update Domain',
                                     help="If present, this condition must be satisfied before the update of the record.")
-    filter_id = fields.Many2one("ir.filters", string='Filter', ondelete='restrict', domain="[('model_id', '=', model_id.model)]",
+    filter_id = fields.Many2one("ir.filters", string='Filter', ondelete='restrict',
+                                domain="[('model_id', '=', model_name)]",
                                 help="If present, this condition must be satisfied before executing the action rule.")
     filter_domain = fields.Char(string='Domain', help="If present, this condition must be satisfied before executing the action rule.")
     last_run = fields.Datetime(readonly=True, copy=False)
     on_change_fields = fields.Char(string="On Change Fields Trigger", help="Comma-separated list of field names that triggers the onchange.")
 
     # which fields have an impact on the registry
-    CRITICAL_FIELDS = ['model_id', 'active', 'kind', 'on_change_fields']
+    CRITICAL_FIELDS = ['model_id', 'active', 'trigger', 'on_change_fields']
 
     @api.onchange('model_id')
     def onchange_model_id(self):
         self.filter_pre_id = self.filter_id = False
+        self.model_name = self.model_id.model
 
-    @api.onchange('kind')
-    def onchange_kind(self):
-        if self.kind in ['on_create', 'on_create_or_write', 'on_unlink']:
+    @api.onchange('trigger')
+    def onchange_trigger(self):
+        if self.trigger in ['on_create', 'on_create_or_write', 'on_unlink']:
             self.filter_pre_id = self.filter_pre_domain = self.trg_date_id = self.trg_date_range = self.trg_date_range_type = False
-        elif self.kind in ['on_write', 'on_create_or_write']:
+        elif self.trigger in ['on_write', 'on_create_or_write']:
             self.trg_date_id = self.trg_date_range = self.trg_date_range_type = False
-        elif self.kind == 'on_time':
+        elif self.trigger == 'on_time':
             self.filter_pre_id = self.filter_pre_domain = False
 
     @api.onchange('filter_pre_id')
@@ -93,6 +94,7 @@ class BaseAutomation(models.Model):
 
     @api.model
     def create(self, vals):
+        vals['usage'] = 'base_automation'
         base_automation = super(BaseAutomation, self).create(vals)
         self._update_cron()
         self._update_registry()
@@ -118,7 +120,7 @@ class BaseAutomation(models.Model):
             based on time conditions.
         """
         cron = self.env.ref('base_automation.ir_cron_data_base_automation_check', raise_if_not_found=False)
-        return cron and cron.toggle(model=self._name, domain=[('kind', '=', 'on_time')])
+        return cron and cron.toggle(model=self._name, domain=[('trigger', '=', 'on_time')])
 
     def _update_registry(self):
         """ Update the registry after a modification on action rules. """
@@ -129,13 +131,13 @@ class BaseAutomation(models.Model):
             registry = Registry.new(self._cr.dbname)
             registry.signal_registry_change()
 
-    def _get_actions(self, records, kinds):
-        """ Return the actions of the given kinds for records' model. The
+    def _get_actions(self, records, triggers):
+        """ Return the actions of the given triggers for records' model. The
             returned actions' context contain an object to manage processing.
         """
         if '__action_done' not in self._context:
             self = self.with_context(__action_done={})
-        domain = [('model', '=', records._name), ('kind', 'in', kinds)]
+        domain = [('model_name', '=', records._name), ('trigger', 'in', triggers)]
         actions = self.with_context(active_test=True).search(domain)
         return actions.with_env(self.env)
 
@@ -189,27 +191,14 @@ class BaseAutomation(models.Model):
         values = {}
         if 'date_action_last' in records._fields:
             values['date_action_last'] = fields.Datetime.now()
-        if self.act_user_id and 'user_id' in records._fields:
-            values['user_id'] = self.act_user_id.id
         if values:
             records.write(values)
 
-        # subscribe followers
-        if self.act_followers and hasattr(records, 'message_subscribe'):
-            followers = self.env['mail.followers'].sudo().search(
-                [('res_model', '=', records._name),
-                 ('res_id', 'in', records.ids),
-                 ('partner_id', 'in', self.act_followers.ids),
-                 ]
-            )
-            if not len(followers) == len(self.act_followers):
-                records.message_subscribe(self.act_followers.ids)
-
         # execute server actions
-        if self.server_action_ids:
+        if self.action_server_id:
             for record in records:
                 ctx = {'active_model': record._name, 'active_ids': record.ids, 'active_id': record.id}
-                self.server_action_ids.with_context(**ctx).run()
+                self.action_server_id.with_context(**ctx).run()
 
     @api.model_cr
     def _register_hook(self):
@@ -287,16 +276,16 @@ class BaseAutomation(models.Model):
             def base_automation_onchange(self):
                 action_rule = self.env['base.automation'].browse(action_rule_id)
                 result = {}
-                for server_action in action_rule.server_action_ids.with_context(active_model=self._name, onchange_self=self):
-                    res = server_action.run()
-                    if res:
-                        if 'value' in res:
-                            res['value'].pop('id', None)
-                            self.update({key: val for key, val in res['value'].iteritems() if key in self._fields})
-                        if 'domain' in res:
-                            result.setdefault('domain', {}).update(res['domain'])
-                        if 'warning' in res:
-                            result['warning'] = res['warning']
+                server_action = action_rule.action_server_id.with_context(active_model=self._name, onchange_self=self)
+                res = server_action.run()
+                if res:
+                    if 'value' in res:
+                        res['value'].pop('id', None)
+                        self.update({key: val for key, val in res['value'].iteritems() if key in self._fields})
+                    if 'domain' in res:
+                        result.setdefault('domain', {}).update(res['domain'])
+                    if 'warning' in res:
+                        result['warning'] = res['warning']
                 return result
 
             return base_automation_onchange
@@ -310,21 +299,21 @@ class BaseAutomation(models.Model):
 
         # retrieve all actions, and patch their corresponding model
         for action_rule in self.with_context({}).search([]):
-            Model = self.env[action_rule.model]
-            if action_rule.kind == 'on_create':
+            Model = self.env[action_rule.model_name]
+            if action_rule.trigger == 'on_create':
                 patch(Model, 'create', make_create())
 
-            elif action_rule.kind == 'on_create_or_write':
+            elif action_rule.trigger == 'on_create_or_write':
                 patch(Model, 'create', make_create())
                 patch(Model, '_write', make_write())
 
-            elif action_rule.kind == 'on_write':
+            elif action_rule.trigger == 'on_write':
                 patch(Model, '_write', make_write())
 
-            elif action_rule.kind == 'on_unlink':
+            elif action_rule.trigger == 'on_unlink':
                 patch(Model, 'unlink', make_unlink())
 
-            elif action_rule.kind == 'on_change':
+            elif action_rule.trigger == 'on_change':
                 # register an onchange method for the action_rule
                 method = make_onchange(action_rule.id)
                 for field_name in action_rule.on_change_fields.split(","):
@@ -350,7 +339,7 @@ class BaseAutomation(models.Model):
 
         # retrieve all the action rules to run based on a timed condition
         eval_context = self._get_eval_context()
-        for action in self.with_context(active_test=True).search([('kind', '=', 'on_time')]):
+        for action in self.with_context(active_test=True).search([('trigger', '=', 'on_time')]):
             last_run = fields.Datetime.from_string(action.last_run) or datetime.datetime.utcfromtimestamp(0)
 
             # retrieve all the records that satisfy the action's condition
@@ -367,7 +356,7 @@ class BaseAutomation(models.Model):
                     filter_meta = action.filter_id.get_metadata()[0]
                     user_id = (filter_meta['write_uid'] or filter_meta['create_uid'])[0]
                     context['lang'] = self.env['res.users'].browse(user_id).lang
-            records = self.env[action.model].with_context(context).search(domain)
+            records = self.env[action.model_name].with_context(context).search(domain)
 
             # determine when action should occur for the records
             if action.trg_date_id.name == 'date_action_last' and 'create_date' in records._fields:
