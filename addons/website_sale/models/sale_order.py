@@ -295,7 +295,7 @@ class Website(models.Model):
             else:
                 salesperson_id = request.website.salesperson_id.id
             addr = partner.address_get(['delivery', 'invoice'])
-            sale_order = self.env['sale.order'].sudo().create({
+            so_data = {
                 'partner_id': partner.id,
                 'pricelist_id': pricelist_id,
                 'payment_term_id': partner.property_payment_term_id.id,
@@ -303,7 +303,12 @@ class Website(models.Model):
                 'partner_invoice_id': addr['invoice'],
                 'partner_shipping_id': addr['delivery'],
                 'user_id': salesperson_id or self.salesperson_id.id,
-            })
+            }
+            company = self.company_id or self.env['product.pricelist'].browse(pricelist_id).sudo().company_id
+            if company:
+                so_data['company_id'] = company.id
+
+            sale_order = self.env['sale.order'].sudo().create(so_data)
 
             # set fiscal position
             if request.website.partner_id.id != partner.id:

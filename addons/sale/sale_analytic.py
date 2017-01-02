@@ -18,6 +18,11 @@ class SaleOrderLine(models.Model):
             domain,
             ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
         )
+        # If the unlinked analytic line was the last one on the SO line, the qty was not updated.
+        force_so_lines = self.env.context.get("force_so_lines")
+        if force_so_lines:
+            for line in force_so_lines:
+                lines.setdefault(line, 0.0)
         for d in data:
             if not d['product_uom_id']:
                 continue
@@ -42,6 +47,12 @@ class AccountAnalyticLine(models.Model):
     def _get_invoice_price(self, order):
         if self.unit_amount == 0.0:
             return 0.0
+
+        # Prevent unnecessary currency conversion that could be impacted by exchange rate
+        # fluctuations
+        if self.currency_id and self.amount_currency and self.currency_id == order.currency_id:
+            return abs(self.amount_currency / self.unit_amount)
+
         price_unit = abs(self.amount / self.unit_amount)
         currency_id = self.company_id.currency_id
         if currency_id and currency_id != order.currency_id:
@@ -124,3 +135,10 @@ class AccountAnalyticLine(models.Model):
         line.with_context(create=True).write(res)
         line.mapped('so_line').sudo()._compute_analytic()
         return line
+
+    @api.multi
+    def unlink(self):
+        so_lines = self.mapped('so_line')
+        res = super(AccountAnalyticLine, self).unlink()
+        so_lines.with_context(force_so_lines=so_lines).sudo()._compute_analytic()
+        return res

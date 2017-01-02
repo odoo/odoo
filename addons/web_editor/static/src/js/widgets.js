@@ -299,7 +299,9 @@ var ImageDialog = Widget.extend({
             self.display_attachments();
         });
         this.fetch_existing().then(function () {
-            self.set_image(_.find(self.records, function (record) { return record.url === o.url;}) || o);
+            if (o.url) {
+                self.set_image(_.find(self.records, function (record) { return record.url === o.url;}) || o);
+            }
         });
         return res;
     },
