@@ -194,8 +194,8 @@ class GoogleCalendar(models.AbstractModel):
 
     def generate_data(self, event, isCreating=False):
         if event.allday:
-            start_date = fields.Datetime.context_timestamp(self, fields.Datetime.from_string(event.start)).isoformat('T').split('T')[0]
-            final_date = fields.Datetime.context_timestamp(self, fields.Datetime.from_string(event.stop) + timedelta(days=1)).isoformat('T').split('T')[0]
+            start_date = event.start_date
+            final_date = (datetime.strptime(event.stop_date, tools.DEFAULT_SERVER_DATE_FORMAT) + timedelta(days=1)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
             type = 'date'
             vstype = 'dateTime'
         else:

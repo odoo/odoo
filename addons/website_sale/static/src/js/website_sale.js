@@ -262,9 +262,12 @@ odoo.define('website_sale.website_sale', function (require) {
         }
 
         $(oe_website_sale).on('change', 'input.js_product_change', function () {
+            var self = this;
             var $parent = $(this).closest('.js_product');
-            $parent.find(".oe_default_price:first .oe_currency_value").html( price_to_str(+$(this).data('lst_price')) );
-            $parent.find(".oe_price:first .oe_currency_value").html(price_to_str(+$(this).data('price')) );
+            $.when(base.ready()).then(function() {
+                $parent.find(".oe_default_price:first .oe_currency_value").html( price_to_str(+$(self).data('lst_price')) );
+                $parent.find(".oe_price:first .oe_currency_value").html(price_to_str(+$(self).data('price')) );
+            });
             update_product_image(this, +$(this).val());
         });
 
@@ -286,8 +289,10 @@ odoo.define('website_sale.website_sale', function (require) {
             var product_id = false;
             for (var k in variant_ids) {
                 if (_.isEmpty(_.difference(variant_ids[k][1], values))) {
-                    $price.html(price_to_str(variant_ids[k][2]));
-                    $default_price.html(price_to_str(variant_ids[k][3]));
+                    $.when(base.ready()).then(function() {
+                        $price.html(price_to_str(variant_ids[k][2]));
+                        $default_price.html(price_to_str(variant_ids[k][3]));
+                    });
                     if (variant_ids[k][3]-variant_ids[k][2]>0.01) {
                         $default_price.closest('.oe_website_sale').addClass("discount");
                         $optional_price.closest('.oe_optional').show().css('text-decoration', 'line-through');
