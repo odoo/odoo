@@ -1068,7 +1068,7 @@ var LinkDialog = Dialog.extend({
         }
 
         var style = this.$("input[name='link-style-type']:checked").val() || '';
-        var size = this.$("input[name='link-style-size']:checked").val() || '';
+        var size = this.$("select.link-style").val() || '';
         var classes = (this.data.className || "") + (style && style.length ? " btn " : "") + style + " " + size;
         var isNewWindow = this.$('input.window-new').prop('checked');
 
@@ -1108,12 +1108,19 @@ var LinkDialog = Dialog.extend({
 
         this.$('input#link-text').val(text);
         this.$('input.window-new').prop('checked', new_window);
+        this.$('input[value=""]').prop('checked', 'checked');
 
         if (classes) {
             this.$('input[value!=""]').each(function () {
                 var $option = $(this);
                 if (classes.indexOf($option.val()) !== -1) {
                     $option.attr("checked", "checked");
+                }
+            });
+            this.$('select option[value!=""]').each(function () {
+                var $option = $(this);
+                if (classes.indexOf($option.val()) !== -1) {
+                    $option.attr("selected", "selected");
                 }
             });
         }

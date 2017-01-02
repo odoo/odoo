@@ -218,100 +218,60 @@
     </t>
 
     <!-- Link Dialog (allows to choose a style and content for a link on the page) -->
-    <form t-name="web_editor.dialog.link">
-        <div class="list-group">
-            <div class="form-group list-group-item active">
-                <h3 class="list-group-item-heading">
-                    <label class="control-label" for="link-new">Link Label
-                    </label>
-                </h3>
-                <input class="form-control" id="link-text" required="required" type="text"/>
-            </div>
-        </div>
-        <ul class="list-group">
-            <li class="list-group-item form-group clearfix active">
-                <div class="pull-right" style="display: none;">
-                    <label>
-                        <input class="window-new" type="checkbox"/>Open in new window</label>
-                </div>
-                <h4 class="list-group-item-heading">
-                    <label class="control-label" for="link-external">URL or Email Address
-                    </label>
-                </h4>
-                <input class="form-control url email-address url-source" id="link-external" placeholder="https://www.odoo.com" type="text"/>
-            </li>
-        </ul>
-        <div class="form-horizontal link-style">
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Style
-                </label>
-                <div class="col-sm-4">
-                    <div class="dropdown" style="line-height: 2em;">
-                        <a class="btn btn-default" data-toggle="dropdown" href="#">Color Style
-                            <span class="caret"/></a>
-                        <ul aria-labelledby="dLabel" class="dropdown-menu" role="menu">
-                            <li>
-                                <label class="btn btn-link o_btn_preview">Link
-                                    <input checked="checked" class="link-style" name="link-style-type" type="radio" value=""/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-default o_btn_preview">Basic
-                                    <input class="link-style" name="link-style-type" type="radio" value="btn-default"/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-success o_btn_preview">Success
-                                    <input class="link-style" name="link-style-type" type="radio" value="btn-success"/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-primary o_btn_preview">Primary
-                                    <input class="link-style" name="link-style-type" type="radio" value="btn-primary"/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-info o_btn_preview">Info
-                                    <input class="link-style" name="link-style-type" type="radio" value="btn-info"/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-warning o_btn_preview">Warning
-                                    <input class="link-style" name="link-style-type" type="radio" value="btn-warning"/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-danger o_btn_preview">Danger
-                                    <input class="link-style" name="link-style-type" type="radio" value="btn-danger"/></label>
-                            </li>
-                        </ul>
+    <form t-name="web_editor.dialog.link" class="o-link-editor-dialog">
+        <div class="row">
+            <div class="col-md-8 o-link-vr">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="link-new">Link Label</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" id="link-text" required="required"/>
+                        </div>
                     </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="dropdown" style="line-height: 2em;">
-                        <a class="btn btn-default" data-toggle="dropdown" href="#">Size
-                            <span class="caret"/></a>
-                        <ul aria-labelledby="dLabel" class="dropdown-menu" role="menu">
-                            <li>
-                                <label class="btn btn-default btn-xs o_btn_preview">Extra Small
-                                    <input class="link-style" name="link-style-size" type="radio" value="btn-xs"/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-default btn-sm o_btn_preview">Small
-                                    <input class="link-style" name="link-style-size" type="radio" value="btn-sm"/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-default o_btn_preview">Default
-                                    <input checked="checked" class="link-style" name="link-style-size" type="radio" value=""/></label>
-                            </li>
-                            <li>
-                                <label class="btn btn-default btn-lg o_btn_preview">Large
-                                    <input class="link-style" name="link-style-size" type="radio" value="btn-lg"/></label>
-                            </li>
-                        </ul>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="link-new">URL or Email</label>
+                        <div class="col-sm-9">
+                            <input class="form-control url email-address url-source" id="link-external" required="required"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Size</label>
+                        <div class="col-sm-9">
+                            <select class="form-control col-sm-3 link-style">
+                                <option value="btn-xs">Extra Small</option>
+                                <option value="btn-sm">Small</option>
+                                <option value="" selected="selected">Medium</option>
+                                <option value="btn-lg">Large</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Color</label>
+                        <div class="col-sm-9">
+                            <div class="o-link-color-selector">
+                                <t t-foreach="['', 'btn-primary', 'btn-success', 'btn-info', 'btn-warning', 'btn-danger', 'btn-alpha', 'btn-beta', 'btn-gamma', 'btn-delta', 'btn-epsilon', 'btn-default']" t-as="color">
+                                    <label t-attf-class="o-link-color #{color}" t-att-data-color="color">
+                                        <input class="link-style" name="link-style-type" type="radio" t-att-value="color"/>
+                                        <span/>
+                                    </label>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                        <label class="o_switch">
+                            <input class="window-new" type="checkbox"/>
+                            <span/>
+                            Open in new window
+                        </label>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="form-horizontal link-style">
-            <div class="form-group">
-                <label class="col-sm-2 control-label">Preview
-                </label>
-                <div class="col-sm-10" style="line-height: 2em;">
+            <div class="col-md-4">
+                <div class="form-group text-center">
+                    <label>Preview</label>
                     <div style="overflow: auto; max-width: 100%; max-height: 200px;">
                         <a href="#" id="link-preview"/>
                     </div>
