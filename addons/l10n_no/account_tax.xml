@@ -12,7 +12,7 @@
 		<field name="applicability">taxes</field>
 	</record>
 	<record id="tax_tag_ut8" model="account.account.tag">
-		<field name="name">Utgående 8% mva</field>
+		<field name="name">Utgående 10% mva</field>
 		<field name="applicability">taxes</field>
 	</record>
 	<record id="tax_tag_in25" model="account.account.tag">
@@ -24,7 +24,7 @@
 		<field name="applicability">taxes</field>
 	</record>
 	<record id="tax_tag_in8" model="account.account.tag">
-		<field name="name">Inngående 8% mva</field>
+		<field name="name">Inngående 10% mva</field>
 		<field name="applicability">taxes</field>
 	</record>
 
@@ -63,9 +63,9 @@
 </record>
 <record id="tax3" model="account.tax.template">
 	<field name="chart_template_id" ref="no_chart_template"/>
-	<field name="name">Utgående 8% mva</field>
-	<field name="description">Utgående 8% mva</field>
-	<field name="amount">8</field>
+	<field name="name">Utgående 10% mva</field>
+	<field name="description">Utgående 10% mva</field>
+	<field name="amount">10</field>
 	<field name="amount_type">percent</field>
 	<field name="type_tax_use">sale</field>
 	<field name="account_id" ref="chart2704"/>
@@ -96,9 +96,9 @@
 </record>
 <record id="tax6" model="account.tax.template">
 	<field name="chart_template_id" ref="no_chart_template"/>
-	<field name="name">Inngående 8% mva</field>
-	<field name="description">Inngående 8% mva</field>
-	<field name="amount">8</field>
+	<field name="name">Inngående 10% mva</field>
+	<field name="description">Inngående 10% mva</field>
+	<field name="amount">10</field>
 	<field name="amount_type">percent</field>
 	<field name="type_tax_use">purchase</field>
 	<field name="account_id" ref="chart2714"/>

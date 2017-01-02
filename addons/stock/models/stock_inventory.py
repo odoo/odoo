@@ -105,6 +105,11 @@ class Inventory(models.Model):
         if self.filter != 'pack':
             self.package_id = False
 
+    @api.onchange('location_id')
+    def onchange_location_id(self):
+        if self.location_id.company_id:
+            self.company_id = self.location_id.company_id
+
     @api.one
     @api.constrains('filter', 'product_id', 'lot_id', 'partner_id', 'package_id')
     def _check_filter_product(self):
@@ -177,6 +182,9 @@ class Inventory(models.Model):
         locations = self.env['stock.location'].search([('id', 'child_of', [self.location_id.id])])
         domain = ' location_id in %s'
         args = (tuple(locations.ids),)
+        if self.company_id:
+            domain += ' AND company_id = %s'
+            args += (self.company_id.id,)
         if self.partner_id:
             domain += ' AND owner_id = %s'
             args += (self.partner_id.id,)

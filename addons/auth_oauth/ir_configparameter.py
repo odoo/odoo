@@ -10,5 +10,7 @@ class ir_configparameter(osv.Model):
         if force:
             IMD = self.pool['ir.model.data']
             oauth_oe = IMD.xmlid_to_object(cr, SUPERUSER_ID, 'auth_oauth.provider_openerp')
+            if not oauth_oe:
+                return
             dbuuid = self.get_param(cr, SUPERUSER_ID, 'database.uuid')
             oauth_oe.write({'client_id': dbuuid})
