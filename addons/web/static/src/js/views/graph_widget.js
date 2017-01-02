@@ -205,18 +205,20 @@ return Widget.extend({
             all_zero = all_zero && (datapt.value === 0);
         });
         if (some_negative && !all_negative) {
-            return this.$el.append(QWeb.render('GraphView.error', {
+            this.$el.append(QWeb.render('GraphView.error', {
                 title: _t("Invalid data"),
                 description: _t("Pie chart cannot mix positive and negative numbers. " +
                     "Try to change your domain to only display positive results"),
             }));
+            return;
         }
         if (all_zero) {
-            return this.$el.append(QWeb.render('GraphView.error', {
+            this.$el.append(QWeb.render('GraphView.error', {
                 title: _t("Invalid data"),
                 description: _t("Pie chart cannot display all zero numbers.. " +
                     "Try to change your domain to display positive results"),
             }));
+            return;
         }
         if (this.groupbys.length) {
             data = this.data.map(function (datapt) {
