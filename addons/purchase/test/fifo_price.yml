@@ -2,8 +2,8 @@
   Set the company currency as EURO for the sake of repeatibility
 -
   !python {model: res.company}: |
-    company = self.browse(cr, uid, ref('base.main_company'))
-    company.currency_id = company.env['res.currency'].browse(ref('base.EUR'))
+    company = self.env.ref('base.main_company')
+    company.currency_id = self.env.ref('base.EUR')
 -
   Set a product as using fifo price
 -
