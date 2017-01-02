@@ -351,7 +351,7 @@ snippets_editor.Class.include({
 
 var callback = window ? window["callback"] : undefined;
 odoo_top[callback+"_updown"] = function (value, fields_values, field_name) {
-    if (!window) {
+    if (!window || window.closed) {
         delete odoo_top[callback+"_updown"];
         return;
     }

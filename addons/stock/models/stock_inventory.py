@@ -124,6 +124,11 @@ class Inventory(models.Model):
         if self.filter == 'product':
             self.exhausted = True
 
+    @api.onchange('location_id')
+    def onchange_location_id(self):
+        if self.location_id.company_id:
+            self.company_id = self.location_id.company_id
+
     @api.one
     @api.constrains('filter', 'product_id', 'lot_id', 'partner_id', 'package_id')
     def _check_filter_product(self):
@@ -204,6 +209,11 @@ class Inventory(models.Model):
         # Empty recordset of products to filter
         products_to_filter = self.env['product.product']
 
+        # case 0: Filter on company
+        if self.company_id:
+            domain += ' AND company_id = %s'
+            args += (self.company_id.id,)
+        
         #case 1: Filter on One owner only or One product for a specific owner
         if self.partner_id:
             domain += ' AND owner_id = %s'

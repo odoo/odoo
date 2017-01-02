@@ -75,7 +75,7 @@ class PortalWizardUser(models.TransientModel):
     _description = 'Portal User Config'
 
     wizard_id = fields.Many2one('portal.wizard', string='Wizard', required=True, ondelete='cascade')
-    partner_id = fields.Many2one('res.partner', string='Contact', required=True, readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Contact', required=True, readonly=True, ondelete='cascade')
     email = fields.Char('Email')
     in_portal = fields.Boolean('In Portal')
     user_id = fields.Many2one('res.users', string='Login User')

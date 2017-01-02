@@ -47,7 +47,7 @@ class PosOrderReport(models.Model):
                     MIN(l.id) AS id,
                     COUNT(*) AS nbr_lines,
                     s.date_order AS date,
-                    SUM(l.qty * u.factor) AS product_qty,
+                    SUM(l.qty) AS product_qty,
                     SUM(l.qty * l.price_unit) AS price_sub_total,
                     SUM((l.qty * l.price_unit) * (100 - l.discount) / 100) AS price_total,
                     SUM((l.qty * l.price_unit) * (l.discount / 100)) AS total_discount,
