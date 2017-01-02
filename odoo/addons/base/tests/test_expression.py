@@ -241,6 +241,9 @@ class TestExpression(TransactionCase):
         partners = Partner.search([('company_id.partner_id', 'in', [])])
         self.assertFalse(partners)
 
+        # check multi-level expressions with magic columns
+        partners = Partner.search([('create_uid.active', '=', True)])
+
         # check that multi-level expressions with negative op work
         all_partners = Partner.search([('company_id', '!=', False)])
         res_partners = Partner.search([('company_id.partner_id', 'not in', [])])
