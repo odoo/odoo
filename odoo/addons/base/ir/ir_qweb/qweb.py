@@ -8,7 +8,7 @@ from itertools import count
 from textwrap import dedent
 import werkzeug
 from werkzeug.utils import escape as _escape
-from itertools import izip, tee
+from itertools import chain, izip, tee
 import __builtin__
 builtin_defaults = {name: getattr(__builtin__, name) for name in dir(__builtin__)}
 
@@ -269,6 +269,8 @@ class QWeb(object):
         _options['ast_calls'] = []
         _options['root'] = element.getroottree()
         _options['last_path_node'] = None
+        if not options.get('nsmap'):
+            _options['nsmap'] = {}
 
         # generate ast
 
@@ -700,14 +702,42 @@ class QWeb(object):
 
     def _compile_static_node(self, el, options):
         """ Compile a purely static element into a list of AST nodes. """
-        content = self._compile_directive_content(el, options)
-        if el.tag == 't':
+        extra_attrib = {}
+        if not el.nsmap:
+            unqualified_el_tag = el_tag = el.tag
+            content = self._compile_directive_content(el, options)
+        else:
+            # Etree will remove the ns prefixes indirection by inlining the corresponding
+            # nsmap definition into the tag attribute. Restore the tag and prefix here.
+            unqualified_el_tag = etree.QName(el.tag).localname
+            el_tag = unqualified_el_tag
+            if el.prefix:
+                el_tag = '%s:%s' % (el.prefix, el_tag)
+
+            # If `el` introduced new namespaces, write them as attribute by using the
+            # `extra_attrib` dict.
+            for ns_prefix, ns_definition in set(el.nsmap.items()) - set(options['nsmap'].items()):
+                if ns_prefix is None:
+                    extra_attrib['xmlns'] = ns_definition
+                else:
+                    extra_attrib['xmlns:%s' % ns_prefix] = ns_definition
+
+            # Update the dict of inherited namespaces before continuing the recursion. Note:
+            # since `options['nsmap']` is a dict (and therefore mutable) and we do **not**
+            # want changes done in deeper recursion to bevisible in earlier ones, we'll pass
+            # a copy before continuing the recursion and restore the original afterwards.
+            original_nsmap = options['nsmap']
+            options['nsmap'] = dict(options['nsmap'], **el.nsmap)
+            content = self._compile_directive_content(el, options)
+            options['nsmap'] = original_nsmap
+
+        if unqualified_el_tag == 't':
             return content
-        tag = u'<%s%s' % (el.tag, u''.join([u' %s="%s"' % (name, escape(unicodifier(value))) for name, value in el.attrib.iteritems()]))
-        if el.tag in self._void_elements:
+        tag = u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(unicodifier(value))) for name, value in chain(el.attrib.iteritems(), extra_attrib.iteritems())]))
+        if unqualified_el_tag in self._void_elements:
             return [self._append(ast.Str(tag + '/>'))] + content
         else:
-            return [self._append(ast.Str(tag + '>'))] + content + [self._append(ast.Str('</%s>' % el.tag))]
+            return [self._append(ast.Str(tag + '>'))] + content + [self._append(ast.Str('</%s>' % el_tag))]
 
     def _compile_static_attributes(self, el, options):
         """ Compile the static attributes of the given element into a list of
@@ -847,17 +877,37 @@ class QWeb(object):
 
     def _compile_tag(self, el, content, options, attr_already_created=False):
         """ Compile the tag of the given element into a list of AST nodes. """
-        if el.tag == 't':
+        extra_attrib = {}
+        if not el.nsmap:
+            unqualified_el_tag = el_tag = el.tag
+        else:
+            # Etree will remove the ns prefixes indirection by inlining the corresponding
+            # nsmap definition into the tag attribute. Restore the tag and prefix here.
+            unqualified_el_tag = etree.QName(el.tag).localname
+            el_tag = unqualified_el_tag
+            if el.prefix:
+                el_tag = '%s:%s' % (el.prefix, el_tag)
+
+            # If `el` introduced new namespaces, write them as attribute by using the
+            # `extra_attrib` dict.
+            for ns_prefix, ns_definition in set(el.nsmap.items()) - set(options['nsmap'].items()):
+                if ns_prefix is None:
+                    extra_attrib['xmlns'] = ns_definition
+                else:
+                    extra_attrib['xmlns:%s' % ns_prefix] = ns_definition
+
+        if unqualified_el_tag == 't':
             return content
-        body = [self._append(ast.Str(u'<%s' % el.tag))]
+
+        body = [self._append(ast.Str(u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(unicodifier(value))) for name, value in extra_attrib.iteritems()]))))]
         body.extend(self._compile_all_attributes(el, options, attr_already_created))
-        if el.tag in self._void_elements:
+        if unqualified_el_tag in self._void_elements:
             body.append(self._append(ast.Str(u'/>')))
             body.extend(content)
         else:
             body.append(self._append(ast.Str(u'>')))
             body.extend(content)
-            body.append(self._append(ast.Str(u'</%s>' % el.tag)))
+            body.append(self._append(ast.Str(u'</%s>' % el_tag)))
         return body
 
     # compile directives
@@ -873,7 +923,17 @@ class QWeb(object):
 
     def _compile_directive_tag(self, el, options):
         el.attrib.pop('t-tag', None)
+
+        # Update the dict of inherited namespaces before continuing the recursion. Note:
+        # since `options['nsmap']` is a dict (and therefore mutable) and we do **not**
+        # want changes done in deeper recursion to bevisible in earlier ones, we'll pass
+        # a copy before continuing the recursion and restore the original afterwards.
+        if el.nsmap:
+            original_nsmap = options['nsmap']
+            options['nsmap'] = dict(options['nsmap'], **el.nsmap)
         content = self._compile_directives(el, options)
+        if el.nsmap:
+            options['nsmap'] = original_nsmap
         return self._compile_tag(el, content, options, False)
 
     def _compile_directive_set(self, el, options):
@@ -1237,6 +1297,7 @@ class QWeb(object):
         tmpl = el.attrib.pop('t-call')
         _values = self._make_name('values_copy')
         call_options = el.attrib.pop('t-call-options', None)
+        nsmap = options.get('nsmap')
 
         _values = self._make_name('values_copy')
 
@@ -1303,9 +1364,10 @@ class QWeb(object):
                 )
             )
 
-        if call_options:
+        if nsmap or call_options:
+            # copy the original dict of options to pass to the callee
             name_options = self._make_name('options')
-            content.extend([
+            content.append(
                 # options_ = options.copy()
                 ast.Assign(
                     targets=[ast.Name(id=name_options, ctx=ast.Store())],
@@ -1317,18 +1379,56 @@ class QWeb(object):
                         ),
                         args=[], keywords=[], starargs=None, kwargs=None
                     )
-                ),
-                # options_.update(template options)
-                ast.Expr(ast.Call(
-                    func=ast.Attribute(
-                        value=ast.Name(id=name_options, ctx=ast.Load()),
-                        attr='update',
-                        ctx=ast.Load()
-                    ),
-                    args=[self._compile_expr(call_options)],
-                    keywords=[], starargs=None, kwargs=None
-                ))
-            ])
+                )
+            )
+
+            if call_options:
+            # update this dict with the content of `t-call-options`
+                content.extend([
+                    # options_.update(template options)
+                    ast.Expr(ast.Call(
+                        func=ast.Attribute(
+                            value=ast.Name(id=name_options, ctx=ast.Load()),
+                            attr='update',
+                            ctx=ast.Load()
+                        ),
+                        args=[self._compile_expr(call_options)],
+                        keywords=[], starargs=None, kwargs=None
+                    ))
+                ])
+
+            if nsmap:
+                # update this dict with the current nsmap so that the callee know
+                # if he outputting the xmlns attributes is relevenat or not
+
+                # make the nsmap an ast dict
+                keys = []
+                values = []
+                for key, value in options['nsmap'].items():
+                    if isinstance(key, basestring):
+                        keys.append(ast.Str(s=key))
+                    elif key is None:
+                        keys.append(ast.Name(id='None', ctx=ast.Load()))
+                    values.append(ast.Str(s=value))
+
+                # {'nsmap': {None: 'xmlns def'}}
+                nsmap_ast_dict = ast.Dict(
+                    keys=[ast.Str(s='nsmap')],
+                    values=[ast.Dict(keys=keys, values=values)]
+                )
+
+                # options_.update(nsmap_ast_dict)
+                content.append(
+                    ast.Expr(ast.Call(
+                        func=ast.Attribute(
+                            value=ast.Name(id=name_options, ctx=ast.Load()),
+                            attr='update',
+                            ctx=ast.Load()
+                        ),
+                        args=[nsmap_ast_dict],
+                        keywords=[], starargs=None, kwargs=None
+                    ))
+                )
         else:
             name_options = 'options'
 

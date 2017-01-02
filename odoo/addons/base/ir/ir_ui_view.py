@@ -466,7 +466,7 @@ actual arch.
         :return: a node in the source matching the spec
         """
         if spec.tag == 'xpath':
-            nodes = arch.xpath(spec.get('expr'))
+            nodes = etree.ETXPath(spec.get('expr'))(arch)
             return nodes[0] if nodes else None
         elif spec.tag == 'field':
             # Only compare the field name: a field can be only once in a given view
