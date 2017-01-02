@@ -836,9 +836,6 @@ class expression(object):
                     new_leaf = create_substitution_leaf(leaf, dom_leaf, model)
                     push(new_leaf)
 
-            elif path[0] in MAGIC_COLUMNS:
-                push_result(leaf)
-
             # ----------------------------------------
             # PATH SPOTTED
             # -> many2one or one2many with _auto_join:
@@ -1134,8 +1131,8 @@ class expression(object):
         # final sanity checks - should never fail
         assert operator in (TERM_OPERATORS + ('inselect', 'not inselect')), \
             "Invalid operator %r in domain term %r" % (operator, leaf)
-        assert leaf in (TRUE_LEAF, FALSE_LEAF) or left in model._fields \
-            or left in MAGIC_COLUMNS, "Invalid field %r in domain term %r" % (left, leaf)
+        assert leaf in (TRUE_LEAF, FALSE_LEAF) or left in model._fields, \
+            "Invalid field %r in domain term %r" % (left, leaf)
         assert not isinstance(right, BaseModel), \
             "Invalid value %r in domain term %r" % (right, leaf)
 
