@@ -52,6 +52,14 @@ class TranslationToolsTestCase(unittest.TestCase):
         self.assertEquals(result, source)
         self.assertItemsEqual(terms, [source])
 
+    def test_translate_xml_unicode(self):
+        """ Test xml_translate() on plain text with unicode characters. """
+        terms = []
+        source = u"Un heureux évènement"
+        result = xml_translate(terms.append, source)
+        self.assertEquals(result, source)
+        self.assertItemsEqual(terms, [source])
+
     def test_translate_xml_text_entity(self):
         """ Test xml_translate() on plain text with HTML escaped entities. """
         terms = []
@@ -161,6 +169,40 @@ class TranslationToolsTestCase(unittest.TestCase):
         self.assertEquals(result, source)
         self.assertItemsEqual(terms,
             ['<span class="oe_menu_text">Blah</span>', 'More <b class="caret"/>'])
+
+    def test_translate_xml_with_namespace(self):
+        """ Test xml_translate() on elements with namespaces. """
+        terms = []
+        # do not slit the long line below, otherwise the result will not match
+        source = """<Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+                        <cbc:UBLVersionID t-esc="version_id"/>
+                        <t t-foreach="[1, 2, 3, 4]" t-as="value">
+                            Oasis <cac:Test t-esc="value"/>
+                        </t>
+                    </Invoice>"""
+        result = xml_translate(terms.append, source)
+        self.assertEquals(result, source)
+        self.assertItemsEqual(terms, ['Oasis'])
+        result = xml_translate(lambda term: term, source)
+        self.assertEquals(result, source)
+
+    def test_translate_xml_invalid_translations(self):
+        """ Test xml_translate() with invalid translations. """
+        source = """<form string="Form stuff">
+                        <h1>Blah <i>blah</i> blah</h1>
+                        Put some <b>more text</b> here
+                        <field name="foo"/>
+                    </form>"""
+        translations = {
+            "Put some <b>more text</b> here": "Mettre <b>plus de texte</i> ici",
+        }
+        expect = """<form string="Form stuff">
+                        <h1>Blah <i>blah</i> blah</h1>
+                        Mettre &lt;b&gt;plus de texte&lt;/i&gt; ici
+                        <field name="foo"/>
+                    </form>"""
+        result = xml_translate(translations.get, source)
+        self.assertEquals(result, expect)
 
     def test_translate_html(self):
         """ Test xml_translate() and html_translate() with <i> elements. """
