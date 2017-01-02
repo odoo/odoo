@@ -33,7 +33,7 @@ $(document).ready(function () {
                             data: {lang: openerp.website.get_context().lang},
                             success: function (quantity) {
                                 if (!$a.hasClass('js_goto_shop')) {
-                                    window.location.href = window.location.href.replace(/shop([\/?].*)?$/, "shop/cart");
+                                    window.location.pathname = window.location.pathname.replace(/shop([\/?].*)?$/, "shop/cart");
                                 }
                                 var $q = $(".my_cart_quantity");
                                 $q.parent().parent().removeClass("hidden", !quantity);

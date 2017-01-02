@@ -38,6 +38,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
                     'based_on': 'invoices',
                     'company_id': company_id,
                     'display_detail': False,
+                    'chart_tax_id': self.pool['account.vat.declaration']._get_tax(self.cr, self.uid),
                 }
             }
         self.period_ids = []
