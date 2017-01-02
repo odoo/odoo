@@ -13,15 +13,14 @@ class StockPickingType(models.Model):
     count_mo_late = fields.Integer(compute='_get_mo_count')
 
     def _get_mo_count(self):
-        mrp_picking_types = self.filtered(lambda picking: picking.code == 'mrp_operation')
-        if not mrp_picking_types:
-            return
-
         MrpProduction = self.env['mrp.production']
-        count_mo_waiting = MrpProduction.search_count([('availability', '=', 'waiting')])
-        count_mo_todo = MrpProduction.search_count([('state', 'in', ('confirmed', 'planned', 'progress'))])
-        count_mo_late = MrpProduction.search_count(['&', ('date_planned_start', '<', fields.Date.today()), ('state', '=', 'confirmed')])
-        for picking in mrp_picking_types:
-            picking.count_mo_waiting = count_mo_waiting
-            picking.count_mo_todo = count_mo_todo
-            picking.count_mo_late = count_mo_late
+        for r in self.filtered(lambda picking: picking.code == 'mrp_operation'):            
+            if not r:
+                return
+            count_mo_waiting = MrpProduction.search_count([('availability', '=', 'waiting'),('picking_type_id', '=', r.id)])
+            count_mo_todo = MrpProduction.search_count([('state', 'in', ('confirmed', 'planned', 'progress')),('picking_type_id', '=', r.id)])
+            count_mo_late = MrpProduction.search_count(['&', ('date_planned_start', '<', fields.Date.today()), ('state', '=', 'confirmed'),('picking_type_id', '=', r.id)])
+
+            r.count_mo_waiting = count_mo_waiting
+            r.count_mo_todo = count_mo_todo
+            r.count_mo_late = count_mo_late
