@@ -371,7 +371,8 @@ class PageConverter(werkzeug.routing.PathConverter):
         query = query and query.startswith('website.') and query[8:] or query
         if query:
             domain += [('key', 'like', query)]
-        domain += ['|', ('website_id', '=', request.website.id), ('website_id', '=', False)]
+        website_id = request.context.get('website_id') or request.registry['website'].search(cr, uid, [], limit=1)[0]
+        domain += ['|', ('website_id', '=', website_id), ('website_id', '=', False)]
 
         views = View.search_read(domain, fields=['key', 'priority', 'write_date'], order='name')
         for view in views:
