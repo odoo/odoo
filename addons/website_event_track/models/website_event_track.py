@@ -68,7 +68,7 @@ class Track(models.Model):
         res.message_post_with_view(
             'website_event_track.event_track_template_new',
             subject=res.name,
-            subtype_id=self.env['ir.model.data'].sudo().xmlid_to_res_id('website_event_track.mt_event_track'))
+            subtype_id=self.env['ir.model.data'].xmlid_to_res_id('website_event_track.mt_event_track'))
         return res
 
     @api.multi

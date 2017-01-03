@@ -14,11 +14,13 @@ class CalendarSettings(models.TransientModel):
     server_uri = fields.Char('URI for tuto')
 
     def set_calset(self):
-        self.env['ir.config_parameter'].set_param('google_calendar_client_id', (self.cal_client_id or '').strip(), groups=['base.group_system'])
-        self.env['ir.config_parameter'].set_param('google_calendar_client_secret', (self.cal_client_secret or '').strip(), groups=['base.group_system'])
+        set_param = self.env['ir.config_parameter'].set_param
+        set_param('google_calendar_client_id', (self.cal_client_id or '').strip())
+        set_param('google_calendar_client_secret', (self.cal_client_secret or '').strip())
 
     def get_default_all(self, fields):
-        cal_client_id = self.env['ir.config_parameter'].get_param('google_calendar_client_id', default='')
-        cal_client_secret = self.env['ir.config_parameter'].get_param('google_calendar_client_secret', default='')
-        server_uri = "%s/google_account/authentication" % self.env['ir.config_parameter'].get_param('web.base.url', default="http://yourcompany.odoo.com")
+        get_param = self.env['ir.config_parameter'].get_param
+        cal_client_id = get_param('google_calendar_client_id', default='')
+        cal_client_secret = get_param('google_calendar_client_secret', default='')
+        server_uri = "%s/google_account/authentication" % get_param('web.base.url', default="http://yourcompany.odoo.com")
         return dict(cal_client_id=cal_client_id, cal_client_secret=cal_client_secret, server_uri=server_uri)

@@ -40,7 +40,7 @@ class Followers(models.Model):
         :param force: if True, delete existing followers before creating new one
                       using the subtypes given in the parameters
         """
-        res_model_id = self.env['ir.model'].search([('model', '=', res_model)], limit=1).id
+        res_model_id = self.env['ir.model']._get(res_model).id
         force_mode = force or (all(data for data in partner_data.values()) and all(data for data in channel_data.values()))
         generic = []
         specific = {}

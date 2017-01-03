@@ -63,7 +63,7 @@ class Alias(models.Model):
         help="Optional ID of a thread (record) to which all incoming messages will be attached, even "
              "if they did not reply to it. If set, this will disable the creation of new records completely.")
     alias_domain = fields.Char('Alias domain', compute='_get_alias_domain',
-                               default=lambda self: self.env["ir.config_parameter"].get_param("mail.catchall.domain"))
+                               default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
     alias_parent_model_id = fields.Many2one(
         'ir.model', 'Parent Model',
         help="Parent model holding the alias. The model holding the alias reference "
@@ -86,7 +86,7 @@ class Alias(models.Model):
 
     @api.multi
     def _get_alias_domain(self):
-        alias_domain = self.env["ir.config_parameter"].get_param("mail.catchall.domain")
+        alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
         for record in self:
             record.alias_domain = alias_domain
 
@@ -111,10 +111,10 @@ class Alias(models.Model):
         if vals.get('alias_name'):
             vals['alias_name'] = self._clean_and_make_unique(vals.get('alias_name'))
         if model_name:
-            model = self.env['ir.model'].search([('model', '=', model_name)])
+            model = self.env['ir.model']._get(model_name)
             vals['alias_model_id'] = model.id
         if parent_model_name:
-            model = self.env['ir.model'].search([('model', '=', parent_model_name)])
+            model = self.env['ir.model']._get(parent_model_name)
             vals['alias_parent_model_id'] = model.id
         return super(Alias, self).create(vals)
 

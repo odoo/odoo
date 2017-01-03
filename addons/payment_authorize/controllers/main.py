@@ -24,7 +24,7 @@ class AuthorizeController(http.Controller):
         if post:
             request.env['payment.transaction'].sudo().form_feedback(post, 'authorize')
             return_url = post.pop('return_url', '/')
-        base_url = request.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         # Authorize.Net is expecting a response to the POST sent by their server.
         # This response is in the form of a URL that Authorize.Net will pass on to the
         # client's browser to redirect them to the desired location need javascript.

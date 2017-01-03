@@ -17,7 +17,7 @@ class MailGroup(models.Model):
     def message_get_email_values(self, notif_mail=None):
         self.ensure_one()
         res = super(MailGroup, self).message_get_email_values(notif_mail=notif_mail)
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         headers = {}
         if res.get('headers'):
             try:

@@ -25,7 +25,7 @@ class TestMailFollowers(TestMail):
             'mail.channel', groups.ids,
             {self.user_employee.partner_id.id: [self.mt_mg_nodef.id]},
             {test_channel.id: [self.mt_al_nodef.id]})
-        mail_channel_model_id = self.env['ir.model'].search([('model', '=', 'mail.channel')], limit=1).id
+        mail_channel_model_id = self.env['ir.model']._get('mail.channel').id
         self.assertFalse(specific)
         self.assertEqual(len(generic), 2)
 
@@ -40,7 +40,7 @@ class TestMailFollowers(TestMail):
 
     def test_m2o_command_update_selective(self):
         test_channel = self.env['mail.channel'].create({'name': 'Test'})
-        mail_channel_model_id = self.env['ir.model'].search([('model', '=', 'mail.channel')], limit=1).id
+        mail_channel_model_id = self.env['ir.model']._get('mail.channel').id
         groups = self.group_pigs | self.group_public
         self.env['mail.followers'].create({'partner_id': self.user_employee.partner_id.id, 'res_model_id': mail_channel_model_id, 'res_id': self.group_pigs.id})
         generic, specific = self.env['mail.followers']._add_follower_command(
@@ -136,7 +136,7 @@ class TestMailFollowers(TestMail):
         })
         with self.assertRaises(IntegrityError):
             self.env['mail.followers'].create({
-                'res_model_id': self.env['ir.model'].search([('model', '=', 'mail.channel')], limit=1).id,
+                'res_model_id': self.env['ir.model']._get('mail.channel').id,
                 'res_id': test_channel.id,
                 'partner_id': self.user_employee.partner_id.id,
                 'channel_id': self.group_pigs.id,

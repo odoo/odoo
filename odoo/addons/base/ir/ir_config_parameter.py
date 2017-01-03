@@ -16,10 +16,10 @@ _logger = logging.getLogger(__name__)
 A dictionary holding some configuration parameters to be initialized when the database is created.
 """
 _default_parameters = {
-    "database.secret": lambda: (str(uuid.uuid4()), ['base.group_erp_manager']),
-    "database.uuid": lambda: (str(uuid.uuid1()), []),
-    "database.create_date": lambda: (fields.Datetime.now(), ['base.group_user']),
-    "web.base.url": lambda: ("http://localhost:%s" % config.get('xmlrpc_port'), []),
+    "database.secret": lambda: str(uuid.uuid4()),
+    "database.uuid": lambda: str(uuid.uuid1()),
+    "database.create_date": fields.Datetime.now,
+    "web.base.url": lambda: "http://localhost:%s" % config.get('xmlrpc_port'),
 }
 
 
@@ -30,7 +30,6 @@ class IrConfigParameter(models.Model):
 
     key = fields.Char(required=True, index=True)
     value = fields.Text(required=True)
-    group_ids = fields.Many2many('res.groups', 'ir_config_parameter_groups_rel', 'icp_id', 'group_id', string='Groups')
 
     _sql_constraints = [
         ('key_uniq', 'unique (key)', 'Key must be unique.')
@@ -47,8 +46,7 @@ class IrConfigParameter(models.Model):
             # force=True skips search and always performs the 'if' body (because ids=False)
             params = self.sudo().search([('key', '=', key)])
             if force or not params:
-                value, groups = func()
-                params.set_param(key, value, groups=groups)
+                params.set_param(key, func())
 
     @api.model
     def get_param(self, key, default=False):
@@ -68,42 +66,32 @@ class IrConfigParameter(models.Model):
         return params[0]['value'] if params else None
 
     @api.model
-    def set_param(self, key, value, groups=()):
+    def set_param(self, key, value):
         """Sets the value of a parameter.
 
         :param string key: The key of the parameter value to set.
         :param string value: The value to set.
-        :param list of string groups: List of group (xml_id allowed) to read this key.
         :return: the previous value of the parameter or False if it did
                  not exist.
         :rtype: string
         """
-        self._get_param.clear_cache(self)
         param = self.search([('key', '=', key)])
-
-        gids = []
-        for group_xml in groups:
-            group = self.env.ref(group_xml, raise_if_not_found=False)
-            if group:
-                gids.append((4, group.id))
-            else:
-                _logger.warning('Potential Security Issue: Group [%s] is not found.' % group_xml)
-
-        vals = {'value': value}
-        if gids:
-            vals.update(group_ids=gids)
         if param:
             old = param.value
             if value is not False and value is not None:
-                param.write(vals)
+                param.write({'value': value})
             else:
                 param.unlink()
             return old
         else:
-            vals.update(key=key)
             if value is not False and value is not None:
-                self.create(vals)
+                self.create({'key': key, 'value': value})
             return False
+
+    @api.model
+    def create(self, vals):
+        self.clear_caches()
+        return super(IrConfigParameter, self).create(vals)
 
     @api.multi
     def write(self, vals):

@@ -59,8 +59,7 @@ class WebsiteConfigSettings(models.TransientModel):
         return dict(google_maps_api_key=google_maps_api_key)
 
     def set_google_maps_api_key(self):
-        self.env['ir.config_parameter'].set_param(
-            'google_maps_api_key', (self.google_maps_api_key or '').strip(), groups=['base.group_system'])
+        self.env['ir.config_parameter'].set_param('google_maps_api_key', (self.google_maps_api_key or '').strip())
 
     @api.depends('language_ids')
     def _compute_language_count(self):

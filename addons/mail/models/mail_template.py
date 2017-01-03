@@ -106,7 +106,7 @@ class MailTemplate(models.Model):
     def default_get(self, fields):
         res = super(MailTemplate, self).default_get(fields)
         if res.get('model'):
-            res['model_id'] = self.env['ir.model'].search([('model', '=', res.pop('model'))]).id
+            res['model_id'] = self.env['ir.model']._get(res.pop('model')).id
         return res
 
     name = fields.Char('Name')
@@ -201,9 +201,9 @@ class MailTemplate(models.Model):
     def onchange_sub_model_object_value_field(self):
         if self.model_object_field:
             if self.model_object_field.ttype in ['many2one', 'one2many', 'many2many']:
-                models = self.env['ir.model'].search([('model', '=', self.model_object_field.relation)])
-                if models:
-                    self.sub_object = models.id
+                model = self.env['ir.model']._get(self.model_object_field.relation)
+                if model:
+                    self.sub_object = model.id
                     self.copyvalue = self.build_expression(self.model_object_field.name, self.sub_model_object_field and self.sub_model_object_field.name or False, self.null_value or False)
             else:
                 self.sub_object = False
@@ -285,7 +285,7 @@ class MailTemplate(models.Model):
             html = '<div>%s</div>' % html
             root = lxml.html.fromstring(html)
 
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         (base_scheme, base_netloc, bpath, bparams, bquery, bfragment) = urlparse.urlparse(base_url)
 
         def _process_link(url):
