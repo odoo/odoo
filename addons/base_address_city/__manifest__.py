@@ -16,6 +16,7 @@ This module allows to enforce users to choose the city of a partner inside a giv
         'security/ir.model.access.csv',
         'views/res_city_view.xml',
         'views/res_country_view.xml',
+        'views/res_partner_view.xml',
     ],
     'depends': ['base'],
 }
