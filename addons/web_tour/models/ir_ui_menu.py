@@ -18,7 +18,7 @@ class IrUiMenu(models.Model):
         menu_ids = [menu.id for menu in self.browse(menu_root['all_menu_ids']) if menu.load_xmlid]
         xmlids = {
             d.res_id: d.module + "." + d.name
-            for d in self.env['ir.model.data'].search([('res_id', 'in', menu_ids), ('model', '=', 'ir.ui.menu')])
+            for d in self.env['ir.model.data'].sudo().search([('res_id', 'in', menu_ids), ('model', '=', 'ir.ui.menu')])
         }
 
         def _find_subtree(tree, node_id):

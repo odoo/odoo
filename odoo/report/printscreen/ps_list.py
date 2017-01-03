@@ -51,7 +51,7 @@ class report_printscreen_list(report_int):
         self.groupby_no_leaf = context.get('group_by_no_leaf', False)
         env = odoo.api.Environment(cr, uid, context)
         Model = env[datas['model']]
-        model = env['ir.model'].search([('model', '=', Model._name)])
+        model = env['ir.model']._get(Model._name)
         model_desc = model.name or Model._description
         self.title = model_desc
         datas['ids'] = ids

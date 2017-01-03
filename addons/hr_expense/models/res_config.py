@@ -7,7 +7,7 @@ class HrExpenseConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     alias_prefix = fields.Char('Default Alias Name for Expenses')
-    alias_domain = fields.Char('Alias Domain', default=lambda self: self.env["ir.config_parameter"].get_param("mail.catchall.domain"))
+    alias_domain = fields.Char('Alias Domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
 
     @api.model
     def get_default_alias_prefix(self, fields):

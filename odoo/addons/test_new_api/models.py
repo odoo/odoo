@@ -227,7 +227,7 @@ class MixedModel(models.Model):
 
     @api.model
     def _reference_models(self):
-        models = self.env['ir.model'].search([('state', '!=', 'manual')])
+        models = self.env['ir.model'].sudo().search([('state', '!=', 'manual')])
         return [(model.model, model.name)
                 for model in models
                 if not model.model.startswith('ir.')]

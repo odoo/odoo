@@ -131,7 +131,7 @@ class Attendee(models.Model):
         """
         res = False
 
-        if self.env['ir.config_parameter'].get_param('calendar.block_mail') or self._context.get("no_mail_to_attendees"):
+        if self.env['ir.config_parameter'].sudo().get_param('calendar.block_mail') or self._context.get("no_mail_to_attendees"):
             return res
 
         calendar_view = self.env.ref('calendar.view_calendar_event_calendar')
@@ -152,7 +152,7 @@ class Attendee(models.Model):
             'color': colors,
             'action_id': self.env['ir.actions.act_window'].search([('view_id', '=', calendar_view.id)], limit=1).id,
             'dbname': self._cr.dbname,
-            'base_url': self.env['ir.config_parameter'].get_param('web.base.url', default='http://localhost:8069')
+            'base_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url', default='http://localhost:8069')
         })
         invitation_template = invitation_template.with_context(rendering_context)
 

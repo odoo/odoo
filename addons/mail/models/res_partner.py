@@ -65,7 +65,7 @@ class Partner(models.Model):
 
         model_name = False
         if message.model:
-            model_name = self.env['ir.model'].sudo().search([('model', '=', self.env[message.model]._name)]).name_get()[0][1]
+            model_name = self.env['ir.model']._get(message.model).display_name
 
         record_name = message.record_name
 

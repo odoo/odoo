@@ -17,7 +17,7 @@ class ResCompany(models.Model):
                 'name': new_company.name,
                 'currency_id': new_company.currency_id.id,
             })
-        field = self.env['ir.model.fields'].search([('model', '=', 'res.partner'), ('name', '=', 'property_product_pricelist')])
+        field = self.env['ir.model.fields']._get('res.partner', 'property_product_pricelist')
         self.env['ir.property'].create({
             'name': 'property_product_pricelist',
             'company_id': new_company.id,

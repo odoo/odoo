@@ -51,7 +51,7 @@ class link_tracker(models.Model):
     def convert_links(self, html, vals, blacklist=None):
         for match in re.findall(URL_REGEX, html):
 
-            short_schema = self.env['ir.config_parameter'].get_param('web.base.url') + '/r/'
+            short_schema = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
 
             href = match[0]
             long_url = match[1]
@@ -76,12 +76,12 @@ class link_tracker(models.Model):
     @api.one
     @api.depends('code')
     def _compute_short_url(self):
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         self.short_url = urljoin(base_url, '/r/%(code)s' % {'code': self.code})
 
     @api.one
     def _compute_short_url_host(self):
-        self.short_url_host = self.env['ir.config_parameter'].get_param('web.base.url') + '/r/'
+        self.short_url_host = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
 
     @api.one
     def _compute_code(self):

@@ -13,19 +13,19 @@ class BaseConfigSettings(models.TransientModel):
 
     @api.model
     def get_default_auth_signup_template_user_id(self, fields):
-        IrConfigParam = self.env['ir.config_parameter']
+        get_param = self.env['ir.config_parameter'].get_param
         # we use safe_eval on the result, since the value of the parameter is a nonempty string
         return {
-            'auth_signup_reset_password': safe_eval(IrConfigParam.get_param('auth_signup.reset_password', 'False')),
-            'auth_signup_uninvited': safe_eval(IrConfigParam.get_param('auth_signup.allow_uninvited', 'False')),
-            'auth_signup_template_user_id': safe_eval(IrConfigParam.get_param('auth_signup.template_user_id', 'False')),
+            'auth_signup_reset_password': safe_eval(get_param('auth_signup.reset_password', 'False')),
+            'auth_signup_uninvited': safe_eval(get_param('auth_signup.allow_uninvited', 'False')),
+            'auth_signup_template_user_id': safe_eval(get_param('auth_signup.template_user_id', 'False')),
         }
 
     @api.multi
     def set_auth_signup_template_user_id(self):
         self.ensure_one()
-        IrConfigParam = self.env['ir.config_parameter']
+        set_param = self.env['ir.config_parameter'].set_param
         # we store the repr of the values, since the value of the parameter is a required string
-        IrConfigParam.set_param('auth_signup.reset_password', repr(self.auth_signup_reset_password))
-        IrConfigParam.set_param('auth_signup.allow_uninvited', repr(self.auth_signup_uninvited))
-        IrConfigParam.set_param('auth_signup.template_user_id', repr(self.auth_signup_template_user_id.id))
+        set_param('auth_signup.reset_password', repr(self.auth_signup_reset_password))
+        set_param('auth_signup.allow_uninvited', repr(self.auth_signup_uninvited))
+        set_param('auth_signup.template_user_id', repr(self.auth_signup_template_user_id.id))

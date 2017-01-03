@@ -109,15 +109,15 @@ class IrUiMenu(models.Model):
 
         # process action menus, check whether their action is allowed
         access = self.env['ir.model.access']
-        model_fname = {
-            'ir.actions.act_window': 'res_model',
-            'ir.actions.report.xml': 'model',
-            'ir.actions.server': 'model_id',
+        MODEL_GETTER = {
+            'ir.actions.act_window': lambda action: action.res_model,
+            'ir.actions.report.xml': lambda action: action.model,
+            'ir.actions.server': lambda action: action.model_id.model,
         }
-        for menu in action_menus:
-            fname = model_fname.get(menu.action._name)
-            if not fname or not menu.action[fname] or \
-                    access.check(menu.action[fname], 'read', False):
+        for menu in action_menus.sudo():
+            get_model = MODEL_GETTER.get(menu.action._name)
+            if not get_model or not get_model(menu.action) or \
+                    access.check(get_model(menu.action), 'read', False):
                 # make menu visible, and its folder ancestors, too
                 visible += menu
                 menu = menu.parent_id

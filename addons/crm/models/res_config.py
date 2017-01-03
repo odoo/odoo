@@ -10,7 +10,7 @@ class CRMSettings(models.TransientModel):
     generate_sales_team_alias = fields.Boolean("Automatically generate an email alias at the sales team creation",
         help="Odoo will generate an email alias based on the sales team name")
     alias_prefix = fields.Char('Default Alias Name for Leads')
-    alias_domain = fields.Char('Alias Domain', default=lambda self: self.env["ir.config_parameter"].get_param("mail.catchall.domain"))
+    alias_domain = fields.Char('Alias Domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
     default_generate_lead_from_alias = fields.Boolean(default_model='sale.config.settings')
     group_use_lead = fields.Boolean(string="Leads", implied_group='crm.group_use_lead')
     module_crm_voip = fields.Boolean("Asterisk (VoIP)")

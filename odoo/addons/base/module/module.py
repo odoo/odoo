@@ -86,7 +86,7 @@ class ModuleCategory(models.Model):
     def _compute_xml_id(self):
         xml_ids = defaultdict(list)
         domain = [('model', '=', self._name), ('res_id', 'in', self.ids)]
-        for data in self.env['ir.model.data'].search_read(domain, ['module', 'name', 'res_id']):
+        for data in self.env['ir.model.data'].sudo().search_read(domain, ['module', 'name', 'res_id']):
             xml_ids[data['res_id']].append("%s.%s" % (data['module'], data['name']))
         for cat in self:
             cat.xml_id = xml_ids.get(cat.id, [''])[0]
@@ -194,7 +194,7 @@ class Module(models.Model):
             # then, search and group ir.model.data records
             imd_models = defaultdict(list)
             imd_domain = [('module', '=', module.name), ('model', 'in', tuple(dmodels))]
-            for data in IrModelData.search(imd_domain):
+            for data in IrModelData.sudo().search(imd_domain):
                 imd_models[data.model].append(data.res_id)
 
             def browse(model):
