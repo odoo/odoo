@@ -945,6 +945,7 @@ var SelectCreateListView = ListView.extend({
         this.popup.create_edit_record();
     },
     select_record: function(index) {
+        if (this.popup.options.readonly) return;
         this.popup.on_selected([this.dataset.ids[index]]);
         this.popup.close();
     },
@@ -1090,53 +1091,6 @@ var SelectCreateDialog = ViewDialog.extend({
     on_view_list_loaded: function() {},
 });
 
-var DomainEditorDialog = SelectCreateDialog.extend({
-    init: function(parent, options) {
-        options = _.defaults(options, {initial_facet: {
-            category: _t("Custom Filter"),
-            icon: 'fa-star',
-            field: {
-                get_context: function () { return options.context; },
-                get_groupby: function () { return []; },
-                get_domain: function () { return options.default_domain; },
-            },
-            values: [{label: _t("Selected domain"), value: null}],
-        }});
-
-        this._super(parent, options);
-    },
-
-    get_domain: function (selected_ids) {
-        var group_domain = [];
-        var domain;
-        if (this.$('.o_list_record_selector input').prop('checked')) {
-            if (this.view_list.grouped) {
-                group_domain = _.chain(_.values(this.view_list.groups.children))
-                                        .filter(function (child) { return child.records.length; })
-                                        .map(function (c) { return c.datagroup.domain;})
-                                        .value();
-                group_domain = _.flatten(group_domain, true);
-                group_domain = _.times(group_domain.length - 1, _.constant('|')).concat(group_domain);
-            }
-            var search_data = this.searchview.build_search_data();
-            domain = pyeval.sync_eval_domains_and_contexts({
-                domains: search_data.domains,
-                contexts: search_data.contexts,
-                group_by_seq: search_data.groupbys || []
-            }).domain;
-        }
-        else {
-            domain = [["id", "in", selected_ids]];
-        }
-        return this.dataset.domain.concat(group_domain).concat(domain || []);
-    },
-
-    on_view_list_loaded: function() {
-        this.$('.o_list_record_selector input').prop('checked', true);
-        this.$footer.find(".o_selectcreatepopup_search_select").prop('disabled', false);
-    },
-});
-
 return {
     // mixins
     FieldManagerMixin: FieldManagerMixin,
@@ -1156,7 +1110,6 @@ return {
     ViewDialog: ViewDialog,
     FormViewDialog: FormViewDialog,
     SelectCreateDialog: SelectCreateDialog,
-    DomainEditorDialog: DomainEditorDialog,
 };
 
 });

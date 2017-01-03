@@ -162,7 +162,7 @@
             <field name="period">once</field>
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
-            <field name="user_domain" eval="str([('groups_id', '=', ref('base.group_user'))])" />
+            <field name="user_domain" eval="str([('groups_id.id', '=', ref('base.group_user'))])" />
             <field name="state">inprogress</field>
             <field name="category">other</field>
         </record>
@@ -172,7 +172,7 @@
             <field name="period">once</field>
             <field name="visibility_mode">personal</field>
             <field name="report_message_frequency">never</field>
-            <field name="user_domain" eval="str([('groups_id', '=', ref('base.group_erp_manager'))])" />
+            <field name="user_domain" eval="str([('groups_id.id', '=', ref('base.group_erp_manager'))])" />
             <field name="state">inprogress</field>
             <field name="category">other</field>
         </record>
