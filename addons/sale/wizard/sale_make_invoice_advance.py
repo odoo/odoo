@@ -107,6 +107,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'sale_line_ids': [(6, 0, [so_line.id])],
                 'invoice_line_tax_ids': [(6, 0, tax_ids)],
                 'account_analytic_id': order.project_id.id or False,
+                'analytic_tag_ids': [(6, 0, so_line.analytic_tag_ids.ids)],
             })],
             'currency_id': order.pricelist_id.currency_id.id,
             'payment_term_id': order.payment_term_id.id,
@@ -149,6 +150,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     tax_ids = order.fiscal_position_id.map_tax(self.product_id.taxes_id).ids
                 else:
                     tax_ids = self.product_id.taxes_id.ids
+                analytic_tag_ids = []
+                if all([l.analytic_tag_ids for l in order.order_line]) and len(order.mapped('order_line').mapped('analytic_tag_ids')) == 1:
+                    analytic_tag_ids = order.mapped('order_line').mapped('analytic_tag_ids').ids
                 so_line = sale_line_obj.create({
                     'name': _('Advance: %s') % (time.strftime('%m %Y'),),
                     'price_unit': amount,
@@ -158,6 +162,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     'product_uom': self.product_id.uom_id.id,
                     'product_id': self.product_id.id,
                     'tax_id': [(6, 0, tax_ids)],
+                    'analytic_tag_ids': [(6, 0, analytic_tag_ids)],
                 })
                 self._create_invoice(order, so_line, amount)
         if self._context.get('open_invoices', False):
