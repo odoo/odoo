@@ -1705,7 +1705,8 @@ class calendar_event(osv.Model):
         for r in result:
             if r['user_id']:
                 user_id = type(r['user_id']) in (tuple, list) and r['user_id'][0] or r['user_id']
-                if user_id == uid:
+                partner_id = self.pool['res.users'].browse(cr, uid, uid, context).partner_id.id
+                if user_id == uid or partner_id in r.get("partner_ids", []):
                     continue
             if r['class'] == 'private':
                 for f in r.keys():
