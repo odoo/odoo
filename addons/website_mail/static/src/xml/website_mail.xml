@@ -38,7 +38,7 @@
                         <form class="o_website_mail_composer_form" t-attf-action="/website_mail/post/post" method="POST">
                             <input type="hidden" name="csrf_token" t-att-value="widget.options['csrf_token']"/>
                             <div class="mb32">
-                                <textarea rows="4" name="message" class="form-control" placeholder="Write a message..." style="width: 75%"></textarea>
+                                <textarea rows="4" name="message" class="form-control" placeholder="Write a message..."></textarea>
                                 <input type='hidden' name="res_model" t-att-value="widget.options['res_model']"/>
                                 <input type='hidden' name="res_id" t-att-value="widget.options['res_id']"/>
                                 <input type='hidden' name="token" t-att-value="widget.options['token']" t-if="widget.options['token']"/>

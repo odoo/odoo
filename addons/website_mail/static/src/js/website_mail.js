@@ -39,9 +39,9 @@ odoo.define('website_mail.thread', function(require) {
             });
             this.set('messages', []);
             this.set('message_count', this.options['message_count']);
-            this.set('current_page', this.options['pager_start']);
             this.set('pager', {});
             this.set('domain', this.options['domain']);
+            this._current_page = this.options['pager_start'];
         },
         willStart: function(){
             var self = this;
@@ -56,15 +56,15 @@ odoo.define('website_mail.thread', function(require) {
                 self.on("change:messages", self, self._renderMessages);
                 self.on("change:message_count", self, function(){
                     self._renderMessageCount();
-                    self.set('pager', self._pager(self.get('current_page')));
+                    self.set('pager', self._pager(self._current_page));
                 });
                 self.on("change:pager", self, self._renderPager);
                 self.on("change:domain", self, self._onChangeDomain);
-                self.on("change:current_page", self, self._onChangeCurrentPage);
                 // set options and parameters
                 self.options = _.extend(self.options, result['options'] || {});
                 self.set('message_count', self.options['message_count']);
                 self.set('messages', self.preprocessMessages(result['messages']));
+                return result;
             });
         },
 
@@ -108,6 +108,18 @@ odoo.define('website_mail.thread', function(require) {
         //--------------------------------------------------------------------------
 
         /**
+         * Change the current page by refreshing current domain
+         *
+         * @private
+         * @param {Number} page
+         * @param {Array} domain
+         */
+        _changeCurrentPage: function(page, domain){
+            this._current_page = page;
+            var d = domain ? domain : _.clone(this.get('domain'));
+            this.set('domain', d); // trigger fetch message
+        },
+        /**
          * @private
          * @returns {Deferred}
          */
@@ -120,7 +132,7 @@ odoo.define('website_mail.thread', function(require) {
                 'res_model': this.options['res_model'],
                 'res_id': this.options['res_id'],
                 'limit': this.options['pager_step'],
-                'offset': (this.get('current_page')-1) * this.options['pager_step'],
+                'offset': (this._current_page-1) * this.options['pager_step'],
                 'allow_composer': this.options['allow_composer'],
             };
             // add fields to allow to post comment without being logged
@@ -133,10 +145,7 @@ odoo.define('website_mail.thread', function(require) {
             if(this.get('domain')){
                 data['domain'] = this.get('domain');
             }
-            return ajax.jsonRpc('/website_mail/fetch', 'call', data).then(function(result){
-                self.set('messages', self.preprocessMessages(result['messages']));
-                self.set('message_count', result['message_count']);
-            });
+            return data;
         },
         /**
          * Generate the pager data for the given page number
@@ -196,15 +205,12 @@ odoo.define('website_mail.thread', function(require) {
         // Handlers
         //--------------------------------------------------------------------------
 
-        _onChangeCurrentPage: function(){
+        _onChangeDomain: function(){
             var self = this;
             this.messageFetch().then(function(){
                 var p = self.get('current_page');
                 self.set('pager', self._pager(p));
             });
-        },
-        _onChangeDomain: function(){
-            this.set('current_page', 1);
         },
         /**
          * @private
@@ -213,9 +219,8 @@ odoo.define('website_mail.thread', function(require) {
         _onClickPager: function(ev){
             ev.preventDefault();
             var page = $(ev.currentTarget).data('page');
-            this.set('current_page', page);
+            this._changeCurrentPage(page);
         },
-
     });
 
     web_editor_base.ready().then(function(){
