@@ -10,6 +10,7 @@ var dom_utils = require('web.dom_utils');
 var Priority = require('web.Priority');
 var ProgressBar = require('web.ProgressBar');
 var Dialog = require('web.Dialog');
+var DomainSelector = require("web.DomainSelector");
 var common = require('web.form_common');
 var formats = require('web.formats');
 var framework = require('web.framework');
@@ -383,87 +384,112 @@ var FieldFloat = FieldChar.extend({
         }
         if (this.digits !== undefined && this.digits.length === 2) {
             value_ = utils.round_decimals(value_, this.digits[1]);
-        }        
+        }
         this._super(value_);
     }
 });
 
-var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin, {
-    template: "FieldCharDomain",
+/// The "Domain" field allows the user to construct a technical-prefix domain thanks to
+/// a tree-like interface and see the selected records in real time.
+/// In debug mode, an input is also there to be able to enter the prefix char domain
+/// directly (or to build advanced domains the tree-like interface does not allow to).
+var FieldDomain = common.AbstractField.extend(common.ReinitializeFieldMixin).extend({
+    template: "FieldDomain",
     events: {
-        'click button': 'on_click',
-        'change .o_debug_input': function(e) {
-            this.set('value', $(e.target).val());
-        }
+        "click .o_domain_show_selection_button": function (e) {
+            e.preventDefault();
+            this._showSelection();
+        },
     },
-    init: function() {
+    custom_events: {
+        "domain_changed": function (e) {
+            this.set_value(this.domainSelector.getDomain(), true);
+        },
+    },
+    init: function () {
         this._super.apply(this, arguments);
+
+        this.valid = true;
         this.debug = session.debug;
+        this.options = _.defaults(this.options || {}, {
+            model: undefined, // this option is mandatory !
+            fs_filters: {}, // Field selector filters (to only show a subset of available fields @see FieldSelector)
+        });
     },
     start: function() {
-        var self = this;
-        var tmp = this._super();
-        if (this.options.model_field){
-            this.field_manager.fields[this.options.model_field].on("change:value", this, function(){
-                if (self.view && self.view.record_loaded.state == "resolved" && self.view.onchanges_mutex){
-                    self.view.onchanges_mutex.def.then(function(){
-                        self.render_value();
-                    });
-                }
-            });
+        this.model = _get_model.call(this); // TODO get the model another way ?
+        this.field_manager.on("view_content_has_changed", this, function () {
+            var currentModel = this.model;
+            this.model = _get_model.call(this);
+            if (currentModel !== this.model) {
+                this.render_value();
+            }
+        });
+
+        return this._super.apply(this, arguments);
+
+        function _get_model() {
+            if (this.field_manager.fields[this.options.model]) {
+                return this.field_manager.get_field_value(this.options.model);
+            }
+            return this.options.model;
         }
-        return tmp;
+    },
+    initialize_content: function () {
+        this._super.apply(this, arguments);
+        this.$recordsCountDisplay = this.$(".o_domain_records_count");
+        this.$showSelectionButton = this.$(".o_domain_show_selection_button");
+        this.$errorMessage = this.$(".o_domain_error_message");
+    },
+    set_value: function (value, noDomainSelectorRender) {
+        this._noDomainSelectorRender = !!noDomainSelectorRender;
+        this._super.apply(this, arguments);
+        this._noDomainSelectorRender = false;
     },
     render_value: function() {
-        var self = this;
+        this._super.apply(this, arguments);
 
-        if (this.get('value')) {
-            var model = this.options.model || this.field_manager.get_field_value(this.options.model_field);
-            try{
-                var domain = pyeval.eval('domain', this.get('value'));
+        var domain = pyeval.eval("domain", this.get("value") || "[]");
+
+        // Recreate domain widget with new domain value
+        if (!this._noDomainSelectorRender) {
+            if (this.domainSelector) {
+                this.domainSelector.destroy();
             }
-            catch(e){
-                this.do_warn(_t('Error: Bad domain'), _t('The domain is wrong.'));
-                return;
-            }
-            var ds = new data.DataSetStatic(self, model, self.build_context());
-            ds.call('search_count', [domain]).then(function (results) {
-                self.$('.o_count').text(results + _t(' selected records'));
-                if (self.get('effective_readonly')) {
-                    self.$('button').text(_t('See selection '));
-                }
-                else {
-                    self.$('button').text(_t('Change selection '));
-                }
-                self.$('button').append($("<span/>").addClass('fa fa-arrow-right'));
+            this.domainSelector = new DomainSelector(this, this.model, domain, {
+                readonly: this.get("effective_readonly"),
+                fs_filters: this.options.fs_filters,
+                debugMode: session.debug,
             });
-
-            if(this.debug) {
-                this.$('.o_debug_input').val(this.get('value'));
-            }
-        } else {
-            this.$('.o_form_input').val('');
-            this.$('.o_count').text(_t('No selected record'));
-            var $arrow = this.$('button span').detach();
-            this.$('button').text(_t('Select records ')).append($("<span/>").addClass('fa fa-arrow-right'));
+            this.domainSelector.prependTo(this.$el);
         }
-    },
-    on_click: function(event) {
-        event.preventDefault();
 
-        var self = this;
-        var dialog = new common.DomainEditorDialog(this, {
-            res_model: this.options.model || this.field_manager.get_field_value(this.options.model_field),
-            default_domain: this.get('value'),
-            title: this.get('effective_readonly') ? _t('Selected records') : _t('Select records...'),
-            readonly: this.get('effective_readonly'),
-            disable_multiple_selection: this.get('effective_readonly'),
-            no_create: this.get('effective_readonly'),
-            on_selected: function(selected_ids) {
-                if (!self.get('effective_readonly')) {
-                    self.set_value(dialog.get_domain(selected_ids));
-                }
-            }
+        // Show number of selected records
+        new Model(this.model).call("search_count", [domain], {
+            context: this.build_context(),
+        }).then((function (data) {
+            this.valid = true;
+            return data;
+        }).bind(this), (function (error, e) {
+            e.preventDefault();
+            this.valid = false;
+        }).bind(this)).always((function (data) {
+            this.$recordsCountDisplay.text(data || 0);
+            this.$showSelectionButton.toggleClass("hidden", !this.valid);
+            this.$errorMessage.toggleClass("hidden", this.valid);
+        }).bind(this));
+    },
+    is_syntax_valid: function() {
+        return this.field_manager.get("actual_mode") === "view" || this.valid;
+    },
+    _showSelection: function() {
+        return new common.SelectCreateDialog(this, {
+            title: _t("Selected records"),
+            res_model: this.model,
+            domain: this.get("value"),
+            no_create: true,
+            readonly: true,
+            disable_multiple_selection: true,
         }).open();
     },
 });
@@ -1315,7 +1341,7 @@ var FieldStatus = common.AbstractField.extend({
     render_value: function() {
         var self = this;
         var content = QWeb.render("FieldStatus.content", {
-            'widget': self, 
+            'widget': self,
             'value_folded': _.find(self.selection.folded, function(i){return i[0] === self.get('value');})
         });
         self.$el.html(content);
@@ -1506,7 +1532,7 @@ var FieldMonetary = FieldFloat.extend({
 
 /**
     This widget is intended to be used on stat button numeric fields.  It will display
-    the value   many2many and one2many. It is a read-only field that will 
+    the value   many2many and one2many. It is a read-only field that will
     display a simple string "<value of field> <label of the field>"
 */
 var StatInfo = common.AbstractField.extend({
@@ -1684,7 +1710,7 @@ core.form_widget_registry
     .add('email', FieldEmail)
     .add('url', FieldUrl)
     .add('text',FieldText)
-    .add('char_domain', FieldCharDomain)
+    .add('domain', FieldDomain)
     .add('date', FieldDate)
     .add('datetime', FieldDatetime)
     .add('selection', FieldSelection)
