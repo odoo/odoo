@@ -5,7 +5,7 @@
     'name': 'Calendar',
     'version': '1.0',
     'sequence': 130,
-    'depends': ['base', 'mail', 'base_action_rule', 'web_calendar'],
+    'depends': ['base', 'mail', 'web_calendar'],
     'summary': 'Personal & Shared Calendar',
     'description': """
 This is a full-featured calendar system.

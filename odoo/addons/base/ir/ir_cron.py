@@ -10,16 +10,12 @@ from dateutil.relativedelta import relativedelta
 
 import odoo
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
-from odoo.tools.safe_eval import safe_eval
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
 BASE_VERSION = odoo.modules.load_information_from_description_file('base')['version']
 
-
-def str2tuple(s):
-    return safe_eval('tuple(%s)' % (s or ''))
 
 _intervalTypes = {
     'days': lambda interval: relativedelta(days=interval),
@@ -40,9 +36,12 @@ class ir_cron(models.Model):
     # See also odoo.cron
 
     _name = "ir.cron"
-    _order = 'name'
+    _order = 'cron_name'
 
-    name = fields.Char(required=True)
+    ir_actions_server_id = fields.Many2one(
+        'ir.actions.server', 'Server action',
+        delegate=True, ondelete='restrict', required=True)
+    cron_name = fields.Char('Name', related='ir_actions_server_id.name', store=True)
     user_id = fields.Many2one('res.users', string='User', default=lambda self: self.env.user, required=True)
     active = fields.Boolean(default=True)
     interval_number = fields.Integer(default=1, help="Repeat every x.")
@@ -54,77 +53,50 @@ class ir_cron(models.Model):
     numbercall = fields.Integer(string='Number of Calls', default=1, help='How many times the method is called,\na negative number indicates no limit.')
     doall = fields.Boolean(string='Repeat Missed', help="Specify if missed occurrences should be executed when the server restarts.")
     nextcall = fields.Datetime(string='Next Execution Date', required=True, default=fields.Datetime.now, help="Next planned execution date for this job.")
-    model = fields.Char(string='Object', help="Model name on which the method to be called is located, e.g. 'res.partner'.")
-    function = fields.Char(string='Method', help="Name of the method to be called when this job is processed.")
-    args = fields.Text(string='Arguments', help="Arguments to be passed to the method, e.g. (uid,).")
     priority = fields.Integer(default=5, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
 
-    @api.constrains('args')
-    def _check_args(self):
-        try:
-            for this in self:
-                str2tuple(this.args)
-        except Exception:
-            raise ValidationError(_('Invalid arguments'))
+    @api.model
+    def create(self, values):
+        values['usage'] = 'ir_cron'
+        return super(ir_cron, self).create(values)
 
     @api.multi
     def method_direct_trigger(self):
         for cron in self:
-            self.sudo(user=cron.user_id.id)._callback(cron.model, cron.function, cron.args, cron.id)
+            self.sudo(user=cron.user_id.id).ir_actions_server_id.run()
         return True
 
     @api.model
-    def _handle_callback_exception(self, model_name, method_name, args, job_id, job_exception):
+    def _handle_callback_exception(self, cron_name, server_action_id, job_id, job_exception):
         """ Method called when an exception is raised by a job.
 
-        Simply logs the exception and rollback the transaction.
-
-        :param model_name: model name on which the job method is located.
-        :param method_name: name of the method to call when this job is processed.
-        :param args: arguments of the method (without the usual self, cr, uid).
-        :param job_id: job id.
-        :param job_exception: exception raised by the job.
-
-        """
+        Simply logs the exception and rollback the transaction. """
         self._cr.rollback()
-        _logger.exception("Call of self.env[%r].%s(*%r) failed in Job %s",
-                          model_name, method_name, args, job_id)
+        _logger.exception("Call from cron %s for server action %d failed in Job %s",
+                          cron_name, server_action_id, job_id)
 
     @api.model
-    def _callback(self, model_name, method_name, args, job_id):
-        """ Run the method associated to a given job
-
-        It takes care of logging and exception handling.
-
-        :param model_name: model name on which the job method is located.
-        :param method_name: name of the method to call when this job is processed.
-        :param args: arguments of the method (without the usual self, cr, uid).
-        :param job_id: job id.
-        """
+    def _callback(self, cron_name, server_action_id, job_id):
+        """ Run the method associated to a given job. It takes care of logging
+        and exception handling. Note that the user running the server action
+        is the user calling this method. """
         try:
-            args = str2tuple(args)
             if self.pool != self.pool.check_signaling():
                 # the registry has changed, reload self in the new registry
                 self.env.reset()
                 self = self.env()[self._name]
-            if model_name in self.env:
-                model = self.env[model_name]
-                if hasattr(model, method_name):
-                    log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
-                    odoo.netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (self._cr.dbname, self._uid, '*', model_name, method_name)+tuple(args), depth=log_depth)
-                    if _logger.isEnabledFor(logging.DEBUG):
-                        start_time = time.time()
-                    getattr(model, method_name)(*args)
-                    if _logger.isEnabledFor(logging.DEBUG):
-                        end_time = time.time()
-                        _logger.debug('%.3fs (%s, %s)', end_time - start_time, model_name, method_name)
-                    self.pool.signal_caches_change()
-                else:
-                    _logger.warning("Method '%s.%s' does not exist.", model_name, method_name)
-            else:
-                _logger.warning("Model %r does not exist.", model_name)
+
+            log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
+            odoo.netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (self._cr.dbname, self._uid, '*', cron_name, server_action_id), depth=log_depth)
+            if _logger.isEnabledFor(logging.DEBUG):
+                start_time = time.time()
+            self.env['ir.actions.server'].browse(server_action_id).run()
+            if _logger.isEnabledFor(logging.DEBUG):
+                end_time = time.time()
+                _logger.debug('%.3fs (cron %s, server action %d with uid %d)', end_time - start_time, cron_name, server_action_id, self.env.uid)
+            self.pool.signal_caches_change()
         except Exception, e:
-            self._handle_callback_exception(model_name, method_name, args, job_id, e)
+            self._handle_callback_exception(cron_name, server_action_id, job_id, e)
 
     @classmethod
     def _process_job(cls, job_cr, job, cron_cr):
@@ -151,7 +123,7 @@ class ir_cron(models.Model):
                     if numbercall > 0:
                         numbercall -= 1
                     if not ok or job['doall']:
-                        cron._callback(job['model'], job['function'], job['args'], job['id'])
+                        cron._callback(job['cron_name'], job['ir_actions_server_id'], job['id'])
                     if numbercall:
                         nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
                     ok = True
@@ -168,7 +140,7 @@ class ir_cron(models.Model):
 
     @classmethod
     def _acquire_job(cls, db_name):
-        # TODO remove 'check' argument from addons/base_action_rule/base_action_rule.py
+        # TODO remove 'check' argument from addons/base_automation/base_automation.py
         """ Try to process one cron job.
 
         This selects in database all the jobs that should be processed. It then
@@ -223,10 +195,10 @@ class ir_cron(models.Model):
 
                 locked_job = lock_cr.fetchone()
                 if not locked_job:
-                    _logger.debug("Job `%s` already executed by another process/thread. skipping it", job['name'])
+                    _logger.debug("Job `%s` already executed by another process/thread. skipping it", job['cron_name'])
                     continue
                 # Got the lock on the job row, run its code
-                _logger.debug('Starting job `%s`.', job['name'])
+                _logger.debug('Starting job `%s`.', job['cron_name'])
                 job_cr = db.cursor()
                 try:
                     registry = odoo.registry(db_name)
@@ -239,7 +211,7 @@ class ir_cron(models.Model):
             except psycopg2.OperationalError, e:
                 if e.pgcode == '55P03':
                     # Class 55: Object not in prerequisite state; 55P03: lock_not_available
-                    _logger.debug('Another process/thread is already busy executing job `%s`, skipping it.', job['name'])
+                    _logger.debug('Another process/thread is already busy executing job `%s`, skipping it.', job['cron_name'])
                     continue
                 else:
                     # Unexpected OperationalError

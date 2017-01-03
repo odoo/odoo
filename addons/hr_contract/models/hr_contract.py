@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date
+from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
@@ -83,13 +86,28 @@ class Contract(models.Model):
         if self.filtered(lambda c: c.date_end and c.date_start > c.date_end):
             raise ValidationError(_('Contract start date must be less than contract end date.'))
 
-    @api.multi
-    def set_as_pending(self):
-        return self.write({'state': 'pending'})
+    @api.model
+    def update_to_pending(self):
+        soon_expired_contracts = self.search([
+            ('state', '=', 'open'),
+            '|',
+            ('date_end', '>=', fields.Date.to_string(date.today() + relativedelta(days=-7))),
+            ('visa_expire', '>=', fields.Date.to_string(date.today() + relativedelta(days=-60)))
+        ])
+        return soon_expired_contracts.write({
+            'state': 'pending'
+        })
 
-    @api.multi
-    def set_as_close(self):
-        return self.write({'state': 'close'})
+    @api.model
+    def update_to_close(self):
+        expired_contracts = self.search([
+            '|',
+            ('date_end', '>=', fields.Date.to_string(date.today() + relativedelta(days=1))),
+            ('visa_expire', '>=', fields.Date.to_string(date.today() + relativedelta(days=1)))
+        ])
+        return expired_contracts.write({
+            'state': 'close'
+        })
 
     @api.multi
     def _track_subtype(self, init_values):

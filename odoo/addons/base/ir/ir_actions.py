@@ -24,7 +24,6 @@ class IrActions(models.Model):
 
     name = fields.Char(required=True)
     type = fields.Char(string='Action Type', required=True)
-    usage = fields.Char(string='Action Usage')
     xml_id = fields.Char(compute='_compute_xml_id', string="External ID")
     help = fields.Html(string='Action Description',
                        help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
@@ -444,9 +443,9 @@ class IrActionsServer(models.Model):
     DEFAULT_PYTHON_CODE = """# Available variables:
 #  - time, datetime, dateutil, timezone: Python libraries
 #  - env: Odoo Environement
-#  - model: Model of the record on which the action is triggered
-#  - record: Record on which the action is triggered if there is one, otherwise None
-#  - records: Records on which the action is triggered if there is one, otherwise None
+#  - model: Odoo Model of the record on which the action is triggered; is a void recordset
+#  - record: record set of the current record on which the action is triggered; may be be void
+#  - records: record set of all records on which the action is triggered; may be void
 #  - log : log(message), function to log debug information in logging table
 #  - Warning: Warning Exception to use with raise
 # To return an action, assign: action = {...}\n\n\n\n"""
@@ -456,47 +455,35 @@ class IrActionsServer(models.Model):
         records = self.env['ir.model'].search([])
         return [(record.model, record.name) for record in records] + [('', '')]
 
-    @api.model
-    def _get_states(self):
-        """ Override me in order to add new states in the server action. Please
-        note that the added key length should not be higher than already-existing
-        ones. """
-        return [('code', 'Execute Python Code'),
-                ('client_action', 'Run a Client Action'),
-                ('object_create', 'Create or Copy a new Record'),
-                ('object_write', 'Write on a Record'),
-                ('multi', 'Execute several actions')]
-
     name = fields.Char(string='Action Name', translate=True)
     type = fields.Char(default='ir.actions.server')
-
-    condition = fields.Char(default="True", groups='base.group_system',
-                            help="Condition verified before executing the server action. If it "
-                                 "is not verified, the action will not be executed. The condition is "
-                                 "a Python expression, like 'record.list_price > 5000'. A void "
-                                 "condition is considered as always True. Help about python expression "
-                                 "is given in the help tab.")
-    state = fields.Selection(selection=lambda self: self._get_states(),
-                             string='Action To Do', default='code', required=True,
-                             help="Type of server action. The following values are available:\n"
-                                  "- 'Execute Python Code': a block of python code that will be executed\n"
-                                  "- 'Run a Client Action': choose a client action to launch\n"
-                                  "- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
-                                  "- 'Write on a Record': update the values of a record\n"
-                                  "- 'Execute several actions': define an action that triggers several other server actions\n"
-                                  "- 'Send Email': automatically send an email (available in email_template)")
+    usage = fields.Selection([
+        ('ir_actions_server', 'Server Action'),
+        ('ir_cron', 'Scheduled Action')], string='Usage',
+        default='ir_actions_server', required=True)
+    state = fields.Selection([
+        ('code', 'Execute Python Code'),
+        ('object_create', 'Create a new Record'),
+        ('object_write', 'Update the Record'),
+        ('multi', 'Execute several actions')], string='Action To Do',
+        default='code', required=True,  # set default to write ?
+        help="Type of server action. The following values are available:\n"
+             "- 'Execute Python Code': a block of python code that will be executed\n"
+             "- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
+             "- 'Write on a Record': update the values of a record\n"
+             "- 'Execute several actions': define an action that triggers several other server actions\n"
+             "- 'Add Followers': add followers to a record (available in Discuss)\n"
+             "- 'Send Email': automatically send an email (available in email_template)")
     # Generic
     sequence = fields.Integer(default=5,
                               help="When dealing with multiple actions, the execution order is "
                                    "based on the sequence. Low number means high priority.")
     model_id = fields.Many2one('ir.model', string='Base Model', required=True, ondelete='cascade',
                                help="Base model on which the server action runs.")
-    model_name = fields.Char(related='model_id.model', readonly=True)
-    menu_ir_values_id = fields.Many2one('ir.values', string='More Menu entry', readonly=True,
-                                        help='More menu entry.', copy=False)
-    # Client Action
-    action_id = fields.Many2one('ir.actions.actions', string='Client Action',
-                                help="Select the client action that has to be executed.")
+    model_name = fields.Char(related='model_id.model', readonly=True, store=True)
+    menu_ir_values_id = fields.Many2one('ir.values', string='Action on Object',
+                                        copy=False, readonly=True,
+                                        help='IrValues entry of the related more menu entry action')
     # Python code
     code = fields.Text(string='Python Code', groups='base.group_system',
                        default=DEFAULT_PYTHON_CODE,
@@ -505,78 +492,14 @@ class IrActionsServer(models.Model):
     # Multi
     child_ids = fields.Many2many('ir.actions.server', 'rel_server_actions', 'server_id', 'action_id',
                                  string='Child Actions', help='Child server actions that will be executed. Note that the last return returned action value will be used as global return value.')
-    # Create/Copy/Write
-    use_create = fields.Selection([('new', 'Create a new record in the Base Model'),
-                                   ('new_other', 'Create a new record in another model'),
-                                   ('copy_current', 'Copy the current record'),
-                                   ('copy_other', 'Choose and copy a record in the database')],
-                                  string="Creation Policy", default='new', required=True)
+    # Create
     crud_model_id = fields.Many2one('ir.model', string='Create/Write Target Model',
                                     oldname='srcmodel_id', help="Model for record creation / update. Set this field only to specify a different model than the base model.")
-    crud_model_name = fields.Char(string='Create/Write Target Model Name', related='crud_model_id.model', store=True, readonly=True)
-    ref_object = fields.Reference(string='Reference record', selection='_select_objects', oldname='copy_object')
-    link_new_record = fields.Boolean(string='Attach the new record',
-                                     help="Check this if you want to link the newly-created record "
-                                          "to the current record on which the server action runs.")
+    crud_model_name = fields.Char(related='crud_model_id.name', readonly=True)
     link_field_id = fields.Many2one('ir.model.fields', string='Link using field',
-                                    oldname='record_id', help="Provide the field where the record id is stored after the operations.")
-    use_write = fields.Selection([('current', 'Update the current record'),
-                                  ('expression', 'Update a record linked to the current record using python'),
-                                  ('other', 'Choose and Update a record in the database')],
-                                 string='Update Policy', default='current', required=True)
-    write_expression = fields.Char(string='Expression', oldname='write_id',
-                                   help="Provide an expression that, applied on the current record, gives the field to update.")
+                                    help="Provide the field used to link the newly created record"
+                                         "on the record on used by the server action.")
     fields_lines = fields.One2many('ir.server.object.lines', 'server_id', string='Value Mapping', copy=True)
-
-    # Fake fields used to implement the placeholder assistant
-    model_object_field = fields.Many2one('ir.model.fields', string="Field",
-                                         help="Select target field from the related document model.\n"
-                                              "If it is a relationship field you will be able to select "
-                                              "a target field at the destination of the relationship.")
-    sub_object = fields.Many2one('ir.model', string='Sub-model', readonly=True,
-                                 help="fWhen a relationship field is selected as first field, "
-                                      "this field shows the document model the relationship goes to.")
-    sub_model_object_field = fields.Many2one('ir.model.fields', string='Sub-field',
-                                             help="When a relationship field is selected as first field, "
-                                                  "this field lets you select the target field within the "
-                                                  "destination document model (sub-model).")
-    copyvalue = fields.Char(string='Placeholder Expression', help="Final placeholder expression, to be copy-pasted in the desired template field.")
-    # Fake fields used to implement the ID finding assistant
-    id_object = fields.Reference(string='Record', selection='_select_objects')
-    id_value = fields.Char(string='Record ID')
-
-    def _check_expression(self, expression, model):
-        """ Check python expression (condition, write_expression). Each step of
-        the path must be a valid many2one field, or an integer field for the last
-        step.
-
-        :param str expression: a python expression, beginning by 'obj' or 'object'
-        :param model: a record of the model 'ir.model'
-        :returns tuple: (is_valid, target_model_name, error_msg)
-        """
-        if not model:
-            return (False, None, 'Your expression cannot be validated because the Base Model is not set.')
-        # fetch current model
-        model_name = model.model
-        # transform expression into a path that should look like 'object.many2onefield.many2onefield'
-        path = expression.split('.')
-        initial = path.pop(0)
-        if initial not in ['obj', 'object', 'record']:
-            return (False, None, 'Your expression should begin with obj, object, record.\nAn expression builder is available in the help tab.')
-        # analyze path
-        while path:
-            step = path.pop(0)
-            field = self.env[model_name]._fields.get(step)
-            if not field:
-                return (False, None, 'Part of the expression (%s) is not recognized as a column in the model %s.' % (step, model_name))
-            ftype = field.type
-            if ftype not in ['many2one', 'int']:
-                return (False, None, 'Part of the expression (%s) is not a valid column type (is %s, should be a many2one or an int)' % (step, ftype))
-            if ftype == 'int' and path:
-                return (False, None, 'Part of the expression (%s) is an integer field that is only allowed at the end of an expression' % (step))
-            if ftype == 'many2one':
-                model_name = field.comodel_name
-        return (True, model_name, None)
 
     @api.constrains('code')
     def _check_python_code(self):
@@ -585,142 +508,19 @@ class IrActionsServer(models.Model):
             if msg:
                 raise ValidationError(msg)
 
-    @api.constrains('write_expression', 'model_id')
-    def _check_write_expression(self):
-        for record in self:
-            if record.write_expression and record.model_id:
-                correct, model_name, message = self._check_expression(record.write_expression, record.model_id)
-                if not correct:
-                    _logger.warning('Invalid expression: %s' % message)
-                    raise ValidationError(_('Incorrect Write Record Expression'))
-
     @api.constrains('child_ids')
     def _check_recursion(self):
         if not self._check_m2m_recursion('child_ids'):
             raise ValidationError(_('Recursion found in child server actions'))
 
-    @api.onchange('model_id')
-    def _onchange_model_id(self):
-        """ When changing the action base model, reset crud config
-        to ease value coherence. """
-        self.use_create = 'new'
-        self.use_write = 'current'
-        self.crud_model_id = self.model_id
-
-    @api.onchange('use_create', 'use_write', 'ref_object')
-    def _onchange_crud_config(self):
-        """ Wrapper on CRUD-type (create or write) on_change """
-        if self.state == 'object_create':
-            self._onchange_create_config()
-        elif self.state == 'object_write':
-            self._onchange_write_config()
-
-    def _onchange_create_config(self):
-        """ When changing the object_create type configuration:
-
-         - `new` and `copy_current`: crud_model_id is the same as base model
-         - `new_other`: user choose crud_model_id
-         - `copy_other`: disassemble the reference object to have its model
-         - if the target model has changed, then reset the link field that is
-           probably not correct anymore
-        """
-        crud_model_id = self.crud_model_id
-
-        if self.use_create == 'new':
-            self.crud_model_id = self.model_id
-        elif self.use_create == 'new_other':
-            pass
-        elif self.use_create == 'copy_current':
-            self.crud_model_id = self.model_id
-        elif self.use_create == 'copy_other' and self.ref_object:
-            ref_model = self.ref_object._name
-            self.crud_model_id = self.env['ir.model'].search([('model', '=', ref_model)])
-
-        if self.crud_model_id != crud_model_id:
-            self.link_field_id = False
-
-    def _onchange_write_config(self):
-        """ When changing the object_write type configuration:
-
-         - `current`: crud_model_id is the same as base model
-         - `other`: disassemble the reference object to have its model
-         - `expression`: has its own on_change, nothing special here
-        """
-        crud_model_id = self.crud_model_id
-
-        if self.use_write == 'current':
-            self.crud_model_id = self.model_id
-        elif self.use_write == 'other' and self.ref_object:
-            ref_model = self.ref_object._name
-            self.crud_model_id = self.env['ir.model'].search([('model', '=', ref_model)])
-        elif self.use_write == 'expression':
-            pass
-
-        if self.crud_model_id != crud_model_id:
-            self.link_field_id = False
-
     @api.onchange('crud_model_id')
     def _onchange_crud_model_id(self):
-        """ When changing the CRUD model, update its stored name also """
         self.link_field_id = False
+        self.crud_model_name = self.crud_model_id.model
 
-    @api.onchange('write_expression')
-    def _onchange_write_expression(self):
-        """ Check the write_expression and update crud_model_id accordingly """
-        values = {}
-        if self.write_expression:
-            valid, model_name, message = self._check_expression(self.write_expression, self.model_id)
-        else:
-            valid, model_name, message = True, None, False
-            if self.model_id:
-                model_name = self.model_id.model
-        if not valid:
-            return {
-                'warning': {
-                    'title': _('Incorrect expression'),
-                    'message': message or _('Invalid expression'),
-                }
-            }
-        if model_name:
-            self.crud_model_id = self.env['ir.model'].search([('model', '=', model_name)])
-
-    def _build_expression(self, field_name, sub_field_name):
-        """ Returns a placeholder expression for use in a template field,
-        based on the values provided in the placeholder assistant.
-
-        :param field_name: main field name
-        :param sub_field_name: sub field name (M2O)
-        :return: final placeholder expression
-        """
-        expression = ''
-        if field_name:
-            expression = "object." + field_name
-            if sub_field_name:
-                expression += "." + sub_field_name
-        return expression
-
-    @api.onchange('model_object_field', 'sub_model_object_field')
-    def _onchange_model_object_field(self):
-        field = self.model_object_field
-        sub_field = self.sub_model_object_field
-
-        self.sub_object = False
-        self.sub_model_object_field = False
-        self.copyvalue = False
-
-        if field:
-            if field.ttype in ['many2one', 'one2many', 'many2many']:
-                comodel = self.env['ir.model'].search([('model', '=', field.relation)])
-                if comodel:
-                    self.sub_object = comodel
-                    self.copyvalue = self._build_expression(field.name, sub_field.name)
-                    self.sub_model_object_field = sub_field
-            else:
-                self.copyvalue = self._build_expression(field.name, False)
-
-    @api.onchange('id_object')
-    def _onchange_id_object(self):
-        self.id_value = self.id_object.id if self.id_object else False
+    @api.onchange('model_id')
+    def _onchange_model_id(self):
+        self.model_name = self.model_id.model
 
     @api.multi
     def create_action(self):
@@ -746,13 +546,6 @@ class IrActionsServer(models.Model):
                 except Exception:
                     raise UserError(_('Deletion of the action record failed.'))
         return True
-
-    @api.model
-    def run_action_client_action(self, action, eval_context=None):
-        if not action.action_id:
-            raise UserError(_("Please specify an action to launch!"))
-        record = self.env[action.action_id.type].browse(action.action_id.id)
-        return record.read()[0]
 
     @api.model
     def run_action_code_multi(self, action, eval_context=None):
@@ -784,21 +577,7 @@ class IrActionsServer(models.Model):
         for exp in action.fields_lines:
             res[exp.col1.name] = exp.eval_value(eval_context=eval_context)[exp.id]
 
-        if action.use_write == 'current':
-            model = action.model_id.model
-            ref_id = self._context.get('active_id')
-        elif action.use_write == 'other':
-            model = action.crud_model_id.model
-            ref_id = action.ref_object.id
-        elif action.use_write == 'expression':
-            model = action.crud_model_id.model
-            ref = safe_eval(action.write_expression, eval_context)
-            if isinstance(ref, models.BaseModel):
-                ref_id = ref.id
-            else:
-                ref_id = int(ref)
-
-        self.env[model].browse(ref_id).write(res)
+        self.env[action.model_id.model].browse(self._context.get('active_id')).write(res)
 
     @api.model
     def run_action_object_create(self, action, eval_context=None):
@@ -817,27 +596,16 @@ class IrActionsServer(models.Model):
         for exp in action.fields_lines:
             res[exp.col1.name] = exp.eval_value(eval_context=eval_context)[exp.id]
 
-        if action.use_create in ['new', 'copy_current']:
-            model = action.model_id.model
-        elif action.use_create in ['new_other', 'copy_other']:
-            model = action.crud_model_id.model
+        res = self.env[action.crud_model_id.model].create(res)
 
-        if action.use_create == 'copy_current':
-            ref_id = self._context.get('active_id')
-            res = self.env[model].browse(ref_id).copy(res)
-        elif action.use_create == 'copy_other':
-            res = action.ref_object.copy(res)
-        else:
-            res = self.env[model].create(res)
-
-        if action.link_new_record and action.link_field_id:
+        if action.link_field_id:
             record = self.env[action.model_id.model].browse(self._context.get('active_id'))
             record.write({action.link_field_id.name: res.id})
 
     @api.model
     def _get_eval_context(self, action=None):
         """ Prepare the context used when evaluating python code, like the
-        condition or code server actions.
+        python formulas or code server actions.
 
         :param action: the current server action
         :type action: browse record
@@ -874,10 +642,9 @@ class IrActionsServer(models.Model):
 
     @api.multi
     def run(self):
-        """ Runs the server action. For each server action, the condition is
-        checked. Note that a void (``False``) condition is considered as always
-        valid. If it is verified, the run_action_<STATE> method is called. This
-        allows easy overriding of the server actions.
+        """ Runs the server action. For each server action, the
+        run_action_<STATE> method is called. This allows easy overriding
+        of the server actions.
 
         :param dict context: context should contain following keys
 
@@ -894,14 +661,7 @@ class IrActionsServer(models.Model):
         """
         for action in self:
             eval_context = self._get_eval_context(action)
-            condition = action.sudo().condition
-            if condition is False:
-                # Void (aka False) conditions are considered as True
-                condition = True
             if hasattr(self, 'run_action_%s_multi' % action.state):
-                expr = safe_eval(str(condition), eval_context)
-                if not expr:
-                    continue
                 # call the multi method
                 run_self = self.with_context(eval_context['env'].context)
                 func = getattr(run_self, 'run_action_%s_multi' % action.state)
@@ -914,9 +674,6 @@ class IrActionsServer(models.Model):
                     # run context dedicated to a particular active_id
                     run_self = self.with_context(active_ids=[active_id], active_id=active_id)
                     eval_context["env"].context = run_self._context
-                    expr = safe_eval(str(condition), eval_context)
-                    if not expr:
-                        continue
                     # call the single method related to the action: run_action_<STATE>
                     func = getattr(run_self, 'run_action_%s' % action.state)
                     res = func(action, eval_context=eval_context)
@@ -940,7 +697,7 @@ class IrServerObjectLines(models.Model):
     col1 = fields.Many2one('ir.model.fields', string='Field', required=True)
     value = fields.Text(required=True, help="Expression containing a value specification. \n"
                                             "When Formula type is selected, this field may be a Python expression "
-                                            " that can use the same values as for the condition field on the server action.\n"
+                                            " that can use the same values as for the code field on the server action.\n"
                                             "If Value type is selected, the value will be used directly without evaluation.")
     type = fields.Selection([('value', 'Value'), ('equation', 'Python expression')], 'Evaluation Type', default='value', required=True, change_default=True)
 

@@ -41,71 +41,28 @@
             <field name="description">Contract about to expire</field>
         </record>
 
-        <!-- base action rule about "Expiring Soon" contracts -->
-        <record id="contract_open" model="ir.filters">
-            <field name="name">Open Contracts</field>
-            <field name="model_id">hr.contract</field>
-            <field name="domain">[('state', '=', 'open')]</field>
-            <field name="user_id" eval="False"/>
-        </record>
-        <record id="contract_set_as_pending" model="ir.actions.server">
-            <field name="name">HR Contract: set as pending</field>
+        <!-- Expired Soon -->
+        <record id="ir_cron_data_contract_update_to_pending" model="ir.cron">
+            <field name="name">HR Contract: update to pending</field>
             <field name="model_id" ref="model_hr_contract"/>
-            <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
-            <field name="code">record.set_as_pending()</field>
+            <field name="code">model.update_to_pending()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
         </record>
-        <record id="rule_contract_1_set_as_pending" model="base.action.rule">
-            <field name="name">HR Contract: check for pending</field>
+
+        <!-- Expired -->
+        <record id="ir_cron_data_contract_update_to_close" model="ir.cron">
+            <field name="name">HR Contract: update to closed</field>
             <field name="model_id" ref="model_hr_contract"/>
-            <field name="sequence">50</field>
-            <field name="kind">on_time</field>
-            <field name="filter_id" ref="contract_open"/>
-            <field name="trg_date_id" ref="hr_contract.field_hr_contract_date_end"/>
-            <field name="trg_date_range">-7</field>
-            <field name="trg_date_range_type">day</field>
-            <field name="server_action_ids" eval="[(6, 0, [ref('contract_set_as_pending')])]"/>
-        </record>
-         <record id="rule_contract_2_set_as_pending" model="base.action.rule">
-            <field name="name">HR Contract: check for pending</field>
-            <field name="model_id" ref="model_hr_contract"/>
-            <field name="sequence">51</field>
-            <field name="kind">on_time</field>
-            <field name="filter_id" ref="contract_open"/>
-            <field name="trg_date_id" ref="hr_contract.field_hr_contract_visa_expire"/>
-            <field name="trg_date_range">-60</field>
-            <field name="trg_date_range_type">day</field>
-            <field name="server_action_ids" eval="[(6, 0, [ref('contract_set_as_pending')])]"/>
-        </record>
-        <!-- base action rule about "Expired" contracts -->
-        <record id="contract_set_as_close" model="ir.actions.server">
-            <field name="name">HR Contract: set as close</field>
-            <field name="model_id" ref="model_hr_contract"/>
-            <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
-            <field name="code">record.set_as_close()</field>
-        </record>
-        <record id="rule_contract_3_set_as_close" model="base.action.rule">
-            <field name="name">HR Contract: check for close</field>
-            <field name="model_id" ref="model_hr_contract"/>
-            <field name="sequence">52</field>
-            <field name="kind">on_time</field>
-            <field name="trg_date_id" ref="hr_contract.field_hr_contract_date_end"/>
-            <field name="trg_date_range">1</field>
-            <field name="trg_date_range_type">day</field>
-            <field name="server_action_ids" eval="[(6, 0, [ref('contract_set_as_close')])]"/>
-        </record>
-        <record id="rule_contract_4_set_as_close" model="base.action.rule">
-            <field name="name">HR Contract: check for close</field>
-            <field name="model_id" ref="model_hr_contract"/>
-            <field name="sequence">53</field>
-            <field name="kind">on_time</field>
-            <field name="trg_date_id" ref="hr_contract.field_hr_contract_visa_expire"/>
-            <field name="trg_date_range">1</field>
-            <field name="trg_date_range_type">day</field>
-            <field name="server_action_ids" eval="[(6, 0, [ref('contract_set_as_close')])]"/>
+            <field name="code">model.update_to_close()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
         </record>
 
     </data>

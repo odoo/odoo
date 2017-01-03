@@ -2,29 +2,28 @@
 <odoo>
     <data noupdate="1">
         <record forcecreate="True" id="ir_cron_mail_scheduler_action" model="ir.cron">
-            <field name="name">Email Queue Manager</field>
+            <field name="name">Mail: Email Queue Manager</field>
+            <field name="model_id" ref="model_mail_mail"/>
+            <field name="state">code</field>
+            <field name="code">model.process_email_queue()</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
             <field name="interval_type">hours</field>
             <field name="numbercall">-1</field>
             <field eval="False" name="doall"/>
-            <field eval="'mail.mail'" name="model"/>
-            <field eval="'process_email_queue'" name="function"/>
-            <field eval="'()'" name="args"/>
         </record>
 
         <record id="ir_cron_module_update_notification" model="ir.cron">
-            <field name="name">Update Notification</field>
-            <field eval="True" name="active" />
+            <field name="name">Publisher: Update Notification</field>
+            <field name="model_id" ref="model_publisher_warranty_contract"/>
+            <field name="state">code</field>
+            <field name="code">model.update_notification(None)</field>
             <field name="user_id" ref="base.user_root" />
             <field name="interval_number">1</field>
             <field name="interval_type">weeks</field>
             <field name="numbercall">-1</field>
             <field name="nextcall" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')" />
             <field eval="False" name="doall" />
-            <field eval="'publisher_warranty.contract'" name="model" />
-            <field eval="'update_notification'" name="function" />
-            <field eval="'(None,)'" name="args" />
             <field name="priority">1000</field>
         </record>
 
