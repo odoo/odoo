@@ -46,13 +46,14 @@
 # Alexander Freiman <ajfreiman@gmail.com>, 2016
 # Luis Miguel Limache leon <luislimache@gmail.com>, 2016
 # Gelo Joga Landoo <gj@landoo.es>, 2016
+# Cristian Salamea <ovnicraft@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
 "PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: Gelo Joga Landoo <gj@landoo.es>, 2016\n"
+"Last-Translator: Cristian Salamea <ovnicraft@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4514,12 +4515,12 @@ msgstr "Referencia libre / Nº Fact. Proveedor"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Payable accounts"
-msgstr ""
+msgstr "Desde cuentas por pagar"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Receivable accounts"
-msgstr ""
+msgstr "desde cuentas por cobrar"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all_supp
@@ -5330,19 +5331,19 @@ msgstr "Id factura"
 #: code:addons/account/models/account_invoice.py:555
 #, python-format
 msgid "Invoice must be a draft in order to set it to Pro-forma."
-msgstr ""
+msgstr "Factura debe estar en borrador para ponerla como proforma"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:535
 #, python-format
 msgid "Invoice must be cancelled in order to reset it to draft."
-msgstr ""
+msgstr "Factura debe estar cancelada para cambiarla a borrador."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:563
 #, python-format
 msgid "Invoice must be in draft or Pro-forma state in order to validate it."
-msgstr ""
+msgstr "Factura debe estar en estado borrador o proforma para validarla."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:587
@@ -6159,7 +6160,7 @@ msgstr "Divisa principal de la compañía."
 #: model:ir.actions.act_window,name:account.tax_adjustments_form
 #: model:ir.ui.menu,name:account.menu_action_tax_adjustment
 msgid "Make Manual Tax Adjustments"
-msgstr ""
+msgstr "Ajuste de Impuestos manuales"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6211,7 +6212,7 @@ msgstr "Impuestos de facturas manuales"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_manual_reconciliation
 msgid "Manual Payments & Invoices Matching"
-msgstr ""
+msgstr "Cruce manual de Pagos & Facturas"
 
 #. module: account
 #: model:ir.actions.client,name:account.action_manual_reconciliation
@@ -6309,32 +6310,32 @@ msgstr "Mensaje para factura"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Cost of Revenue"
-msgstr ""
+msgstr "Menos costo de ganancia"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Credit Card Accounts"
-msgstr ""
+msgstr "Menos cuentas de tarjetas de crédito"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Current Liabilities"
-msgstr ""
+msgstr "Menos pasivos corrientes"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Expenses"
-msgstr ""
+msgstr "Menos gastos"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Non-Current Liabilities"
-msgstr ""
+msgstr "Menos pasivo no corriente"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Payable Accounts"
-msgstr ""
+msgstr "Menos cuentas por pagar"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -6355,7 +6356,7 @@ msgstr "Operaciones varias"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:82
 #, python-format
 msgid "Modify models"
-msgstr ""
+msgstr "Modificar modelos"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -6473,7 +6474,7 @@ msgstr "Nombre:"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_narration
 msgid "Narration"
-msgstr ""
+msgstr "Detalle"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_tax_net
@@ -7089,12 +7090,12 @@ msgstr "Libro mayor de empresa"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_ledger_payable
 msgid "Partner Ledger: Payable"
-msgstr ""
+msgstr "Libro Mayor: Por pagar"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_ledger_receivable
 msgid "Partner Ledger: Receivable"
-msgstr ""
+msgstr "Libro Mayor: Por Cobrar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_partner_name
@@ -7190,7 +7191,7 @@ msgstr "Método de pago"
 #: model:ir.model.fields,field_description:account.field_account_payment_payment_method_id
 #: model:ir.model.fields,field_description:account.field_account_register_payments_payment_method_id
 msgid "Payment Method Type"
-msgstr ""
+msgstr "Tipo de método de pago"
 
 #. module: account
 #. openerp-web
@@ -7208,7 +7209,7 @@ msgstr "Métodos de pago"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_payment_move_line_ids
 msgid "Payment Move Lines"
-msgstr ""
+msgstr "Líneas de asiento de pago"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference_type
@@ -7378,7 +7379,7 @@ msgstr "Porcentaje sobre el saldo"
 #: code:addons/account/models/account_invoice.py:1470
 #, python-format
 msgid "Percentages for Payment Terms Line must be between 0 and 100."
-msgstr ""
+msgstr "Porcentaje de líneas en términos de pago debe estar entre 0 y 100."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7426,7 +7427,7 @@ msgstr "Por favor, cree algunas líneas de factura."
 #: code:addons/account/models/account_move.py:140
 #, python-format
 msgid "Please define a sequence for the refunds"
-msgstr ""
+msgstr "Por favor definir una secuencia para reembolsos"
 
 #. module: account
 #: code:addons/account/models/account_move.py:141
@@ -8288,12 +8289,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_analytic_account_id
 msgid "Second Analytic Account"
-msgstr ""
+msgstr "Segunda cuenta analítica"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_journal_id
 msgid "Second Journal"
-msgstr ""
+msgstr "Segundo diario"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_label
@@ -8375,7 +8376,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_product_template_action
 msgid "Sellable Products"
-msgstr ""
+msgstr "Productos Vendibles"
 
 #. module: account
 #: selection:account.abstract.payment,payment_type:0
@@ -9772,7 +9773,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_tree
 msgid "To pay"
-msgstr ""
+msgstr "Pagar"
 
 #. module: account
 #: code:addons/account/models/account_move.py:847
@@ -10265,7 +10266,7 @@ msgstr "Pago a proveedor"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_supplier_payment_term_id
 msgid "Vendor Payment Terms"
-msgstr ""
+msgstr "Términos de Pago"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference
@@ -10428,7 +10429,7 @@ msgstr "Impuestos incluídos"
 #. module: account
 #: model:ir.model,name:account.model_tax_adjustments_wizard
 msgid "Wizard for Tax Adjustments"
-msgstr ""
+msgstr "Asistente para Ajustar Impuestos"
 
 #. module: account
 #: code:addons/account/models/account_move.py:888
