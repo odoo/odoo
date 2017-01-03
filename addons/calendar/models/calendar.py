@@ -1461,7 +1461,7 @@ class Meeting(models.Model):
         for r in result:
             if r['user_id']:
                 user_id = type(r['user_id']) in (tuple, list) and r['user_id'][0] or r['user_id']
-                if user_id == self.env.user.id:
+                if user_id == self.env.user.id or self.env.user.partner_id.id in r.get("partner_ids", []):
                     continue
             if r['privacy'] == 'private':
                 for f in r.keys():
