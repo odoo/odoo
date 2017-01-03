@@ -24,7 +24,6 @@ class IrActions(models.Model):
 
     name = fields.Char(required=True)
     type = fields.Char(string='Action Type', required=True)
-    usage = fields.Char(string='Action Usage')
     xml_id = fields.Char(compute='_compute_xml_id', string="External ID")
     help = fields.Html(string='Action Description',
                        help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
