@@ -18,10 +18,10 @@ trigger an automatic reminder email.
     'depends': ['base', 'resource', 'mail'],
     'data': [
         'security/ir.model.access.csv',
-        'data/base_action_rule_data.xml',
-        'views/base_action_rule_view.xml',
+        'data/base_automation_data.xml',
+        'views/base_automation_view.xml',
     ],
     'demo': [
-        'data/base_action_rule_demo.xml',
+        'data/base_automation_demo.xml',
     ],
 }

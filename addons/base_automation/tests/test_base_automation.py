@@ -6,10 +6,10 @@ from odoo.tests import common
 
 @common.at_install(False)
 @common.post_install(True)
-class base_action_rule_test(common.TransactionCase):
+class base_automation_test(common.TransactionCase):
 
     def setUp(self):
-        super(base_action_rule_test, self).setUp()
+        super(base_automation_test, self).setUp()
         self.user_admin = self.env.ref('base.user_root')
         self.user_demo = self.env.ref('base.user_demo')
 
@@ -19,7 +19,7 @@ class base_action_rule_test(common.TransactionCase):
             'user_id': self.user_admin.id,
         }
         vals.update(kwargs)
-        return self.env['base.action.rule.lead.test'].create(vals)
+        return self.env['base.automation.lead.test'].create(vals)
 
     def test_00_check_to_state_open_pre(self):
         """
@@ -96,7 +96,7 @@ class base_action_rule_test(common.TransactionCase):
         """
         Check that a rule is executed after creating a line record.
         """
-        line = self.env['base.action.rule.line.test'].create({'name': "Line"})
+        line = self.env['base.automation.line.test'].create({'name': "Line"})
         self.assertEqual(line.user_id, self.user_demo)
 
     def test_20_indirect_line(self):

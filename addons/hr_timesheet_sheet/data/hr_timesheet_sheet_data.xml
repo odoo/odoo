@@ -3,13 +3,12 @@
     <data noupdate="1">
 
         <record id="ir_actions_server_timesheet_sheet" model="ir.actions.server">
+            <field name="name">Timesheet Sheet: My Timesheet</field>
             <field name="sequence" eval="5"/>
             <field name="state">code</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_hr_timesheet_current_open"/>
             <field name="code">action = model.open_timesheet()</field>
-            <field name="condition">True</field>
-            <field name="name">My Timesheet</field>
         </record>
 
         <!-- Timesheet sheet related subtypes for messaging / Chatter -->
