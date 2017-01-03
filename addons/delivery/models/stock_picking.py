@@ -60,10 +60,8 @@ class StockPicking(models.Model):
         self.ensure_one()
         packs = set()
         for packop in self.pack_operation_ids:
-            if packop.result_package_id:
+            if packop.result_package_id and packop.result_package_id.packaging_id:
                 packs.add(packop.result_package_id.id)
-            elif packop.package_id and not packop.product_id:
-                packs.add(packop.package_id.id)
         self.package_ids = list(packs)
 
     @api.one
@@ -112,7 +110,7 @@ class StockPicking(models.Model):
         self.ensure_one()
         res = super(StockPicking, self).do_transfer()
 
-        if self.carrier_id and self.carrier_id.delivery_type not in ['fixed', 'base_on_rule'] and self.carrier_id.integration_level == 'rate_and_ship':
+        if self.carrier_id and self.carrier_id.delivery_type not in ['fixed', 'base_on_rule'] and self.carrier_id.integration_level == 'rate_and_ship' and self.package_ids:
             self.send_to_shipper()
 
         if self.carrier_id:
