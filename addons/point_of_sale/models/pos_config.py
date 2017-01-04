@@ -209,7 +209,7 @@ class PosConfig(models.Model):
     def create(self, values):
         IrSequence = self.env['ir.sequence']
         val = {
-            'name': _('POS Order %s') % values['name'],
+            'name': _('POS Order {}'.format(values['name'])),
             'padding': 4,
             'prefix': "%s/" % values['name'],
             'code': "pos.order",
@@ -220,7 +220,7 @@ class PosConfig(models.Model):
 
         # TODO master: add field sequence_line_id on model
         # this make sure we always have one available per company
-        val.update(name=_('POS order line %s') % values['name'], code='pos.order.line')
+        val.update(name=_('POS order line {}'.format(values['name'])), code='pos.order.line')
         IrSequence.create(val)
         return super(PosConfig, self).create(values)
 
