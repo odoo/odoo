@@ -36,10 +36,6 @@ class AccountConfigSettings(models.TransientModel):
         implied_group='account.group_proforma_invoices',
         help="Allows you to put invoices in pro-forma state.")
     module_account_reports_followup = fields.Boolean("Enable payment followup management")
-    tax_cash_basis_journal_id = fields.Many2one(
-        'account.journal',
-        related='company_id.tax_cash_basis_journal_id',
-        string="Tax Cash Basis Journal",)
     default_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax",
         default_model="account.config.settings", company_dependent=True, oldname="default_sale_tax")
     default_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax",
