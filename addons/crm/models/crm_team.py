@@ -13,9 +13,8 @@ class Team(models.Model):
     _inherit = ['mail.alias.mixin', 'crm.team']
 
     resource_calendar_id = fields.Many2one('resource.calendar', string="Working Time", help="Used to compute open days")
-    use_leads = fields.Boolean('Leads', help="The first contact you get with a potential customer is a lead you qualify before converting it into a real "
-                                             "business opportunity. Check this box to assign leads to this sales channel.")
-    use_opportunities = fields.Boolean('Pipeline', help="Check this box to manage opportunities in this sales channel.")
+    use_leads = fields.Boolean('Leads', help="Check this box to filter and qualify incoming requests as leads before converting them into opportunities and assigning them to a salesperson.")
+    use_opportunities = fields.Boolean('Pipeline', help="Check this box to manage a presales process with opportunities.")
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True, help="The email address associated with this channel. New emails received will automatically create new leads assigned to the channel.")
     unassigned_leads_count = fields.Integer(
         compute='_compute_unassigned_leads_count',
