@@ -19,3 +19,4 @@ from float_utils import *
 from mail import *
 from func import *
 from debugger import *
+from xml_utils import *
