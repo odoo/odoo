@@ -10,4 +10,5 @@
     'data': [
         'views/website_sale_templates.xml',
     ],
+    'auto_install': True,
 }
