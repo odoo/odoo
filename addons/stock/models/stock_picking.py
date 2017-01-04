@@ -389,7 +389,7 @@ class Picking(models.Model):
         if self.partner_id:
             if self.partner_id.picking_warn == 'no-message' and self.partner_id.parent_id:
                 partner = self.partner_id.parent_id
-            elif self.partner_id.picking_warn not in ('no-message', 'block') and partner.parent_id.picking_warn == 'block':
+            elif self.partner_id.picking_warn not in ('no-message', 'block') and self.partner_id.parent_id.picking_warn == 'block':
                 partner = self.partner_id.parent_id
             else:
                 partner = self.partner_id
