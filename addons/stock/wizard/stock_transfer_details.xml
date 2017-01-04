@@ -29,6 +29,7 @@
                                 <field name="result_package_id" groups="stock.group_tracking_lot" context="{'location_id': destinationloc_id}"/>
                                 <button name="put_in_pack" string="Pack" type="object" icon="terp-product" attrs="{'invisible': [('result_package_id', '!=', False)]}" groups="stock.group_tracking_lot"/>
                                 <field name="lot_id" groups="stock.group_production_lot" domain="[('product_id','=?', product_id)]" context="{'product_id': product_id}"/>
+                                <button name="put_in_lot" string="Lot" type="object" icon="gtk-justify-fill" attrs="{'invisible': [('lot_id', '!=', False)]}" groups="stock.group_tracking_lot"/>
                             </tree>
                         </field>
                     </group>
