@@ -135,6 +135,21 @@ def fix_import_export_id_paths(fieldname):
     return fixed_external_id.split('/')
 
 
+def get_addon_name(full_name):
+    # The (Odoo) module name can be in the ``odoo.addons`` namespace
+    # or not. For instance, module ``sale`` can be imported as
+    # ``odoo.addons.sale`` (the right way) or ``sale`` (for backward
+    # compatibility).
+    # This method is called by community modules and then should stay
+    # outside any class to be used easily
+    module_parts = full_name.split('.')
+    if len(module_parts) > 2 and module_parts[:2] == ['odoo', 'addons']:
+        addon_name = full_name.split('.')[2]
+    else:
+        addon_name = full_name.split('.')[0]
+    return addon_name
+
+
 class MetaModel(api.Meta):
     """ The metaclass of all model classes.
         Its main purpose is to register the models per module.
@@ -149,7 +164,7 @@ class MetaModel(api.Meta):
             return
 
         if not hasattr(self, '_module'):
-            self._module = self._get_addon_name(self.__module__)
+            self._module = get_addon_name(self.__module__)
 
         # Remember which models to instanciate for this module.
         if not self._custom:
@@ -161,18 +176,6 @@ class MetaModel(api.Meta):
                 _logger.error("Trailing comma after field definition: %s.%s", self, key)
             if isinstance(val, Field):
                 val.args = dict(val.args, _module=self._module)
-
-    def _get_addon_name(self, full_name):
-        # The (OpenERP) module name can be in the ``odoo.addons`` namespace
-        # or not. For instance, module ``sale`` can be imported as
-        # ``odoo.addons.sale`` (the right way) or ``sale`` (for backward
-        # compatibility).
-        module_parts = full_name.split('.')
-        if len(module_parts) > 2 and module_parts[:2] == ['odoo', 'addons']:
-            addon_name = full_name.split('.')[2]
-        else:
-            addon_name = full_name.split('.')[0]
-        return addon_name
 
 
 class NewId(object):
