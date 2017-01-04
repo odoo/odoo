@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 from datetime import datetime
 
 
@@ -12,6 +12,20 @@ class CrmTeam(models.Model):
     pos_config_ids = fields.One2many('pos.config', 'crm_team_id', string="Point of Sales")
     pos_sessions_open_count = fields.Integer(string='Open POS Sessions', compute='_compute_pos_sessions_open_count')
     pos_order_amount_total = fields.Float(string="Session Sale Amount", compute='_compute_pos_order_amount_total')
+    dashboard_graph_group_pos = fields.Selection([
+        ('day', 'Day'),
+        ('week', 'Week'),
+        ('month', 'Month'),
+        ('user', 'Salesperson'),
+        ('pos', 'Point of Sale'),
+    ], string='Group by', default='day', help="How this channel's dashboard graph will group the results.")
+
+    @api.onchange('dashboard_graph_group_pos')
+    def _onchange_dashboard_graph_group_pos(self):
+        if self.dashboard_graph_group_pos == 'pos':
+            self.dashboard_graph_group = False
+        else:
+            self.dashboard_graph_group = self.dashboard_graph_group_pos
 
     def _compute_pos_sessions_open_count(self):
         for team in self.filtered(lambda t: t.team_type == 'pos'):
@@ -29,7 +43,24 @@ class CrmTeam(models.Model):
         """
         if self.team_type == 'pos':
             result = []
-            if self.dashboard_graph_group == 'user':
+            if self.dashboard_graph_group_pos == 'pos':
+                order_data = self.env['report.pos.order'].read_group(
+                    domain=[
+                        ('date', '>=', fields.Date.to_string(start_date)),
+                        ('date', '<=', fields.Datetime.to_string(datetime.combine(end_date, datetime.max.time()))),
+                        ('config_id', 'in', self.pos_config_ids.ids),
+                        ('state', 'in', ['paid', 'done', 'invoiced'])],
+                    fields=['config_id', 'price_total'],
+                    groupby=['config_id']
+                )
+                appended_config_ids = set()
+                for data_point in order_data:
+                    result.append({'x_value': self.env['pos.config'].browse(data_point.get('config_id')[0]).name, 'y_value': data_point.get('price_total')})
+                    appended_config_ids.add(data_point.get('config_id'))
+                for config_id in set(self.pos_config_ids.ids) - appended_config_ids:
+                    result.append({'x_value': self.env['pos.config'].browse(config_id).name, 'y_value': 0})
+
+            elif self.dashboard_graph_group_pos == 'user':
                 order_data = self.env['report.pos.order'].read_group(
                     domain=[
                         ('date', '>=', fields.Date.to_string(start_date)),
@@ -41,6 +72,7 @@ class CrmTeam(models.Model):
                 )
                 for data_point in order_data:
                     result.append({'x_value': data_point.get('user_id')[0], 'y_value': data_point.get('price_total')})
+
             else:
                 order_data = self.env['report.pos.order'].read_group(
                     domain=[
@@ -49,16 +81,18 @@ class CrmTeam(models.Model):
                         ('config_id', 'in', self.pos_config_ids.ids),
                         ('state', 'in', ['paid', 'done', 'invoiced'])],
                     fields=['date', 'price_total'],
-                    groupby=['date:' + self.dashboard_graph_group]
+                    groupby=['date:' + self.dashboard_graph_group_pos]
                 )
-                if self.dashboard_graph_group == 'day':
+                if self.dashboard_graph_group_pos == 'day':
                     for data_point in order_data:
                         result.append({'x_value': fields.Date.to_string((fields.datetime.strptime(data_point.get('date:day'), "%d %b %Y"))), 'y_value': data_point.get('price_total')})
-                if self.dashboard_graph_group == 'week':
+                elif self.dashboard_graph_group_pos == 'week':
                     for data_point in order_data:
                         # non-standard groupby formatting requires garbage formatting here, hope this'll hold ...
-                        result.append({'x_value': int(data_point.get('date:week')[1:3]) - 1, 'y_value': data_point.get('price_total')})
-                if self.dashboard_graph_group == 'month':
+                        # also this week result is non-standard, so week numbers might be wrong here...
+                        # for example 2016-12-31 -> week number 53 from read_group, while both isocalendar() and strftime('%W') return 52.
+                        result.append({'x_value': int(data_point.get('date:week')[1:3]), 'y_value': data_point.get('price_total')})
+                elif self.dashboard_graph_group_pos == 'month':
                     for data_point in order_data:
                         result.append({'x_value': fields.datetime.strptime(data_point.get('date:month'), "%B %Y").month, 'y_value': data_point.get('price_total')})
             return result
