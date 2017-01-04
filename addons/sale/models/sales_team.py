@@ -9,7 +9,8 @@ from odoo import api, fields, models, _
 class CrmTeam(models.Model):
     _inherit = 'crm.team'
 
-    use_quotations = fields.Boolean(string='Quotations', help="Check this box to manage quotations in this sales channel.")
+    use_quotations = fields.Boolean(string='Quotations', help="Check this box if you send quotations to your customers rather than confirming orders straight away. "
+                                                              "This will add specific action buttons to your dashboard.")
     use_invoices = fields.Boolean('Set Invoicing Target', help="Check this box to set an invoicing target for this sales channel.")
     invoiced = fields.Integer(
         compute='_compute_invoiced',
