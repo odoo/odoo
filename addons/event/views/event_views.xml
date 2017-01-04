@@ -66,6 +66,18 @@
                         <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                     </header>
+                    <field name="event_schedule_updated" invisible='1'/>
+                        <div attrs="{'invisible': [('seats_expected', '=', 0), ('state', '!=', 'cancel')]}">
+                            <div class="alert text-center alert-warning" style="padding: 5px;" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done')), ('event_schedule_updated', '=', False)]}">
+                                <strong attrs="{'invisible': [('state', '=', 'cancel')]}">
+                                    Event schedule has been changed, Notify all the attendees:
+                                </strong>
+                                <strong attrs="{'invisible': [('state', 'in', ('confirm', 'draft'))]}">
+                                    Event has been cancelled, Notify all the attendees:
+                                </strong>
+                                <button type="object" name="action_open_attendees" string="Send mail to all attendees" class="oe_link"/>
+                            </div>
+                        </div>
                     <sheet>
                         <div class="oe_button_box" name="button_box" groups="base.group_user">
                             <button name="%(event.act_event_registration_from_event)d"
@@ -471,5 +483,26 @@
 
         <menuitem name="Mail Schedulers" id="menu_event_mail_schedulers" action="action_event_mail" parent="menu_event_configuration" groups="base.group_no_one"/>
 
+        <record id="action_server_notify_schedule_updatation" model="ir.actions.server">
+            <field name="name">Send mail</field>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_event_registration" />
+            <field name="state">code</field>
+            <field name="code">
+                if context.get('active_model') == 'event.registration' and context.get('active_ids'):
+                    object.browse(context['active_ids']).notify_schedule_updation()
+            </field>
+        </record>
+
+        <record id="ir_values_notify_schedule_updatation" model="ir.values">
+            <field name="name">Notify schedule Update</field>
+            <field name="action_id" ref="action_server_notify_schedule_updatation" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('action_server_notify_schedule_updatation'))" />
+            <field name="key">action</field>
+            <field name="model_id" ref="model_event_registration" />
+            <field name="model">event.registration</field>
+            <field name="key2">client_action_multi</field>
+        </record>
     </data>
 </odoo>
