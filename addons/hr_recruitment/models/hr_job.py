@@ -22,9 +22,6 @@ class Job(models.Model):
     user_id = fields.Many2one('res.users', "Recruitment Responsible", track_visibility='onchange')
     document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Applications")
     documents_count = fields.Integer(compute='_compute_document_ids', string="Documents")
-    alias_id = fields.Many2one(
-        'mail.alias', "Alias", ondelete="restrict", required=True,
-        help="Email alias for this job position. New emails will automatically create new applicants for this job position.")
     color = fields.Integer("Color Index")
 
     def _compute_document_ids(self):
@@ -53,7 +50,7 @@ class Job(models.Model):
             job.application_count = result.get(job.id, 0)
 
     def get_alias_model_name(self, vals):
-        return 'hr.applicant'
+        return vals.get('alias_model', 'hr.applicant')
 
     def get_alias_values(self):
         values = super(Job, self).get_alias_values()
