@@ -21,6 +21,102 @@
         <field name="context">{'search_default_published': 1, 'default_website_published': True}</field>
     </record>
 
+    <record id="sale_report_search_view_dashboard" model="ir.ui.view">
+        <field name="name">sale.report.search</field>
+        <field name="model">sale.report</field>
+        <field name="arch" type="xml">
+            <search string="Sales">
+                <filter name="week" string="Last Week"
+                        domain="[
+                            '&amp;',
+                            ('date', '&gt;=', (context_today()-relativedelta(days=7)).strftime('%Y-%m-%d')),
+                            ('date', '&lt;=', context_today().strftime('%Y-%m-%d')),
+                        ]"/>
+                <filter name="month" string="Last Month"
+                        domain="[
+                            '&amp;',
+                            ('date', '&gt;=', (context_today()-relativedelta(months=1)).strftime('%Y-%m-%d')),
+                            ('date', '&lt;=', context_today().strftime('%Y-%m-%d')),
+                        ]"/>
+                <filter name="year" string="Last Year"
+                        domain="[
+                            '&amp;',
+                            ('date', '&gt;=', (context_today()-relativedelta(years=1)).strftime('%Y-%m-%d')),
+                            ('date', '&lt;=', context_today().strftime('%Y-%m-%d')),
+                         ]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="sale_report_pivot_view_dashboard" model="ir.ui.view">
+        <field name="name">sale.report.pivot</field>
+        <field name="model">sale.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Sales Report">
+                <field name="date" type="row"/>
+                <field name="state" type="col"/>
+                <field name="price_subtotal" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="sale_report_graph_view_dashboard" model="ir.ui.view">
+        <field name="name">sale.report.graph</field>
+        <field name="model">sale.report</field>
+        <field name="arch" type="xml">
+            <graph string="Sale Report" type="bar">
+                <field name="date"/>
+                <field name="price_subtotal" type='measure'/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="sale_report_action_dashboard" model="ir.actions.act_window">
+        <field name="name">Sales</field>
+        <field name="res_model">sale.report</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="domain">[('state','in',('sale', 'done')), ('team_id.team_type', '=', 'website')]</field>
+        <field name="search_view_id" ref="sale_report_search_view_dashboard"/>
+        <field name="help">You don't have any order from the website.</field>
+    </record>
+
+    <record id="action_sale_report_pivot_view_dashboard" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="sale_report_pivot_view_dashboard"/>
+        <field name="act_window_id" ref="sale_report_action_dashboard"/>
+    </record>
+
+    <record id="action_sale_report_graph_view_dashboard" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="sale_report_graph_view_dashboard"/>
+        <field name="act_window_id" ref="sale_report_action_dashboard"/>
+    </record>
+
+    <record id="sale_report_action_dashboard_carts" model="ir.actions.act_window">
+        <field name="name">Sales</field>
+        <field name="res_model">sale.report</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="domain">[('team_id.team_type', '=', 'website')]</field>
+        <field name="search_view_id" ref="sale_report_search_view_dashboard"/>
+        <field name="help">You don't have any order from the website.</field>
+    </record>
+
+    <record id="action_sale_report_pivot_view_dashboard_carts" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="sale_report_pivot_view_dashboard"/>
+        <field name="act_window_id" ref="sale_report_action_dashboard_carts"/>
+    </record>
+
+    <record id="action_sale_report_graph_view_dashboard_carts" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="sale_report_graph_view_dashboard"/>
+        <field name="act_window_id" ref="sale_report_action_dashboard_carts"/>
+    </record>
+
     <record id="view_sales_order_filter_ecommerce" model="ir.ui.view">
         <field name="name">sale.order.ecommerce.search.view</field>
         <field name="model">sale.order</field>
@@ -35,7 +131,7 @@
     </record>
 
     <record id="action_orders_ecommerce" model="ir.actions.act_window">
-        <field name="name">eCommerce Orders</field>
+        <field name="name">Orders</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{'show_sale': True, 'search_default_confirm_order': 1, 'search_default_from_website': 1}</field>
@@ -44,7 +140,7 @@
     </record>
 
     <record id="action_unpaid_orders_ecommerce" model="ir.actions.act_window">
-        <field name="name">Unpaid eCommerce Orders</field>
+        <field name="name">Unpaid Orders</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('state', '=', 'sent')]</field>
@@ -68,21 +164,10 @@
         <field name="name">Orders To Invoice</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('state', '=', 'sale'), ('invoice_status', '=', 'no')]</field>
+        <field name="domain">[('state', 'in', ('sale', 'done')), ('invoice_status', '=', 'to invoice')]</field>
         <field name="context">{'show_sale': True, 'search_default_from_website': 1}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
         <field name="help">You don't have any order from the website.</field>
-    </record>
-
-    <record id="payment_transaction_action_awaiting_payments" model="ir.actions.act_window">
-        <field name="name">Awaiting Payments</field>
-        <field name="res_model">payment.transaction</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('state', '=', 'pending'), ('sale_order_id.state', '!=', 'cancel')]</field>
-        <field name="context">{'create': False}</field>
-        <field name="view_id" ref="payment.transaction"/>
-        <field name="help">You don't have any awaiting payments from the website.</field>
     </record>
 
     <record id="payment_transaction_action_payments_to_capture" model="ir.actions.act_window">
@@ -113,15 +198,11 @@
         <field name="code">action = env['sale.order'].get_abandoned_carts()</field>
     </record>
 
-    <record id="sale_order_action_active_carts" model="ir.actions.server">
-        <field name="name">Active Carts</field>
-        <field name="model_id" ref="sale.model_sale_order"/>
-        <field name="state">code</field>
-        <field name="code">action = env['sale.order'].get_active_carts()</field>
-    </record>
+    <menuitem id="website.menu_website_global_configuration" parent="website.menu_website_configuration" sequence="100" name="Configuration"
+    groups="base.group_system,sales_team.group_sale_manager"/>
 
     <menuitem id="menu_orders" name="Orders" parent="website.menu_website_configuration" sequence="2" groups="sales_team.group_sale_salesman"/>
-    <menuitem id="menu_catalog" name="Catalog" parent="website.menu_website_configuration" action="product_template_action" sequence="3" groups="sales_team.group_sale_salesman"/>
+    <menuitem id="menu_catalog" name="Catalog" parent="website.menu_website_configuration" sequence="3" groups="sales_team.group_sale_salesman"/>
     <menuitem id="menu_reporting" name="Reporting" parent="website.menu_website_configuration" sequence="99" groups="sales_team.group_sale_manager"/>
     <menuitem id="menu_ecommerce_settings" parent="website.menu_website_global_configuration" name="eCommerce"/>
     <menuitem id="menu_product_settings" parent="website.menu_website_global_configuration" name="Products"/>
@@ -133,7 +214,7 @@
     <menuitem id="menu_orders_customers" name="Customers" parent="menu_orders" action="base.action_partner_customer_form" sequence="4"/>
 
     <!-- Catalog sub-menus -->
-    <menuitem id="menu_catalog_products" name="Products" parent="menu_catalog" action="product_template_action" groups="product.group_product_variant" sequence="1"/>
+    <menuitem id="menu_catalog_products" name="Products" parent="menu_catalog" action="product_template_action" sequence="1"/>
     <menuitem id="product_catalog_variants" name="Product Variants" parent="menu_catalog" action="product.product_normal_action" groups="product.group_product_variant" sequence="2"/>
     <menuitem id="menu_catalog_pricelists" name="Pricelists" parent="menu_catalog" action="product.product_pricelist_action2" groups="product.group_sale_pricelist" sequence="3"/>
 

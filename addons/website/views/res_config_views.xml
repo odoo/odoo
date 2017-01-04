@@ -377,12 +377,12 @@ You can also edit the fields of the Extra Step page in eCommerce checkout.">
         </record>
 
         <menuitem id="menu_website_configuration" sequence="215"
-        name="Website" groups="website.group_website_publisher" web_icon="website,static/description/icon.png"/>
+        name="Website" groups="base.group_user" web_icon="website,static/description/icon.png"/>
 
         <menuitem id="menu_dashboard" name="Dashboard" action="website.backend_dashboard" parent="website.menu_website_configuration" sequence="1"/>
 
         <menuitem id="menu_website_global_configuration" parent="menu_website_configuration"
             sequence="100" name="Configuration" groups="base.group_system"/>
-        <menuitem id="menu_website_website_settings" parent="menu_website_global_configuration" name="Settings" action="action_website_configuration"/>
+        <menuitem id="menu_website_website_settings" parent="menu_website_global_configuration" name="Settings" action="action_website_configuration" groups="base.group_system"/>
 
 </odoo>

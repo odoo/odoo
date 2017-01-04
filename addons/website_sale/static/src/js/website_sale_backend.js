@@ -20,6 +20,12 @@ WebsiteBackend.include({
         this._super()
         this.$('.o_dashboard_common').after(QWeb.render('website_sale.dashboard_sales', {widget: this}));
     },
+    render_graph: function (div_to_display, chart_values) {
+        if (!this.date_range) {
+            delete this.dashboards_data.sales.graph[1];
+        }
+        return this._super(div_to_display, chart_values);
+    },
     on_product_template: function(ev) {
         ev.preventDefault();
 

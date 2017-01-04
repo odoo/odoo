@@ -21,6 +21,8 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     events: {
         'click .js_link_analytics_settings': 'on_link_analytics_settings',
         'click .o_dashboard_action': 'on_dashboard_action_clicked',
+        'click .o_dashboard_menu_action': 'on_dashboard_menu_action_clicked',
+        'click .o_apps_hide_panel': 'on_dashboard_hide_panel',
     },
 
     init: function(parent, context) {
@@ -50,14 +52,25 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             self.render_dashboards();
             self.render_graphs();
             self.$el.parent().addClass('oe_background_grey');
+            self.update_ghost();
         });
+    },
+
+    update_ghost: function() {
+        this.$('.o_ghost').hide();
+        var flex_items = this.$('.o_box_item:not(.o_ghost)');
+        this.$('.o_ghost').each(function(index) {
+            if (flex_items.length < 6 && index < (6 - flex_items.length)) {
+                $(this).show();
+            }
+        })
     },
 
     fetch_data: function() {
         var self = this;
         var def = $.Deferred();
         ajax.jsonRpc('/website/fetch_dashboard_data', 'call', {
-            'date_from': this.date_from.format('YYYY-MM-DD'),
+            'date_from': this.date_from && this.date_from.format('YYYY-MM-DD'),
             'date_to': this.date_to.format('YYYY-MM-DD'),
         }).done(function(result) {
             if (!result.groups) {
@@ -149,7 +162,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
                 .append("svg");
 
             svg
-                .attr("height", '20em')
+                .attr("height", '27em')
                 .datum(chart_values)
                 .call(chart);
 
@@ -210,8 +223,11 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         } else if (date_range === 'year') {
             this.date_range = 'year';
             this.date_from = moment().subtract(1, 'years');
+        } else if (date_range === 'no_filter') {
+            this.date_range = false;
+            this.date_from = false;
         } else {
-            console.log('Unknown date range. Choose between [week, month, year]');
+            console.log('Unknown date range');
             return;
         }
 
@@ -220,6 +236,7 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
             self.$('.o_website_dashboard').empty();
             self.render_dashboards();
             self.render_graphs();
+            self.update_ghost();
         });
 
     },
@@ -233,11 +250,55 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         ev.preventDefault();
         var $action = $(ev.currentTarget);
         var action_name = $action.attr('name');
-        var action_context = $action.data('context');
+        var additional_context = {};
+        if (this.date_range === 'week') {
+            additional_context = {'search_default_week': true}
+        } else if (this.date_range === 'month') {
+            additional_context = {'search_default_month': true}
+        } else if (this.date_range === 'year') {
+            additional_context = {'search_default_year': true}
+        }
         this.do_action(action_name, {
-            additional_context: action_context,
+            additional_context: additional_context,
             on_reverse_breadcrumb: this.on_reverse_breadcrumb
         });
+    },
+
+    on_dashboard_menu_action_clicked: function(ev) {
+        ev.preventDefault();
+        var $action = $(ev.currentTarget);
+        var module_id = $action.data('module_id');
+        this.do_action({
+            name: _t('Apps'),
+            res_model: 'ir.module.module',
+            res_id: module_id,
+            views: [[false, 'form']],
+            type: 'ir.actions.act_window',
+        }, {
+            on_reverse_breadcrumb: this.on_reverse_breadcrumb
+        });
+    },
+
+    on_dashboard_hide_panel: function(ev) {
+        ev.preventDefault();
+        var $action = $(ev.currentTarget);
+        var cookie_data = utils.get_cookie('o_dashboard_hide_panel');
+        var module_list = []
+        if (cookie_data) {
+            module_list = JSON.parse(cookie_data) || [];
+        }
+        module_list.push(JSON.parse($action.data('module_id')));
+        utils.set_cookie('o_dashboard_hide_panel', JSON.stringify(module_list), 15*24*60*60); //15 days cookie
+        $action.closest(".o_box_item").remove();
+
+        var self = this;
+        $.when(this.fetch_data()).then(function() {
+            self.$('.o_website_dashboard').empty();
+            self.render_dashboards();
+            self.render_graphs();
+            self.update_ghost();
+        });
+        return false;
     },
 
     update_cp: function() {
@@ -464,7 +525,6 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
 
                 this.container.innerHTML = opts.template || this.template;
                 this.container.querySelector('b').innerHTML = this.activeUsers;
-                document.querySelector('.CurrentActiveUsers').innerHTML = this.activeUsers;
             },
 
             pollActiveUsers_: function() {
@@ -498,7 +558,6 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
 
             onChange_: function(delta) {
                 var valueContainer = this.container.querySelector('b');
-                document.querySelector('.CurrentActiveUsers').innerHTML = this.activeUsers;
                 if (valueContainer) { valueContainer.innerHTML = this.activeUsers; }
 
                 this.emit('change', {activeUsers: this.activeUsers, delta: delta});

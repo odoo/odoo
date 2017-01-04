@@ -15,18 +15,37 @@
     <t t-name="website.dashboard_common">
         <div class="row o_dashboard_common">
             <div class="o_box">
-                <div class="o_inner_box o_main" title="Website">
-                    <a href="#" class="o_dashboard_action" name="website.action_website">
+                <a href="#" class="o_box_item o_dashboard_action" name="website.action_website" title="Go to Website">
+                    <div class="o_inner_box o_primary">
                         <i class="fa fa-globe fa-3x"></i><br/>
-                        Website
-                    </a>
-                </div>
-                <t t-if="widget.groups.system &amp;&amp; widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id">
-                    <div class="o_inner_box o_secondary" title="Visitors">
-                        <div class="o_highlight"><b class='CurrentActiveUsers'></b></div>
-                        Current Visitors
+                        Go to Website
                     </div>
+                </a>
+                <t class="o_dashboard_smart_button">
+                    <t t-if="widget.groups.is_admin">
+                        <t t-foreach="widget.dashboards_data.apps" t-as="app">
+                            <a href="#" class="o_box_item o_dashboard_menu_action" t-att-data-module_id="app.id" t-attf-title="#{widget.dashboards_data.apps_icon[app.name].help}">
+                                <div class="o_inner_box o_apps">
+                                    <div class="o_apps_show">
+                                        <i t-attf-class="fa #{widget.dashboards_data.apps_icon[app.name].icon} fa-3x"></i><br/>
+                                        <t t-esc="app.shortdesc"/>
+                                    </div>
+                                    <div class="o_apps_hidden">
+                                        <i class="fa fa-plus-circle fa-3x"></i><br/>
+                                        Add this feature
+                                    </div>
+                                    <i class="o_apps_hidden o_apps_hide_panel fa fa-close" t-att-data-module_id="app.id" title="Remove this suggestion from dashboard"/>
+                                </div>
+                            </a>
+                        </t>
+                    </t>
                 </t>
+                <a class="o_ghost o_box_item"></a>
+                <a class="o_ghost o_box_item"></a>
+                <a class="o_ghost o_box_item"></a>
+                <a class="o_ghost o_box_item"></a>
+                <a class="o_ghost o_box_item"></a>
+                <a class="o_ghost o_box_item"></a>
             </div>
         </div>
     </t>
