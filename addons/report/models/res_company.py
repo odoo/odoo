@@ -7,20 +7,29 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
 
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format')
-    report_footer_default = fields.Html('Standard Report Foorter', compute='_compute_report_footer_default', readonly=True)
+    external_report_layout = fields.Selection([
+        ('background', 'Background'),
+        ('boxed', 'Boxed'),
+        ('clean', 'Clean'),
+        ('standard', 'Standard'),
+    ], string='Report Template')
 
-    @api.multi
-    def _compute_report_footer_default(self):
-        for company in self:
-            company.report_footer_default = self.env['ir.ui.view'].render_template('report.external_layout_footer_default', {
-                'company': company,
-            })
+    def open_company_edit_report(self):
+        self.ensure_one()
+        return self.env['base.config.settings'].open_company()
+
+    def set_report_template(self):
+        self.ensure_one()
+        if self.env.context.get('report_template', False):
+            self.external_report_layout = self.env.context['report_template']
+        if self.env.context.get('default_report_name'):
+            document = self.env.get(self.env.context['active_model']).browse(self.env.context['active_id'])
+            return self.env['report'].get_action(document, self.env.context['default_report_name'], config=False)
+        return False
 
     @api.model_cr
     def init(self):
-
         # set a default paperformat based on rml one.
-
         for company in self.search([('paperformat_id', '=', False)]):
             paperformat_euro = self.env.ref('report.paperformat_euro', False)
             paperformat_us = self.env.ref('report.paperformat_us', False)
@@ -36,25 +45,4 @@ class ResCompany(models.Model):
         if hasattr(sup, 'init'):
             sup.init()
 
-    @api.model
-    def _prepare_report_view_action(self, template):
-        template_id = self.env.ref(template)
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'ir.ui.view',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_id': template_id.id,
-        }
 
-    @api.multi
-    def edit_external_header(self):
-        return self._prepare_report_view_action('report.external_layout_header')
-
-    @api.multi
-    def edit_external_footer(self):
-        return self._prepare_report_view_action('report.external_layout_footer')
-
-    @api.multi
-    def edit_internal_header(self):
-        return self._prepare_report_view_action('report.internal_layout')
