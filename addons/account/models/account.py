@@ -58,7 +58,7 @@ class AccountAccount(models.Model):
         help="Forces all moves for this account to have this secondary currency.")
     code = fields.Char(size=64, required=True, index=True)
     deprecated = fields.Boolean(index=True, default=False)
-    user_type_id = fields.Many2one('account.account.type', string='Type', required=True, oldname="user_type", 
+    user_type_id = fields.Many2one('account.account.type', string='Type', required=True, oldname="user_type",
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
     internal_type = fields.Selection(related='user_type_id.type', string="Internal Type", store=True, readonly=True)
     #has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',

@@ -24,7 +24,7 @@
                              <field name="internal_type" invisible="1" readonly="1"/>
                              <label for="reconcile"/>
                              <div>
-                                <field name="reconcile"/> 
+                                <field name="reconcile"/>
                                 <button name="action_open_reconcile" class="oe_link" type="object" string=" -> Reconcile" attrs="{'invisible': [('reconcile', '=', False)]}"/>
                              </div>
                              <field name="deprecated"/>
@@ -1203,7 +1203,7 @@
                     <field name="move_id" string="Number (Move)"/>
                     <field name="account_id"/>
                     <field name="partner_id"/>
-                    <field name="journal_id"/> 
+                    <field name="journal_id"/>
                     <group expand="0" string="Group By">
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
