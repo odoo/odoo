@@ -90,9 +90,8 @@ class Partner(models.Model):
         street_fields = self.get_street_fields()
         for partner in self:
             if not partner.street:
-                partner.street_name = ''
-                partner.street_number = ''
-                partner.street_number2 = ''
+                for field in street_fields:
+                    partner[field] = ''
                 continue
 
             street_format = (partner.country_id.street_format or
