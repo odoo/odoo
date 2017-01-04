@@ -27,7 +27,7 @@
                     <div class="row" t-if="record.pending_payment_transactions_count.raw_value">
                         <div class="col-xs-8">
                             <div>
-                                <a name="%(payment_transaction_action_pending)d" type="action" class="o_quotation_view_button">
+                                <a name="%(payment_transaction_action_pending)d" type="action">
                                     <field name="pending_payment_transactions_count"/> Awaiting Payment<t t-if="record.pending_payment_transactions_count.raw_value != 1">s</t>
                                 </a>
                             </div>
