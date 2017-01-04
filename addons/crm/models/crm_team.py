@@ -49,7 +49,7 @@ class Team(models.Model):
             team.opportunities_amount = amounts.get(team.id, 0)
 
     def get_alias_model_name(self, vals):
-        return 'crm.lead'
+        return vals.get('alias_model', 'crm.lead')
 
     def get_alias_values(self):
         has_group_use_lead = self.env.user.has_group('crm.group_use_lead')
