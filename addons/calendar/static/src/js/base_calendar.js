@@ -29,7 +29,7 @@ CalendarView.include({
     get_all_filters_ordered: function() {
         var filters = this._super();
         if (this.useContacts) {
-            var filter_me = _.first(_.values(this.all_filters));
+            var filter_me = this.all_filters[this.session.partner_id];
             var filter_all = this.all_filters[-1];
             filters = [].concat(filter_me, _.difference(filters, [filter_me, filter_all]), filter_all);
         }
