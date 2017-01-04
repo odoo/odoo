@@ -8,6 +8,12 @@
             <xpath expr="//field[@name='dashboard_graph_model']" position="attributes">
                 <attribute name="attrs">{'invisible': [('team_type', '=', 'pos')]}</attribute>
             </xpath>
+            <xpath expr="//field[@name='dashboard_graph_group']" position="attributes">
+                <attribute name="attrs">{'invisible': [('team_type', '=', 'pos')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='dashboard_graph_group']" position="after">
+                <field name="dashboard_graph_group_pos" attrs="{'invisible': [('team_type', '!=', 'pos')]}"/>
+            </xpath>
         </field>
     </record>
 

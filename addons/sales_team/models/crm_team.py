@@ -71,8 +71,8 @@ class CrmTeam(models.Model):
     @api.depends('dashboard_graph_group', 'dashboard_graph_model', 'dashboard_graph_period')
     def _compute_dashboard_graph(self):
         for team in self.filtered('dashboard_graph_model'):
-            # might want to discuss this
-            if team.dashboard_graph_group == 'user' or team.dashboard_graph_period == 'week' and team.dashboard_graph_group != 'day' or team.dashboard_graph_period == 'month' and team.dashboard_graph_group != 'day':
+            if team.dashboard_graph_group in (False, 'user') or team.dashboard_graph_period == 'week' and team.dashboard_graph_group != 'day' \
+                    or team.dashboard_graph_period == 'month' and team.dashboard_graph_group != 'day':
                 team.dashboard_graph_type = 'bar'
             else:
                 team.dashboard_graph_type = 'line'
@@ -216,6 +216,10 @@ class CrmTeam(models.Model):
         elif self.dashboard_graph_group == 'user':
             for data_item in graph_data:
                 values.append({x_field: self.env['res.users'].browse(data_item.get('x_value')).name, y_field: data_item.get('y_value')})
+
+        else:
+            for data_item in graph_data:
+                values.append({x_field: data_item.get('x_value'), y_field: data_item.get('y_value')})
 
         [graph_title, graph_key] = self._graph_title_and_key()
         color = '#875A7B' if '+e' in version else '#7c7bad'
