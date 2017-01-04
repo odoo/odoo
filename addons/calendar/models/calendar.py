@@ -65,9 +65,13 @@ def is_calendar_id(record_id):
 class Contacts(models.Model):
     _name = 'calendar.contacts'
 
-    user_id = fields.Many2one('res.users', 'Me', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', 'Me', required=True, default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', 'Employee', required=True)
     active = fields.Boolean('Active', default=True)
+
+    _sql_constraints = [
+        ('user_id_partner_id_unique', 'UNIQUE(user_id,partner_id)', 'An user cannot have twice the same contact.')
+    ]
 
     @api.model
     def unlink_from_partner_id(self, partner_id):
