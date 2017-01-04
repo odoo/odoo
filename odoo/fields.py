@@ -424,10 +424,14 @@ class Field(object):
             attrs['store'] = attrs.get('store', False)
             attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
+            if attrs.get('default'):
+                _logger.warning("Field %s/%s: computed field using default value", model, name)
         if attrs.get('related'):
             # by default, related fields are not stored and not copied
             attrs['store'] = attrs.get('store', False)
             attrs['copy'] = attrs.get('copy', False)
+            if attrs.get('default'):
+                _logger.warning("Field %s/%s: related field using default value", model, name)
         if attrs.get('company_dependent'):
             # by default, company-dependent fields are not stored and not copied
             attrs['store'] = False
