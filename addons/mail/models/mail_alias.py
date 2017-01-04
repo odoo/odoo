@@ -196,9 +196,10 @@ class AliasMixin(models.AbstractModel):
         relation between your model and mail aliases.
     """
     _name = 'mail.alias.mixin'
-    _inherits = {'mail.alias': 'alias_id'}
 
-    alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True)
+    alias_id = fields.Many2one(
+        'mail.alias', string='Alias',
+        delegate=True, ondelete="restrict", required=True)
 
     def get_alias_model_name(self, vals):
         """ Return the model name for the alias. Incoming emails that are not

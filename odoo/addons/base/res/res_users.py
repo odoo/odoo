@@ -173,7 +173,6 @@ class Users(models.Model):
     """
     _name = "res.users"
     _description = 'Users'
-    _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
     __uid_cache = defaultdict(dict)             # {dbname: {uid: password}}
 
@@ -189,8 +188,10 @@ class Users(models.Model):
     def _companies_count(self):
         return self.env['res.company'].sudo().search_count([])
 
-    partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True,
-        string='Related Partner', help='Partner-related data of the user')
+    partner_id = fields.Many2one(
+        'res.partner', string='Related Partner',
+        auto_join=True, delegate=True, ondelete='restrict', required=True,
+        help='Partner-related data of the user')
     login = fields.Char(required=True, help="Used to log into the system")
     password = fields.Char(default='', invisible=True, copy=False,
         help="Keep empty if you don't want the user to be able to connect on the system.")

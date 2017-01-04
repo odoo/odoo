@@ -23,12 +23,14 @@ class MailMail(models.Model):
         facilities to queue and send new email messages.  """
     _name = 'mail.mail'
     _description = 'Outgoing Mails'
-    _inherits = {'mail.message': 'mail_message_id'}
     _order = 'id desc'
     _rec_name = 'subject'
 
     # content
-    mail_message_id = fields.Many2one('mail.message', 'Message', required=True, ondelete='cascade', index=True, auto_join=True)
+    mail_message_id = fields.Many2one(
+        'mail.message', 'Message',
+        auto_join=True, delegate=True, index=True,
+        required=True, ondelete='cascade')
     body_html = fields.Text('Rich-text Contents', help="Rich-text/HTML message")
     references = fields.Text('References', help='Message references, such as identifiers of previous messages', readonly=1)
     headers = fields.Text('Headers', copy=False)

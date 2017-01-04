@@ -50,7 +50,6 @@ class Project(models.Model):
     _name = "project.project"
     _description = "Project"
     _inherit = ['mail.alias.mixin', 'mail.thread']
-    _inherits = {'account.analytic.account': "analytic_account_id"}
     _order = "sequence, name, id"
     _period_number = 5
 
@@ -169,14 +168,14 @@ class Project(models.Model):
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
     _alias_models = lambda self: self._get_alias_models()
 
+    analytic_account_id = fields.Many2one(
+        'account.analytic.account', string='Contract/Analytic',
+        auto_join=True, delegate=True, ondelete="cascade", required=True,
+        help="Link this project to an analytic account if you need financial management on projects. "
+             "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.")
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
     sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of Projects.")
-    analytic_account_id = fields.Many2one(
-        'account.analytic.account', string='Contract/Analytic',
-        help="Link this project to an analytic account if you need financial management on projects. "
-             "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.",
-        ondelete="cascade", required=True, auto_join=True)
     favorite_user_ids = fields.Many2many(
         'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
         default=_get_default_favorite_user_ids,

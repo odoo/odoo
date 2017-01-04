@@ -12,7 +12,6 @@ _logger = logging.getLogger(__name__)
 
 class DeliveryCarrier(models.Model):
     _name = 'delivery.carrier'
-    _inherits = {'product.product': 'product_id'}
     _description = "Carrier"
     _order = 'sequence, id'
 
@@ -35,12 +34,14 @@ class DeliveryCarrier(models.Model):
     # Internals for shipping providers #
     # -------------------------------- #
 
+    product_id = fields.Many2one(
+        'product.product', string='Delivery Product',
+        delegate=True, required=True, ondelete="cascade")
     sequence = fields.Integer(help="Determine the display order", default=10)
-    # This field will be overwritten by internal shipping providers by adding their own type (ex: 'fedex')
-    delivery_type = fields.Selection([('fixed', 'Fixed Price'), ('base_on_rule', 'Based on Rules')], string='Provider', default='fixed', required=True)
     product_type = fields.Selection(related='product_id.type', default='service')
     product_sale_ok = fields.Boolean(related='product_id.sale_ok', default=False)
-    product_id = fields.Many2one('product.product', string='Delivery Product', required=True, ondelete="cascade")
+    # This field will be overwritten by internal shipping providers by adding their own type (ex: 'fedex')
+    delivery_type = fields.Selection([('fixed', 'Fixed Price'), ('base_on_rule', 'Based on Rules')], string='Provider', default='fixed', required=True)
     price = fields.Float(compute='get_price')
     available = fields.Boolean(compute='get_price')
     free_if_more_than = fields.Boolean('Free if Order total is more than', help="If the order is more expensive than a certain amount, the customer can benefit from a free shipping", default=False)

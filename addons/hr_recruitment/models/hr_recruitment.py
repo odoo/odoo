@@ -18,9 +18,10 @@ AVAILABLE_PRIORITIES = [
 class RecruitmentSource(models.Model):
     _name = "hr.recruitment.source"
     _description = "Source of Applicants"
-    _inherits = {"utm.source": "source_id"}
 
-    source_id = fields.Many2one('utm.source', "Source", ondelete='cascade', required=True)
+    source_id = fields.Many2one(
+        'utm.source', "Source",
+        delegate=True, ondelete='cascade', required=True)
     email = fields.Char(related='alias_id.display_name', string="Email", readonly=True)
     job_id = fields.Many2one('hr.job', "Job ID")
     alias_id = fields.Many2one('mail.alias', "Alias ID")

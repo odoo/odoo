@@ -134,15 +134,16 @@ class MassMailingCampaign(models.Model):
     _name = "mail.mass_mailing.campaign"
     _description = 'Mass Mailing Campaign'
     _rec_name = "campaign_id"
-    _inherits = {'utm.campaign': 'campaign_id'}
 
+    campaign_id = fields.Many2one(
+        'utm.campaign', 'campaign_id',
+        delegate=True, ondelete='cascade', required=True,
+        help="This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
     stage_id = fields.Many2one('mail.mass_mailing.stage', string='Stage', required=True, 
         default=lambda self: self.env['mail.mass_mailing.stage'].search([], limit=1))
     user_id = fields.Many2one(
         'res.users', string='Responsible',
         required=True, default=lambda self: self.env.uid)
-    campaign_id = fields.Many2one('utm.campaign', 'campaign_id',
-        required=True, ondelete='cascade',  help="This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
     source_id = fields.Many2one('utm.source', string='Source',
             help="This is the link source, e.g. Search Engine, another domain,or name of email list", default=lambda self: self.env.ref('utm.utm_source_newsletter'))
     medium_id = fields.Many2one('utm.medium', string='Medium',
@@ -271,13 +272,11 @@ class MassMailingCampaign(models.Model):
 class MassMailing(models.Model):
     """ MassMailing models a wave of emails for a mass mailign campaign.
     A mass mailing is an occurence of sending emails. """
-
     _name = 'mail.mass_mailing'
     _description = 'Mass Mailing'
     # number of periods for tracking mail_mail statistics
     _period_number = 6
     _order = 'sent_date DESC'
-    _inherits = {'utm.source': 'source_id'}
     _rec_name = "source_id"
 
     @api.model
@@ -306,6 +305,18 @@ class MassMailing(models.Model):
     # indirections for inheritance
     _mailing_model = lambda self: self._get_mailing_model()
 
+    source_id = fields.Many2one(
+        'utm.source', string='Subject',
+        delegate=True, required=True, ondelete='cascade',
+        help="This is the link source, e.g. Search Engine, another domain, or name of email list")
+    campaign_id = fields.Many2one(
+        'utm.campaign', string='Campaign',
+        help="This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
+    medium_id = fields.Many2one(
+        'utm.medium', string='Medium',
+        default=lambda self: self.env.ref('utm.utm_medium_email'),
+        help="This is the delivery method, e.g. Postcard, Email, or Banner Ad")
+
     active = fields.Boolean(default=True)
     email_from = fields.Char(string='From', required=True,
         default=lambda self: self.env['mail.message']._get_default_from())
@@ -317,12 +328,6 @@ class MassMailing(models.Model):
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')
     mass_mailing_campaign_id = fields.Many2one('mail.mass_mailing.campaign', string='Mass Mailing Campaign')
-    campaign_id = fields.Many2one('utm.campaign', string='Campaign',
-                                  help="This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special")
-    source_id = fields.Many2one('utm.source', string='Subject', required=True, ondelete='cascade',
-                                help="This is the link source, e.g. Search Engine, another domain, or name of email list")
-    medium_id = fields.Many2one('utm.medium', string='Medium',
-                                help="This is the delivery method, e.g. Postcard, Email, or Banner Ad", default=lambda self: self.env.ref('utm.utm_medium_email'))
     clicks_ratio = fields.Integer(compute="_compute_clicks_ratio", string="Number of Clicks")
     state = fields.Selection([('draft', 'Draft'), ('in_queue', 'In Queue'), ('sending', 'Sending'), ('done', 'Sent')],
         string='Status', required=True, copy=False, default='draft')

@@ -103,9 +103,13 @@ class ProductPriceHistory(models.Model):
 class ProductProduct(models.Model):
     _name = "product.product"
     _description = "Product"
-    _inherits = {'product.template': 'product_tmpl_id'}
     _inherit = ['mail.thread']
     _order = 'default_code, id'
+
+    product_tmpl_id = fields.Many2one(
+        'product.template', 'Product Template',
+        auto_join=True, delegate=True, index=True,
+        ondelete="cascade", required=True)
 
     price = fields.Float(
         'Price', compute='_compute_product_price',
@@ -126,9 +130,6 @@ class ProductProduct(models.Model):
     active = fields.Boolean(
         'Active', default=True,
         help="If unchecked, it will allow you to hide the product without removing it.")
-    product_tmpl_id = fields.Many2one(
-        'product.template', 'Product Template',
-        auto_join=True, index=True, ondelete="cascade", required=True)
     barcode = fields.Char(
         'Barcode', copy=False, oldname='ean13',
         help="International Article Number used for product identification.")
