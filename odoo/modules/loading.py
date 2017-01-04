@@ -191,6 +191,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             # Set new modules and dependencies
             module.write({'state': 'installed', 'latest_version': ver})
 
+            package.load_state = package.state
+            package.load_version = package.installed_version
             package.state = 'installed'
             for kind in ('init', 'demo', 'update'):
                 if hasattr(package, kind):
@@ -338,6 +340,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         registry.setup_models(cr)
 
+        # STEP 3.5: execute migration end-scripts
+        migrations = odoo.modules.migration.MigrationManager(cr, graph)
+        for package in graph:
+            migrations.migrate_module(package, 'end')
+
         # STEP 4: Finish and cleanup installations
         if processed_modules:
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
@@ -394,12 +401,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # STEP 6: verify custom views on every model
         if update_module:
             View = env['ir.ui.view']
-            custom_view_test = True
             for model in registry:
                 if not View._validate_custom_views(model):
-                    custom_view_test = False
-                    _logger.error('invalid custom view(s) for model %s', model)
-            report.record_result(custom_view_test)
+                    _logger.warning('invalid custom view(s) for model %s', model)
 
         if report.failures:
             _logger.error('At least one test failed when loading the modules.')
