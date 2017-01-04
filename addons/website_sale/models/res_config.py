@@ -28,6 +28,7 @@ class WebsiteConfigSettings(models.TransientModel):
     module_delivery_usps = fields.Boolean("USPS integration")
 
     module_sale_ebay = fields.Boolean("eBay connector")
+    module_sale_coupon = fields.Boolean("Manage coupons and promotional offers")
 
     group_website_multiimage = fields.Boolean(string='Multi-Images', implied_group='website_sale.group_website_multi_image')
     group_discount_per_so_line = fields.Boolean(string="Discounted Prices", implied_group='sale.group_discount_per_so_line')
@@ -54,7 +55,9 @@ class WebsiteConfigSettings(models.TransientModel):
     group_product_pricelist = fields.Boolean("Show pricelists On Products",
         implied_group='product.group_product_pricelist')
 
-    order_mail_template = fields.Many2one('mail.template', string='Order Confirmation Email', default=_default_order_mail_template, help="Email sent to customer at the end of the checkout process")
+    order_mail_template = fields.Many2one('mail.template', string='Order Confirmation Email',
+        default=_default_order_mail_template, domain="[('model', '=', 'sale.order')]", 
+        help="Email sent to customer at the end of the checkout process")
     group_show_price_subtotal = fields.Boolean("Show subtotal", implied_group='sale.group_show_price_subtotal')
     group_show_price_total = fields.Boolean("Show total", implied_group='sale.group_show_price_total')
 
