@@ -93,10 +93,17 @@ class AccountAnalyticLine(models.Model):
 
     @api.multi
     def write(self, values):
+        so_lines = self.mapped('so_line')
         self._update_values(values)
         for line in self:
             values = line._get_timesheet_cost(vals=values)
             super(AccountAnalyticLine, line).write(values)
+
+        # Update delivered quantity on SO lines which are not linked to the analytic lines anymore
+        so_lines -= self.mapped('so_line')
+        if so_lines:
+            so_lines.with_context(force_so_lines=so_lines).sudo()._compute_analytic()
+
         return True
 
     @api.model
