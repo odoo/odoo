@@ -171,6 +171,9 @@
                         <div class="o_setting_right_pane">
                             <label for="sale_show_tax"/>
                             <div class="text-muted">
+                                Line subtotals in sales orders
+                            </div>
+                            <div class="text-muted">
                                 <field name="sale_show_tax" widget="radio"/>
                                 <field name="group_show_price_subtotal" invisible="1"/>
                                 <field name="group_show_price_total" invisible="1"/>
@@ -233,15 +236,6 @@
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-6 o_setting_box">
-                        <div class="o_setting_left_pane"/>
-                        <div class="o_setting_right_pane">
-                            <label string="Default product for payment advances"/>
-                            <div class="text-muted">
-                                <field name="deposit_product_id_setting"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box">
                         <div class="o_setting_left_pane">
                             <field name="auto_done_setting"/>
                         </div>
@@ -265,6 +259,18 @@
                                 <div class="mt16">
                                     <field name="default_invoice_policy" class="o_light_label" widget="radio"/>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box" groups="base.group_no_one">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label string="Down Payments"/>
+                            <div class="text-muted">
+                                Product used for down payments
+                            </div>
+                            <div class="text-muted">
+                                <field name="deposit_product_id_setting"/>
                             </div>
                         </div>
                     </div>
