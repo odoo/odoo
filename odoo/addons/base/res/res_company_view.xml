@@ -13,12 +13,8 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="name" class="oe_inline"/>
+                            <field name="name"/>
                         </h1>
-                        <label for="rml_header1" class="oe_edit_only"/>
-                        <h3>
-                            <field name="rml_header1" placeholder="e.g. Global Business Solutions"/>
-                        </h3>
                     </div>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -35,6 +31,8 @@
                                         <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}'/>
                                     </div>
                                     <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
+                                    <field name="rml_footer" placeholder="e.g. Your Bank Accounts, one per line"/>
+                                    <field name="rml_header1" placeholder="e.g. Global Business Solutions"/>
                                 </group>
                                 <group>
                                     <field name="phone"/>

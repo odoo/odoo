@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError
 from odoo.sql_db import TestCursor
 from odoo.tools import config
@@ -224,7 +224,7 @@ class Report(models.Model):
                 footer = render_minimal(dict(subst=True, body=body, base_url=base_url))
                 footerhtml.append(footer)
 
-            for node in root.xpath(match_klass.format('page')):
+            for node in root.xpath(match_klass.format('article')):
                 # Previously, we marked some reports to be saved in attachment via their ids, so we
                 # must set a relation between report ids and report's content. We use the QWeb
                 # branding in order to do so: searching after a node having a data-oe-model
@@ -266,12 +266,27 @@ class Report(models.Model):
         )
 
     @api.noguess
-    def get_action(self, docids, report_name, data=None):
+    def get_action(self, docids, report_name, data=None, config=True):
         """Return an action of type ir.actions.report.xml.
 
         :param docids: id/ids/browserecord of the records to print (if not used, pass an empty list)
         :param report_name: Name of the template to generate an action for
         """
+        if (self.env.uid == SUPERUSER_ID) and ((not self.env.user.company_id.external_report_layout) or (not self.env.user.company_id.logo)) and config:
+            template = self.env.ref('report.view_company_report_form', False)
+            return {
+                'name': _('Choose Your Report Layout'),
+                'type': 'ir.actions.act_window',
+                'context': {'default_report_name': report_name},
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_id': self.env.user.company_id.id,
+                'res_model': 'res.company',
+                'views': [(template.id, 'form')],
+                'view_id': template.id,
+                'target': 'new',
+            }
+
         context = self.env.context
         if docids:
             if isinstance(docids, models.Model):
