@@ -330,13 +330,25 @@ class Website(models.Model):
         return dependencies
 
     @api.model
-    def page_exists(self, name, module='website'):
-        try:
-            name = (name or "").replace("/page/website.", "").replace("/page/", "")
-            if not name:
-                return False
-            return self.env.ref('%s.%s' % module, name)
-        except:
+    def page_exists(self, name, module=None):
+        # merge context
+        request.context = dict(request.context, **self._context)
+        # prepare name and module
+        name = (name or "").replace("/page/website.", "").replace("/page/", "")
+        if not name:
+            return False
+        if not module:
+            module = 'website'
+        # search for the webpage
+        view = self.env['ir.ui.view'].search([
+            ('name', '=', name),
+            '|', ('website_id', '=', self._context.get('website_id')), ('website_id', '=', False),
+            ('page', '=', True),
+            ('type', '=', 'qweb')
+        ], count=True)
+        if view == 1:
+            return True
+        else:
             return False
 
     #----------------------------------------------------------
