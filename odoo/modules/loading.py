@@ -341,7 +341,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         registry.setup_models(cr)
 
         # STEP 3.5: execute migration end-scripts
-        migrations = openerp.modules.migration.MigrationManager(cr, graph)
+        migrations = odoo.modules.migration.MigrationManager(cr, graph)
         for package in graph:
             migrations.migrate_module(package, 'end')
 
