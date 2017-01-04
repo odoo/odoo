@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="website_config_settings_view_form_inherit_website_sale" model="ir.ui.view">
+        <field name="name">website.config.settings.form.inherit.sale</field>
+        <field name="model">website.config.settings</field>
+        <field name="inherit_id" ref="website.website_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='sale_coupon']" position="replace">
+                <div class="mt16">
+                    <button name="%(sale_coupon.sale_coupon_program_action_promo_program)d" icon="fa-arrow-right" type="action" string="Promotion Programs" class="btn-link"/>
+                </div>
+                <div>
+                    <button name="%(sale_coupon.sale_coupon_program_action_coupon_program)d" icon="fa-arrow-right" type="action" string="Coupon Programs" class="btn-link"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
