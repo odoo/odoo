@@ -38,10 +38,6 @@ class MaintenanceEquipmentCategory(models.Model):
     equipment_count = fields.Integer(string="Equipment", compute='_compute_equipment_count')
     maintenance_ids = fields.One2many('maintenance.request', 'category_id', copy=False)
     maintenance_count = fields.Integer(string="Maintenance", compute='_compute_maintenance_count')
-    alias_id = fields.Many2one(
-        'mail.alias', 'Alias', ondelete='restrict', required=True,
-        help="Email alias for this equipment category. New emails will automatically "
-        "create new maintenance request for this equipment category.")
     fold = fields.Boolean(string='Folded in Maintenance Pipe', compute='_compute_fold', store=True)
 
     @api.multi
@@ -60,26 +56,19 @@ class MaintenanceEquipmentCategory(models.Model):
 
     @api.model
     def create(self, vals):
-        self = self.with_context(alias_model_name='maintenance.request', alias_parent_model_name=self._name)
         if not vals.get('alias_name'):
             vals['alias_name'] = vals.get('name')
-        category_id = super(MaintenanceEquipmentCategory, self).create(vals)
-        category_id.alias_id.write({'alias_parent_thread_id': category_id.id, 'alias_defaults': {'category_id': category_id.id}})
-        return category_id
+        return super(MaintenanceEquipmentCategory, self).create(vals)
 
     @api.multi
     def unlink(self):
-        MailAlias = self.env['mail.alias']
         for category in self:
             if category.equipment_ids or category.maintenance_ids:
                 raise UserError(_("You cannot delete an equipment category containing equipments or maintenance requests."))
-            MailAlias += category.alias_id
-        res = super(MaintenanceEquipmentCategory, self).unlink()
-        MailAlias.unlink()
-        return res
+        return super(MaintenanceEquipmentCategory, self).unlink()
 
     def get_alias_model_name(self, vals):
-        return vals.get('alias_model', 'maintenance.equipment')
+        return vals.get('alias_model', 'maintenance.request')
 
     def get_alias_values(self):
         values = super(MaintenanceEquipmentCategory, self).get_alias_values()
