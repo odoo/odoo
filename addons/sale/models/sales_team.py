@@ -21,10 +21,10 @@ class CrmTeam(models.Model):
         string='Invoicing Target',
         help="Target of invoice revenue for the current month. This is the amount the sales "
              "channel estimates to be able to invoice this month.")
-    quotations_to_invoice_count = fields.Integer(
+    quotations_count = fields.Integer(
         compute='_compute_quotations_to_invoice',
         string='Number of quotations to invoice', readonly=True)
-    quotations_to_invoice_amount = fields.Integer(
+    quotations_amount = fields.Integer(
         compute='_compute_quotations_to_invoice',
         string='Amount of quotations to invoice', readonly=True)
     sales_to_invoice_count = fields.Integer(
@@ -41,8 +41,8 @@ class CrmTeam(models.Model):
             ('state', 'in', ['draft', 'sent']),
         ], ['price_total', 'team_id', 'name'], ['team_id', 'name'], lazy=False)
         for rec in amounts:
-            self.browse(rec['team_id'][0]).quotations_to_invoice_amount += rec['price_total']
-            self.browse(rec['team_id'][0]).quotations_to_invoice_count += 1
+            self.browse(rec['team_id'][0]).quotations_amount += rec['price_total']
+            self.browse(rec['team_id'][0]).quotations_count += 1
 
     @api.multi
     def _compute_sales_to_invoice(self):
