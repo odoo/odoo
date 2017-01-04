@@ -25,6 +25,22 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box" title="Boost your sales with two kinds of discount programs: promotions and coupon codes. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products.">
+                        <div class="o_setting_left_pane">
+                            <field name="module_sale_coupon" widget="upgrade_boolean"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label string="Discount Programs"/>
+                            <div class="text-muted">
+                                Manage promotion &amp; coupon programs
+                            </div>
+                            <div class="content-group">
+                                <div class="text-warning mt16" id="sale_coupon" attrs="{'invisible': [('module_sale_coupon','=',False)]}">
+                                    Save this page and come back here to set up the feature.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-xs-12 col-md-6 o_setting_box" id="pricelists_setting"  title="There are two ways to manage pricelists:
                         Multiple prices per product: must be set in the Sales tab of the product detail form.
                         Price computed from formulas: must be set in the pricelist form.">
@@ -134,6 +150,17 @@
 
                 <h2>Checkout Process</h2>
                 <div class="row mt16 o_settings_container" id="sale_checkout_settings">
+                    <div class="col-xs-12 col-md-6 o_setting_box" id="shipping_address_setting">
+                        <div class="o_setting_left_pane">
+                            <field name="group_delivery_invoice_address"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="group_delivery_invoice_address"/>
+                            <div class="text-muted">
+                                Let the customer enter a shipping address
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-xs-12 col-md-6 o_setting_box" id="checkout_mail_setting">
                         <div class="o_setting_left_pane"/>
                         <div class="o_setting_right_pane">
@@ -149,18 +176,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="shipping_address_setting">
-                        <div class="o_setting_left_pane">
-                            <field name="group_delivery_invoice_address"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="group_delivery_invoice_address"/>
-                            <div class="text-muted">
-                                Let the customer enter a shipping address
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="checkout_assignation_setting" groups="base.group_no_one">
+                    <div class="col-xs-12 col-md-6 o_setting_box" id="checkout_assignation_setting">
                         <div class="o_setting_left_pane"/>
                         <div class="o_setting_right_pane">
                             <label string="Assignation"/>
