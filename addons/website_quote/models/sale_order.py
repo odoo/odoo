@@ -165,8 +165,7 @@ class SaleOrder(models.Model):
         """ Payment callback: validate the order and write transaction details in chatter """
         # create draft invoice if transaction is ok
         if transaction and transaction.state == 'done':
-            if self.state in ['draft', 'sent']:
-                self.sudo().action_confirm()
+            transaction._confirm_so()
             message = _('Order paid by %s. Transaction: %s. Amount: %s.') % (transaction.partner_id.name, transaction.acquirer_reference, transaction.amount)
             self.message_post(body=message)
             return True
