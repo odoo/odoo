@@ -94,7 +94,7 @@ class MrpProduction(models.Model):
         help="Bill of Materials allow you to define the list of required raw materials to make a finished product.")
     routing_id = fields.Many2one(
         'mrp.routing', 'Routing',
-        readonly=True, related='bom_id.routing_id', store=True,
+        readonly=True, compute='_compute_routing', store=True,
         help="The list of operations (list of work centers) to produce the finished product. The routing "
              "is mainly used to compute work center costs during operations and to plan future loads on "
              "work centers based on production planning.")
@@ -151,6 +151,15 @@ class MrpProduction(models.Model):
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
     priority = fields.Selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority',
                                 readonly=True, states={'confirmed': [('readonly', False)]}, default='1')
+
+    @api.multi
+    @api.depends('bom_id.routing_id', 'bom_id.routing_id.operation_ids')
+    def _compute_routing(self):
+        for production in self:
+            if production.bom_id.routing_id.operation_ids:
+                production.routing_id = production.bom_id.routing_id.id
+            else:
+                production.routing_id = False
 
     @api.multi
     @api.depends('workorder_ids')
@@ -243,10 +252,6 @@ class MrpProduction(models.Model):
         self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
 
-    @api.onchange('bom_id')
-    def onchange_bom_id(self):
-        self.routing_id = self.bom_id.routing_id.id
-
     @api.model
     def create(self, values):
         if not values.get('name', False) or values['name'] == _('New'):
@@ -310,7 +315,7 @@ class MrpProduction(models.Model):
             return self.env['stock.move']
         if bom_line.product_id.type not in ['product', 'consu']:
             return self.env['stock.move']
-        if self.bom_id.routing_id and self.bom_id.routing_id.location_id:
+        if self.bom_id.routing_id.location_id:
             source_location = self.bom_id.routing_id.location_id
         else:
             source_location = self.location_src_id
@@ -345,7 +350,7 @@ class MrpProduction(models.Model):
             mto_route = False
         for move in self.move_raw_ids:
             product = move.product_id
-            routes = product.route_ids + product.categ_id.route_ids
+            routes = product.route_ids + product.route_from_categ_ids
             # TODO: optimize with read_group?
             pull = self.env['procurement.rule'].search([('route_id', 'in', [x.id for x in routes]), ('location_src_id', '=', move.location_id.id),
                                                         ('location_id', '=', move.location_dest_id.id)], limit=1)
@@ -388,8 +393,10 @@ class MrpProduction(models.Model):
     @api.multi
     def button_plan(self):
         """ Create work orders. And probably do stuff, like things. """
-        orders_to_plan = self.filtered(lambda order: order.routing_id and order.state == 'confirmed')
+        orders_to_plan = self.filtered(lambda order: order.bom_id.routing_id and order.state == 'confirmed')
         for order in orders_to_plan:
+            if not order.routing_id.operation_ids:
+                raise UserError(_('Either create an operation in the routing or remove the routing linked to the BoM!'))
             quantity = order.product_uom_id._compute_quantity(order.product_qty, order.bom_id.product_uom_id) / order.bom_id.product_qty
             boms, lines = order.bom_id.explode(order.product_id, quantity, picking_type=order.bom_id.picking_type_id)
             order._generate_workorders(boms)
