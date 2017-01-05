@@ -22,11 +22,9 @@ Leave Management (keep track of employee leaves), Expense Management (manage emp
         </record>
 
         <record id="employee_root" model="hr.employee">
-            <field name="name" eval="obj(ref('base.partner_root')).name" model="res.partner"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="address_id" ref="base.partner_root"/>
-            <field name="address_home_id" ref="base.partner_root"/>
-            <field name="image" eval="obj(ref('base.partner_root')).image" model="res.partner"/>
+            <field name="home_partner_id" ref="base.partner_root"/>
         </record>
 
         <record id="mail_template_data_unknown_employee_email_address" model="mail.template">

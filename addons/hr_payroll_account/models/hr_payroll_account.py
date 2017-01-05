@@ -15,7 +15,7 @@ class HrPayslipLine(models.Model):
         """
         # use partner of salary rule or fallback on employee's address
         register_partner_id = self.salary_rule_id.register_id.partner_id
-        partner_id = register_partner_id.id or self.slip_id.employee_id.address_home_id.id
+        partner_id = register_partner_id.id or self.slip_id.employee_id.home_partner_id.id
         if credit_account:
             if register_partner_id or self.salary_rule_id.account_credit.internal_type in ('receivable', 'payable'):
                 return partner_id

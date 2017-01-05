@@ -120,7 +120,7 @@ class HrExpense(models.Model):
         '''
         This function prepares move line of account.move related to an expense
         '''
-        partner_id = self.employee_id.address_home_id.commercial_partner_id.id
+        partner_id = self.employee_id.home_partner_id.commercial_partner_id.id
         return {
             'date_maturity': line.get('date_maturity'),
             'partner_id': partner_id,
@@ -204,7 +204,7 @@ class HrExpense(models.Model):
                 payment = self.env['account.payment'].create({
                     'payment_method_id': payment_methods and payment_methods[0].id or False,
                     'payment_type': total < 0 and 'outbound' or 'inbound',
-                    'partner_id': expense.employee_id.address_home_id.commercial_partner_id.id,
+                    'partner_id': expense.employee_id.home_partner_id.commercial_partner_id.id,
                     'partner_type': 'supplier',
                     'journal_id': journal.id,
                     'payment_date': expense.date,
@@ -215,9 +215,9 @@ class HrExpense(models.Model):
                 })
                 payment_id = payment.id
             else:
-                if not expense.employee_id.address_home_id:
+                if not expense.employee_id.home_partner_id:
                     raise UserError(_("No Home Address found for the employee %s, please configure one.") % (expense.employee_id.name))
-                emp_account = expense.employee_id.address_home_id.property_account_payable_id.id
+                emp_account = expense.employee_id.home_partner_id.property_account_payable_id.id
 
             aml_name = expense.employee_id.name + ': ' + expense.name.split('\n')[0][:64]
             move_lines.append({
@@ -314,11 +314,7 @@ class HrExpense(models.Model):
 
         email_address = email_split(msg_dict.get('email_from', False))[0]
 
-        employee = self.env['hr.employee'].search([
-            '|',
-            ('work_email', 'ilike', email_address),
-            ('user_id.email', 'ilike', email_address)
-        ], limit=1)
+        employee = self.env['hr.employee'].search([('email', 'ilike', email_address)], limit=1)
 
         expense_description = msg_dict.get('subject', '')
 
@@ -456,7 +452,7 @@ class HrExpenseSheet(models.Model):
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
-        self.address_id = self.employee_id.address_home_id
+        self.address_id = self.employee_id.home_partner_id
         self.department_id = self.employee_id.department_id
 
     @api.one

@@ -388,12 +388,13 @@ class Applicant(models.Model):
                 contact_name = applicant.partner_id.name_get()[0][1]
             if applicant.job_id and (applicant.partner_name or contact_name):
                 applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
+                # TDE FIXME: seems louche, especially email
                 employee = self.env['hr.employee'].create({'name': applicant.partner_name or contact_name,
                                                'job_id': applicant.job_id.id,
-                                               'address_home_id': address_id,
+                                               'home_partner_id': address_id,
                                                'department_id': applicant.department_id.id or False,
                                                'address_id': applicant.company_id and applicant.company_id.partner_id and applicant.company_id.partner_id.id or False,
-                                               'work_email': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.email or False,
+                                               'email': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.email or False,
                                                'work_phone': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.phone or False})
                 applicant.write({'emp_id': employee.id})
                 applicant.job_id.message_post(

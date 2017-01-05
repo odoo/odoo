@@ -33,9 +33,7 @@ class MailThread(models.AbstractModel):
             # Alias: check alias_contact settings for employees
             if alias and alias.alias_contact == 'employees':
                 email_address = email_split(email_from)[0]
-                employee = self.env['hr.employee'].search([('work_email', 'ilike', email_address)], limit=1)
-                if not employee:
-                    employee = self.env['hr.employee'].search([('user_id.email', 'ilike', email_address)], limit=1)
+                employee = self.env['hr.employee'].search([('email', 'ilike', email_address)], limit=1)
                 if not employee:
                     mail_template = self.env.ref('hr.mail_template_data_unknown_employee_email_address')
                     self._routing_warn(_('alias %s does not accept unknown employees') % alias.alias_name, _('skipping'), message_id, route, False)

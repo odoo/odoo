@@ -32,7 +32,7 @@ class TestCheckJournalEntry(TransactionCase):
             'user_type_id': user_type.id,
             'reconcile': True
         })
-        self.employee.address_home_id.property_account_payable_id = account_payable.id
+        self.employee.home_partner_id.property_account_payable_id = account_payable.id
 
         # Create expenses account for the expense
         user_type = self.env.ref('account.data_account_type_expenses')

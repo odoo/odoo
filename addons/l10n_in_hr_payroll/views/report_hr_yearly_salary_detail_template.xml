@@ -42,8 +42,8 @@
                             </td>
                             <td><strong>Address</strong></td>
                             <td>
-                                <t t-if="employee.address_home_id">
-                                    <span t-field="employee.address_home_id.name"/>
+                                <t t-if="employee.home_partner_id">
+                                    <span t-field="employee.home_partner_id.name"/>
                                 </t>
                             </td>
                             <td></td>
@@ -63,8 +63,8 @@
                             </td>
                             <td><strong>E-mail Address</strong></td>
                             <td>
-                                <t t-if="employee.work_email">
-                                    <span t-field="employee.work_email"/>
+                                <t t-if="employee.email">
+                                    <span t-field="employee.email"/>
                                 </t>
                             </td>
                         </tr>

@@ -60,7 +60,7 @@
                                             context="{'show_address': 1}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
                                         <field name="work_location"/>
-                                        <field name="work_email" widget="email"/>
+                                        <field name="email" widget="email"/>
                                         <field name="mobile_phone"/>
                                         <field name="work_phone"/>
                                     </group>
@@ -83,7 +83,8 @@
                                         <field name="bank_account_id"/>
                                     </group>
                                     <group string="Contact Information">
-                                        <field name="address_home_id"
+                                        <field name="home_partner_id"
+                                            required="0"
                                             context="{'show_address': 1}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
                                     </group>
@@ -121,7 +122,7 @@
                 <tree string="Employees" decoration-bf="message_needaction==True">
                     <field name="name"/>
                     <field name="work_phone"/>
-                    <field name="work_email"/>
+                    <field name="email"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="department_id"/>
                     <field name="job_id"/>
@@ -137,7 +138,7 @@
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <search string="Employees">
-                    <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
+                    <field name="name" string="Employees" filter_domain="['|',('email','ilike',self),('name','ilike',self)]"/>
                     <field name="department_id"/>
                     <field name="category_ids" groups="hr.group_hr_user"/>
                     <field name="job_id" />
@@ -186,7 +187,7 @@
                                 <li id="last_login"/>
                                 <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
                                 <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
-                                <li t-if="record.work_email.raw_value"><i class="fa fa-envelope"></i> <field name="work_email"/></li>
+                                <li t-if="record.email.raw_value"><i class="fa fa-envelope"></i> <field name="email"/></li>
                                 <li t-if="record.work_phone.raw_value"><i class="fa fa-phone"></i> <field name="work_phone"/></li>
                                 <li t-if="record.mobile_phone.raw_value"><i class="fa fa-mobile"></i> <field name="mobile_phone"/></li>
                             </ul>
@@ -261,7 +262,7 @@
                 <tree string="Employees">
                     <field name="name"/>
                     <field name="work_phone"/>
-                    <field name="work_email"/>
+                    <field name="email"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="department_id"/>
                     <field name="job_id"/>

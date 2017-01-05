@@ -15,7 +15,7 @@ class HrExpenseRegisterPaymentWizard(models.TransientModel):
         context = dict(self._context or {})
         active_ids = context.get('active_ids', [])
         expense_sheet = self.env['hr.expense.sheet'].browse(active_ids)
-        return expense_sheet.address_id.id or expense_sheet.employee_id.id and expense_sheet.employee_id.address_home_id.id
+        return expense_sheet.address_id.id or expense_sheet.employee_id.id and expense_sheet.employee_id.home_partner_id.id
 
     partner_id = fields.Many2one('res.partner', string='Partner', required=True, default=_default_partner_id)
     journal_id = fields.Many2one('account.journal', string='Payment Method', required=True, domain=[('type', 'in', ('bank', 'cash'))])

@@ -95,7 +95,7 @@ class Job(models.Model):
 class Employee(models.Model):
     _name = "hr.employee"
     _description = "Employee"
-    _order = 'name_related'
+    _order = 'name'
     _inherit = ['resource.mixin', 'mail.thread']
 
     _mail_post_access = 'read'
@@ -109,14 +109,12 @@ class Employee(models.Model):
     resource_id = fields.Many2one(
         'resource.resource', string='Resource',
         auto_join=True, ondelete='cascade', required=True)
-    name_related = fields.Char(
-        'Resource Name', related='resource_id.name',
-        readonly=True, store=True)  # store a related for search / group purposes
     # partner
-    address_home_id = fields.Many2one(
-        'res.partner', 'Home Address')
+    home_partner_id = fields.Many2one(
+        'res.partner', 'Home Address',
+        delegate=True, oldname='address_home_id', required=True)
     country_id = fields.Many2one(
-        'res.country', 'Nationality (Country)')
+        'res.country', 'Nationality (Country)', related='home_partner_id.country_id', readonly=True)
     birthday = fields.Date('Date of Birth')
     ssnid = fields.Char('SSN No', help='Social Security Number')
     sinid = fields.Char('SIN No', help='Social Insurance Number')
@@ -124,7 +122,7 @@ class Employee(models.Model):
     passport_id = fields.Char('Passport No')
     bank_account_id = fields.Many2one(
         'res.partner.bank', 'Bank Account Number',
-        domain="[('partner_id', '=', address_home_id)]",
+        domain="[('partner_id', '=', home_partner_id)]",
         help='Employee bank salary account')
     gender = fields.Selection([
         ('male', 'Male'),
@@ -137,26 +135,11 @@ class Employee(models.Model):
         ('widower', 'Widower'),
         ('divorced', 'Divorced')
     ], string='Marital Status')
-    # image: all image fields are base64 encoded and PIL-supported
-    image = fields.Binary(
-        "Photo", default=_default_image, attachment=True,
-        help="This field holds the image used as photo for the employee, limited to 1024x1024px.")
-    image_medium = fields.Binary(
-        "Medium-sized photo", attachment=True,
-        help="Medium-sized photo of the employee. It is automatically "
-             "resized as a 128x128px image, with aspect ratio preserved. "
-             "Use this field in form views or some kanban views.")
-    image_small = fields.Binary(
-        "Small-sized photo", attachment=True,
-        help="Small-sized photo of the employee. It is automatically "
-             "resized as a 64x64px image, with aspect ratio preserved. "
-             "Use this field anywhere a small image is required.")
     # work
     address_id = fields.Many2one(
         'res.partner', 'Work Address')
     work_phone = fields.Char('Work Phone')
     mobile_phone = fields.Char('Work Mobile')
-    work_email = fields.Char('Work Email')
     work_location = fields.Char('Work Location')
     user_id = fields.Many2one('res.users', 'User')
     # employee
@@ -195,19 +178,8 @@ class Employee(models.Model):
 
     @api.onchange('user_id')
     def _onchange_user(self):
-        self.work_email = self.user_id.email
-        self.name = self.user_id.name
-        self.image = self.user_id.image
-
-    @api.model
-    def create(self, vals):
-        tools.image_resize_images(vals)
-        return super(Employee, self).create(vals)
-
-    @api.multi
-    def write(self, vals):
-        tools.image_resize_images(vals)
-        return super(Employee, self).write(vals)
+        if self.user_id:
+            self.home_partner_id = self.user_id.partner_id
 
     @api.multi
     def unlink(self):
