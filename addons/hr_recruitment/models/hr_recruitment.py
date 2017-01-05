@@ -393,7 +393,7 @@ class Applicant(models.Model):
                                                'job_id': applicant.job_id.id,
                                                'home_partner_id': address_id,
                                                'department_id': applicant.department_id.id or False,
-                                               'address_id': applicant.company_id and applicant.company_id.partner_id and applicant.company_id.partner_id.id or False,
+                                               'work_partner_id': applicant.company_id and applicant.company_id.partner_id and applicant.company_id.partner_id.id or False,
                                                'email': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.email or False,
                                                'work_phone': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.phone or False})
                 applicant.write({'emp_id': employee.id})

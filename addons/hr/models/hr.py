@@ -136,7 +136,7 @@ class Employee(models.Model):
         ('divorced', 'Divorced')
     ], string='Marital Status')
     # work
-    address_id = fields.Many2one(
+    work_partner_id = fields.Many2one(
         'res.partner', 'Work Address')
     work_phone = fields.Char('Work Phone')
     mobile_phone = fields.Char('Work Mobile')
@@ -162,15 +162,15 @@ class Employee(models.Model):
             if not employee._check_recursion():
                 raise ValidationError(_('Error! You cannot create recursive hierarchy of Employee(s).'))
 
-    @api.onchange('address_id')
+    @api.onchange('work_partner_id')
     def _onchange_address(self):
-        self.work_phone = self.address_id.phone
-        self.mobile_phone = self.address_id.mobile
+        self.work_phone = self.work_partner_id.phone
+        self.mobile_phone = self.work_partner_id.mobile
 
     @api.onchange('company_id')
     def _onchange_company(self):
         address = self.company_id.partner_id.address_get(['default'])
-        self.address_id = address['default'] if address else False
+        self.work_partner_id = address['default'] if address else False
 
     @api.onchange('department_id')
     def _onchange_department(self):
