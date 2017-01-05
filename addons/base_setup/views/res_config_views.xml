@@ -10,9 +10,42 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <sheet>
+                        <div id="business_documents"/>
+                        <div id="emails"/>
+                        <h2>Users</h2>
+                        <div class="row mt16 o_settings_container" id="default_user_rights">
+                            <div class="col-xs-12 col-md-6 o_setting_box"  title="By default, new users get highest access rights for all installed apps." id="access_rights">
+                                <div class="o_setting_left_pane">
+                                    <field name="default_user_rights"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Access Rights" for="default_user_rights"/>
+                                    <div class="text-muted">
+                                        Set custom access rights for new users
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('default_user_rights','=',False)]}">
+                                        <div class="mt16">
+                                            <field name="company_id" invisible="1"/>
+                                            <button type="object" name="open_default_user" string="Default Access Rights" icon="fa-arrow-right" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_base_import" />
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Import &amp; Export" for="module_base_import"/>
+                                    <div class="text-muted">
+                                        Allow users to import data from CSV/XLS/XLSX/ODS files
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <field name="company_id" invisible="1"/>
-                        <h2>Company</h2>
-                        <div class="row mt16 o_settings_container">
+                        <h2>Multi-Companies</h2>
+                        <div class="row mt16 o_settings_container" name="multi_company">
                             <div class="col-xs-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="group_multi_company"/>
@@ -48,39 +81,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="business_documents"/>
-                        <h2>Users</h2>
-                        <div class="row mt16 o_settings_container" id="default_user_rights">
-                            <div class="col-xs-12 col-md-6 o_setting_box"  title="By default, new users get highest access rights for all installed apps." id="access_rights">
-                                <div class="o_setting_left_pane">
-                                    <field name="default_user_rights"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label string="Access Rights" for="default_user_rights"/>
-                                    <div class="text-muted">
-                                        Set custom access rights for new users
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('default_user_rights','=',False)]}">
-                                        <div class="mt16">
-                                            <field name="company_id" invisible="1"/>
-                                            <button type="object" name="open_default_user" string="Default Access Rights" icon="fa-arrow-right" class="btn-link"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_base_import" />
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label string="Import &amp; Export" for="module_base_import"/>
-                                    <div class="text-muted">
-                                        Allow users to import data from CSV/XLS/XLSX/ODS files
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="emails"/>
                         <h2>Integrations</h2>
                         <div class="row mt16 o_settings_container">
                             <div class="col-xs-12 col-md-6 o_setting_box">
