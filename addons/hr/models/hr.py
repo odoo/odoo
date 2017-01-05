@@ -113,9 +113,6 @@ class Employee(models.Model):
     name_related = fields.Char(
         'Resource Name', related='resource_id.name',
         readonly=True, store=True)  # store a related for search / group purposes
-    login = fields.Char(
-        'Login', related='user_id.login',
-        readonly=True)
     # partner
     address_home_id = fields.Many2one(
         'res.partner', 'Home Address')
