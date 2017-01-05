@@ -167,21 +167,6 @@
                     </div>
                     <div class="col-xs-12 col-md-6 o_setting_box">
                         <div class="o_setting_left_pane">
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="sale_show_tax"/>
-                            <div class="text-muted">
-                                Line subtotals in sales orders
-                            </div>
-                            <div class="text-muted">
-                                <field name="sale_show_tax" widget="radio"/>
-                                <field name="group_show_price_subtotal" invisible="1"/>
-                                <field name="group_show_price_total" invisible="1"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box">
-                        <div class="o_setting_left_pane">
                             <field name="group_sale_delivery_address"/>
                         </div>
                         <div class="o_setting_right_pane">
@@ -243,6 +228,21 @@
                             <label for="auto_done_setting"/>
                             <div class="text-muted">
                                 No longer edit orders once confirmed
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="sale_show_tax"/>
+                            <div class="text-muted">
+                                Line subtotals in sales orders
+                            </div>
+                            <div class="mt16">
+                                <field name="sale_show_tax" class="o_light_label" widget="radio"/>
+                                <field name="group_show_price_subtotal" invisible="1"/>
+                                <field name="group_show_price_total" invisible="1"/>
                             </div>
                         </div>
                     </div>

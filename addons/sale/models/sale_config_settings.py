@@ -65,7 +65,7 @@ class SaleConfiguration(models.TransientModel):
         domain="[('type', '=', 'service')]",
         help='Default product used for payment advances')
     auto_done_setting = fields.Boolean("Lock Confirmed Orders")
-    module_sale_contract = fields.Boolean("Manage subscriptions and recurring invoicing")
+    module_sale_contract = fields.Boolean("Subscriptions")
     module_website_sale_digital = fields.Boolean("Sell digital products - provide downloadable content on your customer portal")
 
     group_multi_currency = fields.Boolean("Multi-Currencies", implied_group='base.group_multi_currency')
