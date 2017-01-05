@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-06-27 15:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Georgian (http://www.transifex.com/odoo/odoo-9/language/ka/)\n"
@@ -38,6 +38,11 @@ msgid "Basic Salary of the employee"
 msgstr "თანამშრომლის ძირითადი ხელფასი"
 
 #. module: hr_contract
+#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid "Click here to create new contracts."
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
 msgid "Company Vehicle"
 msgstr ""
@@ -50,7 +55,7 @@ msgstr ""
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5769
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
@@ -74,6 +79,12 @@ msgstr ""
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
+msgstr ""
+
+#. module: hr_contract
+#: code:addons/hr_contract/models/hr_contract.py:84
+#, python-format
+msgid "Contract start date must be less than contract end date."
 msgstr ""
 
 #. module: hr_contract
@@ -141,19 +152,8 @@ msgid "Employee"
 msgstr "თანამშრომელი"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_contract
-#, fuzzy
-msgid "Employee Contract"
-msgstr "კონტრაქტი"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
 msgid "End Date"
-msgstr ""
-
-#. module: hr_contract
-#: constraint:hr.contract:0
-msgid "Error! Contract start-date must be less than contract end-date."
 msgstr ""
 
 #. module: hr_contract
@@ -192,6 +192,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id
 msgid "ID"
 msgstr "იდენტიფიკატორი"
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Important Messages"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
@@ -341,11 +346,6 @@ msgid "Trial Start Date"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Unread Messages"
-msgstr "წაუკითხავი შეტყობინებები"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
 msgid "Use employee work schedule"
 msgstr ""
@@ -384,12 +384,3 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_working_hours
 msgid "Working Schedule"
 msgstr ""
-
-#~ msgid "Followers"
-#~ msgstr "მიმდევრები"
-
-#~ msgid "Last Message Date"
-#~ msgstr "ბოლო შეტყობინების თარიღი"
-
-#~ msgid "Messages"
-#~ msgstr "მესიჯები"

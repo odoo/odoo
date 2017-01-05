@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-04-26 05:55+0000\n"
 "Last-Translator: MinGi KYUNG <moonend@gmail.com>\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:686
+#: code:addons/resource/models/resource.py:689
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (사본)"
@@ -106,7 +106,8 @@ msgid "End Date"
 msgstr "마감일"
 
 #. module: resource
-#: constraint:resource.calendar.leaves:0
+#: code:addons/resource/models/resource.py:738
+#, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr "오류! 휴가 시작일은 휴가 종료일보다 이전이어야 합니다."
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2015-11-18 13:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -165,7 +165,7 @@ msgid "Name of the picking wave"
 msgstr "Бэлтгэх давалгааны нэр"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:42
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:52
 #, python-format
 msgid "Nothing to print."
 msgstr "Хэвлэх зүйл алга."
@@ -176,10 +176,10 @@ msgid "Person responsible for this wave"
 msgstr "Энэ давалгааны хариуцагч"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:64
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9894
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -202,7 +202,7 @@ msgid "Picking Waves not finished"
 msgstr "Бэлтгэх давалгаа дуусаагүй"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9894
 msgid "Picking wave associated to this picking"
 msgstr "Энэ бэлтгэх баримтанд холбогдсон бэлтгэх давалгаа"
 
@@ -214,8 +214,8 @@ msgstr "Бэлтгэх баримтууд"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
-msgid "Print all pickings"
-msgstr "Бүх бэлтгэх баримтуудыг хэвлэх"
+msgid "Print"
+msgstr ""
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_user_id
@@ -238,7 +238,7 @@ msgid "Select a wave"
 msgstr "Давалгааг сонгох"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:59
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:59
 #, python-format
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
@@ -295,7 +295,7 @@ msgid "Transfer"
 msgstr "Шилжүүлэх"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:63
 #, python-format
 msgid "Transferred by"
 msgstr ""
@@ -309,59 +309,3 @@ msgstr "Хэрэглэгч"
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_stock_picking_wave_search_inherit
 msgid "Wave"
 msgstr "Давалгаа"
-
-#~ msgid "Action Needed"
-#~ msgstr "Үйлдэл Шаардлагатай"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
-
-#~ msgid "Followers"
-#~ msgstr "Дагагчид"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Дагагчид (Сувагууд)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Дагагчид (Харилцагчид)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr ""
-#~ "Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг "
-#~ "шаардана."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
-
-#~ msgid "Is Follower"
-#~ msgstr "Дагагч эсэх"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Сүүлийн зурвасын огноо"
-
-#~ msgid "Messages"
-#~ msgstr "Зурвасууд"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Зурвас болон харилцсан түүх"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Үйлдлийн тоо"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Үйлдэл шаардлагатай зурвасын тоо"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Уншаагүй зурвасын тоо"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Уншаагүй Зурвасууд"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Уншаагүй зурвасын тоолуур"
-
-#~ msgid "Website Messages"
-#~ msgstr "Вебсайтын зурвасууд"
-
-#~ msgid "Website communication history"
-#~ msgstr "Вебсайтын харилцааны түүх"

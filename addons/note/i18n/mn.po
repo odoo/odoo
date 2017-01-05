@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2015-11-18 13:53+0000\n"
 "Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -33,6 +33,11 @@ msgstr "Хадгалах газар"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Наасан тэмдэглэлийн ангилалаар"
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
+msgstr ""
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -131,7 +136,7 @@ msgid "New"
 msgstr "Шинэ"
 
 #. module: note
-#: code:addons/note/note.py:165
+#: code:addons/note/models/note.py:129
 #, python-format
 msgid "New Note"
 msgstr ""
@@ -179,8 +184,8 @@ msgstr "Эзэмшигч"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
-msgstr "Тэмдэглэлийн үеийн эзэн"
+msgid "Owner of the note stage"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_sequence
@@ -232,13 +237,15 @@ msgid "Tag name already exists !"
 msgstr ""
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Пайзууд"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
 msgstr "Энэ долооног"
@@ -282,53 +289,3 @@ msgid ""
 "You can customize how you process your notes/tasks by adding,\n"
 "            removing or modifying columns."
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Үйлдэл Шаардлагатай"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
-
-#~ msgid "Followers"
-#~ msgstr "Дагагчид"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Дагагчид (Сувагууд)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Дагагчид (Харилцагчид)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr ""
-#~ "Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг "
-#~ "шаардана."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
-
-#~ msgid "Is Follower"
-#~ msgstr "Дагагч эсэх"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Сүүлийн зурвасын огноо"
-
-#~ msgid "Messages"
-#~ msgstr "Зурвасууд"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Зурвас болон харилцсан түүх"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Үйлдлийн тоо"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Үйлдэл шаардлагатай зурвасын тоо"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Уншаагүй зурвасын тоо"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Уншаагүй Зурвасууд"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Уншаагүй зурвасын тоолуур"

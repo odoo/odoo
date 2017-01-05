@@ -152,17 +152,17 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
 msgid "# Days to Assign"
-msgstr ""
+msgstr "Päivää vastuutukseen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_closing_days
 msgid "# Days to Close"
-msgstr ""
+msgstr "Päivää sulkemiseen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
 msgid "# Days to Deadline"
-msgstr ""
+msgstr "Päivää määräaikaan"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -172,7 +172,7 @@ msgstr "# Tehtävää"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_no_of_days
 msgid "# Working Days"
-msgstr ""
+msgstr "Työpäivää"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
@@ -225,7 +225,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:83
 #, python-format
 msgid "<b>Click the save button</b> to apply your changes to the task."
-msgstr ""
+msgstr "<b>Paina Tallenna-painiketta</b> tallentaaksesi muutoksesi tehtävään."
 
 #. module: project
 #. openerp-web
@@ -270,6 +270,7 @@ msgstr ""
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">Paina luodaksesi uuden projektin.</p>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -916,7 +917,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Add/remove from favorite"
-msgstr ""
+msgstr "Lisää/poista suosikeistasi"
 
 #. module: project
 #. openerp-web
@@ -1188,11 +1189,13 @@ msgid ""
 "Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
 "Office Party, etc.)"
 msgstr ""
+"Valitse <b>projektin nimi</b>. (esim. verkkosivuston julkaisu, tuotekehitys "
+"tai toimistobileet)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Choose a Project Email"
-msgstr ""
+msgstr "Valitse projektin sähköposti"
 
 #. module: project
 #. openerp-web
@@ -1206,7 +1209,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:59
 #, python-format
 msgid "Click on a card to get the details of the task."
-msgstr ""
+msgstr "Paina korttia nähdäksesi tehtävän tarkemmat tiedot."
 
 #. module: project
 #. openerp-web
@@ -1215,13 +1218,15 @@ msgstr ""
 msgid ""
 "Click on the card to <b>go to your project</b> and start organizing tasks."
 msgstr ""
+"Paina kortista <b>mennäksesi projektiisi</b> alkaaksesi suunnitella "
+"tehtäviä."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:67
 #, python-format
 msgid "Click on this button to modify the task."
-msgstr ""
+msgstr "Paina tätä nappia muokataksesi tehtävää."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_tags_action
@@ -1231,12 +1236,12 @@ msgstr "Klikkaa lisätäksesi uusi tunniste."
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
 msgid "Click to add a stage in the task pipeline."
-msgstr ""
+msgstr "Paina lisätäksesi vaiheen projektin tehtäville."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "Click to create a new project.<br>"
-msgstr ""
+msgstr "Paina luodaksesi uuden projektin.<br>"
 
 #. module: project
 #: selection:project.config.settings,module_pad:0
@@ -1348,7 +1353,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create a Project"
-msgstr ""
+msgstr "Luo projekti"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
@@ -1584,7 +1589,7 @@ msgstr "Näyttönimi"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
 msgid "Displayed Image"
-msgstr ""
+msgstr "Näytettävä kuva"
 
 #. module: project
 #. openerp-web
@@ -1669,7 +1674,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit Task"
-msgstr ""
+msgstr "Muokkaa tehtävää"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2354,7 +2359,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Favorites"
-msgstr ""
+msgstr "Omat suosikkini"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -2488,7 +2493,7 @@ msgstr ""
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
-msgstr ""
+msgstr "Vain kutsulla"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2742,12 +2747,12 @@ msgstr "Projektit"
 #. module: project
 #: model:mail.channel,name:project.mail_channel_project_task
 msgid "Projects & Tasks"
-msgstr ""
+msgstr "Projektit & tehtävät"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
 msgid "Rating on task"
-msgstr ""
+msgstr "Tehtävien arviointi"
 
 #. module: project
 #. openerp-web
@@ -2835,7 +2840,7 @@ msgstr "Jäljelläolevat tunnit"
 #: code:addons/project/static/src/js/project.js:48
 #, python-format
 msgid "Remove Cover Image"
-msgstr ""
+msgstr "Poista kansikuva"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2937,14 +2942,14 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr ""
+msgstr "Aseta kansikuva"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project.js:45
 #, python-format
 msgid "Set a Cover Image"
-msgstr ""
+msgstr "Aseta kansikuva"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_general_settings
@@ -3045,7 +3050,7 @@ msgstr "Vaiheet"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Start / Stop a timer in one click"
-msgstr ""
+msgstr "Aloita / Lopeta ajastin yhdella painalluksella"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date_start
@@ -3110,7 +3115,7 @@ msgstr "Tehtäväpolku"
 #: model:mail.message.subtype,name:project.mt_project_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready"
-msgstr ""
+msgstr "Tehtävä valmis"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -3157,14 +3162,14 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:104
 #, python-format
 msgid "Task is completed"
-msgstr ""
+msgstr "Tehtävä on valmis"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:25
 #, python-format
 msgid "Task is tested"
-msgstr ""
+msgstr "Tehtävä on testattu"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
@@ -3174,7 +3179,7 @@ msgstr "Tehtävä avattu"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
 msgid "Task ready for Next Stage"
-msgstr ""
+msgstr "Tehtävä on valmis seuraavaan vaiheeseen"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
@@ -3218,7 +3223,7 @@ msgstr "Tehtävien vaiheet"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Tasks analysis"
-msgstr ""
+msgstr "Tehtäväanalyysi"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3375,7 +3380,7 @@ msgstr "Tehtävien aika-arvio"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Time Scheduling"
-msgstr ""
+msgstr "Aikataulutus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
@@ -3443,7 +3448,7 @@ msgstr ""
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
 msgid "Track customer satisfaction on tasks"
-msgstr ""
+msgstr "Seuraa asiakkaiden tyytyväisyyttä tehtävissä"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3542,14 +3547,14 @@ msgstr ""
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by all employees"
-msgstr ""
+msgstr "Näkyy kaikille työntekijöille"
 
 #. module: project
 #: code:addons/project/models/project.py:205
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
-msgstr ""
+msgstr "Näkyy kaikille projektia seuraaville asiakkaille"
 
 #. module: project
 #. openerp-web
@@ -3765,7 +3770,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
-msgstr ""
+msgstr "esim. Toimistobileet"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2015-09-07 18:22+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/"
@@ -66,7 +66,7 @@ msgid "Confirmed"
 msgstr "Potvrđeno"
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:150
+#: code:addons/fetchmail/models/fetchmail.py:137
 #, python-format
 msgid "Connection test failed: %s"
 msgstr ""
@@ -84,13 +84,11 @@ msgid "Create a New Record"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
 msgid "Created by"
 msgstr "Kreirao"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_create_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
 msgid "Created on"
 msgstr "Kreiran"
@@ -101,7 +99,6 @@ msgid "Defines the order of processing, lower values mean higher priority"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_display_name
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
 msgid "Display Name"
 msgstr "Ime za prikaz"
@@ -117,7 +114,6 @@ msgid "Hostname or IP of the mail server"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_id
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
 msgid "ID"
 msgstr "ID"
@@ -170,19 +166,16 @@ msgid "Last Fetch Date"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings___last_update
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
 msgid "Last Modified on"
 msgstr "Zadnja izmjena"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_uid
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
 msgid "Last Updated by"
 msgstr "Zadnja izmjena"
 
 #. module: fetchmail
-#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_config_settings_write_date
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
 msgid "Last Updated on"
 msgstr "Zadnja izmjena"
@@ -356,9 +349,4 @@ msgstr ""
 msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
-msgstr ""
-
-#. module: fetchmail
-#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
-msgid "fetchmail.config.settings"
 msgstr ""

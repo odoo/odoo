@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-09-29 13:59+0000\n"
 "PO-Revision-Date: 2015-11-11 08:22+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/"
@@ -20,10 +20,42 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.view_project_kanban_inherited
+msgid "<span class=\"o_label\">Timesheets</span>"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "<span>Timesheet Entries</span>"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "<strong>Total</strong>"
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_by_project
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
 msgid "Activities"
 msgstr "Aktivnosti"
+
+#. module: hr_timesheet
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_activity_analysis
+msgid "Activity Analysis"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_project_allow_timesheets
+#: model:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
+msgid "Allow timesheets"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_delay
@@ -31,7 +63,13 @@ msgid "Avg. Plan.-Eff."
 msgstr ""
 
 #. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_project_crossovered_budget_line
+msgid "Budget Lines"
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project_subtask_project_id
+#: model:ir.model.fields,help:hr_timesheet.field_project_task_subtask_project_id
 msgid ""
 "Choosing a sub-tasks project will both enable sub-tasks and set their "
 "default project (possibly the project itself)"
@@ -45,14 +83,9 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
+#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
 msgid "Click to record activities."
 msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_company_id
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
-msgid "Company"
-msgstr "Preduzeće"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_delay_hours
@@ -67,17 +100,17 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr ""
 
 #. module: hr_timesheet
+#: model:ir.model.fields,help:hr_timesheet.field_project_task_total_hours_spent
+msgid "Computed as: Time Spent + Sub-tasks Hours."
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_effective_hours
 msgid "Computed using the sum of the task work done."
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_cost
-msgid "Cost"
-msgstr "Cijena koštanja"
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_date
+#: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Date"
 msgstr "Datum"
 
@@ -92,15 +125,14 @@ msgid "Delay Hours"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
-#, fuzzy
-msgid "Detailed Activities"
-msgstr "Aktivnosti"
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_department_id
+msgid "Department"
+msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_display_name
-msgid "Display Name"
-msgstr "Ime za prikaz"
+#: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "Description"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
@@ -114,20 +146,9 @@ msgid "Effective Hours"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
-msgid "Extended Filters..."
-msgstr "Prošireni filteri..."
-
-#. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group By"
 msgstr "Grupisano po"
-
-#. module: hr_timesheet
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
-msgid "Group by month of date"
-msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_effective_hours
@@ -135,32 +156,9 @@ msgid "Hours Spent"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_id
-msgid "ID"
-msgstr "ID"
-
-#. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_project_task_progress
-msgid ""
-"If the task has a progress of 99.99% you should close the task if it's "
-"finished or reevaluate the time"
+#: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
+msgid "Officer"
 msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report___last_update
-msgid "Last Modified on"
-msgstr "Zadnja izmjena"
-
-#. module: hr_timesheet
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
-msgid "Month"
-msgstr "Mesec"
-
-#. module: hr_timesheet
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
-#, fuzzy
-msgid "My Timesheet"
-msgstr "Karneti ( vremena rada)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_parent_id
@@ -173,7 +171,6 @@ msgid "Planned Hours"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_product_id
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Product"
 msgstr "Proizvod"
@@ -186,9 +183,13 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_project
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_project_id
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_project_id
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Project"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "Project -"
 msgstr ""
 
 #. module: hr_timesheet
@@ -208,6 +209,11 @@ msgid "Reports"
 msgstr "Izveštaji"
 
 #. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
+msgid "Responsible"
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Spent Hours"
 msgstr ""
@@ -225,6 +231,7 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_project_task_sub_task
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task_child_ids
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Sub-tasks"
 msgstr ""
@@ -245,6 +252,7 @@ msgstr ""
 #: model:ir.model,name:hr_timesheet.model_project_task
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_task_id
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+#: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Task"
 msgstr ""
 
@@ -254,21 +262,13 @@ msgid "Tasks by user and project"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
-msgid "This Month"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_quantity
+#: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Time"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_timesheet_report
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_graph
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_pivot
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
+#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 msgid "Timesheet"
 msgstr ""
 
@@ -279,9 +279,9 @@ msgid "Timesheet Activities"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_all
-#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_filtered
-msgid "Timesheet Analysis"
+#: model:ir.actions.act_window,name:hr_timesheet.project_task_action_view_timesheet
+#: model:ir.actions.report.xml,name:hr_timesheet.timesheet_report
+msgid "Timesheet Entries"
 msgstr ""
 
 #. module: hr_timesheet
@@ -296,7 +296,6 @@ msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_timesheet_ids
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_report_all
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_root
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_department_view_kanban
 #: model:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
@@ -311,6 +310,7 @@ msgid "Total"
 msgstr ""
 
 #. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task_total_hours_spent
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_total_hours
 msgid "Total Hours"
 msgstr ""
@@ -321,24 +321,19 @@ msgid "Total time"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_hr_timesheet_report_user_id
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
-msgid "User"
-msgstr "Korisnik"
-
-#. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 msgid "Users"
 msgstr "Korisnici"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_progress
-msgid "Working Time Progress (%)"
+msgid "Working Time Recorded"
 msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
+#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
 msgid ""
 "You can register and track your workings hours by project every\n"
 "                day. Every time spent on a project will become a cost and "
@@ -353,32 +348,3 @@ msgid ""
 "analyse costs and revenues. In Odoo, analytic accounts are also used to "
 "track customer contracts."
 msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_account_analytic_line
-#, fuzzy
-msgid "account analytic line"
-msgstr "Analiticki red"
-
-#. module: hr_timesheet
-#: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_report_search
-msgid "month"
-msgstr "mesec"
-
-#~ msgid "Accounting"
-#~ msgstr "Računovodstvo"
-
-#~ msgid "Analytic Account"
-#~ msgstr "Analitički konto"
-
-#~ msgid "Analytic account"
-#~ msgstr "Analitički račun"
-
-#~ msgid "Companies"
-#~ msgstr "Kompanije"
-
-#~ msgid "Configuration"
-#~ msgstr "Podešavanje"
-
-#~ msgid "Information"
-#~ msgstr "Informacija"

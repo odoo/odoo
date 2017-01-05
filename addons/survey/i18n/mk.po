@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-10-10 08:44+0000\n"
 "PO-Revision-Date: 2016-07-08 16:00+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -31,7 +31,7 @@ msgid ""
 "<p>Hello,</p>\n"
 "<p>We are conducting a survey, and your response would be appreciated.</p>\n"
 "<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; "
-"background-color:#a24689; text-align:center; text-decoration:none; color:"
+"background-color:#875A7B; text-align:center; text-decoration:none; color:"
 "#F7FBFD;\" href=\"__URL__\">Please, click here to start survey</a></p>\n"
 "<p>Thanks for your participation!</p>\n"
 "                \n"
@@ -44,7 +44,7 @@ msgid "#Questions"
 msgstr "#Прашања"
 
 #. module: survey
-#: code:addons/survey/survey.py:231
+#: code:addons/survey/models/survey.py:124
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копија)"
@@ -188,11 +188,6 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: constraint:survey.label:0
-msgid "A label must be attached to one and only one question"
-msgstr ""
-
-#. module: survey
 #: sql_constraint:survey.question:0
 msgid "A length must be positive!"
 msgstr "Должината мора да е позитивна!"
@@ -220,7 +215,8 @@ msgid "A process is defined for all enterprise flows"
 msgstr "Процес е дефиниран за сите текови на претпријатието"
 
 #. module: survey
-#: constraint:survey.user_input_line:0
+#: code:addons/survey/models/survey.py:808
+#, python-format
 msgid "A question cannot be unanswered and skipped"
 msgstr "Прашање не може да се остави неодговорено или да се прескокне"
 
@@ -233,12 +229,6 @@ msgstr "Токенот мора да биде уникатен"
 #: model:survey.page,title:survey.feedback_1
 msgid "About your Odoo usage"
 msgstr "За вашата употреба на Odoo"
-
-#. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_active
-#, fuzzy
-msgid "Active"
-msgstr "Активен домен"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -298,9 +288,15 @@ msgstr "Одговорени"
 #: model:ir.model.fields,field_description:survey.field_survey_question_user_input_line_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_user_input_line_ids
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
+#: model:ir.ui.view,arch_db:survey.survey_form
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Answers"
 msgstr "Одговори"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Archived"
+msgstr ""
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -311,6 +307,13 @@ msgstr "Дали го користите Odoo секој ден?"
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_attachment_ids
 msgid "Attachments"
 msgstr "Привезоци"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_attachment_ids
+msgid ""
+"Attachments are linked to a document through model / res_id and to the "
+"message through this field."
+msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.back
@@ -338,17 +341,15 @@ msgid "Choose..."
 msgstr "Изберете..."
 
 #. module: survey
-#: code:addons/survey/survey.py:125
-#: code:addons/survey/wizard/survey_email_compose_message.py:34
+#: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
+msgid "Clean test answers"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/models/survey.py:112
 #, python-format
 msgid "Click here to start survey"
 msgstr "Кликнете овде за да ја започнете анкетата"
-
-#. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:92
-#, python-format
-msgid "Click here to take survey"
-msgstr "Кликнете овде за да ја пополните анкетата"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form
@@ -495,10 +496,8 @@ msgstr "Краен рок"
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_date_deadline
 msgid ""
 "Deadline to which the invitation to respond for this survey is valid. If the "
-"field is empty, the invitation is still valid."
+"field is empty,        the invitation is still valid."
 msgstr ""
-"Последен рок до кој поканата за одговор на оваа анкета важи. Ако ова поле е "
-"празно, поканата сеуште важи."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_date_deadline
@@ -622,7 +621,6 @@ msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_error_msg
-#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
 msgid "Error message"
 msgstr "Порака за грешка"
 
@@ -673,12 +671,6 @@ msgstr "Групирај по"
 #: model:survey.question,question:survey.feedback_3_1
 msgid "How do you contribute or plan to contribute to Odoo?"
 msgstr "Како придонесувате или планирате да придонесете кон Odoo?"
-
-#. module: survey
-#: model:survey.label,value:survey.choice_1_2_6
-#, fuzzy
-msgid "Human Resources"
-msgstr "Човечки ресурси"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_3
@@ -755,28 +747,10 @@ msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_stage_closed
+#: model:ir.model.fields,help:survey.field_survey_survey_is_closed
 msgid "If closed, people won't be able to answer to surveys in this column."
 msgstr ""
 "Ако е затворено луѓето нема да можат да одговараат на анкети во оваа колона."
-
-#. module: survey
-#: code:addons/survey/survey.py:624
-#: model:survey.question,comments_message:survey.feedback_1_1
-#: model:survey.question,comments_message:survey.feedback_1_2
-#: model:survey.question,comments_message:survey.feedback_2_1
-#: model:survey.question,comments_message:survey.feedback_2_2
-#: model:survey.question,comments_message:survey.feedback_2_3
-#: model:survey.question,comments_message:survey.feedback_2_4
-#: model:survey.question,comments_message:survey.feedback_2_5
-#: model:survey.question,comments_message:survey.feedback_2_6
-#: model:survey.question,comments_message:survey.feedback_2_7
-#: model:survey.question,comments_message:survey.feedback_3_1
-#: model:survey.question,comments_message:survey.feedback_3_2
-#: model:survey.question,comments_message:survey.feedback_3_3
-#: model:survey.question,comments_message:survey.feedback_4_1
-#, fuzzy, python-format
-msgid "If other, please specify:"
-msgstr "Ако е друго, нагласи:"
 
 #. module: survey
 #: model:survey.page,description:survey.feedback_4
@@ -794,6 +768,12 @@ msgid "In progress"
 msgstr "Во тек"
 
 #. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:66
+#, python-format
+msgid "Incorrect Email Address: %s"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_email
 msgid "Input must be an email"
 msgstr "Внесот мора да биде е-маил"
@@ -802,6 +782,11 @@ msgstr "Внесот мора да биде е-маил"
 #: model:ir.ui.view,arch_db:survey.survey_tree
 msgid "Invitations sent"
 msgstr "Поканата е испратена"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_is_closed
+msgid "Is closed"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_designed
@@ -905,6 +890,11 @@ msgstr "Листа на е-маил адреси"
 #: model:ir.ui.view,arch_db:survey.auth_required
 msgid "Login required"
 msgstr "Потребна е најава"
+
+#. module: survey
+#: model:res.groups,name:survey.group_survey_manager
+msgid "Manager"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_mandatory
@@ -1089,12 +1079,6 @@ msgid "One choice per row"
 msgstr "Еден избор по ред"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:78
-#, python-format
-msgid "One email at least is incorrect: %s"
-msgstr "Најмалку еден е-маил не е точен: %s"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Options"
@@ -1141,7 +1125,6 @@ msgstr "Партнер"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_partner_survey_mail
-#: model:ir.actions.act_window,name:survey.action_partner_survey_mail_crm
 msgid "Partner Survey Mailing"
 msgstr "Испраќање на е-маил за анкета на партнери"
 
@@ -1151,16 +1134,10 @@ msgid "Permanent"
 msgstr "Трајно"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:199
+#: code:addons/survey/wizard/survey_email_compose_message.py:164
 #, python-format
 msgid "Please enter at least one valid recipient."
 msgstr "Ве молиме внесете барем еден валиден примач."
-
-#. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:95
-#, python-format
-msgid "Please select a survey"
-msgstr "Ве молиме изберете анкета"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
@@ -1224,12 +1201,16 @@ msgstr "Управување со нарачки"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id
-#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_question_id
 #: model:ir.ui.view,arch_db:survey.survey_label_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Question"
 msgstr "Прашање"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
+msgid "Question 2"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_question
@@ -1258,7 +1239,7 @@ msgstr "Прашања за девелопери"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_quizz_mode
-msgid "Quiz mode"
+msgid "Quizz Mode"
 msgstr ""
 
 #. module: survey
@@ -1373,6 +1354,11 @@ msgid "Send"
 msgstr "Испрати"
 
 #. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_user_input_form
+msgid "Send Invitation Again"
+msgstr ""
+
+#. module: survey
 #: selection:survey.mail.compose.message,public:0
 msgid "Send by email the public web link to your audience."
 msgstr "Испратете го по е-маил јавниот веб линк на вашата публика."
@@ -1385,11 +1371,6 @@ msgid ""
 msgstr ""
 "Испратете приватна покана до вашата публика (само еден одговор по примач и "
 "по покана)"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_user_input_form
-msgid "Sent Invitation Again"
-msgstr "Испрати покана повторно"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_sequence
@@ -1508,6 +1489,7 @@ msgstr "Предлог"
 #: model:ir.ui.view,arch_db:survey.survey_page_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Survey"
@@ -1613,14 +1595,14 @@ msgid "Text answer"
 msgstr "Текстуален одговор"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_thank_you_message
-msgid "Thank you message"
-msgstr "Порака за благодарност"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
 msgid "Thank you!"
 msgstr "Ви благодариме!"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_thank_you_message
+msgid "Thanks Message"
+msgstr ""
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_3
@@ -1635,12 +1617,13 @@ msgstr ""
 "полиња"
 
 #. module: survey
-#: constraint:survey.user_input_line:0
+#: code:addons/survey/models/survey.py:821
+#, python-format
 msgid "The answer must be in the right type"
 msgstr "Одоговорот мора да биде во правилниот тип"
 
 #. module: survey
-#: code:addons/survey/survey.py:622
+#: code:addons/survey/models/survey.py:487
 #: model:survey.question,validation_error_msg:survey.feedback_1_1
 #: model:survey.question,validation_error_msg:survey.feedback_1_2
 #: model:survey.question,validation_error_msg:survey.feedback_2_1
@@ -1659,7 +1642,7 @@ msgid "The answer you entered has an invalid format."
 msgstr "Одговорот што го внесовте не е во валиден формат."
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:174
+#: code:addons/survey/wizard/survey_email_compose_message.py:138
 #, python-format
 msgid ""
 "The content of the text don't contain '__URL__'.                     __URL__ "
@@ -1734,19 +1717,22 @@ msgid "They help new users to understand Odoo"
 msgstr "Им помагаат на новите корисници да го разберат Odoo"
 
 #. module: survey
-#: code:addons/survey/survey.py:671 code:addons/survey/tests/test_survey.py:94
+#: code:addons/survey/models/survey.py:546
+#: code:addons/survey/tests/test_survey.py:86
 #, python-format
 msgid "This answer must be an email address"
 msgstr "Одоговорот мора да биде е-маил адреса"
 
 #. module: survey
-#: code:addons/survey/survey.py:713 code:addons/survey/tests/test_survey.py:115
+#: code:addons/survey/models/survey.py:590
+#: code:addons/survey/tests/test_survey.py:107
 #, python-format
 msgid "This is not a date/time"
 msgstr "Ова не е датум/време"
 
 #. module: survey
-#: code:addons/survey/survey.py:690 code:addons/survey/tests/test_survey.py:105
+#: code:addons/survey/models/survey.py:567
+#: code:addons/survey/tests/test_survey.py:97
 #, python-format
 msgid "This is not a number"
 msgstr "Ова не е број"
@@ -1754,11 +1740,9 @@ msgstr "Ова не е број"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_multi_email
 msgid ""
-"This list of emails of recipients will not converted in contacts. Emails "
-"separated by commas, semicolons or newline."
+"This list of emails of recipients will not be converted in contacts.        "
+"Emails must be separated by commas, semicolons or newline."
 msgstr ""
-"Оваа е-маил листа на примачи нема да биде конвертирана во контакти. Е-маил "
-"адресите се разделени со запирки, точка-запирка или нов ред."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey_thank_you_message
@@ -1766,7 +1750,7 @@ msgid "This message will be displayed when survey is completed"
 msgstr "Оваа порака ќе биде прикажана кога анкетата ќе биде комплетирана"
 
 #. module: survey
-#: code:addons/survey/survey.py:621
+#: code:addons/survey/models/survey.py:491
 #: model:survey.question,constr_error_msg:survey.feedback_1_1
 #: model:survey.question,constr_error_msg:survey.feedback_1_2
 #: model:survey.question,constr_error_msg:survey.feedback_2_1
@@ -1813,6 +1797,7 @@ msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_title
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Title"
 msgstr "Титула"
 
@@ -1860,10 +1845,13 @@ msgstr "Користење на урнек"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question_description
 msgid ""
-"Use this field to add             additional explanations about your question"
+"Use this field to add         additional explanations about your question"
 msgstr ""
-"Искористете го ова поле за да додадете дополнително објаснување за вашето "
-"прашање"
+
+#. module: survey
+#: model:res.groups,name:survey.group_survey_user
+msgid "User"
+msgstr ""
 
 #. module: survey
 #: model:survey.survey,title:survey.feedback_form
@@ -1921,6 +1909,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_required
 msgid "Validate entry"
 msgstr "Валидирај внес"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
+msgid "Validation Error message"
+msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_form
@@ -2016,22 +2009,18 @@ msgstr ""
 msgid ""
 "You can share your survey web public link and/or send private invitations to "
 "your audience. People can answer once per invitation, and whenever they want "
-"with the public web link (in this case, the \"Public in website\" setting "
-"must be enabled)."
+"with the public web link (in this case, the \"Login Required\" setting must "
+"be disabled)."
 msgstr ""
-"Можете да го споделите јавниот веб линк за вашата анкета и/или да испратите "
-"приватни покани на вашата публика. Луѓето можат да одговараат енаш по "
-"покана, и кога сакаат преку јавниот веб линк (во овој случај, Подесувањето "
-"\"Јавно во вебсајт\" мора да биде вклучено)."
 
 #. module: survey
-#: code:addons/survey/survey.py:424
+#: code:addons/survey/models/survey.py:318
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr "Не можете да испратите порака за анкета која не содржи прашања."
 
 #. module: survey
-#: code:addons/survey/survey.py:429
+#: code:addons/survey/models/survey.py:321
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr "Не можете да испратите порака за затворени анкети."
@@ -2044,6 +2033,11 @@ msgstr "Вашиот резултат е"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "ans"
+msgstr ""
+
+#. module: survey
+#: model:ir.model,name:survey.model_ir_autovacuum
+msgid "ir.autovacuum"
 msgstr ""
 
 #. module: survey
@@ -2065,204 +2059,3 @@ msgstr "поени."
 #: model:ir.ui.view,arch_db:survey.sfinished
 msgid "review your answers"
 msgstr "прегледајте ги вашите одговори"
-
-#. module: survey
-#. openerp-web
-#: code:addons/survey/static/src/js/tour_test_survey.js:10
-#, python-format
-msgid "try to create and fill survey"
-msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "                \n"
-#~ "                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, "
-#~ "Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
-#~ "                    <p>Hello,</p>\n"
-#~ "                    <p>We are conducting a survey, and your response "
-#~ "would be appreciated.</p>\n"
-#~ "                    <p><a href=\"__URL__\">Please, click here to start "
-#~ "survey</a></p>\n"
-#~ "                    <p>Thanks for your participation!</p>\n"
-#~ "                </div>\n"
-#~ "                \n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "                \n"
-#~ "                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, "
-#~ "Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
-#~ "                    <p>Здраво,</p>\n"
-#~ "                    <p>Спроведуваме анкета и многу ќе ни значи вашето "
-#~ "учество.</p>\n"
-#~ "                    <p><a href=\"__URL__\">Ве молиме кликнете овде за да "
-#~ "започнете со анкетата</a></p>\n"
-#~ "                    <p>Ви благодариме за учеството!</p>\n"
-#~ "                </div>\n"
-#~ "                \n"
-#~ "            "
-
-#~ msgid "Action Needed"
-#~ msgstr "Потребна е акција"
-
-#~ msgid "Author"
-#~ msgstr "Автор"
-
-#~ msgid ""
-#~ "Author of the message. If not set, email_from may hold an email address "
-#~ "that did not match any partner."
-#~ msgstr ""
-#~ "Автор на пораката. Доколку не е подесено, email_from може да содржи e-"
-#~ "mail адреса што не се совпаѓа со никој партнер."
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "Автоматски санирани HTML содржини"
-
-#~ msgid "Channels"
-#~ msgstr "Канали"
-
-#~ msgid "Child Messages"
-#~ msgstr "Подредени пораки"
-
-#~ msgid "Composition mode"
-#~ msgstr "Режим на составување"
-
-#~ msgid "Contents"
-#~ msgstr "Содржини"
-
-#~ msgid "Current user has a starred notification linked to this message"
-#~ msgstr "Моменталниот корисник има известување поврзано со оваа порака"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Датум на испраќање на последната порака"
-
-#~ msgid "Followers"
-#~ msgstr "Пратители"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Пратители (Канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Пратители (Партнери)"
-
-#~ msgid "From"
-#~ msgstr "Од"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето внимание."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
-
-#~ msgid "Initial thread message."
-#~ msgstr "Почетна тема на пораката"
-
-#~ msgid "Is Follower"
-#~ msgstr "е следач"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Датум на последна порака"
-
-#~ msgid "Log an Internal Note"
-#~ msgstr "Запиши интерна забелешка"
-
-#~ msgid "Message Record Name"
-#~ msgstr "Име на записот на пораката"
-
-#~ msgid ""
-#~ "Message type: email for email message, notification for system message, "
-#~ "comment for other messages such as user replies"
-#~ msgstr ""
-#~ "Тип на порака: e-mail за e-mail порака, известување за системски пораки, "
-#~ "коментар за други пораки како кориснички одговори"
-
-#~ msgid "Message unique identifier"
-#~ msgstr "Единствен идентификатор на порака"
-
-#~ msgid "Message-Id"
-#~ msgstr "Идентификатор на порака"
-
-#~ msgid "Messages"
-#~ msgstr "Пораки"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Пораки и историја на комуникација"
-
-#~ msgid "Name get of the related document."
-#~ msgstr "Превземи име од поврзаниот документ."
-
-#~ msgid "No threading for answers"
-#~ msgstr "Нема теми за одговори"
-
-#~ msgid "Notify followers"
-#~ msgstr "Извести следбеници"
-
-#~ msgid "Notify followers of the document (mass post only)"
-#~ msgstr "Извести ги следбениците на документот (само групна порака)"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Број на акции"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Број на пораки за кои ѝм е потребна акција"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Број на непрочитани пораки"
-
-#~ msgid "Outgoing mail server"
-#~ msgstr "Сервер за излезна пошта"
-
-#~ msgid "Parent Message"
-#~ msgstr "Надредна порака"
-
-#~ msgid "Related Document ID"
-#~ msgstr "ID на поврзан документ"
-
-#~ msgid "Related Document Model"
-#~ msgstr "Поврзан модел на документ"
-
-#~ msgid ""
-#~ "Reply email address. Setting the reply_to bypasses the automatic thread "
-#~ "creation."
-#~ msgstr ""
-#~ "Е-маил адреса за одговор. Со подесување на reply_to го заобиколува "
-#~ "автомотското креирање на тема."
-
-#~ msgid "Reply-To"
-#~ msgstr "Одговори на"
-
-#~ msgid ""
-#~ "Small-sized image of this contact. It is automatically resized as a "
-#~ "64x64px image, with aspect ratio preserved. Use this field anywhere a "
-#~ "small image is required."
-#~ msgstr ""
-#~ "Мала слика од овој контакт. Автоматски се поставува големината како "
-#~ "64x64, со зачуван размер. Користи го оваа поле секаде каде што се бара "
-#~ "мала слика."
-
-#~ msgid "Starred"
-#~ msgstr "Набљудувани"
-
-#~ msgid "Subject"
-#~ msgstr "Тема"
-
-#~ msgid "Subtype"
-#~ msgstr "Подтип"
-
-#~ msgid "System notification"
-#~ msgstr "Системско известување"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитани Пораки"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Тезга на непрочитаните пораки"
-
-#~ msgid "Use active domain"
-#~ msgstr "Употребете активен домен"
-
-#~ msgid "Whether the message is an internal note (comment mode only)"
-#~ msgstr "Дали пораката е интерна белешка (само мод на коментирање)"
-
-#~ msgid "on"
-#~ msgstr "на"

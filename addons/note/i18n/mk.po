@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-05-12 12:36+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -34,6 +34,11 @@ msgstr "Архива"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Категорија со леплива белешка"
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
+msgstr ""
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -132,7 +137,7 @@ msgid "New"
 msgstr "Ново"
 
 #. module: note
-#: code:addons/note/note.py:165
+#: code:addons/note/models/note.py:129
 #, python-format
 msgid "New Note"
 msgstr "Нова белешка"
@@ -180,8 +185,8 @@ msgstr "Сопственик"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
-msgstr "Сопственик на етапа на белешка."
+msgid "Owner of the note stage"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_sequence
@@ -233,13 +238,15 @@ msgid "Tag name already exists !"
 msgstr "Името на тагот веќе постои !"
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Етикети"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
 msgstr "Оваа недела"
@@ -286,51 +293,3 @@ msgstr ""
 "Можете да костумизирате како ги процесирате вашите белешки/задачи со "
 "додавање, \n"
 "отстранување или модифицирање на колони."
-
-#~ msgid "Action Needed"
-#~ msgstr "Потребна е акција"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Датум на испраќање на последната порака"
-
-#~ msgid "Followers"
-#~ msgstr "Пратители"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Пратители (Канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Пратители (Партнери)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето внимание."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
-
-#~ msgid "Is Follower"
-#~ msgstr "е следач"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Датум на последна порака"
-
-#~ msgid "Messages"
-#~ msgstr "Пораки"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Пораки и историја на комуникација"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Број на акции"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Број на пораки за кои ѝм е потребна акција"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Број на непрочитани пораки"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитани Пораки"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Тезга на непрочитаните пораки"
