@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="website_sale.website_config_settings_view_form_inherit_website_sale"/>
         <field name="arch" type="xml">
             <div id="msg_delivery_method_setting" position="replace">
-                <div class="content-group">
+                <div class="content-group" attrs="{'invisible': [('module_website_sale_delivery', '=', False)]}">
                     <div class="mt16">
                         <button type="action" name="%(delivery.action_delivery_carrier_form)d" string="Delivery Methods" class="btn-link" icon="fa-arrow-right"/>
                     </div>
