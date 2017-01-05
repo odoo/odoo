@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="website.website_config_settings_view_form"/>
         <field name="arch" type="xml">
             <div id="msg_slides_install_setting" position="replace">
-                <div class="content-group" groups="base.group_no_one">
+                <div class="content-group" groups="base.group_no_one" attrs="{'invisible': [('module_website_slides', '=', False)]}">
                     <div class="row mt16">
                         <label class="col-md-3 o_light_label" for="website_slide_google_app_key"/>
                         <field name="website_slide_google_app_key" class="oe_inline"/>
