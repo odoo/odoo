@@ -123,6 +123,31 @@ def get_view_arch_from_file(filename, xmlid):
     _logger.warning("Could not find view arch definition in file '%s' for xmlid '%s'", filename, xmlid)
     return None
 
+def add_text_before(node, text):
+    """ Add text before ``node`` in its XML tree. """
+    if text is None:
+        return
+    prev = node.getprevious()
+    if prev is not None:
+        prev.tail = (prev.tail or "") + text
+    else:
+        parent = node.getparent()
+        parent.text = (parent.text or "") + text
+
+def add_text_inside(node, text):
+    """ Add text inside ``node``. """
+    if text is None:
+        return
+    if len(node):
+        node[-1].tail = (node[-1].tail or "") + text
+    else:
+        node.text = (node.text or "") + text
+
+def remove_element(node):
+    """ Remove ``node`` but not its tail, from its XML tree. """
+    add_text_before(node, node.tail)
+    node.getparent().remove(node)
+
 xpath_utils = etree.FunctionNamespace(None)
 xpath_utils['hasclass'] = _hasclass
 
@@ -555,21 +580,26 @@ actual arch.
                             node.set(attribute, value)
                         elif attribute in node.attrib:
                             del node.attrib[attribute]
-                else:
-                    sib = node.getnext()
+                elif pos == 'inside':
+                    add_text_inside(node, spec.text)
                     for child in spec:
-                        if pos == 'inside':
-                            node.append(child)
-                        elif pos == 'after':
-                            if sib is None:
-                                node.addnext(child)
-                                node = child
-                            else:
-                                sib.addprevious(child)
-                        elif pos == 'before':
-                            node.addprevious(child)
-                        else:
-                            self.raise_view_error(_("Invalid position attribute: '%s'") % pos, inherit_id)
+                        node.append(child)
+                elif pos == 'after':
+                    # add a sentinel element right after node, insert content of
+                    # spec before the sentinel, then remove the sentinel element
+                    sentinel = E.sentinel()
+                    node.addnext(sentinel)
+                    add_text_before(sentinel, spec.text)
+                    for child in spec:
+                        sentinel.addprevious(child)
+                    remove_element(sentinel)
+                elif pos == 'before':
+                    add_text_before(node, spec.text)
+                    for child in spec:
+                        node.addprevious(child)
+                else:
+                    self.raise_view_error(_("Invalid position attribute: '%s'") % pos, inherit_id)
+
             else:
                 attrs = ''.join([
                     ' %s="%s"' % (attr, spec.get(attr))

@@ -736,6 +736,66 @@ class TestViews(ViewCase):
                 ),
                 string="Replacement title", version="7.0"))
 
+    def test_view_inheritance_text_inside(self):
+        """ Test view inheritance when adding elements and text. """
+        view1 = self.View.create({
+            'name': "alpha",
+            'model': 'ir.ui.view',
+            'arch': '<form string="F">(<div/>)</form>',
+        })
+        view2 = self.View.create({
+            'name': "beta",
+            'model': 'ir.ui.view',
+            'inherit_id': view1.id,
+            'arch': '<div position="inside">a<p/>b<p/>c</div>',
+        })
+        view = self.View.with_context(check_view_ids=view2.ids).fields_view_get(view1.id)
+        self.assertEqual(view['type'], 'form')
+        self.assertEqual(
+            view['arch'],
+            '<form string="F">(<div>a<p/>b<p/>c</div>)</form>',
+        )
+
+    def test_view_inheritance_text_after(self):
+        """ Test view inheritance when adding elements and text. """
+        view1 = self.View.create({
+            'name': "alpha",
+            'model': 'ir.ui.view',
+            'arch': '<form string="F">(<div/>)</form>',
+        })
+        view2 = self.View.create({
+            'name': "beta",
+            'model': 'ir.ui.view',
+            'inherit_id': view1.id,
+            'arch': '<div position="after">a<p/>b<p/>c</div>',
+        })
+        view = self.View.with_context(check_view_ids=view2.ids).fields_view_get(view1.id)
+        self.assertEqual(view['type'], 'form')
+        self.assertEqual(
+            view['arch'],
+            '<form string="F">(<div/>a<p/>b<p/>c)</form>',
+        )
+
+    def test_view_inheritance_text_before(self):
+        """ Test view inheritance when adding elements and text. """
+        view1 = self.View.create({
+            'name': "alpha",
+            'model': 'ir.ui.view',
+            'arch': '<form string="F">(<div/>)</form>',
+        })
+        view2 = self.View.create({
+            'name': "beta",
+            'model': 'ir.ui.view',
+            'inherit_id': view1.id,
+            'arch': '<div position="before">a<p/>b<p/>c</div>',
+        })
+        view = self.View.with_context(check_view_ids=view2.ids).fields_view_get(view1.id)
+        self.assertEqual(view['type'], 'form')
+        self.assertEqual(
+            view['arch'],
+            '<form string="F">(a<p/>b<p/>c<div/>)</form>',
+        )
+
     def test_view_inheritance_divergent_models(self):
         view1 = self.View.create({
             'name': "bob",
