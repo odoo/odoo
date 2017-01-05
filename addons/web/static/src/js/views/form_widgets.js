@@ -11,6 +11,7 @@ var Priority = require('web.Priority');
 var ProgressBar = require('web.ProgressBar');
 var Dialog = require('web.Dialog');
 var DomainSelector = require("web.DomainSelector");
+var DomainSelectorDialog = require("web.DomainSelectorDialog");
 var common = require('web.form_common');
 var formats = require('web.formats');
 var framework = require('web.framework');
@@ -400,10 +401,18 @@ var FieldDomain = common.AbstractField.extend(common.ReinitializeFieldMixin).ext
             e.preventDefault();
             this._showSelection();
         },
+        "click .o_form_field_domain_dialog_button": function (e) {
+            e.preventDefault();
+            this.openDomainDialog();
+        },
     },
     custom_events: {
         "domain_changed": function (e) {
+            if (this.options.in_dialog) return;
             this.set_value(this.domainSelector.getDomain(), true);
+        },
+        "domain_selected": function (e) {
+            this.set_value(e.data.domain);
         },
     },
     init: function () {
@@ -412,6 +421,7 @@ var FieldDomain = common.AbstractField.extend(common.ReinitializeFieldMixin).ext
         this.valid = true;
         this.debug = session.debug;
         this.options = _.defaults(this.options || {}, {
+            in_dialog: false,
             model: undefined, // this option is mandatory !
             fs_filters: {}, // Field selector filters (to only show a subset of available fields @see FieldSelector)
         });
@@ -457,7 +467,7 @@ var FieldDomain = common.AbstractField.extend(common.ReinitializeFieldMixin).ext
                 this.domainSelector.destroy();
             }
             this.domainSelector = new DomainSelector(this, this.model, domain, {
-                readonly: this.get("effective_readonly"),
+                readonly: this.get("effective_readonly") || this.options.in_dialog,
                 fs_filters: this.options.fs_filters,
                 debugMode: session.debug,
             });
@@ -490,6 +500,13 @@ var FieldDomain = common.AbstractField.extend(common.ReinitializeFieldMixin).ext
             no_create: true,
             readonly: true,
             disable_multiple_selection: true,
+        }).open();
+    },
+    openDomainDialog: function () {
+        new DomainSelectorDialog(this, this.model, this.get("value"), {
+            readonly: this.get("effective_readonly"),
+            fs_filters: this.options.fs_filters,
+            debugMode: session.debug,
         }).open();
     },
 });

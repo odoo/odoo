@@ -669,7 +669,7 @@
         t-att-maxlength="widget.field.size"/>
 </t>
 
-<div t-name="FieldDomain" t-attf-class="o_form_field_domain#{widget.get('effective_readonly') ? '' : ' o_edit_mode'}">
+<div t-name="FieldDomain" t-attf-class="o_form_field_domain#{widget.get('effective_readonly') ? '' : ' o_edit_mode'}#{widget.options.in_dialog ? '' : ' o_inline_mode'}">
     <!-- domain selector will be instantiated here -->
     <div class="o_form_field_domain_panel">
         <i class="fa fa-arrow-right"/>
@@ -677,6 +677,8 @@
             <span class="o_domain_records_count"/> record(s)
         </button>
         <span class="text-warning o_domain_error_message hidden"><i class="fa fa-exclamation-triangle"/> Invalid domain</span>
+        <button t-if="widget.options.in_dialog &amp;&amp; !widget.get('effective_readonly')"
+            class="btn btn-sm btn-primary o_form_field_domain_dialog_button">Edit domain</button>
     </div>
 </div>
 
