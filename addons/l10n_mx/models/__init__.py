@@ -4,3 +4,4 @@
 
 from . import chart_template
 from . import account
+from . import res_config
