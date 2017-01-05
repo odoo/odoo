@@ -669,7 +669,7 @@ class ResourceResource(models.Model):
     _name = "resource.resource"
     _description = "Resource Detail"
 
-    name = fields.Char(required=True)
+    name = fields.Char()
     code = fields.Char(copy=False)
     active = fields.Boolean(track_visibility='onchange', default=True,
         help="If the active field is set to False, it will allow you to hide the resource record without removing it.")
@@ -748,3 +748,42 @@ def seconds(td):
     assert isinstance(td, timedelta)
 
     return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10.**6
+
+
+class ResourceMixin(models.AbstractModel):
+    _name = 'resource.mixin'
+
+    resource_id = fields.Many2one(
+        'resource.resource', 'Resource',
+        ondelete='restrict', required=True)
+    resource_calendar_id = fields.Many2one(
+        'resource.calendar', 'Calendar',
+        related='resource_id.calendar_id',
+        store=True)
+
+    @api.model
+    def create(self, values):
+        resource = self.env['resource.resource'].create({})
+        values['resource_id'] = resource.id
+        document = super(ResourceMixin, self).create(values)
+
+        document._resource_sync({})
+        return document
+
+    @api.multi
+    def write(self, values):
+        res = super(ResourceMixin, self).write(values)
+        self._resource_sync(values)
+        return res
+
+    def _resource_sync(self, values):
+        for document in self:
+            update_values = {}
+            if self._rec_name in values or not values:
+                update_values['name'] = values and values.get(self._rec_name) or getattr(document, self._rec_name)
+            if 'company_id' in values or (not values and hasattr(document, 'company_id')):
+                update_values['company_id'] = values and values.get('company_id') or document.company_id.id
+            if 'user_id' in values or (not values and hasattr(document, 'user_id')):
+                update_values['user_id'] = values and values.get('user_id') or document.user_id.id
+            if update_values:
+                document.resource_id.write(update_values)
