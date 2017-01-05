@@ -193,7 +193,7 @@ class TxPaypal(models.Model):
         }
         if status in ['Completed', 'Processed']:
             _logger.info('Validated Paypal payment for tx %s: set as done' % (self.reference))
-            res.update(state='done', date_validate=data.get('payment_date', fields.datetime.now()))
+            res.update(state='done', date_validate=data.get('payment_date', fields.Datetime.now()))
             return self.write(res)
         elif status in ['Pending', 'Expired']:
             _logger.info('Received notification for Paypal payment %s: set as pending' % (self.reference))
