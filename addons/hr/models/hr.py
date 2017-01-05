@@ -96,8 +96,7 @@ class Employee(models.Model):
     _name = "hr.employee"
     _description = "Employee"
     _order = 'name_related'
-    _inherits = {'resource.resource': "resource_id"}
-    _inherit = ['mail.thread']
+    _inherit = ['resource.mixin', 'mail.thread']
 
     _mail_post_access = 'read'
 
