@@ -44,7 +44,7 @@ class StockMove(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    sale_id = fields.Many2one('sale.order', "Sales Order", compute='_compute_sale_id', search='_search_sale_id')
+    sale_id = fields.Many2one('sale.order', "Sales Order", compute='_compute_sale_id', store=True)
 
     @api.one
     @api.depends('move_lines.procurement_id.sale_line_id.order_id')
@@ -53,12 +53,6 @@ class StockPicking(models.Model):
             if move.procurement_id.sale_line_id:
                 self.sale_id = move.procurement_id.sale_line_id.order_id
                 return
-
-    def _search_sale_id(self, operator, value):
-        moves = self.env['stock.move'].search(
-            [('picking_id', '!=', False), ('procurement_id.sale_line_id.order_id', operator, value)]
-        )
-        return [('id', 'in', moves.mapped('picking_id').ids)]
 
     @api.multi
     def _create_backorder(self, backorder_moves=[]):
