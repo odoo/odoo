@@ -116,9 +116,6 @@ class Employee(models.Model):
     login = fields.Char(
         'Login', related='user_id.login',
         readonly=True)
-    last_login = fields.Datetime(
-        'Latest Connection', related='user_id.login_date',
-        readonly=True)
     # partner
     address_home_id = fields.Many2one(
         'res.partner', 'Home Address')
