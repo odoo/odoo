@@ -202,8 +202,8 @@
     <xpath expr="//footer" position="inside">
         <div class="container mt16 mb8">
             <div class="pull-right" t-ignore="true" t-if="not editable">
-                Create a <a href="http://www.odoo.com/page/website-builder">free website</a> with
-                <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
+                Create a <a target="_blank" href="http://www.odoo.com/page/website-builder">free website</a> with
+                <a target="_blank" class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
             </div>
             <div class="pull-left text-muted" itemscope="itemscope" itemtype="http://schema.org/Organization">
                 Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
@@ -495,7 +495,7 @@
                     <small>Odoo Version <t t-raw="version.get('server_version')"/></small>
                 </h1>
                 <p>
-                    Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a href="https://www.odoo.com">Open Source ERP</a>.
+                    Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a target="_blank" href="https://www.odoo.com">Open Source ERP</a>.
                 </p>
 
                 <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher">
