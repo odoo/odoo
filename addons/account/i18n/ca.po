@@ -115,7 +115,7 @@ msgid ""
 msgstr ""
 "* L'estat 'Esborrany' s'utilitza quan un usuari està introduint una nova factura no confirmada.\n"
 "* L'estat 'Proforma' s'utilitza quan la factura no té un número assignat.\n"
-"* L'estat 'Obert' s'utilitza quan l'usuari crea la factura i la confirma. Es genera un número de factura i el seu estat romandrà així fins que l'usuari pagui la factura.\n"
+"* L'estat 'Obert' s'utilitza quan l'usuari crea la factura i la confirma. Es genera un número de factura i el seu estat romandrà així fins que l'usuari doni la factura per pagada.\n"
 "* L'estat 'Pagat' s'estableix automàticament quan es paga la factura. Els seus corresponents assentaments poden o no estar conciliats.\n"
 "* L'estat 'Cancel·lada' s'utilitza quan l'usuari cancel·la la factura."
 
@@ -161,7 +161,7 @@ msgstr "${object.subject}"
 #: code:addons/account/models/account_bank_statement.py:467
 #, python-format
 msgid "%d transactions were automatically reconciled."
-msgstr "Es conciliaran automàticament %d transaccions "
+msgstr "S'han conciliat automàticament %d transaccions."
 
 #. module: account
 #: code:addons/account/models/account.py:610
@@ -211,7 +211,7 @@ msgstr "15 dies"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_net
 msgid "30 Net Days"
-msgstr "30 dies nets"
+msgstr "30 dies vista"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
@@ -221,7 +221,7 @@ msgstr "30% d'avançament a final del mes següent"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "5) For setup, you will need the following information:"
-msgstr "5) Per la configuració, necessitareu la informació següent:"
+msgstr "5) Per a la configuració, necessitareu la informació següent:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -231,7 +231,7 @@ msgstr ": Llibre major"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid ": Trial Balance"
-msgstr "Balanç de sumes i saldos"
+msgstr ": Balanç de comprovació"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_notification_email_account_invoice
@@ -369,7 +369,7 @@ msgstr ""
 "                      </tr>\n"
 "                      <tr>\n"
 "                        <td align=\"center\">\n"
-"                            Impulsat per <a href=\"https://www.odoo.com\">Odoo</a>.\n"
+"                            Powered by <a href=\"https://www.odoo.com\">Odoo</a>.\n"
 "                        </td>\n"
 "                      </tr>\n"
 "                    </tbody>\n"
@@ -403,10 +403,10 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-"                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n"
-"                                        <strong>Importa un fitxer</strong><br/>\n"
-"                                        <span class=\"small\">Recomanat si &gt;100 productes</span>\n"
-"                                    </span>"
+"<span class=\"fa\" data-icon=\"&#57408;\"/>\n"
+"<strong>Importa un fitxer</strong><br/>\n"
+"<span class=\"small\">Recomanat si &gt;100 productes</span>\n"
+"</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -516,7 +516,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-"<strong>Pagament de factura per transferència bancaria</strong>\n"
+"<strong>Pagament de factura per transferència bancària</strong>\n"
 "</span>"
 
 #. module: account
@@ -527,7 +527,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-"<strong>Pagueu les vostres factures</strong>\n"
+"<strong>Pagueu les factures</strong>\n"
 "</span>"
 
 #. module: account
@@ -549,7 +549,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-"<strong>Registreu les vostres factures</strong>\n"
+"<strong>Registreu factures</strong>\n"
 "</span>"
 
 #. module: account

@@ -3,7 +3,7 @@
 # * sale
 # 
 # Translators:
-# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # Yuan Xulei <hi@yxl.name>, 2016
 # Ted Wang <feiyuwang2012@gmail.com>, 2016
 msgid ""
@@ -63,6 +63,45 @@ msgid ""
 "% endif\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>尊敬的${object.partner_id.name}\n"
+"% set access_action = object.get_access_action()\n"
+"% set doc_name = '报价单' if object.state in ('draft', 'sent') else '订单确认'\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_name = is_online and object.template_id and '接受并且为%s在线支付' % doc_name or '查看 %s' % doc_name\n"
+"% set access_url = is_online and access_action['url'] or object.get_signup_url()\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"这是 ${object.company_id.name}为您提供的 ${doc_name} <strong>${object.name}</strong>\n"
+"% if object.origin:\n"
+"(参考编号: ${object.origin} )\n"
+"% endif\n"
+"，合计金额 <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"。\n"
+"</p>\n"
+"\n"
+"    <br/><br/>\n"
+"% if is_online:\n"
+"    <center>\n"
+"        <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
+"        <br/><br/>\n"
+"        <span style=\"color:#888888\">(或则查看附件PDF文件)</span>\n"
+"    </center>\n"
+"    <br/>\n"
+"% endif\n"
+"\n"
+"<p>如果您有任何问题，可以回复这封邮件。</p>\n"
+"<p>谢谢，</p>\n"
+"\n"
+"<p style=\"color:#eeeeee;\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
@@ -134,7 +173,7 @@ msgstr "（更新）"
 msgid ""
 "<b>Invite salespeople or managers</b> via email.<br/><i>Enter one email per "
 "line.</i>"
-msgstr ""
+msgstr "通过电子邮件<b>邀请销售员或者经理</b>。<br/><i>每行输入一个电子邮件。</i>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_data_notification_email_sale_order
@@ -210,6 +249,76 @@ msgid ""
 "                </html>\n"
 "            "
 msgstr ""
+"<html>\n"
+"                <head></head>\n"
+"                <body style=\"margin: 0; padding: 0;\">\n"
+"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
+"                    <tbody>\n"
+"\n"
+"                      <!-- HEADER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\">\n"
+"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"                                      ${object.record_name}\n"
+"                                  </span>\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\">\n"
+"                                  <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- CONTENT -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px;\">\n"
+"                            <tbody>\n"
+"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                                ${object.body | safe}\n"
+"                              </td>\n"
+"                            </tbody>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- FOOTER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                ${user.company_id.name}<br/>\n"
+"                                ${user.company_id.phone or ''}\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                % if user.company_id.email:\n"
+"                                <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
+"                                % endif\n"
+"                                % if user.company_id.website:\n"
+"                                    <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${user.company_id.website}\n"
+"                                    </a>\n"
+"                                % endif\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                      <tr>\n"
+"                        <td align=\"center\">\n"
+"                            由 <a href=\"https://www.odoo.com\">Odoo</a> 提供技术支持。\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"                </body>\n"
+"                </html>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
@@ -231,7 +340,7 @@ msgstr "<p><b>确认订单</b> 如果客户购买。</p>"
 msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
-msgstr "<span>（*）这个配置是你登录到公司相关。< /span>"
+msgstr "<span>(*) 此项设置与您登录的公司有关。</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -336,14 +445,14 @@ msgstr "允许在销售订单明细行上折扣"
 msgid ""
 "Allow to edit sales order from the 'Sales Order' menu (not from the "
 "Quotation menu)"
-msgstr "允许在“销售订单”菜单中编辑销售订单(不通过报价菜单)"
+msgstr "允许在“销售订单”菜单中编辑销售订单(不通过报价单菜单)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
 msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
-msgstr ""
+msgstr "允许为不同类别的客户，按规则管理不同的价格。例如：为零售商提供10%折扣，这个产品优惠5欧元等。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_uom
@@ -471,7 +580,7 @@ msgstr "选中复选框来管理此团队的销售报价。"
 #: code:addons/sale/static/src/js/tour.js:39
 #, python-format
 msgid "Click here to add some lines to your quotations."
-msgstr ""
+msgstr "点击此处为报价单添加明细行。"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -752,7 +861,7 @@ msgstr "在报价单和销售订单中显示利润"
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
 msgid "Do not personalize sales orders and invoice reports"
-msgstr ""
+msgstr "不个性化定制销售订单和发票报表"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:84
@@ -1185,7 +1294,7 @@ msgstr "名字"
 #. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
 msgid "Never allow to modify a confirmed sales order"
-msgstr ""
+msgstr "不允许修改已确认的销售订单"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:102
@@ -1409,14 +1518,14 @@ msgstr "付款条款"
 #. module: sale
 #: model:res.groups,name:sale.group_sale_layout
 msgid "Personalize sale order and invoice report"
-msgstr ""
+msgstr "个性化定制销售订单和发票报表"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
 msgid ""
 "Personalize the sales orders and invoice report with categories, subtotals "
 "and page-breaks"
-msgstr ""
+msgstr "通过分类、合计和分页符来个性化定制销售订单和发票报表"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:276
@@ -1653,7 +1762,7 @@ msgstr "报价单分析"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Quotations Sent"
-msgstr ""
+msgstr "已发送报价单"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1942,7 +2051,7 @@ msgstr "在你的公司设置中设置默认的条款和条件。"
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "Show incoterms on sales orders and invoices"
-msgstr ""
+msgstr "在销售订单和发票中显示国际贸易术语"
 
 #. module: sale
 #: model:res.groups,comment:sale.group_show_price_total
@@ -1969,7 +2078,7 @@ msgstr "给客户显示价目表"
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
 msgid "Show public price & discount to the customer"
-msgstr ""
+msgstr "给客户显示公开的价格和折扣"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_show_price_subtotal

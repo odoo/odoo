@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-10-10 08:44+0000\n"
 "PO-Revision-Date: 2015-09-14 10:56+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/"
@@ -42,11 +42,11 @@ msgid ""
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
 "    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: "
-"12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-"
+"12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-"
 "decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
 "400; text-align: center; vertical-align: middle; cursor: pointer; white-"
-"space: nowrap; background-image: none; background-color: #a24689; border: "
-"1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\" href="
+"space: nowrap; background-image: none; background-color: #875A7B; border: "
+"1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href="
 "\"${object.website_url}\">\n"
 "        View <strong>${object.name}</strong>\n"
 "    </a>\n"
@@ -72,11 +72,11 @@ msgid ""
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
 "    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: "
-"12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-"
+"12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-"
 "decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
 "400; text-align: center; vertical-align: middle; cursor: pointer; white-"
-"space: nowrap; background-image: none; background-color: #a24689; border: "
-"1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\" href="
+"space: nowrap; background-image: none; background-color: #875A7B; border: "
+"1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href="
 "\"${object.website_url}\">\n"
 "        View <strong>${object.name}</strong>\n"
 "    </a>\n"
@@ -101,6 +101,13 @@ msgstr ""
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "${user.name} shared a ${object.slide_type} with you!"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid ""
+"(Un)archiving a channel automatically (un)archives its slides. Do you want "
+"to proceed?"
 msgstr ""
 
 #. module: website_slides
@@ -299,6 +306,18 @@ msgid "Actions"
 msgstr "Akcije"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
+msgid "Active"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Archived"
+msgstr ""
+
+#. module: website_slides
 #: selection:slide.slide,download_security:0
 msgid "Authentified Users Only"
 msgstr ""
@@ -341,6 +360,7 @@ msgstr "Категорија"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_channel_id
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Channel"
@@ -394,7 +414,7 @@ msgid "Content Preview"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:289
+#: code:addons/website_slides/controllers/main.py:290
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
@@ -402,7 +422,7 @@ msgid ""
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:294
+#: code:addons/website_slides/models/slides.py:307
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -615,10 +635,10 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/controllers/main.py:299
+#: code:addons/website_slides/controllers/main.py:300
 #: code:addons/website_slides/static/src/js/slides_upload.js:90
 #, python-format
-msgid "File is too big. File size cannot exceed 15MB"
+msgid "File is too big. File size cannot exceed 25MB"
 msgstr ""
 
 #. module: website_slides
@@ -683,7 +703,7 @@ msgid "Infographics"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:321
+#: code:addons/website_slides/controllers/main.py:322
 #, python-format
 msgid ""
 "Internal server error, please try again later or contact administrator.\n"
@@ -808,11 +828,6 @@ msgid "No presentation published yet."
 msgstr ""
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
-msgid "Not Published"
-msgstr ""
-
-#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
 msgid "Number of Documents"
@@ -929,20 +944,20 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides.js:55
+#: code:addons/website_slides/static/src/js/slides.js:56
 #, python-format
 msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:297
-#: code:addons/website_slides/models/slides.py:518
+#: code:addons/website_slides/models/slides.py:310
+#: code:addons/website_slides/models/slides.py:533
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:281
+#: code:addons/website_slides/controllers/main.py:282
 #, python-format
 msgid "Please enter valid youtube or google doc url"
 msgstr ""
@@ -1206,7 +1221,7 @@ msgid "This channel is private and its content is restricted to some users."
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:285
+#: code:addons/website_slides/controllers/main.py:286
 #, python-format
 msgid ""
 "This video already exists in this channel <a target=\"_blank\" href=\"/"
@@ -1250,7 +1265,7 @@ msgid "Type"
 msgstr "Tip"
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:140
+#: code:addons/website_slides/controllers/main.py:141
 #, python-format
 msgid "Uncategorized"
 msgstr "Nekategorisano"
@@ -1261,9 +1276,14 @@ msgid "Uncategorized presentation"
 msgstr ""
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:507
+#: code:addons/website_slides/models/slides.py:522
 #, python-format
 msgid "Unknown document"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
+msgid "Unpublished"
 msgstr ""
 
 #. module: website_slides
@@ -1311,12 +1331,6 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_channel_header
 msgid "Videos"
-msgstr ""
-
-#. module: website_slides
-#: code:addons/website_slides/models/slides.py:436
-#, python-format
-msgid "View Slide"
 msgstr ""
 
 #. module: website_slides
@@ -1374,7 +1388,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides.js:64
+#: code:addons/website_slides/static/src/js/slides.js:65
 #, python-format
 msgid "You have already voted for this slide"
 msgstr ""
@@ -1476,51 +1490,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "your-friend@domain.com"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebna akcija"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum zadnje poslate poruke na slog."
-
-#~ msgid "Followers"
-#~ msgstr "Pratioci"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pratioci (kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pratioci (partneri)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ako je označeno, nove poruke zahtjevaju pažnju"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ako je označeno, nove poruke zahtjevaju pažnju"
-
-#~ msgid "Is Follower"
-#~ msgstr "Je pratioc"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnje poruke"
-
-#~ msgid "Messages"
-#~ msgstr "Poruke"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Poruke i istorija komunikacije"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Broj akcija"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Broj poruka koje zahtjevaju akciju"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Broj nepročitanih poruka"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Nepročitane poruke"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Brojač nepročitanih poruka"

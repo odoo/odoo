@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2015-11-21 09:40+0000\n"
 "Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -31,8 +31,8 @@ msgid "Accounting Entry"
 msgstr "Дансны бичилт"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:154
-#: code:addons/hr_payroll_account/hr_payroll_account.py:170
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:113
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:128
 #, python-format
 msgid "Adjustment Entry"
 msgstr "Тохируулах бичилт"
@@ -62,12 +62,6 @@ msgid "Debit Account"
 msgstr "Орлогын данс"
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_contract
-#, fuzzy
-msgid "Employee Contract"
-msgstr "Гэрээ"
-
-#. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
 msgid "Generate payslips for all selected employees"
 msgstr "Бүх сонгогдсон ажилчдын цалингийн хуудас үүсгэх"
@@ -89,13 +83,7 @@ msgid "Payslip Line"
 msgstr "Цалингийн хуудасын мөр"
 
 #. module: hr_payroll_account
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
-#, fuzzy
-msgid "Payslip Run"
-msgstr "Цалингийн хуудасын мөр"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:105
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:64
 #, python-format
 msgid "Payslip of %s"
 msgstr "%s-н цалингийн хуудас"
@@ -114,14 +102,14 @@ msgid "Tax"
 msgstr "Татвар"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:152
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:111
 #, python-format
 msgid ""
 "The Expense Journal \"%s\" has not properly configured the Credit Account!"
 msgstr "\"%s\" зардлын журналыг зарлагын данстай зөв тохируулаагүй"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:168
+#: code:addons/hr_payroll_account/models/hr_payroll_account.py:126
 #, python-format
 msgid ""
 "The Expense Journal \"%s\" has not properly configured the Debit Account!"
@@ -131,6 +119,3 @@ msgstr "\"%s\" зардлын журналыг орлогын данстай з�
 #: model:ir.model,name:hr_payroll_account.model_hr_salary_rule
 msgid "hr.salary.rule"
 msgstr "hr.salary.rule"
-
-#~ msgid "Payslip Batches"
-#~ msgstr "Цалингийн хуудас бөөнөөр"

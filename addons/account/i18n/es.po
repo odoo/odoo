@@ -4221,12 +4221,12 @@ msgstr "Diario de pérdidas y ganancias por cambio de divisa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_exchange_move_id
 msgid "Exchange move id"
-msgstr ""
+msgstr "Id Asiento de intercambio"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_exchange_partial_rec_id
 msgid "Exchange partial rec id"
-msgstr ""
+msgstr "Id Asiento de intercambio"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4618,6 +4618,8 @@ msgid ""
 "Get your bank statements from you bank and import them through plaid.com.\n"
 "-This installs the module account_plaid."
 msgstr ""
+"Obtenga sus extractos bancarios e impórtelos a traves de plaid.com - se "
+"instalará el módulo account_plaid."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_csv
@@ -4625,6 +4627,8 @@ msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .CSV format.\n"
 "-This installs the module account_bank_statement_import_csv."
 msgstr ""
+"Obtenga sus extractos bancarios e impórtelos a Odoo en formato .OFX Se "
+"instalará el módulo account_bank_statement_import_ofx."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_ofx
@@ -4632,6 +4636,8 @@ msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .OFX format.\n"
 "-This installs the module account_bank_statement_import_ofx."
 msgstr ""
+"Obtenga sus extractos bancarios e impórtelos a Odoo en formato .OFX Se "
+"instalará el módulo account_bank_statement_import_ofx."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_qif
@@ -4639,6 +4645,8 @@ msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .QIF format.\n"
 "-This installs the module account_bank_statement_import_qif."
 msgstr ""
+"Obtenga sus extractos bancarios e impórtelos a Odoo en formato .QIF. Se "
+"instalará el módulo account_bank_statement_import_qif."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_yodlee
@@ -4646,6 +4654,8 @@ msgid ""
 "Get your bank statements from your bank and import them through yodlee.com.\n"
 "-This installs the module account_yodlee."
 msgstr ""
+"Obtenga sus extractos bancarios e impórtelos a través de yodlee.com. - Se "
+"instalará el módulo account_yodlee."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_sequence
@@ -5320,7 +5330,7 @@ msgstr "Impuesto de factura"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_invoice_id
 msgid "Invoice for which this invoice is the refund"
-msgstr ""
+msgstr "Documento que reembolso esta factura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_invoice_id
@@ -5350,19 +5360,19 @@ msgstr "Factura debe estar en estado borrador o proforma para validarla."
 #, python-format
 msgid ""
 "Invoice must be in draft,Pro-forma or open state in order to be cancelled."
-msgstr ""
+msgstr "Factura debe estar en estado borrador o proforma para ser cancelada."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:581
 #, python-format
 msgid "Invoice must be paid in order to set it to register payemnt."
-msgstr ""
+msgstr "Factura debe ser pagada para registrar otro pago"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:573
 #, python-format
 msgid "Invoice must be validated in order to set it to register payemnt."
-msgstr ""
+msgstr "Factura debe estar validada para registrar pagos"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid

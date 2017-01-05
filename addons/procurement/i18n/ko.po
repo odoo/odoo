@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-03-10 13:16+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
@@ -55,6 +55,11 @@ msgid "All at once"
 msgstr "일괄"
 
 #. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr ""
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
 msgstr "취소"
@@ -68,12 +73,6 @@ msgstr "조달 취소"
 #: selection:procurement.order,state:0
 msgid "Cancelled"
 msgstr "취소됨"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:138
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr "%s 상태에 있는 조달 주문은 삭제할 수 없습니다."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -132,12 +131,6 @@ msgstr "작성자"
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_create_date
 msgid "Created on"
 msgstr "작성일"
-
-#. module: procurement
-#: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-#, fuzzy
-msgid "Delivery Type"
-msgstr "운송 방법"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -256,11 +249,6 @@ msgid "Leave Empty"
 msgstr "비워두기"
 
 #. module: procurement
-#: model:ir.ui.view,arch_db:procurement.mrp_company
-msgid "Logistics"
-msgstr "물류"
-
-#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
 "Most common exceptions are products to purchase without\n"
@@ -274,7 +262,7 @@ msgid "Name"
 msgstr "이름"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:200
+#: code:addons/procurement/models/procurement.py:189
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "이 조달에 일치하는 규칙이 없습니다"
@@ -413,11 +401,9 @@ msgstr "참조"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
 msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by Odoo."
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
 msgstr ""
-"이 조달에 작성된 문서의 참조.\n"
-"Odoo에 의해 자동으로 완성됩니다."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -519,6 +505,12 @@ msgid ""
 msgstr ""
 
 #. module: procurement
+#: code:addons/procurement/models/procurement.py:144
+#, python-format
+msgid "You cannot delete procurements that are in cancel state."
+msgstr ""
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "e.g. Buy"
 msgstr ""
@@ -527,30 +519,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr "예 : SO005"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "레코드에 게시된 최근 메시지의 날짜."
-
-#~ msgid "Followers"
-#~ msgstr "팔로워"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
-
-#~ msgid "Last Message Date"
-#~ msgstr "최근 메시지 날짜"
-
-#~ msgid "Messages"
-#~ msgstr "메시지"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "메시지 및 대화 기록"
-
-#~ msgid "Unread Messages"
-#~ msgstr "읽지 않은 메시지"
-
-#~ msgid "Website Messages"
-#~ msgstr "웹사이트 메시지"
-
-#~ msgid "Website communication history"
-#~ msgstr "웹사이트 대화 이력"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-07-23 16:37+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Hebrew (http://www.transifex.com/odoo/odoo-9/language/he/)\n"
@@ -77,6 +77,32 @@ msgid "Activities Done"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
+msgid "Apply"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+msgid "Archived"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_action_res_partner_bank_form
+#: model:ir.ui.menu,name:sales_team.menu_config_bank_accounts
+msgid "Bank Accounts"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_action_res_bank_form
+msgid "Banks"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
+msgid "Cancel"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
 #: model:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model:ir.actions.act_window,help:sales_team.sales_team_config_action
@@ -97,11 +123,6 @@ msgid "Click to set"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_team_code
-msgid "Code"
-msgstr "קוד"
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_color
 msgid "Color Index"
 msgstr "מפתח צבעים"
@@ -113,21 +134,69 @@ msgid "Company"
 msgstr "חברה"
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_sale_config
+msgid "Configuration"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_sale_config
+#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
+msgid "Configure Sales"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_partner_category_form
+msgid "Contact Tags"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_partner_title_contact
+msgid "Contact Titles"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_config_address_book
+msgid "Contacts"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_country_partner
+msgid "Countries"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_country_group
+msgid "Country Group"
+msgstr ""
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:215
 #, python-format
-msgid "Create a few opportunities to activate your dashboard."
+msgid "Create a few opportunities in it."
 msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_create_uid
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "נוצר על ידי"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_create_date
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "נוצר ב-"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_action_currency_form
+msgid "Currencies"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_partner_form
+msgid "Customers"
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
@@ -145,8 +214,14 @@ msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_display_name
 msgid "Display Name"
 msgstr "השם המוצג"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_country_state_partner
+msgid "Fed. States"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -176,8 +251,17 @@ msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_id
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_id
 msgid "ID"
 msgstr "מזהה"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_res_partner_team_id
+#: model:ir.model.fields,help:sales_team.field_res_users_team_id
+msgid ""
+"If set, sale team used notably for sales and assignations related to this "
+"partner"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_active
@@ -200,6 +284,7 @@ msgstr "הפך לחשבונית"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team___last_update
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "תאריך שינוי אחרון"
 
@@ -212,13 +297,25 @@ msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_write_uid
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "עודכן לאחרונה על ידי"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_write_date
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "עודכן לאחרונה על"
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_localisation
+msgid "Localization"
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_manager
+msgid "Manager"
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
@@ -267,7 +364,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr ""
@@ -290,8 +387,19 @@ msgid "Reply-To"
 msgstr "השב ל-"
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_sale_report
+msgid "Reports"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_base_partner
+#: model:ir.ui.menu,name:sales_team.menu_sales
+msgid "Sales"
 msgstr ""
 
 #. module: sales_team
@@ -315,6 +423,7 @@ msgstr ""
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_act
 #: model:ir.actions.act_window,name:sales_team.sales_team_config_action
+#: model:ir.ui.menu,name:sales_team.sales_team_config
 msgid "Sales Teams"
 msgstr "צוותי מכירות"
 
@@ -334,6 +443,7 @@ msgid "Salesteams Search"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.ui.menu,name:sales_team.menu_sale_general_settings
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "Settings"
 msgstr "הגדרות"
@@ -355,11 +465,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member_ids
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
-msgstr ""
-
-#. module: sales_team
-#: sql_constraint:crm.team:0
-msgid "The code of the sales team must be unique !"
 msgstr ""
 
 #. module: sales_team
@@ -461,9 +566,24 @@ msgid ""
 msgstr ""
 
 #. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_salesman_all_leads
+msgid "User: All Documents"
+msgstr ""
+
+#. module: sales_team
+#: model:res.groups,name:sales_team.group_sale_salesman
+msgid "User: Own Documents Only"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
 msgid "Users"
 msgstr "משתמשים"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.salesteam_website_sales
+msgid "Website Sales"
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
@@ -474,7 +594,7 @@ msgstr ""
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
 #, python-format
 msgid "Wrong value entered!"
 msgstr "הוכנס ערך שגוי!"
@@ -487,41 +607,37 @@ msgid "exp. closing"
 msgstr ""
 
 #. module: sales_team
+#: model:ir.model,name:sales_team.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr ""
+
+#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
 #, python-format
 msgid "overdue"
 msgstr ""
 
-#~ msgid "Action Needed"
-#~ msgstr "נדרשת פעולה"
+#. module: sales_team
+#: model:ir.model,name:sales_team.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr ""
 
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "תאריך הודעה אחרונה שפורסמה ברשומה."
+#. module: sales_team
+#: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr ""
 
-#~ msgid "Followers"
-#~ msgstr "עוקבים"
+#. module: sales_team
+#: model:res.groups,comment:sales_team.group_sale_salesman
+msgid "the user will have access to his own data in the sales application."
+msgstr ""
 
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "אם מסומן אז הודעה חדשה דורשת התייחסותכם."
-
-#~ msgid "Last Message Date"
-#~ msgstr "תאריך הודעה אחרונה"
-
-#~ msgid "Messages"
-#~ msgstr "הודעות"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "היסטוריית הודעות ותקשורת"
-
-#~ msgid "Number of Actions"
-#~ msgstr "מספר הפעולות"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "מספר ההודעות שדורשות פעולה"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "מספר ההודעות שלא נקראו"
-
-#~ msgid "Unread Messages"
-#~ msgstr "הודעות שלא נקראו"
+#. module: sales_team
+#: model:res.groups,comment:sales_team.group_sale_manager
+msgid ""
+"the user will have an access to the sales configuration as well as statistic "
+"reports."
+msgstr ""
