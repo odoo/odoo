@@ -54,7 +54,7 @@ Business objects
     by Odoo based on their configuration
 
 Data files
-    XML or CSV files declaring metadata (views or workflows), configuration
+    XML or CSV files declaring metadata (views or reports), configuration
     data (modules parameterization), demonstration data and more
 
 Web controllers
