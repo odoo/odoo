@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-03-04 17:06+0000\n"
 "Last-Translator: Felipe Palomino <omega@nubark.com>\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/"
@@ -28,40 +28,6 @@ msgstr "# Patrocinadores"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
 msgid "<b>Date</b><br/>"
-msgstr "<b>Fecha</b><br/>"
-
-#. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-msgid "<b>Mail</b>:"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-msgid "<b>Phone</b>:"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
-msgid "<b>Proposed By</b>:"
-msgstr "Propuesta Por"
-
-#. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
-msgid "<b>Speakers Biography</b>:"
-msgstr "Biografía de los Ponentes"
-
-#. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
-msgid "<b>Talk Introduction</b>:"
-msgstr "Introducción de la Charla"
-
-#. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
-msgid "<b>Title</b>:"
 msgstr "<b>Fecha</b><br/>"
 
 #. module: website_event_track
@@ -138,7 +104,7 @@ msgid "Advanced reporting with Google Spreadsheets integration."
 msgstr "Informes avanzados con la integración con Google Spreadsheets."
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:160
+#: code:addons/website_event_track/models/event.py:26
 #, python-format
 msgid "Agenda"
 msgstr "Agenda"
@@ -347,15 +313,6 @@ msgid "Filter Tracks..."
 msgstr "Filtrar Sesiones..."
 
 #. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.event_track_social
-msgid ""
-"Find out what people see and say about this event, \n"
-"                        and join the conversation."
-msgstr ""
-"Encuentre lo que la gente ve y dice sobre este evento, y únase a la "
-"conversación."
-
-#. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
 msgid "Gold"
 msgstr "Oro"
@@ -555,12 +512,6 @@ msgid "New Track Created"
 msgstr "Nueva Sesión Creada"
 
 #. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
-#, fuzzy
-msgid "New track proposal"
-msgstr "Nueva Propuesta de Sesión"
-
-#. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.tracks
 msgid "No tracks found!"
 msgstr "No se encontraron sesiones!"
@@ -674,7 +625,7 @@ msgid "Responsible"
 msgstr "Responsable"
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8478
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8539
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_name
 msgid "Room"
 msgstr "Sala"
@@ -706,7 +657,7 @@ msgid "Speaker Biography"
 msgstr "Biografía del Ponente"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:116
+#: code:addons/website_event_track/models/website_event_track.py:122
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_speaker_ids
 #, python-format
 msgid "Speakers"
@@ -761,12 +712,6 @@ msgid "Submit Proposal"
 msgstr "Enviar Propuesta"
 
 #. module: website_event_track
-#: model:web.tip,description:website_event_track.event_track_tip_1
-msgid "Switch to the calendar view to see the availability of each room."
-msgstr ""
-"Cambie a la vista del calendario para ver la disponibilidad de cada salón"
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_name
 msgid "Tag"
 msgstr "Etiqueta"
@@ -788,7 +733,7 @@ msgid "Talk Introduction"
 msgstr "Introducción de la Charla"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:162
+#: code:addons/website_event_track/models/event.py:28
 #, python-format
 msgid "Talk Proposals"
 msgstr "Propuestas de Charlas"
@@ -799,7 +744,7 @@ msgid "Talk Title"
 msgstr "Título de la Charla"
 
 #. module: website_event_track
-#: code:addons/website_event_track/models/event.py:159
+#: code:addons/website_event_track/models/event.py:25
 #, python-format
 msgid "Talks"
 msgstr "Charlas"
@@ -993,92 +938,6 @@ msgid "hours"
 msgstr "horas"
 
 #. module: website_event_track
-#: model:ir.ui.view,arch_db:website_event_track.tracks
-msgid "not published"
-msgstr "no publicada"
-
-#. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.agenda
 msgid "talks"
 msgstr "charlas"
-
-#~ msgid "Action Needed"
-#~ msgstr "Acción Requerida"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Fecha del último mensaje publicado en el registro."
-
-#~ msgid "Event Blog"
-#~ msgstr "Blog del Evento"
-
-#~ msgid "Followers"
-#~ msgstr "Seguidores"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seguidores (Canales)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seguidores (Asociados)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Si está marcado, los nuevos mensajes requerirán su atención."
-
-#~ msgid "Is Follower"
-#~ msgstr "Es Seguidor"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Fecha del Último Mensaje"
-
-#~ msgid "Mail"
-#~ msgstr "Correo"
-
-#~ msgid "Messages"
-#~ msgstr "Mensajes"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Historial de mensajes y de comunicación"
-
-#~ msgid "News"
-#~ msgstr "Noticias"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Número de Acciones"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Número de mensajes que requieren una acción"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Número de mensajes no leidos"
-
-#~ msgid "Phone"
-#~ msgstr "Teléfono"
-
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr "La URL completa para acceder al documento a través del sitio web."
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Contador de Mensajes no Leídos"
-
-#~ msgid "Visible in Website"
-#~ msgstr "Visible en el Sitio Web"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mensajes del Sitio Web"
-
-#~ msgid "Website URL"
-#~ msgstr "URL del Sitio Web"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historial de comunicación del sitio web"
-
-#~ msgid "Website meta description"
-#~ msgstr "Meta descripción del sitio web"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "Meta palabras clave del sitio web"
-
-#~ msgid "Website meta title"
-#~ msgstr "Meta título del sitio web"

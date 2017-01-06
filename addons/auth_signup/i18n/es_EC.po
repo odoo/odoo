@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2016-10-10 08:43+0000\n"
 "PO-Revision-Date: 2016-02-19 21:50+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/"
@@ -20,99 +20,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: auth_signup
-#: model:mail.template,body_html:auth_signup.reset_password_email
-msgid ""
-"\n"
-"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
-"top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-"
-"collapse:collapse;background:inherit;color:inherit\">\n"
-"        <tbody><tr>\n"
-"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px "
-"10px 5px;font-size: 12px\">\n"
-"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
-"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
-"            </td>\n"
-"        </tr></tbody>\n"
-"    </table>\n"
-"</div>\n"
-"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
-"top /100%;color:#777777\">\n"
-"    <p>Dear ${object.name},</p>\n"
-"    <p>A password reset was requested for the Odoo account linked to this "
-"email.</p>\n"
-"    <p>You may change your password by following this link which will remain "
-"valid during 24 hours:</p>\n"
-"    <div style=\"text-align: center; margin-top: 16px;\">\n"
-"        <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-"
-"size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-"
-"decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
-"400; text-align: center; vertical-align: middle; cursor: pointer; white-"
-"space: nowrap; background-image: none; background-color: #a24689; border: "
-"1px solid #a24689; border-radius:3px\">Change password</a>\n"
-"    </div>\n"
-"    <p>If you do not expect this, you can safely ignore this email.</p>\n"
-"    <p>Best regards,</p>\n"
-"</div>\n"
-"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; "
-"background: #fff repeat top /100%;color:#777777\">\n"
-"    ${user.signature | safe}\n"
-"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
-"        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com"
-"\" style=\"text-decoration:none; color: #a24689;\">Odoo</a></strong>\n"
-"    </p>\n"
-"</div>"
-msgstr ""
-
-#. module: auth_signup
-#: model:mail.template,body_html:auth_signup.set_password_email
-msgid ""
-"\n"
-"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
-"top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-"
-"collapse:collapse;background:inherit;color:inherit\">\n"
-"        <tbody><tr>\n"
-"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px "
-"10px 5px;font-size: 12px\">\n"
-"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
-"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
-"            </td>\n"
-"        </tr></tbody>\n"
-"    </table>\n"
-"</div>\n"
-"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
-"top /100%;color:#777777\">\n"
-"<p>Dear ${object.name},</p>\n"
-"    <p>\n"
-"        You have been invited to connect to \"${object.company_id.name}\" in "
-"order to get access to your documents in Odoo.\n"
-"    </p>\n"
-"    <p>\n"
-"        To accept the invitation, click on the following link:\n"
-"    </p>\n"
-"    <div style=\"text-align: center; margin-top: 16px;\">\n"
-"         <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-"
-"size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-"
-"decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
-"400; text-align: center; vertical-align: middle; cursor: pointer; white-"
-"space: nowrap; background-image: none; background-color: #a24689; border: "
-"1px solid #a24689; border-radius:3px\">Accept invitation to \"${object."
-"company_id.name}\"</a>\n"
-"    </div>\n"
-"    <p>Best regards,</p>\n"
-"</div>\n"
-"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; "
-"background: #fff repeat top /100%;color:#777777\">\n"
-"    ${user.signature | safe}\n"
-"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
-"        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com"
-"\" style=\"text-decoration:none; color: #a24689;\">Odoo</a></strong>\n"
-"    </p>\n"
-"</div>"
-msgstr ""
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -137,11 +44,6 @@ msgid ""
 msgstr ""
 "<strong>Se ha enviado un correo electrónico de invitación conteniendo el "
 "siguiente enlace de suscripción:</strong>"
-
-#. module: auth_signup
-#: selection:res.users,state:0
-msgid "Activated"
-msgstr ""
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
@@ -255,11 +157,6 @@ msgid "Reset password: invalid username or email"
 msgstr "Restablecimiento de contraseña: usuario o correo electrónico no válido"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_self
-msgid "Self"
-msgstr ""
-
-#. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
 msgstr "Enviar instrucciones de restablecimiento de la contraseña"
@@ -294,20 +191,6 @@ msgid "Signup URL"
 msgstr "URL de ingreso"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
-#, fuzzy
-msgid "Signup expiration"
-msgstr "Expiración del ingreso"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
-#, fuzzy
-msgid "Signup token"
-msgstr "Palabra de ingreso"
-
-#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
 msgid "Status"
 msgstr "Estado"
@@ -322,6 +205,8 @@ msgstr ""
 #: model:ir.model.fields,help:auth_signup.field_res_users_website_url
 msgid "The full URL to access the document through the website."
 msgstr ""
+"La dirección URL completa para acceder al documento a través de la página "
+"web."
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
@@ -338,37 +223,37 @@ msgstr "Usuarios"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
 msgid "Visible in Website"
-msgstr ""
+msgstr "Visible en el sitio web"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
 msgid "Website Partner Full Description"
-msgstr ""
+msgstr "Descripción completa del Contacto web"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
 msgid "Website Partner Short Description"
-msgstr ""
+msgstr "Descripción corta del Contacto web"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
 msgid "Website URL"
-msgstr ""
+msgstr "URL del sitio web"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
 msgid "Website meta description"
-msgstr ""
+msgstr "Meta descripción del sitio web"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
 msgid "Website meta keywords"
-msgstr ""
+msgstr "Palabras claves del sitio web"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
 msgid "Website meta title"
-msgstr ""
+msgstr "Meta título del sitio web"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -390,85 +275,3 @@ msgstr "base.config.settings"
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
 msgstr "Por ejemplo, John Smith"
-
-#~ msgid ""
-#~ "\n"
-#~ "                \n"
-#~ "                    <p>\n"
-#~ "                        ${object.name},\n"
-#~ "                    </p>\n"
-#~ "                    <p>\n"
-#~ "                        You have been invited to connect to \"${object."
-#~ "company_id.name}\" in order to get access to your documents in Odoo.\n"
-#~ "                    </p>\n"
-#~ "                    <p>\n"
-#~ "                        To accept the invitation, click on the following "
-#~ "link:\n"
-#~ "                    </p>\n"
-#~ "                    <ul>\n"
-#~ "                        <li><a href=\"${object.signup_url}\">Accept "
-#~ "invitation to \"${object.company_id.name}\"</a></li>\n"
-#~ "                    </ul>\n"
-#~ "                    <p>\n"
-#~ "                        Thanks,\n"
-#~ "                    </p>\n"
-#~ "                    <pre>\n"
-#~ "--\n"
-#~ "${object.company_id.name or ''}\n"
-#~ "${object.company_id.email or ''}\n"
-#~ "${object.company_id.phone or ''}\n"
-#~ "                    </pre>\n"
-#~ "                \n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "                \n"
-#~ "                    <p>\n"
-#~ "                        ${object.name},\n"
-#~ "                    </p>\n"
-#~ "                    <p>\n"
-#~ "                        Le han invitado conectarse a \"${object."
-#~ "company_id.name}\"  para tener acceso a sus documentos en Odoo.\n"
-#~ "                    </p>\n"
-#~ "                    <p>\n"
-#~ "                        Para aceptar la invitación haga clic en el "
-#~ "siguiente enlace:\n"
-#~ "                    </p>\n"
-#~ "                    <ul>\n"
-#~ "                        <li><a href=\"${object.signup_url}\">Aceptar la "
-#~ "invitación de \"${object.company_id.name}\"</a></li>\n"
-#~ "                    </ul>\n"
-#~ "                    <p>\n"
-#~ "                        Gracias,\n"
-#~ "                    </p>\n"
-#~ "                    <pre>\n"
-#~ "--\n"
-#~ "${object.company_id.name or ''}\n"
-#~ "${object.company_id.email or ''}\n"
-#~ "${object.company_id.phone or ''}\n"
-#~ "                    </pre>\n"
-#~ "                \n"
-#~ "            "
-
-#~ msgid ""
-#~ "\n"
-#~ "<p>A password reset was requested for the Odoo account linked to this "
-#~ "email.</p>\n"
-#~ "\n"
-#~ "<p>You may change your password by following <a href=\"${object."
-#~ "signup_url}\">this link</a>, which will remain valid during 24 hours.</"
-#~ "p>\n"
-#~ "\n"
-#~ "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-#~ msgstr ""
-#~ "\n"
-#~ "<p>Se ha solicitado un restablecimiento de contraseña para la cuenta Odoo "
-#~ "enlazada a este correo electrónico.</p>\n"
-#~ "\n"
-#~ "<p>Puede cambiar su contraseña accediendo a <a href=\"${object."
-#~ "signup_url}\">este enlace</a>, que será válido durante 24 horas.</p>\n"
-#~ "\n"
-#~ "<p>Nota: Si no esperaba esta notificación, puede ignorarla sin más.</p>"
-
-#~ msgid "Connected"
-#~ msgstr "Conectado"
