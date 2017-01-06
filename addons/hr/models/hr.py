@@ -159,8 +159,7 @@ class Employee(models.Model):
     mobile_phone = fields.Char('Work Mobile')
     work_email = fields.Char('Work Email')
     work_location = fields.Char('Work Location')
-    # work or partner ?
-    city = fields.Char(related='address_id.city')
+    user_id = fields.Many2one('res.users', 'User')
     # employee
     job_id = fields.Many2one('hr.job', 'Job Title')
     department_id = fields.Many2one('hr.department', 'Department')
