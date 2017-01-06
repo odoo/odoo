@@ -113,8 +113,6 @@ class Employee(models.Model):
     home_partner_id = fields.Many2one(
         'res.partner', 'Home Address',
         delegate=True, oldname='address_home_id', required=True)
-    country_id = fields.Many2one(
-        'res.country', 'Nationality (Country)', related='home_partner_id.country_id', readonly=True)
     birthday = fields.Date('Date of Birth')
     ssnid = fields.Char('SSN No', help='Social Security Number')
     sinid = fields.Char('SIN No', help='Social Insurance Number')
