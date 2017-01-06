@@ -692,6 +692,8 @@ class product_template(osv.osv):
                         temp_variants.append(sorted(variant + [int(value_id)]))
                 if temp_variants:
                     all_variants = temp_variants
+            for variant in all_variants:
+                variant.sort()
 
             # adding an attribute with only one value should not recreate product
             # write this attribute on every product to make sure we don't lose them
