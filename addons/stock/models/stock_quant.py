@@ -44,7 +44,7 @@ class Quant(models.Model):
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number',
         index=True, ondelete="restrict", readonly=True)
-    cost = fields.Float('Unit Cost')
+    cost = fields.Float('Unit Cost', group_operator='avg')
     owner_id = fields.Many2one(
         'res.partner', 'Owner',
         index=True, readonly=True,
