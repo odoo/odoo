@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-11-14 15:55+0000\n"
 "PO-Revision-Date: 2016-07-20 23:46+0000\n"
 "Last-Translator: Gustavo Valverde\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/"
@@ -20,13 +20,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/controllers/main.py:60
+#: code:addons/website_crm_partner_assign/controllers/main.py:206
 #, python-format
 msgid "All Categories"
 msgstr "Todas las Categorías"
 
 #. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/controllers/main.py:79
+#: code:addons/website_crm_partner_assign/controllers/main.py:223
 #, python-format
 msgid "All Countries"
 msgstr "Todos los Países"
@@ -62,7 +62,11 @@ msgid "Our Partners"
 msgstr "Nuestros Partners"
 
 #. module: website_crm_partner_assign
+#: model:ir.model,name:website_crm_partner_assign.model_res_partner
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_partner_assigned_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_partner_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.grade_in_detail
+#: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Partner"
 msgstr "Contacto"
 
@@ -106,14 +110,3 @@ msgstr "referencia(s)"
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner_grade
 msgid "res.partner.grade"
 msgstr "res.partner.grade"
-
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr ""
-#~ "La dirección URL completa para acceder al documento a través del sitio "
-#~ "web."
-
-#~ msgid "Visible in Website"
-#~ msgstr "Visible en Sitio Web"
-
-#~ msgid "Website URL"
-#~ msgstr "URL de Página Web"

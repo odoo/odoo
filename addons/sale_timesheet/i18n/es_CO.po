@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2016-09-19 12:36+0000\n"
 "PO-Revision-Date: 2015-10-23 21:08+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-9/"
@@ -29,6 +29,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "#-#-#-#-#  es_CO.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Línea Analítica"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_res_company
@@ -46,54 +51,21 @@ msgid "Product Template"
 msgstr "Plantilla del Producto"
 
 #. module: sale_timesheet
-#: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
-msgid "Project"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
-#, fuzzy
-msgid "Project associated to this sale"
-msgstr "Actividades del parte de horas asociadas a esta venta"
-
-#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
-#, fuzzy
+#: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order"
-msgstr ""
-"#-#-#-#-#  es_CO.po (Odoo 9.0)  #-#-#-#-#\n"
-"Orden de Venta\n"
-"#-#-#-#-#  es_CO.po (Odoo 9.0)  #-#-#-#-#\n"
-"Pedido de Venta"
+msgstr "Orden de Venta"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
-#, fuzzy
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_sale_line_id
 msgid "Sales Order Line"
-msgstr ""
-"#-#-#-#-#  es_CO.po (Odoo 9.0)  #-#-#-#-#\n"
-"Línea Orden de Venta\n"
-"#-#-#-#-#  es_CO.po (Odoo 9.0)  #-#-#-#-#\n"
-"Línea de Pedido de Venta"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
-msgid ""
-"This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects, don't forget to setup the right "
-"unit of measure in your employees."
-msgstr ""
+msgstr "Línea Orden de Venta"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
 msgid "Timesheet Cost"
 msgstr "Costo del Parte de Horas"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.project_time_mode_id_duplicate_xmlid
-#, fuzzy
-msgid "Timesheet UoM"
-msgstr "Parte de Horas"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
@@ -112,7 +84,7 @@ msgid "Timesheets"
 msgstr "Partes de Horas"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_timesheet.py:128
+#: code:addons/sale_timesheet/models/sale_order.py:55
 #, python-format
 msgid ""
 "You can use only one product on timesheet within the same sale order. You "
@@ -122,9 +94,3 @@ msgstr ""
 "Puede usar sólo un producto en el parte de horas dentro de la misma orden de "
 "venta. Debería dividir su orden para incluir sólo un contrato basado en "
 "tiempos y materiales."
-
-#. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_account_analytic_line
-#, fuzzy
-msgid "account analytic line"
-msgstr "Línea Analítica"
