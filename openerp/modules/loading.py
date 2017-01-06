@@ -367,7 +367,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             for (model,) in cr.fetchall():
                 if model in registry:
                     registry[model]._check_removed_columns(cr, log=True)
-                else:
+                elif _logger.isEnabledFor(logging.INFO):    # more an info that a warning...
                     _logger.warning("Model %s is declared but cannot be loaded! (Perhaps a module was partially removed or renamed)", model)
 
             # Cleanup orphan records
