@@ -404,8 +404,10 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if update_module:
             Views = registry['ir.ui.view']
             for model in registry.models.keys():
-                if not Views._validate_custom_views(cr, SUPERUSER_ID, model):
-                    _logger.warning('Invalid custom view(s) for model %s', model)
+                try:
+                    Views._validate_custom_views(cr, SUPERUSER_ID, model)
+                except Exception as e:
+                    _logger.warning('invalid custom view(s) for model %s: %s', model, tools.ustr(e))
 
         if report.failures:
             _logger.error('At least one test failed when loading the modules.')
