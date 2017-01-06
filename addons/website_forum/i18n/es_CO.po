@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-11-28 06:58+0000\n"
+"PO-Revision-Date: 2016-02-16 21:20+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Colombia) (http://www.transifex.com/odoo/odoo-8/language/es_CO/)\n"
 "MIME-Version: 1.0\n"
@@ -43,12 +43,12 @@ msgid ""
 "${object.company_id.email or ''}\n"
 "${object.company_id.phone or ''}\n"
 "</pre>"
-msgstr ""
+msgstr "\n<p>\n    Hola ${object.name},\n</p>\n<p>\n    Ha sido invitado a validar su correo electrónico para poder obtener acceso a los foros de preguntas y respuestas de \"${object.company_id.name}\".\n</p>\n<p>\n    Para validar su correo electrónico, pulse por favor en el siguiente enlace:\n</p>\n<ul>\n    <li><a href=\"${ctx.get('token_url')}\">Validar mi cuenta para los foros de P/R de \"${object.company_id.name}\"</a></li>\n</ul>\n<p>\n    Gracias,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
 
 #. module: website_forum
 #: model:email.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
-msgstr ""
+msgstr "${object.company_id.name} Validación de los foros"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -250,7 +250,7 @@ msgid ""
 "Besides gaining reputation with your questions and answers,\n"
 "            you receive badges for being especially helpful. Badges\n"
 "            appear on your profile page, and your posts."
-msgstr ""
+msgstr "Además de ganar reputación con sus preguntas y respuestas, recibirá insignias por ser especialmente útil. Las insignias aparecen en su página de perfil, y sus mensajes."
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -537,7 +537,7 @@ msgstr "Editar Su Respuesta Anterior"
 #. module: website_forum
 #: field:forum.forum,karma_edit_all:0
 msgid "Edit all posts"
-msgstr ""
+msgstr "Editar todos los mensajes"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
@@ -592,7 +592,7 @@ msgstr "Pregunta Popular"
 #. module: website_forum
 #: field:forum.post,favourite_count:0
 msgid "Favorite Count"
-msgstr ""
+msgstr "Cuenta Favorita"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_5
@@ -628,7 +628,7 @@ msgstr "Preguntas Favoritas"
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Filter on"
-msgstr ""
+msgstr "Filtrar en"
 
 #. module: website_forum
 #: field:forum.forum,karma_flag:0
@@ -670,7 +670,7 @@ msgstr "Nivel de Insignias del Foro"
 #. module: website_forum
 #: view:res.users:website_forum.view_users_form_forum
 msgid "Forum Karma"
-msgstr ""
+msgstr "Karma del Foro"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_form
@@ -760,7 +760,7 @@ msgstr "Gurú (15)"
 #. module: website_forum
 #: field:forum.post,uid_has_answered:0
 msgid "Has Answered"
-msgstr ""
+msgstr "Ha Respondido"
 
 #. module: website_forum
 #: field:forum.post,has_validated_answer:0
@@ -812,7 +812,7 @@ msgstr "Es un Seguidor"
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "It appears your email has not been verified."
-msgstr ""
+msgstr "Parece ser que su correo electrónico no ha sido verificado."
 
 #. module: website_forum
 #: field:res.users,karma:0 view:website:website_forum.user_detail_full
@@ -822,7 +822,7 @@ msgstr "Karma"
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 msgid "Karma Gains"
-msgstr ""
+msgstr "Ganancias de karma"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
@@ -847,12 +847,12 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,karma_close:0
 msgid "Karma to close"
-msgstr ""
+msgstr "Karma para cerrar"
 
 #. module: website_forum
 #: field:forum.post,karma_comment:0
 msgid "Karma to comment"
-msgstr ""
+msgstr "Karma para comentar"
 
 #. module: website_forum
 #: field:forum.post,karma_downvote:0
@@ -867,7 +867,7 @@ msgstr "Karma a editar"
 #. module: website_forum
 #: field:forum.post,karma_unlink:0
 msgid "Karma to unlink"
-msgstr ""
+msgstr "Karma para no vincular"
 
 #. module: website_forum
 #: field:forum.post,karma_upvote:0
@@ -899,7 +899,7 @@ msgstr "Actualizado"
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Last activity date"
-msgstr ""
+msgstr "Fecha de la última actividad"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1056,12 +1056,12 @@ msgstr "Nuestros foros"
 #: model:gamification.challenge,name:website_forum.challenge_peer_pressure
 #: model:gamification.goal.definition,name:website_forum.definition_peer_pressure
 msgid "Peer Pressure"
-msgstr ""
+msgstr "Presión de Pares"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "People"
-msgstr ""
+msgstr "Personas"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
@@ -1119,12 +1119,12 @@ msgstr "Artículo"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_reason
 msgid "Post Closing Reason"
-msgstr ""
+msgstr "Publicar Razón de Cierre"
 
 #. module: website_forum
 #: field:forum.post,website_message_ids:0
 msgid "Post Messages"
-msgstr ""
+msgstr "Publicar Mensajes"
 
 #. module: website_forum
 #: field:forum.post.reason,name:0
@@ -1157,7 +1157,7 @@ msgstr "Perfil público"
 #: model:gamification.challenge,name:website_forum.challenge_pundit
 #: model:gamification.goal.definition,name:website_forum.definition_pundit
 msgid "Pundit"
-msgstr ""
+msgstr "Experto"
 
 #. module: website_forum
 #: view:website:website.layout
@@ -1387,12 +1387,12 @@ msgstr "Alternar navegación"
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Unanswered"
-msgstr ""
+msgstr "Sin respuesta"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_unlink_all:0
 msgid "Unlink all comments"
-msgstr ""
+msgstr "No vincular todos los comentarios"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_unlink_own:0
@@ -1412,7 +1412,7 @@ msgstr "Actualizar"
 #. module: website_forum
 #: field:forum.post,write_date:0
 msgid "Update on"
-msgstr ""
+msgstr "Actualizar en"
 
 #. module: website_forum
 #: field:forum.post,write_uid:0
@@ -1583,7 +1583,7 @@ msgstr "por"
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "by activity date"
-msgstr ""
+msgstr "por fecha de actividad"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
@@ -1628,7 +1628,7 @@ msgstr "seguidor(es)"
 #. module: website_forum
 #: view:website:website_forum.post_description_full
 msgid "for reason:"
-msgstr ""
+msgstr "por motivo:"
 
 #. module: website_forum
 #: selection:gamification.badge,level:0

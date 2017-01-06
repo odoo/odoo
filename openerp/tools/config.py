@@ -118,7 +118,7 @@ class configmanager(object):
         self.has_ssl = _check_ssl()
 
         self._LOGLEVELS = dict([
-            (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x)) 
+            (getattr(loglevels, 'LOG_%s' % x), getattr(logging, x))
             for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET')
         ])
 
@@ -142,7 +142,7 @@ class configmanager(object):
         group.add_option("--addons-path", dest="addons_path",
                          help="specify additional addons paths (separated by commas).",
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
-        group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules default=web")
+        group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules.", my_default='web,web_kanban')
 
         group.add_option("-D", "--data-dir", dest="data_dir", my_default=_get_default_datadir(),
                          help="Directory where to store Odoo data")
@@ -408,6 +408,9 @@ class configmanager(object):
         # the same for the pidfile
         if self.options['pidfile'] in ('None', 'False'):
             self.options['pidfile'] = False
+        # and the server_wide_modules
+        if self.options['server_wide_modules'] in ('', 'None', 'False'):
+            self.options['server_wide_modules'] = 'web,web_kanban'
 
         # if defined dont take the configfile value even if the defined value is None
         keys = ['xmlrpc_interface', 'xmlrpc_port', 'longpolling_port',
@@ -443,6 +446,7 @@ class configmanager(object):
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
             'data_dir',
+            'server_wide_modules',
         ]
 
         posix_keys = [
@@ -480,7 +484,7 @@ class configmanager(object):
                       for x in self.options['addons_path'].split(','))
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
-        self.options["demo"] = not opt.without_demo and self.options['init'] or {}
+        self.options['demo'] = not opt.without_demo and dict(self.options['init']) or {}
         self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
         self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
         self.options['translate_modules'].sort()
@@ -533,10 +537,10 @@ class configmanager(object):
             self.save()
 
         openerp.conf.addons_paths = self.options['addons_path'].split(',')
-        if opt.server_wide_modules:
-            openerp.conf.server_wide_modules = map(lambda m: m.strip(), opt.server_wide_modules.split(','))
-        else:
-            openerp.conf.server_wide_modules = ['web','web_kanban']
+
+        openerp.conf.server_wide_modules = [
+            m.strip() for m in self.options['server_wide_modules'].split(',') if m.strip()
+        ]
 
     def _generate_pgpassfile(self):
         """

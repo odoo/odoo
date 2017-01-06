@@ -121,7 +121,7 @@ def get_module_path(module, downloaded=False, display_warning=True):
     """
     initialize_sys_path()
     for adp in ad_paths:
-        if os.path.exists(opj(adp, module)) or os.path.exists(opj(adp, '%s.zip' % module)):
+        if os.path.exists(opj(adp, module, MANIFEST)) or os.path.exists(opj(adp, '%s.zip' % module)):
             return opj(adp, module)
 
     if downloaded:

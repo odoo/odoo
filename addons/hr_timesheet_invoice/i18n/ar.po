@@ -5,13 +5,14 @@
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # hoxhe aits <hoxhe0@gmail.com>, 2015
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-10-06 05:31+0000\n"
-"Last-Translator: hoxhe aits <hoxhe0@gmail.com>\n"
+"PO-Revision-Date: 2016-05-12 17:44+0000\n"
+"Last-Translator: Mohammed Ibrahim <m.ibrahim@mussder.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +43,7 @@ msgid ""
 "                invoicing.\n"
 "              </p>\n"
 "            "
-msgstr ""
+msgstr "<p class=\"oe_view_nocontent_create\">\nإضغط هنا لإضافه نوع جديد من الفاتوره \n</p><p>أوبنيرب يسمح لك بخلق أنواع الفواتير الافتراضية. \nيمكنك تعيين تخفيض بشكل منتظم \nعقد أو اتفاق مع العملاء. من هذه القائمة، يمكنك\nإنشاء أنواع إضافية من الفواتير لتسريع \nالفواتير الخاصه بك .\n</p>"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
@@ -66,7 +67,7 @@ msgstr "حساب تحليلي"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:179
 #, python-format
 msgid "Analytic Account Incomplete!"
-msgstr ""
+msgstr "الحساب التحليلى غير مكتمل !"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_line
@@ -158,7 +159,7 @@ msgstr "خطأ في الإعدادات!"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:180
 #, python-format
 msgid "Contract incomplete. Please fill in the Customer and Pricelist fields."
-msgstr ""
+msgstr "التعاقد غير مكتمل. يرجى تعبئة حقول العملاء وقائمة الأسعار. "
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,price:0
@@ -353,12 +354,12 @@ msgstr "فبراير"
 msgid ""
 "Fill this field only if you want to force to use a specific product. Keep "
 "empty to use the real product that comes from the cost."
-msgstr ""
+msgstr "إملأ هذا المجال فقط إذا كنت ترغب في فرض استخدام منتج معين. تبقي فارغة لاستخدام المنتج الحقيقي الذي يأتي من حيث التكلفة."
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,product:0
 msgid "Force Product"
-msgstr ""
+msgstr "قوه المنتج "
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create.final:hr_timesheet_invoice.view_hr_timesheet_invoice_create_final
@@ -441,12 +442,12 @@ msgstr "فاتورة العقد"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:56
 #, python-format
 msgid "Invoice is already linked to some of the analytic line(s)!"
-msgstr ""
+msgstr "الفاتوره بالفعل مربوطه ببعض الخطوط التحليليه (s)"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
 msgid "Invoice on Timesheets Options"
-msgstr ""
+msgstr "الفاتوره على خيارات سجلات الدوام "
 
 #. module: hr_timesheet_invoice
 #: view:website:hr_timesheet_invoice.report_analyticprofit
@@ -487,7 +488,7 @@ msgstr "الفوترة"
 msgid ""
 "It allows to set the discount while making invoice, keep empty if the "
 "activities should not be invoiced."
-msgstr ""
+msgstr "انها تسمح لتعيين الخصم على الفاتورة، حافظ عليه فارغا إذا كانت الانشطه لا ينبغى فوترتها ."
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -529,7 +530,7 @@ msgstr "يونيو"
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,amount_max:0
 msgid "Keep empty if this contract is not limited to a total fixed price."
-msgstr ""
+msgstr "تبقي فارغة إذا كان هذا العقد لا يقتصر على مجموع سعر ثابت. "
 
 #. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,customer_name:0
@@ -555,7 +556,7 @@ msgstr "آخر تحديث فى"
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create.final,name:0
 msgid "Log of Activity"
-msgstr ""
+msgstr "سجل النشاط "
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,manager_id:0
@@ -608,7 +609,7 @@ msgstr "الاسم"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:59
 #, python-format
 msgid "No record(s) found for this report."
-msgstr ""
+msgstr "لا يوجد سجلات لهذا التقرير "
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:hr_timesheet_invoice.view_timesheet_line_search
@@ -652,7 +653,7 @@ msgstr "الفترة حتى تاريخ الانتهاء:"
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:253
 #, python-format
 msgid "Please define income account for product '%s'."
-msgstr ""
+msgstr "يرجى تحديد حساب الدخل للمنتج '%s'. "
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,pricelist_id:0
@@ -710,7 +711,7 @@ msgstr "سبتمبر"
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:hr_timesheet_invoice.account_analytic_account_form_form
 msgid "Set In Progress"
-msgstr ""
+msgstr "التعيين في التقدم"
 
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,state:0
@@ -739,7 +740,7 @@ msgstr "المنتج الذي سيتم استخدامه لفاتورة المب�
 msgid ""
 "The product to invoice is defined on the employee form, the price will be "
 "deducted by this pricelist on the product."
-msgstr ""
+msgstr "يتم تعريف المنتج إلى الفاتورة على نموذج الموظف، ويتم خصم ثمن هذا على لائحة أسعارالمنتج."
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,date:0
@@ -778,7 +779,7 @@ msgstr "الوقت المستغرق"
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,to_invoice:0
 msgid "Timesheet Invoicing Ratio"
-msgstr ""
+msgstr "نسبه فاتوره الجدول الزمنى "
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_line_stat_all
@@ -838,7 +839,7 @@ msgstr "سجل الدوام من قبل المستخدم"
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.user:hr_timesheet_invoice.view_timesheet_user_search
 msgid "Timesheet by users"
-msgstr ""
+msgstr "الجدول الزمنى للمستخدمين "
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account
@@ -956,7 +957,7 @@ msgid ""
 " price of the corresponding product (if any, and if its sale price is not "
 "0). You can use the following field to enforce the use of a single product "
 "for all the chosen lines in the future invoices."
-msgstr ""
+msgstr "عند إعادة فوتره التكاليف، الكمية على خطوط الفاتورة من سعر بيع المنتج المطابق (إن وجدت، وإذا سعر بيع غير 0). يمكنك استخدام الحقل التالية لفرض استخدام منتج واحد لجميع خطوط المختار في الفواتير المستقبلية."
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,name:0
@@ -985,7 +986,7 @@ msgid ""
 "timesheet invoicing, you may use another ratio. For instance, if you do a "
 "20% advance invoice (fixed price, based on a sales order), you should "
 "invoice the rest on timesheet with a 80% ratio."
-msgstr ""
+msgstr " عادة الفاتورة 100٪ من الجداول الزمنية. ولكن إذا كانت مزيج من سعر ثابت و فواتير الجدول الزمني، يمكنك استخدام نسبة أخرى. على سبيل المثال، إذا كنت تفعل 20٪ مقدما الفاتورة (سعر ثابت، على أساس أمر المبيعات)، يجب أن تكون الفاتورة الباقيه على الجدول الزمني مع نسبة 80٪. "
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:hr_timesheet_invoice.view_hr_timesheet_analytic_profit

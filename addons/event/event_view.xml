@@ -273,7 +273,7 @@
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
-                    <filter string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
+                    <filter name="confirm" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
                     <separator/>
                     <filter string="My Events" help="My Events" domain="[('user_id','=',uid)]"/>
                     <separator/>
@@ -424,7 +424,7 @@
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter string="New" name="draft" domain="[('state','=','draft')]" help="Registrations in unconfirmed state"/>
-                    <filter string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
+                    <filter name="open" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
                     <separator/>
                     <filter string="My Registrations" help="My Registrations" domain="[('user_id','=',uid)]"/>
                     <field name="event_id"/>

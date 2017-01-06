@@ -9,7 +9,7 @@
                 <form string="Periodical VAT Declaration">
                     <group>
                         <group string="Declare Periodical VAT">
-                            <field name="period_id" widget="selection"/>
+                            <field name="period_id" nocreate="True"/>
                             <field name="tax_code_id" string="Company" widget="selection" groups="base.group_multi_company"/>
                         </group>
                         <group string="Advanced Options">

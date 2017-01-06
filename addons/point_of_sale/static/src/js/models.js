@@ -369,7 +369,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     logo_loaded.reject();
                 };
                     self.company_logo.crossOrigin = "anonymous";
-                self.company_logo.src = '/web/binary/company_logo' +'?_'+Math.random();
+                self.company_logo.src = '/web/binary/company_logo' +'?dbname=' + self.session.db + '&_'+Math.random();
 
                 return logo_loaded;
             },
@@ -821,7 +821,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.trigger('change',this);
         },
         get_unit_price: function(){
-            return this.price;
+            return round_di(this.price || 0, this.pos.dp['Product Price'])
         },
         get_base_price:    function(){
             var rounding = this.pos.currency.rounding;
@@ -972,7 +972,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return this.amount;
         },
         get_amount_str: function(){
-            return this.amount.toFixed(this.pos.currency.decimals);
+            return openerp.instances[this.pos.session.name].web.format_value(this.amount, {
+                type: 'float', digits: [69, this.pos.currency.decimals]
+            });
         },
         set_selected: function(selected){
             if(this.selected !== selected){

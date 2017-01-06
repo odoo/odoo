@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-14 12:26+0000\n"
-"PO-Revision-Date: 2016-01-14 12:26+0000\n"
+"POT-Creation-Date: 2016-03-11 08:43+0000\n"
+"PO-Revision-Date: 2016-03-11 08:43+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -49,12 +49,6 @@ msgstr ""
 #: code:addons/stock/stock.py:1665
 #, python-format
 msgid " (reserved)"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/stock.py:2954
-#, python-format
-msgid "You cannot have two inventory adjustements in state 'in Progess' with the same product(%s), same location(%s), same package, same owner and same lot. Please first validate the first inventory adjustement with this product before creating another one."
 msgstr ""
 
 #. module: stock
@@ -224,22 +218,6 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "              </p><p>\n"
 "                This is the list of all the production lots you recorded. When\n"
 "                you select a lot, you can get the traceability of the products contained in lot.\n"
-"              </p>\n"
-"            "
-msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,help:stock.action_production_lot_form
-msgid "<p class=\"oe_view_nocontent_create\">\n"
-"                Click to add a serial number.\n"
-"              </p><p>\n"
-"                This is the list of all the production lots you recorded. When\n"
-"                you select a lot, you can get the \n"
-"                traceability of the products contained in lot. By default, the\n"
-"                list is filtered on the serial numbers that are available in\n"
-"                your warehouse but you can uncheck the 'Available' button to\n"
-"                get all the lots you produced, received or delivered to\n"
-"                customers.\n"
 "              </p>\n"
 "            "
 msgstr ""
@@ -445,12 +423,6 @@ msgstr ""
 #. module: stock
 #: help:stock.config.settings,group_uom:0
 msgid "Allows you to select and maintain different units of measure for products."
-msgstr ""
-
-#. module: stock
-#: help:stock.config.settings,group_uos:0
-msgid "Allows you to sell units of a product, but invoice based on a different unit of measure.\n"
-"For instance, you can sell pieces of meat that you invoice based on their weight."
 msgstr ""
 
 #. module: stock
@@ -2019,12 +1991,8 @@ msgstr ""
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
+#: field:stock.inventory,filter:0
 msgid "Inventory of"
-msgstr ""
-
-#. module: stock
-#: field:stock.config.settings,group_uos:0
-msgid "Invoice products in a different unit of measure than the sales order"
 msgstr ""
 
 #. module: stock
@@ -4148,11 +4116,6 @@ msgid "Select your operation"
 msgstr ""
 
 #. module: stock
-#: field:stock.inventory,filter:0
-msgid "Selection Filter"
-msgstr ""
-
-#. module: stock
 #: field:stock.location.path,sequence:0
 #: view:stock.location.route:stock.stock_location_route_form_view
 #: field:stock.location.route,sequence:0
@@ -4461,7 +4424,6 @@ msgstr ""
 
 #. module: stock
 #: view:stock.location:stock.view_location_search
-#: view:stock.move:stock.view_move_tree_receipt_picking
 msgid "Supplier"
 msgstr ""
 
@@ -4942,6 +4904,12 @@ msgid "Types of Operation"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:663
+#, python-format
+msgid "Under no circumstances should you delete or change quants yourselves!"
+msgstr ""
+
+#. module: stock
 #: help:stock.production.lot,name:0
 msgid "Unique Serial Number"
 msgstr ""
@@ -5025,6 +4993,11 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Unreserve"
+msgstr ""
+
+#. module: stock
+#: help:stock.warehouse,resupply_from_wh:0
+msgid "Unused field"
 msgstr ""
 
 #. module: stock
@@ -5315,7 +5288,13 @@ msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:638
+#: code:addons/stock/stock.py:2958
+#, python-format
+msgid "You cannot have two inventory adjustements in state 'in Progess' with the same product(%s), same location(%s), same package, same owner and same lot. Please first validate the first inventory adjustement with this product before creating another one."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:657
 #, python-format
 msgid "You cannot move to a location of type view %s."
 msgstr ""
@@ -5340,7 +5319,13 @@ msgid "You cannot split a move done"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:132
+#: code:addons/stock/wizard/stock_transfer_details.py:79
+#, python-format
+msgid "You cannot transfer a picking in state '%s'."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:135
 #, python-format
 msgid "You have manually created product lines, please delete them to proceed"
 msgstr ""

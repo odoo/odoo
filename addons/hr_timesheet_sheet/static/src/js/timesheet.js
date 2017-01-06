@@ -177,6 +177,7 @@ openerp.hr_timesheet_sheet = function(instance) {
             }
         },
         is_valid_value:function(value){
+            this.view.do_notify_change();
             var split_value = value.split(":");
             var valid_value = true;
             if (split_value.length > 2)

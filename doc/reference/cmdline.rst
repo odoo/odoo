@@ -335,7 +335,7 @@ Some conversions don't match the pattern:
   :option:`--log-handler` and :option:`--log-db`) just add content to
   ``log_handler``, use that directly in the configuration file
 * :option:`--smtp` is stored as ``smtp_server``
-* :option:`--database` is stored as ``dbname``
+* :option:`--database` is stored as ``db_name``
 * :option:`--debug` is stored as ``debug_mode`` (a boolean)
 * :option:`--i18n-import` and :option:`--i18n-export` aren't available at all
   from configuration files

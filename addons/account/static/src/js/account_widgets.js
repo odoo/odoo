@@ -93,7 +93,7 @@ openerp.account = function (instance) {
                         relation: "account.tax",
                         string: _t("Tax"),
                         type: "many2one",
-                        domain: [['type_tax_use','in',['purchase', 'all']], ['parent_id', '=', false]],
+                        domain: [['parent_id', '=', false]],
                     },
                 },
                 amount: {

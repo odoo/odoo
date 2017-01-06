@@ -345,7 +345,7 @@ class procurement_order(osv.osv):
 
         procurement_obj = self.pool.get('procurement.order')
         dom = self._get_orderpoint_domain(cr, uid, company_id=company_id, context=context)
-        orderpoint_ids = orderpoint_obj.search(cr, uid, dom)
+        orderpoint_ids = orderpoint_obj.search(cr, uid, dom, context=context)
         prev_ids = []
         while orderpoint_ids:
             ids = orderpoint_ids[:100]

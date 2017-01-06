@@ -729,6 +729,12 @@ class DateTimeConverter(osv.AbstractModel):
 
         return babel.dates.format_datetime(value, format=pattern, locale=locale)
 
+    def record_to_html(self, cr, uid, field_name, record, options, context=None):
+        field = field = record._fields[field_name]
+        value = record[field_name]
+        return self.value_to_html(
+            cr, uid, value, field, options=options, context=dict(context, **record.env.context))
+
 class TextConverter(osv.AbstractModel):
     _name = 'ir.qweb.field.text'
     _inherit = 'ir.qweb.field'

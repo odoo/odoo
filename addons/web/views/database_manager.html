@@ -65,6 +65,14 @@
         <link href="/base/static/src/css/modules.css" rel="stylesheet"/>
         <script type="text/javascript">
             $(function() {
+                /* Do not forward port this block! */
+                if ($.browser.chrome) {
+                    var chrome_version = $.browser.version.split('.')[0];
+                    if (parseInt(chrome_version, 10) >= 50) {
+                        openerp.loadCSS('/web/static/src/css/chrome50.css');
+                    }
+                }
+
                 var s = new openerp.init({{ modules|safe }});
                 var wc = new s.web.WebClient(null, { action: 'database_manager' });
                 wc.setElement($(document.body));

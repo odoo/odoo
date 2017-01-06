@@ -3,16 +3,22 @@
 # * account
 # 
 # Translators:
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
+# DD FS <fatihpiristine@gmail.com>, 2016
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
 # gezgin biri <gezginbiri@hotmail.com>, 2015
 # Murat Kaplan <muratk@projetgrup.com>, 2015-2016
+# Muzaffer YILDIRIM <muzoenespolat@gmail.com>, 2016
+# thermodynamic thermodynamic <emirhanayar2004@gmail.com>, 2016
+# Tolga Han Duyuler <peccavi01@hotmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-15 06:40+0000\n"
-"PO-Revision-Date: 2016-01-02 19:39+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
+"PO-Revision-Date: 2016-12-30 18:26+0000\n"
+"Last-Translator: Ahmet Altinisik <aaltinisik@altinkaya.com.tr>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -627,7 +633,7 @@ msgstr "Hesap"
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
-msgstr "Geçikmiş Hesaplar Mizan Raporu"
+msgstr "Geçici Mizan Yaşlandırma"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_balance
@@ -1177,7 +1183,7 @@ msgstr "Gelişmiş Ayarlar"
 #: model:ir.actions.report.xml,name:account.action_report_aged_partner_balance
 #: model:ir.ui.menu,name:account.menu_aged_trial_balance
 msgid "Aged Partner Balance"
-msgstr "Gecikmiş İş Ortağı Bakiyesi"
+msgstr "İş Ortağı Bakiye Yaşlandırma"
 
 #. module: account
 #: view:account.aged.trial.balance:account.account_aged_balance_view
@@ -1188,7 +1194,7 @@ msgid ""
 "Odoo then calculates a table of credit balance by period. So if you request "
 "an interval of 30 days Odoo generates an analysis of creditors for the past "
 "month, past two months, and so on."
-msgstr "İş Ortağı Gecikmiş Bakiyesi, alacaklarınızın belirli aralıklarla yapılan daha ayrıntılı bir raporudur. Bu rapor açıldığında, Odoo firma adını, mali dönemi ve sonra araştırılacak zaman aralığını (gün olarak) sorar. Sonra Odoo döneme göre alacak bakiyelerini bir tablo olarak hesaplar. Yani 30 günlük bir aralıkta isterseniz, Odoo geçen ayın, geçen iki ayın vb alacaklrın bir analizini oluşturur."
+msgstr "İş Ortağı Yaşlandırılmış Bakiyesi, alacaklarınızın belirli aralıklarla yapılan daha ayrıntılı bir raporudur. Bu rapor açıldığında, Odoo firma adını, mali dönemi ve sonra araştırılacak zaman aralığını (gün olarak) sorar. Sonra Odoo döneme göre alacak bakiyelerini bir tablo olarak hesaplar. Yani 30 günlük bir aralıkta isterseniz, Odoo geçen ayın, geçen iki ayın vb alacaklrın bir analizini oluşturur."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
@@ -1621,14 +1627,14 @@ msgstr "Yalnızca iş ortağının bir KDV numarası varsa uygula."
 msgid ""
 "Apply when the shipping or invoicing country is in this country group, and "
 "no position matches the country directly."
-msgstr ""
+msgstr "Nakliye veya faturalama ülke bu ülke grubunda olduğunu ve hiçbir pozisyon doğrudan ülkeyi eşleştiğinde uygulayın."
 
 #. module: account
 #: help:account.fiscal.position,country_id:0
 msgid ""
 "Apply when the shipping or invoicing country matches. Takes precedence over "
 "positions matching on a country group."
-msgstr ""
+msgstr "Nakliye veya faturalama ülke bu ülke grubunda olduğunu ve hiçbir pozisyon doğrudan ülkeyi eşleştiğinde uygulayın."
 
 #. module: account
 #: view:validate.account.move:account.validate_account_move_view
@@ -2586,7 +2592,7 @@ msgstr "Mali Yıl Seç"
 #: code:addons/account/static/src/js/account_widgets.js:1297
 #, python-format
 msgid "Choose counterpart"
-msgstr ""
+msgstr "Meslektaşınızı seçin"
 
 #. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view1
@@ -4051,7 +4057,7 @@ msgstr "Girişler"
 #: model:ir.actions.act_window,name:account.action_account_entries_report_all
 #: model:ir.ui.menu,name:account.menu_action_account_entries_report_all
 msgid "Entries Analysis"
-msgstr "Girişlerin Analizi"
+msgstr "Kayıtların Analizi"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_project_account_analytic_line_form
@@ -6611,7 +6617,7 @@ msgstr "Bu Şirket için Mali Yıl Tanımlanmamış"
 #. module: account
 #: field:account.move.line,blocked:0
 msgid "No Follow-up"
-msgstr "İzleme Yok"
+msgstr "Takip Yok"
 
 #. module: account
 #: code:addons/account/account_invoice.py:799
@@ -9663,14 +9669,14 @@ msgstr "Bu faturaya ait Yevmiye Girişlerinde kullanılacak ticari varlık"
 msgid ""
 "The company of the gain exchange rate account must be the same than the "
 "company selected."
-msgstr ""
+msgstr "Kambiyo/döviz kuru kârları hesabının şirketi seçili şirket ile aynı olmalı."
 
 #. module: account
 #: constraint:account.config.settings:0
 msgid ""
 "The company of the loss exchange rate account must be the same than the "
 "company selected."
-msgstr ""
+msgstr "Kambiyo/döviz kuru zararları hesabının şirketi seçili şirket ile aynı olmalı."
 
 #. module: account
 #: help:account.tax,type:0
@@ -9704,7 +9710,7 @@ msgstr "Mali koşul, iş ortağı için kullanılacak vergileri ve hesapları be
 #. module: account
 #: view:account.config.settings:account.view_account_config_settings
 msgid "The fiscal year is created when installing a Chart of Account."
-msgstr ""
+msgstr "Muhabesebe tablolarının kurulumu sırasında mali yıl oluşturulacaktır."
 
 #. module: account
 #: constraint:account.aged.trial.balance:0 constraint:account.balance.report:0
@@ -10022,24 +10028,24 @@ msgstr "This Year"
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr ""
+msgstr "Bu hesap, mevcut ürün için giderlerin değerlendirilmesinde varsayılanın yerine faturalar için kullanılacaktır."
 
 #. module: account
 #: help:product.template,property_account_income:0
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr ""
+msgstr "Bu hesap, mevcut ürün için satışların değerlendirilmesinde varsayılanın yerine faturalar için kullanılacaktır."
 
 #. module: account
 #: help:product.category,property_account_expense_categ:0
 msgid "This account will be used for invoices to value expenses."
-msgstr ""
+msgstr "Bu muhasebe hesabı giderleri değerleme için kullanılaca"
 
 #. module: account
 #: help:product.category,property_account_income_categ:0
 msgid "This account will be used for invoices to value sales."
-msgstr ""
+msgstr "Bu muhasebe hesabı satış faturalarını değerleme için kullanılacak"
 
 #. module: account
 #: help:res.partner,property_account_payable:0
@@ -10370,7 +10376,7 @@ msgstr "Bu sihirbaz belirli bir yevmiye ve dönemdeki  bütün yevmiye kayıtlar
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:36
 #, python-format
 msgid "Tip : Hit ctrl-enter to reconcile all balanced items."
-msgstr ""
+msgstr "İpucu: ctrl-enter'a basarak denk öğeleri uzlaştırabilirsiniz."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -11128,7 +11134,7 @@ msgstr "Hem borç hem de alacak hesaplarından işlemler seçiyorsunuz.\n\nSürd
 #: code:addons/account/static/src/js/account_widgets.js:1050
 #, python-format
 msgid "last"
-msgstr ""
+msgstr "geçen"
 
 #. module: account
 #: help:account.move.line,blocked:0

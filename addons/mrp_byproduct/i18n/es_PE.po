@@ -20,27 +20,27 @@ msgstr ""
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_bom
 msgid "Bill of Material"
-msgstr ""
+msgstr "Lista de Material"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,bom_id:0
 msgid "BoM"
-msgstr ""
+msgstr "LdM"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
 msgid "Byproduct"
-msgstr ""
+msgstr "Subproducto"
 
 #. module: mrp_byproduct
 #: view:mrp.bom:mrp_byproduct.mrp_subproduct_view field:mrp.bom,sub_products:0
 msgid "Byproducts"
-msgstr ""
+msgstr "Subproductos"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr ""
+msgstr "Cambiar Cantidad de Productos"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,create_uid:0
@@ -62,12 +62,12 @@ msgid ""
 "that the quantity will be computed as    '(quantity of byproduct set on the "
 "BoM / quantity of manufactured product set on the BoM * quantity of "
 "manufactured product in the production order.)'"
-msgstr ""
+msgstr "Defina cómo se establecerá la cantidad de subproductos en las órdenes de producción que utilizan esta LdM. 'Fijo' representa una situación en la que la cantidad de subproducto que se crea es siempre igual a la cantidad establecida en la LdM, independientemente de cuántos son creados en la orden de producción. Por oposición, 'Variable' significa que la cantidad se calcula como '(cantidad de subproducto establecido en la LdM / cantidad de producto fabricado establecido en la LdM * cantidad de producto fabricado en la orden de producción.)'"
 
 #. module: mrp_byproduct
 #: selection:mrp.subproduct,subproduct_type:0
 msgid "Fixed"
-msgstr ""
+msgstr "Fijo"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,id:0
@@ -87,7 +87,7 @@ msgstr "Ultima Actualización"
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "Orden de Producción"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_id:0
@@ -97,17 +97,17 @@ msgstr "Producto"
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_qty:0
 msgid "Product Qty"
-msgstr ""
+msgstr "Cant de Producto"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Unidad de Medida del Producto"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,subproduct_type:0
 msgid "Quantity Type"
-msgstr ""
+msgstr "Tipo de Cantidad"
 
 #. module: mrp_byproduct
 #: code:addons/mrp_byproduct/mrp_byproduct.py:63
@@ -115,15 +115,15 @@ msgstr ""
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr ""
+msgstr "La Unidad de Medida del Producto que ha seleccionado tiene una categoría diferente que la del formulario del producto."
 
 #. module: mrp_byproduct
 #: selection:mrp.subproduct,subproduct_type:0
 msgid "Variable"
-msgstr ""
+msgstr "Variable"
 
 #. module: mrp_byproduct
 #: code:addons/mrp_byproduct/mrp_byproduct.py:63
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Advertencia"

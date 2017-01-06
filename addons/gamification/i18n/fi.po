@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-11-17 08:35+0000\n"
+"POT-Creation-Date: 2016-05-25 12:58+0000\n"
+"PO-Revision-Date: 2016-06-17 21:32+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -595,6 +595,18 @@ msgid "Display Mode"
 msgstr "Tarkastelunäkymä"
 
 #. module: gamification
+#: field:gamification.badge,display_name:0
+#: field:gamification.badge.user,display_name:0
+#: field:gamification.badge.user.wizard,display_name:0
+#: field:gamification.challenge,display_name:0
+#: field:gamification.challenge.line,display_name:0
+#: field:gamification.goal,display_name:0
+#: field:gamification.goal.definition,display_name:0
+#: field:gamification.goal.wizard,display_name:0
+msgid "Display Name"
+msgstr "Nimi"
+
+#. module: gamification
 #: field:gamification.goal.definition,display_mode:0
 msgid "Displayed as"
 msgstr ""
@@ -663,7 +675,7 @@ msgstr "Kaikki"
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0
 msgid "Exclusive (done or not-done)"
-msgstr ""
+msgstr "Eksklusiivinen (tehty tai ei tehty)"
 
 #. module: gamification
 #: selection:gamification.goal,state:0
@@ -709,7 +721,7 @@ msgstr "Kaikille selviytyville käyttäjille"
 #. module: gamification
 #: view:gamification.goal.definition:gamification.goal_definition_form_view
 msgid "Formating Options"
-msgstr ""
+msgstr "Muotoiluvaihtoehdot"
 
 #. module: gamification
 #: view:gamification.goal:gamification.goal_kanban_view
@@ -754,7 +766,7 @@ msgstr "Pelillistämisen tavoitteiden asetanta"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal
 msgid "Gamification goal instance"
-msgstr ""
+msgstr "Pelillistämisen tavoitteen esimerkki"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user
@@ -912,7 +924,7 @@ msgstr "Käyttäjän ID-kenttä"
 #. module: gamification
 #: help:gamification.badge,remaining_sending:0
 msgid "If a maxium is set"
-msgstr ""
+msgstr "Jos maksimiarvo on asetettu"
 
 #. module: gamification
 #: help:gamification.badge,message_unread:0
@@ -1008,6 +1020,18 @@ msgid "Last Message Date"
 msgstr "Viimeinen viestipvm"
 
 #. module: gamification
+#: field:gamification.badge,__last_update:0
+#: field:gamification.badge.user,__last_update:0
+#: field:gamification.badge.user.wizard,__last_update:0
+#: field:gamification.challenge,__last_update:0
+#: field:gamification.challenge.line,__last_update:0
+#: field:gamification.goal,__last_update:0
+#: field:gamification.goal.definition,__last_update:0
+#: field:gamification.goal.wizard,__last_update:0
+msgid "Last Modified on"
+msgstr ""
+
+#. module: gamification
 #: field:gamification.challenge,last_report_date:0
 msgid "Last Report Date"
 msgstr "Viimeinen raportointipäivämäärä"
@@ -1069,7 +1093,7 @@ msgstr "Listaus tavoitteista, jotka asetetaan"
 #. module: gamification
 #: help:gamification.challenge,user_ids:0
 msgid "List of users participating to the challenge"
-msgstr ""
+msgstr "Listaus käyttäjistä jotka osallistuvat haasteeseen"
 
 #. module: gamification
 #: model:gamification.goal.definition,name:gamification.definition_nbr_following
@@ -1204,7 +1228,7 @@ msgstr "Käyttäjämäärä"
 #. module: gamification
 #: selection:gamification.challenge,report_message_frequency:0
 msgid "On change"
-msgstr ""
+msgstr "Vaihdettaessa"
 
 #. module: gamification
 #: help:gamification.badge,rule_auth_badge_ids:0
@@ -1261,7 +1285,7 @@ msgstr "Ongelmanratkaisija"
 #. module: gamification
 #: selection:gamification.goal.definition,display_mode:0
 msgid "Progressive (using numerical values)"
-msgstr ""
+msgstr "Etenevä (käyttäen numeerisia arvoja)"
 
 #. module: gamification
 #: field:gamification.goal.definition,compute_code:0
@@ -1638,6 +1662,24 @@ msgstr "Mitä matalampi, sitä parempi"
 msgid ""
 "The maximum number of time this badge can be sent per month per person."
 msgstr "Maksimimäärä, jonka käyttäjä voi lähettää tämän ansiomerkin kuukaudessa."
+
+#. module: gamification
+#: code:addons/gamification/models/goal.py:160
+#, python-format
+msgid ""
+"The model configuration for the definition %s seems incorrect, please check it.\n"
+"\n"
+"%s not found"
+msgstr ""
+
+#. module: gamification
+#: code:addons/gamification/models/goal.py:158
+#, python-format
+msgid ""
+"The model configuration for the definition %s seems incorrect, please check it.\n"
+"\n"
+"%s not stored"
+msgstr ""
 
 #. module: gamification
 #: help:gamification.goal.definition,model_id:0

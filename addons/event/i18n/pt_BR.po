@@ -5,14 +5,15 @@
 # Translators:
 # danimaribeiro <danimaribeiro@gmail.com>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# grazziano <g.negocios@outlook.com.br>, 2016
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-10-15 11:29+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>\n"
+"PO-Revision-Date: 2016-08-03 22:33+0000\n"
+"Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,7 @@ msgid ""
 "        For any further information please contact our event department.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr "\n        <p> Olá $ {} object.name, </ p>\n         <p> O evento $ {object.event_id.name} que você se cadastrou está confirmado e será realizado a partir de $ {object.event_id.date_begin_located.strftime ('% Y-% m-% d% H:% M:% S (% Z) ')} até $ {object.event_id.date_end_located.strftime ('% Y-% m-% d% H:% M:% S (% Z) ')}.\n         Para mais informações entre em contato com o nosso departamento de eventos. </ P>\n         <p> Obrigado por sua participação! </ p>\n         <p> Com os melhores cumprimentos </ p>"
+msgstr "\n<p>Olá ${object.name},</p>\n<p>O evento ${object.event_id.name} que se registrou foi confirmado e será realizado de ${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} até ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\nPara mais informações entre em contato com o nosso departamento de eventos.</p>\n<p>Obrigado por sua participação!</p>\n<p>Cumprimentos</p>"
 
 #. module: event
 #: model:email.template,body_html:event.confirmation_registration
@@ -40,17 +41,17 @@ msgid ""
 "        You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
 "        <p>Thank you for your participation!</p>\n"
 "        <p>Best regards</p>"
-msgstr "\n        <p>Olá ${object.name},</p>\n        <p>Nós confirmamos sua inscrição para o evento ${object.event_id.name} .\n        Você irá receber um email com mais informações (como o horário, agenda...) assim que o evento for confirmado.</p>\n        <p>Obrigado por sua participação!</p>\n        <p>Atenciosamente</p>"
+msgstr "\n        <p>Olá ${object.name},</p>\n        <p>Nós confirmamos sua inscrição para o evento ${object.event_id.name} .\n        Você irá receber um e-mail com mais informações (como o horário, agenda...) assim que o evento for confirmado.</p>\n        <p>Obrigado por sua participação!</p>\n        <p>Atenciosamente</p>"
 
 #. module: event
 #: field:report.event.registration,confirm_state:0
 msgid " # No of Confirmed Registrations"
-msgstr " # No de Inscrições Confirmadas"
+msgstr " # No. de Inscrições Confirmadas"
 
 #. module: event
 #: field:report.event.registration,draft_state:0
 msgid " # No of Draft Registrations"
-msgstr " # No de rascunho de Inscrições"
+msgstr " # No. de Inscrições Provisórias"
 
 #. module: event
 #: view:event.event:event.view_event_form
@@ -217,7 +218,7 @@ msgid ""
 "</div>\n"
 "</div>\n"
 "</div>\n"
-msgstr "<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n    <div class=\"carousel-inner\">\n        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n            <div class=\"container\">\n                <div class=\"row content\">\n                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n                    </div>\n                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n                        <h2>5 dias Intensivo</h2>\n                        <h4>para aprender desenvolvimento .JS</h4>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n<h2>Sumário do Curso</h2>\n</div>\n<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n<p><span style=\"text-align: -webkit-center; \">Esta corrida é dedicado a desenvolvedores que precisam de compreender o conhecimento do <strong> desenvolvimento de aplicações de negócios </ strong> processo. Esta corrida é para novos desenvolvedores ou para profissionais de TI ansiosos para saber mais sobre aspectos técnicos. </ Span> </ p>\n</div>\n</div>\n</div>\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n<h2>O que você vai aprender?</h2>\n</div>\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Day 1</h2>\n<p class=\"text-muted\" style=\"margin: 0\">Introdução ao Javascript</p>\n</div>\n<ul class=\"list-group\"><li class=\"list-group-item\">Olá Mundo</li>\n\t<li class=\"list-group-item\">Variables &amp; Operators</li>\n\t<li class=\"list-group-item\">Dive into Strings</li>\n\t<li class=\"list-group-item\">Functions</li>\n\t<li class=\"list-group-item\">Loops</li>\n\t<li class=\"list-group-item\">Arrays</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>Você será ble para isolar Desenvolver páginas HTML dinâmicas em compenents.</i></p>\n</div>\n</div>\n</div>\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Day 2</h2>\n<p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n</div>\n<ul class=\"list-group\"><li class=\"list-group-item\">Introdução ao jQuery</li>\n\t<li class=\"list-group-itemsublinhar\">Avançado JQuery</li>\n\t<li class=\"list-group-item\">Soblinhar</li>\n\t<li class=\"list-group-item\">Introdução à QWEB</li>\n\t<li class=\"list-group-item\">Controladores e Visões</li>\n\t<li class=\"list-group-item\"> Bootstrap CSS</li>\n\t<li class=\"list-group-item\">Chamando o ORM</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>Você poderá criar página dinâmica interagindo com o ORM.</i></p>\n</div>\n</div>\n</div>\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Day 3</h2>\n<p class=\"text-muted\" style=\"margin: 0\">Construindo um aplicativo completo</p>\n</div>\n<ul class=\"list-group\"><li class=\"list-group-item\">Módulos</li>\n\t<li class=\"list-group-item\">Python Objects</li>\n\t<li class=\"list-group-item\">Report Engine</li>\n\t<li class=\"list-group-item\">Workflows</li>\n\t<li class=\"list-group-item\">Training Center Module</li>\n\t<li class=\"list-group-item\">Integrated Help</li>\n\t<li class=\"list-group-item\">How to Debug</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>Você poderá desenvolver aplicativos com um backend completo e interface de usuário.</i></p>\n</div>\n</div>\n</div>\n</div>\n</div>\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n<h2>Requirements</h2>\n</div>\n<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n<p><strong>Objectives:</strong></p>\n<p><strong>Tendo assistido nesta corrida, os participantes shoulds ser ble para: </ strong> </ p>\n<ul> <li> Compreender os conceitos e arquitetura de desenvolvimento;</li>\n\t<li>Instalar e administrar seu próprio servidor;</li>\n\t<li>Desenvolver um novo módulo para aplicação em particular.</li>\n</ul><p></p>\n<p><strong>Nossos preços incluem:</strong></p>\n<ul><li>bebidas e almoço;</li>\n\t<li>material de treinamento.</li>\n</ul><p></p>\n<p><strong>Requisitos:</strong></p>\n<ul><li>Traga o seu próprio Notebook.</li>\n\t<li>Os participantes devem ter algum conhecimento em programação. Um conhecimento básico de programação Python é recomendado.</li>\n\t<li>Preferencialmente-participantes têm conhecimento funcional do nosso software (ver Treinamento Funcional).</li>\n</ul><p></p>\n<p>Para obter mais informações, visite o <a href=\"http://openerp.com/\"> Openerp Site Oficial</a>.</p>\n</div>\n</div>\n</div>\n<div class=\"container oe_dark\">\n<div class=\"row\">\n<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n<h1 class=\"text-center\">Read Great Contents</h1>\n<h3 class=\"text-muted text-center\">O que as pessoas dizem sobre este curso?</h3>\n</div>\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>Eu não esperava, uma grande experiência de aprendizagem. Eu sinto que eu posso agora nada Desenvolver.</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>Este curso me ajudar a construir a minha primeira aplicação Dentro mês. Definitivamente vale preço itos.</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n</div>\n</div>\n"
+msgstr "<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n    <div class=\"carousel-inner\">\n        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n            <div class=\"container\">\n                <div class=\"row content\">\n                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n                    </div>\n                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n                        <h2>5 dias Intensivo</h2>\n                        <h4>para aprender desenvolvimento .JS</h4>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n<h2>Sumário do Curso</h2>\n</div>\n<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n<p><span style=\"text-align: -webkit-center; \">Esta corrida é dedicado a desenvolvedores que precisam de compreender o conhecimento do <strong> desenvolvimento de aplicações de negócios </ strong> processo. Esta corrida é para novos desenvolvedores ou para profissionais de TI ansiosos para saber mais sobre aspectos técnicos. </ Span> </p>\n</div>\n</div>\n</div>\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n<h2>O que você vai aprender?</h2>\n</div>\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Day 1</h2>\n<p class=\"text-muted\" style=\"margin: 0\">Introdução ao Javascript</p>\n</div>\n<ul class=\"list-group\"><li class=\"list-group-item\">Olá Mundo</li>\n\t<li class=\"list-group-item\">Variables &amp; Operators</li>\n\t<li class=\"list-group-item\">Dive into Strings</li>\n\t<li class=\"list-group-item\">Functions</li>\n\t<li class=\"list-group-item\">Loops</li>\n\t<li class=\"list-group-item\">Arrays</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>Você será ble para isolar Desenvolver páginas HTML dinâmicas em compenents.</i></p>\n</div>\n</div>\n</div>\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Day 2</h2>\n<p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n</div>\n<ul class=\"list-group\"><li class=\"list-group-item\">Introdução ao jQuery</li>\n\t<li class=\"list-group-itemsublinhar\">Avançado JQuery</li>\n\t<li class=\"list-group-item\">Soblinhar</li>\n\t<li class=\"list-group-item\">Introdução à QWEB</li>\n\t<li class=\"list-group-item\">Controladores e Visões</li>\n\t<li class=\"list-group-item\"> Bootstrap CSS</li>\n\t<li class=\"list-group-item\">Chamando o ORM</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>Você poderá criar página dinâmica interagindo com o ORM.</i></p>\n</div>\n</div>\n</div>\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Day 3</h2>\n<p class=\"text-muted\" style=\"margin: 0\">Construindo um aplicativo completo</p>\n</div>\n<ul class=\"list-group\"><li class=\"list-group-item\">Módulos</li>\n\t<li class=\"list-group-item\">Python Objects</li>\n\t<li class=\"list-group-item\">Report Engine</li>\n\t<li class=\"list-group-item\">Workflows</li>\n\t<li class=\"list-group-item\">Training Center Module</li>\n\t<li class=\"list-group-item\">Integrated Help</li>\n\t<li class=\"list-group-item\">How to Debug</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>Você poderá desenvolver aplicativos com um backend completo e interface de usuário.</i></p>\n</div>\n</div>\n</div>\n</div>\n</div>\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n<h2>Requirements</h2>\n</div>\n<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n<p><strong>Objectives:</strong></p>\n<p><strong>Tendo assistido nesta corrida, os participantes shoulds ser ble para: </ strong> </ p>\n<ul> <li> Compreender os conceitos e arquitetura de desenvolvimento;</li>\n\t<li>Instalar e administrar seu próprio servidor;</li>\n\t<li>Desenvolver um novo módulo para aplicação em particular.</li>\n</ul><p></p>\n<p><strong>Nossos preços incluem:</strong></p>\n<ul><li>bebidas e almoço;</li>\n\t<li>material de treinamento.</li>\n</ul><p></p>\n<p><strong>Requisitos:</strong></p>\n<ul><li>Traga o seu próprio Notebook.</li>\n\t<li>Os participantes devem ter algum conhecimento em programação. Um conhecimento básico de programação Python é recomendado.</li>\n\t<li>Preferencialmente-participantes têm conhecimento funcional do nosso software (ver Treinamento Funcional).</li>\n</ul><p></p>\n<p>Para obter mais informações, visite o <a href=\"http://openerp.com/\"> Site Oficial Odoo</a>.</p>\n</div>\n</div>\n</div>\n<div class=\"container oe_dark\">\n<div class=\"row\">\n<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n<h1 class=\"text-center\">Read Great Contents</h1>\n<h3 class=\"text-muted text-center\">O que as pessoas dizem sobre este curso?</h3>\n</div>\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>Eu não esperava, uma grande experiência de aprendizagem. Eu sinto que eu posso agora nada Desenvolver.</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>Este curso me ajudar a construir a minha primeira aplicação Dentro mês. Definitivamente vale preço itos.</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n</div>\n</div>\n"
 
 #. module: event
 #: model:event.event,description:event.event_3
@@ -379,7 +380,7 @@ msgid ""
 "</div>\n"
 "</div>\n"
 "</div>\n"
-msgstr "<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n    <div class=\"carousel-inner\">\n        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n            <div class=\"container\">\n                <div class=\"row content\">\n                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n                    </div>\n                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n                        <h2>5 Intensivo Dias</h2>\n                        <h4>to learn <i>desenvolvimento de aplicações de negócios</i></h4>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n<h2>Sumário do Curso</h2>\n</div>\n\n<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n<p><span style=\"text-align: -webkit-center; \">Esta corrida é dedicado a desenvolvedores que precisam de compreender o conhecimento do <strong> desenvolvimento de aplicações de negócios </ strong> processo. Esta corrida é para novos desenvolvedores ou para profissionais de TI ansiosos para saber mais sobre aspectos técnicos. </ Span> </ p>\n</div>\n</div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n<h2>What you will learn?</h2>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Day 1</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Introdução ao Javascript</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Olá Mundo</li>\n\t<li class=\"list-group-item\">Variables &amp; Operadores</li>\n\t<li class=\"list-group-item\">Dive into Strings</li>\n\t<li class=\"list-group-item\">Funções</li>\n\t<li class=\"list-group-item\">Loops</li>\n\t<li class=\"list-group-item\">Arrays</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>Você será capaz para Desenvolver páginas HTML dinâmicas em componentes.</i></p>\n</div>\n</div>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Day 2</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Cliente Web Odoo</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Introdução ao JQuery</li>\n\t<li class=\"list-group-item\">Avançado JQuery</li>\n\t<li class=\"list-group-item\">Sublinhado</li>\n\t<li class=\"list-group-item\">Introdução ao QWeb</li>\n\t<li class=\"list-group-item\">Controladores e visões</li>\n\t<li class=\"list-group-item\">Bootstrap CSS</li>\n\t<li class=\"list-group-item\">Chamar o ORM</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>Você será capaz de criar página dinâmica interagindo com o ORM.</i></p>\n</div>\n</div>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Day 3</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Construindo um aplicativo completo</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Módulos</li>\n\t<li class=\"list-group-item\">Python Objects</li>\n\t<li class=\"list-group-item\">Report Engine</li>\n\t<li class=\"list-group-item\">Workflows</li>\n\t<li class=\"list-group-item\">Training Center Module</li>\n\t<li class=\"list-group-item\">Integrated Help</li>\n\t<li class=\"list-group-item\">How to Debug</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>Você será ble para desenvolver aplicativos com um backend completo e interface de usuário.</i></p>\n</div>\n</div>\n</div>\n</div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n<h2>Requirements</h2>\n</div>\n\n<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n<p><strong>Objectives:</strong></p>\n\n<p><strong>Tendo assistido nesta corrida, os participantes shoulds para ser confiável:</strong></p>\n\n<ul><li>Entender os conceitos e arquitetura de desenvolvimento;</li>\n\t<li>Instalar e administrar seu próprio servidor;</li>\n\t<li>Desenvolver uma nova unidade para uma determinada aplicação.</li>\n</ul><p></p>\n\n<p><strong>Nossos preços incluem:</strong></p>\n\n<ul><li>Bebidas e Almoço;</li>\n\t<li>Material de treinamento.</li>\n</ul><p></p>\n\n<p><strong>Requisitos:</strong></p>\n\n<ul><li>Utilize o seu Notebook.</li>\n\t<li>Os participantes devem ter algum conhecimento em programação. Recomenda-se um conhecimento básico de programação Python. </ Li>\n<li> Os participantes preferencialmente-ter um conhecimento funcional do nosso software (ver Treinamento Funcional).</li>\n</ul><p></p>\n\n<p>Para obter mais informações, visite o <a href=\"http://openerp.com/\"> Openerp Site Oficial</a>.</p>\n</div>\n</div>\n</div>\n\n\n\n<div class=\"container oe_dark\">\n<div class=\"row\">\n<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n<h1 class=\"text-center\">Leia Grandes Conteúdo</h1>\n\n<h3 class=\"text-muted text-center\">O que as pessoas dizem sobre este curso?</h3>\n</div>\n\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>Eu não esperava, uma grande experiência de aprendizagem. Eu sinto que eu posso desenvolver qualquer coisa agora.</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>Este curso me ajudar a construir a minha primeira aplicação Dentro mês. Definitivamente vale preço itos.</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n</div>\n</div>\n"
+msgstr "<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n    <div class=\"carousel-inner\">\n        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n            <div class=\"container\">\n                <div class=\"row content\">\n                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n                    </div>\n                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n                        <h2>5 Intensivo Dias</h2>\n                        <h4>to learn <i>desenvolvimento de aplicações de negócios</i></h4>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n<h2>Sumário do Curso</h2>\n</div>\n\n<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n<p><span style=\"text-align: -webkit-center; \">Esta corrida é dedicado a desenvolvedores que precisam de compreender o conhecimento do <strong> desenvolvimento de aplicações de negócios </ strong> processo. Esta corrida é para novos desenvolvedores ou para profissionais de TI ansiosos para saber mais sobre aspectos técnicos. </ Span> </ p>\n</div>\n</div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n<h2>What you will learn?</h2>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Day 1</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Introdução ao Javascript</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Olá Mundo</li>\n\t<li class=\"list-group-item\">Variables &amp; Operadores</li>\n\t<li class=\"list-group-item\">Dive into Strings</li>\n\t<li class=\"list-group-item\">Funções</li>\n\t<li class=\"list-group-item\">Loops</li>\n\t<li class=\"list-group-item\">Arrays</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>Você será capaz para Desenvolver páginas HTML dinâmicas em componentes.</i></p>\n</div>\n</div>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Day 2</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Cliente Web Odoo</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Introdução ao JQuery</li>\n\t<li class=\"list-group-item\">Avançado JQuery</li>\n\t<li class=\"list-group-item\">Sublinhado</li>\n\t<li class=\"list-group-item\">Introdução ao QWeb</li>\n\t<li class=\"list-group-item\">Controladores e visões</li>\n\t<li class=\"list-group-item\">Bootstrap CSS</li>\n\t<li class=\"list-group-item\">Chamar o ORM</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>Você será capaz de criar página dinâmica interagindo com o ORM.</i></p>\n</div>\n</div>\n</div>\n\n<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n<div class=\"panel panel-info\">\n<div class=\"panel-heading text-center\">\n<h2 style=\"margin: 0\">Day 3</h2>\n\n<p class=\"text-muted\" style=\"margin: 0\">Construindo um aplicativo completo</p>\n</div>\n\n<ul class=\"list-group\"><li class=\"list-group-item\">Módulos</li>\n\t<li class=\"list-group-item\">Python Objects</li>\n\t<li class=\"list-group-item\">Report Engine</li>\n\t<li class=\"list-group-item\">Workflows</li>\n\t<li class=\"list-group-item\">Training Center Module</li>\n\t<li class=\"list-group-item\">Integrated Help</li>\n\t<li class=\"list-group-item\">How to Debug</li>\n</ul><div class=\"panel-footer text-center\">\n<p class=\"text-muted\"><i>Você será ble para desenvolver aplicativos com um backend completo e interface de usuário.</i></p>\n</div>\n</div>\n</div>\n</div>\n</div>\n\n<div class=\"container\">\n<div class=\"row\">\n<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n<h2>Requirements</h2>\n</div>\n\n<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n<p><strong>Objectives:</strong></p>\n\n<p><strong>Tendo assistido nesta corrida, os participantes shoulds para ser confiável:</strong></p>\n\n<ul><li>Entender os conceitos e arquitetura de desenvolvimento;</li>\n\t<li>Instalar e administrar seu próprio servidor;</li>\n\t<li>Desenvolver uma nova unidade para uma determinada aplicação.</li>\n</ul><p></p>\n\n<p><strong>Nossos preços incluem:</strong></p>\n\n<ul><li>Bebidas e Almoço;</li>\n\t<li>Material de treinamento.</li>\n</ul><p></p>\n\n<p><strong>Requisitos:</strong></p>\n\n<ul><li>Utilize o seu Notebook.</li>\n\t<li>Os participantes devem ter algum conhecimento em programação. Recomenda-se um conhecimento básico de programação Python. </ Li>\n<li> Os participantes preferencialmente-ter um conhecimento funcional do nosso software (ver Treinamento Funcional).</li>\n</ul><p></p>\n\n<p>Para obter mais informações, visite o <a href=\"http://openerp.com/\">Site Oficial Odoo</a>.</p>\n</div>\n</div>\n</div>\n\n\n\n<div class=\"container oe_dark\">\n<div class=\"row\">\n<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n<h1 class=\"text-center\">Leia Grandes Conteúdo</h1>\n\n<h3 class=\"text-muted text-center\">O que as pessoas dizem sobre este curso?</h3>\n</div>\n\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>Eu não esperava, uma grande experiência de aprendizagem. Eu sinto que eu posso desenvolver qualquer coisa agora.</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n\n<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n<blockquote data-snippet-id=\"quote\">\n<p>Este curso me ajudar a construir a minha primeira aplicação Dentro mês. Definitivamente vale preço itos.</p>\n<small>John Doe, CEO</small></blockquote>\n</div>\n</div>\n</div>\n"
 
 #. module: event
 #: model:event.event,description:event.event_1
@@ -694,7 +695,7 @@ msgid ""
 "               sell tickets, etc.\n"
 "             </p>\n"
 "           "
-msgstr "<p class=\"oe_view_nocontent_create\">\n               Clique para adicionar um novo evento.\n             </p><p>\n               Odoo ajuda a programar de forma eficiente e organizar os seus eventos:\n                rastrear as subscrições e participações, automatizar os e-mails de confirmação,\n                vender bilhetes, etc.\n             </p>\n           "
+msgstr "<p class=\"oe_view_nocontent_create\">\nClique para adicionar um novo evento.\n</p><p>\nOdoo ajuda a programar de forma eficiente e organizar os seus eventos:\nacompanhar as subscrições e participações, automatizar os e-mails de confirmação,\nvender bilhetes, etc.\n</p>\n           "
 
 #. module: event
 #: view:event.registration:event.view_event_registration_form
@@ -875,7 +876,7 @@ msgstr "Provisório"
 #. module: event
 #: field:event.registration,email:0
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: event
 #: field:event.event,date_end:0
@@ -911,7 +912,7 @@ msgstr "Confirmação de Evento"
 #: field:event.event,email_confirmation_id:0
 #: field:event.type,default_email_event:0
 msgid "Event Confirmation Email"
-msgstr "Email de Confirmação do Evento"
+msgstr "E-mail de Confirmação do Evento"
 
 #. module: event
 #: field:report.event.registration,event_date:0
@@ -1069,7 +1070,7 @@ msgstr "ID (identificação)"
 #. module: event
 #: help:event.event,message_unread:0 help:event.registration,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "Se marcado novas mensagens solicitarão sua atenção."
+msgstr "Se marcado, novas mensagens solicitarão sua atenção."
 
 #. module: event
 #: help:event.event,state:0
@@ -1098,14 +1099,14 @@ msgstr "É um Seguidor"
 msgid ""
 "It will select this default confirmation event mail value when you choose "
 "this event"
-msgstr "Irá selecionar esse email padrão de confirmação do evento quando você escolher este evento"
+msgstr "Irá selecionar esse e-mail padrão de confirmação do evento quando você escolher este evento"
 
 #. module: event
 #: help:event.type,default_email_registration:0
 msgid ""
 "It will select this default confirmation registration mail value when you "
 "choose this event"
-msgstr "Irá selecionar esse email de confirmação padrão quando você escolher este evento"
+msgstr "Irá selecionar esse e-mail de confirmação padrão quando você escolher este evento"
 
 #. module: event
 #: help:event.type,default_registration_max:0
@@ -1138,7 +1139,7 @@ msgstr "Última atualização em"
 #. module: event
 #: field:event.event,address_id:0
 msgid "Location"
-msgstr "Localização"
+msgstr "Local"
 
 #. module: event
 #: field:event.registration,log_ids:0
@@ -1314,7 +1315,7 @@ msgstr "Inscrição"
 #: field:event.event,email_registration_id:0
 #: field:event.type,default_email_registration:0
 msgid "Registration Confirmation Email"
-msgstr "Email de Confirmação da Inscrição"
+msgstr "E-mail de Confirmação da Inscrição"
 
 #. module: event
 #: field:event.registration,date_open:0
@@ -1362,7 +1363,7 @@ msgstr "Inscrições não confirmadas"
 #. module: event
 #: field:event.event,reply_to:0
 msgid "Reply-To Email"
-msgstr "Email Responder para"
+msgstr "E-mail Responder para"
 
 #. module: event
 #: field:event.event,seats_reserved:0
@@ -1388,7 +1389,7 @@ msgstr "Enviar E-mail"
 #. module: event
 #: view:event.event:event.view_event_form
 msgid "Set To Draft"
-msgstr "Marcar como Rascunho"
+msgstr "Marcar como Provisório"
 
 #. module: event
 #: view:event.registration:event.view_event_registration_form
@@ -1472,14 +1473,14 @@ msgid ""
 "The maximum registration level is equal to the sum of the maximum "
 "registration of event ticket. If you have too much registrations you are not"
 " able to confirm your event. (0 to ignore this rule )"
-msgstr "O nível máximo de inscrições é igual a soma da inscrição máxima dos tíquets do evento. Se você tiver muitas inscrições você não será capaz de confirmar seu evento. (0 para cancelar esta regra)"
+msgstr "O nível máximo de inscrições é igual a soma da inscrição máxima dos tickets do evento. Se você tiver muitas inscrições você não será capaz de confirmar seu evento. (0 para cancelar esta regra)"
 
 #. module: event
 #: help:event.event,email_registration_id:0
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
 " each time a registration for this event is confirmed."
-msgstr "Este campo contém o modelo de email que será enviado automaticamente a cada inscrição confirmada para este evento."
+msgstr "Este campo contém o modelo de e-mail que será enviado automaticamente a cada inscrição confirmada para este evento."
 
 #. module: event
 #: field:event.event,date_tz:0
@@ -1557,7 +1558,7 @@ msgstr "É possível definir um nível mínimo de inscritos para cada evento. Se
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
 "reset it to draft if you want to cancel this event."
-msgstr "você já está inscrito neste evento como 'Participei'. Por favor volte ao estado provisório se você deseja cancelar este evento."
+msgstr "Você já está inscrito neste evento como 'Participei'. Por favor volte ao estado provisório se você deseja cancelar este evento."
 
 #. module: event
 #: code:addons/event/event.py:364
@@ -1584,7 +1585,7 @@ msgstr "ou"
 #. module: event
 #: view:event.event:event.view_event_kanban
 msgid "ticket"
-msgstr "Ticket"
+msgstr "ticket"
 
 #. module: event
 #: view:event.event:event.view_event_kanban

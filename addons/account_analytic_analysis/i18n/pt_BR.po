@@ -4,14 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# Mateus Cerqueira Lopes <mateus1@gmail.com>, 2015
+# grazziano <g.negocios@outlook.com.br>, 2016
+# Mateus Lopes <mateus1@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-10-19 10:30+0000\n"
-"Last-Translator: Mateus Cerqueira Lopes <mateus1@gmail.com>\n"
+"PO-Revision-Date: 2016-07-11 12:52+0000\n"
+"Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
 "Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,12 +84,12 @@ msgid ""
 "</pre>\n"
 "\n"
 "            "
-msgstr "\nOlá ${object.name},\n\n% macro account_table(values):\n<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n    <tr>\n        <th>Cliente</th>\n        <th>Contrato</th>\n        <th>Datas</th>\n        <th>Unidades Pré-pagas</th>\n        <th>Contato</th>\n    </tr>\n    % pelo parceiro, contas em valores:\n        % para as contas em contas:\n        <tr>\n            <td>${partner.name}</td>\n            <td><a href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&view_type=form\">${account.name}</a></td>\n            <td>${account.date_start} até ${account.date and account.date or '???'}</td>\n            <td>\n            % if account.quantity_max != 0.0:\n                ${account.remaining_hours}/${account.quantity_max} units\n            % endif\n            </td>\n            <td>${account.partner_id.phone or ''}, ${account.partner_id.email or ''}</td>\n        </tr>\n        % endfor\n    % endfor\n</table>\n% endmacro \n\n% if \"new\" in ctx[\"data\"]:\n    <h2>Os seguintes contratos acabaram de vencer: </h2>\n    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n% endif\n\n% if \"old\" in ctx[\"data\"]:\n    <h2>Os seguintes contratos ainda não foram processados: </h2>\n    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n% endif\n\n% if \"future\" in ctx[\"data\"]:\n    <h2>Os seguintes contratos irão vencer em menos de um mês: </h2>\n    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n% endif\n\n<p>\n    Você pode verificar todos os contratos a serem renovados usando o menu:\n</p>\n<ul>\n    <li>Vendas / Faturamento / Contratos a renovar</li>\n</ul>\n<p>\n    Obrigado,\n</p>\n\n<pre>\n-- \nEmail Automático do OpenERP\n</pre>\n\n            "
+msgstr "\nOlá ${object.name},\n\n% macro account_table(values):\n<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n    <tr>\n        <th>Cliente</th>\n        <th>Contrato</th>\n        <th>Datas</th>\n        <th>Unidades Pré-pagas</th>\n        <th>Contato</th>\n    </tr>\n    % pelo parceiro, contas em valores:\n        % para as contas em contas:\n        <tr>\n            <td>${partner.name}</td>\n            <td><a href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&view_type=form\">${account.name}</a></td>\n            <td>${account.date_start} até ${account.date and account.date or '???'}</td>\n            <td>\n            % if account.quantity_max != 0.0:\n                ${account.remaining_hours}/${account.quantity_max} units\n            % endif\n            </td>\n            <td>${account.partner_id.phone or ''}, ${account.partner_id.e-mail or ''}</td>\n        </tr>\n        % endfor\n    % endfor\n</table>\n% endmacro \n\n% if \"new\" in ctx[\"data\"]:\n    <h2>Os seguintes contratos acabaram de vencer: </h2>\n    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n% endif\n\n% if \"old\" in ctx[\"data\"]:\n    <h2>Os seguintes contratos ainda não foram processados: </h2>\n    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n% endif\n\n% if \"future\" in ctx[\"data\"]:\n    <h2>Os seguintes contratos irão vencer em menos de um mês: </h2>\n    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n% endif\n\n<p>\n    Você pode verificar todos os contratos a serem renovados usando o menu:\n</p>\n<ul>\n    <li>Vendas / Faturamento / Contratos a renovar</li>\n</ul>\n<p>\n    Obrigado,\n</p>\n\n<pre>\n-- \nE-mail Automático do Odoo\n</pre>\n\n            "
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,toinvoice_total:0
 msgid " Sum of everything that could be invoiced for this contract."
-msgstr " Soma de tudo que pode ser faturado neste contrato."
+msgstr " Soma de tudo o que pode ser faturado neste contrato."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
@@ -101,7 +102,7 @@ msgid ""
 "                    terms and conditions of the contract.\n"
 "                </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                    Clique aqui para criar um modelo de contrato.\n                </p><p>\n                    Modelos são utilizados para pré definir contratos/projetos que \n                    podem ser selecionados pela equipe de vendas para rapidamente descrever os \n                    termos e condições do contrato.\n                </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nClique aqui para criar um modelo de contrato.\n</p><p>\nModelos são utilizados para pré definir contratos/projetos que \npodem ser selecionados pela equipe de vendas para rapidamente descrever os \ntermos e condições do contrato.\n</p>\n            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
@@ -114,7 +115,7 @@ msgid ""
 "                    the alerts for the renewal of the contracts to the right salesperson.\n"
 "                </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                    Clique para criar um novo contrato.\n                </p><p>\n                    Use os contratos para seguir tarefas, questões, planilhas de horas ou faturamento baseado no\n                    trabalho executado, despesas e ou pedidos de vendas. O Odoo irá gerenciar os alertas para a renovação do contrato para a pessoa responsável automaticamente.\n                </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nClique para criar um novo contrato.\n</p><p>\nUse os contratos para seguir tarefas, incidentes, planilhas de horas ou faturamento baseado no\ntrabalho executado, despesas e ou pedidos de vendas. O Odoo irá gerenciar os alertas para a renovação do contrato para a pessoa responsável automaticamente.\n</p>\n            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
@@ -127,7 +128,7 @@ msgid ""
 "                at a fix price on a contract.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Clique para criar uma cotação que será convertida em um Pedido de Vendas.\n              </p><p>\n                Use os pedidos de vendas para acompanhar tudo o que precisa ser\nfaturado com um valor fixo em um contrato.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nClique para criar uma cotação que será convertida em uma Odem de Vendas.\n</p><p>\nUse as ordens de vendas para acompanhar tudo o que precisa ser\nfaturado com um valor fixo em um contrato.\n</p>\n            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
@@ -144,7 +145,7 @@ msgid ""
 "                pending contracts.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n                Clique para definir um novo contrato.\n              </p><p>\n                Aqui você irá encontrar os contratos a serem renovados por que a data de término foi ultrapassada\n                ou o tabalho executado é maior que o máximo autorizado.\n              </p><p>\n                O Odoo define os contratos a serem renovados como pendentes automaticamente.\n                Após a negociação, o vendedor deve finalizar ou renovar os contratos pendentes.\n              </p>\n            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nClique para definir um novo contrato.\n</p><p>\nAqui você irá encontrar os contratos a serem renovados por que a data de término foi ultrapassada\nou o tabalho executado é maior que o máximo autorizado.\n</p><p>\nO Odoo define os contratos a serem renovados como pendentes automaticamente.\nApós a negociação, o vendedor deve finalizar ou renovar os contratos pendentes.\n</p>\n            "
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -156,12 +157,12 @@ msgid ""
 "                menu instead.\n"
 "              </p>\n"
 "            "
-msgstr "<p>\n                Aqui você irá encontrar planilhas de horas e compras que você fez para\n                contratos que podem ser refaturados para o cliente. Se ao invés disto\n                você desejar registrar novas atividades para faturar, você deve utilizar o \n                menu planilha de horas.\n              </p>\n            "
+msgstr "<p>\nAqui você irá encontrar planilhas de horas e compras que você fez para\ncontratos que podem ser refaturados para o cliente. Se ao invés disto\nvocê desejar registrar novas atividades para faturar, você deve utilizar o \nmenu planilha de horas.\n</p>\n            "
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Account Analytic Lines"
-msgstr "Contabilidade Linhas Analíticas"
+msgstr "Conta de Linhas Analíticas"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -173,7 +174,7 @@ msgstr "Gerente de Contas"
 msgid ""
 "Allows you to set the template field as required when creating an analytic "
 "account or a contract."
-msgstr "Permite a você ajustar os campos do modelo como obrigatório quando estiver criando uma conta analítica ou um contrato."
+msgstr "Permite a você definir os campos do modelo como necessário quando estiver criando uma conta analítica ou um contrato."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,analytic_account_id:0
@@ -209,7 +210,7 @@ msgstr "Fechado"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Closed contracts"
-msgstr "Contratos finalizados"
+msgstr "Contratos fechados"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours_to_invoice:0
@@ -221,7 +222,7 @@ msgstr "Calculado usando a fórmula: Esperado nas planilhas de horas - Total fat
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
 msgid "Computed using the formula: Invoiced Amount - Total Costs."
-msgstr "Calculado através da fórmula: Valor faturado - Custos Totais."
+msgstr "Calculado através da fórmula: Valor Faturado - Custos Totais."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
@@ -231,7 +232,7 @@ msgstr "Calculado usando a formula: Total Faturado / Horas Totais"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
-msgstr "Calculado utilizando a fórmula: Preço máximo de fatura - Valor Faturado"
+msgstr "Calculado utilizando a fórmula: Preço Máximo de Fatura - Valor Faturado"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
@@ -241,12 +242,12 @@ msgstr "Calculado usando a fórmula: Tempo Máximo - Total de Tempo Trabalhado"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theoretical Revenue - Total Costs"
-msgstr "Calculado usando a fórmula: Receita Esperada - Custo Total"
+msgstr "Calculado usando a fórmula: Receita Esperada - Custos Totais"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr "Calcula usando a fórmula: (Margem Real / Custo Total) * 100."
+msgstr "Calcula usando a fórmula: (Margem Real / Custos Totais) * 100."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -262,7 +263,7 @@ msgstr "Modelo de Contrato"
 #. module: account_analytic_analysis
 #: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
 msgid "Contract expiration reminder ${user.company_id.name}"
-msgstr "Aviso de vencimento de contrato ${user.company_id.name}"
+msgstr "Aviso de vencimento do contrato ${user.company_id.name}"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -320,7 +321,7 @@ msgstr "Data da Última Despesa/Atividade"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
-msgstr "Data do último custo faturado"
+msgstr "Data do Último Custo Faturado"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_next_date:0
@@ -366,7 +367,7 @@ msgstr "Erro!"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_est:0
 msgid "Estimation of Hours to Invoice"
-msgstr "Estimativa de horas para faturar"
+msgstr "Estimativa de Horas para Faturar"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_total:0
@@ -480,7 +481,7 @@ msgstr "Faturamento"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
 msgid "Last Invoice Date"
-msgstr "Data da Última fatura"
+msgstr "Data da Última Fatura"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,write_uid:0
@@ -517,43 +518,43 @@ msgstr "Mês(es)"
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:676
 #, python-format
 msgid "No Customer Defined!"
-msgstr "Nenhum cliente definido!"
+msgstr "Nenhum Cliente Definido!"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "No order to invoice, create"
-msgstr "Não existe pedido para faturar, crie um"
+msgstr "Não existe ordem para faturar, crie uma"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Nothing to invoice, create"
-msgstr "Não existe pedido para faturar, crie um"
+msgstr "Não existe ordem para faturar, crie uma"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
 msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
-msgstr "Número de horas (horas/dia) (do diário to tipo 'geral') que podem ser faturado se você emite fatura baseado em conta analítica."
+msgstr "Número de horas (horas/dias) (do diário to tipo 'geral') que podem ser faturadas se você emite fatura baseada em conta analítica."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
 msgid ""
 "Number of time (hours/days) that can be invoiced plus those that already "
 "have been invoiced."
-msgstr "Númeo de horas (horas/dia) que podem ser faturadas mais aquelas que já tenham sido faturadas."
+msgstr "Númeo de horas (horas/dias) que podem ser faturadas mais aquelas que já tenham sido faturadas."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_quantity:0
 msgid ""
 "Number of time you spent on the analytic account (from timesheet). It "
 "computes quantities on all journal of type 'general'."
-msgstr "Número de horas que você gastou na conta analítica (da planilha). Isto calcula as quantidades de todos os diários do tipo 'geral'."
+msgstr "Número de horas que você gastou na conta analítica (da planilha de horas). Isto calcula as quantidades de todos os diários do tipo 'geral'."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoice_on_timesheets:0
 msgid "On Timesheets"
-msgstr "Sobre Planilha de Horas"
+msgstr "Em Planilha de Horas"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
@@ -584,7 +585,7 @@ msgstr "Por favor defina um diário para a empresa \"%s\"."
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
 msgid "Pricelist"
-msgstr "Lista de preço"
+msgstr "Lista de Preço"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,product_id:0
@@ -599,7 +600,7 @@ msgstr "Quantidade"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
-msgstr "Margem real"
+msgstr "Margem Real"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
@@ -637,29 +638,29 @@ msgstr "Tempo Restante"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,recurring_interval:0
 msgid "Repeat Every"
-msgstr "Repetir a cada"
+msgstr "Repetir a Cada"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,recurring_interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr "Repetir a cada (Dia/Semana/Mês/Ano)"
+msgstr "Repetir a cada (Dias/Semana/Mês/Ano)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
 msgid "Revenue per Time (real)"
-msgstr "Receita por hora (real)"
+msgstr "Receita por Hora (real)"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:550
 #, python-format
 msgid "Sales Order Lines to Invoice of %s"
-msgstr "Linhas do Pedido de Venda para faturar de %s"
+msgstr "Linhas do Pedido de Venda para Faturar de %s"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
 msgid "Sales Orders"
-msgstr "Pedidos de Vendas"
+msgstr "Ordens de Vendas"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.view_account_analytic_account_overdue_search
@@ -674,7 +675,7 @@ msgstr "Situação"
 #. module: account_analytic_analysis
 #: field:account.analytic.invoice.line,price_subtotal:0
 msgid "Sub Total"
-msgstr "Sub Total"
+msgstr "Subtotal"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,fix_price_to_invoice:0
@@ -705,7 +706,7 @@ msgstr "Receita Teórica"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "Time & Materials to Invoice"
-msgstr "Tempo e Materiais"
+msgstr "Tempo e Materiais a Faturar"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -716,7 +717,7 @@ msgstr "Planilhas de Horas"
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:659
 #, python-format
 msgid "Timesheets to Invoice of %s"
-msgstr "Apontamentos para faturar de %s"
+msgstr "Quadros de horários para Faturar de %s"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -736,7 +737,7 @@ msgstr "Total"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
 msgid "Total Costs"
-msgstr "Custo Total"
+msgstr "Custos Totais"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,est_total:0
@@ -767,7 +768,7 @@ msgstr "Tempo Total Trabalhado"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
 msgid "Total customer invoiced amount for this account."
-msgstr "Valor total faturado ao cliente para esta conta"
+msgstr "Valor total faturado ao cliente para esta conta."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
@@ -804,7 +805,7 @@ msgstr "Unidade de Medida"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
 msgid "Units Consumed"
-msgstr "Unidades consumidas"
+msgstr "Unidades Consumidas"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -829,7 +830,7 @@ msgid ""
 "                            pricelist of the contract which uses the price\n"
 "                            defined on the product related (e.g timesheet \n"
 "                            products are defined on each employee)."
-msgstr "Quanto refaturar os custos, O Odoo usa a lista de preços\n                            do contrato que usa o preço definido\n                            no produto relacionado (ex Produtos de planilha de hora \n                            são definidos em cada funcionário)."
+msgstr "Quando refatura os custos, o Odoo usa a lista de preços\ndo contrato que usa o preço definido\nno produto relacionado (ex. Produtos de planilha de hora \nsão definidos em cada funcionário)."
 
 #. module: account_analytic_analysis
 #: selection:account.analytic.account,recurring_rule_type:0
@@ -840,7 +841,7 @@ msgstr "Ano(s)"
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:676
 #, python-format
 msgid "You must first select a Customer for Contract %s!"
-msgstr "Primeiro selecione um Cliente para o Contrato %s!"
+msgstr "Você deve selecionar primeiro um Cliente para o Contrato %s!"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form
@@ -851,7 +852,7 @@ msgstr "ou visualizar"
 #: model:res.groups,comment:account_analytic_analysis.group_template_required
 msgid ""
 "the field template of the analytic accounts and contracts will be required."
-msgstr "o modelo de campo nas contas analíticas e contratos serão obrigatórios."
+msgstr "o modelo de campo nas contas analíticas e contratos serão necessários."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:account_analytic_analysis.account_analytic_account_form_form

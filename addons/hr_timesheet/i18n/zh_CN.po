@@ -4,20 +4,22 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# jeffery chen fan <jeffery9@gmail.com>, 2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
 # 卓忆科技 <zhanghao@jointd.com>, 2015
-# 珠海-老天 <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015-2016
 # mrshelly <mrshelly@hotmail.com>, 2015
 # 卓忆科技 <zhanghao@jointd.com>, 2015
 # 卓忆科技 <zhanghao@jointd.com>, 2015
-# 珠海-老天 <liangjia@qq.com>, 2015
+# liAnGjiA <liangjia@qq.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-01-21 01:16+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2016-07-08 13:11+0000\n"
+"Last-Translator: Jeffery Chenn <jeffery9@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +31,7 @@ msgstr ""
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
 msgid "(Keep empty for current time)"
-msgstr "(留空表示当前时间)"
+msgstr "(保持空白为当前时间)"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -48,7 +50,7 @@ msgid ""
 "                customers if required.\n"
 "              </p>\n"
 "            "
-msgstr "<p class=\"oe_view_nocontent_create\">\n点击来记录一个活动。\n</p><p>\n您可以记录和追踪您每天在项目中的工时。所有在项目中花费的时间都会在辅助核算项/合同中作为成本，如果需要还可以开票给客户。\n</p>"
+msgstr "<p class=\"oe_view_nocontent_create\">\n点击来记录一个活动。\n</p><p>\n您可以记录和跟踪您每天在项目中的工时。所有在项目中花费的时间都会在分析账户/合同中作为成本，如果需要还可以开票给客户。\n</p>"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_analytic_cost_revenue
@@ -69,7 +71,7 @@ msgid ""
 "                on expenses (e.g. reinvoicing of travel costs).\n"
 "              </p>\n"
 "            "
-msgstr "<p>\n此合同未生效。\n</p><p>\n在 Odoo 里。合同和项目都会使用辅助核算项。所以您可以跟踪成本和收入从而容易的分析您的毛利。\n </p><p>\n当您登记一个供应商发票、费用、或计工单时，成本会被自动创建。\n</p><p>\n当您创建一个客户发票时收入会被自动创建。创建客户发票可基于销售订单(固定价格的发票)。在计工单上(基于工作完成后)或在费用上 (例如: 对交通成本的再开票)。\n</p>"
+msgstr "<p>\n此合同没有任何活动。\n</p><p>\n在 Odoo 里。合同和项目都会使用分析账户。所以您可以跟踪成本和收入从而容易的分析您的毛利。\n </p><p>\n当您登记一个供应商发票、费用、或计工单时，成本会被自动创建。\n</p><p>\n当您创建一个客户发票时收入会被自动创建。创建客户发票可基于销售订单(固定价格的发票)。在计工单上(基于工作完成后)或在费用上 (例如: 对交通成本的再开票)。\n</p>"
 
 #. module: hr_timesheet
 #: selection:hr.sign.in.project,state:0 selection:hr.sign.out.project,state:0
@@ -125,7 +127,7 @@ msgstr "改变此条目的内容也会让计工单中相应条目的内容更新
 #. module: hr_timesheet
 #: help:account.analytic.account,use_timesheets:0
 msgid "Check this field if this project manages timesheets"
-msgstr "如果此项目需要管理时间表的话请选中此字段"
+msgstr "如果此项目需要管理记工单，请选中此字段"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
@@ -151,7 +153,7 @@ msgstr "成本/收入"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_analytic_cost_revenue
 msgid "Costs & Revenues"
-msgstr "成本 & 收入"
+msgstr "成本与收入"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,create_uid:0
@@ -215,7 +217,7 @@ msgstr "员工ID"
 msgid ""
 "Employee is not created for this user. Please create one from configuration "
 "panel."
-msgstr "此用户并未创建相关的员工。请在设置里创建一个。"
+msgstr "此用户并未创建相关的员工。请在配置里创建一个。"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,name:0 field:hr.sign.out.project,name:0
@@ -229,7 +231,7 @@ msgid ""
 "assigned on. A  project is an analytic account and the time spent on a "
 "project generates costs on the analytic account. This feature allows to "
 "record at the same time the attendance and the timesheet."
-msgstr "员工能记录在不同项目所花费的时间。\r\n一个项目是一个辅助核算項，而且该项目所花费的时间为这辅助核算項的成本。\r\n此功能允许记录其考勤和计工单。"
+msgstr "员工能记录在不同项目所花费的时间。\n一个项目是一个分析账户，而且该项目所花费的时间为这分析账户的成本。\n此功能允许记录其考勤和计工单。"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
@@ -238,7 +240,7 @@ msgid ""
 "is an analytic account and the time spent on a project generate costs on the"
 " analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
-msgstr "员工能记录在不同项目所花费的时间。\r\n一个项目是一个辅助核算項，而且该项目所花费的时间为这辅助核算項的成本。\r\n此功能允许记录其考勤和计工单。"
+msgstr "员工能记录在不同项目所花费的时间。\n一个项目是一个分析账户，而且该项目所花费的时间为这分析账户的成本。\n此功能允许记录其考勤和计工单。"
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
@@ -248,7 +250,7 @@ msgstr "扩展的过滤器..."
 #. module: hr_timesheet
 #: field:hr.timesheet.report,general_account_id:0
 msgid "General Account"
-msgstr "通用科目"
+msgstr "总账科目"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
@@ -265,12 +267,12 @@ msgstr "跳转到指定的控制面板"
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group By"
-msgstr "分组"
+msgstr "分组于"
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search
 msgid "Group by month of date"
-msgstr "按月分组"
+msgstr "按月份分组"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,id:0 field:hr.sign.in.project,id:0
@@ -332,7 +334,7 @@ msgstr "员工 %s没有定义 '分析日记账'\n为选中的用户定义一名�
 msgid ""
 "No analytic account is defined on the project.\n"
 "Please set one or we cannot automatically fill the timesheet."
-msgstr "项目未定义分析账户。\n请设置一个或设置为不自动填充时间表。"
+msgstr "项目未定义分析账户。\n请设置一个或设置为不自动填充记工单。"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:158
@@ -379,14 +381,14 @@ msgstr "项目 / 分析账户"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
 msgid "Sign In By Project"
-msgstr "项目签入"
+msgstr "项目登录"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
 msgid "Sign In/Out by Project"
-msgstr "项目签入/签出"
+msgstr "按项目登录 / 注销 "
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
@@ -396,20 +398,20 @@ msgstr "项目签出"
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
 msgid "Sign in"
-msgstr "签入"
+msgstr "登录"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:145
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in_message
 #, python-format
 msgid "Sign in / Sign out"
-msgstr "签入/ 签出"
+msgstr "登录/注销"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
 msgid "Sign in / Sign out by Project"
-msgstr "在项目中签入 / 签出"
+msgstr "按项目登录 / 注销 "
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:hr_timesheet.view_hr_timesheet_sign_in
@@ -419,7 +421,7 @@ msgstr "开始工作"
 #. module: hr_timesheet
 #: field:hr.sign.in.project,date:0 field:hr.sign.out.project,date_start:0
 msgid "Starting Date"
-msgstr "开始日期"
+msgstr "起始日期"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:hr_timesheet.view_hr_timesheet_sign_out
@@ -449,7 +451,7 @@ msgstr "计工单"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_accounts_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheet_accounts
 msgid "Timesheet Accounts"
-msgstr "计工单账簿"
+msgstr "计工单帐户"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_form
@@ -457,7 +459,7 @@ msgstr "计工单账簿"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 msgid "Timesheet Activities"
-msgstr "时间表活动"
+msgstr "记工单活动"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_report_stat_all
@@ -478,7 +480,7 @@ msgstr "计工单月"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:hr_timesheet.hr_timesheet_line_search
 msgid "Timesheet by Month"
-msgstr "按月的计工单"
+msgstr "计工单，按月"
 
 #. module: hr_timesheet
 #: field:account.analytic.account,use_timesheets:0
@@ -549,7 +551,7 @@ msgid ""
 "You should create an analytic account structure depending on your needs to "
 "analyse costs and revenues. In Odoo, analytic accounts are also used to "
 "track customer contracts."
-msgstr "您可以按需创建一个辅助核算项来分析您的成本和收入。在Odoo里，辅助核算项还可用于跟踪客户合同。"
+msgstr "您可以按需创建一个分析账户来分析您的成本和收入。在Odoo里，辅助核算项还可用于跟踪客户合同。"
 
 #. module: hr_timesheet
 #: view:hr.timesheet.report:hr_timesheet.view_hr_timesheet_report_search

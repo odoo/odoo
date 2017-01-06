@@ -72,6 +72,22 @@ class stock_change_product_qty(osv.osv_memory):
             res['location_id'] = location_id
         return res
 
+    def _prepare_inventory_line(self, cr, uid, inventory_id, data, context=None):
+
+        product = data.product_id.with_context(location=data.location_id.id, lot_id=data.lot_id.id)
+        th_qty = product.qty_available
+
+        res = {'inventory_id': inventory_id,
+               'product_qty': data.new_quantity,
+               'location_id': data.location_id.id,
+               'product_id': data.product_id.id,
+               'product_uom_id': data.product_id.uom_id.id,
+               'theoretical_qty': th_qty,
+               'prod_lot_id': data.lot_id.id
+               }
+
+        return res
+
     def change_product_qty(self, cr, uid, ids, context=None):
         """ Changes the Product Quantity by making a Physical Inventory.
         @param self: The object pointer.
@@ -105,18 +121,10 @@ class stock_change_product_qty(osv.osv_memory):
                 'product_id': data.product_id.id,
                 'location_id': data.location_id.id,
                 'lot_id': data.lot_id.id}, context=context)
-            product = data.product_id.with_context(location=data.location_id.id, lot_id= data.lot_id.id)
-            th_qty = product.qty_available
-            line_data = {
-                'inventory_id': inventory_id,
-                'product_qty': data.new_quantity,
-                'location_id': data.location_id.id,
-                'product_id': data.product_id.id,
-                'product_uom_id': data.product_id.uom_id.id,
-                'theoretical_qty': th_qty,
-                'prod_lot_id': data.lot_id.id
-            }
-            inventory_line_obj.create(cr , uid, line_data, context=context)
+
+            line_data = self._prepare_inventory_line(cr, uid, inventory_id, data, context=context)
+
+            inventory_line_obj.create(cr, uid, line_data, context=context)
             inventory_obj.action_done(cr, uid, [inventory_id], context=context)
         return {}
 

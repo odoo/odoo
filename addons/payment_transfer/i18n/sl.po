@@ -4,13 +4,13 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2015
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2015
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-05 12:00+0000\n"
-"PO-Revision-Date: 2015-10-01 12:56+0000\n"
+"POT-Creation-Date: 2016-12-14 14:52+0000\n"
+"PO-Revision-Date: 2016-12-20 04:57+0000\n"
 "Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-8/language/sl/)\n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,19 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: sl\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment_acquirer.py:32
+#, python-format
+msgid ""
+"<div>\n"
+"<h3>Please use the following transfer details</h3>\n"
+"<h4>%(bank_title)s</h4>\n"
+"%(bank_accounts)s\n"
+"<h4>Communication</h4>\n"
+"<p>Please use the order name as communication reference.</p>\n"
+"</div>"
+msgstr "<div>\n<h3>Uporabite naslednje podrobnosti transakcije</h3>\n<h4>%(bank_title)s</h4>\n%(bank_accounts)s\n<h4>Komunikacija</h4>\n<p>Uporabite naziv naloga kot sklic komunikacije.</p>\n</div>"
 
 #. module: payment_transfer
 #: model:payment.acquirer,pre_msg:payment_transfer.payment_acquirer_transfer
@@ -50,6 +63,7 @@ msgstr "Plačilna transakcija"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment_acquirer.py:19
+#: model:payment.acquirer,name:payment_transfer.payment_acquirer_transfer
 #, python-format
 msgid "Wire Transfer"
 msgstr "Transakcija iz TR"

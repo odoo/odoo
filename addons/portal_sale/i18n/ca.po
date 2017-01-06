@@ -3,13 +3,14 @@
 # * portal_sale
 # 
 # Translators:
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-11-24 18:23+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2016-08-20 16:01+0000\n"
+"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-8/language/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -198,12 +199,12 @@ msgstr "${object.company_id.name|safe} ${object.state in ('draft', 'sent') i 'Ci
 #: model:email.template,subject:portal_sale.email_template_edi_invoice
 msgid ""
 "${object.company_id.name|safe} Invoice (Ref ${object.number or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name|safe} Factura (Ref ${object.number or 'n/a' })"
 
 #. module: portal_sale
 #: view:account.config.settings:portal_sale.portal_sale_payment_option_config
 msgid "Configure payment acquiring methods"
-msgstr ""
+msgstr "Configura l'adquisició de mitjans de pagament"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_account_invoice
@@ -215,7 +216,7 @@ msgstr "Factura"
 msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
-msgstr ""
+msgstr "Factura_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.portal_action_invoices
@@ -234,13 +235,13 @@ msgstr ""
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Correu sortint"
 
 #. module: portal_sale
 #: field:account.invoice,portal_payment_options:0
 #: field:sale.order,portal_payment_options:0
 msgid "Portal Payment Options"
-msgstr ""
+msgstr "Opcions de pagament del Portal"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_quotations_portal
@@ -251,7 +252,7 @@ msgstr "Cites"
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_orders_portal
 msgid "Sale Orders"
-msgstr ""
+msgstr "Comandes de venda"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_sale_order
@@ -278,24 +279,24 @@ msgstr ""
 #. module: portal_sale
 #: model:res.groups,name:portal_sale.group_payment_options
 msgid "View Online Payment Options"
-msgstr ""
+msgstr "Veure opcions de pagament Online"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.portal_action_invoices
 msgid "We haven't sent you any invoice."
-msgstr ""
+msgstr "No t'hem enviat una factura."
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_quotations_portal
 msgid "We haven't sent you any quotation."
-msgstr ""
+msgstr "No t'hem enviat cap pressupost."
 
 #. module: portal_sale
 #: model:ir.actions.act_window,help:portal_sale.action_orders_portal
 msgid "We haven't sent you any sales order."
-msgstr ""
+msgstr "No t'hem enviat cap comanda de venda."
 
 #. module: portal_sale
 #: view:account.invoice:portal_sale.view_account_invoice_filter_share
 msgid "[('share','=', False)]"
-msgstr ""
+msgstr "[('share','=', False)]"

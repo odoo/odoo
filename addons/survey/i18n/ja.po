@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2015-11-09 04:47+0000\n"
+"PO-Revision-Date: 2016-12-13 05:37+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-8/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -48,7 +48,7 @@ msgstr "%s（コピー）"
 #. module: survey
 #: view:website:survey.page
 msgid "&times;"
-msgstr ""
+msgstr "&times;"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form
@@ -132,12 +132,12 @@ msgstr ""
 #. module: survey
 #: constraint:survey.user_input_line:0
 msgid "A question cannot be unanswered and skipped"
-msgstr ""
+msgstr "この質問は必須回答です。"
 
 #. module: survey
 #: sql_constraint:survey.user_input:0
 msgid "A token must be unique!"
-msgstr ""
+msgstr "トークンは固有でなければなりません！"
 
 #. module: survey
 #: model:survey.page,title:survey.feedback_1
@@ -147,7 +147,7 @@ msgstr ""
 #. module: survey
 #: field:survey.mail.compose.message,active_domain:0
 msgid "Active domain"
-msgstr ""
+msgstr "有効なドメイン"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
@@ -255,17 +255,17 @@ msgstr ""
 #. module: survey
 #: help:survey.mail.compose.message,body:0
 msgid "Automatically sanitized HTML contents"
-msgstr ""
+msgstr "自動サニタイズ済HTML内容"
 
 #. module: survey
 #: view:website:survey.result_number
 msgid "Average"
-msgstr ""
+msgstr "平均"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_4
 msgid "CRM"
-msgstr ""
+msgstr "CRM"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
@@ -297,7 +297,7 @@ msgstr ""
 #: code:addons/survey/wizard/survey_email_compose_message.py:51
 #, python-format
 msgid "Click here to start survey"
-msgstr ""
+msgstr "クリックして調査を開始する"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_email_compose_message.py:109
@@ -357,7 +357,7 @@ msgstr "Eメール作成"
 #. module: survey
 #: field:survey.mail.compose.message,composition_mode:0
 msgid "Composition mode"
-msgstr ""
+msgstr "合成モード"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_2
@@ -418,7 +418,7 @@ msgstr "作成日"
 #. module: survey
 #: help:survey.mail.compose.message,starred:0
 msgid "Current user has a starred notification linked to this message"
-msgstr ""
+msgstr "現在のユーザーには、このメッセージにリンクされているスター付き通知があります"
 
 #. module: survey
 #: help:survey.mail.compose.message,to_read:0
@@ -444,7 +444,7 @@ msgstr "日付と時間"
 #. module: survey
 #: field:survey.user_input_line,value_date:0
 msgid "Date answer"
-msgstr ""
+msgstr "回答日"
 
 #. module: survey
 #: help:survey.user_input,deadline:0
@@ -454,7 +454,7 @@ msgstr ""
 #. module: survey
 #: help:survey.survey,message_last_post:0
 msgid "Date of the last message posted on the record."
-msgstr ""
+msgstr "記録上の最後のメッセージが投稿された日"
 
 #. module: survey
 #: field:survey.user_input,deadline:0
@@ -536,7 +536,7 @@ msgstr "Eメール"
 #. module: survey
 #: view:survey.survey:survey.survey_form
 msgid "Edit Pages and Questions"
-msgstr ""
+msgstr "ページと質問事項を編集"
 
 #. module: survey
 #: selection:survey.mail.compose.message,type:0
@@ -559,7 +559,7 @@ msgstr "送信者のメールアドレス。このフィールドは受信メー
 #. module: survey
 #: model:ir.model,name:survey.model_survey_mail_compose_message
 msgid "Email composition wizard for Survey"
-msgstr ""
+msgstr "調査用Eメール作成ウィザード"
 
 #. module: survey
 #: model:survey.page,title:survey.feedback_2
@@ -596,7 +596,7 @@ msgstr "フィルタ"
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_3
 msgid "Financial Management"
-msgstr ""
+msgstr "財務管理"
 
 #. module: survey
 #: view:website:survey.result
@@ -616,17 +616,17 @@ msgstr "フォロワー"
 #. module: survey
 #: view:survey.question:survey.survey_question_form
 msgid "Format"
-msgstr ""
+msgstr "フォーマット"
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
 msgid "Free Text"
-msgstr ""
+msgstr "自由記入欄"
 
 #. module: survey
 #: field:survey.user_input_line,value_free_text:0
 msgid "Free Text answer"
-msgstr ""
+msgstr "自由記入回答"
 
 #. module: survey
 #: field:survey.mail.compose.message,email_from:0
@@ -734,7 +734,7 @@ msgstr ""
 #. module: survey
 #: help:survey.survey,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
 
 #. module: survey
 #: help:survey.survey,users_can_go_back:0
@@ -844,7 +844,7 @@ msgstr "ラベル"
 #. module: survey
 #: field:survey.survey,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "最終メッセージ日"
 
 #. module: survey
 #: field:survey.label,write_uid:0
@@ -868,7 +868,7 @@ msgstr "最終更新日"
 #. module: survey
 #: field:survey.user_input,last_displayed_page_id:0
 msgid "Last displayed page"
-msgstr ""
+msgstr "最後に表示したページ"
 
 #. module: survey
 #: selection:survey.user_input,type:0
@@ -949,7 +949,7 @@ msgstr ""
 #. module: survey
 #: field:survey.question,validation_length_max:0
 msgid "Maximum Text Length"
-msgstr ""
+msgstr "最大文字数"
 
 #. module: survey
 #: field:survey.question,validation_max_float_value:0
@@ -959,7 +959,7 @@ msgstr ""
 #. module: survey
 #: field:survey.mail.compose.message,record_name:0
 msgid "Message Record Name"
-msgstr ""
+msgstr "メッセージレコード名"
 
 #. module: survey
 #: help:survey.mail.compose.message,type:0
@@ -1001,12 +1001,12 @@ msgstr ""
 #. module: survey
 #: field:survey.question,validation_length_min:0
 msgid "Minimum Text Length"
-msgstr ""
+msgstr "最大文字数"
 
 #. module: survey
 #: field:survey.question,validation_min_float_value:0
 msgid "Minimum value"
-msgstr ""
+msgstr "最低数"
 
 #. module: survey
 #: view:website:survey.result_number
@@ -1016,12 +1016,12 @@ msgstr ""
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple choice: multiple answers allowed"
-msgstr ""
+msgstr "複数の選択肢（複数回答）"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple choice: only one answer"
-msgstr ""
+msgstr "複数の選択肢（回答は１つのみ）"
 
 #. module: survey
 #: selection:survey.question,matrix_subtype:0
@@ -1036,7 +1036,7 @@ msgstr "名称"
 #. module: survey
 #: help:survey.mail.compose.message,record_name:0
 msgid "Name get of the related document."
-msgstr ""
+msgstr "関連するドキュメントの名前を取得します。"
 
 #. module: survey
 #: view:survey.user_input:survey.survey_user_input_search
@@ -1046,12 +1046,12 @@ msgstr "新規"
 #. module: survey
 #: view:website:survey.page
 msgid "Next page"
-msgstr ""
+msgstr "次のページ"
 
 #. module: survey
 #: field:survey.mail.compose.message,no_auto_thread:0
 msgid "No threading for answers"
-msgstr ""
+msgstr "返信をスレッドに追加しない"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_1_4
@@ -1066,7 +1066,7 @@ msgstr ""
 #. module: survey
 #: view:website:survey.nopages
 msgid "Not ready"
-msgstr ""
+msgstr "準備中"
 
 #. module: survey
 #: selection:survey.user_input,state:0
@@ -1086,12 +1086,12 @@ msgstr "通知された取引先"
 #. module: survey
 #: field:survey.mail.compose.message,notify:0
 msgid "Notify followers"
-msgstr ""
+msgstr "フォロワーに通知"
 
 #. module: survey
 #: help:survey.mail.compose.message,notify:0
 msgid "Notify followers of the document (mass post only)"
-msgstr ""
+msgstr "フォロワーに文書を通知する（一括投稿のみ）"
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
@@ -1102,22 +1102,22 @@ msgstr "番号"
 #: view:survey.question:survey.survey_question_form
 #: field:survey.question,column_nb:0
 msgid "Number of columns"
-msgstr ""
+msgstr "カラムの数"
 
 #. module: survey
 #: field:survey.survey,tot_comp_survey:0
 msgid "Number of completed surveys"
-msgstr ""
+msgstr "完了済の調査数"
 
 #. module: survey
 #: field:survey.survey,tot_sent_survey:0
 msgid "Number of sent surveys"
-msgstr ""
+msgstr "送信済みの調査数"
 
 #. module: survey
 #: field:survey.survey,tot_start_survey:0
 msgid "Number of started surveys"
-msgstr ""
+msgstr "開始済みの調査数"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1201,7 +1201,7 @@ msgstr "取引先"
 #: model:ir.actions.act_window,name:survey.action_partner_survey_mail
 #: model:ir.actions.act_window,name:survey.action_partner_survey_mail_crm
 msgid "Partner Survey Mailing"
-msgstr ""
+msgstr "取引先調査メール"
 
 #. module: survey
 #: help:survey.mail.compose.message,notified_partner_ids:0
@@ -1217,7 +1217,7 @@ msgstr ""
 #. module: survey
 #: view:website:survey.result_choice
 msgid "Pie Chart"
-msgstr ""
+msgstr "円グラフ"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_email_compose_message.py:213
@@ -1302,12 +1302,12 @@ msgstr "質問"
 #. module: survey
 #: field:survey.question,question:0
 msgid "Question Name"
-msgstr ""
+msgstr "質問名"
 
 #. module: survey
 #: view:survey.question:survey.survey_question_form
 msgid "Question name"
-msgstr ""
+msgstr "質問名"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_page_question
@@ -1348,7 +1348,7 @@ msgstr "関連する文書モデル"
 msgid ""
 "Reply email address. Setting the reply_to bypasses the automatic thread "
 "creation."
-msgstr ""
+msgstr "返信メールアドレス。 reply_toを設定すると、自動スレッド作成がバイパスされます。"
 
 #. module: survey
 #: field:survey.mail.compose.message,reply_to:0
@@ -1500,7 +1500,7 @@ msgstr ""
 #. module: survey
 #: field:survey.user_input_line,skipped:0 view:website:survey.result
 msgid "Skipped"
-msgstr ""
+msgstr "空欄"
 
 #. module: survey
 #: view:website:survey.page
@@ -1570,7 +1570,7 @@ msgstr ""
 #. module: survey
 #: field:survey.label,value:0
 msgid "Suggested value"
-msgstr ""
+msgstr "推奨される回答"
 
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
@@ -1665,7 +1665,7 @@ msgstr ""
 #. module: survey
 #: field:survey.question,page_id:0
 msgid "Survey page"
-msgstr ""
+msgstr "調査ページ名"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form
@@ -1726,7 +1726,7 @@ msgstr ""
 #. module: survey
 #: view:website:survey.sfinished
 msgid "Thank you!"
-msgstr ""
+msgstr "回答にご協力頂き、誠に有難う御座います！"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_3
@@ -1936,17 +1936,17 @@ msgstr "タイプ"
 #. module: survey
 #: field:survey.question,type:0
 msgid "Type of Question"
-msgstr ""
+msgstr "質問形式"
 
 #. module: survey
 #: view:survey.question:survey.survey_question_form
 msgid "Type of answers"
-msgstr ""
+msgstr "回答形式"
 
 #. module: survey
 #: field:survey.question,labels_ids:0
 msgid "Types of answers"
-msgstr ""
+msgstr "回答形式"
 
 #. module: survey
 #: field:survey.survey,message_unread:0
@@ -1956,7 +1956,7 @@ msgstr "未読メッセージ"
 #. module: survey
 #: field:survey.mail.compose.message,use_active_domain:0
 msgid "Use active domain"
-msgstr ""
+msgstr "有効なドメインを使用"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message
@@ -1974,13 +1974,13 @@ msgstr ""
 #. module: survey
 #: model:survey.survey,title:survey.feedback_form
 msgid "User Feedback Form"
-msgstr ""
+msgstr "ユーザフィードバックフォーム"
 
 #. module: survey
 #: view:survey.user_input_line:survey.survey_response_line_search
 #: field:survey.user_input_line,user_input_id:0
 msgid "User Input"
-msgstr ""
+msgstr "ユーザー回答"
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_survey_response_line_form
@@ -2043,12 +2043,12 @@ msgstr ""
 #. module: survey
 #: view:website:survey.result_choice
 msgid "Vote"
-msgstr ""
+msgstr "投票"
 
 #. module: survey
 #: field:survey.mail.compose.message,vote_user_ids:0
 msgid "Votes"
-msgstr ""
+msgstr "投票"
 
 #. module: survey
 #: code:addons/survey/survey.py:444 code:addons/survey/survey.py:898
@@ -2097,7 +2097,7 @@ msgstr ""
 #. module: survey
 #: help:survey.mail.compose.message,is_log:0
 msgid "Whether the message is an internal note (comment mode only)"
-msgstr ""
+msgstr "メッセージが内部ノートであるかどうか(コメントモードのみ)"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_2
@@ -2164,7 +2164,7 @@ msgstr ""
 #. module: survey
 #: view:website:survey.page
 msgid "on"
-msgstr ""
+msgstr "on"
 
 #. module: survey
 #: view:survey.mail.compose.message:survey.survey_email_compose_message

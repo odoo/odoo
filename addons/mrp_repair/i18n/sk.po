@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-01-08 19:48+0000\n"
+"PO-Revision-Date: 2016-03-06 19:31+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-8/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgid ""
 "* The 'Confirmed' status is set automatically as confirm when repair order in confirm status.                         \n"
 "* The 'Done' status is set automatically when repair order is completed.                        \n"
 "* The 'Cancelled' status is set automatically when user cancel repair order."
-msgstr ""
+msgstr "* Stav 'Koncept' sa automaticky nastaví ako koncept, ak opravná objednávka v koncept stave.\n* Stav 'Potvrdené' je nastavený automaticky ako potvrdený keď je opravná objednávka v stave potvrdenia.\n* Stav 'Hotovo' je natavený automaticky pri dokončení opravnej objednávky.\n* Stav 'Zrušený' je nastavený automaticky keď používateľ zruší opravnú objednávku."
 
 #. module: mrp_repair
 #: help:mrp.repair,state:0
@@ -35,7 +35,7 @@ msgid ""
 "* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.             \n"
 "* The 'Done' status is set when repairing is completed.            \n"
 "* The 'Cancelled' status is used when user cancel repair order."
-msgstr ""
+msgstr "* Stav 'Koncept' sa používa keď používateľ kóduje novú a nepotvrdenú opravnú objednávku.\n* Stav 'Potvrdené' sa používa keď používateľ potvrdí opravnú objednávku.\n* Stav 'Pripravené na opravu' sa používa na začatie opravovania, používateľ môže začať opravovať až keď je opravná objednávka potvrdená.\n* Stav 'Na vyfaktúrovanie' sa používa na vytvorenie faktúry pred alebo po oprave.\n* Stav 'Zrušené' sa používa keď používateľ zruší opravnú objednávku."
 
 #. module: mrp_repair
 #: view:website:mrp_repair.report_mrprepairorder
@@ -68,7 +68,7 @@ msgstr ""
 #: code:addons/mrp_repair/wizard/cancel_repair.py:41
 #, python-format
 msgid "Active ID not Found"
-msgstr ""
+msgstr "Aktívne ID nebolo nájdené"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -78,22 +78,22 @@ msgstr "Pridať"
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
 msgid "Add internal notes..."
-msgstr ""
+msgstr "Pridať interné poznámky..."
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
 msgid "Add quotation notes..."
-msgstr ""
+msgstr "Pridať poznámky cenovej ponuky..."
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "After Repair"
-msgstr ""
+msgstr "Po oprave"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "Before Repair"
-msgstr ""
+msgstr "Pred opravou"
 
 #. module: mrp_repair
 #: view:mrp.repair.cancel:mrp_repair.view_cancel_repair
@@ -105,13 +105,13 @@ msgstr "Zrušiť"
 #: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
 #: view:mrp.repair:mrp_repair.view_repair_order_form
 msgid "Cancel Repair"
-msgstr ""
+msgstr "Zrušiť opravu"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
 #: view:mrp.repair.cancel:mrp_repair.view_cancel_repair
 msgid "Cancel Repair Order"
-msgstr ""
+msgstr "Zrušiť opravnú objednávku"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
@@ -121,7 +121,7 @@ msgstr "Zrušené"
 #. module: mrp_repair
 #: help:mrp.repair,partner_id:0
 msgid "Choose partner for whom the order will be invoiced and delivered."
-msgstr ""
+msgstr "Zvolte partnera ktorému bude objednávka vyfaktúrovaná a doručená."
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form_filter
@@ -132,7 +132,7 @@ msgstr "Spoločnost"
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
 msgid "Confirm Repair"
-msgstr ""
+msgstr "Potvrdiť opravu"
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form_filter
@@ -146,7 +146,7 @@ msgstr "Potvrdené"
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
-msgstr ""
+msgstr "Nemožno nájsť riadok cenníku zodpovedajúci tomuto produktu a množstvu.\nBudete musieť zmeniť buď produkt, množstvo alebo cenník."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
@@ -177,7 +177,7 @@ msgstr "Vytvorené"
 #. module: mrp_repair
 #: field:mrp.repair,location_id:0
 msgid "Current Location"
-msgstr ""
+msgstr "Aktuálna lokácia"
 
 #. module: mrp_repair
 #: help:mrp.repair,message_last_post:0
@@ -192,7 +192,7 @@ msgstr "Adresa dodania"
 #. module: mrp_repair
 #: field:mrp.repair,location_dest_id:0
 msgid "Delivery Location"
-msgstr ""
+msgstr "Dodacia lokácia"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,name:0 field:mrp.repair.line,name:0
@@ -203,7 +203,7 @@ msgstr "Popis"
 #. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
 msgid "Dest. Location"
-msgstr ""
+msgstr "Cieľ. lokácia"
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:mrp_repair.view_make_invoice
@@ -223,7 +223,7 @@ msgstr "Návrh"
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
 msgid "End Repair"
-msgstr ""
+msgstr "Ukončiť opravu"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:339
@@ -242,7 +242,7 @@ msgstr "Ďalšie informácie"
 #: view:mrp.repair:mrp_repair.view_repair_order_form
 #: field:mrp.repair,fees_lines:0
 msgid "Fees"
-msgstr ""
+msgstr "Poplatky"
 
 #. module: mrp_repair
 #: view:website:mrp_repair.report_mrprepairorder
@@ -262,7 +262,7 @@ msgstr "Zoskupiť podľa"
 #. module: mrp_repair
 #: field:mrp.repair.make_invoice,group:0
 msgid "Group by partner invoice address"
-msgstr ""
+msgstr "Zoskupiť podľa fakturačnej adresy partnera"
 
 #. module: mrp_repair
 #: view:website:mrp_repair.report_mrprepairorder
@@ -272,12 +272,12 @@ msgstr ""
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form_filter
 msgid "Guarantee limit Month"
-msgstr ""
+msgstr "Mesiac limitu záruky"
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form_filter
 msgid "Guarantee limit by Month"
-msgstr ""
+msgstr "Limit záruky podľa mesiaca"
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
@@ -311,7 +311,7 @@ msgstr "Interné poznámky"
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
 msgid "Inventory Move"
-msgstr ""
+msgstr "Pohyb zásob"
 
 #. module: mrp_repair
 #: field:mrp.repair,invoice_id:0
@@ -321,12 +321,12 @@ msgstr "Faktúra"
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
 msgid "Invoice Corrected"
-msgstr ""
+msgstr "Faktúra opravená"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "Výnimka faktúry"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,invoice_line_id:0
@@ -337,17 +337,17 @@ msgstr "Položky faktúry"
 #. module: mrp_repair
 #: field:mrp.repair,invoice_method:0
 msgid "Invoice Method"
-msgstr ""
+msgstr "Fakturačná metóda"
 
 #. module: mrp_repair
 #: view:website:mrp_repair.report_mrprepairorder
 msgid "Invoice address:"
-msgstr ""
+msgstr "Fakturačná adresa:"
 
 #. module: mrp_repair
 #: view:website:mrp_repair.report_mrprepairorder
 msgid "Invoice and shipping address:"
-msgstr ""
+msgstr "Fakturačná a dodacia adresa:"
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form_filter
@@ -364,7 +364,7 @@ msgstr "Fakturácia"
 #. module: mrp_repair
 #: field:mrp.repair,partner_invoice_id:0
 msgid "Invoicing Address"
-msgstr ""
+msgstr "Fakturačná adresa"
 
 #. module: mrp_repair
 #: field:mrp.repair,message_is_follower:0
@@ -403,7 +403,7 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
 msgid "Make Invoice"
-msgstr ""
+msgstr "Urobiť faktúru"
 
 #. module: mrp_repair
 #: field:mrp.repair,message_ids:0
@@ -423,31 +423,31 @@ msgstr "Presunúť"
 #. module: mrp_repair
 #: help:mrp.repair,move_id:0
 msgid "Move created by the repair order"
-msgstr ""
+msgstr "Pohyb vytvorený opravnou objednávkou"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "No Invoice"
-msgstr ""
+msgstr "Žiadna faktúra"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:528
 #, python-format
 msgid "No Pricelist!"
-msgstr ""
+msgstr "Žiadny cenník"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:339
 #, python-format
 msgid "No account defined for partner \"%s\"."
-msgstr ""
+msgstr "Žiadny účet zadefinovaný pre partnera \"%s\"."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:367
 #: code:addons/mrp_repair/mrp_repair.py:396
 #, python-format
 msgid "No account defined for product \"%s\"."
-msgstr ""
+msgstr "Žiadny účet zadefinovaný pre produkt \"%s\"."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:325
@@ -459,13 +459,13 @@ msgstr ""
 #: code:addons/mrp_repair/mrp_repair.py:389
 #, python-format
 msgid "No product defined on Fees!"
-msgstr ""
+msgstr "Žiadny produkt zadefinovaný pre Poplatky!"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:539
 #, python-format
 msgid "No valid pricelist line found !"
-msgstr ""
+msgstr "Žiadny platný riadok cenníka nebol nájdený!"
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
@@ -480,7 +480,7 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair,operations:0
 msgid "Operation Lines"
-msgstr ""
+msgstr "Riadky operácie"
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
@@ -506,7 +506,7 @@ msgstr "Cenník"
 #. module: mrp_repair
 #: help:mrp.repair,pricelist_id:0
 msgid "Pricelist of the selected partner."
-msgstr ""
+msgstr "Cenník zvoleného partnera."
 
 #. module: mrp_repair
 #: view:website:mrp_repair.report_mrprepairorder
@@ -538,7 +538,7 @@ msgstr "Merná jednotka produktu"
 #. module: mrp_repair
 #: field:mrp.repair,product_id:0
 msgid "Product to Repair"
-msgstr ""
+msgstr "Produkt na opravu"
 
 #. module: mrp_repair
 #: view:website:mrp_repair.report_mrprepairorder
@@ -548,7 +548,7 @@ msgstr ""
 #. module: mrp_repair
 #: help:mrp.repair,lot_id:0
 msgid "Products repaired are all belonging to this lot"
-msgstr ""
+msgstr "Opravené produkty patria všetky k tejto šarži"
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
@@ -571,7 +571,7 @@ msgstr "Cenová ponuka / Objednávka"
 #. module: mrp_repair
 #: field:mrp.repair,quotation_notes:0
 msgid "Quotation Notes"
-msgstr ""
+msgstr "Poznámky cenovej ponuky"
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form_filter
@@ -581,45 +581,45 @@ msgstr "Cenové ponuky"
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form_filter
 msgid "Ready To Repair"
-msgstr ""
+msgstr "Pripravené na opravu"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Ready to Repair"
-msgstr ""
+msgstr "Pripravené na opravu"
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form_filter
 msgid "Reair Orders"
-msgstr ""
+msgstr "Opravné objednávky"
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
 msgid "Recreate Invoice"
-msgstr ""
+msgstr "Prevytvoriť faktúru"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
 #: view:website:mrp_repair.report_mrprepairorder
 msgid "Remove"
-msgstr ""
+msgstr "Odstrániť"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
-msgstr ""
+msgstr "Opravť riadok poplatku"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_line
 #: view:mrp.repair:mrp_repair.view_repair_order_form
 msgid "Repair Line"
-msgstr ""
+msgstr "Opravný riadok"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
 msgid "Repair Order"
-msgstr ""
+msgstr "Opravná objednávka"
 
 #. module: mrp_repair
 #: view:website:mrp_repair.report_mrprepairorder
@@ -629,13 +629,13 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair.fee,repair_id:0 field:mrp.repair.line,repair_id:0
 msgid "Repair Order Reference"
-msgstr ""
+msgstr "Referencia opravnj objednávky"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_order
 msgid "Repair Orders"
-msgstr ""
+msgstr "Opravné objednávky"
 
 #. module: mrp_repair
 #: view:website:mrp_repair.report_mrprepairorder
@@ -645,19 +645,19 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair,name:0
 msgid "Repair Reference"
-msgstr ""
+msgstr "Referencia opravy"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:302
 #, python-format
 msgid "Repair order is already invoiced."
-msgstr ""
+msgstr "Opravná objednávka je už vyfaktúrovaná."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Repair order is not invoiced."
-msgstr ""
+msgstr "Opravná objednávka nie je vyfaktúrovaná."
 
 #. module: mrp_repair
 #: field:mrp.repair,repaired:0 selection:mrp.repair,state:0
@@ -667,18 +667,18 @@ msgstr "Opravné"
 #. module: mrp_repair
 #: field:mrp.repair,lot_id:0
 msgid "Repaired Lot"
-msgstr ""
+msgstr "Opravená šarža"
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
 #: view:mrp.repair:mrp_repair.view_repair_order_tree
 msgid "Repairs order"
-msgstr ""
+msgstr "Opravná objednávka"
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form_filter
 msgid "Search Reair Orders"
-msgstr ""
+msgstr "Vyhľadať opravné objednávky"
 
 #. module: mrp_repair
 #: help:mrp.repair,invoice_method:0
@@ -686,13 +686,13 @@ msgid ""
 "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
-msgstr ""
+msgstr "Zvolenie \"Pred opravou\" alebo \"Po oprave\" vám umožní generovať faktúry pred alebo po ukončení samotnej opravy. \"Žiadna faktúra\" znamená že nechcete generovať faktúry pre túto opravnú objednávku."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:289
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
-msgstr ""
+msgstr "Seriálové číslo je požadované pre riadok operácií s produktom '%s'"
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
@@ -712,7 +712,7 @@ msgstr "Zdrojová lokácia"
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
 msgid "Start Repair"
-msgstr ""
+msgstr "Začať opravu"
 
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form_filter
@@ -754,7 +754,7 @@ msgstr "Jednotka merania produku korú ste vybrali má inú kategíu ako v produ
 #. module: mrp_repair
 #: sql_constraint:mrp.repair:0
 msgid "The name of the Repair Order must be unique!"
-msgstr ""
+msgstr "Názov opravnej objednávky musí byť jedinečné!"
 
 #. module: mrp_repair
 #: help:mrp.repair,guarantee_limit:0
@@ -770,7 +770,7 @@ msgstr ""
 msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
 "Invoice. Do you want to continue?"
-msgstr ""
+msgstr "Táto operácia zruší opravný proces, ale nezruší jeho faktúru. Chcete pokračovať?"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,to_invoice:0 field:mrp.repair.line,to_invoice:0
@@ -780,7 +780,7 @@ msgstr "Na vyfaktúrovanie"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "To be Invoiced"
-msgstr ""
+msgstr "Na vyfaktúrovanie"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_total:0
@@ -796,7 +796,7 @@ msgstr ""
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
 msgid "Total amount"
-msgstr ""
+msgstr "Celková suma"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,type:0
@@ -806,7 +806,7 @@ msgstr "Typ"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Under Repair"
-msgstr ""
+msgstr "Opravuje sa"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,price_unit:0 field:mrp.repair.line,price_unit:0
@@ -832,7 +832,7 @@ msgstr "Suma bez DPH"
 #. module: mrp_repair
 #: view:mrp.repair:mrp_repair.view_repair_order_form
 msgid "Untaxed amount"
-msgstr ""
+msgstr "Nezdanená suma"
 
 #. module: mrp_repair
 #: view:website:mrp_repair.report_mrprepairorder
@@ -857,7 +857,7 @@ msgstr "Varovanie !"
 #. module: mrp_repair
 #: field:mrp.repair,guarantee_limit:0
 msgid "Warranty Expiration"
-msgstr ""
+msgstr "Vypršanie záruky"
 
 #. module: mrp_repair
 #: field:mrp.repair,website_message_ids:0
@@ -878,7 +878,7 @@ msgstr "Áno"
 #: code:addons/mrp_repair/mrp_repair.py:325
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form!"
-msgstr ""
+msgstr "Musíte zvoliť fakturačnú adresu partnera vo formulári opravy!"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:530
@@ -886,7 +886,7 @@ msgstr ""
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
 "Please set one before choosing a product."
-msgstr ""
+msgstr "Musíte zvoliť cenník vo formulári opravy !\nProsím nastavte ho pred zvolením produktu."
 
 #. module: mrp_repair
 #: view:mrp.repair.cancel:mrp_repair.view_cancel_repair

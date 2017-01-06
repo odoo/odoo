@@ -3,13 +3,14 @@
 # * website_quote
 # 
 # Translators:
+# zbik2607 <darek@krokus.com.pl>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:09+0000\n"
-"PO-Revision-Date: 2015-11-04 06:12+0000\n"
-"Last-Translator: Dariusz Żbikowski <darek@krokus.com.pl>\n"
+"POT-Creation-Date: 2016-03-25 13:43+0000\n"
+"PO-Revision-Date: 2016-09-23 17:45+0000\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-8/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,21 +43,17 @@ msgid ""
 "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
-"\n"
-"    <% set signup_url = object.get_signup_url() %>\n"
-"    % if signup_url:\n"
 "    <p>\n"
-"    You can access this document and pay online via our Customer Portal:\n"
+"        You can view your quotation online:\n"
 "    </p>\n"
-"        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
-"           href=\"${signup_url}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
-"    % endif\n"
+"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "\n"
 "    % if object.paypal_url:\n"
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "\n"
@@ -101,6 +98,11 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
+#: view:website:website_quote.so_quotation
+msgid "! You can"
+msgstr "! Ty możesz"
+
+#. module: website_quote
 #: model:email.template,report_name:website_quote.email_template_edi_sale
 msgid ""
 "${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
@@ -139,7 +141,7 @@ msgid ""
 ":\n"
 "                                this content will appear on the quotation only if this\n"
 "                                product is put on the quote."
-msgstr ""
+msgstr ":\n                                 Ta treść pojawi się na ofercie cenowej tylko wtedy, gdy\n                                 Produkt pakowany jest na wycenę."
 
 #. module: website_quote
 #: view:website:website_quote.so_template
@@ -147,7 +149,7 @@ msgid ""
 ":\n"
 "                                this content will appear on the quotation only if this\n"
 "                                product is used in the quote."
-msgstr ""
+msgstr ":\n                                 Ta treść pojawi się na ofercie cenowej tylko wtedy, gdy\n                                 produkt jest użyty w wycenie."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -467,7 +469,7 @@ msgid ""
 "                            <h2>Structure of the Training</h2>\n"
 "                        </div>\n"
 "                        <div class=\"col-md-5 col-md-offset-1 mt16 mb16\">\n"
-"                            <img class=\"img img-responsive\" src=\"https://www.openerp.com/saas_master/static/site_new/img/layout/online_training.png\">\n"
+"                            <img class=\"img img-responsive\" src=\"/website_quote/static/src/img/online_training.png\">\n"
 "                        </div>\n"
 "                        <div class=\"col-md-6 mt32\">\n"
 "                            <h4><strong>There are three components to the training</strong></h4>\n"
@@ -678,7 +680,7 @@ msgstr "Data utworzenia"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Customer:"
-msgstr ""
+msgstr "Klient:"
 
 #. module: website_quote
 #: field:sale.order,website_description:0 field:sale.order.option,name:0
@@ -773,7 +775,7 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.navigation_menu
 msgid "Introduction"
-msgstr ""
+msgstr "Wprowadzenie"
 
 #. module: website_quote
 #: field:sale.order.option,write_uid:0 field:sale.quote.line,write_uid:0
@@ -810,7 +812,7 @@ msgstr ""
 #: field:sale.order.option,website_description:0
 #: field:sale.quote.line,website_description:0
 msgid "Line Description"
-msgstr ""
+msgstr "Linia opisu"
 
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
@@ -896,29 +898,29 @@ msgstr "Ilość"
 #. module: website_quote
 #: field:sale.quote.template,name:0
 msgid "Quotation Template"
-msgstr ""
+msgstr "szablon oferty cenowej"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_line
 msgid "Quotation Template Lines"
-msgstr ""
+msgstr "szablon liniowy oferty cenowej"
 
 #. module: website_quote
 #: field:sale.quote.line,quote_id:0 field:sale.quote.option,template_id:0
 msgid "Quotation Template Reference"
-msgstr ""
+msgstr "referencje szablonu oferty cenowej"
 
 #. module: website_quote
 #: model:ir.actions.act_window,name:website_quote.action_sale_quotation_template
 #: model:ir.ui.menu,name:website_quote.menu_sale_quote_template
 msgid "Quotation Templates"
-msgstr ""
+msgstr "szablony oferty cenowej"
 
 #. module: website_quote
 #: code:addons/website_quote/controllers/main.py:47
 #, python-format
 msgid "Quotation viewed by customer"
-msgstr ""
+msgstr "widok oferty cenowej przez klienta"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -959,7 +961,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order_option
 msgid "Sale Options"
-msgstr ""
+msgstr "Opcje sprzedaży"
 
 #. module: website_quote
 #: field:sale.order.option,order_id:0
@@ -970,7 +972,7 @@ msgstr ""
 #: model:ir.model,name:website_quote.model_sale_quote_template
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
 msgid "Sale Quotation Template"
-msgstr ""
+msgstr "sprzedaż szablonów ofert cenowych"
 
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_tree
@@ -996,7 +998,7 @@ msgstr ""
 #. module: website_quote
 #: field:sale.order,access_token:0
 msgid "Security Token"
-msgstr ""
+msgstr "Znak uprawnienia"
 
 #. module: website_quote
 #: view:website:website_quote.chatter
@@ -1027,7 +1029,7 @@ msgstr "Suma częściowa:"
 #: view:sale.order:website_quote.sale_order_form_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
 msgid "Suggested Products"
-msgstr ""
+msgstr "sugerowane produkty"
 
 #. module: website_quote
 #: view:website:website_quote.pricing
@@ -1081,6 +1083,11 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "This offer expires in"
+msgstr ""
+
+#. module: website_quote
+#: view:website:website_quote.so_quotation
+msgid "This order has already been"
 msgstr ""
 
 #. module: website_quote
@@ -1140,17 +1147,23 @@ msgstr ""
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
 msgid "Website Description"
+msgstr "Opis strony"
+
+#. module: website_quote
+#: code:addons/website_quote/controllers/main.py:148
+#, python-format
+msgid "You cannot add options to a confirmed order."
 msgstr ""
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Contact:"
-msgstr ""
+msgstr "Twój kontakt:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Name:"
-msgstr ""
+msgstr "Twoja nazwa:"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1160,7 +1173,7 @@ msgstr "Twoje zamówienie"
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Quotation"
-msgstr ""
+msgstr "twoja oferta cenowa"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1175,7 +1188,7 @@ msgstr ""
 #. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your feedback....."
-msgstr ""
+msgstr "twoja opinia....."
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1189,13 +1202,18 @@ msgstr "i"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
-msgid "contact us"
+msgid "cancelled"
 msgstr ""
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
+msgid "contact us"
+msgstr "skontaktuj się z nami"
+
+#. module: website_quote
+#: view:website:website_quote.so_quotation
 msgid "day"
-msgstr ""
+msgstr "dzień"
 
 #. module: website_quote
 #: view:sale.quote.template:website_quote.view_sale_quote_template_form
@@ -1237,6 +1255,11 @@ msgstr ""
 #: field:sale.order.option,line_id:0
 msgid "unknown"
 msgstr "nieznane"
+
+#. module: website_quote
+#: view:website:website_quote.so_quotation
+msgid "validated"
+msgstr ""
 
 #. module: website_quote
 #: view:website:website_quote.so_template

@@ -3,12 +3,13 @@
 # * stock
 # 
 # Translators:
+# Oihane Crucelaegui <oihanecruce@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-03 15:25+0000\n"
-"PO-Revision-Date: 2015-08-19 09:24+0000\n"
+"POT-Creation-Date: 2016-01-14 12:26+0000\n"
+"PO-Revision-Date: 2016-02-12 10:26+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Basque (http://www.transifex.com/odoo/odoo-8/language/eu/)\n"
 "MIME-Version: 1.0\n"
@@ -56,6 +57,16 @@ msgid " (reserved)"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:2954
+#, python-format
+msgid ""
+"You cannot have two inventory adjustements in state 'in Progess' with the "
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validate the first inventory adjustement with this product "
+"before creating another one."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/stock.py:3090
 #, python-format
 msgid " MTO"
@@ -77,7 +88,7 @@ msgstr ""
 #: code:addons/stock/stock.py:3228 code:addons/stock/stock.py:3502
 #, python-format
 msgid " Sequence internal"
-msgstr ""
+msgstr "Barne sekuentzia"
 
 #. module: stock
 #: code:addons/stock/stock.py:3225 code:addons/stock/stock.py:3499
@@ -100,7 +111,7 @@ msgstr ""
 #. module: stock
 #: field:stock.inventory,move_ids_exist:0
 msgid " Stock Move Exists?"
-msgstr ""
+msgstr "Badago izakinen mugimendurik?"
 
 #. module: stock
 #: code:addons/stock/stock.py:2444
@@ -368,7 +379,7 @@ msgstr "Gaituta"
 #. module: stock
 #: view:stock.picking:stock.view_picking_form
 msgid "Add an internal note..."
-msgstr ""
+msgstr "Erantsi barne oharra"
 
 #. module: stock
 #: view:stock.config.settings:stock.view_stock_config_settings
@@ -383,12 +394,12 @@ msgstr ""
 #. module: stock
 #: view:stock.location:stock.view_location_form field:stock.location,comment:0
 msgid "Additional Information"
-msgstr ""
+msgstr "Informazio gehigarria"
 
 #. module: stock
 #: field:stock.warehouse,partner_id:0
 msgid "Address"
-msgstr ""
+msgstr "Helbidea"
 
 #. module: stock
 #: help:stock.config.settings,module_claim_from_delivery:0
@@ -413,7 +424,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "All at once"
-msgstr ""
+msgstr "Dena batera"
 
 #. module: stock
 #: code:addons/stock/stock.py:2542
@@ -472,7 +483,7 @@ msgstr ""
 #. module: stock
 #: view:stock.location.route:stock.stock_location_route_form_view
 msgid "Applicable On"
-msgstr ""
+msgstr "Aplikagarria"
 
 #. module: stock
 #: field:stock.location.route,product_selectable:0
@@ -492,7 +503,7 @@ msgstr ""
 #. module: stock
 #: view:stock.config.settings:stock.view_stock_config_settings
 msgid "Apply"
-msgstr ""
+msgstr "Aplikatu"
 
 #. module: stock
 #: help:stock.config.settings,decimal_precision:0
@@ -578,7 +589,7 @@ msgstr ""
 #. module: stock
 #: view:website:stock.report_picking
 msgid "Barcode"
-msgstr ""
+msgstr "Barra-kodea"
 
 #. module: stock
 #: view:website:stock.barcode_index
@@ -776,7 +787,7 @@ msgstr "Kodea"
 #. module: stock
 #: field:stock.picking.type,color:0
 msgid "Color"
-msgstr ""
+msgstr "Kolorea"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -786,7 +797,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Enpresak"
 
 #. module: stock
 #: field:stock.config.settings,company_id:0 field:stock.inventory,company_id:0
@@ -820,7 +831,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "Konfigurazioa"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
@@ -854,7 +865,7 @@ msgstr ""
 #. module: stock
 #: view:report.stock.lines.date:stock.report_stock_lines_date_search
 msgid "Consumable"
-msgstr ""
+msgstr "Kontsumigarria"
 
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
@@ -947,7 +958,7 @@ msgstr ""
 #: field:stock.warehouse,create_uid:0
 #: field:stock.warehouse.orderpoint,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "Nork sortua"
 
 #. module: stock
 #: field:make.procurement,create_date:0
@@ -972,7 +983,7 @@ msgstr ""
 #: field:stock.warehouse,create_date:0
 #: field:stock.warehouse.orderpoint,create_date:0
 msgid "Created on"
-msgstr ""
+msgstr "Noiz sortua"
 
 #. module: stock
 #: view:stock.move:stock.view_move_search
@@ -1336,7 +1347,7 @@ msgstr ""
 #: selection:stock.move,state:0
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Done"
-msgstr ""
+msgstr "Egina"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done
@@ -1450,7 +1461,7 @@ msgstr ""
 #: field:stock.picking,message_follower_ids:0
 #: field:stock.production.lot,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Jarraitzaileak"
 
 #. module: stock
 #: view:stock.move:stock.view_move_picking_form
@@ -1501,6 +1512,7 @@ msgstr ""
 
 #. module: stock
 #: field:product.product,virtual_available:0
+#: field:product.template,virtual_available:0
 msgid "Forecast Quantity"
 msgstr ""
 
@@ -1610,13 +1622,13 @@ msgstr ""
 #: view:stock.production.lot:stock.search_product_lot_filter
 #: view:stock.warehouse.orderpoint:stock.warehouse_orderpoint_search
 msgid "Group By"
-msgstr ""
+msgstr "Taldekatu"
 
 #. module: stock
 #: view:stock.quant:stock.quant_search_view
 #: view:stock.quant.package:stock.quant_package_search_view
 msgid "Group by..."
-msgstr ""
+msgstr "Taldekatu..."
 
 #. module: stock
 #: view:procurement.order:stock.view_procurement_form_stock_inherit
@@ -1658,7 +1670,7 @@ msgstr ""
 #: field:stock.transfer_details_items,id:0 field:stock.warehouse,id:0
 #: field:stock.warehouse.orderpoint,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: stock
 #: code:addons/stock/stock.py:2643 code:addons/stock/stock.py:2808
@@ -2074,7 +2086,7 @@ msgstr ""
 #: field:stock.picking,message_is_follower:0
 #: field:stock.production.lot,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Jarraitzailea da"
 
 #. module: stock
 #: field:stock.location,scrap_location:0
@@ -2111,7 +2123,7 @@ msgstr ""
 #: field:stock.picking,message_last_post:0
 #: field:stock.production.lot,message_last_post:0
 msgid "Last Message Date"
-msgstr ""
+msgstr "Azken mezuaren data"
 
 #. module: stock
 #: field:make.procurement,write_uid:0
@@ -2136,7 +2148,7 @@ msgstr ""
 #: field:stock.warehouse,write_uid:0
 #: field:stock.warehouse.orderpoint,write_uid:0
 msgid "Last Updated by"
-msgstr ""
+msgstr "Nork eguneratua"
 
 #. module: stock
 #: field:make.procurement,write_date:0
@@ -2161,7 +2173,7 @@ msgstr ""
 #: field:stock.warehouse,write_date:0
 #: field:stock.warehouse.orderpoint,write_date:0
 msgid "Last Updated on"
-msgstr ""
+msgstr "Noiz eguneratua"
 
 #. module: stock
 #: code:addons/stock/stock.py:4191
@@ -2190,7 +2202,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,parent_left:0 field:stock.quant.package,parent_left:0
 msgid "Left Parent"
-msgstr ""
+msgstr "Ezker Aita"
 
 #. module: stock
 #: help:stock.location,company_id:0
@@ -2302,12 +2314,12 @@ msgstr ""
 #. module: stock
 #: field:stock.quant.package,ul_id:0
 msgid "Logistic Unit"
-msgstr ""
+msgstr "Unitate Logistikoak"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packaging_stock_action
 msgid "Logistic Units"
-msgstr ""
+msgstr "Unitate Logistikoak"
 
 #. module: stock
 #: view:product.category:stock.product_category_form_view_inherit
@@ -2432,7 +2444,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
 msgid "Manager"
-msgstr ""
+msgstr "Gerentea"
 
 #. module: stock
 #: selection:stock.location.path,auto:0
@@ -2475,7 +2487,7 @@ msgstr "Mezuak"
 #. module: stock
 #: help:stock.picking,message_ids:0 help:stock.production.lot,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Komunikazio eta mezu erregistroa"
 
 #. module: stock
 #: field:product.putaway,method:0 field:product.removal,method:0
@@ -2627,7 +2639,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.move,state:0
 msgid "New"
-msgstr ""
+msgstr "Berria"
 
 #. module: stock
 #: field:stock.change.product.qty,new_quantity:0
@@ -2692,7 +2704,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
 msgid "Normal"
-msgstr ""
+msgstr "Arrunta"
 
 #. module: stock
 #: selection:stock.move,priority:0 selection:stock.picking,priority:0
@@ -2761,7 +2773,7 @@ msgstr ""
 #: code:addons/stock/stock.py:2542
 #, python-format
 msgid "One product only"
-msgstr ""
+msgstr "Produktu bat bakarra"
 
 #. module: stock
 #: model:ir.actions.client,name:stock.action_client_warehouse_menu
@@ -2772,7 +2784,7 @@ msgstr ""
 #: field:stock.move.operation.link,operation_id:0
 #: field:stock.transfer_details_items,packop_id:0
 msgid "Operation"
-msgstr ""
+msgstr "Eragiketa"
 
 #. module: stock
 #: code:addons/stock/stock.py:1840 code:addons/stock/stock.py:1915
@@ -3127,7 +3139,7 @@ msgstr ""
 #: model:ir.model,name:stock.model_stock_picking
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Picking List"
-msgstr ""
+msgstr "Albarana"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
@@ -3280,7 +3292,7 @@ msgstr ""
 #: field:stock.fixed.putaway.strat,sequence:0 field:stock.move,priority:0
 #: field:stock.picking,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "Lehenetsi"
 
 #. module: stock
 #: help:stock.picking,priority:0
@@ -3425,7 +3437,7 @@ msgstr ""
 #: model:ir.model,name:stock.model_product_template
 #: field:stock.move,product_tmpl_id:0
 msgid "Product Template"
-msgstr ""
+msgstr "Txantiloi produktua"
 
 #. module: stock
 #: field:stock.move,product_uos:0
@@ -3444,13 +3456,13 @@ msgstr "Produktuaren Neurtze Unitatea"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_variant_config_stock
 msgid "Product Variants"
-msgstr ""
+msgstr "Produktuaren aldaerak"
 
 #. module: stock
 #: model:stock.location,name:stock.location_production
 #: selection:stock.location,usage:0
 msgid "Production"
-msgstr ""
+msgstr "Produkzioa"
 
 #. module: stock
 #: field:product.template,property_stock_production:0
@@ -3491,7 +3503,7 @@ msgstr "Produktuak Kategoriaka"
 #: code:addons/stock/product.py:60
 #, python-format
 msgid "Products: "
-msgstr ""
+msgstr "Produktuak"
 
 #. module: stock
 #: code:addons/stock/stock.py:1699
@@ -3620,7 +3632,7 @@ msgid "Quantity (UOS)"
 msgstr ""
 
 #. module: stock
-#: field:product.template,virtual_available:0 field:stock.move,availability:0
+#: field:stock.move,availability:0
 msgid "Quantity Available"
 msgstr ""
 
@@ -3729,7 +3741,7 @@ msgstr ""
 #: view:stock.picking:stock.view_picking_internal_search
 #: view:stock.picking.type:stock.stock_picking_type_kanban
 msgid "Ready"
-msgstr ""
+msgstr "Listo"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
@@ -3819,7 +3831,7 @@ msgstr ""
 #: view:stock.move:stock.view_move_tree_receipt_picking_board
 #: field:stock.move,picking_id:0 field:stock.picking,name:0
 msgid "Reference"
-msgstr ""
+msgstr "Erreferentzia"
 
 #. module: stock
 #: field:stock.picking.type,sequence_id:0
@@ -4403,7 +4415,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Izakinen mugimendua"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_move_form2
@@ -4416,12 +4428,12 @@ msgstr ""
 #: view:stock.picking:stock.view_picking_form
 #: view:stock.production.lot:stock.view_production_lot_form
 msgid "Stock Moves"
-msgstr ""
+msgstr "Izakinen mugimenduak"
 
 #. module: stock
 #: view:stock.move:stock.view_move_graph
 msgid "Stock Moves Analysis"
-msgstr ""
+msgstr "Izakinen mugimenduen analisia"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_all
@@ -4477,7 +4489,7 @@ msgstr ""
 #: field:stock.picking,message_summary:0
 #: field:stock.production.lot,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Laburpena"
 
 #. module: stock
 #: field:stock.location.route,supplied_wh_id:0
@@ -5091,7 +5103,7 @@ msgstr "Neurketa unitatea"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr ""
+msgstr "Neurtze unitateen kategoriak"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
@@ -5182,7 +5194,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_stock_user
 msgid "User"
-msgstr ""
+msgstr "Erabiltzailea"
 
 #. module: stock
 #: code:addons/stock/stock.py:2400
@@ -5279,7 +5291,7 @@ msgstr ""
 #: view:stock.warehouse.orderpoint:stock.warehouse_orderpoint_search
 #: field:stock.warehouse.orderpoint,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "Biltegia"
 
 #. module: stock
 #: view:website:stock.report_picking
@@ -5317,7 +5329,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_warehouse_form
 #: view:stock.location.route:stock.stock_location_route_form_view
 msgid "Warehouses"
-msgstr ""
+msgstr "Biltegiak"
 
 #. module: stock
 #: code:addons/stock/stock.py:2625 code:addons/stock/stock.py:3522
@@ -5342,7 +5354,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_return_picking.py:150
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Kontuz!"
 
 #. module: stock
 #: code:addons/stock/stock.py:3866
@@ -5540,7 +5552,7 @@ msgstr ""
 #: view:stock.return.picking:stock.view_stock_return_picking_form
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
 msgid "or"
-msgstr ""
+msgstr "edo"
 
 #. module: stock
 #. openerp-web
@@ -5593,7 +5605,7 @@ msgstr ""
 #: field:stock.picking.type,rate_picking_backorders:0
 #: field:stock.picking.type,rate_picking_late:0
 msgid "unknown"
-msgstr ""
+msgstr "ezezaguna"
 
 #. module: stock
 #: view:product.template:stock.view_template_property_form

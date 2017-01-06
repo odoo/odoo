@@ -43,7 +43,8 @@ This module allows you to easily add extra costs on pickings and decide the spli
         'stock_landed_costs_data.xml',
     ],
     'test': [
-        'test/stock_landed_costs.yml'
+        'test/stock_landed_costs.yml',
+        'test/stock_landed_costs_rounding.yml',
     ],
     'installable': True,
     'auto_install': False,

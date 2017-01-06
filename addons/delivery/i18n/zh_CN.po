@@ -4,14 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
-# jeffery chen fan <jeffery9@gmail.com>, 2015-2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2015-2016
+# Jeffery Chenn <jeffery9@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2016-01-21 01:30+0000\n"
-"Last-Translator: jeffery chen fan <jeffery9@gmail.com>\n"
+"PO-Revision-Date: 2016-06-21 22:53+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -128,7 +129,7 @@ msgstr "如果要根据目的地、重量、订单总价来管理运费，请勾
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
-msgstr "如果你计划按装运按装箱开发票请输入此字段。"
+msgstr "完成此字段， 如果你计划基于分拣为送货开票。"
 
 #. module: delivery
 #: view:delivery.grid.line:delivery.view_delivery_grid_line_form
@@ -210,7 +211,7 @@ msgstr "交货产品"
 #. module: delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Delivery by Poste"
-msgstr "邮政送货"
+msgstr "邮政交货"
 
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
@@ -233,7 +234,7 @@ msgstr "固定的"
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If Order Total Amount Is More Than"
-msgstr "当订单总额多于 时，免费"
+msgstr "免费，如果订单总金额多于"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:151
@@ -244,7 +245,7 @@ msgstr "金额高于 %.2f 时，免费"
 #. module: delivery
 #: view:delivery.carrier:delivery.view_delivery_carrier_form
 msgid "General Information"
-msgstr "通用信息"
+msgstr "一般信息"
 
 #. module: delivery
 #: help:delivery.grid.line,sequence:0
@@ -254,7 +255,7 @@ msgstr "提供序列号用于运输网络列表排序"
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr "输入序列用于在送货网络列表上排序"
+msgstr "输入序列用于在交货网络列表上排序"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -301,7 +302,7 @@ msgstr "如果生效设为false，可以不必删除承运方就隐藏它。"
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
-msgstr "如果生效字段为false，送货网络将隐藏而不是删除。"
+msgstr "如果生效字段为false，交货网络将隐藏而不是删除。"
 
 #. module: delivery
 #: help:delivery.carrier,free_if_more_than:0
@@ -315,12 +316,12 @@ msgstr "如果订单金额高于某个特定金额，客户可以享受免费送
 msgid ""
 "If you don't 'Add in Quote', the exact price will be computed when invoicing"
 " based on delivery order(s)."
-msgstr "如果你没有“添加引用”，当基于送货单开票时，将计算精确的价格。"
+msgstr "如果你没有“添加引用”，当基于交货单开票时，将计算精确的价格。"
 
 #. module: delivery
 #: field:sale.order.line,is_delivery:0
 msgid "Is a Delivery"
-msgstr "是送货"
+msgstr "是交货"
 
 #. module: delivery
 #: help:delivery.carrier,available:0
@@ -331,7 +332,7 @@ msgstr "对当前订单这种发运方法可行吗。"
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
-msgstr "默认的运费的价格，如果根据目的地定价，这里留空。"
+msgstr "默认运费的价格，如果根据目的地定价，这里留空。"
 
 #. module: delivery
 #: field:delivery.carrier,write_uid:0 field:delivery.grid,write_uid:0
@@ -461,7 +462,7 @@ msgstr "在发运方式中选择不属于任何发运标准的产品"
 #. module: delivery
 #: field:delivery.grid,sequence:0 field:delivery.grid.line,sequence:0
 msgid "Sequence"
-msgstr "序列"
+msgstr "序号"
 
 #. module: delivery
 #: field:delivery.grid,zip_from:0
@@ -483,23 +484,23 @@ msgstr "库存移动"
 #: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr "承运方 %s (id: %d) 没有送货网络！"
+msgstr "承运方 %s (id: %d) 没有交货网络！"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:74
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr "只能对草稿状态的订单增加送货明细"
+msgstr "只能对草稿状态的订单增加交货明细"
 
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr "提供送货服务的业务伙伴"
+msgstr "提供交货服务的业务伙伴"
 
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr "这个送货方式会在基于送货单开发票的时候使用。"
+msgstr "这个交货方式会用在当从分拣开发票时。"
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -582,4 +583,4 @@ msgstr "邮政编码"
 #. module: delivery
 #: view:delivery.grid.line:delivery.view_delivery_grid_line_form
 msgid "in Function of"
-msgstr "在功能"
+msgstr "使用函数，基于"

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import cgi
 import simplejson
 
 from openerp.http import Controller, route
@@ -15,4 +16,4 @@ class ImportController(Controller):
         }, req.context)
 
         return 'window.top.%s(%s)' % (
-            jsonp, simplejson.dumps({'result': written}))
+            cgi.escape(jsonp), simplejson.dumps({'result': written}))

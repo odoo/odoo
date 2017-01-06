@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-12-26 21:02+0000\n"
+"PO-Revision-Date: 2016-03-22 15:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Dominican Republic) (http://www.transifex.com/odoo/odoo-8/language/es_DO/)\n"
 "MIME-Version: 1.0\n"
@@ -20,27 +20,27 @@ msgstr ""
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_bom
 msgid "Bill of Material"
-msgstr ""
+msgstr "Lista de materiales"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,bom_id:0
 msgid "BoM"
-msgstr ""
+msgstr "LdM"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
 msgid "Byproduct"
-msgstr ""
+msgstr "Derivado"
 
 #. module: mrp_byproduct
 #: view:mrp.bom:mrp_byproduct.mrp_subproduct_view field:mrp.bom,sub_products:0
 msgid "Byproducts"
-msgstr ""
+msgstr "Derivados"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr ""
+msgstr "Cambiar Cantidad de Productos"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,create_uid:0
@@ -62,7 +62,7 @@ msgid ""
 "that the quantity will be computed as    '(quantity of byproduct set on the "
 "BoM / quantity of manufactured product set on the BoM * quantity of "
 "manufactured product in the production order.)'"
-msgstr ""
+msgstr "Definir cómo se establecerá la cantidad de subproductos en las órdenes de producción que utilizan esta LdM. \"Fijo\" representa una situación en la que la cantidad de producto creado por siempre es igual a la cantidad fijada en la LDM, independientemente de cuántos son creados a la orden de producción. Por oposición, \"variable\" significa que la cantidad se calcula como '(cantidad de derivado establecido en LDM / cantidad de producto manufacturado fijado en la cantidad de la LdM * producto manufacturado en el orden de producción.)'"
 
 #. module: mrp_byproduct
 #: selection:mrp.subproduct,subproduct_type:0
@@ -87,7 +87,7 @@ msgstr "Última actualización en"
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "Orden de Fabricación"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_id:0
@@ -97,7 +97,7 @@ msgstr "Producto"
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_qty:0
 msgid "Product Qty"
-msgstr ""
+msgstr "Cantidad de Productos"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_uom:0
@@ -107,7 +107,7 @@ msgstr "Unidad de medida del producto"
 #. module: mrp_byproduct
 #: field:mrp.subproduct,subproduct_type:0
 msgid "Quantity Type"
-msgstr ""
+msgstr "Tipo de Cantidad"
 
 #. module: mrp_byproduct
 #: code:addons/mrp_byproduct/mrp_byproduct.py:63
@@ -115,7 +115,7 @@ msgstr ""
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
-msgstr ""
+msgstr "La Unidad de medida del producto que eligió tiene una categoría diferente a la del formulario del producto."
 
 #. module: mrp_byproduct
 #: selection:mrp.subproduct,subproduct_type:0

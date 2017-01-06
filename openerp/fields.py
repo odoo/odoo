@@ -695,7 +695,8 @@ class Field(object):
 
     def _description_help(self, env):
         if self.help and env.lang:
-            name = "%s,%s" % (self.model_name, self.name)
+            field = self.base_field
+            name = "%s,%s" % (field.model_name, field.name)
             trans = env['ir.translation']._get_source(name, 'help', env.lang)
             return trans or self.help
         return self.help
@@ -971,7 +972,7 @@ class Field(object):
         # invalidate the fields that depend on self, and prepare recomputation
         spec = [(self, records._ids)]
         for field, path in self._triggers:
-            if path and field.store:
+            if path and field.compute and field.store:
                 # don't move this line to function top, see log
                 env = records.env(user=SUPERUSER_ID, context={'active_test': False})
                 target = env[field.model_name].search([(path, 'in', records.ids)])
@@ -997,6 +998,13 @@ class Field(object):
         # ``records``, except fields currently being computed
         spec = []
         for field, path in self._triggers:
+            if not field.compute:
+                # Note: do not invalidate non-computed fields. Such fields may
+                # require invalidation in general (like *2many fields with
+                # domains) but should not be invalidated in this case, because
+                # we would simply lose their values during an onchange!
+                continue
+
             target = env[field.model_name]
             computed = target.browse(env.computed[field])
             if path == 'id':
@@ -1033,6 +1041,7 @@ class Integer(Field):
     }
 
     _related_group_operator = property(attrgetter('group_operator'))
+    _description_group_operator = property(attrgetter('group_operator'))
     _column_group_operator = property(attrgetter('group_operator'))
 
     def convert_to_cache(self, value, record, validate=True):
@@ -1093,6 +1102,7 @@ class Float(Field):
     _related_group_operator = property(attrgetter('group_operator'))
 
     _description_digits = property(attrgetter('digits'))
+    _description_group_operator = property(attrgetter('group_operator'))
 
     _column_digits = property(lambda self: not callable(self._digits) and self._digits)
     _column_digits_compute = property(lambda self: callable(self._digits) and self._digits)
@@ -1121,7 +1131,7 @@ class _String(Field):
     _column_translate = property(attrgetter('translate'))
     _related_translate = property(attrgetter('translate'))
     _description_translate = property(attrgetter('translate'))
-    
+
 
 class Char(_String):
     """ Basic string field, can be length-limited, usually displayed as a
@@ -1713,12 +1723,24 @@ class _RelationalMulti(_Relational):
 
     def _compute_related(self, records):
         """ Compute the related field ``self`` on ``records``. """
-        for record in records:
-            value = record
-            # traverse the intermediate fields, and keep at most one record
-            for name in self.related[:-1]:
-                value = value[name][:1]
-            record[self.name] = value[self.related[-1]]
+        super(_RelationalMulti, self)._compute_related(records)
+        if self.related_sudo:
+            # determine which records in the relation are actually accessible
+            target = records.mapped(self.name)
+            target_ids = set(target.search([('id', 'in', target.ids)]).ids)
+            accessible = lambda target: target.id in target_ids
+            # filter values to keep the accessible records only
+            for record in records:
+                record[self.name] = record[self.name].filtered(accessible)
+
+    def setup_triggers(self, env):
+        super(_RelationalMulti, self).setup_triggers(env)
+        # also invalidate self when fields appearing in the domain are modified
+        if isinstance(self.domain, list):
+            comodel = env[self.comodel_name]
+            for arg in self.domain:
+                if isinstance(arg, (tuple, list)) and isinstance(arg[0], basestring):
+                    self._setup_dependency([self.name], comodel, arg[0].split('.'))
 
 
 class One2many(_RelationalMulti):

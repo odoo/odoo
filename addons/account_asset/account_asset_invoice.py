@@ -19,7 +19,9 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class account_invoice(osv.osv):
 
@@ -45,14 +47,21 @@ class account_invoice_line(osv.osv):
     def asset_create(self, cr, uid, lines, context=None):
         context = context or {}
         asset_obj = self.pool.get('account.asset.asset')
+        asset_ids = []
+        for line in lines:
+            if line.invoice_id.number:
+                #FORWARDPORT UP TO SAAS-6
+                asset_ids += asset_obj.search(cr, SUPERUSER_ID, [('code', '=', line.invoice_id.number), ('company_id', '=', line.company_id.id)], context=context)
+        asset_obj.write(cr, SUPERUSER_ID, asset_ids, {'active': False})
         for line in lines:
             if line.asset_category_id:
+                #FORWARDPORT UP TO SAAS-6
+                sign = -1 if line.invoice_id.type in ("in_refund", 'out_refund') else 1
                 vals = {
                     'name': line.name,
                     'code': line.invoice_id.number or False,
                     'category_id': line.asset_category_id.id,
-                    'purchase_value': line.price_subtotal,
-                    'period_id': line.invoice_id.period_id.id,
+                    'purchase_value': sign * line.price_subtotal,
                     'partner_id': line.invoice_id.partner_id.id,
                     'company_id': line.invoice_id.company_id.id,
                     'currency_id': line.invoice_id.currency_id.id,

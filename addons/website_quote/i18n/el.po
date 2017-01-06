@@ -3,14 +3,14 @@
 # * website_quote
 # 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
+# Kostas Goutoudis <goutoudis@gmail.com>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-21 14:09+0000\n"
-"PO-Revision-Date: 2016-01-02 21:11+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
+"POT-Creation-Date: 2016-03-25 13:43+0000\n"
+"PO-Revision-Date: 2016-03-26 08:57+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,21 +43,17 @@ msgid ""
 "       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or ''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
 "       % endif\n"
 "    </p>\n"
-"\n"
-"    <% set signup_url = object.get_signup_url() %>\n"
-"    % if signup_url:\n"
 "    <p>\n"
-"    You can access this document and pay online via our Customer Portal:\n"
+"        You can view your quotation online:\n"
 "    </p>\n"
-"        <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
-"           href=\"${signup_url}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
-"    % endif\n"
+"    <a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\n"
+"        href=\"/quote/${object.id}/${object.access_token}\">View ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'}</a>\n"
 "\n"
 "    % if object.paypal_url:\n"
 "    <br/>\n"
 "    <p>It is also possible to directly pay with Paypal:</p>\n"
 "        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
-"            <img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"            <img class=\"oe_edi_paypal_button\" src=\"/sale/static/img/btn_paynowcc_lg.gif\"/>\n"
 "        </a>\n"
 "    % endif\n"
 "\n"
@@ -99,7 +95,12 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); \">\n\n<p>Γεια σας ${object.partner_id.name},</p>\n\n<p>Εδώ είναι η ${object.state in ('draft', 'sent') and 'προσφορά' or 'επιβεβαίωση της παραγγελίας'} από ${object.company_id.name}: </p>\n\n<p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n&nbsp;&nbsp;<strong>ΑΝΑΦΟΡΑ</strong><br />\n&nbsp;&nbsp;Αριθμός εντολής: <strong>${object.name}</strong><br />\n&nbsp;&nbsp;Σύνολο εντολής: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />\n&nbsp;&nbsp;Ημερομηνία εντολής: ${object.date_order}<br />\n% if object.origin:\n&nbsp;&nbsp;Αναφορά εντολής: ${object.origin}<br />\n% endif\n% if object.client_order_ref:\n&nbsp;&nbsp;Η αναφορά σας: ${object.client_order_ref}<br />\n% endif\n% if object.user_id:\n&nbsp;&nbsp;Ο συνεργάτης σας: <a href=\"mailto:${object.user_id.email or ''}subject=Εντολή%20${object.name}\">${object.user_id.name}</a>\n% endif\n</p>\n\n<% set signup_url = object.get_signup_url() %>\n% if signup_url:\n<p>\nΜπορείτε να έχετε πρόσβαση σε αυτό το έγγραφο και να πληρώσετε online μέσω της Πύλης Συνεργατών:\t\n</p>\n<a style=\"display:block; width: 150px; height:20px; margin-left: 120px; color: #DDD; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;\"\nhref=\"${signup_url}\">View ${object.state in ('draft', 'sent') and 'Προσφορά' or 'Παραγγελία'}</a>\n% endif\n\n% if object.paypal_url:\n<br/>\n<p>Υπάρχει η δυνατότητα να πληρώσετε άμεσα μέσω Paypal:</p>\n<a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n<img class=\"oe_edi_paypal_button\" src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n</a>\n% endif\n\n<br/>\n<p>Εάν έχετε οποιαδήποτε απορία, μην διστάσετε να επικοινωνήσετε μαζί μας.</p>\n<p>Σας ευχαριστούμε που μας επιλέξατε!</p>\n<br/>\n<br/>\n<div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n<h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n<strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n</div>\n<div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n<span style=\"color: #222; margin-bottom: 5px; display: block; \">\n% if object.company_id.street:\n${object.company_id.street}<br/>\n% endif\n% if object.company_id.street2:\n${object.company_id.street2}<br/>\n% endif\n% if object.company_id.city or object.company_id.zip:\n${object.company_id.zip} ${object.company_id.city}<br/>\n% endif\n% if object.company_id.country_id:\n${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>\n% endif\n</span>\n% if object.company_id.phone:\n<div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\nΤηλέφωνο:&nbsp; ${object.company_id.phone}\n</div>\n% endif\n% if object.company_id.website:\n<div>\nWeb:&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n</div>\n% endif\n<p></p>\n</div>\n</div>"
+msgstr ""
+
+#. module: website_quote
+#: view:website:website_quote.so_quotation
+msgid "! You can"
+msgstr ""
 
 #. module: website_quote
 #: model:email.template,report_name:website_quote.email_template_edi_sale
@@ -468,7 +469,7 @@ msgid ""
 "                            <h2>Structure of the Training</h2>\n"
 "                        </div>\n"
 "                        <div class=\"col-md-5 col-md-offset-1 mt16 mb16\">\n"
-"                            <img class=\"img img-responsive\" src=\"https://www.openerp.com/saas_master/static/site_new/img/layout/online_training.png\">\n"
+"                            <img class=\"img img-responsive\" src=\"/website_quote/static/src/img/online_training.png\">\n"
 "                        </div>\n"
 "                        <div class=\"col-md-6 mt32\">\n"
 "                            <h4><strong>There are three components to the training</strong></h4>\n"
@@ -1086,6 +1087,11 @@ msgstr "Αυτή η προσφορά λήγει σε"
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
+msgid "This order has already been"
+msgstr ""
+
+#. module: website_quote
+#: view:website:website_quote.so_quotation
 msgid ""
 "This order has been validated. Thanks for your trust\n"
 "                          and do not hesitate to"
@@ -1144,6 +1150,12 @@ msgid "Website Description"
 msgstr "Περιγραφή Ιστότοπου"
 
 #. module: website_quote
+#: code:addons/website_quote/controllers/main.py:148
+#, python-format
+msgid "You cannot add options to a confirmed order."
+msgstr ""
+
+#. module: website_quote
 #: view:website:website_quote.so_quotation
 msgid "Your Contact:"
 msgstr "Η Επαφή σας:"
@@ -1187,6 +1199,11 @@ msgstr "Το μήνυμά σας έχει αποσταλεί επιτυχώς!"
 #: view:website:website_quote.so_template
 msgid "and"
 msgstr "και"
+
+#. module: website_quote
+#: view:website:website_quote.so_quotation
+msgid "cancelled"
+msgstr ""
 
 #. module: website_quote
 #: view:website:website_quote.so_quotation
@@ -1238,6 +1255,11 @@ msgstr "αυτό το περιεχόμενο\nθα εμφανιστεί σε ό�
 #: field:sale.order.option,line_id:0
 msgid "unknown"
 msgstr "άγνωστο"
+
+#. module: website_quote
+#: view:website:website_quote.so_quotation
+msgid "validated"
+msgstr ""
 
 #. module: website_quote
 #: view:website:website_quote.so_template

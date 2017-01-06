@@ -746,8 +746,12 @@ class BaseModel(object):
         cls = type(self)
         methods = []
         for attr, func in getmembers(cls, is_constraint):
-            if not all(name in cls._fields for name in func._constrains):
-                _logger.warning("@constrains%r parameters must be field names", func._constrains)
+            for name in func._constrains:
+                field = cls._fields.get(name)
+                if not field:
+                    _logger.warning("method %s.%s: @constrains parameter %r is not a field name", cls._name, attr, name)
+                if not (field.store or field.column and field.column._fnct_inv):
+                    _logger.warning("method %s.%s: @constrains parameter %r is not writeable", cls._name, attr, name)
             methods.append(func)
 
         # optimization: memoize result on cls, it will not be recomputed
@@ -907,10 +911,10 @@ class BaseModel(object):
                         if lines2:
                             # merge first line with record's main line
                             for j, val in enumerate(lines2[0]):
-                                if val:
+                                if val or isinstance(val, bool):
                                     current[j] = val
                             # check value of current field
-                            if not current[i]:
+                            if not current[i] and not isinstance(current[i], bool):
                                 # assign xml_ids, and forget about remaining lines
                                 xml_ids = [item[1] for item in value.name_get()]
                                 current[i] = ','.join(xml_ids)
@@ -1920,7 +1924,7 @@ class BaseModel(object):
         for order_part in orderby.split(','):
             order_split = order_part.split()
             order_field = order_split[0]
-            if order_field in groupby_fields:
+            if order_field == 'id' or order_field in groupby_fields:
 
                 if self._fields[order_field.split(':')[0]].type == 'many2one':
                     order_clause = self._generate_order_by(order_part, query).replace('ORDER BY ', '')
@@ -2585,8 +2589,8 @@ class BaseModel(object):
                                     self._set_default_value_on_column(cr, k, context=context)
                                 # add the NOT NULL constraint
                                 try:
-                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k), log_exceptions=False)
                                     cr.commit()
+                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k), log_exceptions=False)
                                     _schema.debug("Table '%s': column '%s': added NOT NULL constraint",
                                         self._table, k)
                                 except Exception:
@@ -3787,12 +3791,18 @@ class BaseModel(object):
         if old_vals:
             self._write(old_vals)
 
-        # put the values of pure new-style fields into cache, and inverse them
         if new_vals:
+            # put the values of pure new-style fields into cache
             for record in self:
                 record._cache.update(record._convert_to_cache(new_vals, update=True))
+            # mark the fields as being computed, to avoid their invalidation
+            for key in new_vals:
+                self.env.computed[self._fields[key]].update(self._ids)
+            # inverse the fields
             for key in new_vals:
                 self._fields[key].determine_inverse(self)
+            for key in new_vals:
+                self.env.computed[self._fields[key]].difference_update(self._ids)
 
         return True
 
@@ -3910,7 +3920,8 @@ class BaseModel(object):
                             # Inserting value to DB
                             context_wo_lang = dict(context, lang=None)
                             self.write(cr, user, ids, {f: vals[f]}, context=context_wo_lang)
-                        self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
+                        translation_value = self._columns[f]._symbol_set[1](vals[f])
+                        self.pool['ir.translation']._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, translation_value, src_trans)
 
         # invalidate and mark new-style fields to recompute; do this before
         # setting other fields, because it can require the value of computed
@@ -4092,10 +4103,16 @@ class BaseModel(object):
         # create record with old-style fields
         record = self.browse(self._create(old_vals))
 
-        # put the values of pure new-style fields into cache, and inverse them
+        # put the values of pure new-style fields into cache
         record._cache.update(record._convert_to_cache(new_vals))
+        # mark the fields as being computed, to avoid their invalidation
+        for key in new_vals:
+            self.env.computed[self._fields[key]].add(record.id)
+        # inverse the fields
         for key in new_vals:
             self._fields[key].determine_inverse(record)
+        for key in new_vals:
+            self.env.computed[self._fields[key]].discard(record.id)
 
         return record
 
@@ -5756,6 +5773,7 @@ class BaseModel(object):
                         name: rec[name] for name in names
                     })
                     with rec.env.norecompute():
+                        map(rec._recompute_done, field.computed_fields)
                         rec._write(values)
                 except MissingError:
                     pass
@@ -5943,6 +5961,21 @@ class BaseModel(object):
 
         result = {'value': {}}
 
+        # special case for merging commands from *2many fields
+        # TODO: do not forward-port this in 9.0
+        def merge_commands(commands1, commands2):
+            # retrieve updates from commands1
+            updates = {cmd[1]: cmd[2] for cmd in commands1 if cmd[0] == 1}
+            # enrich commands2 with updates from commands1
+            commands = []
+            for cmd in commands2:
+                if cmd[0] == 1 and cmd[1] in updates:
+                    cmd = (1, cmd[1], dict(updates[cmd[1]], **cmd[2]))
+                elif cmd[0] == 4 and cmd[1] in updates:
+                    cmd = (1, cmd[1], updates[cmd[1]])
+                commands.append(cmd)
+            return commands
+
         # process names in order (or the keys of values if no name given)
         while todo:
             name = todo.pop(0)
@@ -5965,9 +5998,10 @@ class BaseModel(object):
                     newval = record[name]
                     if field.type in ('one2many', 'many2many'):
                         if newval != oldval or newval._is_dirty():
-                            # put new value in result
-                            result['value'][name] = field.convert_to_write(
-                                newval, record._origin, subfields.get(name),
+                            # merge new value into result
+                            result['value'][name] = merge_commands(
+                                result['value'].get(name, []),
+                                field.convert_to_write(newval, record._origin, subfields.get(name)),
                             )
                             todo.append(name)
                         else:
