@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <function name="write" model="res.lang">
+            <function eval="[[('code', '=', 'es_VE')]]" model="res.lang"
+                        name="search"/>
+            <value eval="{
+                'date_format': '%d/%m/%Y',
+                'time_format': '%H:%M:%S',
+                'thousands_sep': '.',
+                'decimal_point': ',',
+                'grouping': '[3,3,3,3,3,3,3,3,-2]'}"/>
+        </function>
+    </data>
+</odoo>
