@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- mx partner address -->
+        <record id="mx_partner_address_form" model="ir.ui.view">
+            <field name="name">mx.partner.form.address</field>
+            <field name="model">res.partner</field>
+            <field name="priority" eval="999"/>
+            <field name="arch" type="xml">
+                <form>
+                    <div class="o_address_format">
+                        <field name="street" invisible="1"/>
+                        <field name="street_name" placeholder="Street Name..." class="o_address_street"/>
+                        <div class="o_row">
+                            <label for="street_number" class="oe_edit_only"/>
+                            <span> </span>
+                            <field name="street_number"/>
+                            <label for="street_number2" class="oe_edit_only"/>
+                            <field name="street_number2"/>
+                        </div>
+                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                        <field name="city" placeholder="City..." class="o_address_street" />
+                        <div class="o_row">
+                            <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                            <field name="state_id" placeholder="State" options='{"no_open": True}'/>
+                        </div>
+                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>
