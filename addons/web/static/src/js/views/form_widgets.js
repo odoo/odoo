@@ -426,7 +426,6 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
                 this.do_warn(_t('Error: Bad domain'), _t('The domain is wrong.'));
                 return;
             }
-          debugger; // EAADD
             var ds = new data.DataSetStatic(self, model, self.build_context());
             ds.call('search_count', [domain]).then(function (results) {
                 self.$('.o_count').text(results + _t(' selected records'));

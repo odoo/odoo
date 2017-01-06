@@ -908,6 +908,5 @@ class ReportSaleDetails(models.AbstractModel):
     def render_html(self, docids, data=None):
         data = dict(data or {})
         configs = self.env['pos.config'].browse(data['config_ids'])
-        print(data['config_ids'])
         data.update(self.get_sale_details(data['date_start'], data['date_stop'], configs))
         return self.env['report'].render('point_of_sale.report_saledetails', data)
