@@ -39,7 +39,7 @@ class MaintenanceEquipmentCategory(models.Model):
     maintenance_ids = fields.One2many('maintenance.request', 'category_id', copy=False)
     maintenance_count = fields.Integer(string="Maintenance", compute='_compute_maintenance_count')
     alias_id = fields.Many2one(
-        'mail.alias', 'Alias', ondelete='cascade', required=True,
+        'mail.alias', 'Alias', ondelete='restrict', required=True,
         help="Email alias for this equipment category. New emails will automatically "
         "create new maintenance request for this equipment category.")
     fold = fields.Boolean(string='Folded in Maintenance Pipe', compute='_compute_fold', store=True)
