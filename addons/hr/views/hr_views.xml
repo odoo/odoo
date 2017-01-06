@@ -34,84 +34,68 @@
         <record id="view_employee_form" model="ir.ui.view">
             <field name="name">hr.employee.form</field>
             <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="base.res_partner_view_form_base"/>
+            <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <form string="Employee">
-                    <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" groups="hr.group_hr_user"
-                                    class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                    options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
-                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image":"image_medium"}'/>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1>
-                                <field name="name" placeholder="Employee's Name"/>
-                            </h1>
-                        </div>
-                        <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" options="{'no_create_edit': True}" groups="hr.group_hr_user"/>
-                        <notebook>
-                            <page name="public" string="Public Information">
-                                <group>
-                                    <group string="Contact Information">
-                                        <field name="work_partner_id"
-                                            context="{'show_address': 1}"
-                                            options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        <field name="work_location"/>
-                                        <field name="email" widget="email"/>
-                                        <field name="mobile_phone"/>
-                                        <field name="work_phone"/>
-                                    </group>
-                                    <group string="Position">
-                                        <field name="department_id"/>
-                                        <field name="job_id"/>
-                                        <field name="parent_id"/>
-                                        <field name="coach_id"/>
-                                        <field name="resource_calendar_id"/>
-                                    </group>
+                <field name="company_type" position="attributes"><attribute name="invisible">True</attribute></field>
+                <field name="parent_id" position="attributes"><attribute name="invisible">True</attribute></field>
+                <field name="category_id" position="attributes"><attribute name="invisible">True</attribute></field>
+                <div class="oe_title" position="after">
+                    <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" options="{'no_create_edit': True}" groups="hr.group_hr_user"/>
+                </div>
+                <group name="contact" position="after">
+                    <notebook>
+                        <page name="public" string="Work Information">
+                            <group>
+                                <group string="Contact Information">
+                                    <field name="work_partner_id"
+                                        context="{'show_address': 1}"
+                                        options='{"always_reload": True, "highlight_first_line": True}'/>
+                                    <field name="work_location"/>
+                                    <field name="mobile_phone"/>
+                                    <field name="work_phone"/>
                                 </group>
-                                <field name="notes" placeholder="Other Information ..." colspan="4"/>
-                            </page>
-                            <page string="Personal Information" groups="hr.group_hr_user">
-                                <group>
-                                    <group string="Citizenship &amp; Other Information">
-                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
-                                        <field name="identification_id" groups="hr.group_hr_user"/>
-                                        <field name="passport_id" groups="hr.group_hr_user"/>
-                                        <field name="bank_account_id"/>
-                                    </group>
-                                    <group string="Contact Information">
-                                        <field name="home_partner_id"
-                                            required="0"
-                                            context="{'show_address': 1}"
-                                            options='{"always_reload": True, "highlight_first_line": True}'/>
-                                    </group>
-                                    <group string="Status">
-                                        <field name="gender"/>
-                                        <field name="marital"/>
-                                    </group>
-                                    <group string="Birth">
-                                        <field name="birthday"/>
-                                    </group>
+                                <group string="Position">
+                                    <field name="department_id"/>
+                                    <field name="job_id"/>
+                                    <field name="parent_id"/>
+                                    <field name="coach_id"/>
                                 </group>
-                            </page>
-                            <page string="HR Settings" groups="hr.group_hr_user">
+                            </group>
+                            <field name="notes" placeholder="Other Information ..." colspan="4"/>
+                        </page>
+                        <page string="HR Settings" groups="hr.group_hr_user">
+                            <group string='Private'>
                                 <group>
-                                    <group string='Status' name="active_group">
-                                        <field name="company_id" groups="base.group_multi_company"/>
-                                        <field name="user_id" string="Related User"/>
-                                    </group>
+                                    <field name="gender"/>
+                                    <field name="marital"/>
+                                    <field name="birthday"/>
                                 </group>
-                            </page>
-                        </notebook>
-                    </sheet>
+                                <group>
+                                    <field name="identification_id"/>
+                                    <field name="passport_id"/>
+                                    <field name="bank_account_id"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string='Admin' name="active_group">
+                                    <field name="user_id" string="Internal User"
+                                        context="{
+                                            'default_partner_id': home_partner_id,
+                                        }"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
+                                    <field name="resource_calendar_id"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </group>
+                <sheet position="after">
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
-                </form>
+                </sheet>
             </field>
         </record>
 
