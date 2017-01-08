@@ -16,17 +16,6 @@
             <field name="alias_parent_model_id" ref="model_crm_team"/>
         </record>
 
-        <!-- notify all employees of module installation -->
-        <record id="module_install_notification" model="mail.message">
-            <field name="model">mail.channel</field>
-            <field name="res_id" ref="mail.channel_all_employees"/>
-            <field name="message_type">email</field>
-            <field name="subtype_id" ref="mail.mt_comment"/>
-            <field name="subject">CRM application installed!</field>
-            <field name="body"><![CDATA[<p>From the top Sales menu you can track leads and opportunities, get accurate forecast on your sales pipeline, plan meetings, get realtime statistics and efficiently organize the communication with your prospects.</p>
-<p>To manage quotations and sales orders, install the "Sales Management" application.</p>]]></field>
-        </record>
-
         <!-- opportunities' lost causes -->
         <record id="lost_reason_1" model="crm.lost.reason">
             <field name="name">Too expensive</field>
