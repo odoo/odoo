@@ -313,7 +313,11 @@ class AccountChartTemplate(models.Model):
         taxes_ref.update(generated_tax_res['tax_template_to_tax'])
 
         # Generating Accounts from templates.
-        account_template_ref = self.generate_account(taxes_ref, account_ref, code_digits, company)
+        account_template_ref = self.
+        
+        
+        
+        (taxes_ref, account_ref, code_digits, company)
         account_ref.update(account_template_ref)
 
         # writing account values after creation of accounts
@@ -350,6 +354,23 @@ class AccountChartTemplate(models.Model):
         new_xml_id = str(company.id)+'_'+template_xmlid.name
         return ir_model_data._update(model, template_xmlid.module, vals, xml_id=new_xml_id, store=True, noupdate=True, mode='init', res_id=False)
 
+    def _get_account_vals(self, company, account_template, tax_ids, code_acc):
+        """ This method generates a dictionnary of all the values for the account that will be created.
+        """
+        self.ensure_one()
+        val = {
+                'name': account_template.name,
+                'currency_id': account_template.currency_id and account_template.currency_id.id or False,
+                'code': code_acc,
+                'user_type_id': account_template.user_type_id and account_template.user_type_id.id or False,
+                'reconcile': account_template.reconcile,
+                'note': account_template.note,
+                'tax_ids': [(6, 0, tax_ids)],
+                'company_id': company.id,
+                'tag_ids': [(6, 0, [t.id for t in account_template.tag_ids])],
+            }
+        return val
+
     @api.multi
     def generate_account(self, tax_template_ref, acc_template_ref, code_digits, company):
         """ This method for generating accounts from templates.
@@ -373,17 +394,7 @@ class AccountChartTemplate(models.Model):
             code_acc = account_template.code or ''
             if code_main > 0 and code_main <= code_digits:
                 code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
-            vals = {
-                'name': account_template.name,
-                'currency_id': account_template.currency_id and account_template.currency_id.id or False,
-                'code': code_acc,
-                'user_type_id': account_template.user_type_id and account_template.user_type_id.id or False,
-                'reconcile': account_template.reconcile,
-                'note': account_template.note,
-                'tax_ids': [(6, 0, tax_ids)],
-                'company_id': company.id,
-                'tag_ids': [(6, 0, [t.id for t in account_template.tag_ids])],
-            }
+            vals = _get_account_vals(self, company, account_template, tax_ids, code_acc)
             new_account = self.create_record_with_xmlid(company, account_template, 'account.account', vals)
             acc_template_ref[account_template.id] = new_account
         return acc_template_ref
