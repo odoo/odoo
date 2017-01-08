@@ -1129,7 +1129,7 @@ class Tag(models.Model):
     _description = "Category of lead"
 
     name = fields.Char('Name', required=True, translate=True)
-    color = fields.Integer('Color Index')
+    color = fields.Integer('Color Index', default=10)
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists !"),

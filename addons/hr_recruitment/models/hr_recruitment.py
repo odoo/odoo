@@ -426,7 +426,7 @@ class ApplicantCategory(models.Model):
     _description = "Category of applicant"
 
     name = fields.Char("Name", required=True)
-    color = fields.Integer(string='Color Index')
+    color = fields.Integer(string='Color Index', default=10)
 
     _sql_constraints = [
             ('name_uniq', 'unique (name)', "Tag name already exists !"),
