@@ -518,7 +518,7 @@ class AccountTaxTemplate(models.Model):
             'include_base_amount': self.include_base_amount,
             'analytic': self.analytic,
             'tag_ids': [(6, 0, [t.id for t in self.tag_ids])],
-            'children_tax_ids': children_ids and [(6, 0, children_ids)] or []
+            'children_tax_ids': [(6, 0, children_ids)],
             'tax_adjustment': self.tax_adjustment,
         }
         if self.tax_group_id:
