@@ -313,11 +313,7 @@ class AccountChartTemplate(models.Model):
         taxes_ref.update(generated_tax_res['tax_template_to_tax'])
 
         # Generating Accounts from templates.
-        account_template_ref = self.
-        
-        
-        
-        (taxes_ref, account_ref, code_digits, company)
+        account_template_ref = self.generate_account(taxes_ref, account_ref, code_digits, company)
         account_ref.update(account_template_ref)
 
         # writing account values after creation of accounts
