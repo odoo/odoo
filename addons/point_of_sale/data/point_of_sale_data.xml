@@ -30,17 +30,6 @@
             <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
         </record>
 
-        <!-- notify all employees of module installation -->
-        <record model="mail.message" id="module_install_notification">
-            <field name="model">mail.channel</field>
-            <field name="res_id" ref="mail.channel_all_employees"/>
-            <field name="message_type">notification</field>
-            <field name="subtype_id" ref="mail.mt_comment"/>
-            <field name="subject">Point of Sale application installed!</field>
-            <field name="body"><![CDATA[<p>Record sales orders, register payments, compute change to return, create invoices, and manage refunds through a specific web touch-screen interface.</p>
-<p>You can interface Odoo with retail hardware: barcode scanners, printers, cash registers, weighing machines, credit card payment terminals.</p>]]></field>
-        </record>
-
         <record id="product_product_consumable" model="product.product">
             <field name="name">Miscellaneous</field>
             <field name="standard_price">13.0</field>
