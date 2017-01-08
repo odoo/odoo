@@ -390,7 +390,7 @@ class AccountChartTemplate(models.Model):
             code_acc = account_template.code or ''
             if code_main > 0 and code_main <= code_digits:
                 code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
-            vals = _get_account_vals(self, company, account_template, tax_ids, code_acc)
+            vals = self._get_account_vals(company, account_template, tax_ids, code_acc)
             new_account = self.create_record_with_xmlid(company, account_template, 'account.account', vals)
             acc_template_ref[account_template.id] = new_account
         return acc_template_ref
