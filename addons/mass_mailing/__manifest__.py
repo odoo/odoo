@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Mass Mailing Campaigns',
+    'name': 'Email Marketing',
     'summary': 'Design, send and track emails',
     'description': """
 Easily send mass mailing to your leads, opportunities or customers. Track
