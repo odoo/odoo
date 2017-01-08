@@ -34,7 +34,7 @@ class AccountAccountTag(models.Model):
 
     name = fields.Char(required=True)
     applicability = fields.Selection([('accounts', 'Accounts'), ('taxes', 'Taxes')], required=True, default='accounts')
-    color = fields.Integer('Color Index')
+    color = fields.Integer('Color Index', default=10)
 
 #----------------------------------------------------------
 # Accounts
