@@ -1710,14 +1710,14 @@
         <div class="panel panel-info">
           <div class="panel-heading">Bill To:</div>
           <div class="panel-body">
-            <div t-field="order.partner_invoice_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone', 'email']}" />
+            <div class='o_div_text_overflow' t-field="order.partner_invoice_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone', 'email']}" />
           </div>
         </div>
         <t t-if="not order.only_services">
             <div class="panel panel-info">
               <div class="panel-heading">Ship To:</div>
               <div class="panel-body">
-                <div t-field="order.partner_shipping_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone']}" />
+                <div class='o_div_text_overflow' t-field="order.partner_shipping_id" t-options="{'widget': 'contact','fields': ['address', 'name', 'phone']}" />
               </div>
             </div>
         </t>
