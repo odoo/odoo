@@ -1643,6 +1643,7 @@ class AccountPartialReconcile(models.Model):
         move_vals = {
             'journal_id': self.company_id.tax_cash_basis_journal_id.id,
             'tax_cash_basis_rec_id': self.id,
+            'ref': self.credit_move_id.move_id.name if self.credit_move_id.payment_id else self.debit_move_id.move_id.name,
         }
         return self.env['account.move'].create(move_vals)
 
