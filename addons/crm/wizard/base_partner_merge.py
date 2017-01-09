@@ -406,7 +406,7 @@ class MergePartnerAutomatic(models.TransientModel):
             :param models : dict mapping a model name with its foreign key with res_partner table
         """
         return any(
-            self.env[model].search_count([(field, 'in', aggr_ids)], limit=1)
+            self.env[model].search_count([(field, 'in', aggr_ids)])
             for model, field in models.iteritems()
         )
 
