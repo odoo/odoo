@@ -50,7 +50,7 @@
                                     <field name="list_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                     <label for="standard_price" groups="base.group_user"/>
                                     <div name="standard_price_uom" groups="base.group_user">
-                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}" class="oe_inline"/>
+                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                     </div>
                                     <field name="company_id" groups="base.group_multi_company"
                                         options="{'no_create': True}"/>
@@ -59,14 +59,6 @@
                                     <field name="currency_id" invisible="1"/>
                                     <field name="product_variant_id" invisible="1"/>
                                 </group>
-                            </group>
-                        </page>
-                        <page string="Inventory" name="inventory" groups="stock.group_stock_user,product.group_stock_packaging">
-                            <group name="packaging" string="Packaging"
-                                colspan="4"
-                                attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1)]}"
-                                groups="product.group_stock_packaging">
-                                <field name="packaging_ids" nolabel="1" context="{'default_product_id': product_variant_id,'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}"/>
                             </group>
                         </page>
                         <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales">
@@ -88,13 +80,24 @@
                                     attrs="{'invisible':[('type', '!=', 'service')]}"/>
                             </group>
                         </page>
+                        <page string="Inventory" name="inventory" groups="stock.group_stock_user,product.group_stock_packaging" attrs="{'invisible':[('type', '=', 'service')]}">
+                            <group name="packaging" string="Packaging"
+                                colspan="4"
+                                attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1)]}"
+                                groups="product.group_stock_packaging">
+                                <field name="packaging_ids" nolabel="1" context="{'default_product_id': product_variant_id,'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}"/>
+                            </group>
+                        </page>
                         <page string="Notes" name="notes">
                             <group name="description">
-                                <group string="Description for Quotations">
-                                    <field name="description_sale" nolabel="1" placeholder="This note will be displayed on the quotations."/>
+                                <group string="Description for Customers" attrs="{'invisible': [('sale_ok','=',False)]}">
+                                    <field name="description_sale" nolabel="1" placeholder="This note will show up on sales orders."/>
                                 </group>
                             </group>
-                            <group name="warning"/>
+                            <group name="warning">
+                                <group name="sale_warning"/>
+                                <group name="purchase_warning"/>
+                            </group>
                          </page>
                     </notebook>
                 </sheet>
@@ -308,7 +311,7 @@
                 <field name="name" position="after">
                     <field name="product_tmpl_id" class="oe_inline" readonly="1" invisible="1" attrs="{'required': [('id', '!=', False)]}"/>
                 </field>
-                <field name="item_ids" position="replace">
+                <field name="item_ids" position="inside">
                     <field name="pricelist_item_ids" widget="many2many">
                         <tree string="Pricelist Items">
                             <field name="pricelist_id"/>

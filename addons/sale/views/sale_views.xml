@@ -610,6 +610,13 @@
                         <field string="Sales" name="sales_count" widget="statinfo" />
                     </button>
                 </button>
+                <group name="sale_warning" position="replace">
+                    <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
+                        <field name="sale_line_warn" nolabel="1"/>
+                        <field name="sale_line_warn_msg" colspan="3" nolabel="1"
+                                attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')]}"/>
+                    </group>
+                </group>
             </field>
         </record>
 
@@ -625,7 +632,7 @@
                         <field string="Sales" name="sales_count" widget="statinfo" />
                     </button>
                 </button>
-                <group name="warning" position="inside">
+                <group name="sale_warning" position="replace">
                     <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
                         <field name="sale_line_warn" nolabel="1"/>
                         <field name="sale_line_warn_msg" colspan="3" nolabel="1"
@@ -640,13 +647,12 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <page name="invoicing" position="inside">
-                    <separator string="Invoicing Policy"/>
-                    <group>
+                <group name="invoicing" position="inside">
+                    <group string="Invoicing" name="invoicing" attrs="{'invisible': [('sale_ok','=',False)]}">
                         <field name="invoice_policy" widget="radio"/>
                         <field name="track_service" widget="radio" invisible="True"/>
                     </group>
-                </page>
+                </group>
             </field>
         </record>
 

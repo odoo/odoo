@@ -39,7 +39,7 @@
                     </field>
                     <field name="standard_price" position="replace">
                         <field name="standard_price"
-                            attrs="{'readonly':['&amp;', ('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}" class="oe_inline"
+                            attrs="{'readonly':['&amp;', ('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}"
                             widget='monetary' options="{'currency_field': 'currency_id'}"/>
                     </field>
                     <div name="standard_price_uom" position="after">
@@ -49,13 +49,11 @@
                             class="oe_link oe_read_only" colspan="2"/>
                     </div>
                     <group name="accounting" position="inside">
-                        <group name="property_inventory_valuation" attrs="{'invisible': [('type','=','service')]}">
+                        <group name="property_inventory_valuation"  string="Stock Valuation" attrs="{'invisible': [('type','=','service'), ('valuation', '!=', 'real_time')]}">
                             <field name="property_valuation" invisible="1"/>
                             <field name="property_stock_account_input"
-                                attrs="{'invisible':[ ('valuation', '!=', 'real_time')]}"
                                 domain="[('deprecated', '=', False)]"/>
                             <field name="property_stock_account_output"
-                                attrs="{'invisible':[ ('valuation', '!=', 'real_time')]}"
                                 domain="[('deprecated', '=', False)]"/>
                         </group>
                     </group>

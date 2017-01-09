@@ -16,7 +16,7 @@ class ProductTemplate(models.Model):
     sale_line_warn = fields.Selection(WARNING_MESSAGE, 'Sales Order Line', help=WARNING_HELP, required=True, default="no-message")
     sale_line_warn_msg = fields.Text('Message for Sales Order Line')
     expense_policy = fields.Selection(
-        [('no', 'No'), ('cost', 'At cost'), ('sales_price', 'At sale price')],
+        [('no', 'No'), ('cost', 'At cost'), ('sales_price', 'Sales price')],
         string='Re-Invoice Expenses',
         default='no')
 

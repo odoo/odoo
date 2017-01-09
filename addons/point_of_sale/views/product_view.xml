@@ -57,7 +57,7 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="stock.view_template_property_form"/>
         <field name="arch" type="xml">
-            <group name="sale_condition" position="after">
+            <group name="email_template_and_project" position="before">
                 <group name="pos" string="Point of Sale">
                     <field name="available_in_pos"/>
                     <field name="pos_categ_id" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>

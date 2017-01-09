@@ -79,7 +79,7 @@
             </group>
             <button name="toggle_active" position="before">
                 <button class="oe_stat_button" name="website_publish_button"
-                    type="object" icon="fa-globe">
+                    type="object" icon="fa-globe" attrs="{'invisible': [('sale_ok','=',False)]}">
                     <field name="website_published" widget="website_button"/>
                 </button>
             </button>

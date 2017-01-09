@@ -5,7 +5,7 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="sale.product_template_form_view_invoice_policy"/>
         <field name="arch" type="xml">
-            <field name="invoice_policy" position="after">
+            <field name="track_service" position="after">
                 <field name="expense_policy" widget="radio"
                        attrs="{'invisible': [('can_be_expensed','=',False)]}"/>
             </field>
