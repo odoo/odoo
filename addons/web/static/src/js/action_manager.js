@@ -740,6 +740,9 @@ var ActionManager = Widget.extend({
             var fragment = document.createDocumentFragment();
             return this.dialog_widget.appendTo(fragment).then(function() {
                 self.dialog.open().$el.append(fragment);
+                if (self.dialog_widget.action.view_mode === 'form') {
+                    self.dialog_widget.views['form'].controller.autofocus();
+                }
                 if(options.state && self.dialog_widget.do_load_state) {
                     return self.dialog_widget.do_load_state(options.state);
                 }
