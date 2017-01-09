@@ -3,7 +3,9 @@
 
 import uuid
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, tools, _
+
+from odoo.modules.module import get_resource_path
 
 
 class Rating(models.Model):
@@ -26,16 +28,36 @@ class Rating(models.Model):
     def new_access_token(self):
         return uuid.uuid4().hex
 
-    res_name = fields.Char(string='Resource Name', compute='_compute_res_name', store=True, help="The name of the rated resource.")
-    res_model = fields.Char(string='Document Model', required=True, help="Model name of the rated object", index=True)
+    res_name = fields.Char(string='Resource name', compute='_compute_res_name', store=True, help="The name of the rated resource.")
+    res_model_id = fields.Many2one('ir.model', 'Related Document Model', index=True, ondelete='cascade', help='Model of the followed resource')
+    res_model = fields.Char(string='Document Model', related='res_model_id.model', store=True, index=True, readonly=True)
     res_id = fields.Integer(string='Document ID', required=True, help="Identifier of the rated object", index=True)
-    rated_partner_id = fields.Many2one('res.partner', string="Rated Partner", help="Owner of the rated resource")
+    rated_partner_id = fields.Many2one('res.partner', string="Rated person", help="Owner of the rated resource")
     partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")
     rating = fields.Float(string="Rating", group_operator="avg", default=0, help="Rating value: 0=Unhappy, 10=Happy")
-    feedback = fields.Text('Feedback reason', help="Reason of the rating")
+    rating_image = fields.Binary('Image', compute='_compute_rating_image')
+    rating_text = fields.Char(string='Rating', compute='_compute_rating_text')
+    feedback = fields.Text('Comment', help="Reason of the rating")
     message_id = fields.Many2one('mail.message', string="Linked message", help="Associated message when posting a review. Mainly used in website addons.", index=True)
     access_token = fields.Char('Security Token', default=new_access_token, help="Access token to set the rating of the value")
     consumed = fields.Boolean(string="Filled Rating", help="Enabled if the rating has been filled.")
+
+    @api.multi
+    @api.depends('rating')
+    def _compute_rating_image(self):
+        for rating in self:
+            try:
+                image_path = get_resource_path('rating', 'static/src/img', 'rating_%s.png' % (int(rating.rating),))
+                rating.rating_image = open(image_path, 'rb').read().encode('base64')
+            except (IOError, OSError):
+                rating.rating_image = False
+
+    @api.multi
+    @api.depends('rating')
+    def _compute_rating_text(self):
+        text = {10: _('Satisfied'), 5: _('Not satisfied'), 1: _('Highly dissatisfied')}
+        for rating in self:
+            rating.rating_text = text[rating.rating] or _('No rating yet')
 
     @api.multi
     def reset(self):
@@ -47,13 +69,24 @@ class Rating(models.Model):
                 'consumed': False,
             })
 
+    def action_open_rated_object(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self.res_model,
+            'res_id': self.res_id,
+            'views': [[False, 'form']]
+        }
+
 
 class RatingMixin(models.AbstractModel):
     _name = 'rating.mixin'
     _description = "Rating Mixin"
 
-    rating_ids = fields.One2many('rating.rating', 'res_id', string='Rating', domain=lambda self: [('res_model', '=', self._name)])
+    rating_ids = fields.One2many('rating.rating', 'res_id', string='Rating', domain=lambda self: [('res_model', '=', self._name)], auto_join=True)
     rating_last_value = fields.Float('Rating Last Value', related='rating_ids.rating', store=True)
+    rating_last_feedback = fields.Text('Rating Last Feedback', related='rating_ids.feedback')
+    rating_last_image = fields.Binary('Rating Last Image', related='rating_ids.rating_image')
     rating_count = fields.Integer('Rating count', compute="_compute_rating_count")
 
     @api.multi
@@ -66,6 +99,20 @@ class RatingMixin(models.AbstractModel):
             result[data['res_id']] += data['res_id_count']
         for record in self:
             record.rating_count = result[record.id]
+
+    def write(self, values):
+        """ If the rated ressource name is modified, we should update the rating res_name too. """
+        result = super(RatingMixin, self).write(values)
+        if self._rec_name in values:
+            self.rating_ids._compute_res_name()
+        return result
+
+    def unlink(self):
+        """ When removing a record, its rating should be deleted too. """
+        record_ids = self.ids
+        result = super(RatingMixin, self).unlink()
+        self.env['rating.rating'].sudo().search([('res_model', '=', self._name), ('res_id', 'in', record_ids)]).unlink()
+        return result
 
     def rating_get_partner_id(self):
         if hasattr(self, 'partner_id') and self.partner_id:
@@ -83,18 +130,23 @@ class RatingMixin(models.AbstractModel):
         rated_partner = self.rating_get_rated_partner_id()
         ratings = self.rating_ids.filtered(lambda x: x.partner_id.id == partner.id and not x.consumed)
         if not ratings:
-            rating = self.env['rating.rating'].create({'partner_id': partner.id, 'rated_partner_id': rated_partner.id, 'res_model': self._name, 'res_id': self.id})
+            record_model_id = self.env['ir.model'].sudo().search([('model', '=', self._name)], limit=1).id
+            rating = self.env['rating.rating'].create({
+                'partner_id': partner.id,
+                'rated_partner_id': rated_partner.id,
+                'res_model_id': record_model_id,
+                'res_id': self.id
+            })
         else:
             rating = ratings[0]
         return rating.access_token
 
     @api.multi
-    def rating_send_request(self, template, partner=None, rated_partner=None, reuse_rating=True, force_send=True):
+    def rating_send_request(self, template, lang=False, force_send=True):
         """ This method send rating request by email, using a template given
         in parameter. """
-        partner = (partner or self.env['res.partner']).sudo()
+        lang = lang or 'en_US'
         for record in self:
-            lang = partner.lang or 'en_US'
             template.with_context(lang=lang).send_mail(record.id, force_send=force_send)
 
     @api.multi
