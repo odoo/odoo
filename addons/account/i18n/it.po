@@ -2645,6 +2645,8 @@ msgid ""
 "Chart of Accounts has been\n"
 "                            installed. You should review it and create any additional accounts."
 msgstr ""
+"Il Piano dei consti è stato\n"
+"installato. Dovete verificarlo e creare ogni altro conto necessario."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_list
@@ -4166,7 +4168,7 @@ msgstr "Sezionale utile/perdite su cambi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_exchange_move_id
 msgid "Exchange move id"
-msgstr ""
+msgstr "Identificativo operazione di cambio"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_exchange_partial_rec_id
@@ -4215,7 +4217,7 @@ msgstr "Costi della produzione"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_reference
 msgid "External Reference"
-msgstr ""
+msgstr "Riferimento Esterno"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4990,7 +4992,7 @@ msgstr "Importa file in formato .qif"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_csv
 msgid "Import in .csv format"
-msgstr ""
+msgstr "Importa in formato .csv"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_ofx
@@ -5270,19 +5272,20 @@ msgstr "Id fattura"
 #: code:addons/account/models/account_invoice.py:555
 #, python-format
 msgid "Invoice must be a draft in order to set it to Pro-forma."
-msgstr ""
+msgstr "La fattura deve essere in bozza al fine di impostarla come Pro-forma"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:535
 #, python-format
 msgid "Invoice must be cancelled in order to reset it to draft."
-msgstr ""
+msgstr "La fattura deve essere cancellata al fine di reimpostarla in bozza."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:563
 #, python-format
 msgid "Invoice must be in draft or Pro-forma state in order to validate it."
 msgstr ""
+"La fattura deve essere in stato di bozza o Pro-forma per essere validata."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:587
@@ -5290,18 +5293,24 @@ msgstr ""
 msgid ""
 "Invoice must be in draft,Pro-forma or open state in order to be cancelled."
 msgstr ""
+"La fattura deve essere in stato di bozza, Pro-forma o aperta, per essere "
+"cancellata."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:581
 #, python-format
 msgid "Invoice must be paid in order to set it to register payemnt."
 msgstr ""
+"La fattura deve essere pagata per poter essere inserita nel registro "
+"pagamenti."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:573
 #, python-format
 msgid "Invoice must be validated in order to set it to register payemnt."
 msgstr ""
+"La fattura deve essere validata per poter essere inserirla nel registro "
+"pagamenti."
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
