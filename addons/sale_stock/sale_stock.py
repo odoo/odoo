@@ -338,7 +338,8 @@ class sale_order_line(osv.osv):
         res_packing = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging, context=context)
         res['value'].update(res_packing.get('value', {}))
         warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
-
+        #add message from self.product_id_change
+        warning_msgs += res.get('warning',{}).get('message','')
         if product_obj.type == 'product':
             #determine if the product needs further check for stock availibility
             is_available = self._check_routing(cr, uid, ids, product_obj, warehouse_id, context=context)
