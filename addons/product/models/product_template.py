@@ -61,7 +61,7 @@ class ProductTemplate(models.Model):
         'Price', compute='_compute_template_price', inverse='_set_template_price',
         digits=dp.get_precision('Product Price'))
     list_price = fields.Float(
-        'Sale Price', default=1.0,
+        'Sales Price', default=1.0,
         digits=dp.get_precision('Product Price'),
         help="Base price to compute the customer price. Sometimes called the catalog price.")
     lst_price = fields.Float(
@@ -81,7 +81,6 @@ class ProductTemplate(models.Model):
         inverse='_set_weight', store=True,
         help="The weight of the contents in Kg, not including any packaging, etc.")
 
-    warranty = fields.Float('Warranty')
     sale_ok = fields.Boolean(
         'Can be Sold', default=True,
         help="Specify if the product can be selected in a sales order line.")

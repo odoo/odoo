@@ -28,7 +28,7 @@
             <xpath expr="//form" position="attributes">
                 <attribute name="name">Product Template</attribute>
             </xpath>
-            <field name="type" position="after">
+            <field name="categ_id" position="after">
                 <field name="default_code" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
                 <field name="barcode" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
             </field>
@@ -42,7 +42,7 @@
                 </button>
             </button>
 
-            <xpath expr="//page[@name='sales']" position="after">
+            <xpath expr="//page[@name='general_information']" position="after">
                 <page name="variants" string="Variants" groups="product.group_product_variant">
                     <field name="attribute_line_ids" widget="one2many_list" context="{'show_attribute': False}">
                         <tree string="Variants" editable="bottom">
