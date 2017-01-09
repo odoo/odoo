@@ -710,24 +710,18 @@ var KanbanView = View.extend({
         var context = {};
         context['default_' + this.group_by_field] = column.id;
         var name = event.data.value;
-        this.dataset.name_create(name, context).then(function on_success (data) {
+        this.dataset.name_create(name).done(function(data) {
             add_record(data[0]);
-        }, function on_fail (event) {
+        }).fail(function(error, event) {
             event.preventDefault();
-            var popup = new form_common.SelectCreatePopup(this);
-            popup.select_element(
-                self.model,
-                {
-                    title: _t("Create: "),
-                    initial_view: "form",
-                    disable_multiple_selection: true
-                },
-                [],
-                {"default_name": name}
-            );
-            popup.on("elements_selected", self, function(element_ids) {
-                add_record(element_ids[0]);
-            });
+            var dialog = new form_common.FormViewDialog(this, {
+                res_model: self.model,
+                context: {"default_name": name},
+                title: _t("Create"),
+                on_selected: function(element_ids) {
+                    add_record(element_ids[0]);
+                }
+            }).open();
         });
 
         function add_record(id) {
