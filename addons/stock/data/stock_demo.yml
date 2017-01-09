@@ -20,6 +20,15 @@
     usage: internal
     location_id: stock_location_14
 -
+ !record {model: product.uom.categ, id: product.product_uom_categ_kgm}:
+    name: Weight
+-
+ !record {model: product.uom, id: product.product_uom_kgm}:
+    category_id: product.product_uom_categ_kgm
+    name: kg
+    factor: 1
+    rounding: 0.001
+-
  !record {model: product.product, id: product_icecream}:
     default_code: 001
     name: Ice Cream
