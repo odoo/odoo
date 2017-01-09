@@ -714,10 +714,11 @@ var KanbanView = View.extend({
             add_record(data[0]);
         }).fail(function(error, event) {
             event.preventDefault();
-            var dialog = new form_common.FormViewDialog(this, {
+            var dialog = new form_common.FormViewDialog(self, {
                 res_model: self.model,
-                context: {"default_name": name},
+                context: _.extend({"default_name": name}, context),
                 title: _t("Create"),
+                disable_multiple_selection: true,
                 on_selected: function(element_ids) {
                     add_record(element_ids[0]);
                 }
