@@ -570,7 +570,7 @@ class AccountInvoice(models.Model):
         # lots of duplicate calls to action_invoice_paid, so we remove those already paid
         to_pay_invoices = self.filtered(lambda inv: inv.state != 'paid')
         if to_pay_invoices.filtered(lambda inv: inv.state != 'open'):
-            raise UserError(_('Invoice must be validated in order to set it to register payemnt.'))
+            raise UserError(_('Invoice must be validated in order to set it to register payment.'))
         if to_pay_invoices.filtered(lambda inv: not inv.reconciled):
             raise UserError(_('You cannot pay an invoice which is partially paid. You need to reconcile payment entries first.'))
         return to_pay_invoices.write({'state': 'paid'})
@@ -578,13 +578,13 @@ class AccountInvoice(models.Model):
     @api.multi
     def action_invoice_re_open(self):
         if self.filtered(lambda inv: inv.state != 'paid'):
-            raise UserError(_('Invoice must be paid in order to set it to register payemnt.'))
+            raise UserError(_('Invoice must be paid in order to set it to register payment.'))
         return self.write({'state': 'open'})
 
     @api.multi
     def action_invoice_cancel(self):
         if self.filtered(lambda inv: inv.state not in ['proforma2', 'draft', 'open']):
-            raise UserError(_("Invoice must be in draft,Pro-forma or open state in order to be cancelled."))
+            raise UserError(_("Invoice must be in draft, Pro-forma or open state in order to be cancelled."))
         return self.action_cancel()
 
     @api.multi
