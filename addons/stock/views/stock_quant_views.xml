@@ -123,7 +123,7 @@
         <field name="res_model">stock.quant</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,pivot</field>
-        <field name="context">{'search_default_internal_loc': 1, 'group_by': ['product_id', 'location_id']}</field>
+        <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup': 1}</field>
         <field name="help">This analysis gives you a fast overview on the current stock level of your products and their current inventory value.</field>
     </record>
     <record model="ir.actions.act_window" id="product_template_open_quants"> <!-- Not used -->
