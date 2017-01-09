@@ -1023,27 +1023,31 @@ class Binary(http.Controller):
     @http.route('/web/binary/upload_attachment', type='http', auth="user")
     @serialize_exception
     def upload_attachment(self, callback, model, id, ufile):
+        files = request.httprequest.files.getlist('ufile')
         Model = request.env['ir.attachment']
         out = """<script language="javascript" type="text/javascript">
                     var win = window.top.window;
                     win.jQuery(win).trigger(%s, %s);
                 </script>"""
-        try:
-            attachment = Model.create({
-                'name': ufile.filename,
-                'datas': base64.encodestring(ufile.read()),
-                'datas_fname': ufile.filename,
-                'res_model': model,
-                'res_id': int(id)
-            })
-            args = {
-                'filename': ufile.filename,
-                'mimetype': ufile.content_type,
-                'id':  attachment.id
-            }
-        except Exception:
-            args = {'error': _("Something horrible happened")}
-            _logger.exception("Fail to upload attachment %s" % ufile.filename)
+        args = []
+        for ufile in files:
+            try:
+                attachment = Model.create({
+                    'name': ufile.filename,
+                    'datas': base64.encodestring(ufile.read()),
+                    'datas_fname': ufile.filename,
+                    'res_model': model,
+                    'res_id': int(id)
+                })
+            except Exception:
+                args = args.append({'error': _("Something horrible happened")})
+                _logger.exception("Fail to upload attachment %s" % ufile.filename)
+            else:
+                args.append({
+                    'filename': ufile.filename,
+                    'mimetype': ufile.content_type,
+                    'id': attachment.id
+                })
         return out % (json.dumps(callback), json.dumps(args))
 
     @http.route([

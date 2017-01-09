@@ -580,57 +580,58 @@ var BasicComposer = Widget.extend({
 
     // Attachments
     on_attachment_change: function(event) {
-        var $target = $(event.target);
-        if ($target.val() !== '') {
-            var filename = $target.val().replace(/.*[\\\/]/,'');
-            // if the files exits for this answer, delete the file before upload
-            var attachments = [];
-            for (var i in this.get('attachment_ids')) {
-                if ((this.get('attachment_ids')[i].filename || this.get('attachment_ids')[i].name) === filename) {
-                    if (this.get('attachment_ids')[i].upload) {
-                        return false;
-                    }
-                    this.AttachmentDataSet.unlink([this.get('attachment_ids')[i].id]);
-                } else {
-                    attachments.push(this.get('attachment_ids')[i]);
-                }
-            }
-            // submit filename
-            this.$('form.o_form_binary_form').submit();
-            this.$attachment_button.prop('disabled', true);
+        var self = this,
+            files = event.target.files,
+            attachments = self.get('attachment_ids');
 
-            attachments.push({
+        _.each(files, function(file){
+            var attachment = _.findWhere(attachments, {name: file.name});
+            // if the files already exits, delete the file before upload
+            if(attachment){
+                self.AttachmentDataSet.unlink([attachment.id]);
+                attachments = _.without(attachments, attachment);
+            }
+        });
+
+        this.$('form.o_form_binary_form').submit();
+        this.$attachment_button.prop('disabled', true);
+        var upload_attachments = _.map(files, function(file){
+            return {
                 'id': 0,
-                'name': filename,
-                'filename': filename,
+                'name': file.name,
+                'filename': file.name,
                 'url': '',
                 'upload': true,
                 'mimetype': '',
-            });
-            this.set('attachment_ids', attachments);
-        }
+            };
+        });
+        attachments = attachments.concat(upload_attachments);
+        this.set('attachment_ids', attachments);
     },
-    on_attachment_loaded: function(event, result) {
-        var attachment_ids = [];
-        if (result.error || !result.id ) {
-            this.do_warn(result.error);
-            attachment_ids = _.filter(this.get('attachment_ids'), function (val) { return !val.upload; });
-        } else {
-            _.each(this.get('attachment_ids'), function(a) {
-                if (a.filename === result.filename && a.upload) {
-                    attachment_ids.push({
-                        'id': result.id,
-                        'name': result.name || result.filename,
-                        'filename': result.filename,
-                        'mimetype': result.mimetype,
-                        'url': session.url('/web/content', {'id': result.id, download: true}),
+    on_attachment_loaded: function(event) {
+        var self = this,
+            attachments = this.get('attachment_ids'),
+            files = Array.prototype.slice.call(arguments, 1);
+
+        _.each(files, function(file){
+            if(file.error || !file.id){
+                this.do_warn(file.error);
+                attachments = _.filter(attachments, function (attachment) { return !attachment.upload; });
+            }else{
+                var attachment = _.findWhere(attachments, {filename: file.filename, upload: true});
+                if(attachment){
+                    attachments = _.without(attachments, attachment);
+                    attachments.push({
+                        'id': file.id,
+                        'name': file.name || file.filename,
+                        'filename': file.filename,
+                        'mimetype': file.mimetype,
+                        'url': session.url('/web/content', {'id': file.id, download: true}),
                     });
-                } else {
-                    attachment_ids.push(a);
                 }
-            });
-        }
-        this.set('attachment_ids', attachment_ids);
+            }
+        }.bind(this));
+        this.set('attachment_ids', attachments);
         this.$attachment_button.prop('disabled', false);
     },
     on_attachment_delete: function(event){
