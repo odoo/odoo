@@ -332,11 +332,10 @@ msgid ""
 "</p><p>Thank you!</p>\n"
 msgstr ""
 "<p>こんにちは${object.user_id and object.user_id.name or ''},</p>\n"
-"<p>この案件 <strong>${object.name}</strong> ですが、5日間何のアクティビティーがありません。</p>\n"
+"<p>この案件 <strong>${object.name}</strong> につき、ここ5日間何の活動もありませんでした。</p>\n"
 "%if object.description:\n"
-"<p>案件についての説明は次のとおりです : </p><p><i>${object.description}</i>\n"
+"<p>案件の詳細は次のとおりです: </p><p><i>${object.description}</i>\n"
 "%endif\n"
-"</p><p>それでは!</p>\n"
 
 #. module: crm
 #. openerp-web
@@ -1495,7 +1494,7 @@ msgstr "連絡先名"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Contact Us"
-msgstr "私たちに連絡してください。"
+msgstr "お問い合わせ"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_partner_ids
