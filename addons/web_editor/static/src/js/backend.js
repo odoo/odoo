@@ -381,8 +381,7 @@ var FieldTextHtml = widget.extend({
         } else if (this._dirty_flag && this.editor && this.editor.buildingBlock) {
             /* Switch to WYSIWYG mode if currently in code view */
             if (session.debug) {
-                var editable = this.editor.rte.editable()
-                var layoutInfo = editable.data('layoutInfo');
+                var layoutInfo = this.editor.rte.editable().data('layoutInfo');
                 $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
             }
             this.editor.buildingBlock.clean_for_save();
