@@ -5,12 +5,23 @@
         <record id="rating_rating_action_issue" model="ir.actions.act_window">
             <field name="name">Customer Ratings</field>
             <field name="res_model">rating.rating</field>
-            <field name="view_mode">kanban,pivot,graph</field>
+            <field name="view_mode">kanban,tree,pivot,graph,form</field>
             <field name="domain">[('res_model','=','project.issue'),('res_id','=',active_id), ('consumed', '=', True)]</field>
             <field name="help" type="html">
                 <p>
                     Customer ratings on issues. If you have no rating, change your project Settings to activate it.
                 </p>
+            </field>
+        </record>
+
+        <record id="rating_rating_view_search" model="ir.ui.view">
+            <field name="name">rating.rating.search.inherit</field>
+            <field name="model">rating.rating</field>
+            <field name="inherit_id" ref="rating.rating_rating_view_search" />
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='rating_tasks']" position="after">
+                    <filter string="Rating for issues" domain="[('res_model', '=', 'project.issue')]" />
+                </xpath>
             </field>
         </record>
 
@@ -43,6 +54,18 @@
                         <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-if="record.rating_last_value.value == 5" title="Latest Rating: Average"/>
                         <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-if="record.rating_last_value.value == 1" title="Latest Rating: Not Happy"/>
                     </b>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_issue_view_search" model="ir.ui.view">
+            <field name="name">project.issue.view.search.inherit.rating.project.issue</field>
+            <field name="model">project.issue</field>
+            <field name="inherit_id" ref="project_issue.view_project_issue_filter" />
+            <field name="arch" type="xml">
+                <xpath expr="//group" position="before">
+                    <separator/>
+                    <filter string="Rated issues" domain="[('rating_last_value', '!=', 0.0)]" />
                 </xpath>
             </field>
         </record>
