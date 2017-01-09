@@ -170,8 +170,9 @@ var Sidebar = Widget.extend({
     do_attachement_update: function(dataset, model_id, args) {
         this.dataset = dataset;
         this.model_id = model_id;
-        if (args && args[0].error) {
-            this.do_warn(_t('Uploading Error'), args[0].error);
+        var upload_error = _.filter(args, function(attachment) {return attachment.error;});
+        if (upload_error.length) {
+            this.do_warn(_t('Uploading Error'), upload_error[0].error);
         }
         if (!model_id) {
             this.on_attachments_loaded([]);

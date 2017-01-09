@@ -244,6 +244,7 @@
                     <t t-call="HiddenInputFile">
                         <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
                         <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+                        <t t-set="multi_upload" t-value="true"/>
                         <input type="hidden" name="model" t-att-value="widget.dataset and widget.dataset.model"/>
                         <input type="hidden" name="id" t-att-value="widget.model_id"/>
                         <input type="hidden" name="session_id" t-att-value="widget.session.session_id" t-if="widget.session.override_session"/>
@@ -1003,7 +1004,7 @@
             <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
             <input type="hidden" name="session_id" value="" t-if="widget.session.override_session"/>
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
-            <input t-if="widget.widget!='image'" type="file" class="o_form_input_file" name="ufile"/>
+            <input t-if="widget.widget!='image'" type="file" class="o_form_input_file" name="ufile" t-att="{'multiple': multi_upload ? 'multiple' : null}"/>
             <input t-if="widget.widget=='image'" type="file" class="o_form_input_file" name="ufile" accept="image/*"/>
             <t t-raw="0"/>
         </form>
@@ -1017,6 +1018,7 @@
         <t t-call="HiddenInputFile">
             <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
             <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+            <t t-set="multi_upload" t-value="true"/>
             <input type="hidden" name="model" t-att-value="widget.view.model"/>
             <input type="hidden" name="id" value="0"/>
             <input t-if="widget.session.override_session" type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
@@ -1033,22 +1035,23 @@
     <t t-if="!widget.get('effective_readonly')">
         <div t-foreach="values" t-as="id" class="oe_attachment">
             <t t-set="file" t-value="widget.data[id]"/>
-            <span t-if="file.upload or file.percent_loaded&lt;100"
-                  t-att-title="(file.name || file.filename) + ((file.date)? (' \n(' + file.date + ')') : '')"
-                  t-att-name="file.name || file.filename">
-                <span class="oe_fileuploader_in_process">...Upload in progress...</span>
-                <t t-raw="file.name || file.filename"/>
-            </span>
-            <t t-if="!file.upload or file.percent_loaded&gt;=100">
+            <t t-if="!file.upload">
                 <div>
                     <a href="#" class="fa fa-times pull-right oe_delete" title="Delete this file" t-att-data-id="file.id"/>
                     <t t-raw="file.name || file.filename"/>
                 </div>
                 <a class="o_image" target="_blank" t-att-href="file.url"
-                   t-att-title="(file.name || file.filename) + ((file.date)? (' \n(' + file.date + ')') : '')"
+                   t-att-title="file.name"
                    t-att-data-mimetype="file.mimetype"
                    t-attf-data-src="/web/image/#{file.id}/100x80"/>
             </t>
+        </div>
+        <div t-foreach="widget.files_uploading" t-as="file" class="oe_attachment">
+            <div>Uploading...</div>
+            <a t-att-title="file.name" t-att-name="file.name" class="o_image">
+                <i class="fa fa-spinner fa-spin fa-5x fa-fw"></i>
+            </a>
+            <div><t t-esc="file.name"/></div>
         </div>
     </t>
 </div>
