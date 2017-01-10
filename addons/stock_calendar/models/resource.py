@@ -92,7 +92,7 @@ class ResourceCalendar(models.Model):
         if leave_intervals is None:
             leave_intervals = []
         intervals = []
-        #leave_intervals = self._interval_clean(leave_intervals) NOT NECESSARY TO CLEAN HERE AS IT WOULD REMOVE GROUP INFO
+        #leave_intervals = self._interval_merge(leave_intervals) NOT NECESSARY TO CLEAN HERE AS IT WOULD REMOVE GROUP INFO
         current_interval = list(interval)
         for leave in leave_intervals:
             if len(leave) > 2:
