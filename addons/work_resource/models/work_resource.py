@@ -193,11 +193,8 @@ class ResourceCalendar(models.Model):
         return attendances
 
     @api.multi
-    def _get_weekdays(self, default_weekdays=None):
-        """ Return the list of weekdays that contain at least one working interval.
-        If no id is given (no calendar), return default weekdays. """
-        if not self:
-            return default_weekdays if default_weekdays is not None else [0, 1, 2, 3, 4]
+    def _get_weekdays(self):
+        """ Return the list of weekdays that contain at least one working interval. """
         self.ensure_one()
         weekdays = set(map(int, (self.attendance_ids.mapped('dayofweek'))))
         return list(weekdays)
@@ -210,8 +207,6 @@ class ResourceCalendar(models.Model):
         :param date day_date: current day as a date
 
         :return date: next day of calendar, or just next day """
-        if not self:
-            return day_date + relativedelta(days=1)
         self.ensure_one()
         weekdays = self._get_weekdays()
 
@@ -236,8 +231,6 @@ class ResourceCalendar(models.Model):
         :param date day_date: current day as a date
 
         :return date: previous day of calendar, or just previous day """
-        if not self:
-            return day_date + relativedelta(days=-1)
         self.ensure_one()
         weekdays = self._get_weekdays()
         weekdays.reverse()
@@ -289,8 +282,7 @@ class ResourceCalendar(models.Model):
 
     @api.multi
     def _get_day_work_intervals(self, start_dt=None, end_dt=None,
-                                     leaves=None, compute_leaves=False, resource_id=None,
-                                     default_interval=None):
+                                     leaves=None, compute_leaves=False, resource_id=None):
         """ Get the working intervals of the day based on calendar. This method
         handle leaves that come directly from the leaves parameter or can be computed.
 
@@ -314,16 +306,10 @@ class ResourceCalendar(models.Model):
                                 computing the leaves. If not set, only general
                                 leaves are computed. If set, generic and
                                 specific leaves are computed.
-        :param tuple default_interval: if no id, try to return a default working
-                                       day using default_interval[0] as beginning
-                                       hour, and default_interval[1] as ending hour.
-                                       Example: default_interval = (8, 16).
-                                       Otherwise, a void list of working intervals
-                                       is returned when id is None.
 
         :return list intervals: a list of tuples (start_datetime, end_datetime)
                                 of work intervals """
-
+        self.ensure_one()
         # Computes start_dt, end_dt (with default values if not set) + off-interval work limits
         work_limits = []
         if start_dt is None and end_dt is not None:
@@ -339,15 +325,6 @@ class ResourceCalendar(models.Model):
         assert start_dt.date() == end_dt.date(), '_get_day_work_intervals is restricted to one day'
 
         work_dt = start_dt.replace(hour=0, minute=0, second=0)
-
-        # no calendar: try to use the default_interval, then return directly
-        if not self:
-            if default_interval:
-                working_interval = (start_dt.replace(hour=default_interval[0], minute=0, second=0),
-                                    start_dt.replace(hour=default_interval[1], minute=0, second=0))
-                return self._interval_remove_leaves(working_interval, work_limits)
-            else:
-                return []
 
         working_intervals = []
         tz_info = fields.Datetime.context_timestamp(self, work_dt).tzinfo
@@ -379,8 +356,7 @@ class ResourceCalendar(models.Model):
 
     @api.multi
     def _schedule_hours(self, hours, day_dt=None,
-                        compute_leaves=False, resource_id=None,
-                        default_interval=None):
+                        compute_leaves=False, resource_id=None):
         """ Schedule hours of work, using a calendar and an optional resource to
         compute working and leave days. This method can be used backwards, i.e.
         scheduling days before a deadline.
@@ -397,12 +373,6 @@ class ResourceCalendar(models.Model):
                                 computing the leaves. If not set, only general
                                 leaves are computed. If set, generic and
                                 specific leaves are computed.
-        :param tuple default_interval: if no id, try to return a default working
-                                       day using default_interval[0] as beginning
-                                       hour, and default_interval[1] as ending hour.
-                                       Example: default_interval = (8, 16).
-                                       Otherwise, a void list of working intervals
-                                       is returned when id is None.
 
         :return tuple (datetime, intervals): datetime is the beginning/ending date
                                              of the schedulign; intervals are the
@@ -420,7 +390,7 @@ class ResourceCalendar(models.Model):
         iterations = 0
         current_datetime = day_dt
 
-        call_args = dict(compute_leaves=compute_leaves, resource_id=resource_id, default_interval=default_interval)
+        call_args = dict(compute_leaves=compute_leaves, resource_id=resource_id)
 
         while float_compare(remaining_hours, 0.0, precision_digits=2) in (1, 0) and iterations < 1000:
             if backwards:
@@ -459,15 +429,14 @@ class ResourceCalendar(models.Model):
 
     @api.multi
     def plan_hours(self, hours, day_dt=None,
-                   compute_leaves=False, resource_id=None,
-                   default_interval=None):
+                   compute_leaves=False, resource_id=None):
         """ Return datetime after having planned hours """
-        res = self._schedule_hours(hours, day_dt, compute_leaves, resource_id, default_interval)
+        res = self._schedule_hours(hours, day_dt, compute_leaves, resource_id)
         return res and res[0][0] or False
 
     @api.multi
     def get_work_hours_count(self, start_dt, end_dt, compute_leaves=False,
-                             resource_id=None, default_interval=None):
+                             resource_id=None):
         if not end_dt:
             end_dt = start_dt.replace(hour=23, minute=59, second=59)
         res = timedelta()
@@ -482,8 +451,7 @@ class ResourceCalendar(models.Model):
                 day_end_dt = end_dt
             intervals = self._get_day_work_intervals(
                 start_dt=day_start_dt, end_dt=day_end_dt,
-                compute_leaves=compute_leaves, resource_id=resource_id,
-                default_interval=default_interval)
+                compute_leaves=compute_leaves, resource_id=resource_id)
             for interval in intervals:
                 res += interval[1] - interval[0]
 
@@ -495,7 +463,7 @@ class ResourceCalendar(models.Model):
 
     @api.multi
     def _schedule_days(self, days, day_date=None, compute_leaves=False,
-                       resource_id=None, default_interval=None):
+                       resource_id=None):
         """Schedule days of work, using a calendar and an optional resource to
         compute working and leave days. This method can be used backwards, i.e.
         scheduling days before a deadline.
@@ -512,12 +480,6 @@ class ResourceCalendar(models.Model):
                                 computing the leaves. If not set, only general
                                 leaves are computed. If set, generic and
                                 specific leaves are computed.
-        :param tuple default_interval: if no id, try to return a default working
-                                       day using default_interval[0] as beginning
-                                       hour, and default_interval[1] as ending hour.
-                                       Example: default_interval = (8, 16).
-                                       Otherwise, a void list of working intervals
-                                       is returned when id is None.
 
         :return tuple (datetime, intervals): datetime is the beginning/ending date
                                              of the schedulign; intervals are the
@@ -538,8 +500,7 @@ class ResourceCalendar(models.Model):
         while planned_days < days and iterations < 100:
             working_intervals = self._get_day_work_intervals(
                 current_datetime,
-                compute_leaves=compute_leaves, resource_id=resource_id,
-                default_interval=default_interval)
+                compute_leaves=compute_leaves, resource_id=resource_id)
             if not self or working_intervals:  # no calendar -> no working hours, but day is considered as worked
                 planned_days += 1
                 intervals += working_intervals
@@ -555,9 +516,9 @@ class ResourceCalendar(models.Model):
 
     @api.multi
     def plan_days(self, days, day_date=None, compute_leaves=False,
-                  resource_id=None, default_interval=None):
+                  resource_id=None):
         """ Returns the datetime of a days scheduling. """
-        res = self._schedule_days(days, day_date, compute_leaves, resource_id, default_interval)
+        res = self._schedule_days(days, day_date, compute_leaves, resource_id)
         return res and res[-1][1] or False
 
 

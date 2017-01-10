@@ -226,15 +226,6 @@ class ResourceWorkingHours(TestResourceCommon):
             compute_leaves=True, resource_id=self.resource1_id)
         self.assertEqual(res, 33.0)
 
-    def test_calendar_working_hours_default_calendar(self):
-        # Test without calendar and default_interval
-        res = self.env['work.calendar'].with_context(tz='UTC').get_work_hours_count(
-            Datetime.from_string('2013-02-12 06:00:00'),
-            Datetime.from_string('2013-02-15 23:00:00'),
-            compute_leaves=True, resource_id=self.resource1_id,
-            default_interval=(8, 16))
-        self.assertEqual(res, 32.0)
-
     def test_calendar_hours_scheduling_backward(self):
         res = self.calendar._schedule_hours(-40, day_dt=Datetime.from_string('2013-02-12 09:00:00'))
         # current day, limited at 09:00 because of day_dt specified -> 1 hour
@@ -299,11 +290,6 @@ class ResourceWorkingHours(TestResourceCommon):
             5, day_date=Datetime.from_string('2013-02-12 09:08:07'),
             compute_leaves=True, resource_id=self.resource1_id)
         self.assertEqual(res.date(), Datetime.from_string('2013-03-01 00:00:00').date(), 'resource_calendar: wrong days scheduling')
-
-    def test_calendar_days_scheduling_without_calendar(self):
-        # Without calendar, should only count days -> 12 -> 16, 5 days with default intervals
-        res = self.env['work.calendar'].with_context(tz='UTC').plan_days(5, day_date=Datetime.from_string('2013-02-12 09:08:07'), default_interval=(8, 16))
-        self.assertEqual(res, Datetime.from_string('2013-02-16 16:00:00'), 'resource_calendar: wrong days scheduling')
 
 WAR_START = date(1932, 11, 2)
 WAR_END = date(1932, 12, 10)
