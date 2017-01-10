@@ -180,17 +180,11 @@ class ResourceCalendar(models.Model):
     @api.multi
     def _get_day_attendances(self, day_dt):
         """ Given a day datetime, return matching attendances """
-        self.ensure_one()
-        weekday = day_dt.weekday()
-        attendances = self.env['work.calendar.attendance']
-
-        for attendance in self.attendance_ids.filtered(
+        return self.attendance_ids.filtered(
             lambda att:
-                int(att.dayofweek) == weekday and
+                int(att.dayofweek) == day_dt.weekday() and
                 not (att.date_from and fields.Date.from_string(att.date_from) > day_dt.date()) and
-                not (att.date_to and fields.Date.from_string(att.date_to) < day_dt.date())):
-            attendances |= attendance
-        return attendances
+                not (att.date_to and fields.Date.from_string(att.date_to) < day_dt.date()))
 
     @api.multi
     def _get_weekdays(self):
