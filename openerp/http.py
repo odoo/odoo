@@ -840,7 +840,7 @@ more details.
   passing the `csrf=False` parameter to the `route` decorator.
                     """, request.httprequest.path)
 
-                raise werkzeug.exceptions.BadRequest('Invalid CSRF Token')
+                raise werkzeug.exceptions.BadRequest('Session expired (invalid CSRF token)')
 
         r = self._call_function(**self.params)
         if not r:
