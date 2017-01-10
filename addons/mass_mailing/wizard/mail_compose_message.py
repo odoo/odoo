@@ -66,4 +66,12 @@ class MailComposeMessage(models.TransientModel):
                     'notification': mass_mailing.reply_to_mode == 'thread',
                     'auto_delete': not mass_mailing.keep_archives,
                 })
+                if not (res[res_id].get('email_to') or res[res_id].get('recipient_ids')):
+                    del res[res_id]
+                    self.env['mail.mail.statistics'].create({
+                        'model': self.model,
+                        'exception': fields.datetime.now(),
+                        'mass_mailing_id': mass_mailing.id,
+                        'res_id': res_id,
+                    })
         return res
