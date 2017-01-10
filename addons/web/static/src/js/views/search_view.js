@@ -466,7 +466,7 @@ var SearchView = View.extend({
      */
     select_completion: function (e, ui) {
         e.preventDefault();
-        if(ui.item.facet.values && ui.item.facet.values.length && String(ui.item.facet.values[0].value).trim() !== "") {
+        if(ui.item.facet && ui.item.facet.values && ui.item.facet.values.length && String(ui.item.facet.values[0].value).trim() !== "") {
             this.query.add(ui.item.facet);
         } else {
             this.query.trigger('add');

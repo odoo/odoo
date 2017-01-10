@@ -271,8 +271,8 @@ class MrpProduction(models.Model):
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             production._generate_raw_moves(lines)
             # Check for all draft moves whether they are mto or not
-            self._adjust_procure_method()
-            self.move_raw_ids.action_confirm()
+            production._adjust_procure_method()
+            production.move_raw_ids.action_confirm()
         return True
 
     def _generate_finished_moves(self):
