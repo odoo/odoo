@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
+import itertools
 import pytz
 
+from collections import namedtuple
 from datetime import timedelta
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -32,6 +34,7 @@ class ResourceCalendar(models.Model):
     tuples, holding several intervals of work or leaves. """
     _name = "resource.calendar"
     _description = "Resource Calendar"
+    _interval_obj = namedtuple('Interval', ('start_datetime', 'end_datetime', 'data'))
 
     @api.model
     def default_get(self, fields):
@@ -72,75 +75,97 @@ class ResourceCalendar(models.Model):
     # Utility methods
     # --------------------------------------------------
 
-    def _interval_clean(self, intervals):
-        """ Utility method that sorts and removes overlapping inside datetime
-        intervals. The intervals are sorted based on increasing starting datetime.
-        Overlapping intervals are merged into a single one.
+    def _merge_kw(self, kw, kw_ext):
+        new_kw = dict(kw, **kw_ext)
+        new_kw.update(
+            attendances=kw.get('attendances', self.env['resource.calendar.attendance']) | kw_ext.get('attendances', self.env['resource.calendar.attendance']),
+            leaves=kw.get('leaves', self.env['resource.calendar.leaves']) | kw_ext.get('leaves', self.env['resource.calendar.leaves'])
+        )
+        return new_kw
 
-        :param list intervals: list of intervals; each interval is a tuple
-                               (datetime_from, datetime_to)
-        :return list cleaned: list of sorted intervals without overlap """
+    def _interval_new(self, start_datetime, end_datetime, kw=None):
+        kw = kw if kw is not None else dict()
+        kw.setdefault('attendances', self.env['resource.calendar.attendance'])
+        kw.setdefault('leaves', self.env['resource.calendar.leaves'])
+        return self._interval_obj(start_datetime, end_datetime, kw)
+
+    def _interval_exclude_left(self, interval, interval_dst):
+        return self._interval_obj(
+            interval.start_datetime > interval_dst.end_datetime and interval.start_datetime or interval_dst.end_datetime,
+            interval.end_datetime,
+            self._merge_kw(interval.data, interval_dst.data)
+        )
+
+    def _interval_exclude_right(self, interval, interval_dst):
+        return self._interval_obj(
+            interval.start_datetime,
+            interval.end_datetime < interval_dst.start_datetime and interval.end_datetime or interval_dst.start_datetime,
+            self._merge_kw(interval.data, interval_dst.data)
+        )
+
+    def _interval_or(self, interval, interval_dst):
+        return self._interval_obj(
+            interval.start_datetime < interval_dst.start_datetime and interval.start_datetime or interval_dst.start_datetime,
+            interval.end_datetime > interval_dst.end_datetime and interval.end_datetime or interval_dst.end_datetime,
+            self._merge_kw(interval.data, interval_dst.data)
+        )
+
+    def _interval_and(self, interval, interval_dst):
+        return self._interval_obj(
+            interval.start_datetime > interval_dst.start_datetime and interval.start_datetime or interval_dst.start_datetime,
+            interval.end_datetime < interval_dst.end_datetime and interval.end_datetime or interval_dst.end_datetime,
+            self._merge_kw(interval.data, interval_dst.data)
+        )
+
+    def _interval_merge(self, intervals):
+        """ Sort intervals based on starting datetime and merge overlapping intervals.
+
+        :return list cleaned: sorted intervals merged without overlap """
         intervals = sorted(intervals, key=itemgetter(0))  # sort on first datetime
         cleaned = []
         working_interval = None
         while intervals:
             current_interval = intervals.pop(0)
             if not working_interval:  # init
-                working_interval = [current_interval[0], current_interval[1]]
+                working_interval = self._interval_new(*current_interval)
             elif working_interval[1] < current_interval[0]:  # interval is disjoint
-                cleaned.append(tuple(working_interval))
-                working_interval = [current_interval[0], current_interval[1]]
+                cleaned.append(working_interval)
+                working_interval = self._interval_new(*current_interval)
             elif working_interval[1] < current_interval[1]:  # union of greater intervals
-                working_interval[1] = current_interval[1]
+                working_interval = self._interval_or(working_interval, current_interval)
         if working_interval:  # handle void lists
-            cleaned.append(tuple(working_interval))
+            cleaned.append(working_interval)
         return cleaned
 
     @api.model
     def _interval_remove_leaves(self, interval, leave_intervals):
-        """ Utility method that remove leave intervals from a base interval:
+        """ Remove leave intervals from a base interval
 
-         - clean the leave intervals, to have an ordered list of not-overlapping
-           intervals
-         - initiate the current interval to be the base interval
-         - for each leave interval:
-
-          - finishing before the current interval: skip, go to next
-          - beginning after the current interval: skip and get out of the loop
-            because we are outside range (leaves are ordered)
-          - beginning within the current interval: close the current interval
-            and begin a new current interval that begins at the end of the leave
-            interval
-          - ending within the current interval: update the current interval begin
-            to match the leave interval ending
-
-        :param tuple interval: a tuple (beginning datetime, ending datetime) that
-                               is the base interval from which the leave intervals
-                               will be removed
-        :param list leave_intervals: a list of tuples (beginning datetime, ending datetime)
-                                    that are intervals to remove from the base interval
-        :return list intervals: a list of tuples (begin datetime, end datetime)
-                                that are the remaining valid intervals """
-        if not interval:
-            return interval
-        if leave_intervals is None:
-            leave_intervals = []
+        :param tuple interval: an interval (see above) that is the base interval
+                               from which the leave intervals will be removed
+        :param list leave_intervals: leave intervals to remove
+        :return list intervals: ordered intervals with leaves removed """
         intervals = []
-        leave_intervals = self._interval_clean(leave_intervals)
-        current_interval = [interval[0], interval[1]]
+        leave_intervals = self._interval_merge(leave_intervals)
+        current_interval = interval
         for leave in leave_intervals:
+            # skip if ending before the current start datetime
             if leave[1] <= current_interval[0]:
                 continue
+            # skip if starting after current end datetime; break as leaves are ordered and
+            # are therefore all out of range
             if leave[0] >= current_interval[1]:
                 break
+            # begins within current interval: close current interval and begin a new one
+            # that begins at the leave end datetime
             if current_interval[0] < leave[0] < current_interval[1]:
-                current_interval[1] = leave[0]
-                intervals.append((current_interval[0], current_interval[1]))
-                current_interval = [leave[1], interval[1]]
+                intervals.append(self._interval_exclude_right(current_interval, leave))
+                current_interval = self._interval_exclude_left(interval, leave)
+            # ends within current interval: set current start datetime as leave end datetime
             if current_interval[0] <= leave[1]:
-                current_interval[0] = leave[1]
+                current_interval = self._interval_exclude_left(interval, leave)
         if current_interval and current_interval[0] < interval[1]:  # remove intervals moved outside base interval due to leaves
-            intervals.append((current_interval[0], current_interval[1]))
+            intervals.append(current_interval)
         return intervals
 
     @api.model
@@ -230,7 +255,7 @@ class ResourceCalendar(models.Model):
 
     @api.multi
     def _get_previous_work_day(self, day_date):
-        """ Get previous date of day_date, based on work.calendar. If no
+        """ Get previous date of day_date, based on resource.calendar. If no
         calendar is provided, just return the previous day.
 
         :param date day_date: current day as a date
@@ -282,7 +307,7 @@ class ResourceCalendar(models.Model):
             date_to = fields.Datetime.from_string(leave.date_to)
             if start_datetime and date_to < start_datetime:
                 continue
-            leaves.append((date_from, date_to))
+            leaves.append(self._interval_new(date_from, date_to, {'leaves': leave}))
         return leaves
 
     @api.multi
@@ -322,14 +347,13 @@ class ResourceCalendar(models.Model):
         elif start_dt is None:
             start_dt = datetime.datetime.now().replace(hour=0, minute=0, second=0)
         else:
-            work_limits.append((start_dt.replace(hour=0, minute=0, second=0), start_dt))
+            work_limits.append(self._interval_new(start_dt.replace(hour=0, minute=0, second=0), start_dt))
         if end_dt is None:
             end_dt = start_dt.replace(hour=23, minute=59, second=59)
         else:
-            work_limits.append((end_dt, end_dt.replace(hour=23, minute=59, second=59)))
+            work_limits.append(self._interval_new(end_dt, end_dt.replace(hour=23, minute=59, second=59)))
         assert start_dt.date() == end_dt.date(), '_get_day_work_intervals is restricted to one day'
 
-        intervals = []
         work_dt = start_dt.replace(hour=0, minute=0, second=0)
 
         working_intervals = []
@@ -339,10 +363,10 @@ class ResourceCalendar(models.Model):
             dt_t = work_dt.replace(hour=0, minute=0, second=0) + timedelta(seconds=(calendar_working_day.hour_to * 3600))
 
             # adapt tz
-            working_interval = (
+            working_interval = self._interval_new(
                 dt_f.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None),
                 dt_t.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None),
-                calendar_working_day.id
+                {'attendances': calendar_working_day}
             )
             working_intervals += self._interval_remove_leaves(working_interval, work_limits)
 
@@ -351,11 +375,10 @@ class ResourceCalendar(models.Model):
             leaves = self._get_leave_intervals(resource_id=resource_id)
 
         # filter according to leaves
-        for interval in working_intervals:
-            work_intervals = self._interval_remove_leaves(interval, leaves)
-            intervals += work_intervals
-
-        return intervals
+        if leaves:
+            return list(itertools.chain.from_iterable(map(lambda i: self._interval_remove_leaves(i, leaves), working_intervals)))
+        else:
+            return working_intervals
 
     # --------------------------------------------------
     # Main computation API
