@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, _
+import logging
+
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 import odoo.addons.decimal_precision as dp
+
+_logger = logging.getLogger(__name__)
 
 
 class SaleOrder(models.Model):
@@ -24,12 +28,8 @@ class SaleOrder(models.Model):
                 continue
             else:
                 if order.carrier_id:
-                    carrier = order.carrier_id
-                    sale_delivery = order._get_delivery_price(carrier)
-                    if not sale_delivery:
-                        price = carrier._compute_delivery_price_for_so(order)
-                        sale_delivery = order._set_delivery_price(price, carrier)
-                    order.delivery_price = sale_delivery.price
+                    price = order._get_delivery_carrier(order.carrier_id)
+                    order.delivery_price = price if price > -1.0 else 0.0
 
     @api.onchange('partner_id')
     def onchange_partner_id_dtype(self):
@@ -44,19 +44,15 @@ class SaleOrder(models.Model):
         return res
 
     @api.multi
-    def _get_delivery_price(self, carrier):
-        self.ensure_one()
-        return self.env['sale.delivery.carrier'].search([('order_id', '=', self.id), ('carrier_id', '=', carrier.id)], limit=1)
-
-    @api.multi
-    def _set_delivery_price(self, price_unit, carrier):
-        self.ensure_one()
-        return self.env['sale.delivery.carrier'].create({
-            'order_id': self.id,
-            'carrier_id': carrier.id,
-            'price': price_unit,
-            'available': bool(price_unit) if carrier.delivery_type not in ['fixed', 'base_on_rule'] else True
-        })
+    @tools.ormcache('self.id', 'carrier.id')
+    def _get_delivery_carrier(self, carrier):
+        price = -1.0
+        try:
+            price = carrier._compute_delivery_price_for_so(self)
+        except Exception as e:
+            _logger.info("Carrier %s: %s", carrier.name, e.name)
+        finally:
+            return price
 
     @api.multi
     def _delivery_unset(self):
@@ -76,12 +72,9 @@ class SaleOrder(models.Model):
 
                 if carrier.delivery_type not in ['fixed', 'base_on_rule']:
                     # Shipping providers are used when delivery_type is other than 'fixed' or 'base_on_rule'
-                    sale_delivery = order._get_delivery_price(carrier)
-                    if not sale_delivery:
-                        price_unit = order.carrier_id.get_shipping_price_from_so(order)[0]
-                        order._set_delivery_price(price_unit, order.carrier_id)
-                    else:
-                        price_unit = sale_delivery.price
+                    price = order._get_delivery_carrier(carrier)
+                    if price > -1.0:
+                        price_unit = price
                 else:
                     # Classic grid-based carriers
                     carrier = order.carrier_id.verify_carrier(order.partner_shipping_id)
@@ -140,17 +133,5 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def write(self, value):
-        result = super(SaleOrderLine, self).write(value)
-        SaleDelivery = self.env['sale.delivery.carrier']
-        for sale in self.mapped('order_id'):
-            SaleDelivery.search([('order_id', '=', sale.id)]).unlink()
-        return result
-
-
-class SaleDeliveryCarrier(models.TransientModel):
-    _name = "sale.delivery.carrier"
-
-    order_id = fields.Many2one('sale.order', string="Sale Order")
-    carrier_id = fields.Many2one('delivery.carrier', string="Delivery Method")
-    price = fields.Float(string="Estimated Delivery Price")
-    available = fields.Boolean()
+        self.env['sale.order'].clear_caches()
+        return super(SaleOrderLine, self).write(value)
