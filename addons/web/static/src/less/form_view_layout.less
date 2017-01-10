@@ -91,7 +91,7 @@
     // Title
     .oe_title {
         > h1, > h2, > h3 {
-            width: 100%; // Needed because inline-block when is a hx.o_row 
+            width: 100%; // Needed because inline-block when is a hx.o_row
             margin-top: 0;
             margin-bottom: 0;
             line-height: inherit;
@@ -274,6 +274,20 @@
         .ace-view-editor {
             height: 300px;
             padding: 0 1em;
+        }
+    }
+
+    .o_form_field_domain {
+        > .o_form_field_domain_panel {
+            margin-top: 8px;
+        }
+        &.o_inline_mode.o_edit_mode {
+            position: relative;
+
+            > .o_form_field_domain_panel {
+                .o-position-absolute(0, 0);
+                margin-top: 0;
+            }
         }
     }
 }

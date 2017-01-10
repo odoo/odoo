@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="website.website_config_settings_view_form"/>
         <field name="arch" type="xml">
             <div id="msg_contact_form_install_setting" position="after">
-                <div class="content-group mt16">
+                <div class="content-group mt16" attrs="{'invisible': [('module_website_crm', '=', False)]}">
                     <div class="row">
                         <label class="col-md-3 o_light_label" string="Sales Channel" for="crm_default_team_id"/>
                         <field name="crm_default_team_id" class="oe_inline"/>

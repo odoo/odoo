@@ -24,7 +24,10 @@
         &.o_domain_selector {
             &.o_edit_mode {
                 position: relative;
-                padding-right: @o-domain-selector-panel-space;
+
+                > .o_domain_node_children_container {
+                    padding-right: @o-domain-selector-panel-space;
+                }
             }
 
             > .o_domain_node_children_container {

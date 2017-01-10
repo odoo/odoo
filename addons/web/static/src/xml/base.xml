@@ -670,13 +670,16 @@
         t-att-maxlength="widget.field.size"/>
 </t>
 
-<div t-name="FieldDomain" class="o_form_field_domain">
+<div t-name="FieldDomain" t-attf-class="o_form_field_domain#{widget.get('effective_readonly') ? '' : ' o_edit_mode'}#{widget.options.in_dialog ? '' : ' o_inline_mode'}">
     <!-- domain selector will be instantiated here -->
-    <div class="mt8">
+    <div class="o_form_field_domain_panel">
         <i class="fa fa-arrow-right"/>
-        <span><span class="o_domain_records_count"/> Records Selected</span>
-        <button class="btn btn-default btn-xs o_domain_show_selection_button" type="button">See selection</button>
+        <button class="btn btn-xs btn-default o_domain_show_selection_button" type="button">
+            <span class="o_domain_records_count"/> record(s)
+        </button>
         <span class="text-warning o_domain_error_message hidden"><i class="fa fa-exclamation-triangle"/> Invalid domain</span>
+        <button t-if="widget.options.in_dialog &amp;&amp; !widget.get('effective_readonly')"
+            class="btn btn-sm btn-primary o_form_field_domain_dialog_button">Edit domain</button>
     </div>
 </div>
 
@@ -684,7 +687,7 @@
     <div t-if="!widget.readonly &amp;&amp; !widget.noControlPanel" class="btn-group btn-group-sm pull-right o_domain_node_control_panel">
         <button class="btn btn-default o_domain_delete_node_button"><i class="fa fa-minus"/></button>
         <button class="btn btn-default o_domain_add_node_button"><i class="fa fa-plus"/></button>
-        <button class="btn btn-default o_domain_add_node_button" t-att-data-branch="1"><i class="fa fa-ellipsis-h"/></button>
+        <button class="btn btn-default o_domain_add_node_button" data-branch="1"><i class="fa fa-ellipsis-h"/></button>
     </div>
 </t>
 <t t-name="DomainTree.OperatorSelector">
@@ -712,9 +715,9 @@
     </t>
     <t t-else="">
         <div>
-            <t t-if="widget.children.length === 1">Match the records with the following rule:</t>
+            <t t-if="widget.children.length === 1">Match records with the following rule:</t>
             <t t-else="">
-                <span>Match the records with</span>
+                <span>Match records with</span>
                 <t t-call="DomainTree.OperatorSelector"/>
                 <span>of the following rules:</span>
             </t>
