@@ -94,7 +94,7 @@ class MrpProduction(models.Model):
         help="Bill of Materials allow you to define the list of required raw materials to make a finished product.")
     routing_id = fields.Many2one(
         'mrp.routing', 'Routing',
-        readonly=True, related='bom_id.routing_id', store=True,
+        readonly=True, compute='_compute_routing', store=True,
         help="The list of operations (list of work centers) to produce the finished product. The routing "
              "is mainly used to compute work center costs during operations and to plan future loads on "
              "work centers based on production planning.")
@@ -151,6 +151,15 @@ class MrpProduction(models.Model):
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
     priority = fields.Selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority',
                                 readonly=True, states={'confirmed': [('readonly', False)]}, default='1')
+
+    @api.multi
+    @api.depends('bom_id.routing_id', 'bom_id.routing_id.operation_ids')
+    def _compute_routing(self):
+        for production in self:
+            if production.bom_id.routing_id.operation_ids:
+                production.routing_id = production.bom_id.routing_id.id
+            else:
+                production.routing_id = False
 
     @api.multi
     @api.depends('workorder_ids')
@@ -242,10 +251,6 @@ class MrpProduction(models.Model):
         location = self.env.ref('stock.stock_location_stock')
         self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
-
-    @api.onchange('bom_id')
-    def onchange_bom_id(self):
-        self.routing_id = self.bom_id.routing_id.id
 
     @api.model
     def create(self, values):
