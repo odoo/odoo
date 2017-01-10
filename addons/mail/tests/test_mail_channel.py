@@ -14,16 +14,26 @@ class TestMailGroup(TestMail):
     def setUpClass(cls):
         super(TestMailGroup, cls).setUpClass()
         # for specific tests of mail channel, get back to its expected behavior
-        cls.registry('mail.channel')._revert_method('message_get_recipient_values')
-
-        # Private: private group
-        cls.group_private = cls.env['mail.channel'].with_context({
+        # cls.registry('mail.channel')._revert_method('message_get_recipient_values')
+        Channel = cls.env['mail.channel'].with_context({
             'mail_create_nolog': True,
             'mail_create_nosubscribe': True
-        }).create({
+        })
+
+        # Pigs: base group for tests
+        cls.group_pigs = Channel.create({
+            'name': 'Pigs',
+            'public': 'groups',
+            'group_public_id': cls.env.ref('base.group_user').id})
+        # Jobs: public group
+        cls.group_public = Channel.create({
+            'name': 'Jobs',
+            'description': 'NotFalse',
+            'public': 'public'})
+        # Private: private group
+        cls.group_private = Channel.create({
             'name': 'Private',
-            'public': 'private'}
-        ).with_context({'mail_create_nosubscribe': False})
+            'public': 'private'})
 
     @classmethod
     def tearDownClass(cls):

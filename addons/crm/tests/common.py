@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
-from odoo.addons.mail.tests.common import TestMail
+from odoo.addons.mail.tests.common import BaseFunctionalTest
 
-class TestCrm(TestMail):
+class TestCrm(BaseFunctionalTest):
 
     @classmethod
     def setUpClass(cls):

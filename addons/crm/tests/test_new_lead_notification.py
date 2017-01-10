@@ -12,7 +12,7 @@ class NewLeadNotification(TestCrm):
         # subscribe a partner and a channel to the sales channel with new lead subtype
         subtype = self.env.ref("crm.mt_salesteam_lead")
         self.sales_team_1.message_subscribe(partner_ids=[self.user_salesman_all.partner_id.id], subtype_ids=[subtype.id])
-        self.sales_team_1.message_subscribe(channel_ids=[self.group_pigs.id], subtype_ids=[subtype.id])
+        self.sales_team_1.message_subscribe(channel_ids=[self.channel_listen.id], subtype_ids=[subtype.id])
 
         # Imitate what happens in the controller when somebody creates a new
         # lead from the website form
@@ -27,11 +27,11 @@ class NewLeadNotification(TestCrm):
         })
         # partner and channel should be auto subscribed
         self.assertIn(self.user_salesman_all.partner_id, lead.message_partner_ids)
-        self.assertIn(self.group_pigs, lead.message_channel_ids)
+        self.assertIn(self.channel_listen, lead.message_channel_ids)
 
         msg = lead.message_ids[0]
         self.assertIn(self.user_salesman_all.partner_id, msg.needaction_partner_ids)
-        self.assertIn(self.group_pigs, msg.channel_ids)
+        self.assertIn(self.channel_listen, msg.channel_ids)
 
         # The user should have a new unread message
         lead_user = lead.sudo(self.user_salesman_all)
