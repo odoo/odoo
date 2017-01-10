@@ -68,6 +68,46 @@
             </field>
         </record>
 
+        <record id="im_livechat_rating_view_search" model="ir.ui.view">
+            <field name="name">rating.rating.search</field>
+            <field name="model">rating.rating</field>
+            <field name="arch" type="xml">
+                <search string="Ratings">
+                    <field name="rated_partner_id"/>
+                    <field name="rating"/>
+                    <field name="partner_id"/>
+                    <field name="res_name"/>
+                    <field name="res_id"/>
+                    <filter string="Satisfied" name="rating_happy" domain="[('rating', '=', 10)]"/>
+                    <filter string="Not satisfied" name="rating_okay" domain="[('rating', '=', 5)]"/>
+                    <filter string="Highly dissatisfied" name="rating_unhappy" domain="[('rating', '=', 1)]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Rated User" name="Responsible" context="{'group_by':'rated_partner_id'}"/>
+                        <filter string="Customer" name="customer" context="{'group_by':'partner_id'}"/>
+                        <filter string="Rating" name="rating" context="{'group_by':'rating'}"/>
+                        <filter string="Resource" name="resource" context="{'group_by':'res_name'}"/>
+                        <filter string="Day" context="{'group_by':'create_date:day'}"/>
+                        <filter string="Month" context="{'group_by':'create_date:month'}"/>
+                        <filter string="Year" context="{'group_by':'create_date:year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="im_livechat_rating_view_action" model="ir.actions.act_window">
+            <field name="name">Ratings</field>
+            <field name="res_model">rating.rating</field>
+            <field name="view_mode">kanban,tree,graph,pivot,form</field>
+            <field name="domain">[('consumed', '=', True)]</field>
+            <field name="search_view_id" ref="im_livechat_rating_view_search"/>
+            <field name="help" type="html">
+                <p>
+                    There is no rating at the moment.
+                </p>
+            </field>
+        </record>
+
         <record id="im_livechat_channel_view_form" model="ir.ui.view">
             <field name="name">im_livechat.channel.form</field>
             <field name="model">im_livechat.channel</field>
@@ -78,7 +118,7 @@
                         <button class="oe_stat_button" type="action" attrs="{'invisible':[('nbr_channel','=', 0)]}" name="%(mail_channel_action_from_livechat_channel)d" icon="fa-comments">
                             <field string="Sessions" name="nbr_channel" widget="statinfo"/>
                         </button>
-                        <button name="action_view_rating" attrs="{'invisible':[('rating_count_satisfaction','=', 0)]}" class="oe_stat_button" type="object" icon="fa-smile-o">
+                        <button name="im_livechat_rating_view_action" attrs="{'invisible':[('rating_count_satisfaction','=', 0)]}" class="oe_stat_button" type="object" icon="fa-smile-o">
                             <field string="Rating" name="rating_count_satisfaction" widget="statinfo"/>
                         </button>
                     </div>

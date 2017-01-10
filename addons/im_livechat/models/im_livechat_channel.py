@@ -136,13 +136,13 @@ class ImLivechatChannel(models.Model):
         return self.write({'user_ids': [(3, self._uid)]})
 
     @api.multi
-    def action_view_rating(self):
+    def im_livechat_rating_view_action(self):
         """ Action to display the rating relative to the channel, so all rating of the
             sessions of the current channel
-            :returns : the ir.action 'action_view_rating' with the correct domain
+            :returns : the ir.action 'im_livechat_rating_view_action' with the correct domain
         """
         self.ensure_one()
-        action = self.env['ir.actions.act_window'].for_xml_id('rating', 'action_view_rating')
+        action = self.env['ir.actions.act_window'].for_xml_id('im_livechat', 'im_livechat_rating_view_action')
         action['domain'] = [('res_id', 'in', [s.id for s in self.channel_ids]), ('res_model', '=', 'mail.channel')]
         return action
 
