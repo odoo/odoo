@@ -199,6 +199,7 @@ var MediaDialog = Dialog.extend({
 
         this.final_data = [media, self.old_media];
         $(document.body).trigger("media-saved", this.final_data);
+        $(self.old_media).trigger("save", this.final_data);
 
         // Update editor bar after image edition (in case the image change to icon or other)
         _.defer(function () {
@@ -305,11 +306,12 @@ var ImageDialog = Widget.extend({
             var img = _.select(this.images, function (v) { return v.id === attachment.id; });
             if (img.length) {
                 this.images.splice(this.images.indexOf(img[0]),1);
+            } else {
+                this.images.push(attachment);
             }
         } else {
-            this.images = [];
+            this.images = [attachment];
         }
-        this.images.push(attachment);
     },
     save: function () {
         if (this.options.select_images) {
@@ -370,6 +372,7 @@ var ImageDialog = Widget.extend({
         this.push(attachment);
         this.$('input.url').val('');
         this.search();
+        this.images = [];
     },
     form_submit: function (event) {
         var self = this;
@@ -482,20 +485,24 @@ var ImageDialog = Widget.extend({
     },
     select_existing: function (e) {
         var $img = $(e.currentTarget);
+        if (!this.options.select_images) {
+            this.$('.o_existing_attachment_cell.o_selected').removeClass("o_selected");
+            $img.closest('.o_existing_attachment_cell').addClass('o_selected');
+        } else {
+            $img.closest('.o_existing_attachment_cell').toggleClass('o_selected');
+        }
         var attachment = _.find(this.records, function (record) { return record.id === $img.data('id'); });
         this.push(attachment);
         this.selected_existing();
     },
     selected_existing: function () {
         var self = this;
-        this.$('.o_existing_attachment_cell.o_selected').removeClass("o_selected");
         var $select = this.$('.o_existing_attachment_cell [data-src]').filter(function () {
             var $img = $(this);
             return !!_.find(self.images, function (v) {
                 return (v.url === $img.data("src") || ($img.data("url") && v.url === $img.data("url")) || v.id === $img.data("id"));
             });
         });
-        $select.closest('.o_existing_attachment_cell').addClass("o_selected");
         return $select;
     },
     try_remove: function (e) {
