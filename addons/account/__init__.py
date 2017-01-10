@@ -7,13 +7,14 @@ import wizard
 import report
 
 from odoo import api, SUPERUSER_ID
+from openerp.tools import config
 
 
 def _auto_install_l10n(cr, registry):
     #check the country of the main company (only) and eventually load some module needed in that country
     env = api.Environment(cr, SUPERUSER_ID, {})
     country_code = env.user.company_id.country_id.code
-    if country_code:
+    if country_code and not config.options['test_enable']:
         #auto install localization module(s) if available
         module_list = []
         if country_code in ['BJ', 'BF', 'CM', 'CF', 'KM', 'CG', 'CI', 'GA', 'GN', 'GW', 'GQ', 'ML', 'NE', 'CD', 'SN', 'TD', 'TG']:
