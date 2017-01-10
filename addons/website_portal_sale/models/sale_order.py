@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, exceptions, models
+from odoo import api, exceptions, fields, models
 
 
 class SaleOrder(models.Model):
@@ -55,3 +55,11 @@ class SaleOrder(models.Model):
             action='/mail/view',
             model=self._name,
             res_id=self.id)[self.partner_id.id]
+
+
+class SaleOrderLine(models.Model):
+
+    _inherit = 'sale.order.line'
+
+    # Non-stored related field to allow portal user to see the image of the product he has ordered
+    product_image = fields.Binary('Product Image', related="product_id.image", store=False)
