@@ -16,7 +16,7 @@ class TestEventFlow(TestEventCommon):
     def test_00_basic_event_auto_confirm(self):
         """ Basic event management with auto confirmation """
         event_config = self.env['event.config.settings'].sudo(self.user_eventmanager).create({
-            'auto_confirmation': 1
+            'default_auto_confirmation': 1
         })
         event_config.execute()
 
@@ -114,7 +114,7 @@ class TestEventFlow(TestEventCommon):
         ]})
         with self.assertRaises(AccessError):
             event_config = self.env['event.config.settings'].sudo(self.user_eventmanager).create({
-                'auto_confirmation': 1
+                'default_auto_confirmation': 1
             })
             event_config.execute()
 

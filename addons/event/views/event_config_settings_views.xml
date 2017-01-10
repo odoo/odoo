@@ -1,27 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="view_event_configuration" model="ir.ui.view">
-            <field name="name">Configure Event</field>
+        <record id="event_config_settings_view_form" model="ir.ui.view">
+            <field name="name">event.config.settings.form</field>
             <field name="model">event.config.settings</field>
-            <field name="inherit_id" eval="False"/>
             <field name="arch" type="xml">
-                <form class="oe_form_configuration">
-                    <header>
-                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
-                    </header>
-                    <group string="Events">
-                        <field name="module_event_sale" widget="radio"/>
-                        <field name="module_website_event_track" widget="radio"/>
-                        <field name="module_website_event_questions" widget="radio"/>
-                        <field name="auto_confirmation" widget="radio"/>
-                        <label  for="id" string="Barcode Interface"/>
-                        <div class="o_row">
-                            <field name="module_event_barcode" widget="upgrade_boolean"/>
-                            <label for="module_event_barcode"/>
+                <form String="Event settings" class="oe_form_configuration">
+                   <header>
+                       <button string="Save" type="object" name="execute" class="oe_highlight"/>
+                       <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                   </header>
+                   <sheet>
+                        <h2>Advertising</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_website_event"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_website_event"/>
+                                    <div class="text-muted">
+                                        Publish events on your website
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="Add a navigation menu to your event web pages with an agenda, tracks, a track proposal form, etc.">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_website_event_track"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string="Agenda &amp; Tracks" for="module_website_event_track"/>
+                                    <div class="text-muted">
+                                        Manage &amp; publish an agenda with tracks
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </group>
+                        <h2>Registration</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_event_sale"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_event_sale"/>
+                                    <div class="text-muted">
+                                        Sell tickets with sales orders
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_website_event_sale"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_website_event_sale"/>
+                                    <div class="text-muted">
+                                        Sell tickets on your website
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" id="default_auto_confirmation" title="Uncheck this option to manually manage draft event and draft registration.">
+                                <div class="o_setting_left_pane">
+                                    <field name="default_auto_confirmation"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="default_auto_confirmation"/>
+                                    <div class="text-muted">
+                                        Confirm registrations automatically
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Attendance</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_event_barcode" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_event_barcode"/>
+                                    <div class="text-muted">
+                                        Scan badges to confirm attendances
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </sheet>
                 </form>
             </field>
         </record>
