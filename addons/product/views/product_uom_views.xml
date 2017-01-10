@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <record id="product_uom_search_view" model="ir.ui.view">
+        <field name="name">product.uom.search</field>
+        <field name="model">product.uom</field>
+        <field name="arch" type="xml">
+            <search string="Units Of Measure Search">
+                <field name="name"/>
+                <field name="category_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Category" name="groupby_category" domain="[]" context="{'group_by': 'category_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id="product_uom_tree_view" model="ir.ui.view">
         <field name="name">product.uom.tree</field>
         <field name="model">product.uom</field>
@@ -51,6 +66,7 @@
         <field name="res_model">product.uom</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_uom_tree_view"/>
+        <field name="search_view_id" ref="product_uom_search_view" />
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to add a new unit of measure.
