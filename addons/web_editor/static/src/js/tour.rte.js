@@ -403,6 +403,51 @@ Tour.register({
 });
 
 
+Tour.register({
+    id:   'rte_backend_inline',
+    name: "Test RTE in backend view",
+    mode: 'test',
+    steps: [
+        {
+            title:      "Beginning test",
+        },
+        {
+            title:     "Click on edit button",
+            element:   '.o_form_button_edit, .oe_form_button_edit',
+        },
+        {
+            title:     "Add text to inline html field and save",
+            element:   '.o_form_button_save, .oe_form_button_save',
+            onload: function(){
+                $('.oe_form_field_html_text .note-editable > p').append('<i>world</i>');
+            },
+        },
+        {
+            title:      "Verify saved data after edition then click on edit button",
+            waitFor:    '.oe_form_field_html_text p > i:last-child:contains(world)',
+            element:    '.o_form_button_edit, .oe_form_button_edit',
+        },
+        {
+            title:      "Switch to code view mode",
+            element:    'button[data-event="codeview"]',
+        },
+        {
+            title:      "Modify code view content and save",
+            element:   '.o_form_button_save, .oe_form_button_save',
+            onload: function(){
+                $('.oe_form_field_html_text textarea.note-codable').val(function(_, val){
+                    return val.replace('</p>', '<u>!</u></p>');
+                });
+            },
+        },
+        {
+            title:      "Verify saved data after code view edition",
+            waitFor:    '.oe_form_field_html_text p > u:last-child:contains(!)',
+        },
+    ]
+});
+
+
 });
 
 });
