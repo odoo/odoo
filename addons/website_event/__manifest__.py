@@ -12,6 +12,7 @@ Online Events
     'depends': ['website', 'website_partner', 'website_mail', 'event'],
     'data': [
         'data/website_event_data.xml',
+        'views/event_config_settings_views.xml',
         'views/website_event_templates.xml',
         'views/website_event_views.xml',
         'security/ir.model.access.csv',
