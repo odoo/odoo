@@ -166,9 +166,10 @@ $('.oe_website_sale').each(function () {
         var l10n = openerp._t.database.parameters;
         var negative = num[0] === '-';
         num = (negative ? num.slice(1) : num);
-
+        // retro-compatibilit: if no website_id and so l10n.grouping = []
+        var grouping = l10n.grouping instanceof Array ? l10n.grouping : JSON.parse(l10n.grouping);
         return (negative ? '-' : '') + intersperse(
-            num, l10n.grouping, l10n.thousands_sep);
+            num, grouping, l10n.thousands_sep);
     }
 
     function price_to_str(price) {
@@ -176,7 +177,7 @@ $('.oe_website_sale').each(function () {
         var precision = 2;
         if ($(".decimal_precision").length) {
             var dec_precision = $(".decimal_precision").first().data('precision');
-            //MAth.log10 is not implemented in phantomJS
+            //Math.log10 is not implemented in phantomJS
             dec_precision = Math.round(Math.log(1/parseFloat(dec_precision))/Math.log(10));
             if (!isNaN(dec_precision)) {
                 precision = dec_precision;
@@ -184,8 +185,7 @@ $('.oe_website_sale').each(function () {
         }
         var formatted = _.str.sprintf('%.' + precision + 'f', price).split('.');
         formatted[0] = insert_thousand_seps(formatted[0]);
-        var ret = formatted.join(l10n.decimal_point);
-        return ret;
+        return formatted.join(l10n.decimal_point);
     }
 
     $(oe_website_sale).on('change', 'input.js_product_change', function (ev) {
@@ -213,8 +213,10 @@ $('.oe_website_sale').each(function () {
         var product_id = false;
         for (var k in variant_ids) {
             if (_.isEmpty(_.difference(variant_ids[k][1], values))) {
-                $price.html(price_to_str(variant_ids[k][2]));
-                $default_price.html(price_to_str(variant_ids[k][3]));
+                openerp.website.ready(function() {
+                    $price.html(price_to_str(variant_ids[k][2]));
+                    $default_price.html(price_to_str(variant_ids[k][3]));
+                });
                 if (variant_ids[k][3]-variant_ids[k][2]>0.2) {
                     $default_price.closest('.oe_website_sale').addClass("discount");
                     $optional_price.closest('.oe_optional').show().css('text-decoration', 'line-through');
