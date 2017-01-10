@@ -710,24 +710,19 @@ var KanbanView = View.extend({
         var context = {};
         context['default_' + this.group_by_field] = column.id;
         var name = event.data.value;
-        this.dataset.name_create(name, context).then(function on_success (data) {
+        this.dataset.name_create(name).done(function(data) {
             add_record(data[0]);
-        }, function on_fail (event) {
+        }).fail(function(error, event) {
             event.preventDefault();
-            var popup = new form_common.SelectCreatePopup(this);
-            popup.select_element(
-                self.model,
-                {
-                    title: _t("Create: "),
-                    initial_view: "form",
-                    disable_multiple_selection: true
-                },
-                [],
-                {"default_name": name}
-            );
-            popup.on("elements_selected", self, function(element_ids) {
-                add_record(element_ids[0]);
-            });
+            var dialog = new form_common.FormViewDialog(self, {
+                res_model: self.model,
+                context: _.extend({"default_name": name}, context),
+                title: _t("Create"),
+                disable_multiple_selection: true,
+                on_selected: function(element_ids) {
+                    add_record(element_ids[0]);
+                }
+            }).open();
         });
 
         function add_record(id) {
@@ -817,8 +812,20 @@ function transform_qweb_template (node, fvg, many2manys) {
             } else if (fields_registry.contains(ftype)) {
                 // do nothing, the kanban record will handle it
             } else {
-                node.tag = qweb.prefix;
-                node.attrs[qweb.prefix + '-esc'] = 'record.' + node.attrs.name + '.value';
+                if (node.attrs.bold) {
+                    node.tag = 'strong';
+                    var children_node = {
+                        attrs: {},
+                        children: [],
+                        tag: qweb.prefix,
+                    };
+                    children_node.attrs[qweb.prefix + '-esc'] = 'record.' + node.attrs.name + '.value';
+                    node.children.push(children_node);
+                } else {
+                    node.tag = qweb.prefix;
+                    node.attrs[qweb.prefix + '-esc'] = 'record.' + node.attrs.name + '.value';
+                }
+
             }
             break;
         case 'button':

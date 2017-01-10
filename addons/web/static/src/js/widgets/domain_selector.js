@@ -3,9 +3,9 @@ odoo.define("web.DomainSelector", function (require) {
 
 var core = require("web.core");
 var datepicker = require("web.datepicker");
+var domainUtils = require("web.domainUtils");
 var formats = require ("web.formats");
 var ModelFieldSelector = require("web.ModelFieldSelector");
-var pyeval = require("web.pyeval");
 var Widget = require("web.Widget");
 
 var _t = core._t;
@@ -55,7 +55,7 @@ var DomainNode = Widget.extend({
     },
     /// A DomainNode needs a model and domain to work. It can also receives a set of options
     /// @param model - a string with the model name
-    /// @param domain - an array of the prefix representation of the domain
+    /// @param domain - an array of the prefix representation of the domain (or a string which represents it)
     /// @param options - an object with possible values:
     ///                    - readonly, a boolean to indicate if the widget is readonly or not (default to true)
     ///                    - fs_filters, an object with a series of filters to use for the field selector (see @FieldSelector)
@@ -109,7 +109,7 @@ var DomainTree = DomainNode.extend({
     /// @see DomainTree._addFlattenedChildren
     init: function (parent, model, domain, options) {
         this._super.apply(this, arguments);
-        this._initialize(domain);
+        this._initialize(domainUtils.stringToDomain(domain));
     },
     /// @see DomainTree.init
     _initialize: function (domain) {
@@ -265,8 +265,9 @@ var DomainSelector = DomainTree.extend({
         /// the widget is re-rendered and notifies the parents. If not, a warning is shown to the
         /// user and the input is ignored.
         "change .o_domain_debug_input": function (e) {
+            var domain;
             try {
-                var domain = pyeval.eval("domain", $(e.currentTarget).val() || "[]");
+                domain = domainUtils.stringToDomain($(e.currentTarget).val());
             } catch (err) {
                 this.do_warn(_t("Syntax error"), _t("The domain you entered is not properly formed"));
                 return;
@@ -292,12 +293,7 @@ var DomainSelector = DomainTree.extend({
         // Display technical domain if in debug mode
         this.$debugInput = this.$(".o_domain_debug_input");
         if (this.$debugInput.length) {
-            var strValue = this.getDomain() || "[]";
-            if (!_.isString(strValue)) { // TODO there is no "pyuneval" function
-                strValue = JSON.stringify(strValue);
-                strValue = strValue.replace(/false/g, "False").replace(/true/g, "True");
-            }
-            this.$debugInput.val(strValue);
+            this.$debugInput.val(domainUtils.domainToString(this.getDomain()));
         }
     },
 });
@@ -328,6 +324,7 @@ var DomainLeaf = DomainNode.extend({
     init: function (parent, model, domain, options) {
         this._super.apply(this, arguments);
 
+        domain = domainUtils.stringToDomain(domain);
         this.chain = domain[0][0];
         this.operator = domain[0][1];
         this.value = domain[0][2];
