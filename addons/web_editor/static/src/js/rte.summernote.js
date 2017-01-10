@@ -494,13 +494,18 @@ function prettify_html(html) {
  *   disable (false) or enable (true) the code view mode.
  */
 $.summernote.pluginEvents.codeview = function (event, editor, layoutInfo, enable) {
+    if (layoutInfo === undefined) {
+        return;
+    }
     if (layoutInfo.toolbar) {
+        // if editor inline (FieldTextHtmlSimple)
         var is_activated = $.summernote.eventHandler.modules.codeview.isActivated(layoutInfo);
         if (is_activated === enable) {
             return;
         }
         return eventHandler.modules.codeview.toggle(layoutInfo);
     } else {
+        // if editor iframe (FieldTextHtml)
         var $editor = layoutInfo.editor();
         var $textarea = $editor.prev('textarea');
         if ($textarea.is('textarea') === enable) {
