@@ -341,6 +341,16 @@ class MarketingCampaignActivity(models.Model):
         return self.email_template_id.send_mail(workitem.res_id)
 
     @api.multi
+    def _process_wi_report(self, workitem):
+        self.ensure_one()
+        return self.report_id.render_report(workitem.res_id, self.report_id.report_name, None)
+
+    @api.multi
+    def _process_wi_action(self, workitem):
+        self.ensure_one()
+        return self.server_action_id.run()
+
+    @api.multi
     def process(self, workitem):
         self.ensure_one()
         method = '_process_wi_%s' % (self.action_type,)
