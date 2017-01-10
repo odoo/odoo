@@ -49,27 +49,27 @@ class TestIntervals(TestResourceCommon):
         cleaned_intervals = self.env['work.calendar']._interval_clean(self.intervals)
         self.assertEqual(len(cleaned_intervals), 3)
         # First interval: 03, unchanged
-        self.assertEqual(cleaned_intervals[0], (Datetime.from_string('2013-02-03 08:00:00'), Datetime.from_string('2013-02-03 10:00:00')))
+        self.assertEqual(cleaned_intervals[0][:2], (Datetime.from_string('2013-02-03 08:00:00'), Datetime.from_string('2013-02-03 10:00:00')))
         # Second interval: 04, 08-14, combining 08-12 and 11-14, 09-11 being inside 08-12
-        self.assertEqual(cleaned_intervals[1], (Datetime.from_string('2013-02-04 08:00:00'), Datetime.from_string('2013-02-04 14:00:00')))
+        self.assertEqual(cleaned_intervals[1][:2], (Datetime.from_string('2013-02-04 08:00:00'), Datetime.from_string('2013-02-04 14:00:00')))
         # Third interval: 04, 17-21, 18-19 being inside 17-21
-        self.assertEqual(cleaned_intervals[2], (Datetime.from_string('2013-02-04 17:00:00'), Datetime.from_string('2013-02-04 21:00:00')))
+        self.assertEqual(cleaned_intervals[2][:2], (Datetime.from_string('2013-02-04 17:00:00'), Datetime.from_string('2013-02-04 21:00:00')))
 
     def test_interval_remove(self):
         working_interval = (Datetime.from_string('2013-02-04 08:00:00'), Datetime.from_string('2013-02-04 18:00:00'))
         result = self.env['work.calendar']._interval_remove_leaves(working_interval, self.intervals)
         self.assertEqual(len(result), 1)
         # First interval: 04, 14-17
-        self.assertEqual(result[0], (Datetime.from_string('2013-02-04 14:00:00'), Datetime.from_string('2013-02-04 17:00:00')))
+        self.assertEqual(result[0][:2], (Datetime.from_string('2013-02-04 14:00:00'), Datetime.from_string('2013-02-04 17:00:00')))
 
     def test_interval_schedule_hours(self):
         cleaned_intervals = self.env['work.calendar']._interval_clean(self.intervals)
         result = self.env['work.calendar']._interval_schedule_hours(cleaned_intervals, 5.5)
         self.assertEqual(len(result), 2)
         # First interval: 03, 8-10 untouched
-        self.assertEqual(result[0], (Datetime.from_string('2013-02-03 08:00:00'), Datetime.from_string('2013-02-03 10:00:00')))
+        self.assertEqual(result[0][:2], (Datetime.from_string('2013-02-03 08:00:00'), Datetime.from_string('2013-02-03 10:00:00')))
         # First interval: 04, 08-11:30
-        self.assertEqual(result[1], (Datetime.from_string('2013-02-04 08:00:00'), Datetime.from_string('2013-02-04 11:30:00')))
+        self.assertEqual(result[1][:2], (Datetime.from_string('2013-02-04 08:00:00'), Datetime.from_string('2013-02-04 11:30:00')))
 
     def test_interval_schedule_hours_backwards(self):
         cleaned_intervals = self.env['work.calendar']._interval_clean(self.intervals)
@@ -77,9 +77,9 @@ class TestIntervals(TestResourceCommon):
         result = self.env['work.calendar']._interval_schedule_hours(cleaned_intervals, 5.5, remove_at_end=False)
         self.assertEqual(len(result), 2)
         # First interval: 03, 8-10 untouched
-        self.assertEqual(result[0], (Datetime.from_string('2013-02-04 17:00:00'), Datetime.from_string('2013-02-04 21:00:00')))
+        self.assertEqual(result[0][:2], (Datetime.from_string('2013-02-04 17:00:00'), Datetime.from_string('2013-02-04 21:00:00')))
         # First interval: 04, 08-11:30
-        self.assertEqual(result[1], (Datetime.from_string('2013-02-04 12:30:00'), Datetime.from_string('2013-02-04 14:00:00')))
+        self.assertEqual(result[1][:2], (Datetime.from_string('2013-02-04 12:30:00'), Datetime.from_string('2013-02-04 14:00:00')))
 
 
 class TestCalendarBasics(TestResourceCommon):
@@ -126,32 +126,32 @@ class TestCalendarBasics(TestResourceCommon):
         # Test: day0 without leaves: 1 interval
         intervals = self.calendar._get_day_work_intervals(start_dt=Datetime.from_string('2013-02-12 09:08:07'))
         self.assertEqual(len(intervals), 1)
-        self.assertEqual(intervals[0], (Datetime.from_string('2013-02-12 09:08:07'), Datetime.from_string('2013-02-12 16:00:00')))
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-12 09:08:07'), Datetime.from_string('2013-02-12 16:00:00')))
 
         # Test: day1, beginning at 10:30 -> work from 10:30 (arrival) until 16:00
         intervals = self.calendar._get_day_work_intervals(start_dt=Datetime.from_string('2013-02-19 10:30:00'))
         self.assertEqual(len(intervals), 1)
-        self.assertEqual(intervals[0], (Datetime.from_string('2013-02-19 10:30:00'), Datetime.from_string('2013-02-19 16:00:00')))
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-19 10:30:00'), Datetime.from_string('2013-02-19 16:00:00')))
 
         # Test: day3 without leaves: 2 interval
         intervals = self.calendar._get_day_work_intervals(start_dt=Datetime.from_string('2013-02-15 10:11:12'))
         self.assertEqual(len(intervals), 2)
-        self.assertEqual(intervals[0], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
-        self.assertEqual(intervals[1], (Datetime.from_string('2013-02-15 16:00:00'), Datetime.from_string('2013-02-15 23:00:00')))
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
+        self.assertEqual(intervals[1][:2], (Datetime.from_string('2013-02-15 16:00:00'), Datetime.from_string('2013-02-15 23:00:00')))
 
     def test_calendar_working_day_intervals_leaves_generic(self):
         # Test: day0 with leaves outside range: 1 interval
         intervals = self.calendar._get_day_work_intervals(start_dt=Datetime.from_string('2013-02-12 07:00:00'), compute_leaves=True)
         self.assertEqual(len(intervals), 1)
-        self.assertEqual(intervals[0], (Datetime.from_string('2013-02-12 08:00:00'), Datetime.from_string('2013-02-12 16:00:00')))
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-12 08:00:00'), Datetime.from_string('2013-02-12 16:00:00')))
 
         # Test: day0 with leaves: 2 intervals because of leave between 9 ans 12, ending at 15:45:30
         intervals = self.calendar._get_day_work_intervals(start_dt=Datetime.from_string('2013-02-19 08:15:00'),
                                                                end_dt=Datetime.from_string('2013-02-19 15:45:30'),
                                                                compute_leaves=True)
         self.assertEqual(len(intervals), 2)
-        self.assertEqual(intervals[0], (Datetime.from_string('2013-02-19 08:15:00'), Datetime.from_string('2013-02-19 09:00:00')))
-        self.assertEqual(intervals[1], (Datetime.from_string('2013-02-19 12:00:00'), Datetime.from_string('2013-02-19 15:45:30')))
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-19 08:15:00'), Datetime.from_string('2013-02-19 09:00:00')))
+        self.assertEqual(intervals[1][:2], (Datetime.from_string('2013-02-19 12:00:00'), Datetime.from_string('2013-02-19 15:45:30')))
 
     def test_calendar_working_day_intervals_leaves_resource(self):
         # Test: day1+14 on leave, with resource leave computation
@@ -172,21 +172,24 @@ class TestCalendarBasics(TestResourceCommon):
             'date_to': False,
         })
         intervals = self.calendar._get_day_work_intervals(start_dt=self.date2)
-        self.assertEqual(intervals, [(Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00'))])
+        self.assertEqual(len(intervals), 1)
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
 
         attendance.write({
             'date_from': False,
             'date_to': self.date2 - relativedelta(days=7),
         })
         intervals = self.calendar._get_day_work_intervals(start_dt=self.date2)
-        self.assertEqual(intervals, [(Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00'))])
+        self.assertEqual(len(intervals), 1)
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
 
         attendance.write({
             'date_from': self.date2 + relativedelta(days=7),
             'date_to': self.date2 - relativedelta(days=7),
         })
         intervals = self.calendar._get_day_work_intervals(start_dt=self.date2)
-        self.assertEqual(intervals, [(Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00'))])
+        self.assertEqual(len(intervals), 1)
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
 
         attendance.write({
             'date_from': self.date2,
@@ -194,8 +197,8 @@ class TestCalendarBasics(TestResourceCommon):
         })
         intervals = self.calendar._get_day_work_intervals(start_dt=self.date2)
         self.assertEqual(len(intervals), 2)
-        self.assertEqual(intervals[0], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
-        self.assertEqual(intervals[1], (Datetime.from_string('2013-02-15 16:00:00'), Datetime.from_string('2013-02-15 23:00:00')))
+        self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
+        self.assertEqual(intervals[1][:2], (Datetime.from_string('2013-02-15 16:00:00'), Datetime.from_string('2013-02-15 23:00:00')))
 
     def test_calendar_working_hours_of_date(self):
         # Test: day1, beginning at 10:30 -> work from 10:30 (arrival) until 16:00
@@ -235,15 +238,15 @@ class ResourceWorkingHours(TestResourceCommon):
     def test_calendar_hours_scheduling_backward(self):
         res = self.calendar._schedule_hours(-40, day_dt=Datetime.from_string('2013-02-12 09:00:00'))
         # current day, limited at 09:00 because of day_dt specified -> 1 hour
-        self.assertEqual(res[-1], (Datetime.from_string('2013-02-12 08:00:00'), Datetime.from_string('2013-02-12 09:00:00')))
+        self.assertEqual(res[-1][:2], (Datetime.from_string('2013-02-12 08:00:00'), Datetime.from_string('2013-02-12 09:00:00')))
         # previous days: 5+7 hours / 8 hours / 5+7 hours -> 32 hours
-        self.assertEqual(res[-2], (Datetime.from_string('2013-02-08 16:00:00'), Datetime.from_string('2013-02-08 23:00:00')))
-        self.assertEqual(res[-3], (Datetime.from_string('2013-02-08 08:00:00'), Datetime.from_string('2013-02-08 13:00:00')))
-        self.assertEqual(res[-4], (Datetime.from_string('2013-02-05 08:00:00'), Datetime.from_string('2013-02-05 16:00:00')))
-        self.assertEqual(res[-5], (Datetime.from_string('2013-02-01 16:00:00'), Datetime.from_string('2013-02-01 23:00:00')))
-        self.assertEqual(res[-6], (Datetime.from_string('2013-02-01 08:00:00'), Datetime.from_string('2013-02-01 13:00:00')))
+        self.assertEqual(res[-2][:2], (Datetime.from_string('2013-02-08 16:00:00'), Datetime.from_string('2013-02-08 23:00:00')))
+        self.assertEqual(res[-3][:2], (Datetime.from_string('2013-02-08 08:00:00'), Datetime.from_string('2013-02-08 13:00:00')))
+        self.assertEqual(res[-4][:2], (Datetime.from_string('2013-02-05 08:00:00'), Datetime.from_string('2013-02-05 16:00:00')))
+        self.assertEqual(res[-5][:2], (Datetime.from_string('2013-02-01 16:00:00'), Datetime.from_string('2013-02-01 23:00:00')))
+        self.assertEqual(res[-6][:2], (Datetime.from_string('2013-02-01 08:00:00'), Datetime.from_string('2013-02-01 13:00:00')))
         # 7 hours remaining
-        self.assertEqual(res[-7], (Datetime.from_string('2013-01-29 09:00:00'), Datetime.from_string('2013-01-29 16:00:00')))
+        self.assertEqual(res[-7][:2], (Datetime.from_string('2013-01-29 09:00:00'), Datetime.from_string('2013-01-29 16:00:00')))
 
         # Compute scheduled hours
         td = timedelta()
@@ -253,13 +256,13 @@ class ResourceWorkingHours(TestResourceCommon):
 
     def test_calendar_hours_scheduling_forward(self):
         res = self.calendar._schedule_hours(40, day_dt=Datetime.from_string('2013-02-12 09:00:00'))
-        self.assertEqual(res[0], (Datetime.from_string('2013-02-12 09:00:00'), Datetime.from_string('2013-02-12 16:00:00')))
-        self.assertEqual(res[1], (Datetime.from_string('2013-02-15 08:00:00'), Datetime.from_string('2013-02-15 13:00:00')))
-        self.assertEqual(res[2], (Datetime.from_string('2013-02-15 16:00:00'), Datetime.from_string('2013-02-15 23:00:00')))
-        self.assertEqual(res[3], (Datetime.from_string('2013-02-19 08:00:00'), Datetime.from_string('2013-02-19 16:00:00')))
-        self.assertEqual(res[4], (Datetime.from_string('2013-02-22 08:00:00'), Datetime.from_string('2013-02-22 13:00:00')))
-        self.assertEqual(res[5], (Datetime.from_string('2013-02-22 16:00:00'), Datetime.from_string('2013-02-22 23:00:00')))
-        self.assertEqual(res[6], (Datetime.from_string('2013-02-26 08:00:00'), Datetime.from_string('2013-02-26 09:00:00')))
+        self.assertEqual(res[0][:2], (Datetime.from_string('2013-02-12 09:00:00'), Datetime.from_string('2013-02-12 16:00:00')))
+        self.assertEqual(res[1][:2], (Datetime.from_string('2013-02-15 08:00:00'), Datetime.from_string('2013-02-15 13:00:00')))
+        self.assertEqual(res[2][:2], (Datetime.from_string('2013-02-15 16:00:00'), Datetime.from_string('2013-02-15 23:00:00')))
+        self.assertEqual(res[3][:2], (Datetime.from_string('2013-02-19 08:00:00'), Datetime.from_string('2013-02-19 16:00:00')))
+        self.assertEqual(res[4][:2], (Datetime.from_string('2013-02-22 08:00:00'), Datetime.from_string('2013-02-22 13:00:00')))
+        self.assertEqual(res[5][:2], (Datetime.from_string('2013-02-22 16:00:00'), Datetime.from_string('2013-02-22 23:00:00')))
+        self.assertEqual(res[6][:2], (Datetime.from_string('2013-02-26 08:00:00'), Datetime.from_string('2013-02-26 09:00:00')))
 
         td = timedelta()
         for item in res:
@@ -271,15 +274,15 @@ class ResourceWorkingHours(TestResourceCommon):
             40, day_dt=Datetime.from_string('2013-02-12 09:00:00'),
             compute_leaves=True, resource_id=self.resource1_id
         )
-        self.assertEqual(res[0], (Datetime.from_string('2013-02-12 09:00:00'), Datetime.from_string('2013-02-12 16:00:00')))
-        self.assertEqual(res[1], (Datetime.from_string('2013-02-15 08:00:00'), Datetime.from_string('2013-02-15 13:00:00')))
-        self.assertEqual(res[2], (Datetime.from_string('2013-02-15 16:00:00'), Datetime.from_string('2013-02-15 23:00:00')))
-        self.assertEqual(res[3], (Datetime.from_string('2013-02-19 08:00:00'), Datetime.from_string('2013-02-19 09:00:00')))
-        self.assertEqual(res[4], (Datetime.from_string('2013-02-19 12:00:00'), Datetime.from_string('2013-02-19 16:00:00')))
-        self.assertEqual(res[5], (Datetime.from_string('2013-02-22 08:00:00'), Datetime.from_string('2013-02-22 09:00:00')))
-        self.assertEqual(res[6], (Datetime.from_string('2013-02-22 16:00:00'), Datetime.from_string('2013-02-22 23:00:00')))
-        self.assertEqual(res[7], (Datetime.from_string('2013-03-01 11:30:00'), Datetime.from_string('2013-03-01 13:00:00')))
-        self.assertEqual(res[8], (Datetime.from_string('2013-03-01 16:00:00'), Datetime.from_string('2013-03-01 22:30:00')))
+        self.assertEqual(res[0][:2], (Datetime.from_string('2013-02-12 09:00:00'), Datetime.from_string('2013-02-12 16:00:00')))
+        self.assertEqual(res[1][:2], (Datetime.from_string('2013-02-15 08:00:00'), Datetime.from_string('2013-02-15 13:00:00')))
+        self.assertEqual(res[2][:2], (Datetime.from_string('2013-02-15 16:00:00'), Datetime.from_string('2013-02-15 23:00:00')))
+        self.assertEqual(res[3][:2], (Datetime.from_string('2013-02-19 08:00:00'), Datetime.from_string('2013-02-19 09:00:00')))
+        self.assertEqual(res[4][:2], (Datetime.from_string('2013-02-19 12:00:00'), Datetime.from_string('2013-02-19 16:00:00')))
+        self.assertEqual(res[5][:2], (Datetime.from_string('2013-02-22 08:00:00'), Datetime.from_string('2013-02-22 09:00:00')))
+        self.assertEqual(res[6][:2], (Datetime.from_string('2013-02-22 16:00:00'), Datetime.from_string('2013-02-22 23:00:00')))
+        self.assertEqual(res[7][:2], (Datetime.from_string('2013-03-01 11:30:00'), Datetime.from_string('2013-03-01 13:00:00')))
+        self.assertEqual(res[8][:2], (Datetime.from_string('2013-03-01 16:00:00'), Datetime.from_string('2013-03-01 22:30:00')))
 
         td = timedelta()
         for item in res:
