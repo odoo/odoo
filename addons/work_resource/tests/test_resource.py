@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.fields import Date, Datetime
 from odoo.tools import float_compare
-from odoo.addons.work_resource.models.resource import seconds
+from odoo.addons.work_resource.models.work_resource import seconds
 from odoo.addons.work_resource.tests.common import TestResourceCommon
 from odoo.tests import TransactionCase
 
