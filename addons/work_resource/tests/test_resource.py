@@ -325,17 +325,17 @@ class TestWorkDays(TestResourceCommon):
             )
         ]
 
-    def test_no_calendar(self):
-        """ If a resource has no resource calendar, they don't work """
-        r = self.env['work.resource'].create({
-            'name': "NoCalendar",
-            'calendar_id': False,
-        })
+    # def test_no_calendar(self):
+    #     """ If a resource has no resource calendar, they don't work """
+    #     r = self.env['work.resource'].create({
+    #         'name': "NoCalendar",
+    #         'calendar_id': False,
+    #     })
 
-        self.assertEqual(
-            [],
-            list(r._iter_work_days(WAR_START, WAR_END)),
-        )
+    #     self.assertEqual(
+    #         [],
+    #         list(r._iter_work_days(WAR_START, WAR_END)),
+    #     )
 
     def test_trivial_calendar_no_leaves(self):
         """ If leaves are not involved, only calendar attendances (basic
