@@ -1442,7 +1442,7 @@ exports.Orderline = Backbone.Model.extend({
         return parseFloat(round_di(this.price || 0, digits).toFixed(digits));
     },
     get_unit_display_price: function(){
-        if (this.pos.config.iface_tax_included) {
+        if (this.pos.config.iface_tax_included === 'total') {
             var quantity = this.quantity;
             this.quantity = 1.0;
             var price = this.get_all_prices().priceWithTax;
@@ -1457,7 +1457,7 @@ exports.Orderline = Backbone.Model.extend({
         return round_pr(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100), rounding);
     },
     get_display_price: function(){
-        if (this.pos.config.iface_tax_included) {
+        if (this.pos.config.iface_tax_included === 'total') {
             return this.get_price_with_tax();
         } else {
             return this.get_base_price();

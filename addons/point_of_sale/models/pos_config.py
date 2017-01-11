@@ -3,7 +3,7 @@
 import uuid
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
 
 
 class AccountCashboxLine(models.Model):
@@ -11,9 +11,16 @@ class AccountCashboxLine(models.Model):
 
     default_pos_id = fields.Many2one('pos.config', string='This cashbox line is used by default when opening or closing a balance for this point of sale')
 
+    @api.multi
+    def name_get(self):
+        result = []
+        for cashbox_line in self:
+            result.append((cashbox_line.id, "%s * %s"%(cashbox_line.coin_value, cashbox_line.number)))
+        return result
+
 class AccountBankStmtCashWizard(models.Model):
     _inherit = 'account.bank.statement.cashbox'
-    
+
     @api.model
     def default_get(self, fields):
         vals = super(AccountBankStmtCashWizard, self).default_get(fields)
@@ -44,9 +51,6 @@ class PosConfig(models.Model):
     def _get_default_location(self):
         return self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
 
-    def _get_default_nomenclature(self):
-        return self.env['barcode.nomenclature'].search([], limit=1)
-
     def _get_group_pos_manager(self):
         return self.env.ref('point_of_sale.group_pos_manager')
 
@@ -56,7 +60,8 @@ class PosConfig(models.Model):
     def _compute_default_customer_html(self):
         return self.env['ir.qweb'].render('point_of_sale.customer_facing_display_html')
 
-    name = fields.Char(string='Point of Sale Name', index=True, required=True, help="An internal identification of the point of sale")
+    name = fields.Char(string='Point of Sale Name', index=True, required=True, help="An internal identification of the point of sale.")
+    is_installed_account_accountant = fields.Boolean(compute="_compute_is_installed_account_accountant")
     journal_ids = fields.Many2many(
         'account.journal', 'pos_config_journal_rel',
         'pos_config_id', 'journal_id', string='Available Payment Methods',
@@ -77,37 +82,36 @@ class PosConfig(models.Model):
         help="Accounting journal used to create invoices.",
         default=_default_invoice_journal)
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")
-    iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer")
-    iface_payment_terminal = fields.Boolean(string='Payment Terminal', help="Enables Payment Terminal integration")
-    iface_electronic_scale = fields.Boolean(string='Electronic Scale', help="Enables Electronic Scale integration")
-    iface_vkeyboard = fields.Boolean(string='Virtual KeyBoard', help="Enables an integrated Virtual Keyboard")
-    iface_customer_facing_display = fields.Boolean(string='Customer Facing Display', help="Enables a remotely connected customer facing display")
-    iface_print_via_proxy = fields.Boolean(string='Print via Proxy', help="Bypass browser printing and prints via the hardware proxy")
-    iface_scan_via_proxy = fields.Boolean(string='Scan via Proxy', help="Enable barcode scanning with a remotely connected barcode scanner")
-    iface_invoicing = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale', default=True)
-    iface_big_scrollbars = fields.Boolean('Large Scrollbars', help='For imprecise industrial touchscreens')
+    iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer.")
+    iface_payment_terminal = fields.Boolean(string='Payment Terminal', help="Enables Payment Terminal integration.")
+    iface_electronic_scale = fields.Boolean(string='Electronic Scale', help="Enables Electronic Scale integration.")
+    iface_vkeyboard = fields.Boolean(string='Virtual KeyBoard', help=u"Don’t turn this option on if you take orders on smartphones or tablets. \n Such devices already benefit from a native keyboard.")
+    iface_customer_facing_display = fields.Boolean(string='Customer Facing Display', help="Show checkout to customers with a remotely-connected screen.")
+    iface_print_via_proxy = fields.Boolean(string='Print via Proxy', help="Bypass browser printing and prints via the hardware proxy.")
+    iface_scan_via_proxy = fields.Boolean(string='Scan via Proxy', help="Enable barcode scanning with a remotely connected barcode scanner.")
+    iface_invoicing = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale.')
+    iface_big_scrollbars = fields.Boolean('Large Scrollbars', help='For imprecise industrial touchscreens.')
     iface_print_auto = fields.Boolean(string='Automatic Receipt Printing', default=False,
-        help='The receipt will automatically be printed at the end of each order')
-    iface_print_skip_screen = fields.Boolean(string='Skip Receipt Screen', default=True,
+        help='The receipt will automatically be printed at the end of each order.')
+    iface_print_skip_screen = fields.Boolean(string='Skip Preview Screen', default=True,
         help='The receipt screen will be skipped if the receipt can be printed automatically.')
     iface_precompute_cash = fields.Boolean(string='Prefill Cash Payment',
-        help='The payment input will behave similarily to bank payment input, and will be prefilled with the exact due amount')
-    iface_tax_included = fields.Boolean(string='Include Taxes in Prices',
-        help='The displayed prices will always include all taxes, even if the taxes have been setup differently')
-    iface_start_categ_id = fields.Many2one('pos.category', string='Start Category',
-        help='The point of sale will display this product category by default. If no category is specified, all available products will be shown')
+        help='The payment input will behave similarily to bank payment input, and will be prefilled with the exact due amount.')
+    iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Prices'), ('total', 'Tax-Included Prices')], "Tax Display", default='subtotal', required=True)
+    iface_start_categ_id = fields.Many2one('pos.category', string='Initial Category',
+        help='The point of sale will display this product category by default. If no category is specified, all available products will be shown.')
     iface_display_categ_images = fields.Boolean(string='Display Category Pictures',
         help="The product categories will be displayed with pictures.")
     restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Managers',
-        help="Check to box to restrict the price control to managers only on point of sale orders.")
+        help="Only users with Manager access rights for PoS app can modify the product prices on orders.")
     cash_control = fields.Boolean(string='Cash Control', help="Check the amount of the cashbox at opening and closing.")
-    receipt_header = fields.Text(string='Receipt Header', help="A short text that will be inserted as a header in the printed receipt")
-    receipt_footer = fields.Text(string='Receipt Footer', help="A short text that will be inserted as a footer in the printed receipt")
+    receipt_header = fields.Text(string='Receipt Header', help="A short text that will be inserted as a header in the printed receipt.")
+    receipt_footer = fields.Text(string='Receipt Footer', help="A short text that will be inserted as a footer in the printed receipt.")
     proxy_ip = fields.Char(string='IP Address', size=45,
-        help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty')
+        help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty.')
     active = fields.Boolean(default=True)
     uuid = fields.Char(readonly=True, default=lambda self: str(uuid.uuid4()),
-        help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data')
+        help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data.')
     sequence_id = fields.Many2one('ir.sequence', string='Order IDs Sequence', readonly=True,
         help="This sequence is automatically created by Odoo but you can change it "
         "to customize the reference numbers of your orders.", copy=False)
@@ -121,21 +125,39 @@ class PosConfig(models.Model):
     last_session_closing_date = fields.Date(compute='_compute_last_session')
     pos_session_username = fields.Char(compute='_compute_current_session_user')
     group_by = fields.Boolean(string='Group Journal Items', default=True,
-        help="Check this if you want to group the Journal Items by Product while closing a Session")
+        help="Check this if you want to group the Journal Items by Product while closing a Session.")
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, default=_default_pricelist)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
-    barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcodes', required=True, default=_get_default_nomenclature,
-        help='Defines what kind of barcodes are available and how they are assigned to products, customers and cashiers')
+    barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcode Nomenclature',
+        help='Defines what kind of barcodes are available and how they are assigned to products, customers and cashiers.')
     group_pos_manager_id = fields.Many2one('res.groups', string='Point of Sale Manager Group', default=_get_group_pos_manager,
-        help='This field is there to pass the id of the pos manager group to the point of sale client')
+        help='This field is there to pass the id of the pos manager group to the point of sale client.')
     group_pos_user_id = fields.Many2one('res.groups', string='Point of Sale User Group', default=_get_group_pos_user,
-        help='This field is there to pass the id of the pos user group to the point of sale client')
+        help='This field is there to pass the id of the pos user group to the point of sale client.')
+    iface_tipproduct = fields.Boolean(string="Product tips")
     tip_product_id = fields.Many2one('product.product', string='Tip Product',
-        help="The product used to encode the customer tip. Leave empty if you do not accept tips.")
-    fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions')
+        help="This product is used as reference on customer receipts.")
+    fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.')
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
     default_cashbox_lines_ids = fields.One2many('account.cashbox.line', 'default_pos_id', string='Default Balance')
     customer_facing_display_html = fields.Html(string='Customer facing display content', translate=True, default=_compute_default_customer_html)
+    use_pricelist = fields.Boolean("Use a pricelist.")
+    tax_regime = fields.Boolean("Tax Regime")
+    tax_regime_selection = fields.Boolean("Tax Regime Selection value")
+    barcode_scanner = fields.Boolean("Barcode Scanner")
+    start_category = fields.Boolean("Set Start Category")
+    module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
+    module_pos_discount = fields.Boolean("Global Discounts")
+    module_pos_loyalty = fields.Boolean("Loyalty Program")
+    module_pos_mercury = fields.Boolean(string="Integrated Card Payments")
+    module_pos_reprint = fields.Boolean(string="Reprint Receipt")
+    is_posbox = fields.Boolean("PosBox")
+    is_header_or_footer = fields.Boolean("Header & Footer")
+
+    def _compute_is_installed_account_accountant(self):
+        account_accountant = self.env['ir.module.module'].sudo().search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
+        for pos_config in self:
+            pos_config.is_installed_account_accountant = account_accountant and account_accountant.id
 
     @api.depends('journal_id.currency_id', 'journal_id.company_id.currency_id')
     def _compute_currency(self):
@@ -179,27 +201,22 @@ class PosConfig(models.Model):
     @api.constrains('company_id', 'stock_location_id')
     def _check_company_location(self):
         if self.stock_location_id.company_id and self.stock_location_id.company_id.id != self.company_id.id:
-            raise UserError(_("The company of the stock location is different than the one of point of sale"))
+            raise ValidationError(_("The company of the stock location is different than the one of point of sale"))
 
     @api.constrains('company_id', 'journal_id')
     def _check_company_journal(self):
         if self.journal_id and self.journal_id.company_id.id != self.company_id.id:
-            raise UserError(_("The company of the sales journal is different than the one of point of sale"))
+            raise ValidationError(_("The company of the sales journal is different than the one of point of sale"))
 
     @api.constrains('company_id', 'invoice_journal_id')
-    def _check_company_journal(self):
+    def _check_company_invoice_journal(self):
         if self.invoice_journal_id and self.invoice_journal_id.company_id.id != self.company_id.id:
-            raise UserError(_("The invoice journal and the point of sale must belong to the same company"))
+            raise ValidationError(_("The invoice journal and the point of sale must belong to the same company"))
 
     @api.constrains('company_id', 'journal_ids')
     def _check_company_payment(self):
         if self.env['account.journal'].search_count([('id', 'in', self.journal_ids.ids), ('company_id', '!=', self.company_id.id)]):
-            raise UserError(_("The company of a payment method is different than the one of point of sale"))
-
-    @api.constrains('fiscal_position_ids', 'default_fiscal_position_id')
-    def _check_default_fiscal_position(self):
-        if self.default_fiscal_position_id and self.default_fiscal_position_id not in self.fiscal_position_ids:
-            raise UserError(_("The default fiscal position must be included in the available fiscal positions of the point of sale"))
+            raise ValidationError(_("The company of a payment method is different than the one of point of sale"))
 
     @api.onchange('iface_print_via_proxy')
     def _onchange_iface_print_via_proxy(self):
@@ -209,6 +226,60 @@ class PosConfig(models.Model):
     def _onchange_picking_type_id(self):
         if self.picking_type_id.default_location_src_id.usage == 'internal' and self.picking_type_id.default_location_dest_id.usage == 'customer':
             self.stock_location_id = self.picking_type_id.default_location_src_id.id
+
+    @api.onchange('use_pricelist')
+    def _onchange_use_pricelist(self):
+        """
+        If the 'pricelist' box is unchecked, we reset the pricelist_id to stop
+        using a pricelist for this posbox. 
+        """
+        if not self.use_pricelist:
+            self.pricelist_id = self._default_pricelist()
+
+    @api.onchange('iface_scan_via_proxy')
+    def _onchange_iface_scan_via_proxy(self):
+        if self.iface_scan_via_proxy:
+            self.barcode_scanner = True
+        else:
+            self.barcode_scanner = False
+
+    @api.onchange('barcode_scanner')
+    def _onchange_barcode_scanner(self):
+        if self.barcode_scanner:
+            self.barcode_nomenclature_id = self.env['barcode.nomenclature'].search([], limit=1)
+        else:
+            self.barcode_nomenclature_id = False
+
+    @api.onchange('is_posbox')
+    def _onchange_is_posbox(self):
+        if not self.is_posbox:
+            self.proxy_ip = False
+            self.iface_scan_via_proxy = False
+            self.iface_electronic_scale = False
+            self.iface_cashdrawer = False
+            self.iface_print_via_proxy = False
+            self.iface_customer_facing_display = False
+
+    @api.onchange('tax_regime')
+    def _onchange_tax_regime(self):
+        if not self.tax_regime:
+            self.default_fiscal_position_id = False
+
+    @api.onchange('tax_regime_selection')
+    def _onchange_tax_regime_selection(self):
+        if not self.tax_regime_selection:
+            self.fiscal_position_ids = [(5, 0, 0)]
+
+    @api.onchange('start_category')
+    def _onchange_start_category(self):
+        if not self.start_category:
+            self.iface_start_categ_id = False
+
+    @api.onchange('is_header_or_footer')
+    def _onchange_header_footer(self):
+        if not self.is_header_or_footer:
+            self.receipt_header = False
+            self.receipt_footer = False
 
     @api.multi
     def name_get(self):
@@ -235,7 +306,17 @@ class PosConfig(models.Model):
 
         val.update(name=_('POS order line %s') % values['name'], code='pos.order.line')
         values['sequence_line_id'] = IrSequence.create(val).id
-        return super(PosConfig, self).create(values)
+        pos_config = super(PosConfig, self).create(values)
+        pos_config.sudo()._check_modules_to_install()
+        # If you plan to add something after this, use a new environment. The one above is no longer valid after the modules install.
+        return pos_config
+
+    @api.multi
+    def write(self, vals):
+        result = super(PosConfig, self).write(vals)
+        self.sudo()._set_fiscal_position()
+        self.sudo()._check_modules_to_install()
+        return result
 
     @api.multi
     def unlink(self):
@@ -243,6 +324,32 @@ class PosConfig(models.Model):
             pos_config.sequence_id.unlink()
             pos_config.sequence_line_id.unlink()
         return super(PosConfig, self).unlink()
+
+    def _set_fiscal_position(self):
+        for config in self:
+            if config.tax_regime and config.default_fiscal_position_id.id not in config.fiscal_position_ids.ids:
+                config.fiscal_position_ids = [(4, config.default_fiscal_position_id.id)]
+            elif not config.tax_regime_selection and not config.tax_regime and config.fiscal_position_ids.ids:
+                config.fiscal_position_ids = [(5, 0, 0)]
+
+    def _check_modules_to_install(self):
+        module_installed = False
+        for pos_config in self:
+            for field_name in [f for f in pos_config.fields_get_keys() if f.startswith('module_')]:
+                module_name = field_name.split('module_')[1]
+                module_to_install = self.env['ir.module.module'].sudo().search([('name', '=', module_name)])
+                if getattr(pos_config, field_name) and module_to_install.state not in ('installed', 'to install', 'to upgrade'):
+                    module_to_install.button_immediate_install()
+                    module_installed = True
+        # just in case we want to do something if we install a module. (like a refresh ...)
+        return module_installed
+
+    def execute(self):
+        return {
+             'type': 'ir.actions.client',
+             'tag': 'reload',
+             'params': {'wait': True}
+         }
 
     # Methods to open the POS
     @api.multi

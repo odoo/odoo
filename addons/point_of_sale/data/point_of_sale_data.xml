@@ -24,6 +24,11 @@
             <field name="tag">reload</field>
             <field name="params" eval="{'menu_id': ref('menu_point_root')}"/>
         </record>
+
+        <record id="product_product_tip" model="product.product">
+            <field name="name">Tips</field>
+        </record>
+
         <record model="pos.config" id="pos_config_main">
             <field name="name">Main</field>
             <field name="picking_type_id" ref="picking_type_posout"/>

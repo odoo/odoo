@@ -20,9 +20,9 @@ This module adds several restaurant features to the Point of Sale:
     'website': 'https://www.odoo.com/page/point-of-sale',
     'data': [
         'security/ir.model.access.csv',
-        'views/pos_config_views.xml',
         'views/pos_order_views.xml',
         'views/pos_restaurant_views.xml',
+        'views/pos_config_views.xml',
         'views/pos_restaurant_templates.xml',
     ],
     'qweb': [
