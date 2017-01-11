@@ -279,7 +279,7 @@ function binary_to_binsize (value) {
 /**
  * Returns a human readable size
  *
- * @param {Number} numner of bytes
+ * @param {Number} number of bytes
  */
 function human_size (size) {
     var units = _t("Bytes,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb").split(',');
@@ -289,6 +289,39 @@ function human_size (size) {
         ++i;
     }
     return size.toFixed(2) + ' ' + units[i];
+}
+
+/**
+ * Naive and unlocalized human size parser.
+ * Returns the numeric amount specified in the given human formatted string.
+ *
+ * Eg:
+ *
+ *     parse_human_size('4 Kb') === 4096
+ *     parse_human_size('10m') === 10485760
+ *     parse_human_size('340.99') === 340.99
+ *
+ * @param {String} input human formatted string
+ */
+function parse_human_size(size) {
+    var units = "bkmgtpezy".split('');
+    var parsed = size.toString().match(/^([0-9\.,]*)(\s*)?([a-z]{1,2})?$/i);
+    if (parsed === null) {
+        throw("Could not parse: " + size);
+    }
+    var amount = parseFloat(parsed[1].replace(',', '.'));
+    if (isNaN(amount) || !isFinite(amount)) {
+        throw("Invalid amount: " + size);
+    }
+    var unit = parsed[3] ? parsed[3][0].toLowerCase() : '';
+    var index = units.indexOf(unit);
+    if (unit && index === -1) {
+        throw("Invalid unit: " + size);
+    }
+    if (index > 0) {
+        amount = amount * Math.pow(1024, index);
+    }
+    return amount;
 }
 
 /**
@@ -513,6 +546,7 @@ return {
     is_bin_size: is_bin_size,
     binary_to_binsize: binary_to_binsize,
     human_size: human_size,
+    parse_human_size: parse_human_size,
     human_number: human_number,
     round_precision: round_precision,
     round_decimals: round_decimals,

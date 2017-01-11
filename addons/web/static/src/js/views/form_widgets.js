@@ -1101,7 +1101,11 @@ var FieldBinary = common.AbstractField.extend(common.ReinitializeFieldMixin, {
         this._super(field_manager, node);
         this.binary_value = false;
         this.useFileAPI = !!window.FileReader;
-        this.max_upload_size = 25 * 1024 * 1024; // 25Mo
+        try {
+            this.max_file_size = utils.parse_human_size(this.options.max_file_size);
+        } catch(e) {
+            this.max_file_size = 0;
+        }
         if (!this.useFileAPI) {
             this.fileupload_id = _.uniqueId('o_fileupload');
             $(window).on(this.fileupload_id, function() {
@@ -1131,9 +1135,9 @@ var FieldBinary = common.AbstractField.extend(common.ReinitializeFieldMixin, {
         if ((this.useFileAPI && file_node.files.length) || (!this.useFileAPI && $(file_node).val() !== '')) {
             if (this.useFileAPI) {
                 var file = file_node.files[0];
-                if (file.size > this.max_upload_size) {
+                if (this.max_file_size && file.size > this.max_file_size) {
                     var msg = _t("The selected file exceed the maximum file size of %s.");
-                    this.do_warn(_t("File upload"), _.str.sprintf(msg, utils.human_size(this.max_upload_size)));
+                    this.do_warn(_t("File upload"), _.str.sprintf(msg, utils.human_size(this.max_file_size)));
                     return false;
                 }
                 var filereader = new FileReader();
