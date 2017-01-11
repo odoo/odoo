@@ -81,8 +81,8 @@ class SaleOrder(models.Model):
             carrier = DeliveryCarrier.browse(carrier_id)
             try:
                 _logger.debug("Checking availability of carrier #%s" % carrier_id)
-                available = carrier.with_context(order_id=self.id).read(fields=['available'])[0]['available']
-                if available:
+                price, error_msg = self._get_delivery_price(carrier)
+                if price is not False and not error_msg:
                     available_carriers += carrier
             except ValidationError as e:
                 # RIM TODO: hack to remove, make available field not depend on a SOAP call to external shipping provider
@@ -110,7 +110,15 @@ class SaleOrder(models.Model):
             return values
 
         delivery_carriers = order._get_delivery_methods()
-        values['deliveries'] = delivery_carriers.sudo().with_context(order_id=order.id)
+        deliveries = self.env['delivery.carrier']
+        carrier_price = {}
+        for carrier in delivery_carriers:
+            price, error_msg = order._get_delivery_price(carrier)
+            if price is not False and not error_msg:
+                deliveries |= carrier
+                carrier_price.update({carrier.id: price})
+        values['deliveries'] = deliveries.sudo()
+        values['carrier_price'] = carrier_price
         return values
 
     @api.multi
