@@ -364,6 +364,7 @@ var NumpadWidget = PosBaseWidget.extend({
         this.state = new models.NumpadState();
     },
     start: function() {
+        this.check_rights();
         this.state.bind('change:mode', this.changedMode, this);
         this.changedMode();
         this.$el.find('.numpad-backspace').click(_.bind(this.clickDeleteLastChar, this));
@@ -390,6 +391,10 @@ var NumpadWidget = PosBaseWidget.extend({
         var mode = this.state.get('mode');
         $('.selected-mode').removeClass('selected-mode');
         $(_.str.sprintf('.mode-button[data-mode="%s"]', mode), this.$el).addClass('selected-mode');
+    },
+    check_rights: function () {
+        var has_rights = this.pos.get_cashier().price_dis_rights;
+        this.$el.find('.mode-button[data-mode="price"],.mode-button[data-mode="discount"]').toggleClass('disabled-mode', !has_rights).prop('disabled', !has_rights);
     },
 });
 

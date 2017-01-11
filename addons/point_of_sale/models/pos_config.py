@@ -53,6 +53,9 @@ class PosConfig(models.Model):
     def _get_group_pos_user(self):
         return self.env.ref('point_of_sale.group_pos_user')
 
+    def _get_group_pos_price_dis(self):
+        return self.env.ref('point_of_sale.group_pos_price_dis')
+
     name = fields.Char(string='Point of Sale Name', index=True, required=True, help="An internal identification of the point of sale")
     journal_ids = fields.Many2many(
         'account.journal', 'pos_config_journal_rel',
@@ -120,6 +123,8 @@ class PosConfig(models.Model):
         help='This field is there to pass the id of the pos manager group to the point of sale client')
     group_pos_user_id = fields.Many2one('res.groups', string='Point of Sale User Group', default=_get_group_pos_user,
         help='This field is there to pass the id of the pos user group to the point of sale client')
+    group_price_dis_id = fields.Many2one('res.groups', string='Point of Sale User Group', default=_get_group_pos_price_dis,
+        help='This field is there to pass the id of the pos price and discount group to the point of sale client')
     tip_product_id = fields.Many2one('product.product', string='Tip Product',
         help="The product used to encode the customer tip. Leave empty if you do not accept tips.")
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions')
