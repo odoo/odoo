@@ -13,13 +13,15 @@ class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
     @api.multi
+    def action_cancel(self):
+        res = super(AccountInvoice, self).action_cancel()
+        self.env['account.asset.asset'].sudo().search([('invoice_id', 'in', self.ids)]).write({'active': False})
+        return res
+
+    @api.multi
     def action_move_create(self):
         result = super(AccountInvoice, self).action_move_create()
         for inv in self:
-            if inv.number:
-                asset_ids = self.env['account.asset.asset'].sudo().search([('invoice_id', '=', inv.id), ('company_id', '=', inv.company_id.id)])
-                if asset_ids:
-                    asset_ids.write({'active': False})
             context = dict(self.env.context)
             # Within the context of an invoice,
             # this default value is for the type of the invoice, not the type of the asset.
