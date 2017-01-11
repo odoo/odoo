@@ -424,14 +424,14 @@ class Slide(models.Model):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         for slide in self.filtered(lambda slide: slide.website_published):
             publish_template = slide.channel_id.publish_template_id
-            html_body = publish_template.with_context({'base_url': base_url}).render_template(publish_template.body_html, 'slide.slide', slide.id)
+            html_body = publish_template.with_context(base_url=base_url).render_template(publish_template.body_html, 'slide.slide', slide.id)
             slide.channel_id.message_post(body=html_body, subtype='website_slides.mt_channel_slide_published')
         return True
 
     @api.one
     def send_share_email(self, email):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        return self.channel_id.share_template_id.with_context({'email': email, 'base_url': base_url}).send_mail(self.id)
+        return self.channel_id.share_template_id.with_context(email=email, base_url=base_url).send_mail(self.id)
 
     # --------------------------------------------------
     # Parsing methods
