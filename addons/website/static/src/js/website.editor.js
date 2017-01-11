@@ -197,7 +197,7 @@ widget.LinkDialog.include({
         });
     },
     page_exists: function (term) {
-        return this.call('page_exists', [null, term], {
+        return this.call('page_exists', [term], {
             context: base.get_context(),
         });
     },
