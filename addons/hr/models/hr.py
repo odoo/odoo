@@ -30,7 +30,7 @@ class Job(models.Model):
 
     _name = "hr.job"
     _description = "Job Position"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'resource.resource.mixin']
 
     name = fields.Char(string='Job Title', required=True, index=True, translate=True)
     expected_employees = fields.Integer(compute='_compute_employees', string='Total Forecasted Employees', store=True,
