@@ -3,3 +3,4 @@
 
 import res_company
 import work_resource
+import work_mixins

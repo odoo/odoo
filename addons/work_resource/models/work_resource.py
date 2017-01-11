@@ -607,12 +607,6 @@ class ResourceResource(models.Model):
             if intervals and intervals[0]:
                 yield dt.date()
 
-    def get_work_days(self, from_datetime, to_datetime):
-        return self._iter_work_days(from_datetime, to_datetime)
-
-    def get_work_days_count(self, from_datetime, to_datetime):
-        return len([dt for dt in self.get_work_days(from_datetime, to_datetime)])
-
 
 class ResourceCalendarLeaves(models.Model):
     _name = "work.calendar.leave"
