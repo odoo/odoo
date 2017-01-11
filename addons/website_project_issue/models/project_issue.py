@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, exceptions, models, _
+from odoo import api, exceptions, models, fields
 
 
 class Issue(models.Model):
     _name = "project.issue"
     _inherit = ['project.issue']
+
+    website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
+
+    def _compute_website_url(self):
+        for issue in self:
+            issue.website_url = '/my/issues/%s' % issue.id
 
     @api.multi
     def get_access_action(self):
@@ -21,7 +27,7 @@ class Issue(models.Model):
             else:
                 return {
                     'type': 'ir.actions.act_url',
-                    'url': '/my/issues/%s' % self.id,
+                    'url': self.website_url,
                     'target': 'self',
                     'res_id': self.id,
                 }

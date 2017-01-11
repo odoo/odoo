@@ -8,6 +8,12 @@ class SaleOrder(models.Model):
 
     _inherit = 'sale.order'
 
+    website_url = fields.Char('Website URL', compute='_website_url', help='The full URL to access the document through the website.')
+
+    def _website_url(self):
+        for so in self:
+            so.website_url = '/my/orders/%s' % (so.id)
+
     @api.multi
     def get_access_action(self):
         """ Instead of the classic form view, redirect to the online quote for

@@ -4,7 +4,7 @@
 from collections import OrderedDict
 
 from odoo import http, _
-from odoo.addons.website_portal.controllers.main import website_account
+from odoo.addons.website_portal.controllers.main import website_account, get_records_pager
 from odoo.http import request
 
 
@@ -70,6 +70,7 @@ class WebsiteAccount(website_account):
         )
         # content according to pager and archive selected
         project_issues = request.env['project.issue'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        request.session['my_issues_history'] = project_issues.ids[:100]
 
         values.update({
             'date': date_begin,
@@ -90,4 +91,7 @@ class WebsiteAccount(website_account):
     @http.route(['/my/issues/<int:issue_id>'], type='http', auth="user", website=True)
     def my_issues_issue(self, issue_id=None, **kw):
         issue = request.env['project.issue'].browse(issue_id)
-        return request.render("website_project_issue.my_issues_issue", {'issue': issue})
+        vals = {'issue': issue}
+        history = request.session.get('my_issues_history', [])
+        vals.update(get_records_pager(history, issue))
+        return request.render("website_project_issue.my_issues_issue", vals)

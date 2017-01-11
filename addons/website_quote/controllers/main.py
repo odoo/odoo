@@ -6,6 +6,7 @@ import werkzeug
 from odoo import fields, http, _
 from odoo.http import request
 from odoo.addons.website_mail.controllers.main import _message_post_helper
+from odoo.addons.website_portal.controllers.main import get_records_pager
 
 
 class sale_quote(http.Controller):
@@ -76,6 +77,8 @@ class sale_quote(http.Controller):
                         'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
                         'partner_id': Order.partner_id.id,
                     })
+        history = request.session.get('my_quotes_history', [])
+        values.update(get_records_pager(history, Order))
         return request.render('website_quote.so_quotation', values)
 
     @http.route(['/quote/accept'], type='json', auth="public", website=True)

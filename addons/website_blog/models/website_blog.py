@@ -223,7 +223,7 @@ class BlogPost(models.Model):
             return super(BlogPost, self).get_access_action()
         return {
             'type': 'ir.actions.act_url',
-            'url': '/blog/%s/post/%s' % (self.blog_id.id, self.id),
+            'url': self.url,
             'target': 'self',
             'res_id': self.id,
         }

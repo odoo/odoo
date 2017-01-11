@@ -6,7 +6,7 @@ from collections import OrderedDict
 from odoo import http, _
 from odoo.http import request
 
-from odoo.addons.website_portal.controllers.main import website_account
+from odoo.addons.website_portal.controllers.main import website_account, get_records_pager
 
 
 class WebsiteAccount(website_account):
@@ -51,6 +51,7 @@ class WebsiteAccount(website_account):
 
         # content according to pager and archive selected
         projects = Project.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        request.session['my_projects_history'] = projects.ids[:100]
 
         values.update({
             'date': date_begin,
@@ -67,7 +68,10 @@ class WebsiteAccount(website_account):
 
     @http.route(['/my/project/<model("project.project"):project>'], type='http', auth="user", website=True)
     def my_project(self, project=None, **kw):
-        return request.render("website_project.my_project", {'project': project})
+        vals = {'project': project, }
+        history = request.session.get('my_projects_history', [])
+        vals.update(get_records_pager(history, project))
+        return request.render("website_project.my_project", vals)
 
     @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
     def my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
@@ -116,6 +120,7 @@ class WebsiteAccount(website_account):
         )
         # content according to pager and archive selected
         tasks = request.env['project.task'].search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        request.session['my_tasks_history'] = tasks.ids[:100]
 
         values.update({
             'date': date_begin,
@@ -135,4 +140,7 @@ class WebsiteAccount(website_account):
 
     @http.route(['/my/task/<model("project.task"):task>'], type='http', auth="user", website=True)
     def my_task(self, task=None, **kw):
-        return request.render("website_project.my_task", {'task': task, 'user': request.env.user})
+        vals = {'task': task, 'user': request.env.user}
+        history = request.session.get('my_tasks_history', [])
+        vals.update(get_records_pager(history, task))
+        return request.render("website_project.my_task", vals)
