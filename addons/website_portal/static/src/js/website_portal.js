@@ -3,6 +3,9 @@ odoo.define('website_portal', function(require) {
     'use strict';
     require('website.website');
 
+    var pathname = $(location).attr('pathname');
+    $(".o_portal_submenu li a[href$='" + pathname + "']:first").parents('li').addClass('active');
+
     if(!$('.o_website_portal_details').length) {
         return $.Deferred().reject("DOM doesn't contain '.o_website_portal_details'");
     }
