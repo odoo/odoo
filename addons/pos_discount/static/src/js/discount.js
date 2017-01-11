@@ -44,7 +44,7 @@ screens.define_action_button({
     'name': 'discount',
     'widget': DiscountButton,
     'condition': function(){
-        return this.pos.config.iface_discount && this.pos.config.discount_product_id;
+        return this.pos.config.module_pos_discount && this.pos.config.discount_product_id;
     },
 });
 
