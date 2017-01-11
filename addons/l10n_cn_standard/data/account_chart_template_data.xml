@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+    Copyright (C) 2008-2008 凯源吕鑫 lvxin@gmail.com   <basic chart data>
+    Copyright (C) 2008-now  开阖软件 jeff@osbzr.com    < PM and LTS >
+    Copyright (C) 2017-now  jeffery9@gmail.com    
+
+    会计科目表模板
+-->
+    <data noupdate="1">
+        <record id="l10n_cn_standard" model="account.chart.template">
+            <field name="property_account_receivable_id" ref="account_1122" />
+            <field name="property_account_payable_id" ref="account_2202" />
+            <field name="property_account_expense_categ_id" ref="account_6401" />
+            <field name="property_account_income_categ_id" ref="account_6001" />
+            <field name="income_currency_exchange_account_id" ref="account_6061" />
+            <field name="expense_currency_exchange_account_id" ref="account_6061" />
+        </record>
+        <record id="l10n_cn_standard_value" model="ir.values">
+            <field name="name">中国会计科目表 （财会[2006]3号《企业会计准则》）</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="l10n_cn_standard" />
+            <field name="value" ref="base.CNY" />
+        </record>
+    </data>
+</odoo>

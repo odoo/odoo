@@ -14,17 +14,21 @@
     'maintainer': 'jeff@osbzr.com',
     'website': 'http://openerp-china.org',
     'description': """
+包含企业会计准则以下数据
 
-    科目类型\会计科目表模板\增值税\辅助核算类别\管理会计凭证簿\财务会计凭证簿
+* 科目表模板
 
-    添加中文省份数据
+* 科目模板
 
-    增加小企业会计科目表
+* 税金模块
 
     """,
     'depends': ['l10n_cn'],
     'data': [
         'data/l10n_cn_standard_chart_data.xml',
+        'data/account.account.template.csv',
+        'data/account_tax_templates.xml',
+        'data/account_chart_template_data.xml',
         'data/account_chart_template_data.yml',
     ],
     'license': 'GPL-3',
