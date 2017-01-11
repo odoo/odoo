@@ -10,7 +10,7 @@ from odoo import api, exceptions, fields, models, _
 class MrpWorkcenter(models.Model):
     _name = 'mrp.workcenter'
     _description = 'Work Center'
-    _inherits = {'resource.resource': 'resource_id'}
+    _inherits = {'work.resource': 'resource_id'}
     _order = "sequence, id"
 
     note = fields.Text(
@@ -25,7 +25,7 @@ class MrpWorkcenter(models.Model):
     color = fields.Integer('Color')
     time_start = fields.Float('Time before prod.', help="Time in minutes for the setup.")
     time_stop = fields.Float('Time after prod.', help="Time in minutes for the cleaning.")
-    resource_id = fields.Many2one('resource.resource', 'Resource', ondelete='cascade', required=True)
+    resource_id = fields.Many2one('work.resource', 'Resource', ondelete='cascade', required=True)
     routing_line_ids = fields.One2many('mrp.routing.workcenter', 'workcenter_id', "Routing Lines")
 
     order_ids = fields.One2many('mrp.workorder', 'workcenter_id', "Orders")

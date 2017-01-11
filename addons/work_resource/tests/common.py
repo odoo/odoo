@@ -14,10 +14,10 @@ class TestResourceCommon(TransactionCase):
         self.env['res.users'].browse(self.env.uid).with_context(context).write({'tz': 'UTC'})
 
         # Usefull models
-        self.Resource = self.env['resource.resource']
-        self.ResourceCalendar = self.env['resource.calendar']
-        self.ResourceAttendance = self.env['resource.calendar.attendance']
-        self.ResourceLeaves = self.env['resource.calendar.leaves']
+        self.Resource = self.env['work.resource']
+        self.ResourceCalendar = self.env['work.calendar']
+        self.ResourceAttendance = self.env['work.calendar.attendance']
+        self.ResourceLeaves = self.env['work.calendar.leave']
 
         # Some demo data
         self.date1 = Datetime.from_string('2013-02-12 09:08:07')  # weekday() returns 1, isoweekday() returns 2

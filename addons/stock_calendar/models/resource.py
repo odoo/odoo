@@ -5,20 +5,20 @@
 from odoo import api, fields, models
 
 
-class ResourceCalendarAttendance(models.Model):
-    _inherit = "resource.calendar.attendance"
+class WorkCalendarAttendance(models.Model):
+    _inherit = "work.calendar.attendance"
 
     group_id = fields.Many2one('procurement.group', 'Procurement Group')
 
 
-class ResourceCalendarLeaves(models.Model):
-    _inherit = "resource.calendar.leaves"
+class WorkCalendarLeave(models.Model):
+    _inherit = "work.calendar.leave"
 
     group_id = fields.Many2one('procurement.group', string="Procurement Group")
 
 
-class ResourceCalendar(models.Model):
-    _inherit = "resource.calendar"
+class WorkCalendar(models.Model):
+    _inherit = "work.calendar"
 
     # Keep as it takes into account times
     @api.multi
@@ -97,7 +97,7 @@ class ResourceCalendar(models.Model):
         for leave in leave_intervals:
             if len(leave) > 2:
                 current_group = False
-                Att = self.env["resource.calendar.attendance"]
+                Att = self.env["work.calendar.attendance"]
                 if leave[2]:
                     if len(current_interval) > 2:
                         current_group = current_interval[2] and Att.browse(current_interval[2]).group_id.id or False

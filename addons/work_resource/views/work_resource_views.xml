@@ -4,8 +4,8 @@
         <!-- Search Views -->
 
         <record id="view_resource_resource_search" model="ir.ui.view">
-            <field name="name">resource.resource.search</field>
-            <field name="model">resource.resource</field>
+            <field name="name">work.resource.search</field>
+            <field name="model">work.resource</field>
             <field name="arch" type="xml">
                 <search string="Search Resource">
                    <field name="name" string="Resource"/>
@@ -24,8 +24,8 @@
         </record>
 
            <record id="view_resource_calendar_search" model="ir.ui.view">
-            <field name="name">resource.calendar.search</field>
-            <field name="model">resource.calendar</field>
+            <field name="name">work.calendar.search</field>
+            <field name="model">work.calendar</field>
             <field name="arch" type="xml">
                 <search string="Search Working Time">
                    <field name="name" string="Working Time"/>
@@ -36,8 +36,8 @@
         </record>
 
         <record id="view_resource_calendar_leaves_search" model="ir.ui.view">
-            <field name="name">resource.calendar.leaves.search</field>
-            <field name="model">resource.calendar.leaves</field>
+            <field name="name">work.calendar.leave.search</field>
+            <field name="model">work.calendar.leave</field>
             <field name="arch" type="xml">
                 <search string="Search Working Period Leaves">
                     <field name="name" string="Reason"/>
@@ -54,8 +54,8 @@
         </record>
 
         <record id="resource_calendar_form" model="ir.ui.view">
-            <field name="name">resource.calendar.form</field>
-            <field name="model">resource.calendar</field>
+            <field name="name">work.calendar.form</field>
+            <field name="model">work.calendar</field>
             <field name="arch" type="xml">
                 <form string="Working Time">
                     <sheet string="Working Time">
@@ -76,8 +76,8 @@
         </record>
 
         <record id="view_resource_calendar_tree" model="ir.ui.view">
-            <field name="name">resource.calendar.tree</field>
-            <field name="model">resource.calendar</field>
+            <field name="name">work.calendar.tree</field>
+            <field name="model">work.calendar</field>
             <field name="arch" type="xml">
                 <tree string="Working Time">
                     <field name="name"/>
@@ -89,7 +89,7 @@
 
         <record id="action_resource_calendar_form" model="ir.actions.act_window">
             <field name="name">Working Time</field>
-            <field name="res_model">resource.calendar</field>
+            <field name="res_model">work.calendar</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="False"/>
@@ -102,8 +102,8 @@
         </record>
 
         <record id="view_resource_calendar_attendance_tree" model="ir.ui.view">
-            <field name="name">resource.calendar.attendance.tree</field>
-            <field name="model">resource.calendar.attendance</field>
+            <field name="name">work.calendar.attendance.tree</field>
+            <field name="model">work.calendar.attendance</field>
             <field name="arch" type="xml">
                 <tree string="Working Time" editable="top">
                     <field name="name"/>
@@ -117,8 +117,8 @@
         </record>
 
         <record id="view_resource_calendar_attendance_form" model="ir.ui.view">
-            <field name="name">resource.calendar.attendance.form</field>
-            <field name="model">resource.calendar.attendance</field>
+            <field name="name">work.calendar.attendance.form</field>
+            <field name="model">work.calendar.attendance</field>
             <field name="arch" type="xml">
                 <form string="Working Time">
                     <group>
@@ -137,8 +137,8 @@
         </record>
 
         <record id="view_resource_calendar" model="ir.ui.view">
-            <field name="name">resource.calendar.leaves.calendar</field>
-            <field name="model">resource.calendar.leaves</field>
+            <field name="name">work.calendar.leave.calendar</field>
+            <field name="model">work.calendar.leave</field>
             <field name="arch" type="xml">
                 <calendar color="resource_id" date_start="date_from" date_stop="date_to" string="Resource">
                     <field name="name"/>
@@ -149,8 +149,8 @@
         <act_window
             id="resource_calendar_closing_days"
             name="Closing Days"
-            res_model="resource.calendar.leaves"
-            src_model="resource.calendar"
+            res_model="work.calendar.leave"
+            src_model="work.calendar"
             view_mode="calendar,tree,form"
             context="{'default_calendar_id': active_id}"
             domain="[('calendar_id','=',active_id), ('resource_id','=',False)]"/>
@@ -158,15 +158,15 @@
         <act_window
             id="resource_calendar_resources_leaves"
             name="Resources Leaves"
-            res_model="resource.calendar.leaves"
-            src_model="resource.calendar"
+            res_model="work.calendar.leave"
+            src_model="work.calendar"
             view_mode="calendar,tree,form"
             context="{'default_calendar_id': active_id}"
             domain="[('calendar_id','=',active_id), ('resource_id','!=',False)]"/>
 
         <record id="resource_resource_form" model="ir.ui.view">
-            <field name="name">resource.resource.form</field>
-            <field name="model">resource.resource</field>
+            <field name="name">work.resource.form</field>
+            <field name="model">work.resource</field>
             <field name="arch" type="xml">
                 <form string="Resource">
                    <group>
@@ -187,8 +187,8 @@
         </record>
 
         <record id="resource_resource_tree" model="ir.ui.view">
-            <field name="name">resource.resource.tree</field>
-            <field name="model">resource.resource</field>
+            <field name="name">work.resource.tree</field>
+            <field name="model">work.resource</field>
             <field name="arch" type="xml">
                 <tree string="Resources">
                     <field name="name" />
@@ -203,7 +203,7 @@
 
         <record id="action_resource_resource_tree" model="ir.actions.act_window">
             <field name="name">Resources</field>
-            <field name="res_model">resource.resource</field>
+            <field name="res_model">work.resource</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_resource_resource_search"/>
@@ -211,8 +211,8 @@
         </record>
 
         <record id="resource_calendar_leave_form" model="ir.ui.view">
-            <field name="name">resource.calendar.leaves.form</field>
-            <field name="model">resource.calendar.leaves</field>
+            <field name="name">work.calendar.leave.form</field>
+            <field name="model">work.calendar.leave</field>
             <field name="arch" type="xml">
                 <form string="Leave Detail">
                     <group>
@@ -232,8 +232,8 @@
         </record>
         
         <record id="resource_calendar_leave_tree" model="ir.ui.view">
-            <field name="name">resource.calendar.leaves.tree</field>
-            <field name="model">resource.calendar.leaves</field>
+            <field name="name">work.calendar.leave.tree</field>
+            <field name="model">work.calendar.leave</field>
             <field name="arch" type="xml">
                 <tree string="Leave Detail">
                     <field name="name" string="Reason"/>
@@ -248,13 +248,13 @@
 
         <record id="action_resource_calendar_leave_tree" model="ir.actions.act_window">
             <field name="name">Resource Leaves</field>
-            <field name="res_model">resource.calendar.leaves</field>
+            <field name="res_model">work.calendar.leave</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="search_view_id" ref="view_resource_calendar_leaves_search"/>
         </record>
 
        <menuitem id="menu_resource_config" name="Resource" parent="base.menu_custom" sequence="30"/>
-       <menuitem action="resource.action_resource_calendar_form" id="menu_resource_calendar" parent="menu_resource_config" sequence="1"/>
-       <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search" parent="menu_resource_config" sequence="2"/>
-       <menuitem action="resource.action_resource_resource_tree" id="menu_resource_resource" parent="menu_resource_config" sequence="3"/>
+       <menuitem action="action_resource_calendar_form" id="menu_resource_calendar" parent="menu_resource_config" sequence="1"/>
+       <menuitem action="action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search" parent="menu_resource_config" sequence="2"/>
+       <menuitem action="action_resource_resource_tree" id="menu_resource_resource" parent="menu_resource_config" sequence="3"/>
 </odoo>

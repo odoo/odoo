@@ -13,10 +13,10 @@
         'product',
         'analytic',
         'mail',
-        'resource',
         'web_kanban',
         'web_planner',
         'web_tour',
+        'work_resource',
     ],
     'description': """
 Track multi-level projects, tasks, work done on tasks

@@ -15,7 +15,7 @@ Use automated actions to automatically trigger actions for various screens.
 sales channel, or an opportunity which still has status pending after 14 days might
 trigger an automatic reminder email.
     """,
-    'depends': ['base', 'resource', 'mail'],
+    'depends': ['base', 'work_resource', 'mail'],
     'data': [
         'security/ir.model.access.csv',
         'data/base_automation_data.xml',

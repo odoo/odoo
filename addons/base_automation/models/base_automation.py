@@ -53,7 +53,7 @@ class BaseAutomation(models.Model):
                                     trigger date, like sending a reminder 15 minutes before a meeting.""")
     trg_date_range_type = fields.Selection([('minutes', 'Minutes'), ('hour', 'Hours'), ('day', 'Days'), ('month', 'Months')],
                                            string='Delay type', default='day')
-    trg_date_calendar_id = fields.Many2one("resource.calendar", string='Use Calendar',
+    trg_date_calendar_id = fields.Many2one("work.calendar", string='Use Calendar',
                                             help="When calculating a day-based timed condition, it is possible to use a calendar to compute the date based on working days.")
     filter_pre_id = fields.Many2one("ir.filters", string='Before Update Filter', ondelete='restrict',
                                     domain="[('model_id', '=', model_name)]",

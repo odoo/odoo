@@ -17,7 +17,7 @@ from odoo.tools.float_utils import float_compare
 class ResourceCalendar(models.Model):
     """ Calendar model for a resource. It has
 
-     - attendance_ids: list of resource.calendar.attendance that are a working
+     - attendance_ids: list of work.calendar.attendance that are a working
                        interval in a given weekday.
      - leave_ids: list of leaves linked to this calendar. A leave can be general
                   or linked to a specific resource, depending on its resource_id.
@@ -25,18 +25,18 @@ class ResourceCalendar(models.Model):
     All methods in this class use intervals. An interval is a tuple holding
     (begin_datetime, end_datetime). A list of intervals is therefore a list of
     tuples, holding several intervals of work or leaves. """
-    _name = "resource.calendar"
+    _name = "work.calendar"
     _description = "Resource Calendar"
 
     name = fields.Char(required=True)
     company_id = fields.Many2one('res.company', string='Company',
         default=lambda self: self.env['res.company']._company_default_get())
     attendance_ids = fields.One2many(
-        'resource.calendar.attendance', 'calendar_id', string='Working Time',
+        'work.calendar.attendance', 'calendar_id', string='Working Time',
         copy=True)
     manager = fields.Many2one('res.users', string='Workgroup Manager', default=lambda self: self.env.uid)
     leave_ids = fields.One2many(
-        'resource.calendar.leaves', 'calendar_id', string='Leaves')
+        'work.calendar.leave', 'calendar_id', string='Leaves')
 
     # --------------------------------------------------
     # Utility methods
@@ -155,7 +155,7 @@ class ResourceCalendar(models.Model):
         """ Given a day datetime, return matching attendances """
         self.ensure_one()
         weekday = day_dt.weekday()
-        attendances = self.env['resource.calendar.attendance']
+        attendances = self.env['work.calendar.attendance']
 
         for attendance in self.attendance_ids.filtered(
             lambda att:
@@ -177,7 +177,7 @@ class ResourceCalendar(models.Model):
 
     @api.multi
     def get_next_day(self, day_date):
-        """ Get following date of day_date, based on resource.calendar. If no
+        """ Get following date of day_date, based on work.calendar. If no
         calendar is provided, just return the next day.
 
         :param date day_date: current day as a date
@@ -203,7 +203,7 @@ class ResourceCalendar(models.Model):
 
     @api.multi
     def get_previous_day(self, day_date):
-        """ Get previous date of day_date, based on resource.calendar. If no
+        """ Get previous date of day_date, based on work.calendar. If no
         calendar is provided, just return the previous day.
 
         :param date day_date: current day as a date
@@ -638,7 +638,7 @@ class ResourceCalendar(models.Model):
 
 
 class ResourceCalendarAttendance(models.Model):
-    _name = "resource.calendar.attendance"
+    _name = "work.calendar.attendance"
     _description = "Work Detail"
     _order = 'dayofweek, hour_from'
 
@@ -656,7 +656,7 @@ class ResourceCalendarAttendance(models.Model):
     date_to = fields.Date(string='End Date')
     hour_from = fields.Float(string='Work from', required=True, index=True, help="Start and End time of working.")
     hour_to = fields.Float(string='Work to', required=True)
-    calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
+    calendar_id = fields.Many2one("work.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
 
 
 def hours_time_string(hours):
@@ -666,7 +666,7 @@ def hours_time_string(hours):
 
 
 class ResourceResource(models.Model):
-    _name = "resource.resource"
+    _name = "work.resource"
     _description = "Resource Detail"
 
     name = fields.Char(required=True)
@@ -681,7 +681,7 @@ class ResourceResource(models.Model):
     user_id = fields.Many2one('res.users', string='User', help='Related user name for the resource to manage its access.')
     time_efficiency = fields.Float(string='Efficiency Factor', required=True, default=100,
         help="This field is used to calculate the the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes.")
-    calendar_id = fields.Many2one("resource.calendar", string='Working Time', help="Define the schedule of resource")
+    calendar_id = fields.Many2one("work.calendar", string='Working Time', help="Define the schedule of resource")
 
     @api.multi
     def copy(self, default=None):
@@ -705,7 +705,7 @@ class ResourceResource(models.Model):
         dates (inclusive).
 
         Work days are the company or service's open days (as defined by the
-        resource.calendar) minus the resource's own leaves.
+        work.calendar) minus the resource's own leaves.
 
         :param datetime.date from_date: start of the interval to check for
                                         work days (inclusive)
@@ -724,15 +724,15 @@ class ResourceResource(models.Model):
                 yield dt.date()
 
 class ResourceCalendarLeaves(models.Model):
-    _name = "resource.calendar.leaves"
+    _name = "work.calendar.leave"
     _description = "Leave Detail"
 
     name = fields.Char()
     company_id = fields.Many2one('res.company', related='calendar_id.company_id', string="Company", store=True, readonly=True)
-    calendar_id = fields.Many2one('resource.calendar', string='Working Time')
+    calendar_id = fields.Many2one('work.calendar', string='Working Time')
     date_from = fields.Datetime(string='Start Date', required=True)
     date_to = fields.Datetime(string='End Date', required=True)
-    resource_id = fields.Many2one("resource.resource", string='Resource',
+    resource_id = fields.Many2one("work.resource", string='Resource',
         help="If empty, this is a generic holiday for the company. If a resource is set, the holiday/leave is only for this resource")
 
     @api.constrains('date_from', 'date_to')

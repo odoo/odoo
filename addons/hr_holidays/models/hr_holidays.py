@@ -382,7 +382,7 @@ class Holidays(models.Model):
     def _create_resource_leave(self):
         """ This method will create entry in resource calendar leave object at the time of holidays validated """
         for leave in self:
-            self.env['resource.calendar.leaves'].create({
+            self.env['work.calendar.leave'].create({
                 'name': leave.name,
                 'date_from': leave.date_from,
                 'holiday_id': leave.id,
@@ -395,7 +395,7 @@ class Holidays(models.Model):
     @api.multi
     def _remove_resource_leave(self):
         """ This method will create entry in resource calendar leave object at the time of holidays cancel/removed """
-        return self.env['resource.calendar.leaves'].search([('holiday_id', 'in', self.ids)]).unlink()
+        return self.env['work.calendar.leave'].search([('holiday_id', 'in', self.ids)]).unlink()
 
     @api.multi
     def action_draft(self):

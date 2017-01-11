@@ -38,7 +38,7 @@
     """,
     'website': 'https://www.odoo.com/page/warehouse',
     'images': [],
-    'depends': ['purchase', 'resource'],
+    'depends': ['purchase', 'work_resource'],
     'category': 'Warehouse',
     'sequence': 16,
     'demo': [

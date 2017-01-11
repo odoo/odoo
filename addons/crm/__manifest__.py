@@ -33,7 +33,7 @@ Dashboard for CRM will include:
         'sales_team',
         'mail',
         'calendar',
-        'resource',
+        'work_resource',
         'fetchmail',
         'utm',
         'web_planner',

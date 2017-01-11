@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.fields import Datetime
 from odoo.tools import float_compare
-from odoo.addons.resource.tests.common import TestResourceCommon
+from odoo.addons.work_resource.tests.common import TestResourceCommon
 from odoo.tests import TransactionCase
 
 
@@ -80,7 +80,7 @@ class TestResource(TestResourceCommon):
         self.assertEqual(result[1][1], Datetime.from_string('2013-02-04 14:00:00'), 'resource_calendar: wrong leave removal from interval')
 
     def test_10_calendar_basics(self):
-        """ Testing basic method of resource.calendar """
+        """ Testing basic method of work.calendar """
 
         # --------------------------------------------------
         # Test1: get_next_day
@@ -130,7 +130,7 @@ class TestResource(TestResourceCommon):
         self.assertEqual(weekdays, [1, 4], 'resource_calendar: wrong weekdays computing')
 
     def test_20_calendar_working_intervals(self):
-        """ Testing working intervals computing method of resource.calendar """
+        """ Testing working intervals computing method of work.calendar """
 
         # Test: day0 without leaves: 1 interval
         intervals = self.calendar.get_working_intervals_of_day(start_dt=self.date1)
@@ -164,28 +164,28 @@ class TestResource(TestResourceCommon):
 
     def test_21_calendar_working_intervals_limited_attendances(self):
         """ Test attendances limited in time. """
-        self.env['resource.calendar.attendance'].browse(self.att3_id).write({
+        self.env['work.calendar.attendance'].browse(self.att3_id).write({
             'date_from': self.date2 + relativedelta(days=7),
             'date_to': False,
         })
         intervals = self.calendar.get_working_intervals_of_day(start_dt=self.date2)
         self.assertEqual(intervals, [(Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00'))])
 
-        self.env['resource.calendar.attendance'].browse(self.att3_id).write({
+        self.env['work.calendar.attendance'].browse(self.att3_id).write({
             'date_from': False,
             'date_to': self.date2 - relativedelta(days=7),
         })
         intervals = self.calendar.get_working_intervals_of_day(start_dt=self.date2)
         self.assertEqual(intervals, [(Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00'))])
 
-        self.env['resource.calendar.attendance'].browse(self.att3_id).write({
+        self.env['work.calendar.attendance'].browse(self.att3_id).write({
             'date_from': self.date2 + relativedelta(days=7),
             'date_to': self.date2 - relativedelta(days=7),
         })
         intervals = self.calendar.get_working_intervals_of_day(start_dt=self.date2)
         self.assertEqual(intervals, [(Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00'))])
 
-        self.env['resource.calendar.attendance'].browse(self.att3_id).write({
+        self.env['work.calendar.attendance'].browse(self.att3_id).write({
             'date_from': self.date2,
             'date_to': self.date2,
         })
@@ -428,8 +428,8 @@ class TestResource(TestResourceCommon):
 
     def test_60_project(self):
         # I assign working calendar '45 Hours/Week' to human resource.
-        resources = self.env.ref('resource.resource_analyst') + self.env.ref('resource.resource_designer') + self.env.ref('resource.resource_developer')
-        resources.write({'calendar_id': self.ref('resource.timesheet_group1'), 'resource_type': 'user'})
+        resources = self.env.ref('work_resource.resource_analyst') + self.env.ref('work_resource.resource_designer') + self.env.ref('work_resource.resource_developer')
+        resources.write({'calendar_id': self.ref('work_resource.timesheet_group1'), 'resource_type': 'user'})
 
         # I had Project of Odoo Integration of 50 Hours with three human resource assigned on it. I have started project from this week start.
         # I check per day work hour availability of the Resource based on Working Calendar Assigned to each resource, for first day of the week.
@@ -443,27 +443,27 @@ class TestResource(TestResourceCommon):
         now = datetime.now()
         dt = (now - timedelta(days=now.weekday())) + timedelta(days=3)
         vals = {
-            'resource_id': self.ref('resource.resource_developer'),
-            'calendar_id': self.ref('resource.timesheet_group1'),
+            'resource_id': self.ref('work_resource.resource_developer'),
+            'calendar_id': self.ref('work_resource.timesheet_group1'),
             'date_from': dt.strftime("%Y-%m-%d 09:00:00"),
             'date_to': dt.strftime("%Y-%m-%d 18:00:00")
         }
-        self.env.ref('resource.resource_dummyleave').write(vals)
+        self.env.ref('work_resource.resource_dummyleave').write(vals)
 
         # I check Actual working hours on resource 'Developer' from this week
         now = datetime.now()
         dt_from = now - relativedelta(days=now.weekday(), hour=8, minute=30)
         dt_to = dt_from + relativedelta(days=6, hour=17)
-        hours = self.env.ref('resource.timesheet_group1').interval_hours_get(dt_from, dt_to, resource=self.ref('resource.resource_developer'))
+        hours = self.env.ref('work_resource.timesheet_group1').interval_hours_get(dt_from, dt_to, resource=self.ref('work_resource.resource_developer'))
         self.assertGreater(hours, 27, 'Invalid Total Week working hour calculated, got %r, expected > 27' % hours)
 
         # Project Analysis work is of 20 hours which will start from Week start so i will calculate working schedule for resource Analyst for the same.
         now = datetime.now()
-        work_intreval = self.env.ref('resource.timesheet_group1').interval_min_get(now, 20.0, resource=self.ref('resource.resource_designer'))
+        work_intreval = self.env.ref('work_resource.timesheet_group1').interval_min_get(now, 20.0, resource=self.ref('work_resource.resource_designer'))
         self.assertGreaterEqual(len(work_intreval), 5, 'Wrong Schedule Calculated')
 
     def test_70_duplicate_resource(self):
-        resource_id = self.env.ref('resource.resource_analyst').copy()
+        resource_id = self.env.ref('work_resource.resource_analyst').copy()
         self.assertTrue(resource_id, 'Unable to Duplicate Resource')
 
 
@@ -482,7 +482,7 @@ class TestWorkDays(TransactionCase):
     def setUp(self):
         super(TestWorkDays, self).setUp()
         # trivial 5/7 9-17 resource calendar
-        self._calendar = self.env['resource.calendar'].create({
+        self._calendar = self.env['work.calendar'].create({
             'name': "Trivial Calendar",
             'attendance_ids': [
                 (0, 0, self._make_attendance(i))
@@ -502,7 +502,7 @@ class TestWorkDays(TransactionCase):
         """
         If a resource has no resource calendar, they don't work
         """
-        r = self.env['resource.resource'].create({
+        r = self.env['work.resource'].create({
             'name': "NoCalendar"
         })
 
@@ -515,7 +515,7 @@ class TestWorkDays(TransactionCase):
         """ If leaves are not involved, only calendar attendances (basic
         company configuration) are taken in account
         """
-        r = self.env['resource.resource'].create({
+        r = self.env['work.resource'].create({
             'name': "Trivial Calendar",
             'calendar_id': self._calendar.id
         })
@@ -528,17 +528,17 @@ class TestWorkDays(TransactionCase):
         )
 
     def test_global_leaves(self):
-        self.env['resource.calendar.leaves'].create({
+        self.env['work.calendar.leave'].create({
             'calendar_id': self._calendar.id,
             'date_from': '1932-11-09 00:00:00',
             'date_to': '1932-11-12 23:59:59',
         })
 
-        r1 = self.env['resource.resource'].create({
+        r1 = self.env['work.resource'].create({
             'name': "Resource 1",
             'calendar_id': self._calendar.id
         })
-        r2 = self.env['resource.resource'].create({
+        r2 = self.env['work.resource'].create({
             'name': "Resource 2",
             'calendar_id': self._calendar.id
         })
@@ -554,15 +554,15 @@ class TestWorkDays(TransactionCase):
     def test_personal_leaves(self):
         """ Leaves with a resource_id apply only to that resource
         """
-        r1 = self.env['resource.resource'].create({
+        r1 = self.env['work.resource'].create({
             'name': "Resource 1",
             'calendar_id': self._calendar.id
         })
-        r2 = self.env['resource.resource'].create({
+        r2 = self.env['work.resource'].create({
             'name': "Resource 2",
             'calendar_id': self._calendar.id
         })
-        self.env['resource.calendar.leaves'].create({
+        self.env['work.calendar.leave'].create({
             'calendar_id': self._calendar.id,
             'date_from': '1932-11-09 00:00:00',
             'date_to': '1932-11-12 23:59:59',
@@ -577,16 +577,16 @@ class TestWorkDays(TransactionCase):
         )
 
     def test_mixed_leaves(self):
-        r = self.env['resource.resource'].create({
+        r = self.env['work.resource'].create({
             'name': "Resource 1",
             'calendar_id': self._calendar.id
         })
-        self.env['resource.calendar.leaves'].create({
+        self.env['work.calendar.leave'].create({
             'calendar_id': self._calendar.id,
             'date_from': '1932-11-09 00:00:00',
             'date_to': '1932-11-12 23:59:59',
         })
-        self.env['resource.calendar.leaves'].create({
+        self.env['work.calendar.leave'].create({
             'calendar_id': self._calendar.id,
             'date_from': '1932-12-02 00:00:00',
             'date_to': '1932-12-31 23:59:59',

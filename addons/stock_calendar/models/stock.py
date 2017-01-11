@@ -12,10 +12,10 @@ class StockWarehouseOrderpoint(models.Model):
     _inherit = "stock.warehouse.orderpoint"
 
     calendar_id = fields.Many2one(
-        'resource.calendar', 'Calendar',
+        'work.calendar', 'Calendar',
         help="In the calendar you can define the days that the goods will be delivered. That way the scheduler will "
              "only take into account the goods needed until the second delivery and put the procurement date as the first delivery.")
-    purchase_calendar_id = fields.Many2one('resource.calendar', 'Purchase Calendar')
+    purchase_calendar_id = fields.Many2one('work.calendar', 'Purchase Calendar')
     last_execution_date = fields.Datetime('Last Execution Date', readonly=True)
 
     def _prepare_procurement_values(self, product_qty, date=False, purchase_date=False, group=False):
@@ -34,8 +34,8 @@ class StockWarehouseOrderpoint(models.Model):
         """
         # TDE FIXME: unused context key 'no_round_hours' removed
         # Check if orderpoint has last execution date and calculate if we need to calculate again already
-        Calendar = self.env["resource.calendar"]
-        Attendance = self.env["resource.calendar.attendance"]
+        Calendar = self.env["work.calendar"]
+        Attendance = self.env["work.calendar.attendance"]
         group = False
         date = False
         now_date = datetime.utcnow()
@@ -63,7 +63,7 @@ class StockWarehouseOrderpoint(models.Model):
         Date should be given in utc
         """
         # TDE FIXME: unused context key 'no_round_hours' removed
-        Attendance = self.env["resource.calendar.attendance"]
+        Attendance = self.env["work.calendar.attendance"]
         # First check if the orderpoint has a Calendar as it should be delivered at this calendar date
         purchase_date = False
         delivery_date = start_date
@@ -88,7 +88,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _get_next_dates(self, new_date=False, group=False):
         # TDE FIXME: unused context key 'no_round_hours' removed
-        Attendance = self.env["resource.calendar.attendance"]
+        Attendance = self.env["work.calendar.attendance"]
         if not new_date:
             new_date = datetime.utcnow()
         now_date = datetime.utcnow()
