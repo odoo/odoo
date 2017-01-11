@@ -47,9 +47,15 @@ class Website(openerp.addons.web.controllers.main.Home):
         return self.page(page)
 
     @http.route(website=True, auth="public")
-    def web_login(self, *args, **kw):
-        # TODO: can't we just put auth=public, ... in web client ?
-        return super(Website, self).web_login(*args, **kw)
+    def web_login(self, redirect=None, *args, **kw):
+        r = super(Website, self).web_login(redirect=redirect, *args, **kw)
+        if request.params['login_success'] and not redirect:
+            if request.registry['res.users'].has_group(request.cr, request.uid, 'base.group_user'):
+                redirect = '/web?' + request.httprequest.query_string
+            else:
+                redirect = '/'
+            return http.redirect_with_hash(redirect)
+        return r
 
     @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
     def change_lang(self, lang, r='/', **kwargs):
