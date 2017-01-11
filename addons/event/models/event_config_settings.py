@@ -13,8 +13,8 @@ class event_config_settings(models.TransientModel):
         help='Install the event_sale module')
     module_website_event_track = fields.Selection([
         (0, "No mini website per event"),
-        (1, 'Allow tracks, agenda and dedicated menus/website per event')
-        ], "Tracks and Agenda",
+        (1, 'Allow tracks, schedule and dedicated menus/website per event')
+        ], "Tracks and Schedule",
         help='Install the module website_event_track')
     module_website_event_questions = fields.Selection([
         (0, "No extra questions on registrations"),
