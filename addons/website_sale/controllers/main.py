@@ -322,12 +322,9 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/pricelist'], type='http', auth="public", website=True)
     def pricelist(self, promo, **post):
-        pricelist = request.env['product.pricelist'].sudo().search([('code', '=', promo)], limit=1)
-        if pricelist and not request.website.is_pricelist_available(pricelist.id):
-            return request.redirect("/shop/cart?code_not_available=1")
-
-        request.website.sale_get_order(code=promo)
-        return request.redirect("/shop/cart")
+        if request.website.apply_pricelist(promo):
+            return request.redirect("/shop/cart?code_applied=1")
+        return request.redirect("/shop/cart?code_not_available=1")
 
     @http.route(['/shop/cart'], type='http', auth="public", website=True)
     def cart(self, **post):
@@ -356,6 +353,8 @@ class WebsiteSale(http.Controller):
         if post.get('code_not_available'):
             values['code_not_available'] = post.get('code_not_available')
 
+        if post.get('code_applied'):
+            values['code_applied'] = post.get('code_applied')
         return request.render("website_sale.cart", values)
 
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True, csrf=False)
