@@ -5,7 +5,7 @@ from odoo import http, _
 from odoo.exceptions import AccessError
 from odoo.http import request
 
-from odoo.addons.website_portal.controllers.main import website_account
+from odoo.addons.website_portal.controllers.main import website_account, get_records_pager
 
 
 class website_account(website_account):
@@ -80,6 +80,7 @@ class website_account(website_account):
         )
         # search the count to display, according to the pager data
         quotations = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager['offset'])
+        request.session['my_quotes_history'] = quotations.ids[:100]
 
         values.update({
             'date': date_begin,
@@ -129,6 +130,7 @@ class website_account(website_account):
         )
         # content according to pager and archive selected
         orders = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager['offset'])
+        request.session['my_orders_history'] = orders.ids[:100]
 
         values.update({
             'date': date_begin,
@@ -151,10 +153,14 @@ class website_account(website_account):
         except AccessError:
             return request.render("website.403")
         order_invoice_lines = {il.product_id.id: il.invoice_id for il in order.invoice_ids.mapped('invoice_line_ids')}
-        return request.render("website_portal_sale.orders_followup", {
+        history = request.session.get('my_orders_history', [])
+
+        values = {
             'order': order.sudo(),
             'order_invoice_lines': order_invoice_lines,
-        })
+        }
+        values.update(get_records_pager(history, order))
+        return request.render("website_portal_sale.orders_followup", values)
 
     #
     # Invoices

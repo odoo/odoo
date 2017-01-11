@@ -103,6 +103,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <h4>
+                                            <t t-call='website_portal.record_pager'/>
                                             Project - <span t-field="project.name"/>
                                         </h4>
                                     </div>
@@ -213,6 +214,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <h4>
+                                            <t t-call='website_portal.record_pager'/>
                                             Task - <span t-field="task.name"/>
                                             <span t-field="task.stage_id.name" class="pull-right label label-info" title="Current stage of this task"/>
                                             <a class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=project.task&amp;id=%s&amp;view_type=form' % (task.id)" groups="project.group_project_user">Edit Task</a>

@@ -248,6 +248,7 @@
                       <div class="row">
                         <div class="col-md-12">
                           <h4>
+                            <t t-call='website_portal.record_pager'/>
                             <t t-if="order.state == 'sent'">
                               Quotation
                             </t>
@@ -358,26 +359,26 @@
                         </div>
                         <div class="col-md-6">
                           <div class="row">
-                            <div class="col-md-10 col-xs-8 text-right">
+                            <div class="col-md-9 col-xs-8 text-right">
                               Untaxed Amount:
                             </div>
-                            <div class="col-md-2 col-xs-4 text-right">
+                            <div class="col-md-3 col-xs-4 text-right">
                               <span t-field="order.amount_untaxed" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                             </div>
                           </div>
                           <div class="row">
-                            <div class="col-md-10 col-xs-8 text-right">
+                            <div class="col-md-9 col-xs-8 text-right">
                               Taxes:
                             </div>
-                            <div class="col-md-2 col-xs-4 text-right">
+                            <div class="col-md-3 col-xs-4 text-right">
                               <span t-field="order.amount_tax" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                             </div>
                           </div>
                           <div class="row">
-                            <div class="col-md-10 col-xs-8 text-right">
+                            <div class="col-md-9 col-xs-8 text-right">
                               <strong>Total:</strong>
                             </div>
-                            <div class="col-md-2 col-xs-4 text-right">
+                            <div class="col-md-3 col-xs-4 text-right">
                               <strong><span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/></strong>
                             </div>
                           </div>

@@ -86,6 +86,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <h4>
+                                            <t t-call='website_portal.record_pager'/>
                                             Issue <span t-field="issue.id"/> - <span t-field="issue.name"/>
                                             <a class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=project.issue&amp;id=%s&amp;view_type=form' % (issue.id)" groups="project.group_project_user">Edit Issue</a>
                                             <span t-field="issue.stage_id.name" class="pull-right label label-info" title="Current stage of this issue"/>
