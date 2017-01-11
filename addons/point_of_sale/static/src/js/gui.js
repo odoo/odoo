@@ -38,6 +38,14 @@ var Gui = core.Class.extend({
             self.pos.bind('change:selectedOrder', function(){
                 self.show_saved_screen(self.pos.get_order());
             });
+            self.chrome.$el.on('keyup', function (event) {
+                if (event.which === $.ui.keyCode.ESCAPE) {
+                    if (self.current_popup) {
+                        event.stopPropagation();
+                        self.close_popup();
+                    }
+                }
+            });
         });
     },
 
