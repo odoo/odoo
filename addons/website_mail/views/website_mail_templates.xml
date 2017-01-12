@@ -87,7 +87,7 @@
                                     <div class="col-md-2 col-sm-3 text-center" t-foreach='message.attachment_ids' t-as='attachment'>
                                         <a t-attf-href="/web/content/#{attachment.id}?download=true" target="_blank">
                                             <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80"/>
-                                            <div class='oe_attachment_name'><t t-raw='attachment.name' /></div>
+                                            <div class='oe_attachment_name'><t t-esc='attachment.name' /></div>
                                         </a>
                                     </div>
                             </div>
