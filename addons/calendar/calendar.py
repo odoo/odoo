@@ -1606,11 +1606,11 @@ class calendar_event(osv.Model):
             super(calendar_event, self).write(cr, uid, real_ids, values, context=context)
 
             # set end_date for calendar searching
-            if values.get('recurrency') and values.get('end_type', 'count') in ('count', unicode('count')) and \
-                    (values.get('rrule_type') or values.get('count') or values.get('start') or values.get('stop')):
-                for id in real_ids:
-                    final_date = self._get_recurrency_end_date(cr, uid, id, context=context)
-                    super(calendar_event, self).write(cr, uid, [id], {'final_date': final_date}, context=context)
+            if any(field in values for field in ['recurrency', 'end_type', 'count', 'rrule_type', 'start', 'stop']):
+                for event in self.browse(cr, uid, real_ids, context=context):
+                    if event.recurrency and event.end_type in ('count', unicode('count')):
+                        final_date = self._get_recurrency_end_date(cr, uid, event.id, context=context)
+                        super(calendar_event, self).write(cr, uid, [event.id], {'final_date': final_date}, context=context)
 
             attendees_create = False
             if values.get('partner_ids', False):
