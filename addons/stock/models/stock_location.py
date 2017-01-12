@@ -116,6 +116,17 @@ class Location(models.Model):
             current_location = current_location.location_id
         return putaway_location
 
+    @api.multi
+    def get_all_sub_locations(self):
+        ''' Returns the location in the record set and all the sub locations that have these locations as a direct or indirect parent. '''
+        sub_locations = self
+        for location in self:
+            sub_locations += self.env['stock.location'].with_context(active_test=False).search([
+                ('parent_left', '>', location.parent_left),
+                ('parent_right', '<', location.parent_right),
+            ])
+        return sub_locations
+
     @api.returns('stock.warehouse', lambda value: value.id)
     def get_warehouse(self):
         """ Returns warehouse id of warehouse that contains location """

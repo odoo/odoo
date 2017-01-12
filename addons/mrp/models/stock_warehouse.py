@@ -22,6 +22,12 @@ class StockWarehouse(models.Model):
         return res
 
     @api.multi
+    def _get_relevant_picking_types(self):
+        picking_types = super(StockWarehouse, self)._get_relevant_picking_types()
+        picking_types |= self.manu_type_id
+        return picking_types
+
+    @api.multi
     def get_routes_dict(self):
         result = super(StockWarehouse, self).get_routes_dict()
         for warehouse in self:
