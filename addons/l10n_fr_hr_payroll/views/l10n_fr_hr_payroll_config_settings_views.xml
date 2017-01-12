@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="account_config_settings_view_form" model="ir.ui.view">
-        <field name="name">account.config.settings.form</field>
-        <field name="model">account.config.settings</field>
-        <field name="inherit_id" ref="account.account_config_settings_view_form"/>
+    <record id="hr_payroll_config_settings_view_form" model="ir.ui.view">
+        <field name="name">hr.payroll.config.settings.form</field>
+        <field name="model">hr.payroll.config.settings</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payroll_configuration"/>
         <field name="arch" type="xml">
-            <sheet position="inside">
-                <h2>French Payroll</h2>
-                <div class="row mt16 o_settings_container">
+            <xpath expr="//div[@id='hr_payroll_localization']" position="after">
+                <field name="module_l10n_fr_hr_payroll" invisible="1"/>
+                <h2 attrs="{'invisible': [('module_l10n_fr_hr_payroll','=',False)]}">Payroll</h2>
+                <div class="row mt16 o_settings_container" attrs="{'invisible': [('module_l10n_fr_hr_payroll','=',False)]}">
                     <div class="col-xs-12 col-md-6 o_setting_box">
                         <div class="o_setting_left_pane"/>
                         <div class="o_setting_right_pane">
                             <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                            <label string="Paie"/>
                             <div class="content-group">
                                 <div class="row mt16">
                                     <label for="plafond_secu" class="col-md-3 o_light_label"/>
@@ -38,7 +40,7 @@
                         </div>
                     </div>
                 </div>
-            </sheet>
+            </xpath>
         </field>
     </record>
 </odoo>
