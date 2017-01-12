@@ -32,6 +32,9 @@
         criteria will keep the number of page, query params, ... Changing the 'filterby' param will
         redirect the user to the beginning of document list, keeping query parameters.
 
+        These 2 buttons can be prepended by a advanced search input, to activate it, search_input need
+        to be initialized at 'True' and the content of the t-call is the list of li elements searchable.
+
         :param dict searchbar_sortings : containing the sort criteria like
             {'date': {'label': _('Newest'), 'order': 'create_date desc'}}
         :param string sortby : name of the sort criteria
@@ -39,8 +42,30 @@
             {'open': {'label': _('In Progress'), 'domain': [('state', '=', 'open')]}}
         :param string filterby : name of the filter criteria
         :param default_url : the base url of the pages (like '/my/orders')
+        :param boolean o_portal_search_panel : set to True to active the input search
+        :param html $0 : content of the t-call, <li>a</li><li>b</li>
     -->
     <template id="portal_searchbar" name="Portal Search Bar">
+        <t t-if='searchbar_inputs'>
+            <div class='pull-right o_portal_search_panel'>
+                 <div class="input-group">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <span id="search_label">Search</span> <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li t-foreach='searchbar_inputs' t-as='input' t-att-class="search_in == searchbar_inputs[input]['input'] and 'active'">
+                                <a t-att-href="'#' + searchbar_inputs[input]['input']"><span t-raw="searchbar_inputs[input]['label']"/></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <input type="text" class="form-control" t-att-value='search' name="search"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default search-submit" type="button"><span class="fa fa-search"></span></button>
+                    </span>
+                </div>
+            </div>
+        </t>
         <div t-if="searchbar_sortings" class="dropdown pull-right mr8">
             <button id="portal_searchbar_sortby" class="btn btn-default" type="button" data-toggle="dropdown">
                 <span class="fa fa-sort fa-lg" />
@@ -73,7 +98,7 @@
 
     <template id="portal_layout" name="Portal Layout">
         <t t-call="website.layout">
-            <div class="container mt16">
+            <div class="container mt16 o_website_portal">
                 <div class="navbar navbar-default">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#oe-help-navbar-collapse">
