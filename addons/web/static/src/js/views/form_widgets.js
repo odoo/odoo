@@ -447,9 +447,11 @@ var FieldDomain = common.AbstractField.extend(common.ReinitializeFieldMixin).ext
     },
     initialize_content: function () {
         this._super.apply(this, arguments);
-        this.$recordsCountDisplay = this.$(".o_domain_records_count");
-        this.$showSelectionButton = this.$(".o_domain_show_selection_button");
-        this.$errorMessage = this.$(".o_domain_error_message");
+        this.$panel = this.$(".o_form_field_domain_panel");
+        this.$showSelectionButton = this.$panel.find(".o_domain_show_selection_button");
+        this.$recordsCountDisplay = this.$showSelectionButton.find(".o_domain_records_count");
+        this.$errorMessage = this.$panel.find(".o_domain_error_message");
+        this.$modelMissing = this.$(".o_domain_model_missing");
     },
     set_value: function (value, noDomainSelectorRender) {
         this._noDomainSelectorRender = !!noDomainSelectorRender;
@@ -458,6 +460,17 @@ var FieldDomain = common.AbstractField.extend(common.ReinitializeFieldMixin).ext
     },
     render_value: function() {
         this._super.apply(this, arguments);
+
+        // If there is no set model, the field should only display the corresponding error message
+        this.$panel.toggleClass("o_hidden", !this.model);
+        this.$modelMissing.toggleClass("o_hidden", !!this.model);
+        if (!this.model) {
+            if (this.domainSelector) {
+                this.domainSelector.destroy();
+                this.domainSelector = undefined;
+            }
+            return;
+        }
 
         var domain = pyeval.eval("domain", this.get("value") || "[]");
 
