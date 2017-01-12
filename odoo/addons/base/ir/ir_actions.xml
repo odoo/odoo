@@ -263,13 +263,13 @@
                 <form string="Server Action">
                     <header>
                         <field name="menu_ir_values_id" invisible="1"/>
-                        <button name="create_action" string="Create Action" type="object"
+                        <button name="create_action" string="Create Contextual Action" type="object"
                                 class="btn-primary"
                                 attrs="{'invisible':[('menu_ir_values_id','!=',False)]}"
-                                help="Display an option in the 'More' top-menu or related document, to run this action."/>
-                        <button name="unlink_action" string="Remove Action" type="object" 
+                                help="Display an option in the 'More' top-menu in order to run this action."/>
+                        <button name="unlink_action" string="Remove Contextual Action" type="object"
                                 attrs="{'invisible':[('menu_ir_values_id','=',False)]}"
-                                help="Remove the contextual action related to this server action"/>
+                                help="Remove 'More' top-menu contextual action related to this action"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -327,7 +327,9 @@
                                         <p>Various fields may use Python code or Python expressions. The following variables can be used:</p>
                                         <ul>
                                             <li>env: Odoo Environement on which the action is triggered</li>
-                                            <li>record: browse_record of the record on which the action is triggered</li>
+                                            <li>model: Odoo Model of the record on which the action is triggered; is a void recordset</li>
+                                            <li>record: browse record on which the action is triggered</li>
+                                            <li>records: record set of records on which the action is triggered in multi mode</li>
                                             <li>time, datetime, timezone: Python module</li>
                                             <li>log(message, level='info'): a logging function to create ir_logging records</li>
                                         </ul>
