@@ -47,7 +47,7 @@
     -->
     <template id="portal_searchbar" name="Portal Search Bar">
         <t t-if='searchbar_inputs'>
-            <div class='pull-right o_portal_search_panel'>
+            <div class='hidden-xs pull-right o_portal_search_panel'>
                  <div class="input-group">
                     <div class="input-group-btn">
                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -59,17 +59,17 @@
                             </li>
                         </ul>
                     </div>
-                    <input type="text" class="form-control" t-att-value='search' name="search"/>
+                    <input type="text" class="form-control search_panel_fixed_width" t-att-value='search' name="search"/>
                     <span class="input-group-btn">
                         <button class="btn btn-default search-submit" type="button"><span class="fa fa-search"></span></button>
                     </span>
                 </div>
             </div>
         </t>
-        <div t-if="searchbar_sortings" class="dropdown pull-right mr8">
-            <button id="portal_searchbar_sortby" class="btn btn-default" type="button" data-toggle="dropdown">
+        <div t-if="searchbar_sortings" class="dropdown pull-right mr4">
+            <button id="portal_searchbar_sortby" class="search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
                 <span class="fa fa-sort fa-lg" />
-                <span t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
+                <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
@@ -80,10 +80,10 @@
                 </li>
             </ul>
         </div>
-        <div t-if="searchbar_filters" class="dropdown pull-right mr8">
-            <button id="portal_searchbar_filters" class="btn btn-default" type="button" data-toggle="dropdown">
+        <div t-if="searchbar_filters" class="dropdown pull-right mr4">
+            <button id="portal_searchbar_filters" class="search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
                 <span class="fa fa-filter fa-lg" />
-                <span t-esc="searchbar_filters[filterby].get('label', 'All')"/>
+                <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_filters[filterby].get('label', 'All')"/>
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="portal_searchbar_filters">
