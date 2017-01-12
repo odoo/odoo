@@ -169,6 +169,49 @@ class Warehouse(models.Model):
 
         return res
 
+    @api.multi
+    def toggle_active(self):
+        for warehouse in self:
+            if warehouse.active and warehouse._get_operations_inprogress():
+                raise UserError(_("You cannot archive this warehouse because one or many operations are in progress."))
+            super(Warehouse, self).toggle_active()
+            # Archive all the locations of this warehouse
+            warehouse._get_relevant_locations().get_all_sub_locations().write({'active': warehouse.active})
+            # Archive all the picking types of this warehouse
+            warehouse._get_relevant_picking_types().write({'active': warehouse.active})
+
+    def _get_operations_inprogress(self):
+        ''' Return all the stock moves of this warehouse that are not in a final state. '''
+        locations_ids = self._get_relevant_locations().get_all_sub_locations().ids
+        move_locations = self.env['stock.move'].search(['|', ('location_id', 'in', locations_ids), ('location_dest_id', 'in', locations_ids), ('state', 'not in', ['done', 'cancel'])])
+
+        picking_types_ids = self._get_relevant_picking_types().ids
+        move_operations = self.env['stock.move'].search([('picking_type_id', 'in', picking_types_ids), ('state', 'not in', ['done', 'cancel'])])
+
+        return move_locations + move_operations
+
+    def _get_relevant_locations(self):
+        ''' Return locations that are related to the delivrery and reception steps configuration of the warehouse. '''
+        locations = self.lot_stock_id
+        if self.reception_steps != 'one_step':
+            locations += self.wh_input_stock_loc_id
+        if self.reception_steps == 'three_steps':
+            locations += self.wh_qc_stock_loc_id
+        if self.delivery_steps != 'ship_only':
+            locations += self.wh_output_stock_loc_id
+        if self.delivery_steps == 'pick_pack_ship':
+            locations += self.wh_pack_stock_loc_id
+        return locations
+
+    def _get_relevant_picking_types(self):
+        ''' Return picking types that are related to the delivrery steps configuration of the warehouse. '''
+        picking_types = self.in_type_id + self.out_type_id + self.int_type_id
+        if self.delivery_steps == 'pick_pack_ship':
+            picking_types += self.pack_type_id
+        if self.delivery_steps != 'ship_only':
+            picking_types += self.pick_type_id
+        return picking_types
+
     @api.model
     def _update_partner_data(self, partner_id, company_id):
         if not partner_id:
