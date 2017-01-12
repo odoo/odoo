@@ -65,7 +65,7 @@ class MailActivity(models.Model):
     icon = fields.Char('Icon', related='activity_type_id.icon')
     summary = fields.Char('Summary')
     note = fields.Html('Note')
-    date_deadline = fields.Date('Due Date', index=True, required=True, default=fields.Date.today)
+    date_deadline = fields.Date('Deadline', index=True, required=True, default=fields.Date.today)
     # description
     user_id = fields.Many2one(
         'res.users', 'Assigned to',
