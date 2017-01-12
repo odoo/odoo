@@ -659,6 +659,7 @@ class IrActionsServer(models.Model):
         :return: an action_id to be executed, or False is finished correctly without
                  return action
         """
+        res = False
         for action in self:
             eval_context = self._get_eval_context(action)
             if hasattr(self, 'run_action_%s_multi' % action.state):
