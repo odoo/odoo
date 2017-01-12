@@ -297,11 +297,6 @@ class IrModelFields(models.Model):
     groups = fields.Many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id')
     selectable = fields.Boolean(default=True)
     modules = fields.Char(compute='_in_modules', string='In Apps', help='List of modules in which the field is defined')
-    serialization_field_id = fields.Many2one('ir.model.fields', 'Serialization Field', domain="[('ttype','=','serialized')]",
-                                             ondelete='cascade', help="If set, this field will be stored in the sparse "
-                                                                      "structure of the serialization field, instead "
-                                                                      "of having its own database column. This cannot be "
-                                                                      "changed after creation.")
     relation_table = fields.Char(help="Used for custom many2many fields to define a custom relation table name")
     column1 = fields.Char(string='Column 1', help="Column referring to the record in the model table")
     column2 = fields.Char(string="Column 2", help="Column referring to the record in the comodel table")
@@ -577,15 +572,6 @@ class IrModelFields(models.Model):
 
     @api.multi
     def write(self, vals):
-        # For the moment renaming a sparse field or changing the storing system
-        # is not allowed. This may be done later
-        if 'serialization_field_id' in vals or 'name' in vals:
-            for field in self:
-                if 'serialization_field_id' in vals and field.serialization_field_id.id != vals['serialization_field_id']:
-                    raise UserError(_('Changing the storing system for field "%s" is not allowed.') % field.name)
-                if field.serialization_field_id and (field.name != vals['name']):
-                    raise UserError(_('Renaming sparse field "%s" is not allowed') % field.name)
-
         # if set, *one* column can be renamed here
         column_rename = None
 
@@ -671,7 +657,7 @@ class IrModelFields(models.Model):
     def _reflect_values(self, field, existing):
         """ Return the values corresponding to the given ``field``. """
         model = self.env['ir.model']._get(field.model_name)
-        vals = {
+        return {
             'model_id': model.id,
             'model': field.model_name,
             'name': field.name,
@@ -688,18 +674,10 @@ class IrModelFields(models.Model):
             'selectable': bool(field.search or field.store),
             'translate': bool(field.translate),
             'relation_field': field.inverse_name if field.type == 'one2many' else None,
-            'serialization_field_id': None,
             'relation_table': field.relation if field.type == 'many2many' else None,
             'column1': field.column1 if field.type == 'many2many' else None,
             'column2': field.column2 if field.type == 'many2many' else None,
         }
-        if field.sparse:
-            serialization_field = self.env[field.model_name]._fields.get(field.sparse)
-            if serialization_field is None:
-                raise UserError(_("Serialization field `%s` not found for sparse field `%s`!") % (field.sparse, field.name))
-            serialization_record = self._reflect(serialization_field, existing)
-            vals['serialization_field_id'] = serialization_record.id
-        return vals
 
     def _reflect(self, field, existing):
         """ Reflect the given field in the model `ir.model.fields` and return
@@ -757,7 +735,6 @@ class IrModelFields(models.Model):
             'readonly': bool(field_data['readonly']),
             'store': bool(field_data['store']),
         }
-        # FIXME: ignore field_data['serialization_field_id']
         if field_data['ttype'] in ('char', 'text', 'html'):
             attrs['translate'] = bool(field_data['translate'])
             attrs['size'] = field_data['size'] or None

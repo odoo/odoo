@@ -108,9 +108,6 @@
                                                 </group>
                                             </group>
                                             <group string="Advanced Properties" groups="base.group_no_one">
-                                                <field name="serialization_field_id"
-                                                    domain="[('ttype','=','serialized'), ('model_id', '=', parent.model)]"
-                                                    attrs="{'readonly': [('state','=','base')]}"/>
                                                 <field name="related"/>
                                                 <field name="depends"/>
                                                 <field name="compute" widget="ace" options="{'mode': 'python'}"/>
@@ -281,9 +278,6 @@
                                     </group>
                                 </group>
                                 <group string="Advanced Properties" groups="base.group_no_one">
-                                    <field name="serialization_field_id"
-                                        domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]"
-                                        attrs="{'readonly': [('state','=','base')]}"/>
                                     <field name="related"/>
                                     <field name="depends" attrs="{'required': [('compute', '!=', False)] }"/>
                                     <field name="compute" widget="ace" options="{'mode': 'python'}"/>

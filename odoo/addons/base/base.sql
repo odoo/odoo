@@ -41,7 +41,6 @@ CREATE TABLE ir_model_fields (
   required boolean default False,
   selectable boolean default False,
   translate boolean default False,
-  serialization_field_id integer references ir_model_fields on delete cascade,
   relation_table varchar,
   column1 varchar,
   column2 varchar,
