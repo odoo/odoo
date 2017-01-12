@@ -27,13 +27,13 @@ class TimesheetAttendance(models.Model):
             FROM (
                 SELECT
                     -hr_attendance.id AS id,
-                    resource_resource.user_id AS user_id,
+                    work_resource.user_id AS user_id,
                     hr_attendance.worked_hours AS attendance,
                     NULL AS timesheet,
                     date_trunc('day', hr_attendance.check_in) AS date
                 FROM hr_attendance
                 LEFT JOIN hr_employee ON hr_employee.id = hr_attendance.employee_id
-                LEFT JOIN resource_resource on resource_resource.id = hr_employee.resource_id
+                LEFT JOIN work_resource on work_resource.id = hr_employee.resource_id
             UNION ALL
                 SELECT
                     ts.id AS id,
