@@ -590,6 +590,7 @@ class AccountMoveLine(models.Model):
             domain = expression.AND([domain, [('id', 'not in', excluded_ids)]])
         if str:
             str_domain = [
+                '|', ('account_id.code', 'ilike', str + '%'),
                 '|', ('move_id.name', 'ilike', str),
                 '|', ('move_id.ref', 'ilike', str),
                 '|', ('date_maturity', 'like', str),
