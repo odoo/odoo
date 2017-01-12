@@ -669,22 +669,26 @@ class Field(object):
 
     def resolve_deps(self, model):
         """ Return the dependencies of ``self`` as tuples ``(model, field, path)``,
-            where ``path`` is an optional list of field names.
+            where ``path`` is an optional list of fields.
         """
-        model0 = model
+        return self._resolve_deps(model, self, [])
+
+    def _resolve_deps(self, model0, field0, path0, seen=()):
+        """ Return the dependencies of ``self`` starting from ``field0`` via ``path0``. """
         result = []
 
-        # add self's own dependencies
-        for dotnames in self.depends:
+        # add field0's own dependencies
+        for dotnames in field0.depends:
             if dotnames == self.name:
                 _logger.warning("Field %s depends on itself; please fix its decorator @api.depends().", self)
-            model, path = model0, dotnames.split('.')
-            for i, fname in enumerate(path):
+            model, path = model0, path0
+            for fname in dotnames.split('.'):
                 field = model._fields[fname]
-                result.append((model, field, path[:i]))
+                result.append((model, field, path))
                 model = model0.env.get(field.comodel_name)
+                path = None if path is None else path + [field]
 
-        # add self's model dependencies
+        # add field0's model dependencies
         for mname, fnames in model0._depends.iteritems():
             model = model0.env[mname]
             for fname in fnames:
@@ -692,19 +696,36 @@ class Field(object):
                 result.append((model, field, None))
 
         # add indirect dependencies from the dependencies found above
+        seen = seen + (field0,)
         for model, field, path in list(result):
             for inv_field in model._field_inverses[field]:
                 inv_model = model0.env[inv_field.model_name]
-                inv_path = None if path is None else path + [field.name]
+                inv_path = None if path is None else path + [field]
                 result.append((inv_model, inv_field, inv_path))
+            if field not in seen:
+                result += self._resolve_deps(model, field, path, seen)
 
         return result
 
     def setup_triggers(self, model):
         """ Add the necessary triggers to invalidate/recompute ``self``. """
+        if self.compute and self.store:
+            def check(field, path):
+                if path and not path[-1]._description_searchable:
+                    _logger.warning("Field %s's dependency %s path %r is non-searchable; "
+                                    "it will not trigger recomputation.",
+                                    self, field, '.'.join(f.name for f in path))
+                elif path is None:
+                    _logger.warning("Field %s's dependency %s is non-trackable; "
+                                    "it will not trigger recomputation.",
+                                    self, field)
+        else:
+            check = lambda field, path: None
+
         for model, field, path in self.resolve_deps(model):
+            check(field, path)
             if field is not self:
-                path_str = None if path is None else ('.'.join(path) or 'id')
+                path_str = None if path is None else ('.'.join(f.name for f in path) or 'id')
                 model._field_triggers.add(field, (self, path_str))
             elif path:
                 self.recursive = True
