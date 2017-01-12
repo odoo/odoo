@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class PurchaseConfigSettings(models.TransientModel):
@@ -34,6 +34,16 @@ class PurchaseConfigSettings(models.TransientModel):
         ], "Costing Methods",
         implied_group='stock_account.group_inventory_valuation',
         help="""Allows you to compute product cost price based on average cost.""")
+    group_manage_costing_method = fields.Boolean('Manage Costing Methods', implied_group='purchase.group_manage_costing_method')
+    costing_method_setting = fields.Selection([
+        ('standard', 'A fixed cost price on each product'),
+        ('average', 'Use product cost price based on average cost'),
+        ('real', 'Advanced costing method based on product removal strategy (FIFO, LIFO, FEFO, etc).'),
+        ], "Costing Methods",
+        default='standard',
+        help='Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n'
+             'Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n'
+             'Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example).\n')
     module_purchase_requisition = fields.Selection([
         (0, 'Purchase propositions trigger draft purchase orders to a single supplier'),
         (1, 'Allow using call for tenders to get quotes from multiple suppliers (advanced)')
@@ -57,6 +67,14 @@ class PurchaseConfigSettings(models.TransientModel):
         ], "Vendor Price",
         implied_group="purchase.group_manage_vendor_price")
 
+    @api.onchange('costing_method_setting')
+    def _onchange_costing_method(self):
+        self.group_manage_costing_method = self.costing_method_setting != 'standard'
+
+    @api.multi
+    def set_purchase_defaults(self):
+        return self.env['ir.values'].sudo().set_default(
+            'purchase.config.settings', 'costing_method_setting', self.costing_method_setting)
 
 class AccountConfigSettings(models.TransientModel):
     _inherit = 'account.config.settings'

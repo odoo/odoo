@@ -42,6 +42,7 @@ Dashboard / Reports for Purchase Management will include:
         'views/res_config_views.xml',
         'report/purchase_order_templates.xml',
         'report/purchase_quotation_templates.xml',
+        'views/product_views.xml',
     ],
     'test': [
         '../account/test/account_minimal_test.xml',

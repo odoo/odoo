@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_category_valuation_form" model="ir.ui.view">
+            <field name="name">product.category.valuation.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="stock_account.view_category_property_form"/>
+            <field name="arch" type="xml">
+                <field name="property_cost_method" position="attributes">
+                    <attribute name="groups">purchase.group_manage_costing_method</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_template_valuation_form" model="ir.ui.view">
+            <field name="name">product.template.valuation.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock_account.view_template_property_form"/>
+            <field name="arch" type="xml">
+                <field name="property_cost_method" position="attributes">
+                    <attribute name="groups">purchase.group_manage_costing_method</attribute>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>
