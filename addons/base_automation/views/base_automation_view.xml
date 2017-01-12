@@ -9,10 +9,6 @@
             <field name="inherit_id" ref="base.view_server_action_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='create_action']" position="replace">
-                    <button name="create_action_for_menu" string="Create Action" type="object"
-                        class="btn-primary"
-                        attrs="{'invisible':[('menu_ir_values_id','!=',False)]}"
-                        help="Display an option in the 'More' top-menu or related document, to run this action."/>
                 </xpath>
                 <xpath expr="//button[@name='unlink_action']" position="replace">
                     <button name="unlink_action_for_menu" string="Remove Action" type="object"
@@ -25,20 +21,18 @@
 
                         <label for="filter_pre_id" attrs="{'invisible': [('trigger', 'not in', ['on_write','on_create_or_write'])]}"/>
                         <div attrs="{'invisible': [('trigger', 'not in', ['on_write','on_create_or_write'])]}">
-                            <field name="filter_pre_domain" widget="domain" options="{'model': 'model_name'}"
-                                class="o_row"/>
-                            <div class="oe_edit_only o_row">Set selection based on a search filter:
+                            <field name="filter_pre_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}"/>
+                            <div class="oe_edit_only">Set selection based on a search filter:
                                 <field name="filter_pre_id" domain="[('model_id', '=', model_name), '|', ('user_id', '=', uid), ('user_id', '=', False)]"
-                                    class="o_row" context="{'default_model_id': model_name, 'default_active': False, 'active_test': False}"/></div>
+                                    context="{'default_model_id': model_name, 'default_active': False, 'active_test': False}"/></div>
                         </div>
 
                         <label for="filter_id"/>
                         <div>
-                            <field name="filter_domain" widget="domain" options="{'model': 'model_name'}"
-                                class="o_row"/>
-                            <div class="oe_edit_only o_row">Set selection based on a search filter:
+                            <field name="filter_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}"/>
+                            <div class="oe_edit_only">Set selection based on a search filter:
                                 <field name="filter_id" domain="[('model_id', '=', model_name), '|', ('user_id', '=', uid), ('user_id', '=', False)]"
-                                    class="o_row" context="{'default_model_id': model_name, 'default_active': False, 'active_test': False}"/>
+                                    context="{'default_model_id': model_name, 'default_active': False, 'active_test': False}"/>
                             </div>
                         </div>
                         <field name="on_change_fields"
