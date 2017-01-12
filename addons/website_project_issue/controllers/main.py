@@ -6,6 +6,7 @@ from collections import OrderedDict
 from odoo import http, _
 from odoo.addons.website_portal.controllers.main import website_account, get_records_pager
 from odoo.http import request
+from odoo.osv.expression import OR
 
 
 class WebsiteAccount(website_account):
@@ -22,7 +23,7 @@ class WebsiteAccount(website_account):
         return response
 
     @http.route(['/my/issues', '/my/issues/page/<int:page>'], type='http', auth="user", website=True)
-    def my_issues(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
+    def my_issues(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', **kw):
         values = self._prepare_portal_layout_values()
         # portal users can't see the privacy_visibility, fetch the domain for them in sudo
         portal_projects = request.env['project.project'].sudo().search([('privacy_visibility', '=', 'portal')])
@@ -36,6 +37,12 @@ class WebsiteAccount(website_account):
         }
         searchbar_filters = {
             'all': {'label': _('All'), 'domain': []},
+        }
+        searchbar_inputs = {
+            'content': {'input': 'content', 'label': _('Search <span class="nolabel"> (in Content)</span>')},
+            'message': {'input': 'message', 'label': _('Search in Messages')},
+            'customer': {'input': 'customer', 'label': _('Search in Customer')},
+            'all': {'input': 'all', 'label': _('Search in All')},
         }
         # extends filterby criteria with project (criteria name is the project id)
         projects = request.env['project.project'].search([('privacy_visibility', '=', 'portal')])
@@ -57,6 +64,17 @@ class WebsiteAccount(website_account):
         archive_groups = self._get_archive_groups('project.issue', domain)
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
+
+        # search
+        if search and search_in:
+            search_domain = []
+            if search_in in ('content', 'all'):
+                search_domain = OR([search_domain, ['|', ('name', 'ilike', search), ('description', 'ilike', search)]])
+            if search_in in ('customer', 'all'):
+                search_domain = OR([search_domain, [('partner_id', 'ilike', search)]])
+            if search_in in ('message', 'all'):
+                search_domain = OR([search_domain, [('message_ids.body', 'ilike', search)]])
+            domain += search_domain
 
         # issue count
         issue_count = request.env['project.issue'].search_count(domain)
@@ -82,9 +100,12 @@ class WebsiteAccount(website_account):
             'default_url': '/my/issues',
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
+            'searchbar_inputs': searchbar_inputs,
             'sortby': sortby,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
+            'search_in': search_in,
+            'search': search,
         })
         return request.render("website_project_issue.my_issues", values)
 
