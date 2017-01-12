@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import babel
 import base64
 import copy
 import datetime
@@ -16,6 +17,21 @@ from openerp import report as odoo_report
 from openerp.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
+
+
+def format_date(pool, cr, uid, date, pattern=False, context=None):
+    date = datetime.datetime.strptime(date[:10], openerp.tools.DEFAULT_SERVER_DATE_FORMAT)
+    lang_code = context.get('lang') or 'en_US'
+    if not pattern:
+        lang_id = pool['res.lang']._lang_get(cr, uid, lang_code)
+        lang = pool['res.lang'].browse(cr, uid, lang_id, context=context)
+        pattern = lang.date_format
+    try:
+        locale = babel.Locale.parse(lang_code)
+        pattern = openerp.tools.posix_to_ldml(pattern, locale=locale)
+        return babel.dates.format_date(date, format=pattern, locale=locale)
+    except babel.core.UnknownLocaleError:
+        return date.strftime(pattern)
 
 
 def format_tz(pool, cr, uid, dt, tz=False, format=False, context=None):
@@ -355,6 +371,7 @@ class MailTemplate(models.Model):
         for record in records:
             res_to_rec[record.id] = record
         variables = {
+            'format_date': lambda date, format=False, context=self._context: format_date(self.pool, self._cr, self._uid, date, format, context),
             'format_tz': lambda dt, tz=False, format=False, context=self._context: format_tz(self.pool, self._cr, self._uid, dt, tz, format, context),
             'user': self.env.user,
             'ctx': self._context,  # context kw would clash with mako internals
