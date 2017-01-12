@@ -119,6 +119,20 @@
                                     </t>
                                 </div>
                             </div>
+                            <div t-if="issue.attachment_ids" class='panel-footer'>
+                                <strong>
+                                    <t t-if='len(issue.attachment_ids)&gt;1'>Attachments</t>
+                                    <t t-else="">Attachment</t>
+                                </strong>
+                                <div class='row'>
+                                    <div class="col-md-2 col-sm-3 text-center oe_attachments" t-foreach='issue.attachment_ids' t-as='attachment'>
+                                        <a t-attf-href="/web/content/#{attachment.id}?download=true" target="_blank">
+                                            <div class='oe_attachment_embedded o_image o_image_small' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/50x40"/>
+                                            <div class='oe_attachment_name'><t t-esc='attachment.name' /></div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row mt32">
                             <div class="col-md-12">
