@@ -509,14 +509,14 @@ var FieldDomain = common.AbstractField.extend(common.ReinitializeFieldMixin).ext
         return new common.SelectCreateDialog(this, {
             title: _t("Selected records"),
             res_model: this.model,
-            domain: this.get("value"),
+            domain: this.get("value") || "[]",
             no_create: true,
             readonly: true,
             disable_multiple_selection: true,
         }).open();
     },
     openDomainDialog: function () {
-        new DomainSelectorDialog(this, this.model, this.get("value"), {
+        new DomainSelectorDialog(this, this.model, this.get("value") || "[]", {
             readonly: this.get("effective_readonly"),
             fs_filters: this.options.fs_filters,
             debugMode: session.debug,
