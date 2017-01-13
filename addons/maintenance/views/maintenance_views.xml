@@ -217,7 +217,7 @@
         <field name="name">equipment.request.calendar</field>
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
-            <calendar date_start="schedule_date" color="technician_user_id">
+            <calendar date_start="schedule_date" date_delay="duration" color="technician_user_id">
                 <field name="name"/>
                 <field name="technician_user_id"/>
             </calendar>
