@@ -49,5 +49,5 @@ class ProductProduct(models.Model):
             price += bom.product_uom_id._compute_price(workcenter_cost, bom.product_id.uom_id)
         # Convert on product UoM quantities
         if price > 0:
-            price = bom.product_uom_id._compute_price(price / bom.product_qty, bom.product_id.uom_id)
+            price = bom.product_uom_id._compute_price(price / bom.product_qty, self.uom_id)
         return price
