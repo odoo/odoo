@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from . import models
+from . import tests
 
 def _update_database_schema(cr):
     # The reflection of fields is done before updating the model's schema,

@@ -12,6 +12,7 @@
     'version': '1.0',
     'depends': ['base'],
     'data': [
+        'security/ir.model.access.csv',
         'views/views.xml',
     ],
     'pre_init_hook': '_update_database_schema',
