@@ -26,8 +26,8 @@ class Partner(models.Model):
             replacement_xml = """
             <div>
                 <field name="country_enforce_cities" invisible="1"/>
-                <field name='city' attrs="{'invisible': [('country_enforce_cities', '=', True), ('city_id', '!=', False)]}"/>
-                <field name='city_id' attrs="{'invisible': [('country_enforce_cities', '=', False)]}"/>
+                <field name='city' attrs="{'invisible': [('country_enforce_cities', '=', True), ('city_id', '!=', False)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}"/>
+                <field name='city_id' attrs="{'invisible': [('country_enforce_cities', '=', False)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}" context="{'default_country_id': country_id}" domain="[('country_id', '=', country_id)]"/>
             </div>
             """
             city_id_node = etree.fromstring(replacement_xml)

@@ -20,14 +20,13 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='street']" position="replace">
                 <field name="street" invisible="1"/>
-                <field name="street_name" placeholder="Street Name..."/>
+                <field name="street_name" placeholder="Street Name..." attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                 <div class="o_row">
-                    <field name="city" invisible="1"/>
                     <label for="street_number" class="oe_edit_only"/>
                     <span> </span>
-                    <field name="street_number"/>
+                    <field name="street_number" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                     <label for="street_number2" class="oe_edit_only"/>
-                    <field name="street_number2"/>
+                    <field name="street_number2" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                 </div>
             </xpath>
         </field>
@@ -40,13 +39,13 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='street']" position="replace">
                 <field name="street" invisible="1"/>
-                <field name="street_name" placeholder="Street Name..."/>
+                <field name="street_name" placeholder="Street Name..." attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                 <div class="o_row">
                     <label for="street_number" class="oe_edit_only"/>
                     <span> </span>
-                    <field name="street_number"/>
+                    <field name="street_number" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                     <label for="street_number2" class="oe_edit_only"/>
-                    <field name="street_number2"/>
+                    <field name="street_number2" attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                 </div>
             </xpath>
         </field>
