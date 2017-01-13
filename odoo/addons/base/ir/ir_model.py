@@ -613,9 +613,8 @@ class IrModelFields(models.Model):
             res.append((field.id, '%s (%s)' % (field.field_description, field.model)))
         return res
 
-    @api.model
-    def _instanciate(self, field_data, partial):
-        """ Return a field instance corresponding to parameters ``field_data``. """
+    def _instanciate_attrs(self, field_data, partial):
+        """ Return the parameters for a field instance for ``field_data``. """
         attrs = {
             'manual': True,
             'string': field_data['field_description'],
@@ -661,7 +660,11 @@ class IrModelFields(models.Model):
         # add compute function if given
         if field_data['compute']:
             attrs['compute'] = make_compute(field_data['compute'], field_data['depends'])
+        return attrs
 
+    def _instanciate(self, field_data, partial):
+        """ Return a field instance corresponding to parameters ``field_data``. """
+        attrs = self._instanciate_attrs(field_data, partial)
         return fields.Field.by_type[field_data['ttype']](**attrs)
 
 
