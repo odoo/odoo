@@ -299,13 +299,11 @@
 </template>
 
 <!-- Options: Blog Post: user can reply -->
-<template id="opt_blog_post_complete_comment" name="Allow blog post comment"
-        inherit_id="website_blog.blog_post_complete" active="False" customize_show="True">
+<template id="opt_blog_post_complete_comment" name="Allow blog post comment" inherit_id="website_blog.blog_post_complete" active="False" customize_show="True">
     <xpath expr="//div[@class='o_blog_post_complete o_sharing_links']" position="after">
         <section id="comments" class="read_width">
             <t t-call="website_mail.message_thread">
               <t t-set="object" t-value="blog_post"/>
-              <t t-set="chatter_mode" t-value="'json'"/>
             </t>
         </section>
     </xpath>
