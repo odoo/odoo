@@ -147,6 +147,17 @@ class website(orm.Model):
     def sale_product_domain(self, cr, uid, ids, context=None):
         return [("sale_ok", "=", True)]
 
+    def _prepare_sale_order_values(self, cr, uid, w, partner, context=None):
+        pricelist = partner.with_context(force_company=w.company_id.id).property_product_pricelist
+        values = {
+            'user_id': w.user_id.id,
+            'partner_id': partner.id,
+            'pricelist_id': pricelist.id,
+            'team_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website', 'salesteam_website_sales')[1],
+            'company_id': pricelist.company_id.id or w.company_id.id,
+        }
+        return values
+
     def sale_get_order(self, cr, uid, ids, force_create=False, code=None, update_pricelist=None, context=None):
         sale_order_obj = self.pool['sale.order']
         sale_order_id = request.session.get('sale_order_id')
@@ -164,12 +175,7 @@ class website(orm.Model):
             partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
 
             for w in self.browse(cr, uid, ids):
-                values = {
-                    'user_id': w.user_id.id,
-                    'partner_id': partner.id,
-                    'pricelist_id': partner.property_product_pricelist.id,
-                    'team_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'website', 'salesteam_website_sales')[1],
-                }
+                values = self._prepare_sale_order_values(cr, uid, w, partner, context=context)
                 sale_order_id = sale_order_obj.create(cr, SUPERUSER_ID, values, context=context)
                 values = sale_order_obj.onchange_partner_id(cr, SUPERUSER_ID, [], partner.id, context=context)['value']
                 sale_order_obj.write(cr, SUPERUSER_ID, [sale_order_id], values, context=context)
