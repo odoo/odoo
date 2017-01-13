@@ -415,8 +415,8 @@ class Field(object):
         """ Return whether ``self`` can retrieve parameters from ``field``. """
         return isinstance(field, type(self))
 
-    def _setup_attrs(self, model, name):
-        """ Determine field parameter attributes. """
+    def _get_attrs(self, model, name):
+        """ Return the field parameter attributes as a dictionary. """
         # determine all inherited field attributes
         attrs = {}
         if not (self.args.get('automatic') or self.args.get('manual')):
@@ -456,6 +456,11 @@ class Field(object):
             if not attrs.get('readonly'):
                 attrs['inverse'] = self._inverse_sparse
 
+        return attrs
+
+    def _setup_attrs(self, model, name):
+        """ Initialize the field parameter attributes. """
+        attrs = self._get_attrs(model, name)
         self.set_all_attrs(attrs)
 
         # check for renamed attributes (conversion errors)
