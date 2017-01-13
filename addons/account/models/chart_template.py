@@ -511,9 +511,14 @@ class AccountTaxTemplate(models.Model):
             res.append((record.id, name))
         return res
 
-    def _get_tax_vals(self, company):
+    def _get_tax_vals(self, company, tax_template_to_tax):
         """ This method generates a dictionnary of all the values for the tax that will be created.
         """
+        # Compute children tax ids
+        children_ids = []
+        for child_tax in self.children_tax_ids:
+            if tax_template_to_tax.get(child_tax.id):
+                children_ids.append(tax_template_to_tax[child_tax.id])
         self.ensure_one()
         val = {
             'name': self.name,
@@ -528,6 +533,7 @@ class AccountTaxTemplate(models.Model):
             'include_base_amount': self.include_base_amount,
             'analytic': self.analytic,
             'tag_ids': [(6, 0, [t.id for t in self.tag_ids])],
+            'children_tax_ids': [(6, 0, children_ids)],
             'tax_adjustment': self.tax_adjustment,
             'use_cash_basis': self.use_cash_basis,
             'cash_basis_account': self.cash_basis_account,
@@ -549,13 +555,7 @@ class AccountTaxTemplate(models.Model):
         todo_dict = {}
         tax_template_to_tax = {}
         for tax in self:
-            # Compute children tax ids
-            children_ids = []
-            for child_tax in tax.children_tax_ids:
-                if tax_template_to_tax.get(child_tax.id):
-                    children_ids.append(tax_template_to_tax[child_tax.id])
-            vals_tax = tax._get_tax_vals(company)
-            vals_tax['children_tax_ids'] = children_ids and [(6, 0, children_ids)] or []
+            vals_tax = tax._get_tax_vals(company, tax_template_to_tax)
             new_tax = self.env['account.chart.template'].create_record_with_xmlid(company, tax, 'account.tax', vals_tax)
             tax_template_to_tax[tax.id] = new_tax
             # Since the accounts have not been created yet, we have to wait before filling these fields
