@@ -6,8 +6,9 @@
         <field name="model">res.country</field>
         <field name="inherit_id" ref="base.view_country_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='address_format']" position="after">
+            <xpath expr="//div[@name='div_address_format']" position="after">
                 <field name="street_format" groups="base.group_no_one" placeholder="Street format..."/>
+                <div colspan="2" class="text-muted">Change how the system computes the full street field based on the different street subfields</div>
             </xpath>
         </field>
     </record>
