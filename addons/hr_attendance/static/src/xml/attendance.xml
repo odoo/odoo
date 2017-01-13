@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template xml:space="preserve">
+    <t t-name="PresenceIndicator">
+        <div class="oe_hr_attendance_status fa fa-user">
+        </div>
+    </t>
+
+    <t t-name="HrAttendanceKioskMode">
+        <div class="o_hr_attendance_kiosk_mode_container">
+            <div class="o_hr_attendance_kiosk_mode">
+                <h1>Welcome to <t t-esc="widget.company_name"/></h1>
+                <img t-attf-src="{{widget.company_image_url}}" alt="Company Logo"/>
+                <h2>Scan your badge</h2>
+                <h4>or</h4>
+                <button class="o_hr_attendance_button_employees btn btn-primary btn-lg">Select Employee</button>
+            </div>
+            <div class="o_hr_attendance_clock"></div>
+        </div>
+    </t>
+
+    <t t-name="HrAttendanceMyMainMenu">
+        <div class="o_hr_attendance_kiosk_mode_container">
+            <div class="o_hr_attendance_kiosk_mode">
+                <t t-if="widget.employee">
+                    <h1>Welcome <t t-esc="widget.employee.name"/></h1>
+                    <t t-if="widget.employee.attendance_state=='checked_out'">
+                        <h2>Click to check in</h2>
+                        <i class="fa fa-sign-in btn-primary o_hr_attendance_sign_in_out_icon"/>
+                    </t>
+                    <t t-if="widget.employee.attendance_state=='checked_in'">
+                        <h2>Click to check out</h2>
+                        <i class="fa fa-sign-out btn-primary o_hr_attendance_sign_in_out_icon"/>
+                    </t>
+                </t>
+                <t t-if="!widget.employee">
+                    Error : Could not find employee linked to user.
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="HrAttendanceKioskConfirm">
+        <div class="o_hr_attendance_kiosk_mode_container">
+            <div class="o_hr_attendance_kiosk_mode">
+                <t t-if="widget.employee_id">
+                    <h1>Welcome <t t-esc="widget.employee_name"/></h1>
+                    <t t-if="!widget.use_pin">
+                        <t t-if="widget.employee_state=='checked_in'">
+                            <h2>Check out</h2>
+                            <a class="fa btn-primary o_hr_attendance_sign_in_out_icon fa-sign-out fa-sign-in"/>
+                        </t>
+                        <t t-if="widget.employee_state=='checked_out'">
+                            <h2>Check in</h2>
+                            <a class="fa btn-primary o_hr_attendance_sign_in_out_icon fa-sign-out fa-sign-out"/>
+                        </t>
+                    </t>
+                    <t t-if="widget.use_pin">
+                        <t t-if="widget.employee_state=='checked_in'">
+                            <h2>Please enter your PIN to check out</h2>
+                        </t>
+                        <t t-if="widget.employee_state=='checked_out'">
+                            <h2>Please enter your PIN to check in</h2>
+                        </t>
+                        <div class="row">
+                            <div class="col-sm-8 col-sm-offset-2">
+                                <div class="row" >
+                                    <div class="col-xs-4 col-xs-offset-4"><input class="o_hr_attendance_PINbox" type="password" disabled="true"/></div>
+                                </div>
+                                <div class="row o_hr_attendance_pin_pad">
+                                    <t t-foreach="['1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', '0', 'ok']" t-as="btn_name">
+                                        <div class="col-xs-4 o_hr_attendance_pin_pad_border">
+                                            <a t-attf-class="btn btn-primary btn-block btn-lg o_hr_attendance_btn-round-corners {{ 'o_hr_attendance_pin_pad_button_' + btn_name }}"><t t-esc="btn_name"/></a>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                    </t>
+                </t>
+                <t t-if="!widget.employee_id">
+                    Error: could not find corresponding employee.<br/>Please return to the main menu.
+                </t>
+                <div class="oe_attendance_sign_in_out">
+                </div>
+                <div class="o_hr_attendance_back_button btn btn-danger fa fa-times"/>
+            </div>
+            <div class="o_hr_attendance_clock"></div>
+        </div>
+    </t>
+
+    <t t-name="HrAttendanceGreetingMessage">
+        <div class="o_hr_attendance_message_container">
+            <div class="o_hr_attendance_message">
+                <t t-if="widget.attendance">
+                    <t t-if="widget.attendance.check_out">
+                        <h1 class="o_hr_attendance_validation">
+                            Checked out at <t t-esc="widget.attendance.check_out_time"/>
+                        </h1>
+                        <h2 class="o_hr_attendance_message_message">
+                            Goodbye <t t-esc="widget.employee_name"/>
+                            <br/>
+                        </h2>
+                        <h3 class="o_hr_attendance_random_message"></h3>
+                        <h2 class="o_hr_attendance_warning_message"></h2>
+                        
+                    </t>
+                    <t t-if="!widget.attendance.check_out">
+                        <h1 class="o_hr_attendance_validation">
+                            Checked in at <t t-esc="widget.attendance.check_in_time"/>
+                        </h1>
+                        <h2 class="o_hr_attendance_message_message">
+                            Welcome <t t-esc="widget.employee_name"/>
+                            <br/>
+                        </h2>
+                        <h3 class="o_hr_attendance_random_message"></h3>
+                        <h2 class="o_hr_attendance_warning_message"></h2>
+                    </t>
+                </t>
+                <t t-if="!widget.attendance">
+                    Invalid request, please return to the main menu.<br/>
+                </t>
+                <button class="o_hr_attendance_button_dismiss btn btn-primary btn-sm">ok</button>
+            </div>
+        </div>
+    </t>
+</template>

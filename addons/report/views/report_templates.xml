@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <template id="assets_backend" name="report assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/report/static/src/js/qwebactionmanager.js"></script>
+                <script type="text/javascript" src="/report/static/src/js/utils.js"></script>
+                <script type="text/javascript" src="/report/static/src/js/client_action.js"></script>
+                <link rel="stylesheet" type="text/less" href="/report/static/src/less/report_backend.less"/>
+            </xpath>
+        </template>
+</odoo>

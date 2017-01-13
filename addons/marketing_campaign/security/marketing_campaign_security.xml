@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="marketing_campaign.group_lead_automation_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="base.module_category_lead_automation"/>
+    </record>
+
+    <record id="marketing_campaign.group_lead_automation_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="base.module_category_lead_automation"/>
+        <field name="implied_ids" eval="[(4, ref('marketing_campaign.group_lead_automation_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    </record>
+
+    <data noupdate="1">
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id" eval="[(4,ref('marketing_campaign.group_lead_automation_manager'))]"/>
+        </record>
+    </data>
+</odoo>

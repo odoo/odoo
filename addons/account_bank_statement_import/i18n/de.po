@@ -1,0 +1,581 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_bank_statement_import
+# 
+# Translators:
+# Anja Funk <anja.funk@afimage.de>, 2016
+# Rudolf Schnapka <rs@techno-flex.de>, 2016
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
+# JackTheHunter <Maximilian.N98@gmail.com>, 2016
+# darenkster <inactive+darenkster@transifex.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Tina Rittmüller <tr@ife.de>, 2016
+# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
+# Ermin Trevisan <trevi@twanda.com>, 2016
+# Mathias Neef <mn@copado.de>, 2016
+# Ralf Hilgenstock <rh@dialoge.info>, 2016
+# Henry Mineehen <info@mineehen.de>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Henry Mineehen <info@mineehen.de>, 2016\n"
+"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
+#, python-format
+msgid "%d transactions had already been imported and were ignored."
+msgstr "%d Buchungen wurden bereits importiert und ignoriert."
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
+#, python-format
+msgid "1 transaction had already been imported and was ignored."
+msgstr "Eine Buchung wurde bereits importiert und ignoriert."
+
+#. module: account_bank_statement_import
+#: sql_constraint:account.bank.statement.line:0
+msgid "A bank account transactions can be imported only once !"
+msgstr "Eine Bankbuchung kann nur einmal importiert werden!"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_acc_number
+msgid "Account Number"
+msgstr "Kontonummer"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type_control_ids
+msgid "Account Types Allowed"
+msgstr "Zugelassene Kontoarten"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_account_control_ids
+msgid "Accounts Allowed"
+msgstr "Zugelassene Konten"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
+msgid "Allow Cancelling Entries"
+msgstr "Storno erlauben"
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
+#, python-format
+msgid "Already imported items"
+msgstr "Bereits importierte Positionen"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_inbound
+msgid "At least one inbound"
+msgstr "Mindestens ein Eingang"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_outbound
+msgid "At least one outbound"
+msgstr "Mindestens ein Ausgang"
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:76
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_id
+#, python-format
+msgid "Bank"
+msgstr "Bank"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_account_id
+msgid "Bank Account"
+msgstr "Bankkonto"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_statements_source
+msgid "Bank Feeds"
+msgstr "Bank Datenübertragung"
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+msgid "Bank Journal Name"
+msgstr "Bank Journal Name"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_data_file
+msgid "Bank Statement File"
+msgstr "Datei Bankauszug"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Bankauszug Buchung"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
+msgid "Belong to the user's current company"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:165
+#, python-format
+msgid ""
+"Cannot find in which journal import this statement. Please manually select a"
+" journal."
+msgstr ""
+"Kann das Journal mit diesem Eintrag nicht finden. Bitte Journal manuell "
+"auswählen."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
+msgid ""
+"Check this box if you don't want to share the same sequence for invoices and"
+" refunds made from this journal"
+msgstr ""
+"Wählen Sie diese Option, wenn Rechnungen und Gutschriften in diesem Journal "
+"nicht den gleichen Nummernkreis verwenden sollen"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
+msgid ""
+"Check this box if you want to allow the cancellation the entries related to "
+"this journal or of the invoice related to this journal"
+msgstr ""
+"Aktivieren Sie diese Option, wenn Sie erlauben, dass Buchungen oder "
+"Rechnungen innerhalb dieses Journals storniert werden dürfen"
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid "Choose a file to import..."
+msgstr "Wähle eine Datei für den Import..."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_company_id
+msgid "Company"
+msgstr "Unternehmen"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_company_id
+msgid "Company related to this journal"
+msgstr "Unternehmen für dieses Journal"
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:106
+#, python-format
+msgid ""
+"Could not make sense of the given file.\n"
+"Did you install the module to support this type of file ?"
+msgstr ""
+"Die angegebene Datei macht keinen Sinn.\n"
+"Haben Sie das, diesem Dateityp unterstützende, Modul installiert?"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_uid
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_create_uid
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_date
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_create_date
+msgid "Created on"
+msgstr "Angelegt am"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id
+msgid "Currency"
+msgstr "Währung"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_inbound_payment_method_ids
+msgid "Debit Methods"
+msgstr "Abbuchungsmethoden"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
+msgid "Dedicated Refund Sequence"
+msgstr "Eigener Nummernkreis für Rückerstattungen"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
+msgid "Default Credit Account"
+msgstr "Standard-Habenkonto"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_debit_account_id
+msgid "Default Debit Account"
+msgstr "Standard Sollkonto"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_display_name
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_display_on_footer
+msgid ""
+"Display this bank account on the footer of printed documents like invoices "
+"and sales orders."
+msgstr ""
+"Dieses Bankkonto in der Fusszeile von gedruckten Dokumenten wie Rechnungen "
+"und Bestellungen anzeigen."
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid ""
+"Download a bank statement from your bank and import it here. Supported "
+"formats:"
+msgstr ""
+"Laden Sie einen Bankauszug Ihrer Bank herunter und importieren Sie ihn hier."
+" Unterstützte Formate:"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
+msgid "Entry Sequence"
+msgstr "Eingabereihenfolge"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_filename
+msgid "Filename"
+msgstr "Dateiname"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_data_file
+msgid ""
+"Get you bank statements in electronic format from your bank and select them "
+"here."
+msgstr ""
+"Beschaffen Sie Ihre Kontoauszüge in Dateiform von Ihrer Bank und wählen "
+"diese hier aus."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_group_invoice_lines
+msgid "Group Invoice Lines"
+msgstr "Rechnungszeilen zusammenfassen"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_id
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_group_invoice_lines
+msgid ""
+"If this box is checked, the system will try to group the accounting lines "
+"when generating them from invoices."
+msgstr ""
+"Bei Auswahl versucht das System die Buchungszeilen bei der Erzeugung aus "
+"Rechnungen zu gruppieren."
+
+#. module: account_bank_statement_import
+#: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
+msgid "Import"
+msgstr "Import"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import
+msgid "Import Bank Statement"
+msgstr "Bankauszug importieren"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
+msgid "Import Bank Statement Journal Creation Wizard"
+msgstr "Assistent zur Journalanlage beim Kontoauszugimport"
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid "Import Bank Statements"
+msgstr "Import Bank Auszüge"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line_unique_import_id
+msgid "Import ID"
+msgstr "Import ID"
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
+msgid "Import Statement"
+msgstr "Bankauszug importieren"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
+msgid "It acts as a default account for credit amount"
+msgstr "Fungiert als Standardkonto für die Haben-Buchung in diesem Journal"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_debit_account_id
+msgid "It acts as a default account for debit amount"
+msgstr "Dieses Konto fungiert als Standard Debitorenkonto"
+
+#. module: account_bank_statement_import
+#: model:ir.model,name:account_bank_statement_import.model_account_journal
+msgid "Journal"
+msgstr "Journal"
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:67
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+#, python-format
+msgid "Journal Creation"
+msgstr "Journalerstellung"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_name
+msgid "Journal Name"
+msgstr "Journalbezeichnung"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_journal_id
+msgid "Journal id"
+msgstr "Journal id"
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+msgid ""
+"Just click OK to create the account/journal and finish the import. If this "
+"was a mistake, hit cancel to abort the import."
+msgstr ""
+"Klicken Sie einfach auf OK, um das Konto/Journal anzulegen und den Import "
+"abzuschließen. Sollte dies unerwünscht sein, brechen Sie mit Abbrechen den "
+"Import ab."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
+msgid "Kanban dashboard"
+msgstr "Kanban Übersicht"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard_graph
+msgid "Kanban dashboard graph"
+msgstr "Kanban grafische Ansicht"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import___last_update
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation___last_update
+msgid "Last Modified on"
+msgstr "Zuletzt geändert am"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_write_uid
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert durch"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_write_date
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_write_date
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_loss_account_id
+msgid "Loss Account"
+msgstr "Verlustkonto"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_inbound_payment_method_ids
+msgid ""
+"Means of payment for collecting money. Odoo modules offer various payments "
+"handling facilities, but you can always use the 'Manual' payment method in "
+"order to manage payments outside of the software."
+msgstr ""
+"Zahlwege um Geld einzufordern. Odoo-Module bieten verschiedene "
+"Einrichtungen, um mit Zahlungen umzugehen, immer jedoch den 'manuelle' "
+"Zahlweg, um Zahlungen extern zur Software abzuwickeln."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
+msgid ""
+"Means of payment for sending money. Odoo modules offer various payments "
+"handling facilities, but you can always use the 'Manual' payment method in "
+"order to manage payments outside of the software."
+msgstr ""
+"Zahlwege um Geld zu überweisen. Odoo-Module bieten verschiedene "
+"Einrichtungen, um mit Zahlungen umzugehen, immer jedoch den 'manuelle' "
+"Zahlweg, um Zahlungen extern zur Software abzuwickeln."
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:136
+#, python-format
+msgid "No currency found matching '%s'."
+msgstr "Keine passende Währung gefunden '%s'. "
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+msgid "OK"
+msgstr "OK"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
+msgid "Payment Methods"
+msgstr "Zahlungsmethoden"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
+msgid "Profit Account"
+msgstr "Erlöskonto"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
+msgid "Refund Entry Sequence"
+msgstr "Eingabereihenfolge Rückerstattung"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
+msgid ""
+"Select 'Sale' for customer invoices journals.\n"
+"Select 'Purchase' for vendor bills journals.\n"
+"Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
+"Select 'General' for miscellaneous operations journals."
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid "Select a bank statement file to import"
+msgstr "Wählen Sie eine zu importierende Kontoauszugsdatei aus."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence
+msgid "Sequence"
+msgstr "Reihenfolge"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
+msgid "Short Code"
+msgstr "Kurzzeichen"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_display_on_footer
+msgid "Show in Invoices Footer"
+msgstr "Fußzeilen in Rechnung anzeigen"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard
+msgid "Show journal on dashboard"
+msgstr "Journal im Dashboard anzeigen"
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+msgid ""
+"The account of the statement you are importing is not yet recorded in Odoo. "
+"In order to proceed with the import, you need to create a bank journal for "
+"this account."
+msgstr ""
+"Das Konto des zu importierenden Auszugs ist noch nicht angelegt. Um mit dem "
+"Import fortzusetzen, müssen Sie ein Bank-Journal für dieses Konto anlegen."
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:151
+#, python-format
+msgid ""
+"The account of this statement (%s) is not the same as the journal (%s)."
+msgstr ""
+"Das Konto dieses Kontoauszugs (%s) ist nicht das Gleiche, wie das im Journal"
+" (%s)."
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:161
+#, python-format
+msgid ""
+"The currency of the bank statement (%s) is not the same as the currency of "
+"the journal (%s) !"
+msgstr ""
+"Die Währung des Kontoauszugs (%s) ist nicht das Gleiche, wie die des "
+"Journals (%s)."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id
+msgid "The currency used to enter statement"
+msgstr "Währung bei Erfassung des Kontoauszugs"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
+msgid "The journal entries of this journal will be named using this prefix."
+msgstr ""
+"Die Buchungssätze dieses Journals werden unter Verwendung dieses Präfixes "
+"benannt."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
+msgid ""
+"This field contains the information related to the numbering of the journal "
+"entries of this journal."
+msgstr ""
+"In diesem Feld finden Sie Angaben zum Nummernkreis, der für die Nummerierung"
+" der Posten in diesem Journal verwendet wird."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
+msgid ""
+"This field contains the information related to the numbering of the refund "
+"entries of this journal."
+msgstr ""
+"In diesem Feld finden Sie Angaben zum Nummernkreis, der für die Nummerierung"
+" der Ausgleichs-/Erstattungsposten in diesem Journal verwendet wird."
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:111
+#, python-format
+msgid "This file doesn't contain any statement."
+msgstr "Diese Datei enthält keine Buchung."
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:119
+#, python-format
+msgid "This file doesn't contain any transaction."
+msgstr "Diese Datei enthält keinen Vorgang."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
+msgid "Type"
+msgstr "Typ"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence
+msgid "Used to order Journals in the dashboard view"
+msgstr "Verwendet, um Journale im Cockpit zu sortieren"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_loss_account_id
+msgid ""
+"Used to register a loss when the ending balance of a cash register differs "
+"from what the system computes"
+msgstr ""
+"Wird verwendet, um einen Verlust zu buchen, wenn der Saldo einer Kasse vom "
+"errechneten bzw. erwarteten abweicht."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
+msgid ""
+"Used to register a profit when the ending balance of a cash register differs"
+" from what the system computes"
+msgstr ""
+"Wird verwendet, um einen Gewinn zu buchen, wenn der Saldo einer Kasse vom "
+"errechneten bzw. erwarteten abweicht."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard
+msgid "Whether this journal should be displayed on the dashboard or not"
+msgstr "Ob dieses Journal im Dashboard angezeigt werden soll oder nicht"
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
+#, python-format
+msgid "You have already imported that file."
+msgstr "Sie haben diese Datei bereits importiert."
+
+#. module: account_bank_statement_import
+#: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid "_Import"
+msgstr "_Import"

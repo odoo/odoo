@@ -1,0 +1,50 @@
+# HG changeset patch
+# Parent c140f0a861a08881d8737bca0ffb83904a2059a3
+
+Index: addons/openacademy/__manifest__.py
+===================================================================
+--- addons.orig/openacademy/__manifest__.py	2014-08-29 08:39:43.975536806 +0200
++++ addons/openacademy/__manifest__.py	2014-08-29 08:39:52.000000000 +0200
+@@ -31,6 +31,7 @@
+         'views/openacademy.xml',
+         'views/partner.xml',
+         'views/session_workflow.xml',
++        'reports.xml',
+     ],
+     # only loaded in demonstration mode
+     'demo': [
+Index: addons/openacademy/reports.xml
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ addons/openacademy/reports.xml	2014-08-29 08:41:12.663540061 +0200
+@@ -0,0 +1,30 @@
++<odoo>
++<data>
++    <report
++        id="report_session"
++        model="openacademy.session"
++        string="Session Report"
++        name="openacademy.report_session_view"
++        file="openacademy.report_session"
++        report_type="qweb-pdf" />
++
++    <template id="report_session_view">
++        <t t-call="report.html_container">
++            <t t-foreach="docs" t-as="doc">
++                <t t-call="report.external_layout">
++                    <div class="page">
++                        <h2 t-field="doc.name"/>
++                        <p>From <span t-field="doc.start_date"/> to <span t-field="doc.end_date"/></p>
++                        <h3>Attendees:</h3>
++                        <ul>
++                            <t t-foreach="doc.attendee_ids" t-as="attendee">
++                                <li><span t-field="attendee.name"/></li>
++                            </t>
++                        </ul>
++                    </div>
++                </t>
++            </t>
++        </t>
++    </template>
++</data>
++</odoo>

@@ -1,0 +1,557 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_voucher
+# 
+# Translators:
+# Boško Stojaković <bluesoft83@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Bole <bole@dajmi5.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2016\n"
+"Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: bs\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_state
+msgid ""
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
+" * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
+" * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
+" * The 'Cancelled' status is used when user cancel voucher."
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_id
+msgid "Account"
+msgstr "Konto"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+msgid "Account Date"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+msgid "Accounting Date"
+msgstr "Datum knjiženja"
+
+#. module: account_voucher
+#: model:ir.model,name:account_voucher.model_account_voucher
+msgid "Accounting Voucher"
+msgstr "Račun knjigovodstva"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
+msgid "Amount"
+msgstr "Iznos"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_analytic_id
+msgid "Analytic Account"
+msgstr "Analitički konto"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Are you sure you want to cancel this receipt?"
+msgstr "Jeste li sigurni da želite otkazati ovu potvrdu?"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Bill Date"
+msgstr "Datum računa"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Bill Information"
+msgstr "Informacije računa"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
+msgid "Bill Reference"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Cancel"
+msgstr "Otkaži"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Cancel Receipt"
+msgstr "Otkaži račun"
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+msgid "Cancelled"
+msgstr "Otkazan"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:159
+#, python-format
+msgid "Cannot delete voucher(s) which are already opened or paid."
+msgstr "Otvorene ili plaćene račune nije moguće izbrisati."
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
+msgid "Click to create a sale receipt."
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
+msgid "Click to register a purchase receipt."
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_company_id
+msgid "Company"
+msgstr "Kompanija"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
+msgid "Company related to this journal"
+msgstr "Kompanija za koju se vodi ovaj dnevnik"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_uid
+msgid "Created by"
+msgstr "Kreirao"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_date
+msgid "Created on"
+msgstr "Kreirano"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_currency_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
+msgid "Customer"
+msgstr "Kupac"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+msgid "Date"
+msgstr "Datum"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_name
+msgid "Description"
+msgstr "Opis"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
+msgid "Display Name"
+msgstr "Prikaži naziv"
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Draft"
+msgstr "U pripremi"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Draft Vouchers"
+msgstr "Računi u pripremi"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date_due
+msgid "Due Date"
+msgstr "Datum dospijeća"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
+msgid "Effective date for accounting entries"
+msgstr "Efektivni datum za računovodstvene zapise"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
+msgid "Gives the sequence of this line when displaying the voucher."
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Group By"
+msgstr "Grupiši po"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
+msgid ""
+"In case we have a rounding problem in the tax, use this field to correct it"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Internal Notes"
+msgstr "Interne zabilješke"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_journal_id
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Journal"
+msgstr "Dnevnik knjiženja"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_move_id
+msgid "Journal Entry"
+msgstr "Dnevnički zapis"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Journal Items"
+msgstr "Stavke dnevnika"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line___last_update
+msgid "Last Modified on"
+msgstr "Zadnje mijenjano"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_uid
+msgid "Last Updated by"
+msgstr "Zadnji ažurirao"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_date
+msgid "Last Updated on"
+msgstr "Zadnje ažurirano"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
+msgid "Notes"
+msgstr "Zabilješke"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_number
+msgid "Number"
+msgstr "Broj"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
+msgid "Only for tax excluded from price"
+msgstr "Samo za porez koji nije u cijeni"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
+msgid "Paid"
+msgstr "Plaćeno"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_partner_id
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+msgid "Partner"
+msgstr "Partner"
+
+#. module: account_voucher
+#: selection:account.voucher,pay_now:0
+msgid "Pay Directly"
+msgstr "Plati direktno"
+
+#. module: account_voucher
+#: selection:account.voucher,pay_now:0
+msgid "Pay Later"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
+msgid "Payment"
+msgstr "Plaćanje"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_name
+msgid "Payment Reference"
+msgstr "Referenca plaćanja"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:195
+#, python-format
+msgid "Please activate the sequence of selected journal !"
+msgstr "Molimo aktivirajte sekvencu odabrnog dnevnika!"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:198
+#, python-format
+msgid "Please define a sequence on the journal."
+msgstr "Molimo definišite sekvencu na dnevniku."
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Posted"
+msgstr "Proknjižen"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Posted Vouchers"
+msgstr "Knjiženi računi"
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+msgid "Pro-forma"
+msgstr "Pro-forma"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_product_id
+msgid "Product"
+msgstr "Proizvod"
+
+#. module: account_voucher
+#: selection:account.voucher,voucher_type:0
+msgid "Purchase"
+msgstr "Nabava"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Purchase Receipt"
+msgstr "Računi nabavke"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
+msgid "Purchase Receipts"
+msgstr "Nabavni računi"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Purchase Voucher"
+msgstr "Račun nabavke"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_quantity
+msgid "Quantity"
+msgstr "Količina"
+
+#. module: account_voucher
+#: selection:account.voucher,voucher_type:0
+msgid "Sale"
+msgstr "Prodaja"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Sales Information"
+msgstr "Informacije o prodaji"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Sales Receipt"
+msgstr "Račun prodaje"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
+msgid "Sales Receipts"
+msgstr "Prodajni računi"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Search Vouchers"
+msgstr "Pretraži račune"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_sequence
+msgid "Sequence"
+msgstr "Sekvenca"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Set to Draft"
+msgstr "Postavi u pripremu"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_state
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Status"
+msgstr "Status"
+
+#. module: account_voucher
+#: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
+msgid "Status Change"
+msgstr "Promjena statusa"
+
+#. module: account_voucher
+#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
+msgid "Status changed"
+msgstr "Promijenjen status"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_tax_ids
+msgid "Tax"
+msgstr "Porez"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
+msgid "Tax amount"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
+msgid "Tax correction"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
+msgid "The Voucher has been totally paid."
+msgstr "Račun je plaćen u potpunosti."
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
+msgid "The income or expense account related to the selected product."
+msgstr "Račun prihoda ili troškova vezan za odabrani proizvod."
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
+msgid "The partner reference of this document."
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+msgid "To Review"
+msgstr "Za provjeru"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_amount
+msgid "Total"
+msgstr "Ukupno"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
+msgid "Total Amount"
+msgstr "Ukupan iznos"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_voucher_type
+msgid "Type"
+msgstr "Tip"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_unit
+msgid "Unit Price"
+msgstr "Jedinična cijena"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Validate"
+msgstr "Odobri"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
+msgid "Vendor"
+msgstr "Dobavljač"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Vendor Voucher"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:97
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+#, python-format
+msgid "Voucher"
+msgstr "Račun"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
+msgid "Voucher Entries"
+msgstr "Stavke računa"
+
+#. module: account_voucher
+#: model:ir.model,name:account_voucher.model_account_voucher_line
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_ids
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_line_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_line_tree
+msgid "Voucher Lines"
+msgstr "Stavke računa"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.account_cash_statement_graph
+msgid "Voucher Statistics"
+msgstr "Statistika računa"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
+msgid "Vouchers Entries"
+msgstr "Zapisi računa"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
+msgid ""
+"When the purchase receipt is confirmed, you can record the\n"
+"                vendor payment related to this purchase receipt."
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
+msgid ""
+"When the sale receipt is confirmed, you can record the customer\n"
+"                payment related to this sales receipt."
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:361
+#, python-format
+msgid "You must first select a partner!"
+msgstr "Morate prvo da odaberete partnera!"

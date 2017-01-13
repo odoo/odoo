@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChatWindow">
+        <div class="o_chat_window">
+            <div class="o_chat_header">
+                <t t-call="mail.ChatWindowHeaderContent">
+                    <t t-set="status" t-value="widget.status"/>
+                    <t t-set="title" t-value="widget.title"/>
+                    <t t-set="unread_counter" t-value="widget.unread_msgs"/>
+                </t>
+            </div>
+            <div class="o_chat_content">
+            </div>
+            <div t-if='!widget.options.input_less' class="o_chat_composer">
+                <input class="o_composer_text_field" t-att-placeholder="widget.options.placeholder"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mail.ChatWindowsDropdown">
+        <div t-attf-class="o_chat_window o_chat_window_dropdown dropup #{open ? 'open' : ''}">
+            <span class="o_chat_window_dropdown_toggler dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-comments-o"/> <t t-esc="sessions.length"/>
+                <span class="o_total_unread_counter">
+                    <t t-if="unread_counter"><t t-esc="unread_counter"/></t>
+                </span>
+            </span>
+            <ul class="dropdown-menu">
+                <t t-foreach="sessions" t-as="session">
+                    <li class="o_chat_header" t-att-data-session-id="session.id">
+                        <t t-call="mail.ChatWindowHeaderContent">
+                            <t t-set="status" t-value="session.window.status"/>
+                            <t t-set="title" t-value="session.window.title"/>
+                            <t t-set="unread_counter" t-value="session.window.unread_msgs"/>
+                        </t>
+                    </li>
+                </t>
+            </ul>
+        </div>
+    </t>
+
+    <t t-name="mail.ChatWindowHeaderContent">
+        <span class="o_chat_title">
+            <t t-if="status" t-call="mail.chat.UserStatus"/>
+            <t t-esc="title"/>
+            <span t-if="unread_counter"> (<t t-esc="unread_counter"/>)</span>
+        </span>
+        <span>
+            <a href="#" class="o_chat_window_close fa fa-close"/>
+        </span>
+    </t>
+
+</templates>

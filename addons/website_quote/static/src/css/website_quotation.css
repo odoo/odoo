@@ -1,0 +1,62 @@
+.o_website_quote .bs-sidebar {
+  position: relative;
+  width: 100%;
+  z-index : 1;
+  background-color: #f7f5fa;
+  border-radius: 5px;
+}
+
+.o_website_quote .bs-sidenav {
+   padding-top: 10px;
+   padding-bottom: 10px;
+}
+
+.o_website_quote .bs-sidebar .nav > li > a {
+   display: block;
+   color: #716b7a;
+   padding: 5px 20px;
+}
+
+.o_website_quote .bs-sidebar .nav > .active > a,
+.o_website_quote .bs-sidebar .nav > .active:hover > a,
+.o_website_quote .bs-sidebar .nav > .active:focus > a {
+  font-weight: bold;
+  color: #563d7c;
+  background-color: transparent;
+  border-right: 1px solid #563d7c;
+}
+
+.o_website_quote .bs-sidebar .nav .nav {
+  display: none;
+  margin-bottom: 8px;
+}
+.o_website_quote .bs-sidebar .nav .nav > li > a {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-left: 30px;
+  font-size: 90%;
+}
+
+/* Table Styling */
+.wq-table {
+  table-layout: auto !important;
+}
+
+.wq-table th, .wq-table td {
+     border-top: none !important;
+ }
+
+.wq-table:not(:first-of-type) thead {
+  display: none;
+}
+
+@media (min-width: 992px) {
+  .o_website_quote .bs-sidebar .nav > .active > ul {
+    display: block;
+  }
+}
+@media print {
+    body {
+        padding : 0 !important;
+    }
+}

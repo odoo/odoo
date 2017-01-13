@@ -1,0 +1,839 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * project_issue
+# 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2016
+# Vida Potočnik <vida.potocnik@mentis.si>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Vida Potočnik <vida.potocnik@mentis.si>, 2016\n"
+"Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_email
+msgid "# Emails"
+msgstr "# E-sporočil"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_res_partner_issue_count
+msgid "# Issues"
+msgstr "# Zadeve"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_nbr_issues
+msgid "# of Issues"
+msgstr "# zadev"
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:156
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopija)"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+msgid "<b>Category:</b>"
+msgstr "<b>Kategorija:</b>"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+msgid "<b>Project:</b>"
+msgstr "<b>Projekt:</b>"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
+msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
+msgstr "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">kot </span>"
+
+#. module: project_issue
+#: selection:project.config.settings,module_project_issue_sheet:0
+msgid "Activate timesheets on issues"
+msgstr "Aktiviraj časovnice na zadevah"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_active
+msgid "Active"
+msgstr "Aktivno"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
+msgid "Add an internal note..."
+msgstr "Dodajanje zaznamka"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
+msgid ""
+"An Issue's kanban state indicates special situations affecting it:\n"
+"\n"
+"                                           * Normal is the default situation\n"
+"\n"
+"                                           * Blocked indicates something is preventing the progress of this issue\n"
+"\n"
+"                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Analitični konto"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Archived"
+msgstr "Arhivirano"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_open
+msgid "Assigned"
+msgstr "Dodeljeno"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_user_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_user_id
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Assigned to"
+msgstr "Dodeljeno k"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_delay_close
+msgid "Avg. Delay to Close"
+msgstr "Povprečen zamik do zaprtja"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_delay_open
+msgid "Avg. Delay to Open"
+msgstr "Povprečni zamik do odprtja"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_working_hours_close
+msgid "Avg. Working Hours to Close"
+msgstr "Povp. št. delovnih ur do zaprtja"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_working_hours_open
+msgid "Avg. Working Hours to Open"
+msgstr "Povp. št. delovnih ur do odprtja"
+
+#. module: project_issue
+#: selection:project.issue,kanban_state:0
+msgid "Blocked"
+msgstr "Blokirano"
+
+#. module: project_issue
+#: model:project.issue,legend_done:project_issue.crm_case_buginaccountsmodule0
+#: model:project.issue,legend_done:project_issue.crm_case_constrainterror0
+#: model:project.issue,legend_done:project_issue.crm_case_errorinprogram0
+#: model:project.issue,legend_done:project_issue.crm_case_improvereportsinpms0
+#: model:project.issue,legend_done:project_issue.crm_case_includeattendancesheetinproject0
+#: model:project.issue,legend_done:project_issue.crm_case_newfeaturestobeadded0
+#: model:project.issue,legend_done:project_issue.crm_case_patcheserrorinprogram0
+#: model:project.issue,legend_done:project_issue.crm_case_programnotgivingproperoutput0
+msgid "Buzz or set as done"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.filters,name:project_issue.filter_issue_report_responsible
+msgid "By Responsible"
+msgstr "Po odgovornih"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_channel
+msgid "Channel"
+msgstr "Kanal"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_account_analytic_account_use_issues
+#: model:ir.model.fields,help:project_issue.field_project_project_use_issues
+msgid "Check this box to manage customer activities through this project"
+msgstr ""
+"Označite to polje za upravljanje dejavnosti kupca v sklopu tega projekta"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_closed
+msgid "Closed"
+msgstr "Neaktivni"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_color
+msgid "Color Index"
+msgstr "Barvni indeks"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_channel
+msgid "Communication channel."
+msgstr "Komunikacijski kanal"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_company_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_company_id
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Company"
+msgstr "Družba"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_partner_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_partner_id
+msgid "Contact"
+msgstr "Stik"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_create_date
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Create Date"
+msgstr "Datum nastanka"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Create Day"
+msgstr "Dan nastanka"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_create_uid
+msgid "Created by"
+msgstr "Ustvaril"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_create_date
+msgid "Created on"
+msgstr "Ustvarjeno"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
+msgid "Creation Date"
+msgstr "Datum nastanka"
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:296
+#, python-format
+msgid "Customer"
+msgstr "Kupec"
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:298
+#, python-format
+msgid "Customer Email"
+msgstr "E-pošta kupca"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_project_label_issues
+msgid "Customize the issues label, for example to call them cases."
+msgstr "Prilagoditev oznake zadeve, npr., da bi jih imenovali primeri."
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date
+msgid "Date"
+msgstr "Datum"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_date_closed
+msgid "Date of Closing"
+msgstr "Datum zaprtja"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_opening_date
+msgid "Date of Opening"
+msgstr "Datum odprtja"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_days_since_creation
+msgid "Days since creation date"
+msgstr "Dnevi od odprtja"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_inactivity_days
+msgid "Days since last action"
+msgstr "Dnevi od zadnje aktivnosti"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_day_open
+msgid "Days to Assign"
+msgstr "Dnevi do dodelitve"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_day_close
+msgid "Days to Close"
+msgstr "Dnevi do končanja"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_deadline
+msgid "Deadline"
+msgstr "Rok"
+
+#. module: project_issue
+#: model:ir.filters,name:project_issue.filter_issue_report_delay
+msgid "Delay"
+msgstr "Zakasnitev"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+msgid "Delete"
+msgstr "Izbriši"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
+msgid "Description"
+msgstr "Opis"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_days_since_creation
+msgid "Difference in days between creation date and current date"
+msgstr "Razlika v dnevih med datumom nastanka in tekočim datumom"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_inactivity_days
+msgid "Difference in days between last action and current date"
+msgstr "Razlika v dnevih med zadnjo aktivnostjo in tekočim datumom"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_display_name
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_display_name
+msgid "Display Name"
+msgstr "Prikazni naziv"
+
+#. module: project_issue
+#: selection:project.config.settings,module_project_issue_sheet:0
+msgid "Do not track working hours on issues"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
+msgid "Duration"
+msgstr "Trajanje"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+msgid "Edit Issue"
+msgstr "Uredi zadevo"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_email_from
+msgid "Email"
+msgstr "E-pošta"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
+msgid "Extra Info"
+msgstr "Dodatne informacije"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_feature_tree_view
+msgid "Feature Tracker Tree"
+msgstr "Sledilnik značilnosti"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_feature_tree_view
+msgid "Feature description"
+msgstr "Opis značilnosti"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Group By"
+msgstr "Združi po"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Helpdesk & Support"
+msgstr "Pomoč & Podpora"
+
+#. module: project_issue
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
+msgid "High"
+msgstr "Visok"
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:271
+#, python-format
+msgid "I take it"
+msgstr "Prevzemam"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_id
+msgid "ID"
+msgstr "ID"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_name
+#: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Issue"
+msgstr "Zadeva"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_blocked
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
+msgid "Issue Blocked"
+msgstr "Zadeva zaustaljena"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_new
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_new
+msgid "Issue Opened"
+msgstr "Zadeva odprta"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_ready
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_ready
+msgid "Issue Ready"
+msgstr "Zadeva pripravljena"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
+msgid "Issue Stage Changed"
+msgstr "Stopnja zadeve spremenjena"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
+msgid "Issue Summary..."
+msgstr "Povzetek zadeve..."
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Issue Tracker Search"
+msgstr "Iskalnik po sledilniku zadev"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
+msgid "Issue Tracker Tree"
+msgstr "Pregled sledilnika zadev"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_blocked
+msgid "Issue blocked"
+msgstr "Zadeva zaustavljena"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_new
+msgid "Issue opened"
+msgstr "Zadeva odprta"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_ready
+msgid "Issue ready for next stage"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
+#: model:ir.actions.act_window,name:project_issue.action_view_issues
+#: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
+#: model:ir.model.fields,field_description:project_issue.field_project_project_issue_count
+#: model:ir.model.fields,field_description:project_issue.field_project_project_issue_ids
+#: model:ir.model.fields,field_description:project_issue.field_project_project_issue_needaction_count
+#: model:ir.ui.menu,name:project_issue.menu_project_issue_track
+#: model:ir.ui.view,arch_db:project_issue.project_issue_calendar_view
+#: model:ir.ui.view,arch_db:project_issue.res_partner_issues_button_view
+#: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
+#: model:ir.ui.view,arch_db:project_issue.view_project_kanban_inherited
+msgid "Issues"
+msgstr "Zadeve"
+
+#. module: project_issue
+#: model:ir.actions.act_window,name:project_issue.action_project_issue_report
+#: model:ir.actions.act_window,name:project_issue.action_project_issue_report_filtered
+#: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
+msgid "Issues Analysis"
+msgstr "Analiza zadev"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_blocked
+msgid "Kanban Blocked Explanation"
+msgstr "Obrazložitev blokade v kanban"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_normal
+msgid "Kanban Ongoing Explanation"
+msgstr "Obrazložitev 'v teku' v kanban"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_kanban_state
+msgid "Kanban State"
+msgstr "Kanban stanje"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_done
+msgid "Kanban Valid Explanation"
+msgstr "Obrazložitev 'veljavno' v kanban"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_last
+msgid "Last Action"
+msgstr "Zadnja aktivnost"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Last Message"
+msgstr "Zadnje sporočilo"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue___last_update
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report___last_update
+msgid "Last Modified on"
+msgstr "Zadnjič spremenjeno"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_last_stage_update
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_date_last_stage_update
+msgid "Last Stage Update"
+msgstr "Zadnja posodobitev stopnje"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_write_uid
+msgid "Last Updated by"
+msgstr "Zadnjič posodobil"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
+msgid "Last Updated on"
+msgstr "Zadnjič posodobljeno"
+
+#. module: project_issue
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
+msgid "Low"
+msgstr "Nizko"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "My Issues"
+msgstr "Moje zadeve"
+
+#. module: project_issue
+#: model:project.issue,legend_blocked:project_issue.crm_case_buginaccountsmodule0
+#: model:project.issue,legend_blocked:project_issue.crm_case_constrainterror0
+#: model:project.issue,legend_blocked:project_issue.crm_case_errorinprogram0
+#: model:project.issue,legend_blocked:project_issue.crm_case_improvereportsinpms0
+#: model:project.issue,legend_blocked:project_issue.crm_case_includeattendancesheetinproject0
+#: model:project.issue,legend_blocked:project_issue.crm_case_newfeaturestobeadded0
+#: model:project.issue,legend_blocked:project_issue.crm_case_patcheserrorinprogram0
+#: model:project.issue,legend_blocked:project_issue.crm_case_programnotgivingproperoutput0
+msgid "Need functional or technical help"
+msgstr "Potrebuje funkcionalno ali tehnično pomoč"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "New"
+msgstr "Novo"
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:275
+#, python-format
+msgid "New Issue"
+msgstr "Nova zadeva"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_next
+msgid "Next Action"
+msgstr "Naslednje dejanje"
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:322
+#, python-format
+msgid "No Subject"
+msgstr "Ni zadeve"
+
+#. module: project_issue
+#: selection:project.config.settings,module_rating_project_issue:0
+msgid "No customer rating"
+msgstr "Brez ocenjevanja kupcev"
+
+#. module: project_issue
+#: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
+msgid "Normal"
+msgstr "Običajno"
+
+#. module: project_issue
+#: model:project.issue,legend_blocked:project_issue.crm_case_createnewobject0
+#: model:project.issue,legend_blocked:project_issue.crm_case_pagenotfound0
+#: model:project.issue,legend_blocked:project_issue.crm_case_problemloadingpage0
+#: model:project.issue,legend_blocked:project_issue.crm_case_programmingerror0
+msgid "Not validated"
+msgstr "Nepotrjeno"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
+msgid "Number of Days to close the project issue"
+msgstr "Število dni do zaprtja projektne razprave"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_open
+msgid "Number of Days to open the project issue."
+msgstr "Število dni od odprtja projektne zadeve"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_blocked
+msgid ""
+"Override the default value displayed for the blocked state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_done
+msgid ""
+"Override the default value displayed for the done state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_normal
+msgid ""
+"Override the default value displayed for the normal state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: project_issue
+#: code:addons/project_issue/models/account_analytic_account.py:16
+#, python-format
+msgid ""
+"Please remove existing issues in the project linked to the accounts you want"
+" to delete."
+msgstr ""
+"Odstranite obstoječe zadeve iz projekta povezanega s konti, ki jih želite "
+"izbrisati."
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_priority
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_priority
+#: model:ir.ui.view,arch_db:project_issue.project_feature_tree_view
+#: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Priority"
+msgstr "Prioriteta"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_description
+msgid "Private Note"
+msgstr "Zasebna opomba"
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_project_project
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_project_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_project_id
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Project"
+msgstr "Projekt"
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_graph
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_pivot
+msgid "Project Issue"
+msgstr "Projektna zadeva"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_graph_view
+#: model:ir.ui.view,arch_db:project_issue.project_issue_pivot_view
+msgid "Project Issues"
+msgstr "Projektne zadeve"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_project_issue_sheet
+msgid ""
+"Provides timesheet support for the issues/bugs management in project.\n"
+"-This installs the module project_issue_sheet."
+msgstr ""
+"Omogoča časovnice na projektnih zadevah.\n"
+"-Namesti modul project_issue_sheet."
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
+msgid "Rating on issue"
+msgstr ""
+
+#. module: project_issue
+#: selection:project.issue,kanban_state:0
+msgid "Ready for next stage"
+msgstr "Pripravljeno za naslednjo stopnjo"
+
+#. module: project_issue
+#: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
+msgid "Ready to reopen"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Search"
+msgstr "Iskanje"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_stage_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_stage_id
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Stage"
+msgstr "Stopnja"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_stage
+msgid "Stage Changed"
+msgstr "Faza spremenjena"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_stage
+#: model:mail.message.subtype,description:project_issue.mt_project_issue_stage
+msgid "Stage changed"
+msgstr "Faza spremenjena"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_tag_ids
+msgid "Tags"
+msgstr "Ključne besede"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_task_id
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Task"
+msgstr "Naloga"
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_project_task_type
+msgid "Task Stage"
+msgstr "Stopnja opravila"
+
+#. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
+#: model:ir.actions.act_window,help:project_issue.action_view_issues
+#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
+msgid ""
+"The Odoo issues tracker allows you to efficiently manage things\n"
+"                    like internal requests, software development bugs, customer\n"
+"                    complaints, project troubles, material breakdowns, etc."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
+msgid ""
+"These email addresses will be added to the CC field of all inbound\n"
+"        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_email_from
+msgid "These people will receive email."
+msgstr "Prejemniki e-pošte"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_rating_project_issue
+msgid "This allows customers to give rating on issue"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.action_project_issue_report
+#: model:ir.actions.act_window,help:project_issue.action_project_issue_report_filtered
+msgid ""
+"This report on the project issues allows you to analyse the quality of your "
+"support or after-sales services. You can track the issues per age. You can "
+"analyse the time required to open or close an issue, the number of email to "
+"exchange and the time spent on average by issues."
+msgstr ""
+"Poročilo o projektnih zadevah omogoča analizo kvalitete podpore ali "
+"poprodajnih storitev. Zadevam sledimo po starosti. Možna je analiza časa "
+"potrebnega za odprtje ali zaprtje zadeve, števila izmenjanih e-poštnih "
+"sporočil  in povprečne porabe časa na posamezni zadevi."
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Timesheets"
+msgstr "Časovnice"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
+msgid "Timesheets on Issues"
+msgstr ""
+
+#. module: project_issue
+#: selection:project.config.settings,module_rating_project_issue:0
+msgid "Track customer satisfaction on issues"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Unassigned"
+msgstr "Nedodeljeno"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Unread Messages"
+msgstr "Neprebrana sporočila"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
+#: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
+msgid "Use Issues"
+msgstr "Uporaba zadev"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_project_label_issues
+msgid "Use Issues as"
+msgstr "Uporaba zadev kot"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_user_email
+msgid "User Email"
+msgstr "Uporabnikov elektronski naslov"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_email_cc
+msgid "Watchers Emails"
+msgstr "E-pošta opazovalcev"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_open
+msgid "Working Hours to assign the Issue"
+msgstr "Delovnih ur do dodelitve zadeve"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_close
+msgid "Working Hours to close the Issue"
+msgstr "Delovnih ur do zaključka zadeve"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_task_id
+msgid ""
+"You can link this issue to an existing task or directly create a new one "
+"from here"
+msgstr ""
+"To zadevo lahko povežete z obstoječim opravilom ali pa od tukaj neposredno "
+"ustvarite novega"
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:191
+#, python-format
+msgid "issues"
+msgstr "zadeve"
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_project_config_settings
+msgid "project.config.settings"
+msgstr "project.config.settings"
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_project_issue_report
+msgid "project.issue.report"
+msgstr "project.issue.report"

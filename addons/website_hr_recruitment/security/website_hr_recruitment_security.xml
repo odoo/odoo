@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="hr_job_public" model="ir.rule">
+        <field name="name">Job Positions: Public</field>
+        <field name="model_id" ref="hr.model_hr_job"/>
+        <field name="domain_force">[('website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="hr_job_portal" model="ir.rule">
+        <field name="name">Job Positions: Portal</field>
+        <field name="model_id" ref="hr.model_hr_job"/>
+        <field name="domain_force">[('website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="hr_job_officer" model="ir.rule">
+        <field name="name">Job Positions: HR Officer</field>
+        <field name="model_id" ref="hr.model_hr_job"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="hr_department_public" model="ir.rule">
+        <field name="name">Job department: Public</field>
+        <field name="model_id" ref="hr.model_hr_department"/>
+        <field name="domain_force">[('jobs_ids.website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="hr_recruitment.group_hr_recruitment_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('website.group_website_publisher'))]"/>
+    </record>
+</data>
+</odoo>

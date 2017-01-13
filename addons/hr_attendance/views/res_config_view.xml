@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_attendance_view_config" model="ir.ui.view">
+        <field name="name">base.config.setting.hr.form.attendance</field>
+        <field name="model">base.config.settings</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <form string="Configuration" class= "oe_form_configuration">
+                <header>
+                    <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                    <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                </header>
+                <group string="Settings">
+                    <field name="group_attendance_use_pin" widget="radio"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_attendance_settings" model="ir.actions.act_window">
+        <field name="name">Attendance Settings</field>
+        <field name="res_model">base.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="view_id" ref="hr_attendance_view_config"/>
+    </record>
+
+    <menuitem id="hr_attendance.menu_hr_attendance_settings" name="Configuration" parent="menu_hr_attendance_root"
+        sequence="99" action="action_hr_attendance_settings" groups="hr_attendance.group_hr_attendance_manager"/>
+</odoo>

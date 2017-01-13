@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <div t-name="website.mobile_preview">
+        <iframe id="mobile-viewport" t-att-src="widget.mobile_src"/>
+    </div>
+
+    <div t-name="website.error_dialog">
+        <section t-if="message">
+            <t t-raw="message"/>
+        </section>
+        <section class="mt32" t-if="backend_url">
+            <p>The web site has encountered an error.</p>
+            <p>It might be possible to edit the relevant items or fix the issue in <a t-attf-href="#{backend_url}"> the classic Odoo interface</a>.</p>
+        </section>
+    </div>
+
+    <t t-name="website.prompt">
+        <t t-call="website.modal_base">
+            <form class="form-horizontal" role="form" t-att-id="id">
+                <div class="form-group mb0">
+                    <label for="page-name" class="col-sm-3 control-label">
+                        <t t-esc="field_name"/>:
+                    </label>
+                    <div class="col-sm-8">
+                        <input t-if="field_type == 'input'" type="text" class="form-control" required="required"/>
+                        <textarea t-if="field_type == 'textarea'" class="form-control" required="required" rows="5"></textarea>
+                        <select t-if="field_type == 'select'" class="form-control"></select>
+                    </div>
+                </div>
+            </form>
+        </t>
+    </t>
+
+    <t t-name="website.modal_base">
+        <div class="modal o_website_modal " tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <t t-call="website.modal_header" />
+                    <div class="modal-body">
+                        <t t-raw="0"/>
+                    </div>
+                    <t t-call="website.modal_footer" />
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="website.modal_header">
+        <div class="modal-header" t-if="window_title">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 class="modal-title"><t t-esc="window_title"/></h3>
+        </div>
+    </t>
+
+    <t t-name="website.modal_footer">
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-primary btn-continue">Continue</button>
+            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
+        </div>
+    </t>
+
+    <t t-name="website.dependencies">
+        <t t-if="dependencies">
+            <p class="text-warning">
+              <strong>Warning!</strong> Don't forget to update all links referring to this page:
+            </p>
+            <t t-set='tid' t-value='0'/>
+            <div t-foreach="_.keys(dependencies)" t-as="type" class="mb16">
+                <a class="collapsed fa fa-caret-right" data-toggle="collapse" t-att-href="'#collapseDependencies'+tid" aria-expanded="false" t-att-aria-controls="'collapseDependencies'+tid">
+                  <t t-esc="type"/>:&amp;nbsp;
+                  <span class="text-muted"><t t-esc="dependencies[type].length"/> found(s)</span>
+                </a>
+                <div t-att-id="'collapseDependencies'+tid" class="collapse" aria-expanded="false" >
+                  <ul>
+                      <li t-foreach="dependencies[type]" t-as="error">
+                          <a t-if="!_.contains(['', '#', false,], error.link)" t-att-href="error.link">
+                              <t t-raw="error.text"/>
+                          </a>
+                          <t t-if="_.contains(['', '#', false,], error.link)" t-raw="error.text"/>
+                      </li>
+                  </ul>
+                </div>
+                <t t-set='tid' t-value='tid+1'/>
+            </div>
+        </t>
+    </t>
+    <t t-name="website.delete_page">
+        <t t-call="website.modal_base">
+            <t t-call="website.dependencies" />
+            <form class="form-horizontal" role="form" t-att-id="id">
+                <div class="form-group">
+                    <label class="col-sm-offset-2 col-sm-8 text-left alert alert-danger">
+                        <input type="checkbox" onchange="$('.btn-continue').prop('disabled', !this.checked)"/> I'm sure, I want to delete this page definitively
+                    </label>
+                </div>
+            </form>
+        </t>
+    </t>
+
+    <t t-name="website.rename_page">
+        <t t-call="website.modal_base">
+            <t t-call="website.dependencies" />
+            <div class="row">
+                <form class="form-horizontal alert alert-info" role="form" t-att-id="id">
+                    <div class="form-group mb0" >
+                        <label for="new_name" class="control-label col-sm-4">Rename Page To:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="new_name" placeholder="e.g. About Us" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </t>
+    </t>
+</templates>

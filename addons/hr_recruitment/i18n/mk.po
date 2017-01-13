@@ -1,0 +1,1640 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_recruitment
+#
+# Translators:
+# Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2016
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-07-08 16:00+0000\n"
+"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
+"mk/)\n"
+"Language: mk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"#-#-#-#-#  mk.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
+"#-#-#-#-#  mk.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
+
+#. module: hr_recruitment
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
+msgid ""
+"\n"
+"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
+"<p>Thank you for your enquiry.<br />\n"
+"Unfortunately, your profile does not match with our needs</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
+msgid ""
+"\n"
+"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
+"<p>Thank you for your enquiry.<br />\n"
+"Your resume got our interest. I will contact you as soon as possible to "
+"plan\n"
+"next steps of the recruitment process.</p>\n"
+"<p>If you have any questions, please let us know.</p>\n"
+"<p>Best regards,</p>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_employee
+msgid ""
+"\n"
+"<p>Dear all,</p>\n"
+"<p>I’m very pleased to announce that <strong> ${object.name} </strong> will "
+"be\n"
+"joining us as a ${object.job_id.name}\n"
+"%if object.department_id:\n"
+"    in ${object.department_id.name}.\n"
+"%endif\n"
+".</p>\n"
+"<p>Please welcome him/her and help him/her finding his/her marks.</p>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "<b>Contact:</b>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "<b>Degree:</b>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "<b>Departement:</b>"
+msgstr "<b>Оддел:</b>"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+msgid "<span class=\"o_stat_text\">Meetings</span>"
+msgstr "<span class=\"o_stat_text\">Состаноци</span>"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "<span class=\"o_stat_text\">Trackers</span>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "<span>New</span>"
+msgstr "<span> Ново </span>"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "<span>Reports</span>"
+msgstr "<span>Извештаи</span>"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "<span>View</span>"
+msgstr "<span>Приказ</span>"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_defaults
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"Python речник ќе биде користен за да обезбеди стандардни вредности при "
+"креирање нови записи за овој алијас."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_active
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_active
+msgid "Active"
+msgstr "Активно"
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:20
+#, python-format
+msgid ""
+"Add columns to define the <b>interview stages</b>.<br/><i>e.g. New &gt; "
+"Qualified &gt; First Interview &gt; Recruited</i>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id
+msgid "Address where employees are working"
+msgstr "Адреса каде што вработените работат"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_id
+msgid "Alias"
+msgstr "Алијас"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_contact
+msgid "Alias Contact Security"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_alias_id
+msgid "Alias ID"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_name
+msgid "Alias Name"
+msgstr "Алијас име"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_domain
+msgid "Alias domain"
+msgstr "Домеин на алијас"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_model_id
+msgid "Aliased Model"
+msgstr "Модел на алијас"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_applicant
+msgid "Applicant"
+msgstr "Кандидат"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
+#: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_hired
+msgid "Applicant Hired"
+msgstr "Ангажиран апликант"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
+msgid "Applicant Stage Changed"
+msgstr "Состојбата на апликантот е променета"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_new
+msgid "Applicant created"
+msgstr "Апликантот е креиран"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
+msgid "Applicant hired"
+msgstr "Ангажиран апликант"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_name
+msgid "Applicant's Name"
+msgstr "Име на апликантот"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:92
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_calendar_view
+#, python-format
+msgid "Applicants"
+msgstr "апликанти"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
+msgid ""
+"Applicants and their attached CV are created automatically when an email is "
+"sent.\n"
+"                If you install the document management modules, all resumes "
+"are indexed automatically,\n"
+"                so that you can easily search through their content."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
+msgid ""
+"Applicants and their attached CV are created automatically when an email is "
+"sent.\n"
+"            If you install the document management modules, all resumes are "
+"indexed automatically, \n"
+"            so that you can easily search through their content."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Application"
+msgstr "Апликација"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+msgid "Application Summary"
+msgstr "Резиме на апликација"
+
+#. module: hr_recruitment
+#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_interest
+msgid "Application approved"
+msgstr "Апликацијата е прифатена"
+
+#. module: hr_recruitment
+#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
+msgid "Application refused"
+msgstr "Апликацијата е одбиена"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Application(s)"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_applications
+#: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_application_count
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_application_ids
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_document_ids
+#: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Applications"
+msgstr "Апликации"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_job_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_job_id
+msgid "Applied Job"
+msgstr "Применето работно место"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_configuration
+msgid "Apply"
+msgstr "Примени"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_priority
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_priority
+msgid "Appreciation"
+msgstr "Благодарност"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Archived"
+msgstr "Архивирано"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_open
+msgid "Assigned"
+msgstr "Доделено"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_attachment_ids
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Attachments"
+msgstr "Привезоци"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_availability
+msgid "Availability"
+msgstr "Достапност"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_delay_close
+msgid "Avg. Delay to Close"
+msgstr "Просечно време на доцнење до затварање"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_salary_exp_avg
+msgid "Avg. Expected Salary"
+msgstr "Просечно очекувана плата"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_salary_prop_avg
+msgid "Avg. Proposed Salary"
+msgstr "Просечно предложена плата"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
+msgid "Bachelor Degree"
+msgstr "Диплома"
+
+#. module: hr_recruitment
+#: model:ir.filters,name:hr_recruitment.filter_recruitment_report_departmnet
+msgid "By Department"
+msgstr "Според оддел"
+
+#. module: hr_recruitment
+#: model:ir.filters,name:hr_recruitment.filter_recruitment_report_job
+msgid "By Job"
+msgstr "Според работа"
+
+#. module: hr_recruitment
+#: model:ir.filters,name:hr_recruitment.filter_recruitment_report_recruiter
+msgid "By Recruiter"
+msgstr "Според регрутер"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_configuration
+msgid "Cancel"
+msgstr "Откажи"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
+msgid "Cases By Stage and Estimates"
+msgstr "Предмети по етапа и проценки"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_applicant_category
+msgid "Category of applicant"
+msgstr "Категорија на апликант"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
+msgid "Click here to create a new job position."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
+msgid "Click to add a new employee."
+msgstr "Кликнете да додадете нов вработен."
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
+#: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
+msgid "Click to add a new stage in the recruitment process."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_category_action
+msgid "Click to add a new tag."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_closed
+msgid "Closed"
+msgstr "Затворено"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_color
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_color
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_color
+msgid "Color Index"
+msgstr "Индекс на бои"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_company_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_company_id
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+msgid "Company"
+msgstr "Компанија"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_configuration
+msgid "Configuration"
+msgstr "Конфигурација"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_configuration
+msgid "Configure HR Recruitment"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
+msgid "Configure Recruitment"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:366
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_id
+#, python-format
+msgid "Contact"
+msgstr "Контакт"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:368
+#, python-format
+msgid "Contact Email"
+msgstr "Контакт емаил"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment
+msgid "Content"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+msgid "Contract"
+msgstr "Договор"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
+msgid "Contract Proposal"
+msgstr "Предлог на договор"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
+msgid "Contract Signed"
+msgstr "Договорот е потпишан"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Create"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
+msgid "Create Date"
+msgstr "Датум на креирање"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+msgid "Create Employee"
+msgstr "Креирај вработен"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.create_job_simple
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Create a Job Position"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
+msgid "Create alias"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
+msgid ""
+"Create some aliases that will allow you to track where applicants come from."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_create_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_create_uid
+msgid "Created by"
+msgstr "Креирано од"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_create_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_create_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_create_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_create_date
+msgid "Created on"
+msgstr "Креирано на"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_create_date
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Creation Date"
+msgstr "Датум на креирање"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+msgid "Creation Week"
+msgstr "Недела на креирање"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_day_close
+msgid "Days to Close"
+msgstr "Денови до затварање"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_day_open
+msgid "Days to Open"
+msgstr "Денови до отварање"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_defaults
+msgid "Default Values"
+msgstr "Стандардна вредност"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid ""
+"Define a specific contact address for this job position. If you keep it "
+"empty, the default email address will be used which is in human resources "
+"settings"
+msgstr ""
+"Дефинирајте специфична адреса за ова работно место. Ако го оставите празно, "
+"ќе биде употребена стандардната  е-маил адреса од човечки ресурси"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
+msgid ""
+"Define here your stages of the recruitment process, for example:\n"
+"            qualification call, first interview, second interview, refused,\n"
+"            hired."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_type_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_type_id
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_form
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_tree
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Degree"
+msgstr "Диплома"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
+msgid "Degree of Recruitment"
+msgstr "Степен на вработување"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
+msgid "Degrees"
+msgstr "Степени"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "Delete"
+msgstr "Избриши"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_department_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_department_id
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+msgid "Department"
+msgstr "Одделение"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_manager_id
+msgid "Department Manager"
+msgstr "Раководител на оддел"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_department
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_department
+msgid "Departments"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_description
+msgid "Description"
+msgstr "Опис"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Discard"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_display_name
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_display_name
+msgid "Display Name"
+msgstr "Прикажи име"
+
+#. module: hr_recruitment
+#: selection:hr.recruitment.config.settings,module_hr_recruitment_survey:0
+msgid "Do not use interview forms"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
+msgid "Doctoral Degree"
+msgstr "докторска дисертациај"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Document(s)"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_documents_count
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Documents"
+msgstr "Документи"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
+msgid ""
+"Don't forget to specify the department if your recruitment process\n"
+"            is different according to the job position."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_from
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_email
+msgid "Email"
+msgstr "Емаил"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "Email Alias"
+msgstr "Е-маил алијас"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_id
+msgid ""
+"Email alias for this job position. New emails will automatically create new "
+"applicants for this job position."
+msgstr ""
+"Емаил алијас за оваа работна позиција. Новите е-пошти автоматски ќе креираат "
+"нови апликанти за оваа работна позиција."
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_employee
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_emp_id
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+msgid "Employee"
+msgstr "Вработен"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_employee_name
+msgid "Employee Name"
+msgstr "Име на вработен"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_emp_id
+msgid "Employee linked to the applicant."
+msgstr "Вработен поврзан со апликант"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_no_employee
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "Employees"
+msgstr "Вработени"
+
+#. module: hr_recruitment
+#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
+msgid "Excellent"
+msgstr "Одлично"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_department_expected_employee
+msgid "Expected Employee"
+msgstr "Очекуван вработен"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_expected
+msgid "Expected Salary"
+msgstr "Очекувана плата"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_expected_extra
+msgid "Expected Salary Extra"
+msgstr "Очекувана екстра плата"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+msgid "Extended Filters"
+msgstr "Проширени филтри"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+msgid "Extra advantages..."
+msgstr "Екстра предности..."
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+msgid "Feedback of interviews..."
+msgstr "Повратна информација за интервјуата..."
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Filter and view on next actions and date"
+msgstr "Филтер и приказ на следните акции и датум"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Прво интервју"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
+msgid "Folded in Recruitment Pipe"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_degree_sequence
+msgid "Gives the sequence order when displaying a list of degrees."
+msgstr "Го дава редоследот на секвенците кога ја прикажува листата на степени."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_sequence
+msgid "Gives the sequence order when displaying a list of stages."
+msgstr "Го дава редоследот на секвенците кога ја прикажува листата на етапи."
+
+#. module: hr_recruitment
+#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
+msgid "Good"
+msgstr "Добро"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
+msgid "Graduate"
+msgstr "Дипломиран"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+msgid "Group By"
+msgstr "Групирај по"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Hired Employees"
+msgstr "Ангажирани/најмени вработени"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_department
+msgid "Hr Department"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_parent_thread_id
+msgid ""
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
+msgstr ""
+"ИБ на надредениот запис што го содржи alias-от (пример: проект што го содржи "
+"креаторот на задачи alias)"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_template_id
+msgid ""
+"If set, a message is posted on the applicant using the template when the "
+"applicant is set to the stage."
+msgstr ""
+"Ако е избрано, се праќа порака на апликантот користејќи го урнекот кога "
+"апликантот е подесен на фазата."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_active
+msgid ""
+"If the active field is set to false, it will allow you to hide the case "
+"without removing it."
+msgstr ""
+"Доколку активното поле е подесено на грешка, ќе ви дозволи да го сокриете "
+"предметот без да го отстраните."
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Initial Qualification"
+msgstr "основна квалификација"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_module_hr_recruitment_survey
+msgid "Interview Form"
+msgstr "Формулар за интервју"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Job"
+msgstr "Работно место"
+
+#. module: hr_recruitment
+#: model:utm.campaign,name:hr_recruitment.utm_campaign_job
+msgid "Job Campaign"
+msgstr "Работна кампања"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Job Email"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_job_id
+msgid "Job ID"
+msgstr "Идентификација на работа"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_address_id
+msgid "Job Location"
+msgstr "Локација на работа"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_job
+msgid "Job Position"
+msgstr "Работна позиција"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_department_new
+msgid "Job Position Created"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_job_new
+msgid "Job Position created"
+msgstr "Работна позиција креирана"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_config
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position_config
+msgid "Job Positions"
+msgstr "Работни позиции"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_job_id
+msgid "Job Specific"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+msgid "Jobs"
+msgstr "Работни места"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+msgid "Jobs - Recruitment Form"
+msgstr "Работни места - формулар за вработување"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_sources
+msgid "Jobs Sources"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant___last_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category___last_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings___last_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree___last_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report___last_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source___last_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage___last_update
+msgid "Last Modified on"
+msgstr "Последна промена на"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_last_stage_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_last_stage_id
+msgid "Last Stage"
+msgstr "Последна фаза"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_last_stage_update
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_last_stage_update
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Last Stage Update"
+msgstr "Ажурирање на последен стадиум"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_write_uid
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_write_uid
+msgid "Last Updated by"
+msgstr "Последно ажурирање од"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_write_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_write_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_write_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_write_date
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_write_date
+msgid "Last Updated on"
+msgstr "Последно ажурирање на"
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:16
+#, python-format
+msgid ""
+"Let's have a look at the <b>applications pipeline</b> for this job position."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
+msgid "Manager"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
+msgid "Master Degree"
+msgstr "МАгистратура"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_medium_id
+msgid "Medium"
+msgstr "Средно"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_mobile
+msgid "Mobile"
+msgstr "Мобилен"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "Mobile:"
+msgstr "Мобилен:"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "More <i class=\"fa fa-caret-down\"/>"
+msgstr "Повеќе <i class=\"fa fa-caret-down\"/>"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "My"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_name
+msgid "Name"
+msgstr "Име"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+msgid "New"
+msgstr "Ново"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_department_new_applicant_count
+#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_new
+msgid "New Applicant"
+msgstr "Нов апликант"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
+msgid "New Applicants"
+msgstr "Нови апликанти"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_new_application
+msgid "New Application"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_from_department
+msgid "New Applications"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:416
+#, python-format
+msgid "New Employee %s Hired"
+msgstr "Нов вработен %s ангажиран"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
+msgid "New Hired"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_department_new_hired_employee
+msgid "New Hired Employee"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_employee_action_from_department
+msgid "Newly Hired Employees"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_employee_newly_hired_employee
+msgid "Newly hired employee"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_title_action
+msgid "Next Action"
+msgstr "Следна операција"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_action
+msgid "Next Action Date"
+msgstr "Датум на следна акција"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Next Actions"
+msgstr "Следна активност"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:384
+#, python-format
+msgid "No Subject"
+msgstr "Без тема"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
+msgid "No document yet."
+msgstr ""
+
+#. module: hr_recruitment
+#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
+msgid "Normal"
+msgstr "Нормално"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_attachment_number
+msgid "Number of Attachments"
+msgstr "Број на прикачени датотеки"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_delay_close
+msgid "Number of Days to close the project issue"
+msgstr "Број на денови до затварање на проблемот на проектот"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
+msgid ""
+"Odoo helps you track applicants in the recruitment\n"
+"                process and follow up all operations: meetings, interviews, "
+"etc."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
+msgid ""
+"Odoo helps you track applicants in the recruitment\n"
+"            process and follow up all operations: meetings, interviews, etc."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
+msgid "Officer"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
+msgid ""
+"Once a job position is created, you can track related applications\n"
+"                  and manage the recruitment process."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
+msgid ""
+"Once a job position is created, you can track the applicants\n"
+"                  and manage the recruitment process related to the job\n"
+"                  position."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+msgid "Ongoing"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_force_thread_id
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr ""
+"Опционен идентификатор на нишка (запис) на која сите влезни пораки ќе бидат "
+"прикачени, дури и ако не и одговорат. Доколку е подесено, ова ќе оневозможи "
+"креирање на нови записи."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_user_id
+msgid "Owner"
+msgstr "Сопственик"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_parent_model_id
+msgid "Parent Model"
+msgstr "Надреден модел"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_parent_thread_id
+msgid "Parent Record Thread ID"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_parent_model_id
+msgid ""
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
+"(parent_model) and task (model))"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_partner_id
+msgid "Partner"
+msgstr "Партнер"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_phone
+msgid "Phone"
+msgstr "Телефон"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_probability
+msgid "Probability"
+msgstr "Веројатност"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_proposed
+msgid "Proposed Salary"
+msgstr "Предложена плата"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_salary_proposed_extra
+msgid "Proposed Salary Extra"
+msgstr "Предложена екстра плата"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "ID на нишка на запис"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_configuration
+msgid "Recruitment"
+msgstr "Регрутација"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
+msgid "Recruitment / Applicants Stages"
+msgstr "Етапи на вработување / апликанти"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_all
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_filtered_department
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_filtered_job
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_graph
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_pivot
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+msgid "Recruitment Analysis"
+msgstr "Анализи на вработување"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Recruitment Done"
+msgstr "Регрутацијата е завршена"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_user_id
+msgid "Recruitment Responsible"
+msgstr "Одговорен за регрутација"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
+msgid "Recruitments"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_report
+msgid "Recruitments Statistics"
+msgstr "Статистики на вработувања"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_reference
+msgid "Referred By"
+msgstr "Препорачано од"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+msgid "Refuse"
+msgstr "Одбиј"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+msgid "Refused"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
+msgid "Reports"
+msgstr "Извештаи"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_requirements
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
+msgid "Requirements"
+msgstr "Барања"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_user_id
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+msgid "Responsible"
+msgstr "Одговорен"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_resumes
+#: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job02
+msgid "Resumes and Letters"
+msgstr "Резимеа и писма"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_salary_exp
+msgid "Salary Expected"
+msgstr "очекувана плата"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_expected
+msgid "Salary Expected by Applicant"
+msgstr "Очекувана плата по апликант"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_expected_extra
+msgid "Salary Expected by Applicant, extra advantages"
+msgstr "очекувана плата по кандидат, екстра предности"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_salary_prop
+msgid "Salary Proposed"
+msgstr "Предложена плата"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_proposed
+msgid "Salary Proposed by the Organisation"
+msgstr "Предложена плата од старна на организацијата"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_proposed_extra
+msgid "Salary Proposed by the Organisation, extra advantages"
+msgstr "Плата предложена од Организацијата, дополнителни предности"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "Schedule Interview"
+msgstr "Закажи интервју"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+msgid "Schedule interview with this applicant"
+msgstr "Закажи интервју со овој апликант"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Search Applicants"
+msgstr "Пребарувај апликанти"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "Второ интервју"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_sequence
+msgid "Sequence"
+msgstr "Секвенца"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_global_settings
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Settings"
+msgstr "Подесувања"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_source_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_source_id
+msgid "Source"
+msgstr "Извор"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_name
+msgid "Source Name"
+msgstr "Име на извор"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
+msgid "Source of Applicants"
+msgstr "Извор на апликанти"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
+msgid "Sources of Applicants"
+msgstr "Извори на апликанти"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "Specific Email Address"
+msgstr "Одредена е-маил адреса"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
+msgid "Specific job that uses this stage. Other jobs will not use this stage."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_stage_id
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+msgid "Stage"
+msgstr "Етапа"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_stage_changed
+msgid "Stage Changed"
+msgstr "Етапата е променета"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
+msgid "Stage Definition"
+msgstr "Дефинирање на етапа"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_stage_changed
+msgid "Stage changed"
+msgstr "Променета етапа"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_name
+msgid "Stage name"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
+msgid "Stage of Recruitment"
+msgstr "Етапа на вработување"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_last_stage_id
+msgid ""
+"Stage of the applicant before being in the current stage. Used for lost "
+"cases analysis."
+msgstr ""
+"Фаза на апликантот пред да биде во тековната фаза. Се користи за анализа на "
+"изгубени случаи."
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_stage
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_tree
+msgid "Stages"
+msgstr "Фази"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+msgid "Start Recruitment"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Subject / Applicant"
+msgstr "Субјект / Апликант"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_name
+msgid "Subject / Application Name"
+msgstr "Наслов / Име на апликација"
+
+#. module: hr_recruitment
+#: sql_constraint:hr.applicant.category:0
+msgid "Tag name already exists !"
+msgstr "Името на тагот веќе постои !"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_categ_ids
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_category_menu
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
+msgid "Tags"
+msgstr "Етикети"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_availability
+msgid "The date at which the applicant will be available to start working"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_model_id
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
+msgstr ""
+"Моделот (Тип на Odoo Документ) со кој овој алијас кореспондира. Секој "
+"дојдовен е-маил што не одговара на постоечки запис ќе предизвика креирање на "
+"нов запис од овој модел (пр. Проектна Задача)"
+
+#. module: hr_recruitment
+#: sql_constraint:hr.recruitment.degree:0
+msgid "The name of the Degree of Recruitment must be unique!"
+msgstr "Името на степенот на вработување мора да биде уникатно!"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_name
+msgid ""
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.odoo.com>"
+msgstr ""
+"Името на е-маил алијасот, пр. 'jobs' ако сакате да ги примате сите е-маил "
+"пораки испратени до <jobs@example.odoo.com>"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_user_id
+msgid ""
+"The owner of records created upon receiving emails on this alias. If this "
+"field is not set the system will attempt to find the right owner based on "
+"the sender (From) address, or will use the Administrator account if no "
+"system user is found for that address."
+msgstr ""
+"Сопственик на записите креирани по примањето на пораките на овој алијас. "
+"Доколку ова поле не е конфигурирано, системот ќе се обиде да го пронајде "
+"вистинскиот сопственик врз база на адресата на испраќачот или ќе ја користи "
+"администраторската сметка доколку не се пронајде системски корисник за таа "
+"адреса."
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
+msgid ""
+"These aliases can be emails or urls for every source. When the applicant "
+"arrives here through one of these you'll know where he came from."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_cc
+msgid ""
+"These email addresses will be added to the CC field of all inbound and "
+"outbound emails for this record before being sent. Separate multiple email "
+"addresses with a comma"
+msgstr ""
+"Овие емаил адреси ќе бидат додадени во полето CC на сите влезни и излезни е-"
+"пошти за овој запис пред да биде испратен. Одделете ги емаил адресите со "
+"запирка."
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_email_from
+msgid "These people will receive email."
+msgstr "Овие лица ќе добијат е-пошта."
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+msgid "This Year"
+msgstr "Оваа година"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_medium_id
+msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+msgstr "Ова е начин на испорака. Пр. Честитка, Е-маил или онлајн реклама"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_source_id
+msgid ""
+"This is the source of the link Ex: Search Engine, another domain, or name of "
+"email list"
+msgstr ""
+"ова е извор на врската пр. : пребарувач, друг домен или име од е-маил листа"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
+msgid ""
+"This menu helps you search through resumes and motivation\n"
+"                letters. Odoo automatically indexes .PDF, .DOC, DOCX, .TXT\n"
+"                files so that you can search keywords from the content of "
+"these\n"
+"                files."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_fold
+msgid ""
+"This stage is folded in the kanban view when there are no records in that "
+"stage to display."
+msgstr ""
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:30
+#, python-format
+msgid ""
+"Try to send an email to this address, it will create an application "
+"automatically."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+msgid "Unassigned"
+msgstr "Недоделено"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#: model:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
+msgid "Unread Messages"
+msgstr "Непрочитани Пораки"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_write_date
+msgid "Update Date"
+msgstr "Ажурирај датум"
+
+#. module: hr_recruitment
+#: selection:hr.recruitment.config.settings,module_hr_recruitment_survey:0
+msgid "Use interview forms during the recruitment process"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_template_id
+msgid "Use template"
+msgstr "Користење на урнек"
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:25
+#, python-format
+msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_user_id
+msgid "User"
+msgstr "Корисник"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_user_email
+msgid "User Email"
+msgstr "Е-пошта на корисник"
+
+#. module: hr_recruitment
+#: selection:hr.applicant,priority:0 selection:hr.recruitment.report,priority:0
+msgid "Very Good"
+msgstr "Многу добро"
+
+#. module: hr_recruitment
+#. openerp-web
+#: code:addons/hr_recruitment/static/src/js/tour.js:11
+#, python-format
+msgid "Want to <b>start recruiting</b> like a pro? <i>Start here.</i>"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_cc
+msgid "Watchers Emails"
+msgstr "Мејлови на набљудувачите"
+
+#. module: hr_recruitment
+#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_employee
+msgid "Welcome ${object.name} "
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_no_employee
+msgid ""
+"With just a quick glance on the Odoo employee screen, you\n"
+"                can easily find all the information you need for each "
+"person;\n"
+"                contact data, job position, availability, etc."
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:420
+#, python-format
+msgid "You must define an Applied Job and a Contact Name for this applicant."
+msgstr ""
+"Мора да дефинирате работа за која се аплицира и име за контакт за овој "
+"апликант."
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
+msgid "e.g. Call for interview"
+msgstr "на пр. Повик за интервју"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "e.g. Sales Manager"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_config_settings
+msgid "hr.recruitment.config.settings"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_recruitment.py:296
+#, python-format
+msgid "job applicants"
+msgstr "апликанти за работа"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+msgid "oe_kanban_text_red"
+msgstr "oe_kanban_text_red"

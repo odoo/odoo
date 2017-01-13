@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem name="Slides" id="menu_website_slides_root" sequence="32" parent="website.menu_website_configuration"/>
+
+        <!-- SLIDE.TAG -->
+        <record id="view_slide_tag_form" model="ir.ui.view">
+            <field name="name">slide.tag.form</field>
+            <field name="model">slide.tag</field>
+            <field name="arch" type="xml">
+                <form string="Tag">
+                    <field name="name"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_slide_tag_tree" model="ir.ui.view">
+            <field name="name">slide.tag.tree</field>
+            <field name="model">slide.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Tags">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_slide_tag" model="ir.actions.act_window">
+            <field name="name">Tags</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">slide.tag</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem action="action_slide_tag" id="menu_slide_tag" parent="menu_website_slides_root" sequence="10" groups="base.group_no_one"/>
+
+        <!-- SLIDE.SLIDE -->
+        <record id="view_slide_slide_form" model="ir.ui.view">
+            <field name="name">slide.slide.form</field>
+            <field name="model">slide.slide</field>
+            <field name="arch" type="xml">
+                <form string="Slide">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                            <button class="oe_stat_button" name="website_publish_button"
+                                    type="object" icon="fa-globe">
+                                <field name="website_published" widget="website_button"/>
+                            </button>
+                        </div>
+                        <field name="image" widget="image" class="oe_avatar" options='{"preview_image": "image_thumb"}' readonly="1"/>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" string="Name"/>
+                            </div>
+                            <h1>
+                                <field name="name" default_focus="1" placeholder="Name"/>
+                            </h1>
+                            <field name="tag_ids" widget="many2many_tags" placeholder="Tags..."/>
+                        </div>
+                        <group>
+                            <field name="channel_id"/>
+                            <field name="category_id" context="{'default_channel_id': channel_id}"/>
+                            <field name="website_url"/>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                            <page string="Document">
+                                <group>
+                                    <field name="url" attrs="{'required': [('image', '=', False)]}"/>
+                                    <field name="slide_type" readonly="1"/>
+                                    <field name="document_id" readonly="1"/>
+                                    <field name="mime_type" readonly="1"/>
+                                    <field name="datas" readonly="1"/>
+                                </group>
+                            </page>
+                            <page string="Website">
+                                <group>
+                                    <group>
+                                        <field name="download_security"/>
+                                        <field name="date_published"/>
+                                        <field name="likes"/>
+                                        <field name="dislikes"/>
+                                    </group>
+                                    <group>
+                                        <field name="slide_views"/>
+                                        <field name="embed_views"/>
+                                        <field name="total_views"/>
+                                    </group>
+                                </group>
+                                <label for="index_content"/>
+                                <field name="index_content"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_slide_slide_tree" model="ir.ui.view">
+            <field name="name">slide.slide.tree</field>
+            <field name="model">slide.slide</field>
+            <field name="arch" type="xml">
+                <tree string="Slides">
+                    <field name="name"/>
+                    <field name="active" invisible="1"/>
+                    <field name="slide_type"/>
+                    <field name="channel_id"/>
+                    <field name="category_id"/>
+                    <field name="date_published"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_slide_slide_search" model="ir.ui.view">
+            <field name="name">slide.slide.filter</field>
+            <field name="model">slide.slide</field>
+            <field name="arch" type="xml">
+                <search string="Search Slides">
+                    <field name="name"/>
+                    <filter name="published" string="Published" domain="[('website_published', '=', True)]"/>
+                    <filter name="not_published" string="Waiting for validation" domain="[('website_published', '=', False)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Channel" domain="[]" context="{'group_by': 'channel_id'}"/>
+                        <filter string="Category" domain="[]" context="{'group_by': 'category_id'}"/>
+                        <filter string="Type" domain="[]" context="{'group_by': 'slide_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_slide_slide_graph" model="ir.ui.view">
+            <field name="name">slide.slide.graph</field>
+            <field name="model">slide.slide</field>
+            <field name="arch" type="xml">
+                <graph string="Graph of Slides" type="pivot">
+                    <field name="date_published" interval="month" type="col"/>
+                    <field name="channel_id" type="row"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="action_slides_slides" model="ir.actions.act_window">
+            <field name="name">Slides</field>
+            <field name="res_model">slide.slide</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+        </record>
+        <menuitem action="action_slides_slides" id="submenu_action_slides_slides" parent="menu_website_slides_root" sequence="3"/>
+
+        <!-- SLIDE.CATEGORY -->
+        <record model="ir.ui.view" id="view_slides_category_form">
+            <field name="name">slide.category.form</field>
+            <field name="model">slide.category</field>
+            <field name="arch" type="xml">
+                <form string="Category">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="channel_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_slides_category_tree" model="ir.ui.view">
+            <field name="name">slide.category.tree</field>
+            <field name="model">slide.category</field>
+            <field name="arch" type="xml">
+                <tree string="Category">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="channel_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_ir_slide_category" model="ir.actions.act_window">
+            <field name="name">Categories</field>
+            <field name="res_model">slide.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem action="action_ir_slide_category" id="menu_action_ir_slide_category" parent="menu_website_slides_root" sequence="2"/>
+
+        <!-- SLIDE.CHANNEL VIEWS -->
+        <record model="ir.ui.view" id="view_slide_channel_form">
+            <field name="name">slide.channel.form</field>
+            <field name="model">slide.channel</field>
+            <field name="arch" type="xml">
+                <form string="Channels">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" confirm="(Un)archiving a channel automatically (un)archives its slides. Do you want to proceed?" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                            <button class="oe_stat_button" name="website_publish_button"
+                                    type="object" icon="fa-globe">
+                                <field name="website_published" widget="website_button"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" string="Name"/>
+                            </div>
+                            <h1>
+                                <field name="name" default_focus="1" placeholder="Name"/>
+                            </h1>
+                        </div>
+                        <field name="category_ids" widget="many2many_tags" placeholder="Categories" context="{'default_channel_id': active_id}"
+                            domain="[('channel_id','=', active_id)]"/>
+                        <notebook colspan="4">
+                            <page string="General">
+                                <group>
+                                    <group>
+                                        <field name="promote_strategy" widget="radio"/>
+                                        <field name="custom_slide_id" class="oe_edit_only" attrs="{'invisible': [('promote_strategy', '!=', 'custom')]}" domain="[('channel_id','=',id), ('website_published','=',True)]"/>
+                                        <field name="promoted_slide_id" attrs="{'invisible': [('promote_strategy', '!=', 'custom')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="publish_template_id" domain="[('model','=','slide.slide')]"/>
+                                        <field name="share_template_id" domain="[('model','=','slide.slide')]"/>
+                                    </group>
+                                </group>
+                                <label for="description"/>
+                                <field name="description" colspan="4" nolabel="1"/>
+                            </page>
+                            <page string="Security">
+                                <group>
+                                    <field name="upload_group_ids" widget="many2many_tags"/>
+                                    <field name="visibility" string="Channel visibility" widget="radio"/>
+                                    <field name="group_ids" widget="many2many_tags" attrs="{'invisible':[('visibility', '=', 'public')], 'required':[('visibility', 'in',('private', 'partial'))]}"/>
+                                </group>
+                                <group attrs="{'invisible':[('visibility','in',('public'))]}" colspan="4">
+                                        <label string="Error Message"/>
+                                        <field name="access_error_msg" colspan="4" nolabel="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_slide_channel_tree" model="ir.ui.view">
+            <field name="name">slide.channel.tree</field>
+            <field name="model">slide.channel</field>
+            <field name="arch" type="xml">
+                <tree string="Channel">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="active" invisible="1"/>
+                    <field name="visibility"/>
+                    <field name="promote_strategy"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="slide_channel_view_search" model="ir.ui.view">
+            <field name="name">slide.channel.search</field>
+            <field name="model">slide.channel</field>
+            <field name="arch" type="xml">
+                <search string="Channel">
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_slide_channels" model="ir.actions.act_window">
+            <field name="name">Channels</field>
+            <field name="res_model">slide.channel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem action="action_slide_channels" id="menu_action_slide_channels" 
+            parent="menu_website_slides_root" sequence="1"/>
+
+    </data>
+</odoo>

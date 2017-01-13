@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_hr_expense_configuration" model="ir.ui.view">
+            <field name="name">Configure Expense</field>
+            <field name="model">hr.expense.config.settings</field>
+            <field name="inherit_id" eval="False"/>
+            <field name="arch" type="xml">
+                <form class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <group string="Expenses" name="config_alias">
+                        <label for="id" string="Expense Email Alias"/>
+                        <div>
+                            <div attrs="{'invisible': [('alias_domain', 'in', ['localhost', '', False])]}">
+                                <p class="text-muted">
+                                    You can setup a generic email alias to create
+                                    incoming expenses easily. Write an email with the receipt
+                                    in attachment to create an expense line in one click. If the mail
+                                    subject contains the product's internal reference between brackets,
+                                    the product will be set automatically. Type the expense amount
+                                    in the mail subject to set it on the expense too.
+                                </p>
+                                <field name="alias_prefix" class="oe_inline"/>
+                                <span>@</span>
+                                <field name="alias_domain"  class="oe_inline" readonly="1"/>
+                            </div>
+                            <div attrs="{'invisible': [('alias_domain', 'not in', ['localhost', '', False])]}">
+                                <button type="action"
+                                    name="base_setup.action_general_configuration"
+                                    string="Setup your domain alias" class="oe_link"/>
+                            </div>
+                        </div>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hr_expense_configuration" model="ir.actions.act_window">
+            <field name="name">Configure Expense</field>
+            <field name="res_model">hr.expense.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="menu_hr_expense_global_settings" name="Settings" 
+            parent="menu_hr_expense_configuration" sequence="0" action="action_hr_expense_configuration" groups="base.group_system"/>
+    </data>
+</odoo>

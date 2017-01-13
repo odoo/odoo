@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_recruitment_tree_url" model="ir.ui.view" >
+        <field name="name">hr.recruitment.tree.inherit.url</field>
+        <field name="model">hr.recruitment.source</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_recruitment_source_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='create_alias']" position="before">
+                <field name="url"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_job_form_website_published_button" model="ir.ui.view" >
+        <field name="name">hr.job.form.inherit.published.button</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_job_survey"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" name="website_publish_button"
+                    type="object" icon="fa-globe">
+                    <field name="website_published" widget="website_button"/>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

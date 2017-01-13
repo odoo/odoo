@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="summernote" name="Summernote">
+    <script type="text/javascript">
+        (function () {
+            "use strict";
+            odoo.define('jquery', function () {return $;});
+
+            var uniqId = 0;
+            odoo.__define__ = window.define;
+            window.define = function (id) {
+                var args = Array.prototype.slice.call(arguments);
+                var factorie = args.pop();
+                var id = args[0];
+
+                if (id instanceof Array) {
+                    var name = "summernote_factorie_" + (++uniqId);
+                    odoo[name] = factorie;
+
+                    var head = '';
+                    var fn = 'var fn = odoo.'+name+';\ndelete odoo.'+name+';\n';
+                    fn += 'return fn(';
+                    for (var k=0; k&lt;id.length; k++) {
+                        head += 'var a'+(++uniqId)+' = require("'+id[k]+'");\n';
+                        fn += 'a'+uniqId+', ';
+                    }
+                    fn += 'null);';
+
+                    odoo.define(odoo.website_next_define, new Function('require', head + fn));
+                } else {
+                    odoo.define(id, factorie);
+                }
+            };
+        })();
+    </script>
+    <t t-set="summer_js_files" t-value="['core/async', 'core/func', 'core/agent', 'core/list',
+        'core/dom', 'core/key', 'core/range', 'editing/Bullet', 'editing/History', 'editing/Style',
+        'editing/Table', 'editing/Typing', 'module/Editor', 'module/Button', 'module/Clipboard',
+        'module/Codeview', 'module/DragAndDrop', 'module/Fullscreen', 'module/Handle',
+        'module/HelpDialog', 'module/ImageDialog', 'module/LinkDialog', 'module/Popover',
+        'module/Statusbar', 'module/Toolbar', 'Renderer', 'EventHandler', 'defaults', 'summernote']" />
+    <t t-foreach="summer_js_files" t-as="file">
+        <script>odoo.website_next_define = 'summernote/<t t-esc="file" />';</script>
+        <script type="text/javascript" t-attf-src="/web_editor/static/lib/summernote/src/js/{{ file }}.js"></script>
+    </t>
+    <script type="text/javascript" src="/web_editor/static/src/js/summernote.js" />
+    <script type="text/javascript">
+        window.define = odoo.__define__;
+        delete odoo.__define__;
+        delete odoo.website_next_define;
+    </script>
+    <link rel="stylesheet" type="text/less" href="/web_editor/static/lib/summernote/src/less/summernote.less"/>
+</template>
+
+<template id="less_helpers" inherit_id="web.less_helpers">
+    <xpath expr="." position="inside">
+        <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.variables.less"/>
+    </xpath>
+</template>
+
+<template id="assets_common" inherit_id="web.assets_common" name="web_editor base assets_common">
+    <xpath expr="script[last()]" position="after">
+        <script type="text/javascript" src="/web_editor/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
+        <script type="text/javascript" src="/web_editor/static/src/js/ace.js" />
+        <script type="text/javascript" src="/web_editor/static/src/js/base.js" />
+        <script type="text/javascript" src="/web_editor/static/src/js/snippets.animation.js" />
+    </xpath>
+</template>
+
+<template id="assets_backend" inherit_id="web.assets_backend" name="web_editor assets for backend">
+    <xpath expr="link[last()]" position="after">
+        <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.common.less"/> <!-- not in common because compiled differently with context -->
+        <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.backend.less"/>
+    </xpath>
+    <xpath expr="script[last()]" position="after">
+        <script type="text/javascript" src="/web_editor/static/src/js/backend.js" />
+    </xpath>
+</template>
+
+<template id="assets_frontend" inherit_id="web.assets_frontend" priority="15">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.common.less"/> <!-- not in common because compiled differently with context -->
+    </xpath>
+</template>
+
+<template id="assets_editor" name="Full web_editor assets">
+    <t t-call="web.less_helpers"/>
+
+    <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.ui.less"/>
+    <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.ui.components.less"/>
+
+    <script type="text/javascript" src="/web_editor/static/lib/nearest/jquery.nearest.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/rte.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/rte.summernote.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/widgets.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/snippets.editor.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/snippets.options.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/tour.rte.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/transcoder.js"></script>
+    <script type="text/javascript" src="/web_editor/static/src/js/translator.js"></script>
+</template>
+
+<template id="webclient_bootstrap" inherit_id="web.webclient_bootstrap">
+    <xpath expr="//t[@t-call-assets='web.assets_backend'][@t-js='false']" position="after">
+        <t t-call-assets="web_editor.summernote" t-js="false"/>
+        <t t-call-assets="web_editor.assets_editor" t-js="false"/>
+    </xpath>
+    <xpath expr="//t[@t-call-assets='web.assets_backend'][@t-css='false']" position="after">
+        <t t-call-assets="web_editor.summernote" t-css="false"/>
+        <t t-call-assets="web_editor.assets_editor" t-css="false"/>
+    </xpath>
+</template>
+<template id="qunit_suite" inherit_id="web.qunit_suite">
+    <xpath expr="//t[@t-call-assets='web.assets_backend'][@t-css='false']" position="after">
+        <t t-call-assets="web_editor.summernote" t-css="false"/>
+        <t t-call-assets="web_editor.assets_editor" t-css="false"/>
+    </xpath>
+</template>
+
+<!--
+    The web_editor.colorpicker template regroups section of colorpicker menu for website customization
+    (text foreground/background but also snippet background color option).
+    As it is presentend below, the colorpicker tag regroups a set of .o_colorpicker_section with name,
+    icon-class and icon-content as data. These will be used to build the colorpicker dropdowns.
+
+    Redefinition can edit section content, add sections or even remove them. If no section is found when
+    building a colorpicker dropdown, the template content will be used without changes as the colorpicker
+    dropdown content.
+
+    Sections should contain a set of button with a data-color attribute. When selecting such a button to
+    edit style, the "bg-x" class or the "text-x" will be automatically added.
+-->
+<template id="web_editor.colorpicker" name="Color-Picker">
+    <colorpicker>
+        <div class="o_colorpicker_section" data-name="theme" data-icon-class="fa fa-flask">
+            <button data-color="alpha">Alpha</button>
+            <button data-color="beta">Beta</button>
+            <button data-color="gamma">Gamma</button>
+            <button data-color="delta">Delta</button>
+            <button data-color="epsilon">Epsilon</button>
+        </div>
+        <div class="o_colorpicker_section" data-name="grayscale" data-icon-class="fa fa-database">
+            <button data-color="white">White</button>
+            <button data-color="gray-lighter">Gray Lighter</button>
+            <button data-color="gray-light">Gray Light</button>
+            <button data-color="gray">Gray</button>
+            <button data-color="gray-dark">Gray Dark</button>
+            <button data-color="gray-darker">Gray Darker</button>
+            <button data-color="black">Black</button>
+        </div>
+        <div class="o_colorpicker_section" data-name="ui" data-icon-class="fa fa-paint-brush">
+            <button data-color="primary">Primary</button>
+            <button data-color="success">Success</button>
+            <button data-color="info">Info</button>
+            <button data-color="warning">Warning</button>
+            <button data-color="danger">Danger</button>
+        </div>
+        <div class="o_colorpicker_section" data-name="transparent_grayscale" data-icon-class="fa fa-eye-slash">
+            <button class="o_btn_transparent">Transparent</button>
+            <button data-color="black-25">25% Black</button>
+            <button data-color="black-50">50% Black</button>
+            <button data-color="black-75">75% Black</button>
+            <button data-color="white-25">25% White</button>
+            <button data-color="white-50">50% White</button>
+            <button data-color="white-75">75% White</button>
+        </div>
+    </colorpicker>
+</template>
+</odoo>

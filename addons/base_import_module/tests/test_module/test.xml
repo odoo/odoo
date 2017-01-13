@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- TODO: make test suite -->
+    <record id="base.main_company" model="res.company">
+        <field name="name">The base company is noupdate=1</field>
+    </record>
+
+    <record id="main_company2" model="res.company">
+        <field name="name">Hagrid</field>
+        <field name="rml_header1">My Company Tagline</field>
+        <field name="currency_id" ref="base.EUR"/>
+    </record>
+
+    <template id="test_page" name="Test Page" page="True">
+        <t t-call="website.layout">
+            <h1>
+                This page comes from an imported module!
+            </h1>
+            <p>
+                And this static image too !
+                <img src="/test_module/static/src/img/c64.png"/>
+            </p>
+        </t>
+    </template>
+
+    <template id="website.homepage">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                This homepage has been overwritten by an imported module !
+                <p>
+                    <a href="/page/test_module.test_page">Link to page added by imported module</a>
+                </p>
+            </div>
+        </t>
+    </template>
+
+    <template id="contactus_test" name="Contact Form" inherit_id="website.contactus">
+        <xpath expr="//h1" position="replace">
+            <h1>This contact us title has been changed by an imported module</h1>
+        </xpath>
+    </template>
+
+    <template id="assets" inherit_id="web.assets_backend" name="base module import test">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/test_module/static/src/js/test.js"></script>
+        </xpath>
+    </template>
+
+</odoo>

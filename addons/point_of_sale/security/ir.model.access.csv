@@ -1,0 +1,37 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_pos_order,pos.order,model_pos_order,group_pos_user,1,1,1,1
+access_pos_order_line,pos.order.line,model_pos_order_line,group_pos_user,1,1,1,1
+access_pos_pack_operation_lot,pos.pack.operation.lot,model_pos_pack_operation_lot,group_pos_user,1,1,1,1
+access_stock_picking_pos_user,stock.picking pos_user,stock.model_stock_picking,group_pos_user,1,1,1,1
+access_stock_warehouse_pos_user,stock.warehouse pos_user,stock.model_stock_warehouse,group_pos_user,1,0,0,0
+access_pos_order_stock_worker,pos.order stock_worker,model_pos_order,stock.group_stock_user,1,0,0,0
+access_stock_move_pos_user,stock.move pos_user,stock.model_stock_move,group_pos_user,1,1,1,1
+access_report_pos_order,report.pos.order,model_report_pos_order,group_pos_user,1,1,1,1
+access_account_journal_pos_user,account.journal pos_user,account.model_account_journal,group_pos_user,1,0,0,0
+access_account_payment_method_pos_user,account.payment.method pos_user,account.model_account_payment_method,group_pos_manager,1,0,0,0
+access_account_bank_statement,account.bank.statement,account.model_account_bank_statement,group_pos_user,1,1,1,0
+access_account_bank_statement_manager,account.bank.statement manager,account.model_account_bank_statement,group_pos_manager,1,1,1,1
+access_account_bank_statement_line,account.bank.statement.line,account.model_account_bank_statement_line,group_pos_user,1,1,1,0
+access_product_product,product.product,product.model_product_product,group_pos_user,1,0,0,0
+access_product_template_pos_user,product.template pos user,product.model_product_template,group_pos_user,1,0,0,0
+access_product_product_pos_manager,product.product.pos manager,product.model_product_product,group_pos_manager,1,1,1,1
+access_product_template_pos_manager,product.template pos manager,product.model_product_template,group_pos_manager,1,1,1,1
+access_account_bank_statement_line_manager,account.bank.statement.line manager,account.model_account_bank_statement_line,group_pos_manager,1,1,1,1
+access_product_product_supplierinfo_user,product.supplierinfo user,product.model_product_supplierinfo,group_pos_user,1,0,0,0
+access_product_product_packaging_user,product.packaging user,product.model_product_packaging,group_pos_user,1,0,0,0
+access_stock_warehouse_manager,stock.warehouse manager,stock.model_stock_warehouse,group_pos_manager,1,0,0,0
+access_stock_location_manager,stock.location manager,stock.model_stock_location,group_pos_manager,1,0,0,0
+access_product_uom_manager,product.uom manager,product.model_product_uom,group_pos_manager,1,1,1,1
+access_product_category_manager,product.category manager,product.model_product_category,group_pos_manager,1,1,1,1
+access_product_pricelist_manager,product.pricelist manager,product.model_product_pricelist,group_pos_manager,1,0,0,0
+access_pos_session_user,pos.session user,model_pos_session,group_pos_user,1,1,1,0
+access_pos_config_user,pos.config user,model_pos_config,group_pos_user,1,1,0,0
+access_pos_config_manager,pos.config user,model_pos_config,group_pos_manager,1,1,1,0
+access_product_category_pos_manager,pos.category manager,model_pos_category,group_pos_manager,1,1,1,1
+access_product_category_pos_user,pos.category user,model_pos_category,group_pos_user,1,0,0,0
+access_barcode_nomenclature_pos_user,barcode.nomenclature.pos.user,barcodes.model_barcode_nomenclature,group_pos_user,1,0,0,0
+access_barcode_nomenclature_pos_manager,barcode.nomenclature.pos.manager,barcodes.model_barcode_nomenclature,group_pos_manager,1,1,1,1
+access_barcode_rule_pos_user,barcode.rule.pos.user,barcodes.model_barcode_rule,group_pos_user,1,0,0,0
+access_barcode_rule_pos_manager,barcode.rule.pos.manager,barcodes.model_barcode_rule,group_pos_manager,1,1,1,1
+access_bank_statement_cashbox_user,account.bank.statement.cashbox user,account.model_account_bank_statement_cashbox,group_pos_user,1,1,1,0
+access_account_cashbox_line_user,account.cashbox.line user,account.model_account_cashbox_line,group_pos_user,1,1,1,0

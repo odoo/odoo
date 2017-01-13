@@ -1,0 +1,571 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_voucher
+# 
+# Translators:
+# Murat Kaplan <muratk@projetgrup.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2016
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2016
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
+# Ediz Duman <neps1192@gmail.com>, 2016
+# gezgin biri <gezginbiri@hotmail.com>, 2016
+# selim kartal <kartalselim37@gmail.com>, 2016
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_state
+msgid ""
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
+" * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
+" * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
+" * The 'Cancelled' status is used when user cancel voucher."
+msgstr ""
+"* 'Taslak' durumu, bir kullanıcı yeni yada onaylanmamış bir Makbuz hazırlıyorsa kullanılır.\n"
+"* 'Proforma' durumu, bir makbuzun numaralandırılmamış olması durumunda kullanılır.\n"
+"* 'Yollandı' durumu, kullanıcı bir makbuz oluştururken kullanılır, bir makbuz numarası oluşturulur ve makbuz girişleri hesapta oluşturulur.\n"
+"* 'İptal edildi' durumu kullanıcı bir makbuzu iptal ettiğinde kullanılır."
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_id
+msgid "Account"
+msgstr "Hesap"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+msgid "Account Date"
+msgstr "Hesap Tarihi"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+msgid "Accounting Date"
+msgstr "Muhasebe Tarihi"
+
+#. module: account_voucher
+#: model:ir.model,name:account_voucher.model_account_voucher
+msgid "Accounting Voucher"
+msgstr "Muhasebe Fişi"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
+msgid "Amount"
+msgstr "Tutar"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_analytic_id
+msgid "Analytic Account"
+msgstr "Analitik Hesap"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Are you sure you want to cancel this receipt?"
+msgstr "Bu makbuzu iptal etmek istediğinizden emin misiniz?"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Bill Date"
+msgstr "Fatura Tarihi"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Bill Information"
+msgstr "Fatura Bilgileri"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
+msgid "Bill Reference"
+msgstr "Fatura Referansı"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Cancel"
+msgstr "İptal"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Cancel Receipt"
+msgstr "Makbuz İptal et"
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+msgid "Cancelled"
+msgstr "İptal Edildi"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:159
+#, python-format
+msgid "Cannot delete voucher(s) which are already opened or paid."
+msgstr "Hali hazırda açık ya da ödenmiş olan fiş(ler) silinemiyor."
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
+msgid "Click to create a sale receipt."
+msgstr "Bir satış fişi oluşturmak için tıklayın."
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
+msgid "Click to register a purchase receipt."
+msgstr "Bir satınalma fişi oluşturmak için tıklayın."
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_company_id
+msgid "Company"
+msgstr "Firma"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
+msgid "Company related to this journal"
+msgstr "Bu yevmiyeyle ilişkili firma"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_uid
+msgid "Created by"
+msgstr "Oluşturan"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_date
+msgid "Created on"
+msgstr "Oluşturulma"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_currency_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_currency_id
+msgid "Currency"
+msgstr "Para Birimi"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
+msgid "Customer"
+msgstr "Müşteri"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+msgid "Date"
+msgstr "Tarih"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_name
+msgid "Description"
+msgstr "Açıklama"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
+msgid "Display Name"
+msgstr "Ad Görünümü"
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Draft"
+msgstr "Taslak"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Draft Vouchers"
+msgstr "Taslak Fişler"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date_due
+msgid "Due Date"
+msgstr "Vade Tarihi"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
+msgid "Effective date for accounting entries"
+msgstr "Hesap Girişleri için Yürürlük Tarihi"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
+msgid "Gives the sequence of this line when displaying the voucher."
+msgstr "Makbuz görüntülenirken bu satırın sırasını verir."
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Group By"
+msgstr "Grupla"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
+msgid ""
+"In case we have a rounding problem in the tax, use this field to correct it"
+msgstr "Vergide yuvarlama sorunu olduğunda, düzeltmek için bu alanı kullanın"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Internal Notes"
+msgstr "İç Notlar"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_journal_id
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Journal"
+msgstr "Yevmiye"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_move_id
+msgid "Journal Entry"
+msgstr "Yevmiye Kaydı"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Journal Items"
+msgstr "Yevmiye Kalemleri"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line___last_update
+msgid "Last Modified on"
+msgstr "Son Güncelleme"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_uid
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_date
+msgid "Last Updated on"
+msgstr "Son Güncelleme"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
+msgid "Notes"
+msgstr "Notlar"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_number
+msgid "Number"
+msgstr "Numara"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
+msgid "Only for tax excluded from price"
+msgstr "Yalnızca vergi hariç fiyatlarda"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
+msgid "Paid"
+msgstr "Ödendi"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_partner_id
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+msgid "Partner"
+msgstr "İş Ortağı"
+
+#. module: account_voucher
+#: selection:account.voucher,pay_now:0
+msgid "Pay Directly"
+msgstr "Doğrudan Ödeme"
+
+#. module: account_voucher
+#: selection:account.voucher,pay_now:0
+msgid "Pay Later"
+msgstr "Sonra Öde"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
+msgid "Payment"
+msgstr "Ödeme"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_name
+msgid "Payment Reference"
+msgstr "Ödeme Referansı"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:195
+#, python-format
+msgid "Please activate the sequence of selected journal !"
+msgstr "Lütfen seçilen yevmiyenin seri numarasını etkinleştirin !"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:198
+#, python-format
+msgid "Please define a sequence on the journal."
+msgstr "Yevmiye için lütfen bir seri no tanımlayın."
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Posted"
+msgstr "İşlendi"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Posted Vouchers"
+msgstr "İşlenmiş Fişler"
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+msgid "Pro-forma"
+msgstr "Proforma"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_product_id
+msgid "Product"
+msgstr "Ürün"
+
+#. module: account_voucher
+#: selection:account.voucher,voucher_type:0
+msgid "Purchase"
+msgstr "Satınalma"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Purchase Receipt"
+msgstr "Satınalma Makbuzu"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
+msgid "Purchase Receipts"
+msgstr "Satınalma Makbuzları"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Purchase Voucher"
+msgstr "Satınalma Fişi"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_quantity
+msgid "Quantity"
+msgstr "Miktar"
+
+#. module: account_voucher
+#: selection:account.voucher,voucher_type:0
+msgid "Sale"
+msgstr "Satış"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Sales Information"
+msgstr "Satış Bilgisi"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Sales Receipt"
+msgstr "Satış Makbuzu"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
+msgid "Sales Receipts"
+msgstr "Satış Makbuzları"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Search Vouchers"
+msgstr "Fiş Arama"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_sequence
+msgid "Sequence"
+msgstr "Sıra"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Set to Draft"
+msgstr "Taslak olarak ayarla"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_state
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Status"
+msgstr "Durumu"
+
+#. module: account_voucher
+#: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
+msgid "Status Change"
+msgstr "Durum Değişimi"
+
+#. module: account_voucher
+#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
+msgid "Status changed"
+msgstr "Durumu değişti"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_tax_ids
+msgid "Tax"
+msgstr "Vergi"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
+msgid "Tax amount"
+msgstr "Vergi tutarı"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
+msgid "Tax correction"
+msgstr "Vergi düzeltme"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
+msgid "The Voucher has been totally paid."
+msgstr "Fiş tamamen ödenmiştir."
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
+msgid "The income or expense account related to the selected product."
+msgstr "Seçilen ürünle ilgili gelir ve gider hesabı."
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
+msgid "The partner reference of this document."
+msgstr "Bu belgedeki iş ortağı referansı."
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+msgid "To Review"
+msgstr "İncelenecek"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_amount
+msgid "Total"
+msgstr "Toplam"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
+msgid "Total Amount"
+msgstr "Toplam Tutar"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_voucher_type
+msgid "Type"
+msgstr "Türü"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_unit
+msgid "Unit Price"
+msgstr "Birim Fiyat"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Validate"
+msgstr "Doğrula"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
+msgid "Vendor"
+msgstr "Tedarikçi"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Vendor Voucher"
+msgstr "Tedarikçi Makbuzu"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:97
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+#, python-format
+msgid "Voucher"
+msgstr "Fiş"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
+msgid "Voucher Entries"
+msgstr "Fiş Girişleri"
+
+#. module: account_voucher
+#: model:ir.model,name:account_voucher.model_account_voucher_line
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_ids
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_line_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_line_tree
+msgid "Voucher Lines"
+msgstr "Fiş Satırları"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.account_cash_statement_graph
+msgid "Voucher Statistics"
+msgstr "Fiş İstatistikleri"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
+msgid "Vouchers Entries"
+msgstr "Fiş Girişleri"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
+msgid ""
+"When the purchase receipt is confirmed, you can record the\n"
+"                vendor payment related to this purchase receipt."
+msgstr ""
+"Satınalma makbuzu onaylandığında, bu satınalma makbuzu ile\n"
+"ilgili satıcı ödemesini kaydedebilirsiniz."
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
+msgid ""
+"When the sale receipt is confirmed, you can record the customer\n"
+"                payment related to this sales receipt."
+msgstr ""
+"Satış makbuzu onaylandığında, bu satınalma makbuzu ile\n"
+"ilgili müşteri ödemesini kaydedebilirsiniz."
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:361
+#, python-format
+msgid "You must first select a partner!"
+msgstr "Bir ortak seçmelisiniz ! "

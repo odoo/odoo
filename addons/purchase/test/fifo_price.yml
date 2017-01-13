@@ -1,0 +1,375 @@
+-
+  Set the company currency as EURO for the sake of repeatibility
+-
+  !python {model: res.company}: |
+    company = self.env.ref('base.main_company')
+    company.currency_id = self.env.ref('base.EUR')
+-
+  Set a product as using fifo price
+-
+  !record {model: product.product, id: product_fifo_icecream}:
+    default_code: FIFO
+    name: FIFO Ice Cream
+    type: product
+    categ_id: product.product_category_1
+    list_price: 100.0
+    standard_price: 70.0
+    uom_id: product.product_uom_kgm
+    uom_po_id: product.product_uom_kgm
+    cost_method: real
+    valuation: real_time
+    property_stock_account_input: o_expense
+    property_stock_account_output: o_income
+    supplier_taxes_id: []
+    description: FIFO Ice Cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
+- 
+  I create a draft Purchase Order for first in move for 10 kg at 50 euro
+- 
+  !record {model: purchase.order, id: purchase_order_fifo1}:
+    partner_id: base.res_partner_3
+    order_line:
+      - product_id: product_fifo_icecream
+        product_qty: 10.0
+        product_uom: product.product_uom_kgm
+        price_unit: 50.0
+        name: 'FIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
+- 
+  I confirm the first purchase order
+-
+  !python {model: purchase.order, id: purchase_order_fifo1}: |
+    self.button_confirm()
+- 
+  I check the "Purchase" status of purchase order 1
+-
+  !assert {model: purchase.order, id: purchase_order_fifo1}:
+    - state == 'purchase'
+- 
+  Process the reception of purchase order 1 and set date
+-
+  !python {model: purchase.order, id: purchase_order_fifo1}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
+- 
+  Check the standard price of the product (fifo icecream), that should have not changed because the standard price is supposed to be updated only when goods are going out of the stock
+- 
+  !python {model: product.product, id: product_fifo_icecream}: |
+    assert self.standard_price == 70.0, 'Standard price should not have changed!'
+- 
+  I create a draft Purchase Order for second shipment for 30 kg at 80 euro
+- 
+  !record {model: purchase.order, id: purchase_order_fifo2}:
+    partner_id: base.res_partner_3
+    order_line:
+      - product_id: product_fifo_icecream
+        product_qty: 30.0
+        product_uom: product.product_uom_kgm
+        price_unit: 80.0
+        name: 'FIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
+- 
+  I confirm the second purchase order
+- 
+  !python {model: purchase.order, id: purchase_order_fifo2}: |
+    self.button_confirm()
+- 
+  Process the reception of purchase order 2
+- 
+  !python {model: purchase.order, id: purchase_order_fifo2}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
+- 
+  Check the standard price of the product, that should have not changed because the standard price is supposed to be updated only when goods are going out of the stock
+- 
+  !python {model: product.product, id: product_fifo_icecream}: |
+    assert self.standard_price == 70.0, 'Standard price as fifo price of second reception incorrect!'
+- 
+  Let us send some goods
+- 
+  !record {model: stock.picking, id: outgoing_fifo_shipment}:
+    picking_type_id: stock.picking_type_out
+-
+  Picking needs movement from stock
+-
+  !record {model: stock.move, id: outgoing_shipment_fifo_icecream}:
+    picking_id: outgoing_fifo_shipment
+    product_id: product_fifo_icecream
+    product_uom: product.product_uom_kgm
+    product_uom_qty: 20.0
+    location_id: stock.stock_location_stock
+    location_dest_id: stock.stock_location_customers
+    picking_type_id: stock.picking_type_out
+- 
+  I assign this outgoing shipment 
+- 
+  !python {model: stock.picking, id: outgoing_fifo_shipment}: |
+    self.action_assign()
+- 
+  Process the delivery of the outgoing shipment
+- 
+  !python {model: stock.picking, id: outgoing_fifo_shipment}: |
+     self.do_transfer()
+- 
+  Check product standard price changed to 65.0 (because last outgoing shipment was made of 10 kg at 50€ and 10 kg at 80€)
+- 
+  !python {model: product.product, id: product_fifo_icecream}: |
+    assert self.standard_price == 65.0, "Product price not updated accordingly. %s found instead of 65" % (self.standard_price,)
+- 
+  Do a delivery of an extra 500 g (delivery order)
+- 
+  !record {model: stock.picking, id: outgoing_fifo_shipment_uom}:
+    picking_type_id: stock.picking_type_out
+-
+  Picking needs movement from stock
+-
+  !record {model: stock.move, id: outgoing_shipment_fifo_icecream_gram}:
+    picking_id: outgoing_fifo_shipment_uom
+    product_id: product_fifo_icecream
+    product_uom: product.product_uom_gram
+    location_id: stock.stock_location_stock
+    location_dest_id: stock.stock_location_customers
+    product_uom_qty: 500.0
+    picking_type_id: stock.picking_type_out
+- 
+  I assign this outgoing shipment 
+- 
+  !python {model: stock.picking, id: outgoing_fifo_shipment_uom}: |
+    self.action_assign()
+-
+  Process the delivery of the outgoing shipment
+- 
+  !python {model: stock.picking, id: outgoing_fifo_shipment_uom}: |
+    self.do_transfer()
+- 
+  Check product price changed to 80.0 (because last outgoing shipment was made of 0.5 kg at 80€)
+- 
+  !python {model: product.product, id: product_fifo_icecream}: |
+    assert self.standard_price == 80.0, "Product price not updated accordingly. %s found instead of 80" % (self.standard_price,)
+- 
+  We will temporarily change the currency rate on the sixth of June to have the same results all year
+- 
+  Purchase order in USD
+-
+  !record {model: res.currency, id: new_USD}:
+    name: new_usd
+    symbol: "$²"
+    rate_ids:
+      - rate: 1.2834
+        name: !eval time.strftime('%Y-%m-%d')
+- 
+  I create a draft Purchase Order for 30000 g at 0.150 USD/g and 10 kg at 150 USD/kg
+- 
+  !record {model: purchase.order, id: purchase_order_fifo_usd}:
+    partner_id: base.res_partner_3
+    currency_id: new_USD
+    order_line:
+      - product_id: product_fifo_icecream
+        product_qty: 30000
+        product_uom: product.product_uom_gram
+        price_unit: 0.150
+        name: 'FIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
+      - product_id: product_fifo_icecream
+        product_qty: 10.0
+        product_uom: product.product_uom_kgm
+        price_unit: 150.0
+        name: 'FIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
+- 
+  I confirm the purchase order in USD
+-
+  !python {model: purchase.order, id: purchase_order_fifo_usd}: |
+    self.button_confirm()
+- 
+  Process the reception of purchase order with usd
+-
+  !python {model: purchase.order, id: purchase_order_fifo_usd}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
+- 
+  We create delivery order of 49.5 kg
+- 
+  !record {model: stock.picking, id: outgoing_fifo_shipment_cur}:
+    picking_type_id: stock.picking_type_out
+-
+  Picking needs movement from stock
+-
+  !record {model: stock.move, id: outgoing_shipment_fifo_icecream_cur}:
+    picking_id: outgoing_fifo_shipment_cur
+    product_id: product_fifo_icecream
+    product_uom: product.product_uom_kgm
+    product_uom_qty: 49.5
+    location_id: stock.stock_location_stock
+    location_dest_id: stock.stock_location_customers
+    picking_type_id: stock.picking_type_out
+- 
+  I assign this outgoing shipment 
+- 
+  !python {model: stock.picking, id: outgoing_fifo_shipment_cur}: |
+    self.action_assign()
+-
+  Process the delivery of the outgoing shipment
+- 
+  !python {model: stock.picking, id: outgoing_fifo_shipment_cur}: |
+    self.do_transfer()
+- 
+ Check rounded price is 102 euro (because last outgoing shipment was made of 19.5kg at 80€ and 30kg at $150 (rate=1.2834)
+- 
+  !python {model: product.product, id: product_fifo_icecream}: |
+    assert round(self.standard_price) == 102, "Product price not updated accordingly. %s found instead of 102 (rounded values)" %(round(self.standard_price),)
+-
+  Do a delivery of an extra 10 kg
+- 
+  !record {model: stock.picking, id: outgoing_fifo_shipment_ret}:
+    picking_type_id: stock.picking_type_out
+- 
+  Picking needs movement from stock
+-
+  !record {model: stock.move, id: outgoing_shipment_fifo_icecream_ret}:
+    picking_id: outgoing_fifo_shipment_ret
+    product_id: product_fifo_icecream
+    product_uom: product.product_uom_kgm
+    product_uom_qty: 10.0
+    location_id: stock.stock_location_stock
+    location_dest_id: stock.stock_location_customers
+    picking_type_id: stock.picking_type_out
+- 
+  I assign this outgoing shipment
+- 
+  !python {model: stock.picking, id: outgoing_fifo_shipment_ret}: |
+    self.action_assign()
+- 
+  Process the delivery of the outgoing shipment
+- 
+  !python {model: stock.picking, id: outgoing_fifo_shipment_ret}: |
+    self.do_transfer()
+- 
+  Check rounded price is 150.0 / 1.2834
+- 
+  !python {model: product.product, id: product_fifo_icecream}: |
+    assert round(self.standard_price) == round(150.0 / 1.2834), "Product price not updated accordingly. %s found instead of %s" %(self.standard_price, round(150.0/1.2834))
+    assert self.qty_available == 0.0, 'Wrong quantity in stock after first reception'
+-
+  Let us create some outs to get negative stock for a new product using the same config
+-
+  !record {model: product.product, id: product_fifo_negative}:
+    default_code: NEG
+    name: FIFO Negative
+    type: product
+    categ_id: product.product_category_1
+    list_price: 100.0
+    standard_price: 70.0
+    uom_id: product.product_uom_kgm
+    uom_po_id: product.product_uom_kgm
+    cost_method: real
+    valuation: real_time
+    property_stock_account_input: o_expense
+    property_stock_account_output: o_income
+    supplier_taxes_id: []
+    description: 
+- 
+  Create outpicking.  We create delivery order of 100 kg.
+- 
+  !record {model: stock.picking, id: outgoing_fifo_shipment_neg}:
+    picking_type_id: stock.picking_type_out
+-
+  Picking needs movement from stock
+-
+  !record {model: stock.move, id: outgoing_shipment_fifo_icecream_neg}:
+    picking_id: outgoing_fifo_shipment_neg
+    product_id: product_fifo_negative
+    product_uom: product.product_uom_kgm
+    product_uom_qty: 100.0
+    location_id: stock.stock_location_stock
+    location_dest_id: stock.stock_location_customers
+    picking_type_id: stock.picking_type_out
+- 
+  Process the delivery of the first outgoing shipment
+- 
+  !python {model: stock.picking, id: outgoing_fifo_shipment_neg}: |
+    self.do_transfer()
+-
+  The behavior of fifo/lifo is not garantee if the quants are created at the same second, so i just wait one second
+-
+  !python {model: stock.picking, id: False}: |
+    import time
+    time.sleep(1)
+-
+  Let us create another out of 400 kg
+- 
+  !record {model: stock.picking, id: outgoing_fifo_shipment_neg2}:
+    picking_type_id: stock.picking_type_out
+-
+  Picking needs movement from stock
+-
+  !record {model: stock.move, id: outgoing_shipment_fifo_icecream_neg2}:
+    picking_id: outgoing_fifo_shipment_neg2
+    product_id: product_fifo_negative
+    product_uom: product.product_uom_kgm
+    product_uom_qty: 400.0
+    location_id: stock.stock_location_stock
+    location_dest_id: stock.stock_location_customers
+    picking_type_id: stock.picking_type_out
+- 
+  Process the delivery of the outgoing shipments
+- 
+  !python {model: stock.picking, id: outgoing_fifo_shipment_neg2}: |
+    self.do_transfer()
+
+- 
+  Receive purchase order with 50 kg FIFO Ice Cream at 50 euro/kg
+- 
+  !record {model: purchase.order, id: purchase_order_fifo_neg}:
+    partner_id: base.res_partner_3
+    order_line:
+      - product_id: product_fifo_negative
+        product_qty: 50.0
+        product_uom: product.product_uom_kgm
+        price_unit: 50.0
+        name: 'FIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
+- 
+  I confirm the first purchase order
+-
+  !python {model: purchase.order, id: purchase_order_fifo_neg}: |
+    self.button_confirm()
+- 
+  Process the reception of purchase order 1
+-
+  !python {model: purchase.order, id: purchase_order_fifo_neg}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
+- 
+  Assert price on product is still the old price as the out move has not been received fully yet
+- 
+  !python {model: product.product, id: product_fifo_negative}: |
+
+    assert self.standard_price == 70, 'The product price should not have been updated'
+- 
+  Receive purchase order with 60 kg FIFO Ice Cream at 80 euro/kg
+- 
+  !record {model: purchase.order, id: purchase_order_fifo_neg2}:
+    partner_id: base.res_partner_3
+    order_line:
+      - product_id: product_fifo_negative
+        product_qty: 60.0
+        product_uom: product.product_uom_kgm
+        price_unit: 80
+        name: 'FIFO Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
+- 
+  I confirm the second negative purchase order
+- 
+  !python {model: purchase.order, id: purchase_order_fifo_neg2}: |
+    self.button_confirm()
+- 
+  Process the reception of purchase order 2
+- 
+  !python {model: purchase.order, id: purchase_order_fifo_neg2}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
+- 
+  The price of the product should have changed back to 65.0
+- 
+  !python {model: product.product, id: product_fifo_negative}: |
+    assert self.standard_price == 65.0, "Product price not updated accordingly. %s found instead of 65" %(self.standard_price,)

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="crm.model_crm_lead" model="ir.model">
+            <field name="website_form_default_field_id" ref="crm.field_crm_lead_description" />
+            <field name="website_form_access">True</field>
+            <field name="website_form_label">Create a lead</field>
+        </record>
+        <function model="ir.model.fields" name="formbuilder_whitelist">
+            <value>crm.lead</value>
+            <value eval="[
+                'contact_name',
+                'description',
+                'email_from',
+                'name',
+                'partner_name',
+                'phone',
+            ]"/>
+        </function>
+    </data>
+    <data noupdate="1">
+        <record id="action_open_website" model="ir.actions.act_url">
+            <field name="name">Website Contact Form</field>
+            <field name="target">self</field>
+            <field name="url">/page/contactus</field>
+        </record>
+
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_open_website"/>
+            <field name="state">open</field>
+        </record>
+
+        <record model="crm.team" id="sales_team.salesteam_website_sales">
+            <field name="use_leads">True</field>
+            <field name="use_opportunities" eval="False"/>
+        </record>
+    </data>
+</odoo>

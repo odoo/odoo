@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="hr_timesheet_sheet.WeeklyTimesheet">
+        <div class="oe_timesheet_weekly">
+            <table class="table table-condensed table-responsive">
+                <tr>
+                    <th class="oe_timesheet_first_col" colspan="2"/>
+                    <t t-foreach="widget.dates" t-as="date">
+                        <th t-att-class="'oe_timesheet_weekly_date_head' + (moment().format('DD-MM-YYYY') === moment(date).format('DD-MM-YYYY') ? ' oe_timesheet_weekly_today' : '')">
+                            <t t-esc="moment(date).format('ddd')"/><br/>
+                            <t t-esc="moment(date).format('MMM DD')"/>
+                        </th>
+                    </t>
+                    <th class="oe_timesheet_weekly_date_head">Total</th>
+                </tr>
+                <tr t-foreach="widget.projects" t-as="project">
+                    <td class="oe_timesheet_weekly_account" colspan="2"><a href="javascript:void(0)" t-att-data-id="JSON.stringify(project.project)"><t t-esc="widget.project_names[project.project]"/></a></td>
+                    <t t-set="day_count" t-value="0"/>
+                    <t t-foreach="project.days" t-as="day">
+                        <td t-att-class="moment().format('DD-MM-YYYY') === moment(day.day).format('DD-MM-YYYY') ? 'oe_timesheet_weekly_today' : ''">
+                            <input t-if="!widget.get('effective_readonly')" class="oe_timesheet_weekly_input" t-att-data-project="project.project"
+                                t-att-data-day-count="day_count" type="text"/>
+                            <span t-if="widget.get('effective_readonly')" t-att-data-project="project.project"
+                                t-att-data-day-count="day_count" class="oe_timesheet_weekly_box"/>
+                            <t t-set="day_count" t-value="day_count + 1"/>
+                        </td>
+                    </t>
+                    <td t-att-data-project-total="project.project" class="oe_timesheet_total"/>
+                </tr>
+                <tr>
+                    <td class="o_add_timesheet_line">
+                        <div>
+                            <button t-if="!widget.get('effective_readonly')" class="btn btn-sm btn-primary oe_edit_only oe_timesheet_button_add">Add a Line</button>
+                        </div>
+                    </td>
+                    <td class="oe_timesheet_total">
+                        Total
+                    </td>
+                    <t t-set="day_count" t-value="0"/>
+                    <t t-foreach="widget.dates" t-as="date">
+                        <td class="oe_timesheet_total">
+                            <span class="oe_timesheet_weekly_box" t-att-data-day-total="day_count"/>
+                            <t t-set="day_count" t-value="day_count + 1"/>
+                        </td>
+                    </t>
+                    <td class="oe_timesheet_weekly_supertotal oe_timesheet_total"/>
+                </tr>
+            </table>
+            <div t-if="widget.projects.length == 0">
+                <div class="oe_view_nocontent oe_edit_only">
+                    <p class="oe_view_nocontent_create">Click to add projects, contracts or analytic accounts.</p>
+                    <p>You will be able to register your working hours and activities.</p>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

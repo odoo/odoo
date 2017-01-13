@@ -1,0 +1,209 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_ldap
+# 
+# Translators:
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Manami Hashi <manami@roomsfor.hk>, 2016
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_create_user
+msgid ""
+"Automatically create local user accounts for new users authenticating via "
+"LDAP"
+msgstr "LDAPを使用して新しいユーザーを認証するためのローカルユーザーアカウントを自動的に作成します。"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company
+msgid "Companies"
+msgstr "会社"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_company
+msgid "Company"
+msgstr "会社"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_user
+msgid "Create user"
+msgstr "ユーザの作成"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_ldap
+#: model:ir.ui.view,arch_db:auth_ldap.view_general_configuration_form_inherit_auth_ldap
+#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "LDAP Configuration"
+msgstr "LDAP設定"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldaps
+#: model:ir.ui.view,arch_db:auth_ldap.view_general_configuration_form_inherit_auth_ldap
+msgid "LDAP Parameters"
+msgstr "LDAPパラメータ"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_base_config_settings_ldaps
+msgid "LDAP Parameters *"
+msgstr "LDAP パラメーター *"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server
+msgid "LDAP Server address"
+msgstr "LDAPサーバアドレス"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server_port
+msgid "LDAP Server port"
+msgstr "LDAPサーバポート"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_base
+msgid "LDAP base"
+msgstr "LDAPベース"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_binddn
+msgid "LDAP binddn"
+msgstr "LDAPバインディング"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_filter
+msgid "LDAP filter"
+msgstr "LDAPフィルタ"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_password
+msgid "LDAP password"
+msgstr "LDAPパスワード"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap___last_update
+msgid "Last Modified on"
+msgstr "最終更新日"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: auth_ldap
+#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "Login Information"
+msgstr "ログイン情報"
+
+#. module: auth_ldap
+#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "Process Parameter"
+msgstr "処理パラメータ"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_tls
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication"
+" attempts will fail."
+msgstr ""
+"LDAPサーバへの接続時に安全なTLS/SSL暗号化を要求します。このオプションはサーバがSTARTTLSが使用可能であることを要求します。そうでない場合は全ての認証要求は失敗します。"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_sequence
+msgid "Sequence"
+msgstr "付番"
+
+#. module: auth_ldap
+#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "Server Information"
+msgstr "サーバ情報"
+
+#. module: auth_ldap
+#: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
+msgid "Setup your LDAP Server"
+msgstr "LDAPサーバの設定"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_user
+msgid "Template User"
+msgstr "テンプレートユーザー"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_password
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
+msgstr "LDAPサーバのユーザアカウントのパスワードはディレクトリへのクエリー使用されます。"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_binddn
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
+msgstr "LDAPサーバ上のユーザアカウントはディレクトリへのクエリーのために使用されます。匿名接続する場合は空のままにして下さい。"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_tls
+msgid "Use TLS"
+msgstr "TLS を使用"
+
+#. module: auth_ldap
+#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "User Information"
+msgstr "ユーザー情報"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_user
+msgid "User to copy when creating new users"
+msgstr "新規ユーザー作成時にユーザーにコピーされます。"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+msgid "Users"
+msgstr "ユーザ"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company_ldap
+msgid "res.company.ldap"
+msgstr "res.company.ldap"

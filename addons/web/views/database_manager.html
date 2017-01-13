@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Odoo</title>
+  <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css">
+  <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css">
+  <script src="/web/static/lib/jquery/jquery.js" type="text/javascript"></script>
+  <script src="/web/static/lib/bootstrap/js/modal.js"></script>
+  <script src="/web/static/lib/bootstrap/js/tooltip.js"></script>
+  <script src="/web/static/lib/bootstrap/js/dropdown.js"></script>
+  <script type="text/javascript">
+  $(function() {
+      // Little eye
+      $('body').on('mousedown','.o_little_eye',function(ev) {
+          $(ev.target).siblings('input').prop('type','text');
+      });
+      $('body').on('mouseup','.o_little_eye',function(ev) {
+          $(ev.target).siblings('input').prop('type','password');
+      });
+      // db modal
+      $('body').on('click','.o_database_action', function(ev) {
+          ev.preventDefault();
+          var db = $(ev.currentTarget).data('db');
+          var target = $(ev.currentTarget).data('target');
+          $(target).find('input[name=name]').val(db);
+          $(target).modal();
+      });
+      // close modal on submit
+      $('.modal').on('click','input[type="submit"]', function(ev) {
+          var modal  = $(this).parentsUntil('body', '.modal');
+          if (modal.hasClass('o_database_backup')) {
+            $(modal).modal('hide');
+            if (!$('.alert-backup-long').length) {
+              $('.list-group').before("<div class='alert alert-info alert-backup-long'>The backup may take some time before being ready</div>");              
+            }
+          }
+      });
+  });
+  </script>
+</head>
+
+{% macro master_input() -%}
+  <div class="form-group">
+    {% if insecure %}
+      <input type="hidden" name="master_pwd" class="form-control" value="admin"/>
+    {% else %}
+      <label for="master_pwd" class="control-label">Master Password</label>
+      <input id="master_pwd" type="password" name="master_pwd" class="form-control" required="required" autofocus="autofocus"/>
+    {% endif %}
+  </div>
+{%- endmacro %}
+
+{% macro create_form() -%}
+  <p>Odoo is up and running! <br />
+  Create a new database by filling out the form,
+  you'll be able to install your first app in a minute.</p>
+  {{ master_input() }}
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-12">
+        <label for="name" class="control-label">Database Name</label>
+        <input id="name" type="text" name="name" class="form-control" required="required" autocomplete="off"/>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-12">
+        <label for="login" class="control-label">Email</label>
+        <input id="login" type="text" name="login" class="form-control" required="required" autocomplete="off"/>
+      </div>
+    </div>
+  </div>
+  <div class="form-group has-feedback">
+    <label for="password" class="control-label">Password</label>
+    <input id="password" type="password" name="password" class="form-control" required="required" autocomplete="off"/>
+    <span class="fa fa-eye o_little_eye form-control-feedback" aria-hidden="true" style="cursor: pointer; pointer-events: auto"></span>
+  </div>
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-6">
+        <label for="lang" class="control-label">Language</label>
+        <select id="lang" name="lang" class="form-control" required="required" autocomplete="off">
+          {% for lang in langs %}
+              <option {% if lang[0] == "en_US" %}selected="selected" {% endif %}value="{{ lang[0] }}">{{ lang[1] }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-6">
+          <label for="country" class="control-label">Country</label>
+          <select id="country" name="country_code" class="form-control" autocomplete="off">
+              <option value=""></option>
+            {% for country in countries %}
+              <option value="{{ country[0] }}">{{ country[1] }}</option>
+            {% endfor %}
+            </select>
+        </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="checkbox">
+      <label>
+        <input name="demo" type="checkbox" class="pull-right" value="1">
+        <span>Load demonstration data</span>
+        <span class="text-muted"> (Check this box to evaluate Odoo)</span>
+      </label>
+    </div>
+  </div>
+{%- endmacro %}
+
+<body class="container">
+  <!-- Database List -->
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3 o_database_list">
+      <div class="text-center">
+        <img src="/web/static/src/img/logo2.png" class="img-responsive center-block"/>
+      </div>
+      {% if insecure and databases %}
+      <div class="alert alert-warning">
+      Warning, your Odoo database manager is not protected.
+      Please <a href="#" data-toggle="modal" data-target=".o_database_master">set a master password</a>
+      to secure it.
+      </div>
+      {% endif %}
+      {% if error %}
+      <div class="alert alert-danger">{{ error }}</div>
+      {% endif %}
+      {% if databases %}
+        <div class="list-group">
+          {% for db in databases %}
+          <a href="/web?db={{ db }}" class="list-group-item">
+            {{ db }}
+            {% if manage %}
+            <div class="text-right pull-right">
+            <span data-db="{{ db }}" data-target=".o_database_backup" class="o_database_action btn-link"><i class="fa fa-floppy-o fa-fw"></i> Backup</span>
+            <span data-db="{{ db }}" data-target=".o_database_duplicate" class="o_database_action btn-link"><i class="fa fa-files-o fa-fw"></i> Duplicate</span>
+            <span data-db="{{ db }}" data-target=".o_database_delete" class="o_database_action btn-link"><i class="fa fa-trash-o fa-fw"></i> Delete</span>
+            </div>
+            {% endif %}
+          </a>
+          {% endfor %}
+        </div>
+        {% if manage %}
+        <div class="text-left">
+          <button type="button" data-toggle="modal" data-target=".o_database_create" class="btn btn-sm btn-primary">
+            Create Database
+          </button>
+          <button type="button" data-toggle="modal" data-target=".o_database_restore" class="btn btn-sm btn-primary">
+            Restore Database
+          </button>
+          <button type="button" data-toggle="modal" data-target=".o_database_master" class="btn btn-sm btn-primary">
+            Set Master Password
+          </button>
+        </div>
+        {% else %}
+        <div class="text-center">
+          <a href="/web/database/manager">Manage databases</a>
+        </div>
+        {% endif %}
+      {% else %}
+        <form role="form" action="/web/database/create" method="post">
+          {{ create_form() }}
+          <input type="submit" value="Create database" class="btn btn-primary pull-left"/>
+        </form>
+        <a role="button" data-toggle="modal" data-target=".o_database_restore" class="btn btn-link">
+          or restore a database
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Create -->
+  <div class="modal fade o_database_create" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form role="form" action="/web/database/create" method="post">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Create Database</h4>
+          </div>
+          <div class="modal-body">
+            {{ create_form() }}
+          </div>
+          <div class="modal-footer">
+            <input type="submit" value="Continue" class="btn btn-primary pull-right"/>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Restore -->
+  <div class="modal fade o_database_restore" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Restore Database</h4>
+        </div>
+        <form id="form_restore_db" role="form" action="/web/database/restore" method="post" enctype="multipart/form-data">
+          <div class="modal-body">
+            {{ master_input() }}
+            <div class="form-group">
+              <label for="backup_file" class="control-label">File</label>
+              <input id="backup_file" type="file" name="backup_file" class="required"/>
+            </div>
+            <div class="form-group">
+              <label for="name" class="control-label">Database Name</label>
+              <input id="name" type="text" name="name" class="form-control" required="required"/>
+            </div>
+            <div class="form-group">
+                <label for="copy">This database might have been moved or copied.</label>
+                <p class="help-block">In order to avoid conflicts between databases, Odoo needs to know if this database was moved or copied.
+                If you don't know, answer "This database is a copy".</p>
+              <div class="radio">
+                <label>
+                  <input name="copy" type="radio" class="pull-right" value="true" checked="1">
+                  This database is a copy
+                </label>
+              </div>
+              <div class="radio">
+                <label>
+                  <input name="copy" type="radio" class="pull-right" value="false">
+                  This database was moved
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input type="submit" value="Continue" class="btn btn-primary pull-right"/>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Master password -->
+  <div class="modal fade o_database_master" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Set Master Password</h4>
+        </div>
+        <form id="form_change_pwd" role="form" action="/web/database/change_password" method="post">
+          <div class="modal-body">
+            <p>The master password is required to create, delete, dump or restore databases.</p>
+            {{ master_input() }}
+            <div class="form-group has-feedback">
+              <label for="master_pwd_new" class="control-label">New Master Password</label>
+              <input id="master_pwd_new" type="password" name="master_pwd_new" class="form-control" required="required" autocomplete="off"/>
+              <span class="fa fa-eye o_little_eye form-control-feedback" aria-hidden="true" style="cursor: pointer; pointer-events: auto"></span>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input type="submit" value="Continue" class="btn btn-primary pull-right"/>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Duplicate DB -->
+  <div class="modal fade o_database_duplicate" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Duplicate Database</h4>
+        </div>
+        <form id="form-duplicate-db" role="form" action="/web/database/duplicate" method="post">
+          <div class="modal-body">
+            {{ master_input() }}
+            <div class="form-group">
+              <label for="name" class="control-label">Database Name</label>
+              <input id="name" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+              <label for="new_name" class="control-label">New Name</label>
+              <input id="new_name" type="text" name="new_name" class="form-control" required="required"/>
+            </div>
+          </div>
+          <div class="modal-footer">
+          <input type="submit" value="Continue" class="btn btn-primary pull-right"/>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drop DB -->
+  <div class="modal fade o_database_delete" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Delete Database</h4>
+        </div>
+        <form id="form_drop_db" role="form" action="/web/database/drop" method="post">
+          <div class="modal-body">
+            {{ master_input() }}
+            <div class="form-group">
+              <label for="name" class="control-label">Database</label>
+              <input id="name" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <input type="submit" value="Delete" class="btn btn-primary pull-right"/>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Backup DB -->
+  <div class="modal fade o_database_backup" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Backup Database</h4>
+        </div>
+        <form id="form_backup_db" role="form" action="/web/database/backup" method="post">
+          <div class="modal-body">
+            {{ master_input() }}
+            <div class="form-group">
+              <label for="name" class="control-label">Database Name</label>
+              <input id="name" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
+            </div>
+            <div class="form-group">
+              <label for="backup_format" class="control-label">Backup Format</label>
+              <select id="backup_format" name="backup_format" id="backup_format" class="form-control" required="required">
+                <option value="zip">zip (includes filestore)</option>
+                <option value="dump">pg_dump custom format (without filestore)</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+          <input type="submit" value="Backup" class="btn btn-primary pull-right"/>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

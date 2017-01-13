@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_general_configuration_mail_alias_domain" model="ir.ui.view">
+            <field name="name">base.config.settings.mail.alias</field>
+            <field name="model">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='email.outgoing_server']/button[1]" position='after'>
+                    <button class="oe_inline oe_link" style="display: inline-block;" name= "%(action_view_mail_mail)d" type="action" 
+                        context="{'search_default_exception': 1, 'search_default_outgoing': 0}"
+                        attrs="{'invisible': [('fail_counter','=',0)]}">
+                        <span> -- </span>
+                        <i class="fa fa-exclamation-triangle"></i> <field class="oe_inline" name="fail_counter"/>
+                        <span>failed emails</span>
+                    </button>
+                </xpath>
+                <xpath expr="//div[@name='email']" position='inside'>
+                    <div>
+                        <label for="alias_domain" class="oe_inline"/>
+                        <field name="alias_domain" placeholder="mycompany.odoo.com" class="oe_inline"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

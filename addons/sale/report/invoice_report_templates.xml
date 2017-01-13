@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_invoice_layouted" inherit_id="account.report_invoice_document">
+    <xpath expr="//table" position="attributes">
+        <attribute name="groups">!sale.group_sale_layout</attribute>
+    </xpath>
+    <xpath expr="//table" position="after">
+        <t groups="sale.group_sale_layout" t-foreach="o.order_lines_layouted()" t-as="page">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th class="text-right">Quantity</th>
+                        <th class="text-right">Unit Price</th>
+                        <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
+                        <th class="text-right">Taxes</th>
+                        <th class="text-right" groups="sale.group_show_price_subtotal">Price</th>
+                    </tr>
+                </thead>
+                <tbody class="invoice_tbody">
+                    <t t-foreach="page" t-as="layout_category">
+
+                        <t t-if="layout_category_size > 1 or page_size > 1" groups="sale.group_sale_layout">
+                            <tr class="active">
+                                <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
+                                    <t t-esc="layout_category['name']"/>
+                                </td>
+                            </tr>
+                        </t>
+
+                        <!-- Lines associated -->
+                        <t t-foreach="layout_category['lines']" t-as="l">
+                            <tr>
+                                <td><span t-field="l.name"/></td>
+                                <td class="text-right">
+                                    <span t-field="l.quantity"/>
+                                    <span t-field="l.uom_id"  groups="product.group_uom"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="l.price_unit"/>
+                                </td>
+                                <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
+                                    <span t-field="l.discount"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="', '.join(map(lambda x: x.description or x.name, l.invoice_line_tax_ids))"/>
+                                </td>
+                                <td class="text-right" groups="sale.group_show_price_subtotal">
+                                    <span t-field="l.price_subtotal"
+                                        t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                            </tr>
+                        </t>
+
+                        <t t-if="(layout_category_size > 1 or page_size > 1) and layout_category['subtotal']" groups="sale.group_sale_layout">
+                            <tr class="text-right">
+                                <td colspan="6">
+                                    <strong>Subtotal: </strong>
+                                    <t t-set="subtotal" t-value="sum(line.price_subtotal for line in layout_category['lines'])"/>
+                                    <span t-esc="subtotal" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                </tbody>
+            </table>
+
+            <t t-if="page_index &lt; page_size - 1" groups="sale.group_sale_layout">
+                <p style="page-break-before:always;"> </p>
+            </t>
+        </t>
+    </xpath>
+</template>
+
+    <template id="report_invoice_document_inherit_sale" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@name='invoice_address']" position="attributes">
+            <attribute name="groups">!sale.group_delivery_invoice_address</attribute>
+        </xpath>
+        <xpath expr="//div[@name='invoice_address']" position="before">
+            <div class="col-xs-5 col-xs-offset-7" groups="sale.group_delivery_invoice_address">
+                <strong t-if="o.partner_shipping_id == o.partner_id">Invoicing and shipping address:</strong>
+                <strong t-if="o.partner_shipping_id != o.partner_id">Invoicing address:</strong>
+                <div t-field="o.partner_id"
+                    t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                <span t-if="o.partner_id.vat">TIN: <span t-field="o.partner_id.vat"/></span>
+                <div t-if="o.partner_shipping_id != o.partner_id" class="mt8">
+                    <strong>Shipping address:</strong>
+                    <div t-field="o.partner_shipping_id"
+                        t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                    <span t-if="o.partner_id.vat">TIN: <span t-field="o.partner_id.vat"/></span>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

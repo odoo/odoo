@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_pos_category_form_view" model="ir.ui.view">
+        <field name="name">pos.category.form</field>
+        <field name="model">pos.category</field>
+        <field name="arch" type="xml">
+            <form string="Pos Categories">
+                <sheet>
+                    <field name="image_medium" widget='image' class="oe_avatar"/>
+                    <div class="oe_left">
+                        <group>
+                            <field name="name"/>
+                            <field name="parent_id"/>
+                            <field name="sequence"/>
+                        </group>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="product_pos_category_tree_view" model="ir.ui.view">
+        <field name="name">pos.category.tree</field>
+        <field name="model">pos.category</field>
+        <field name="field_parent" eval="False"/>
+        <field name="arch" type="xml">
+            <tree string="Product Product Categories">
+                <field name="sequence" widget="handle"/>
+                <field name="display_name"/>
+            </tree>
+        </field>
+    </record>
+    <record id="product_pos_category_action" model="ir.actions.act_window">
+        <field name="name">Pos Product Categories</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.category</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" eval="False"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to define a new category.
+            </p><p>
+                Categories are used to browse your products through the
+                touchscreen interface.
+            </p><p>
+                If you put a photo on the category, the layout of the
+                touchscreen interface will automatically. We suggest not to put
+                a photo on categories for small (1024x768) screens.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_product_pos_category" action="product_pos_category_action" parent="menu_point_config_product" sequence="20" />
+</odoo>

@@ -1,0 +1,365 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * fetchmail
+# 
+# Translators:
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
+# Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+msgid "# of emails"
+msgstr "# E-mail"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Actions to Perform on Incoming Mails"
+msgstr "Uit te voeren acties op inkomende e-mails"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_active
+msgid "Active"
+msgstr "Actief"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Advanced"
+msgstr "Geavanceerd"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Advanced Options"
+msgstr "Geavanceerde opties"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_configuration
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Configuration"
+msgstr "Instellingen"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.inherit_view_general_configuration
+msgid "Configure the incoming email gateway"
+msgstr "De inkomende e-mail server instellen"
+
+#. module: fetchmail
+#: selection:fetchmail.server,state:0
+msgid "Confirmed"
+msgstr "Bevestigd"
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:137
+#, python-format
+msgid "Connection test failed: %s"
+msgstr "Connectie test niet geslaagd: %s"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_is_ssl
+msgid ""
+"Connections are encrypted with SSL/TLS through a dedicated port (default: "
+"IMAPS=993, POP3S=995)"
+msgstr ""
+"Verbindingen worden versleuteld met SSL/TLS via een speciale port "
+"(standaard: IMAPS=993, POP3S=995)"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_object_id
+msgid "Create a New Record"
+msgstr "Maak een nieuwe regel"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_uid
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_create_date
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_priority
+msgid "Defines the order of processing, lower values mean higher priority"
+msgstr ""
+"Bepaalt de volgorde van verwerking. Lager betekent een hogere prioriteit."
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_display_name
+msgid "Display Name"
+msgstr "Weergave naam"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Fetch Now"
+msgstr "Nu ophalen"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_server
+msgid "Hostname or IP of the mail server"
+msgstr "Hostname of IP van de mail server"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_id
+msgid "ID"
+msgstr "ID"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "IMAP"
+msgstr "IMAP"
+
+#. module: fetchmail
+#: selection:fetchmail.server,type:0
+msgid "IMAP Server"
+msgstr "IMAP server"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "If SSL required."
+msgstr "Indien SSL verplicht."
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_mail_mail_fetchmail_server_id
+msgid "Inbound Mail Server"
+msgstr "Inkomende mailserver"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Incoming Mail Server"
+msgstr "Inkomende mailserver"
+
+#. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
+#: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
+msgid "Incoming Mail Servers"
+msgstr "Inkomende mailservers"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_attach
+msgid "Keep Attachments"
+msgstr "Bewaar bijlagen"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_original
+msgid "Keep Original"
+msgstr "Bewaar origineel"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_date
+msgid "Last Fetch Date"
+msgstr "Laatste datum opgehaald"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server___last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: fetchmail
+#: selection:fetchmail.server,type:0
+msgid "Local Server"
+msgstr "Lokale server"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Login Information"
+msgstr "Login informatie"
+
+#. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.act_server_history
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_message_ids
+msgid "Messages"
+msgstr "Berichten"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_name
+msgid "Name"
+msgstr "Naam"
+
+#. module: fetchmail
+#: selection:fetchmail.server,state:0
+msgid "Not Confirmed"
+msgstr "Niet bevestigd"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_action_id
+msgid ""
+"Optional custom server action to trigger for each incoming mail, on the "
+"record that was created or updated by this mail"
+msgstr ""
+"Optioneel op maat gemaakte serveractie-trigger voor elke inkomende e-mail, "
+"op de regel welke is gemaakt of bijgewerkt door deze e-mail."
+
+#. module: fetchmail
+#: model:ir.model,name:fetchmail.model_mail_mail
+msgid "Outgoing Mails"
+msgstr "Uitgaande e-mails"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "POP"
+msgstr "POP"
+
+#. module: fetchmail
+#: selection:fetchmail.server,type:0
+msgid "POP Server"
+msgstr "POP Server"
+
+#. module: fetchmail
+#: model:ir.model,name:fetchmail.model_fetchmail_server
+msgid "POP/IMAP Server"
+msgstr "POP/IMAP Server"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+msgid "POP/IMAP Servers"
+msgstr "POP/IMAP Servers"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_password
+msgid "Password"
+msgstr "Wachtwoord"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_port
+msgid "Port"
+msgstr "Poort"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_object_id
+msgid ""
+"Process each incoming mail as part of a conversation corresponding to this "
+"document type. This will create new documents for new conversations, or "
+"attach follow-up emails to the existing conversations (documents)."
+msgstr ""
+"Verwerk elke inkomende mail als onderdeel van het gesprek overeenkomstig met"
+" dit document type. Dit zal nieuwe documenten voor nieuwe gesprekken "
+"aanmaken, of opvolgende e-mails koppelen aan de bestaande gesprekken "
+"(documenten)."
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Reset Confirmation"
+msgstr "Reset bevestiging"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "SSL"
+msgstr "SSL"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_is_ssl
+msgid "SSL/TLS"
+msgstr "SSL/TLS"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_script
+msgid "Script"
+msgstr "Script"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Search Incoming Mail Servers"
+msgstr "Zoek inkomende mailservers"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Server & Login"
+msgstr "Server & Login"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_action_id
+msgid "Server Action"
+msgstr "Server-actie"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Server Information"
+msgstr "Serverinformatie"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_server
+msgid "Server Name"
+msgstr "Servernaam"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_priority
+msgid "Server Priority"
+msgstr "Server Prioriteit"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_type
+msgid "Server Type"
+msgstr "Soort server"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Server type IMAP."
+msgstr "Server soort IMAP."
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Server type POP."
+msgstr "Server soort POP."
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_state
+msgid "Status"
+msgstr "Status"
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Test & Confirm"
+msgstr "Test & Bevestig"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_user
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_original
+msgid ""
+"Whether a full original copy of each email should be kept for reference and "
+"attached to each processed message. This will usually double the size of "
+"your message database."
+msgstr ""
+"Of een volledige originele kopie van elke e-mail moet worden bewaard voor "
+"referentie en deze gekoppeld moet worden aan ieder verwerkt bericht. Dit zal"
+" meestal de grootte van uw berichtendatabase verdubbelen."
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server_attach
+msgid ""
+"Whether attachments should be downloaded. If not enabled, incoming emails "
+"will be stripped of any attachments before being processed"
+msgstr ""
+"Of bijlagen moeten worden gedownload. Indien niet is ingeschakeld, worden "
+"binnenkomende e-mails ontdaan van eventuele bijlagen alvorens te worden "
+"verwerkt"

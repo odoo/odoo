@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--
+            Sequences for pickings
+        -->
+
+
+        
+        <record id="seq_picking_internal" model="ir.sequence">
+            <field name="name">Picking INT</field>
+            <field name="code">stock.picking</field>
+            <field name="prefix">INT/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!--
+    Sequences from tracking numbers
+    -->
+        <record id="sequence_production_lots" model="ir.sequence">
+            <field name="name">Serial Numbers</field>
+            <field name="code">stock.lot.serial</field>
+            <field name="prefix"></field>
+            <field name="padding">7</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+	<!-- stock/lot.tracking sequence and sequence type should be removed, mmh? -->
+        <record id="sequence_tracking" model="ir.sequence">
+            <field name="name">Packs</field>
+            <field name="code">stock.lot.tracking</field>
+            <field name="prefix"></field>
+            <field name="padding">7</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequences for stock.quant.package -->
+        <record id="seq_quant_package" model="ir.sequence">
+            <field name="name">Packages</field>
+            <field name="code">stock.quant.package</field>
+            <field name="prefix">PACK</field>
+            <field name="padding">7</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

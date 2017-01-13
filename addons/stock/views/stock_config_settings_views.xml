@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_stock_config_settings" model="ir.ui.view">
+            <field name="name">stock settings</field>
+            <field name="model">stock.config.settings</field>
+            <field name="arch" type="xml">
+                <form string="Configure Warehouse" class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <group string="Traceability" name="traceability">
+                        <field name="group_stock_production_lot" widget="radio"/>
+                        <field name="module_product_expiry" widget="radio" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}"/>
+                        <field name="group_stock_tracking_lot" widget="radio"/>
+                        <field name="group_stock_tracking_owner" widget="radio"/>
+                        <label for="id" string="Barcode Interface"/>
+                        <div>
+                            <div>
+                                <field name="module_stock_barcode" widget="upgrade_boolean"/>
+                                <label for="module_stock_barcode"/>
+                                <a href="https://www.odoo.com/page/warehouse-features" target="_blank"> More Info</a>
+                            </div>
+                        </div>
+                    </group>
+                    <group string="Shipping Connectors" name="shipping">
+                        <label for="id" string="Carriers"/>
+                        <div>
+                            <div>
+                                <field name="module_delivery_dhl" widget="upgrade_boolean"/>
+                                <label for="module_delivery_dhl"/>
+                            </div>
+                            <div>
+                                <field name="module_delivery_fedex" widget="upgrade_boolean"/>
+                                <label for="module_delivery_fedex"/>
+                            </div>
+                            <div>
+                                <field name="module_delivery_temando"  widget="upgrade_boolean"/>
+                                <label for="module_delivery_temando"/>
+                            </div>
+                            <div>
+                                <field name="module_delivery_ups"  widget="upgrade_boolean"/>
+                                <label for="module_delivery_ups"/>
+                            </div>
+                            <div>
+                                <field name="module_delivery_usps" widget="upgrade_boolean"/>
+                                <label for="module_delivery_usps"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group string="Location &amp; Warehouse">
+                        <field name="module_procurement_jit" widget="radio"/>
+                        <field name="warehouse_and_location_usage_level" widget="radio"/>
+                        <field name="group_stock_multi_locations" invisible="1"/>
+                        <field name="group_stock_multi_warehouses" invisible="1"/>
+                        
+                        <label for="group_stock_adv_location"/>
+                        <div>
+                            <field name="group_stock_adv_location" widget="radio"/>
+                            <div attrs="{'invisible': [('group_stock_adv_location', '=', 0)]}">
+                                <label for="propagation_minimum_delta"/>
+                                <field name="propagation_minimum_delta" class="oe_inline"/>
+                            </div>
+                        </div>
+
+                        <label for="id" string="Products" groups="base.group_no_one"/>
+                        <div name="config_products" groups="base.group_no_one">
+                            <label for="decimal_precision"/>
+                            <field name="decimal_precision" class="oe_inline"/>
+                        </div>
+
+                        <field name="module_stock_dropshipping" widget="radio"/>
+                        <field name="module_stock_picking_wave" widget="radio"/>
+                        <field name="module_stock_calendar" widget="radio"/>
+                        <field name="group_warning_stock" widget="radio"/>
+                    </group>
+                    <group string="Products">
+                        <field name="group_uom" widget="radio"/>
+                        <field name="group_product_variant" widget="radio"/>
+                        <field name="group_stock_packaging" widget="radio"/>
+                    </group>
+                    <group string="Extra Features">
+                        <label for="module_quality"/>
+                        <div>
+                            <div>
+                                <field name="module_quality" widget="upgrade_boolean"/>
+                                <label for="module_quality" string="Manage quality control points, checks and measures"/>
+                            </div>
+                        </div>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_stock_config_settings" model="ir.actions.act_window">
+            <field name="name">Configure Warehouse</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="menu_stock_config_settings" name="Configuration" parent="menu_stock_root"
+            sequence="100" groups="group_stock_manager"/>
+        <menuitem id="menu_stock_general_settings" name="Settings" parent="menu_stock_config_settings"
+            sequence="0" action="action_stock_config_settings" groups="base.group_system"/>
+    </data>
+</odoo>

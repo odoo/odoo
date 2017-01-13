@@ -1,0 +1,2188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Account template -->
+        <record id="0010" model="account.account.template">
+            <field name="code">0010</field>
+            <field name="name">Aanschafwaarde Goodwill</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0019" model="account.account.template">
+            <field name="code">0019</field>
+            <field name="name">Afschrijving Goodwill</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0020" model="account.account.template">
+            <field name="code">0020</field>
+            <field name="name">Aanschafwaarde overige immateriele vaste activa</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0029" model="account.account.template">
+            <field name="code">0029</field>
+            <field name="name">Afschrijving overige immateriele vaste activa</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0101" model="account.account.template">
+            <field name="code">0101</field>
+            <field name="name">Aanschafwaarde Grond </field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0110" model="account.account.template">
+            <field name="code">0110</field>
+            <field name="name">Aanschafwaarde Gebouwen</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0119" model="account.account.template">
+            <field name="code">0119</field>
+            <field name="name">Afschrijving Gebouwen</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0120" model="account.account.template">
+            <field name="code">0120</field>
+            <field name="name">Aanschafwaarde Winkels</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0129" model="account.account.template">
+            <field name="code">0129</field>
+            <field name="name">Afschrijving Winkels</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0130" model="account.account.template">
+            <field name="code">0130</field>
+            <field name="name">Aanschafwaarde Verbouwingen</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0139" model="account.account.template">
+            <field name="code">0139</field>
+            <field name="name">Afschrijving Verbouwingen</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0210" model="account.account.template">
+            <field name="code">0210</field>
+            <field name="name">Aanschafwaarde Machines 1</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0219" model="account.account.template">
+            <field name="code">0219</field>
+            <field name="name">Afschrijving Machines 1</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0220" model="account.account.template">
+            <field name="code">0220</field>
+            <field name="name">Aanschafwaarde Machines 2</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0229" model="account.account.template">
+            <field name="code">0229</field>
+            <field name="name">Afschrijving Machines 2</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0310" model="account.account.template">
+            <field name="code">0310</field>
+            <field name="name">Aanschafwaarde Bedrijfsinventaris</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0319" model="account.account.template">
+            <field name="code">0319</field>
+            <field name="name">Afschrijving Bedrijfsinventaris</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0320" model="account.account.template">
+            <field name="code">0320</field>
+            <field name="name">Aanschafwaarde Magazijninventaris</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0329" model="account.account.template">
+            <field name="code">0329</field>
+            <field name="name">Afschrijving Magazijninventaris</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0330" model="account.account.template">
+            <field name="code">0330</field>
+            <field name="name">Aanschafwaarde Fabrieksinventaris</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0339" model="account.account.template">
+            <field name="code">0339</field>
+            <field name="name">Afschrijving Fabrieksinventaris</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0340" model="account.account.template">
+            <field name="code">0340</field>
+            <field name="name">Aanschafwaarde Gereedschappen</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0349" model="account.account.template">
+            <field name="code">0349</field>
+            <field name="name">Afschrijving Gereedschappen</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0350" model="account.account.template">
+            <field name="code">0350</field>
+            <field name="name">Aanschafwaarde Kantoorinventaris</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0359" model="account.account.template">
+            <field name="code">0359</field>
+            <field name="name">Afschrijving Kantoorinventaris</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0360" model="account.account.template">
+            <field name="code">0360</field>
+            <field name="name">Aanschafwaarde Kantoormachines</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0369" model="account.account.template">
+            <field name="code">0369</field>
+            <field name="name">Afschrijving Kantoormachines</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0370" model="account.account.template">
+            <field name="code">0370</field>
+            <field name="name">Aanschafwaarde Kantine-inventaris</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0379" model="account.account.template">
+            <field name="code">0379</field>
+            <field name="name">Afschrijving Kantine-inventaris</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0410" model="account.account.template">
+            <field name="code">0410</field>
+            <field name="name">Aanschafwaarde Personenauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0419" model="account.account.template">
+            <field name="code">0419</field>
+            <field name="name">Afschrijving Personenauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0420" model="account.account.template">
+            <field name="code">0420</field>
+            <field name="name">Aanschafwaarde overige vervoersmiddelen</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0429" model="account.account.template">
+            <field name="code">0429</field>
+            <field name="name">Afschrijving overige vervoersmiddelen</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0430" model="account.account.template">
+            <field name="code">0430</field>
+            <field name="name">Aanschafwaarde Vrachtauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0439" model="account.account.template">
+            <field name="code">0439</field>
+            <field name="name">Afschrijving Vrachtauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_fixed_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0510" model="account.account.template">
+            <field name="code">0510</field>
+            <field name="name">Deelneming 1</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0520" model="account.account.template">
+            <field name="code">0520</field>
+            <field name="name">Deelneming 2</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0530" model="account.account.template">
+            <field name="code">0530</field>
+            <field name="name">Deelneming 3</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0551" model="account.account.template">
+            <field name="code">0551</field>
+            <field name="name">Vorderingen op deelneming 1</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0552" model="account.account.template">
+            <field name="code">0552</field>
+            <field name="name">Vorderingen op deelneming 2</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0553" model="account.account.template">
+            <field name="code">0553</field>
+            <field name="name">Vorderingen op deelneming 3</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0561" model="account.account.template">
+            <field name="code">0561</field>
+            <field name="name">Hypotheken u/g 1</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0562" model="account.account.template">
+            <field name="code">0562</field>
+            <field name="name">Hypotheken u/g 2</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0563" model="account.account.template">
+            <field name="code">0563</field>
+            <field name="name">Hypotheken u/g 3</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0565" model="account.account.template">
+            <field name="code">0565</field>
+            <field name="name">Leningen u/g 1</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0566" model="account.account.template">
+            <field name="code">0566</field>
+            <field name="name">Leningen u/g 2</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0567" model="account.account.template">
+            <field name="code">0567</field>
+            <field name="name">Leningen u/g 3</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0570" model="account.account.template">
+            <field name="code">0570</field>
+            <field name="name">Waarborgsommen</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0610" model="account.account.template">
+            <field name="code">0610</field>
+            <field name="name">Aandelenkapitaal</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0620" model="account.account.template">
+            <field name="code">0620</field>
+            <field name="name">Wettelijke reserves</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0630" model="account.account.template">
+            <field name="code">0630</field>
+            <field name="name">Agioreserve</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0640" model="account.account.template">
+            <field name="code">0640</field>
+            <field name="name">Algemene reserve</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0650" model="account.account.template">
+            <field name="code">0650</field>
+            <field name="name">Overige reserves</field>
+            <field name="user_type_id" ref="account.data_account_type_equity"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0710" model="account.account.template">
+            <field name="code">0710</field>
+            <field name="name">Voorziening pensioenverplichtingen</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0720" model="account.account.template">
+            <field name="code">0720</field>
+            <field name="name">Egalisatiereserve groot onderhoud</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0730" model="account.account.template">
+            <field name="code">0730</field>
+            <field name="name">Voorziening deelnemingen</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0740" model="account.account.template">
+            <field name="code">0740</field>
+            <field name="name">Latente belastingverplichting</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0750" model="account.account.template">
+            <field name="code">0750</field>
+            <field name="name">Overige voorzieningen</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0760" model="account.account.template">
+            <field name="code">0760</field>
+            <field name="name">Garantieverplichtingen</field>
+            <field name="user_type_id" ref="account.data_account_type_non_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0811" model="account.account.template">
+            <field name="code">0811</field>
+            <field name="name">Hypotheken o/g 1</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0812" model="account.account.template">
+            <field name="code">0812</field>
+            <field name="name">Hypotheken o/g 2</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0813" model="account.account.template">
+            <field name="code">0813</field>
+            <field name="name">Hypotheken o/g 3</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0814" model="account.account.template">
+            <field name="code">0814</field>
+            <field name="name">Hypotheken o/g 4</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0815" model="account.account.template">
+            <field name="code">0815</field>
+            <field name="name">Hypotheken o/g 5</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0821" model="account.account.template">
+            <field name="code">0821</field>
+            <field name="name">Leningen o/g 1</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0822" model="account.account.template">
+            <field name="code">0822</field>
+            <field name="name">Leningen o/g 2</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0823" model="account.account.template">
+            <field name="code">0823</field>
+            <field name="name">Leningen o/g 3</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0824" model="account.account.template">
+            <field name="code">0824</field>
+            <field name="name">Leningen o/g 4</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="0825" model="account.account.template">
+            <field name="code">0825</field>
+            <field name="name">Leningen o/g 5</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="recv" model="account.account.template">
+            <field name="code">11</field>
+            <field name="name">Debiteuren</field>
+            <field eval="True" name="reconcile"/>
+            <field name="user_type_id" ref="account.data_account_type_receivable"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1150" model="account.account.template">
+            <field name="code">1150</field>
+            <field name="name">Dubieuze debiteuren</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1160" model="account.account.template">
+            <field name="code">1160</field>
+            <field name="name">Voorziening dubieuze debiteuren</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1205" model="account.account.template">
+            <field name="code">1205</field>
+            <field name="name">Vooruitbetaalde kosten</field>
+            <field name="user_type_id" ref="account.data_account_type_prepayments"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1210" model="account.account.template">
+            <field name="code">1210</field>
+            <field name="name">Borg</field>
+            <field name="user_type_id" ref="account.data_account_type_prepayments"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1220" model="account.account.template">
+            <field name="code">1220</field>
+            <field name="name">Te ontvangen rente</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1230" model="account.account.template">
+            <field name="code">1230</field>
+            <field name="name">Te ontvangen ziekengeld</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1290" model="account.account.template">
+            <field name="code">1290</field>
+            <field name="name">Overige kortlopende vorderingen</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="pay" model="account.account.template">
+            <field name="code">13</field>
+            <field name="name">Crediteuren</field>
+            <field eval="True" name="reconcile"/>
+            <field name="user_type_id" ref="account.data_account_type_payable"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1405" model="account.account.template">
+            <field name="code">1405</field>
+            <field name="name">Vooruit ontvangen bedragen</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1410" model="account.account.template">
+            <field name="code">1410</field>
+            <field name="name">Te betalen rente</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1420" model="account.account.template">
+            <field name="code">1420</field>
+            <field name="name">Te betalen dividend</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1430" model="account.account.template">
+            <field name="code">1430</field>
+            <field name="name">Te betalen accountantskosten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1440" model="account.account.template">
+            <field name="code">1440</field>
+            <field name="name">Te betalen telefoonkosten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1450" model="account.account.template">
+            <field name="code">1450</field>
+            <field name="name">Nog te ontvangen facturen</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1460" model="account.account.template">
+            <field name="code">1460</field>
+            <field name="name">Te betalen VPB</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1470" model="account.account.template">
+            <field name="code">1470</field>
+            <field name="name">Te betalen VPB voorgaande jaren</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1480" model="account.account.template">
+            <field name="code">1480</field>
+            <field name="name">Te betalen dividendbelasting</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1490" model="account.account.template">
+            <field name="code">1490</field>
+            <field name="name">Overige kortlopende schulden</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_h" model="account.account.template">
+            <field name="code">1500</field>
+            <field name="name">Af te dragen BTW hoog tarief</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_h_d" model="account.account.template">
+            <field name="code">1540</field>
+            <field name="name">Af te dragen BTW hoog tarief diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_l" model="account.account.template">
+            <field name="code">1501</field>
+            <field name="name">Af te dragen BTW laag tarief</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_l_d" model="account.account.template">
+            <field name="code">1541</field>
+            <field name="name">Af te dragen BTW laag tarief diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_0" model="account.account.template">
+            <field name="code">1502</field>
+            <field name="name">Af te dragen BTW overige tarieven</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_0_d" model="account.account.template">
+            <field name="code">1542</field>
+            <field name="name">Af te dragen BTW overige tarieven diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1503" model="account.account.template">
+            <field name="code">1503</field>
+            <field name="name">Af te dragen BTW privé-gebruik</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_v" model="account.account.template">
+            <field name="code">1504</field>
+            <field name="name">Af te dragen BTW heffing verlegd</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_v_d" model="account.account.template">
+            <field name="code">1544</field>
+            <field name="name">Af te dragen BTW heffing verlegd diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1505" model="account.account.template">
+            <field name="code">1505</field>
+            <field name="name">BTW 0% / niet bij mij belast</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+<!-- Verrichte leveringen binnen de EU -->
+        <record id="vat_payable_h_eu" model="account.account.template">
+            <field name="code">1516</field>
+            <field name="name">Af te dragen BTW hoog tarief binnen de EU</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_h_d_eu" model="account.account.template">
+            <field name="code">1576</field>
+            <field name="name">Af te dragen BTW hoog tarief binnen de EU diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_l_eu" model="account.account.template">
+            <field name="code">1517</field>
+            <field name="name">Af te dragen BTW laag tarief binnen de EU</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_l_d_eu" model="account.account.template">
+            <field name="code">1577</field>
+            <field name="name">Af te dragen BTW laag tarief binnen de EU diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_0_eu" model="account.account.template">
+            <field name="code">1518</field>
+            <field name="name">Af te dragen BTW overige tarieven binnen de EU</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_0_d_eu" model="account.account.template">
+            <field name="code">1578</field>
+            <field name="name">Af te dragen BTW overige tarieven binnen de EU diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+<!-- Verrichte leveringen buiten de EU -->
+        <record id="vat_payable_h_non_eu" model="account.account.template">
+            <field name="code">1513</field>
+            <field name="name">Af te dragen BTW hoog tarief buiten de EU</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_h_d_non_eu" model="account.account.template">
+            <field name="code">1573</field>
+            <field name="name">Af te dragen BTW hoog tarief buiten de EU diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_l_non_eu" model="account.account.template">
+            <field name="code">1514</field>
+            <field name="name">Af te dragen BTW laag tarief buiten de EU</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_l_d_non_eu" model="account.account.template">
+            <field name="code">1574</field>
+            <field name="name">Af te dragen BTW laag tarief buiten de EU diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_0_non_eu" model="account.account.template">
+            <field name="code">1515</field>
+            <field name="name">Af te dragen BTW overige tarieven buiten de EU</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_payable_0_d_non_eu" model="account.account.template">
+            <field name="code">1575</field>
+            <field name="name">Af te dragen BTW overige tarieven buiten de EU diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1507" model="account.account.template">
+            <field name="code">1507</field>
+            <field name="name">Installatie/televerkoop binnen de EU</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1508" model="account.account.template">
+            <field name="code">1508</field>
+            <field name="name">Aan mij verrichte leveringen buiten EU</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1509" model="account.account.template">
+            <field name="code">1509</field>
+            <field name="name">Aan mij verrichte leveringen binnen EU</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_0" model="account.account.template">
+            <field name="code">1510</field>
+            <field name="name">Voorbelasting overige</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_0_d" model="account.account.template">
+            <field name="code">1570</field>
+            <field name="name">Voorbelasting overige diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_h" model="account.account.template">
+            <field name="code">1520</field>
+            <field name="name">Voorbelasting hoog</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_h_d" model="account.account.template">
+            <field name="code">1580</field>
+            <field name="name">Voorbelasting hoog diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_l" model="account.account.template">
+            <field name="code">1521</field>
+            <field name="name">Voorbelasting laag</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_l_d" model="account.account.template">
+            <field name="code">1581</field>
+            <field name="name">Voorbelasting laag diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_v" model="account.account.template">
+            <field name="code">1522</field>
+            <field name="name">Voorbelasting verlegd</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_v_d" model="account.account.template">
+            <field name="code">1582</field>
+            <field name="name">Voorbelasting verlegd diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+<!-- Voorbelasting verwerving in EU -->
+        <record id="vat_refund_0_eu" model="account.account.template">
+            <field name="code">1523</field>
+            <field name="name">Voorbelasting overige binnen de EU</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_0_d_eu" model="account.account.template">
+            <field name="code">1583</field>
+            <field name="name">Voorbelasting overige binnen de EU diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_h_eu" model="account.account.template">
+            <field name="code">1524</field>
+            <field name="name">Voorbelasting hoog binnen de EU</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_h_d_eu" model="account.account.template">
+            <field name="code">1584</field>
+            <field name="name">Voorbelasting hoog binnen de EU diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_l_eu" model="account.account.template">
+            <field name="code">1525</field>
+            <field name="name">Voorbelasting laag binnen de EU</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_l_d_eu" model="account.account.template">
+            <field name="code">1585</field>
+            <field name="name">Voorbelasting laag binnen de EU diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_v_eu" model="account.account.template">
+            <field name="code">1526</field>
+            <field name="name">Voorbelasting verlegd binnen de EU</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_v_d_eu" model="account.account.template">
+            <field name="code">1586</field>
+            <field name="name">Voorbelasting verlegd binnen de EU diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+<!-- Voorbelasting verwerving buiten EU -->
+        <record id="vat_refund_0_non_eu" model="account.account.template">
+            <field name="code">1527</field>
+            <field name="name">Voorbelasting overige buiten EU</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_0_d_non_eu" model="account.account.template">
+            <field name="code">1587</field>
+            <field name="name">Voorbelasting overige buiten EU diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_h_non_eu" model="account.account.template">
+            <field name="code">1528</field>
+            <field name="name">Voorbelasting hoog buiten EU</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_h_d_non_eu" model="account.account.template">
+            <field name="code">1588</field>
+            <field name="name">Voorbelasting hoog buiten EU diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_l_non_eu" model="account.account.template">
+            <field name="code">1529</field>
+            <field name="name">Voorbelasting laag buiten EU</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_l_d_non_eu" model="account.account.template">
+            <field name="code">1589</field>
+            <field name="name">Voorbelasting laag buiten EU diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_v_non_eu" model="account.account.template">
+            <field name="code">1530</field>
+            <field name="name">Voorbelasting verlegd buiten EU</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="vat_refund_v_d_non_eu" model="account.account.template">
+            <field name="code">1535</field>
+            <field name="name">Voorbelasting verlegd buiten EU diensten</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1531" model="account.account.template">
+            <field name="code">1531</field>
+            <field name="name">BTW oninbare vorderingen</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1532" model="account.account.template">
+            <field name="code">1532</field>
+            <field name="name">Kleine ondernemersregeling</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1550" model="account.account.template">
+            <field name="code">1550</field>
+            <field name="name">Afdrachten/aangifte omzetbelasting</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1560" model="account.account.template">
+            <field name="code">1560</field>
+            <field name="name">Suppletie omzetbelasting</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1599" model="account.account.template">
+            <field name="code">1599</field>
+            <field name="name">Schuld omzetbelasting (einde boekjaar)</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1610" model="account.account.template">
+            <field name="code">1610</field>
+            <field name="name">Pensioenpremies</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1615" model="account.account.template">
+            <field name="code">1615</field>
+            <field name="name">Afdracht pensioenpremies</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1620" model="account.account.template">
+            <field name="code">1620</field>
+            <field name="name">Netto lonen</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1621" model="account.account.template">
+            <field name="code">1621</field>
+            <field name="name">Voorschot loon</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1625" model="account.account.template">
+            <field name="code">1625</field>
+            <field name="name">Te betalen netto lonen</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1630" model="account.account.template">
+            <field name="code">1630</field>
+            <field name="name">Loonheffing</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1635" model="account.account.template">
+            <field name="code">1635</field>
+            <field name="name">Afdracht loonheffing</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1640" model="account.account.template">
+            <field name="code">1640</field>
+            <field name="name">Te betalen vakantiedagen</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="1650" model="account.account.template">
+            <field name="code">1650</field>
+            <field name="name">Te betalen vakantiegeld</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="3001" model="account.account.template">
+            <field name="code">3001</field>
+            <field name="name">Grondstoffen 1</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="3002" model="account.account.template">
+            <field name="code">3002</field>
+            <field name="name">Grondstoffen 2</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="3100" model="account.account.template">
+            <field name="code">3100</field>
+            <field name="name">Hulpstoffen 1</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="3110" model="account.account.template">
+            <field name="code">3110</field>
+            <field name="name">Hulpstoffen 2</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="3200" model="account.account.template">
+            <field name="code">3200</field>
+            <field name="name">Gereed product 1</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="3210" model="account.account.template">
+            <field name="code">3210</field>
+            <field name="name">Gereed product 2</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="3300" model="account.account.template">
+            <field name="code">3300</field>
+            <field name="name">Verpakkingsmateriaal</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="3310" model="account.account.template">
+            <field name="code">3310</field>
+            <field name="name">Emballage</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+        </record>
+        <record id="4001" model="account.account.template">
+            <field name="code">4001</field>
+            <field name="name">Bruto lonen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4002" model="account.account.template">
+            <field name="code">4002</field>
+            <field name="name">Bonussen en provisies</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4003" model="account.account.template">
+            <field name="code">4003</field>
+            <field name="name">Vakantietoeslag</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4004" model="account.account.template">
+            <field name="code">4004</field>
+            <field name="name">Tantièmes</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4005" model="account.account.template">
+            <field name="code">4005</field>
+            <field name="name">Werknemersbijdrage auto</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4010" model="account.account.template">
+            <field name="code">4010</field>
+            <field name="name">Werkgeversdeel loonheffingen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4011" model="account.account.template">
+            <field name="code">4011</field>
+            <field name="name">Werkgeversdeel pensioenen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4012" model="account.account.template">
+            <field name="code">4012</field>
+            <field name="name">Werkgeversdeel sociale lasten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4015" model="account.account.template">
+            <field name="code">4015</field>
+            <field name="name">Voorziening vakantiedagen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4016" model="account.account.template">
+            <field name="code">4016</field>
+            <field name="name">Uitkering ziekteverzuimverzekering</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4016" model="account.account.template">
+            <field name="code">4016</field>
+            <field name="name">Vergoeding woon- werkverkeer</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4017" model="account.account.template">
+            <field name="code">4017</field>
+            <field name="name">Vergoeding studiekosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4018" model="account.account.template">
+            <field name="code">4018</field>
+            <field name="name">Vergoeding overige reiskosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4019" model="account.account.template">
+            <field name="code">4019</field>
+            <field name="name">Vergoeding overige kosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4020" model="account.account.template">
+            <field name="code">4020</field>
+            <field name="name">Managementvergoedingen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4021" model="account.account.template">
+            <field name="code">4021</field>
+            <field name="name">Ingeleend personeel</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4024" model="account.account.template">
+            <field name="code">4024</field>
+            <field name="name">Reiskosten ingeleend personeel</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4029" model="account.account.template">
+            <field name="code">4029</field>
+            <field name="name">Doorbelasting directe loonkosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4030" model="account.account.template">
+            <field name="code">4030</field>
+            <field name="name">Ziekteverzuimverzekering</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4040" model="account.account.template">
+            <field name="code">4040</field>
+            <field name="name">Kantinekosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4041" model="account.account.template">
+            <field name="code">4041</field>
+            <field name="name">Bedrijfskleding</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4042" model="account.account.template">
+            <field name="code">4042</field>
+            <field name="name">Overige reiskosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4043" model="account.account.template">
+            <field name="code">4043</field>
+            <field name="name">"Congressen, seminars en symposia"</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4044" model="account.account.template">
+            <field name="code">4044</field>
+            <field name="name">Wervingskosten personeel</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4045" model="account.account.template">
+            <field name="code">4045</field>
+            <field name="name">Studie- en opleidingskosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4090" model="account.account.template">
+            <field name="code">4090</field>
+            <field name="name">Overige personeelskosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_1')])]"/>
+        </record>
+        <record id="4110" model="account.account.template">
+            <field name="code">4110</field>
+            <field name="name">Huur onroerend goed</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_2')])]"/>
+        </record>
+        <record id="4111" model="account.account.template">
+            <field name="code">4111</field>
+            <field name="name">Groot onderhoud onroerend goed</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_2')])]"/>
+        </record>
+        <record id="4112" model="account.account.template">
+            <field name="code">4112</field>
+            <field name="name">Onderhoud onroerend goed</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_2')])]"/>
+        </record>
+        <record id="4113" model="account.account.template">
+            <field name="code">4113</field>
+            <field name="name">Toevoeging egalisatiereserve Groot onderhoud</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_2')])]"/>
+        </record>
+        <record id="4120" model="account.account.template">
+            <field name="code">4120</field>
+            <field name="name">Belastingen onroerend goed</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_2')])]"/>
+        </record>
+        <record id="4130" model="account.account.template">
+            <field name="code">4130</field>
+            <field name="name">Energiekosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_2')])]"/>
+        </record>
+        <record id="4140" model="account.account.template">
+            <field name="code">4140</field>
+            <field name="name">Schoonmaakkosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_2')])]"/>
+        </record>
+        <record id="4150" model="account.account.template">
+            <field name="code">4150</field>
+            <field name="name">Assurantie onroerend goed</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_2')])]"/>
+        </record>
+        <record id="4190" model="account.account.template">
+            <field name="code">4190</field>
+            <field name="name">Overige huisvestingskosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_2')])]"/>
+        </record>
+        <record id="4201" model="account.account.template">
+            <field name="code">4201</field>
+            <field name="name">Huur machines</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_3')])]"/>
+        </record>
+        <record id="4202" model="account.account.template">
+            <field name="code">4202</field>
+            <field name="name">Lease machines (operational lease)</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_3')])]"/>
+        </record>
+        <record id="4210" model="account.account.template">
+            <field name="code">4210</field>
+            <field name="name">Huur inventaris</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_3')])]"/>
+        </record>
+        <record id="4211" model="account.account.template">
+            <field name="code">4211</field>
+            <field name="name">Lease inventaris (operational lease)</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_3')])]"/>
+        </record>
+        <record id="4220" model="account.account.template">
+            <field name="code">4220</field>
+            <field name="name">Onderhoud machines</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_3')])]"/>
+        </record>
+        <record id="4230" model="account.account.template">
+            <field name="code">4230</field>
+            <field name="name">Onderhoud inventaris</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_3')])]"/>
+        </record>
+        <record id="4240" model="account.account.template">
+            <field name="code">4240</field>
+            <field name="name">Gereedschappen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_3')])]"/>
+        </record>
+        <record id="4250" model="account.account.template">
+            <field name="code">4250</field>
+            <field name="name">Kleine aanschaffingen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_3')])]"/>
+        </record>
+        <record id="4260" model="account.account.template">
+            <field name="code">4260</field>
+            <field name="name">Energiekosten machines / inventaris</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_4')])]"/>
+        </record>
+        <record id="4270" model="account.account.template">
+            <field name="code">4270</field>
+            <field name="name">Assurantie machines / inventaris</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_4')])]"/>
+        </record>
+        <record id="4280" model="account.account.template">
+            <field name="code">4280</field>
+            <field name="name">Milieukosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_4')])]"/>
+        </record>
+        <record id="4290" model="account.account.template">
+            <field name="code">4290</field>
+            <field name="name">Overige bedrijfskosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_4')])]"/>
+        </record>
+        <record id="4305" model="account.account.template">
+            <field name="code">4305</field>
+            <field name="name">Contributies / abonnementen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_4')])]"/>
+        </record>
+        <record id="4310" model="account.account.template">
+            <field name="code">4310</field>
+            <field name="name">Kantoorbenodigdheden</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_4')])]"/>
+        </record>
+        <record id="4320" model="account.account.template">
+            <field name="code">4320</field>
+            <field name="name">Onderhoud kantoorinventaris</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_5')])]"/>
+        </record>
+        <record id="4321" model="account.account.template">
+            <field name="code">4321</field>
+            <field name="name">Huur kantoorapparatuur</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_5')])]"/>
+        </record>
+        <record id="4322" model="account.account.template">
+            <field name="code">4322</field>
+            <field name="name">Lease kantoorinventaris (operational lease)</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_5')])]"/>
+        </record>
+        <record id="4330" model="account.account.template">
+            <field name="code">4330</field>
+            <field name="name">Telefoon / telefax</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_5')])]"/>
+        </record>
+        <record id="4340" model="account.account.template">
+            <field name="code">4340</field>
+            <field name="name">Internet / e-mail</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_5')])]"/>
+        </record>
+        <record id="4350" model="account.account.template">
+            <field name="code">4350</field>
+            <field name="name">Porti</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_5')])]"/>
+        </record>
+        <record id="4360" model="account.account.template">
+            <field name="code">4360</field>
+            <field name="name">Automatiseringskosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_5')])]"/>
+        </record>
+        <record id="4390" model="account.account.template">
+            <field name="code">4390</field>
+            <field name="name">Overige kantoorkosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_5')])]"/>
+        </record>
+        <record id="4401" model="account.account.template">
+            <field name="code">4401</field>
+            <field name="name">Brandstof vrachtauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4402" model="account.account.template">
+            <field name="code">4402</field>
+            <field name="name">Onderhoud vrachtauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4403" model="account.account.template">
+            <field name="code">4403</field>
+            <field name="name">Huur vrachtauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4404" model="account.account.template">
+            <field name="code">4404</field>
+            <field name="name">Lease vrachtauto's (operational lease)</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4405" model="account.account.template">
+            <field name="code">4405</field>
+            <field name="name">Assurantie vrachtauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4406" model="account.account.template">
+            <field name="code">4406</field>
+            <field name="name">Belastingen vrachtauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4407" model="account.account.template">
+            <field name="code">4407</field>
+            <field name="name">Onderhoud vrachtauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4408" model="account.account.template">
+            <field name="code">4408</field>
+            <field name="name">Overige kosten vrachtauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4411" model="account.account.template">
+            <field name="code">4411</field>
+            <field name="name">Brandstof personenauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4412" model="account.account.template">
+            <field name="code">4412</field>
+            <field name="name">Onderhoud personenauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4413" model="account.account.template">
+            <field name="code">4413</field>
+            <field name="name">Huur personenauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4414" model="account.account.template">
+            <field name="code">4414</field>
+            <field name="name">Lease personenauto's (operational lease)</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4415" model="account.account.template">
+            <field name="code">4415</field>
+            <field name="name">Assurantie personenauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4416" model="account.account.template">
+            <field name="code">4416</field>
+            <field name="name">Belastingen personenauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4417" model="account.account.template">
+            <field name="code">4417</field>
+            <field name="name">Onderhoud personenauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4418" model="account.account.template">
+            <field name="code">4418</field>
+            <field name="name">Privégebruik personenauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4419" model="account.account.template">
+            <field name="code">4419</field>
+            <field name="name">Overige kosten personenauto's</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4421" model="account.account.template">
+            <field name="code">4421</field>
+            <field name="name">Brandstof overige vervoermiddelen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4422" model="account.account.template">
+            <field name="code">4422</field>
+            <field name="name">Onderhoud overige vervoermiddelen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4423" model="account.account.template">
+            <field name="code">4423</field>
+            <field name="name">Huur overige vervoermiddelen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4424" model="account.account.template">
+            <field name="code">4424</field>
+            <field name="name">Lease overige vervoermiddelen (operational lease)</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4425" model="account.account.template">
+            <field name="code">4425</field>
+            <field name="name">Assurantie overige vervoermiddelen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4426" model="account.account.template">
+            <field name="code">4426</field>
+            <field name="name">Belastingen overige vervoermiddelen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4427" model="account.account.template">
+            <field name="code">4427</field>
+            <field name="name">Onderhoud overige vervoermiddelen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4428" model="account.account.template">
+            <field name="code">4428</field>
+            <field name="name">Overige overige vervoermiddelen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4490" model="account.account.template">
+            <field name="code">4490</field>
+            <field name="name">Overige vervoerskosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_6')])]"/>
+        </record>
+        <record id="4505" model="account.account.template">
+            <field name="code">4505</field>
+            <field name="name">Relatiegeschenken</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_7')])]"/>
+        </record>
+        <record id="4510" model="account.account.template">
+            <field name="code">4510</field>
+            <field name="name">Reis- en verblijfkosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_7')])]"/>
+        </record>
+        <record id="4515" model="account.account.template">
+            <field name="code">4515</field>
+            <field name="name">Representatiekosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_7')])]"/>
+        </record>
+        <record id="4520" model="account.account.template">
+            <field name="code">4520</field>
+            <field name="name">Reclamekosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_7')])]"/>
+        </record>
+        <record id="4525" model="account.account.template">
+            <field name="code">4525</field>
+            <field name="name">Advertenties</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_7')])]"/>
+        </record>
+        <record id="4530" model="account.account.template">
+            <field name="code">4530</field>
+            <field name="name">Beurskosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_7')])]"/>
+        </record>
+        <record id="4535" model="account.account.template">
+            <field name="code">4535</field>
+            <field name="name">Etalagekosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_7')])]"/>
+        </record>
+        <record id="4540" model="account.account.template">
+            <field name="code">4540</field>
+            <field name="name">Websitekosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_7')])]"/>
+        </record>
+        <record id="4550" model="account.account.template">
+            <field name="code">4550</field>
+            <field name="name">Afschrijving dubieuze debiteuren</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_7')])]"/>
+        </record>
+        <record id="4560" model="account.account.template">
+            <field name="code">4560</field>
+            <field name="name">Kredietbeperking debiteuren</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_7')])]"/>
+        </record>
+        <record id="4570" model="account.account.template">
+            <field name="code">4570</field>
+            <field name="name">Vrachtkosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_7')])]"/>
+        </record>
+        <record id="4590" model="account.account.template">
+            <field name="code">4590</field>
+            <field name="name">Overige verkoopkosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_7')])]"/>
+        </record>
+        <record id="4601" model="account.account.template">
+            <field name="code">4601</field>
+            <field name="name">Accountantskosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_8')])]"/>
+        </record>
+        <record id="4605" model="account.account.template">
+            <field name="code">4605</field>
+            <field name="name">Advieskosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_8')])]"/>
+        </record>
+        <record id="4610" model="account.account.template">
+            <field name="code">4610</field>
+            <field name="name">Juridische kosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_8')])]"/>
+        </record>
+        <record id="4620" model="account.account.template">
+            <field name="code">4620</field>
+            <field name="name">Assuranties</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_8')])]"/>
+        </record>
+        <record id="4621" model="account.account.template">
+            <field name="code">4621</field>
+            <field name="name">Administratiekosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_8')])]"/>
+        </record>
+        <record id="4630" model="account.account.template">
+            <field name="code">4630</field>
+            <field name="name">Bankkosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_8')])]"/>
+        </record>
+        <record id="4690" model="account.account.template">
+            <field name="code">4690</field>
+            <field name="name">Overige algemene kosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_8')])]"/>
+        </record>
+        <record id="4705" model="account.account.template">
+            <field name="code">4705</field>
+            <field name="name">Rente hypotheek</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_8')])]"/>
+        </record>
+        <record id="4710" model="account.account.template">
+            <field name="code">4710</field>
+            <field name="name">Rente lening</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_8')])]"/>
+        </record>
+        <record id="4720" model="account.account.template">
+            <field name="code">4720</field>
+            <field name="name">Rente rekening-courant bank</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_8')])]"/>
+        </record>
+        <record id="4790" model="account.account.template">
+            <field name="code">4790</field>
+            <field name="name">Overige rentelasten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_8')])]"/>
+        </record>
+        <record id="4795" model="account.account.template">
+            <field name="code">4795</field>
+            <field name="name">Overige rentebaten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_8')])]"/>
+        </record>
+        <record id="4805" model="account.account.template">
+            <field name="code">4805</field>
+            <field name="name">Goodwill</field>
+            <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_9')])]"/>
+        </record>
+        <record id="4810" model="account.account.template">
+            <field name="code">4810</field>
+            <field name="name">Gebouwen / verbouwingen</field>
+            <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_9')])]"/>
+        </record>
+        <record id="4820" model="account.account.template">
+            <field name="code">4820</field>
+            <field name="name">Machines</field>
+            <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_9')])]"/>
+        </record>
+        <record id="4830" model="account.account.template">
+            <field name="code">4830</field>
+            <field name="name">Inventaris</field>
+            <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_9')])]"/>
+        </record>
+        <record id="4840" model="account.account.template">
+            <field name="code">4840</field>
+            <field name="name">Vervoermiddelen</field>
+            <field name="user_type_id" ref="account.data_account_type_depreciation"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_9')])]"/>
+        </record>
+        <record id="4901" model="account.account.template">
+            <field name="code">4901</field>
+            <field name="name">Boekwinst vaste activa</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_9')])]"/>
+        </record>
+        <record id="4902" model="account.account.template">
+            <field name="code">4902</field>
+            <field name="name">Boekverlies vaste activa</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_9')])]"/>
+        </record>
+        <record id="4910" model="account.account.template">
+            <field name="code">4910</field>
+            <field name="name">Kleine ondernemingsregeling Omzetbelasting</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_9')])]"/>
+        </record>
+        <record id="4920" model="account.account.template">
+            <field name="code">4920</field>
+            <field name="name">Koersverschillen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_9')])]"/>
+        </record>
+        <record id="4930" model="account.account.template">
+            <field name="code">4930</field>
+            <field name="name">Betalingsverschillen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_9')])]"/>
+        </record>
+        <record id="4940" model="account.account.template">
+            <field name="code">4940</field>
+            <field name="name">Kasverschillen</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_9')])]"/>
+        </record>
+        <record id="4950" model="account.account.template">
+            <field name="code">4950</field>
+            <field name="name">Overige baten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_9')])]"/>
+        </record>
+        <record id="4960" model="account.account.template">
+            <field name="code">4960</field>
+            <field name="name">Overige lasten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_9')])]"/>
+        </record>
+        <record id="4970" model="account.account.template">
+            <field name="code">4970</field>
+            <field name="name">Overige baten voorgaande jaren</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_9')])]"/>
+        </record>
+        <record id="4980" model="account.account.template">
+            <field name="code">4980</field>
+            <field name="name">Overige lasten voorgaande jaren</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_9')])]"/>
+        </record>
+        <record id="7001" model="account.account.template">
+            <field name="code">7001</field>
+            <field name="name">Kostprijs NL handelsgoederen 1</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7002" model="account.account.template">
+            <field name="code">7002</field>
+            <field name="name">Kostprijs binnen EU handelsgoederen 1</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7003" model="account.account.template">
+            <field name="code">7003</field>
+            <field name="name">Kostprijs buiten EU handelsgoederen 1</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7004" model="account.account.template">
+            <field name="code">7004</field>
+            <field name="name">Kostprijs Intercompany handelsgoederen 1</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7005" model="account.account.template">
+            <field name="code">7005</field>
+            <field name="name">Kostprijs NL handelsgoederen 2</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7006" model="account.account.template">
+            <field name="code">7006</field>
+            <field name="name">Kostprijs binnen EU handelsgoederen 2</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7007" model="account.account.template">
+            <field name="code">7007</field>
+            <field name="name">Kostprijs buiten EU handelsgoederen 2</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7008" model="account.account.template">
+            <field name="code">7008</field>
+            <field name="name">Kostprijs Intercompany handelsgoederen 2</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7009" model="account.account.template">
+            <field name="code">7009</field>
+            <field name="name">Kostprijs NL handelsgoederen 3</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7010" model="account.account.template">
+            <field name="code">7010</field>
+            <field name="name">Kostprijs binnen EU handelsgoederen 3</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7011" model="account.account.template">
+            <field name="code">7011</field>
+            <field name="name">Kostprijs buiten EU handelsgoederen 3</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7012" model="account.account.template">
+            <field name="code">7012</field>
+            <field name="name">Kostprijs Intercompany handelsgoederen 3</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7020" model="account.account.template">
+            <field name="code">7020</field>
+            <field name="name">Directe loonkosten</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7030" model="account.account.template">
+            <field name="code">7030</field>
+            <field name="name">Produktiekosten</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7040" model="account.account.template">
+            <field name="code">7040</field>
+            <field name="name">Kostprijs werk derden</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7050" model="account.account.template">
+            <field name="code">7050</field>
+            <field name="name">Voorziening incourante voorraad grondstof</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7051" model="account.account.template">
+            <field name="code">7051</field>
+            <field name="name">Voorziening incourante voorraad hulpstof</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7052" model="account.account.template">
+            <field name="code">7052</field>
+            <field name="name">Voorziening incourante voorraad handelsgoederen</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7060" model="account.account.template">
+            <field name="code">7060</field>
+            <field name="name">Inkoopkosten</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7061" model="account.account.template">
+            <field name="code">7061</field>
+            <field name="name">Inkoopprovisie</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7062" model="account.account.template">
+            <field name="code">7062</field>
+            <field name="name">Vrachtkosten</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7063" model="account.account.template">
+            <field name="code">7063</field>
+            <field name="name">Invoerkosten</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7064" model="account.account.template">
+            <field name="code">7064</field>
+            <field name="name">Inkoopbonussen</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7065" model="account.account.template">
+            <field name="code">7065</field>
+            <field name="name">Betalingskorting crediteuren</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7070" model="account.account.template">
+            <field name="code">7070</field>
+            <field name="name">Garantiekosten</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="7071" model="account.account.template">
+            <field name="code">7071</field>
+            <field name="name">Mutatie garantieverplichting</field>
+            <field name="user_type_id" ref="account.data_account_type_direct_costs"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_10')])]"/>
+        </record>
+        <record id="8001" model="account.account.template">
+            <field name="code">8001</field>
+            <field name="name">Omzet NL handelsgoederen 1</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="8002" model="account.account.template">
+            <field name="code">8002</field>
+            <field name="name">Omzet binnen EU handelsgoederen 1</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="8003" model="account.account.template">
+            <field name="code">8003</field>
+            <field name="name">Omzet buiten EU handelsgoederen 1</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="8004" model="account.account.template">
+            <field name="code">8004</field>
+            <field name="name">Omzet Intercompany handelsgoederen 1</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="8011" model="account.account.template">
+            <field name="code">8011</field>
+            <field name="name">Omzet NL handelsgoederen 2</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="8012" model="account.account.template">
+            <field name="code">8012</field>
+            <field name="name">Omzet binnen EU handelsgoederen 2</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="8013" model="account.account.template">
+            <field name="code">8013</field>
+            <field name="name">Omzet buiten EU handelsgoederen 2</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="8014" model="account.account.template">
+            <field name="code">8014</field>
+            <field name="name">Omzet Intercompany handelsgoederen 2</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="8021" model="account.account.template">
+            <field name="code">8021</field>
+            <field name="name">Omzet NL handelsgoederen 3</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="8022" model="account.account.template">
+            <field name="code">8022</field>
+            <field name="name">Omzet binnen EU handelsgoederen 3</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="8023" model="account.account.template">
+            <field name="code">8023</field>
+            <field name="name">Omzet buiten EU handelsgoederen 3</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="8024" model="account.account.template">
+            <field name="code">8024</field>
+            <field name="name">Omzet Intercompany handelsgoederen 3</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="8041" model="account.account.template">
+            <field name="code">8041</field>
+            <field name="name">Omzet NL werk derden</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="8042" model="account.account.template">
+            <field name="code">8042</field>
+            <field name="name">Omzet binnen EU werk derden</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="8043" model="account.account.template">
+            <field name="code">8043</field>
+            <field name="name">Omzet buiten EU werk derden</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="8044" model="account.account.template">
+            <field name="code">8044</field>
+            <field name="name">Omzet Intercompany werk derden</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="8090" model="account.account.template">
+            <field name="code">8090</field>
+            <field name="name">Diverse overige opbrengsten</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="8920" model="account.account.template">
+            <field name="code">8920</field>
+            <field name="name">Koersverschillen</field>
+            <field name="user_type_id" ref="account.data_account_type_revenue"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_11')])]"/>
+        </record>
+        <record id="9011" model="account.account.template">
+            <field name="code">9011</field>
+            <field name="name">Resultaat deelneming 1</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_12')])]"/>
+        </record>
+        <record id="9012" model="account.account.template">
+            <field name="code">9012</field>
+            <field name="name">Resultaat deelneming 2</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_12')])]"/>
+        </record>
+        <record id="9013" model="account.account.template">
+            <field name="code">9013</field>
+            <field name="name">Resultaat deelneming 3</field>
+            <field name="user_type_id" ref="account.data_account_type_other_income"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_12')])]"/>
+        </record>
+        <record id="9150" model="account.account.template">
+            <field name="code">9150</field>
+            <field name="name">Reorganisatiekosten</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_12')])]"/>
+        </record>
+        <record id="9900" model="account.account.template">
+            <field name="code">9900</field>
+            <field name="name">Vennootschapsbelasting</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_12')])]"/>
+        </record>
+        <record id="9950" model="account.account.template">
+            <field name="code">9950</field>
+            <field name="name">Vennootschapsbelasting voorgaande jaren</field>
+            <field name="user_type_id" ref="account.data_account_type_expenses"/>
+            <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_12')])]"/>
+        </record>
+
+        <!-- Chart template -->
+        <record id="l10nnl_chart_template" model="account.chart.template">
+            <field name="cash_account_code_prefix">101</field>
+            <field name="bank_account_code_prefix">103</field>
+            <field name="code_digits">6</field>
+            <field name="property_account_receivable_id" ref="recv"/>
+            <field name="property_account_payable_id" ref="pay"/>
+            <field name="property_account_expense_categ_id" ref="7001"/>
+            <field name="property_account_income_categ_id" ref="8001"/>
+            <field name="property_stock_account_input_categ_id" ref="0120"/>
+            <field name="property_stock_account_output_categ_id" ref="0129"/>
+            <field name="property_stock_valuation_account_id" ref="4830"/>
+            <field name="expense_currency_exchange_account_id" ref="4920"/>
+            <field name="income_currency_exchange_account_id" ref="8920"/>
+        </record>
+
+    </data>
+</openerp>

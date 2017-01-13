@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_hryearlysalary">
+    <t t-call="report.html_container">
+    <t t-foreach="docs" t-as="o">
+      <t t-foreach="get_employee(data['form'])" t-as="employee">
+        <t t-call="report.internal_layout">
+            <div class="page">
+                    <h2><span t-field="employee.company_id"/></h2>
+                    <p> From 
+                        <u><span t-field="o.date_from" />
+                        </u>
+                    To  <u><span t-field="o.date_to" />
+                        </u> </p>
+                    <table class="table table-condensed table-bordered">
+                        <tr>
+                            <td><strong>Employee Code</strong></td>
+                            <td>
+                                <t t-if="employee.identification_id">
+                                    <span t-field="employee.identification_id"/>
+                                </t>
+                            </td>
+                            <td><strong>Department</strong></td>
+                            <td>
+                                <t t-if="employee.department_id">
+                                    <span t-field="employee.department_id.name"/>
+                                </t>
+                            </td>
+                            <td><strong>Bank</strong></td>
+                            <td>
+                            <t t-if="employee.bank_account_id">
+                                    <span t-field="employee.bank_account_id.bank_id.name"/>
+                            </t>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Employee Name</strong></td>
+                            <td>
+                                <t t-if="employee.name">
+                                    <span t-field="employee.name"/>
+                                </t>
+                            </td>
+                            <td><strong>Address</strong></td>
+                            <td>
+                                <t t-if="employee.address_home_id">
+                                    <span t-field="employee.address_home_id.name"/>
+                                </t>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Designation</strong></td>
+                            <td>
+                                <t t-if="employee.job_id">
+                                    <span t-field="employee.job_id.name"/>
+                                </t>
+                            </td>
+                            <td><strong>Phone No.</strong></td>
+                            <td>
+                                <t t-if="employee.work_phone">
+                                    <span t-field="employee.work_phone"/>
+                                </t>
+                            </td>
+                            <td><strong>E-mail Address</strong></td>
+                            <td>
+                                <t t-if="employee.work_email">
+                                    <span t-field="employee.work_email"/>
+                                </t>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr t-foreach="get_periods(data['form'])" t-as="months">
+                            <span t-esc="get_employee_detail(data['form'], employee)"/>
+                                <th>Title</th>
+                                <t t-foreach="months[0:12]" t-as="month_sal">
+                                    <th class="text-right">
+                                        <span t-esc="month_sal"/>
+                                    </th>
+                                </t>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <td><strong> Allowances with Basic:</strong></td>
+                             <tr t-foreach="get_allow()" t-as="allowance">
+                                 <t t-if="allowance[0] in ['Basic','Gross']">
+                                     <td><strong><span t-esc="allowance[0]"/></strong></td>
+	                                 <t t-foreach="allowance[1:13]" t-as="allow">
+	                                     <td><span t-esc="allow"/></td>
+	                                 </t>
+                                 </t>
+                                 <t t-if="allowance[0] not in ['Basic','Gross']">
+                                     <td><span t-esc="allowance[0]"/></td>
+                                     <t t-foreach="allowance[1:13]" t-as="allow">
+                                         <td><span t-esc="allow"/></td>
+                                     </t>
+                                 </t>
+                                 <td t-esc="format(allowance[13], 'monetary', employee.company_id.currency_id)"/>
+                             </tr>
+                             <td><strong> Deductions:</strong></td>
+                               <tr t-foreach="get_deduct()" t-as="deduct">
+                                   <t t-if="deduct[0] in ['Net']">
+                                       <td><strong><span t-esc="deduct[0]"/></strong></td>
+                                   </t>
+                                   <t t-if="deduct[0] not in ['Net']">
+                                       <td><span t-esc="deduct[0]"/></td>
+                                   </t>
+                                   <t t-foreach="deduct[1:12]" t-as="d">
+                                       <td><span t-esc="d"/></td>
+                                   </t>
+                                   <td t-esc="format(deduct[13], 'monetary', employee.company_id.currency_id)"/>
+                               </tr>
+                        </tbody>
+                    </table>
+            </div>
+        </t>
+        </t>
+    </t>
+    </t>
+</template>
+</odoo>

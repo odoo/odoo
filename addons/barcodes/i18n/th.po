@@ -1,0 +1,414 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * barcodes
+# 
+# Translators:
+# monchai7 <montchye@gmail.com>, 2016
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2016
+# Seksan Poltree <seksan.poltree@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Tapakorn Kittirudeekul <bossmonfire@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-14 15:54+0000\n"
+"PO-Revision-Date: 2016-11-14 15:54+0000\n"
+"Last-Translator: Tapakorn Kittirudeekul <bossmonfire@gmail.com>, 2016\n"
+"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:202
+#, python-format
+msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
+msgstr ""
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:200
+#, python-format
+msgid ": a rule can only contain one pair of braces."
+msgstr ""
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:196
+#, python-format
+msgid ": braces can only contain N's followed by D's."
+msgstr ""
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:198
+#, python-format
+msgid ": empty braces."
+msgstr ""
+
+#. module: barcodes
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid ""
+"<i>Barcodes Nomenclatures</i> define how barcodes are recognized and categorized.\n"
+"                                When a barcode is scanned it is associated to the <i>first</i> rule with a matching\n"
+"                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
+"                                if the regular expression matches a prefix of the barcode."
+msgstr ""
+
+#. module: barcodes
+#: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+msgid ""
+"A barcode nomenclature defines how the point of sale identify and interprets"
+" barcodes"
+msgstr ""
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:183 selection:barcode.rule,type:0
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_alias
+#, python-format
+msgid "Alias"
+msgstr "นามแฝง"
+
+#. module: barcodes
+#: selection:barcode.nomenclature,upc_ean_conv:0
+msgid "Always"
+msgstr "เสมอ"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_name
+msgid "An internal identification for this barcode nomenclature rule"
+msgstr ""
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_name
+msgid "An internal identification of the barcode nomenclature"
+msgstr ""
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:177
+#: selection:barcode.rule,encoding:0
+#, python-format
+msgid "Any"
+msgstr ""
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_barcode_nomenclature_id
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid "Barcode Nomenclature"
+msgstr "การตีความบาร์โค้ด"
+
+#. module: barcodes
+#: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
+msgid "Barcode Nomenclatures"
+msgstr "การตีความบาร์โค้ด"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_pattern
+msgid "Barcode Pattern"
+msgstr "รูปแบบบาร์โค้ด"
+
+#. module: barcodes
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
+msgid "Barcode Rule"
+msgstr "กฎของบาร์โค้ด"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
+msgid "Barcode Scanned"
+msgstr "สแกนบาร์โค้ดแล้ว"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Cashier"
+msgstr "พนักงานขาย"
+
+#. module: barcodes
+#: model:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
+msgid "Click to add a Barcode Nomenclature ."
+msgstr "กดเพื่อเพิ่มการตีความบาร์โค้ด"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Client"
+msgstr "ไคลเอนต์"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_create_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_create_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Credit Card"
+msgstr "บัตรเครดิต"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:100
+#, python-format
+msgid "Discard"
+msgstr "ยกเลิก"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Discounted Product"
+msgstr "สินค้าลดราคา"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_display_name
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin_display_name
+msgid "Display Name"
+msgstr "ชื่อที่ใช้แสดง"
+
+#. module: barcodes
+#: selection:barcode.rule,encoding:0
+msgid "EAN-13"
+msgstr ""
+
+#. module: barcodes
+#: selection:barcode.nomenclature,upc_ean_conv:0
+msgid "EAN-13 to UPC-A"
+msgstr ""
+
+#. module: barcodes
+#: selection:barcode.rule,encoding:0
+msgid "EAN-8"
+msgstr ""
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_encoding
+msgid "Encoding"
+msgstr ""
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:62
+#, python-format
+msgid "Error : Document not editable"
+msgstr "พบจุดบกพร่อง: เอกสารนี้ไม่สามารถแก้ไขได้"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:66
+#, python-format
+msgid "Error : No last scanned barcode"
+msgstr "ผิดพลาด: ไม่พบบาร์โค้ดที่ถูกสแกนล่าสุด"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_id
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_id
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin_id
+msgid "ID"
+msgstr "ID"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature___last_update
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule___last_update
+#: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___last_update
+msgid "Last Modified on"
+msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_uid
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_write_uid
+msgid "Last Updated by"
+msgstr "อัพเดทครั้งสุดท้ายโดย"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_write_date
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_write_date
+msgid "Last Updated on"
+msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Location"
+msgstr "สถานที่"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Lot"
+msgstr "ล็อต"
+
+#. module: barcodes
+#: selection:barcode.nomenclature,upc_ean_conv:0
+msgid "Never"
+msgstr "ไม่"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_name
+msgid "Nomenclature Name"
+msgstr ""
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Package"
+msgstr "หีบห่อ"
+
+#. module: barcodes
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid ""
+"Patterns can also define how numerical values, such as weight or price, can be\n"
+"                                encoded into the barcode. They are indicated by <code>{NNN}</code> where the N's\n"
+"                                define where the number's digits are encoded. Floats are also supported with the \n"
+"                                decimals indicated with D's, such as <code>{NNNDD}</code>. In these cases, \n"
+"                                the barcode field on the associated records <i>must</i> show these digits as \n"
+"                                zeroes."
+msgstr ""
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Priced Product"
+msgstr ""
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_name
+msgid "Rule Name"
+msgstr "ชื่อกฎ"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_rule_ids
+msgid "Rules"
+msgstr "กฏ"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:86
+#, python-format
+msgid "Select"
+msgstr "เลือก"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_sequence
+msgid "Sequence"
+msgstr "ลำดับ"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:85
+#, python-format
+msgid "Set quantity"
+msgstr "กำหนดจำนวน"
+
+#. module: barcodes
+#: model:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
+msgid "Tables"
+msgstr "ตาราง"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_pattern
+msgid "The barcode matching pattern"
+msgstr ""
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_rule_ids
+msgid "The list of barcode rules"
+msgstr "รายการกฏของบาร์โค้ด"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_alias
+msgid "The matched pattern will alias to this barcode"
+msgstr ""
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:196
+#: code:addons/barcodes/models/barcodes.py:198
+#: code:addons/barcodes/models/barcodes.py:200
+#, python-format
+msgid "There is a syntax error in the barcode pattern "
+msgstr ""
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_encoding
+msgid ""
+"This rule will apply only if the barcode is encoded with the specified "
+"encoding"
+msgstr ""
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:62
+#, python-format
+msgid "To modify this document, please first start edition."
+msgstr ""
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:66
+#, python-format
+msgid "To set the quantity please scan a barcode first."
+msgstr ""
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_rule_type
+msgid "Type"
+msgstr "ประเภท"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_upc_ean_conv
+msgid ""
+"UPC Codes can be converted to EAN by prefixing them with a zero. This "
+"setting determines if a UPC/EAN barcode should be automatically converted in"
+" one way or another when trying to match a rule with the other encoding."
+msgstr ""
+
+#. module: barcodes
+#: selection:barcode.rule,encoding:0
+msgid "UPC-A"
+msgstr ""
+
+#. module: barcodes
+#: selection:barcode.nomenclature,upc_ean_conv:0
+msgid "UPC-A to EAN-13"
+msgstr "เปลี่ยน UPC-A เป็น  EAN-13"
+
+#. module: barcodes
+#: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature_upc_ean_conv
+msgid "UPC/EAN Conversion"
+msgstr "การแปลง UPC/EAN "
+
+#. module: barcodes
+#: code:addons/barcodes/models/barcodes.py:184 selection:barcode.rule,type:0
+#, python-format
+msgid "Unit Product"
+msgstr "สิ้นค้าที่มีหน่วย"
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcode_rule_sequence
+msgid ""
+"Used to order rules such that rules with a smaller sequence match first"
+msgstr ""
+
+#. module: barcodes
+#: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
+msgid "Value of the last barcode scanned."
+msgstr "ข้อมูลของบาร์โค้ดล่าสุดที่ถูกสแกน"
+
+#. module: barcodes
+#: selection:barcode.rule,type:0
+msgid "Weighted Product"
+msgstr ""
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_nomenclature
+msgid "barcode.nomenclature"
+msgstr ""
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcode_rule
+msgid "barcode.rule"
+msgstr "barcode.rule"
+
+#. module: barcodes
+#: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
+msgid "barcodes.barcode_events_mixin"
+msgstr "barcodes.barcode_events_mixin"

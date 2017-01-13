@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="snippets">
+    <h2 id="snippets_menu">Add blocks</h2>
+
+    <div id="o_scroll">
+        <div id="snippet_structure" class="o_panel">
+            <div class="o_panel_header">
+                <i class="fa fa-th-large"/> First Panel
+            </div>
+            <div class="o_panel_body"/>
+        </div>
+    </div>
+
+    <div id="snippet_options" class="hidden">
+        <t t-call="web_editor.snippet_options"/>
+    </div>
+</template>
+
+<!-- options (data-selector, data-drop-in, data-drop-near, data-js to link js object ) -->
+<template id="snippet_options">
+    <!-- t-field -->
+    <div data-js='many2one'
+         data-selector="[data-oe-many2one-model]:not([data-oe-readonly])"
+         data-no-check="true"/>
+</template>
+</odoo>

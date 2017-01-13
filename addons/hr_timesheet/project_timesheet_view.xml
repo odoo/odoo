@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="act_hr_timesheet_line_by_project" model="ir.actions.act_window">
+            <field name="name">Activities</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="hr_timesheet_line_tree"/>
+            <field name="domain">[('project_id', '!=', False)]</field>
+            <field name="context">{"default_project_id": active_id, "search_default_project_id": [active_id]}</field>
+            <field name="search_view_id" ref="hr_timesheet_line_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to record activities.
+              </p><p>
+                You can register and track your workings hours by project every
+                day. Every time spent on a project will become a cost and can be re-invoiced to
+                customers if required.
+              </p>
+            </field>
+        </record>
+
+        <record id="project_project_view_form_simplified_inherit_timesheet" model="ir.ui.view">
+            <field name="name">project.project.view.form.simplified.inherit.timesheet</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+            <field name="priority">24</field>
+            <field name="arch" type="xml">
+                <group name="options" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </group>
+                <field name="use_tasks" position="after">
+                    <field name="allow_timesheets"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="project_invoice_form" model="ir.ui.view">
+            <field name="name">Inherit project form : Invoicing Data</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="priority">24</field>
+            <field name="arch" type="xml">
+                <button name="toggle_active" position="before">
+                    <button class="oe_stat_button" name="%(act_hr_timesheet_line_by_project)d" type="action" icon="fa-calendar" string="Timesheets" attrs="{'invisible': [('allow_timesheets', '=', False)]}"/>
+                </button>
+                <field name="user_id" position="after">
+                    <field name="subtask_project_id" groups="base.group_no_one" attrs="{'invisible': [('allow_timesheets', '=', False)]}"/>
+                </field>
+                <xpath expr="//div[@name='options_active']" position="inside">
+                    <div>
+                        <field name="allow_timesheets" class="oe_inline" string="Allow timesheets"/>
+                        <label for="allow_timesheets"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="act_project_task_sub_task" model="ir.actions.act_window">
+            <field name="name">Sub-tasks</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
+            <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
+            <field name="context">
+            {
+                'default_parent_id' : active_id,
+                'default_project_id' : project_id,
+                'default_name' : name + ':',
+                'default_partner_id' : partner_id,
+            }
+            </field>
+            <field name="search_view_id" ref="project.view_task_search_form"/>
+        </record>
+
+        <record model="ir.ui.view" id="view_task_form2_inherited">
+            <field name="name">project.task.form.inherited</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2" />
+            <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+            <field name="arch" type="xml">
+                <button name="toggle_active" position="after">
+                    <button name="%(act_project_task_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
+                            attrs="{'invisible' : [('subtask_project_id', '=', False)]}"
+                            context="{'project_id': subtask_project_id, 'name': name, 'partner_id': partner_id}" >
+                        <field string="Sub-tasks" name="subtask_count" widget="statinfo"/>
+                    </button>
+                </button>
+                <field name="tag_ids" position="after">
+                    <field name="progress" widget="progressbar"/>
+                </field>
+                <field name="user_id" position="after">
+                    <field name="planned_hours" widget="float_time"/>
+                </field>
+                <field name="partner_id" position="after">
+                    <field name="parent_id" attrs="{'invisible' : [('parent_id', '=', False)]}" />
+                    <field name="child_ids" invisible="1" />
+                    <field name="subtask_project_id" invisible="1" />
+                </field>
+                <xpath expr="//notebook/page[@name='description_page']" position="after">
+                    <page string="Timesheets" attrs="{'invisible': [('project_id', '=', False)]}">
+                    <field name="timesheet_ids" context="{'default_project_id': project_id}">
+                        <tree editable="bottom" string="Timesheet Activities" default_order="date">
+                            <field name="date"/>
+                            <field name="user_id" required="1"/>
+                            <field name="name"/>
+                            <field name="unit_amount" string="Duration" widget="float_time"/>
+                            <field name="project_id" invisible="1"/>
+                        </tree>
+                    </field>
+                    <group>
+                     <group class="oe_subtotal_footer oe_right" name="project_hours">
+                        <field name="effective_hours" widget="float_time" />
+                        <field name="children_hours" widget="float_time" attrs="{'invisible' : [('children_hours', '=', 0.0)]}" />
+                        <field name="total_hours_spent" widget="float_time" class="oe_subtotal_footer_separator" attrs="{'invisible' : [('children_hours', '=', 0.0)]}" />
+                        <field name="remaining_hours" widget="float_time" class="oe_subtotal_footer_separator" readonly="1"/>
+                     </group>
+                    </group>
+                </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_task_tree2_inherited" model="ir.ui.view">
+            <field name="name">project.task.tree.inherited</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_tree2" />
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="planned_hours"/>
+                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" readonly="1"/>
+                    <field name="total_hours" invisible="1"/>
+                    <field name="effective_hours" widget="float_time" sum="Spent Hours" invisible="1"/>
+                </field>
+                <field name="stage_id" position="after">
+                    <field name="progress" widget="progressbar"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_project_kanban_inherited" model="ir.ui.view">
+            <field name="name">project.project.timesheet.kanban.inherited</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="priority">24</field>
+            <field name="arch" type="xml">
+                <field name="use_tasks" position="after">
+                    <field name="allow_timesheets" invisible="1"/>
+                </field>
+                <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]/div[last()]" position="after">
+                    <div attrs="{'invisible': [('allow_timesheets', '=', False)]}">
+                        <a name="%(act_hr_timesheet_line_by_project)d" type="action">Timesheets</a>
+                    </div>
+                </xpath>
+                <xpath expr="//div[contains(@class, 'o_project_kanban_box')]/div[last()]" position="before">
+                    <div attrs="{'invisible': [('allow_timesheets', '=', False)]}" class="o_project_kanban_box">
+                        <a t-if="record.allow_timesheets.raw_value" name="%(act_hr_timesheet_line_by_project)d" type="action">
+                            <span class="o_label">Timesheets</span>
+                        </a>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_task_kanban_inherited_progress" model="ir.ui.view">
+            <field name="name">project.task.timesheet.kanban.inherited.progress</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_kanban"/>
+            <field name="arch" type="xml">
+                <templates position="before">
+                    <field name="progress" />
+                    <field name="remaining_hours" />
+                </templates>
+                <div class="oe_kanban_bottom_left" position="inside">
+                   <t t-if="record.progress.raw_value &gt; 80 and record.progress.raw_value &lt; 100">
+                       <div t-att-class="'oe_kanban_align label label-' + (record.progress.raw_value &gt;= 99 ? 'danger': 'warning')"
+                             groups="project.group_time_work_estimation_tasks" title="Remaining hours">
+                              <field name="remaining_hours" widget="float_time" />
+                       </div>
+                   </t>
+                </div>
+             </field>
+         </record>
+
+         <act_window id="project_task_action_view_timesheet"
+            name="Timesheet Entries"
+            src_model="project.task"
+            res_model="account.analytic.line"
+            view_mode="tree"
+            view_id="hr_timesheet_line_tree"
+            context="{
+                'search_default_task_id': [active_id],
+                'default_task_id': active_id,
+            }"
+        />
+
+    </data>
+</odoo>

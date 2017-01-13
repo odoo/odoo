@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <!-- mail.channel.partner -->
+        <record id="mail_channel_partner_view_tree" model="ir.ui.view">
+            <field name="name">mail.channel.partner.tree</field>
+            <field name="model">mail.channel.partner</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree string="Channels">
+                    <field name="partner_id"/>
+                    <field name="channel_id"/>
+                    <field name="seen_message_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mail_channel_partner_view_form" model="ir.ui.view">
+            <field name="name">mail.channel.partner.form</field>
+            <field name="model">mail.channel.partner</field>
+            <field name="arch" type="xml">
+                <form string="Channel">
+                    <sheet>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="channel_id"/>
+                            <field name="seen_message_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="mail_channel_partner_action" model="ir.actions.act_window">
+            <field name="name">Channels/Partner</field>
+            <field name="res_model">mail.channel.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Channels/Partner" id="mail_channel_partner_menu" parent="base.menu_email"
+            action="mail_channel_partner_action" sequence="92" groups="base.group_no_one"/>
+
+        <!-- mail.channel -->
+        <record id="mail_channel_view_kanban" model="ir.ui.view">
+            <field name="name">mail.channel.kanban</field>
+            <field name="model">mail.channel</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="description"/>
+                    <field name="is_subscribed"/>
+                    <templates>
+                        <t t-name="kanban-description">
+                            <div class="oe_group_description" t-if="record.description.raw_value">
+                                <field name="description"/>
+                            </div>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div class="oe_module_vignette oe_kanban_global_click">
+                                <img t-att-src="kanban_image('mail.channel', 'image_medium', record.id.value)" class="oe_module_icon"/>
+                                <div class="oe_module_desc">
+                                    <h4>#<field name="name"/></h4>
+                                    <p class="oe_module_name">
+                                        <field name="description"/>
+                                    </p>
+                                    <button type="object" attrs="{'invisible':[('is_subscribed','=',True)]}" class="btn btn-primary pull-right btn-sm" name="channel_join_and_get_info">Join</button>
+                                    <button type="object" attrs="{'invisible':[('is_subscribed','=',False)]}" class="btn btn-default pull-right btn-sm" name="action_unfollow">Leave</button>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="mail_channel_view_form" model="ir.ui.view">
+            <field name="name">mail.channel.form</field>
+            <field name="model">mail.channel</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <form string="Mail Channel Form">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box"/>
+                        <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium', 'size': [90, 90]}"/>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name"/>
+                            </div>
+                            <h1>
+                                #<field name="name" default_focus="1" placeholder="Name" readonly="0"/>
+                            </h1>
+                        </div>
+                        <group class="o_label_nowrap">
+                            <field name="email_send"/>
+                            <field name="description" placeholder="Topics discussed in this group..."/>
+                        </group>
+                        <group name="group_alias" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                            <label for="alias_id" string=" " class="fa fa-envelope-o" style="min-width: 20px;"/>
+                            <div name="alias_def">
+                                <field name="alias_id" class="oe_read_only oe_inline"
+                                        string="Email Alias" required="0"/>
+                                <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
+                                    <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                </div>
+                            </div>
+                            <label for="alias_contact" string=" " class="fa fa-lock" style="min-width: 20px;"/>
+                            <field name="alias_contact" class="oe_inline" nolabel="1"/>
+                        </group>
+                        <notebook>
+                            <page string="Privacy">
+                                <group class="o_label_nowrap">
+                                    <field name="public" widget="radio" string="Who can follow the group's activities?"/>
+                                    <field name="group_public_id"
+                                        attrs="{'invisible': [('public','&lt;&gt;','groups')], 'required': [('public','=','groups')]}"
+                                        />
+                                    <field name="group_ids" widget="many2many_tags"/>
+                                </group>
+                            </page>
+                            <page string="Members">
+                                <field name="channel_partner_ids" mode="tree">
+                                    <tree string="members">
+                                        <field name="name"/>
+                                        <field name="email"/>
+                                        <field name="im_status"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <div class="oe_chatter" groups="base.group_no_one">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="mail_channel_view_tree" model="ir.ui.view">
+            <field name="name">mail.channel.tree</field>
+            <field name="model">mail.channel</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <tree string="Groups">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mail_channel_view_search" model="ir.ui.view">
+            <field name="name">mail.channel.search</field>
+            <field name="model">mail.channel</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <search string="Search Groups">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="mail_channel_action_view" model="ir.actions.act_window">
+            <field name="name">Join a group</field>
+            <field name="res_model">mail.channel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="mail_channel_view_search"/>
+        </record>
+
+        <!-- settings !-->
+        <menuitem id="mail_channel_menu_settings" parent="base.menu_email" sequence="90"
+            name="Channels" action="mail_channel_action_view"
+            groups="base.group_no_one"/>
+
+
+
+    <record id="mail_channel_action_client_chat" model="ir.actions.client">
+            <field name="name">Chat</field>
+            <field name="tag">mail.chat.instant_messaging</field>
+            <field name="res_model">mail.channel</field>
+            <field name="params" eval="&quot;{
+                'default_active_id': 'channel_inbox'
+            }&quot;"/>
+        </record>
+
+    <menuitem
+        id="mail.mail_channel_menu_root_chat"
+        name="Discuss"
+        action="mail_channel_action_client_chat"
+        web_icon="mail,static/description/icon.png"
+        groups="base.group_user"
+        sequence="1"/>
+
+    </data>
+</odoo>

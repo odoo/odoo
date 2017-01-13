@@ -1,0 +1,568 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_voucher
+# 
+# Translators:
+# Grazziano Duarte <gra.negocia@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Mateus Lopes <mateus1@gmail.com>, 2016
+# francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016\n"
+"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_state
+msgid ""
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
+" * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
+" * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
+" * The 'Cancelled' status is used when user cancel voucher."
+msgstr ""
+"* O status 'Rascunho' é usado quando um usuário está codificando uma nova Comprovante.\n"
+"* O status 'Pro-forma' é usada quando o comprovante não tem um número de comprovante.\n"
+"* O status 'Postado' é usado quando o usuário cria um comprovante, um número de comprovante é gerado e comprovantes são criados na conta.\n"
+"* O status 'Cancelado' é usado quando o usuário cancela o comprovante."
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_id
+msgid "Account"
+msgstr "Conta"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+msgid "Account Date"
+msgstr "Data da Conta"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+msgid "Accounting Date"
+msgstr "Data da Conta"
+
+#. module: account_voucher
+#: model:ir.model,name:account_voucher.model_account_voucher
+msgid "Accounting Voucher"
+msgstr "Comprovante Contábil"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
+msgid "Amount"
+msgstr "Montante"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_analytic_id
+msgid "Analytic Account"
+msgstr "Conta Analítica"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Are you sure you want to cancel this receipt?"
+msgstr "Você tem certeza de que quer cancelar este recebimento?"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Bill Date"
+msgstr "Data de Cobrança"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Bill Information"
+msgstr "Informação de Cobrança"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
+msgid "Bill Reference"
+msgstr "Conta de Referência"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Cancel Receipt"
+msgstr "Cancelar Recebimento"
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:159
+#, python-format
+msgid "Cannot delete voucher(s) which are already opened or paid."
+msgstr "Não é possivel excluir comprovante(s) que já foi aberto ou pago."
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
+msgid "Click to create a sale receipt."
+msgstr "Clique para criar um recibo de venda."
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
+msgid "Click to register a purchase receipt."
+msgstr "Clique para registrar um recibo de compra."
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_company_id
+msgid "Company"
+msgstr "Empresa"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
+msgid "Company related to this journal"
+msgstr "Empresa relacionada a este diário"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_uid
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_date
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_currency_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_currency_id
+msgid "Currency"
+msgstr "Moeda"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+msgid "Date"
+msgstr "Data"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_name
+msgid "Description"
+msgstr "Descrição"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
+msgid "Display Name"
+msgstr "Nome para Exibição"
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Draft"
+msgstr "Provisório"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Draft Vouchers"
+msgstr "Comprovantes Provisórios"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date_due
+msgid "Due Date"
+msgstr "Data de Vencimento"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
+msgid "Effective date for accounting entries"
+msgstr "Data efetiva dos Lançamentos Contábeis"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
+msgid "Gives the sequence of this line when displaying the voucher."
+msgstr "Fornece a sequência dessa linha quando exibir a fatura"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Group By"
+msgstr "Agrupar Por"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_id
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
+msgid ""
+"In case we have a rounding problem in the tax, use this field to correct it"
+msgstr ""
+"No caso, temos um problema de arredondamento do imposto, utilize este campo "
+"para corrigi-lo"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Internal Notes"
+msgstr "Anotações Internas"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_journal_id
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Journal"
+msgstr "Diário"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_move_id
+msgid "Journal Entry"
+msgstr "Lançamento de Diário"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Journal Items"
+msgstr "Itens do Diário"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line___last_update
+msgid "Last Modified on"
+msgstr "Última Modificação em"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_uid
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_uid
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_date
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_date
+msgid "Last Updated on"
+msgstr "Última atualização em"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
+msgid "Notes"
+msgstr "Observações"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_number
+msgid "Number"
+msgstr "Número"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
+msgid "Only for tax excluded from price"
+msgstr "Apenas para impostos excluídos do preço"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
+msgid "Paid"
+msgstr "Pago"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_partner_id
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+msgid "Partner"
+msgstr "Parceiro"
+
+#. module: account_voucher
+#: selection:account.voucher,pay_now:0
+msgid "Pay Directly"
+msgstr "Pagar Diretamente"
+
+#. module: account_voucher
+#: selection:account.voucher,pay_now:0
+msgid "Pay Later"
+msgstr "Pagar Depois"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
+msgid "Payment"
+msgstr "Pagamento"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_name
+msgid "Payment Reference"
+msgstr "Referencia de Pagamento"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:195
+#, python-format
+msgid "Please activate the sequence of selected journal !"
+msgstr "Por favor ative a sequência no diário selecionado!"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:198
+#, python-format
+msgid "Please define a sequence on the journal."
+msgstr "Por favor defina a sequência no diário."
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Posted"
+msgstr "Lançado"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Posted Vouchers"
+msgstr "Comprovantes Lançados"
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+msgid "Pro-forma"
+msgstr "Pro-forma"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_product_id
+msgid "Product"
+msgstr "Produto"
+
+#. module: account_voucher
+#: selection:account.voucher,voucher_type:0
+msgid "Purchase"
+msgstr "Compra"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Purchase Receipt"
+msgstr "Recebimento de Compra"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
+msgid "Purchase Receipts"
+msgstr "Recebimentos de Compra"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Purchase Voucher"
+msgstr "Comprovante de Compra"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_quantity
+msgid "Quantity"
+msgstr "Quantidade"
+
+#. module: account_voucher
+#: selection:account.voucher,voucher_type:0
+msgid "Sale"
+msgstr "Venda"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Sales Information"
+msgstr "Informação de Vendas"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Sales Receipt"
+msgstr "Receita de Vendas"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
+msgid "Sales Receipts"
+msgstr "Receitas de Vendas"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Search Vouchers"
+msgstr "Procurar Comprovantes"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_sequence
+msgid "Sequence"
+msgstr "Seqüência"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Set to Draft"
+msgstr "Definir como Provisório"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_state
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+msgid "Status"
+msgstr "Situação"
+
+#. module: account_voucher
+#: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
+msgid "Status Change"
+msgstr "Alteração de Situação"
+
+#. module: account_voucher
+#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
+msgid "Status changed"
+msgstr "Situação alterada"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_tax_ids
+msgid "Tax"
+msgstr "Imposto"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
+msgid "Tax amount"
+msgstr "Valor do imposto"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
+msgid "Tax correction"
+msgstr "Correção de imposto"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
+msgid "The Voucher has been totally paid."
+msgstr "O comprovante foi totalmente pago"
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
+msgid "The income or expense account related to the selected product."
+msgstr "A conta de receita ou despesa relacionada ao produto selecionado."
+
+#. module: account_voucher
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
+msgid "The partner reference of this document."
+msgstr "A referência do parceiro deste documento."
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+msgid "To Review"
+msgstr "Para Revisar"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_amount
+msgid "Total"
+msgstr "Total"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
+msgid "Total Amount"
+msgstr "Valor Total"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_voucher_type
+msgid "Type"
+msgstr "Tipo"
+
+#. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_unit
+msgid "Unit Price"
+msgstr "Preço Unitário"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+msgid "Validate"
+msgstr "Validar"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
+msgid "Vendor"
+msgstr "Fornecedor"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+msgid "Vendor Voucher"
+msgstr "Comprovante do Fornecedor"
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:97
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
+#, python-format
+msgid "Voucher"
+msgstr "Comprovante"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
+msgid "Voucher Entries"
+msgstr "Lançamento de Comprovantes"
+
+#. module: account_voucher
+#: model:ir.model,name:account_voucher.model_account_voucher_line
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_ids
+#: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_line_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_line_tree
+msgid "Voucher Lines"
+msgstr "Linhas do Comprovante"
+
+#. module: account_voucher
+#: model:ir.ui.view,arch_db:account_voucher.account_cash_statement_graph
+msgid "Voucher Statistics"
+msgstr "Estatísticas de Comprovantes"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
+msgid "Vouchers Entries"
+msgstr "Lançamentos dos Recibos"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
+msgid ""
+"When the purchase receipt is confirmed, you can record the\n"
+"                vendor payment related to this purchase receipt."
+msgstr ""
+"Quando o recibo de compra for confirmado, você pode gravar o\n"
+"pagamento de fornecedores relacionados a este recibo de compra."
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
+msgid ""
+"When the sale receipt is confirmed, you can record the customer\n"
+"                payment related to this sales receipt."
+msgstr ""
+"Quando o recibo de venda é confirmado, você pode gravar o pagamento\n"
+"relacionado do cliente a este recibo de venda."
+
+#. module: account_voucher
+#: code:addons/account_voucher/models/account_voucher.py:361
+#, python-format
+msgid "You must first select a partner!"
+msgstr "Você precisa primeiro selecinar um parceiro!"

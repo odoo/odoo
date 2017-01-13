@@ -1,0 +1,64 @@
+Source: odoo
+Section: net
+Priority: optional
+Maintainer: Odoo S.A. <info@odoo.com>
+Uploaders: Aaron Bohy <aab@odoo.com>, Simon Lejeune <sle@odoo.com>
+Build-Depends: debhelper (>= 9.0), python, rsync
+X-Python-Version: 2.7
+Standards-Version: 3.9.5.0
+Homepage: http://www.odoo.com/
+Vcs-Git: https://github.com/odoo/odoo
+
+Package: odoo
+Architecture: all
+Depends:
+ ${misc:Depends},
+ adduser,
+ node-less,
+ postgresql-client,
+ python,
+ python-babel,
+ python-dateutil,
+ python-decorator,
+ python-docutils,
+ python-feedparser,
+ python-imaging,
+ python-jinja2,
+ python-ldap,
+ python-libxslt1,
+ python-lxml,
+ python-mako,
+ python-mock,
+ python-openid,
+ python-passlib,
+ python-psutil,
+ python-psycopg2,
+ python-pychart,
+ python-pydot,
+ python-pyparsing,
+ python-pypdf,
+ python-reportlab,
+ python-requests,
+ python-suds,
+ python-tz,
+ python-vatnumber,
+ python-vobject,
+ python-werkzeug,
+ python-xlsxwriter,
+ python-xlwt,
+ python-yaml,
+Conflicts: tinyerp-server, openerp-server, openerp-web, openerp
+Replaces: tinyerp-server, openerp-server, openerp-web, openerp
+Recommends:
+ postgresql,
+ python-gevent,
+Description: Open Source Apps To Grow Your Business
+ Odoo, formerly known as OpenERP, is a suite of open-source business apps
+ written in Python and released under the LGPLv3 license. This suite of
+ applications covers all business needs, from Website/Ecommerce down to
+ manufacturing, inventory and accounting, all seamlessly integrated. Odoo's
+ technical features include a distributed server, flexible workflows, an object
+ database, a dynamic GUI, customizable reports, and an XML-RPC interface. Odoo
+ is the most installed business software in the world. It is used by 2.000.000
+ users worldwide ranging from very small companies (1 user) to very large ones
+ (300 000 users).

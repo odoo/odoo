@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_config_settings_inherit_form_view" model="ir.ui.view">
+        <field name="name">account settings</field>
+        <field name="model">account.config.settings</field>
+        <field name="inherit_id" ref="account.view_account_config_settings"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='invoice_taxes']" position="inside">
+                <div name="taxcloud_tax" class="o_row">
+                    <field name="module_account_taxcloud"/>
+                    <label for="module_account_taxcloud"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

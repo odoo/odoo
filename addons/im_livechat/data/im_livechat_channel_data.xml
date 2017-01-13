@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <!-- Smiley for rating to be displayed in the conversation -->
+        <record id="mail_shortcode_rating_0" model="mail.shortcode">
+            <field name="source">:rating_0</field>
+            <field name="substitution">&lt;img src='/rating/static/src/img/rating_0.png'/&gt;</field>
+            <field name="description">Rating Empty Smiley</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_shortcode_rating_1" model="mail.shortcode">
+            <field name="source">:rating_1</field>
+            <field name="substitution">&lt;img src='/rating/static/src/img/rating_1.png'/&gt;</field>
+            <field name="description">Rating Smiley Bad</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_shortcode_rating_5" model="mail.shortcode">
+            <field name="source">:rating_5</field>
+            <field name="substitution">&lt;img src='/rating/static/src/img/rating_5.png'/&gt;</field>
+            <field name="description">Rating Smiley Okay</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+        <record id="mail_shorcode_rating_10" model="mail.shortcode">
+            <field name="source">:rating_10</field>
+            <field name="substitution">&lt;img src='/rating/static/src/img/rating_10.png'/&gt;</field>
+            <field name="description">Rating Smiley Good</field>
+            <field name="shortcode_type">image</field>
+        </record>
+
+
+    </data>
+</odoo>

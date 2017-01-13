@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Procurements -->
+        <record id="view_procurement_rule_form_stock_inherit_mrp" model="ir.ui.view">
+            <field name="name">procurement.rule.form.stock.inherit.mrp</field>
+            <field name="model">procurement.rule</field>
+            <field name="inherit_id" ref="stock.view_procurement_rule_form_stock_inherit"/>
+            <field name="arch" type="xml">
+                <field name="location_src_id" position="attributes">
+                    <attribute name="attrs">{'required': [('action', '=', 'move')], 'invisible': [('action', 'not in', ['move', 'manufacture'])]}</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_procurement_form_inherit" model="ir.ui.view">
+            <field name="name">procurement.order.form.inherit</field>
+            <field name="model">procurement.order</field>
+            <field name="inherit_id" ref="procurement.procurement_form_view"/>
+            <field name="arch" type="xml">
+            <data>
+                <field name="origin" position="before">
+                    <field name="bom_id" domain="[('product_id','=',product_id)]"/>
+                    <field name="production_id" attrs="{'invisible': [('production_id','=',False)]}"/>
+                </field>
+               </data>
+            </field>
+        </record>
+    </data>
+</odoo>

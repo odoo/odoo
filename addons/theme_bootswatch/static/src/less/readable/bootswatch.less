@@ -1,0 +1,187 @@
+// Readable 3.2.0
+// Bootswatch
+// -----------------------------------------------------
+
+@import url("//fonts.googleapis.com/css?family=Raleway:400,700");
+
+// Navbar =====================================================================
+
+.navbar {
+  font-family: @headings-font-family;
+
+  &-nav,
+  &-form {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  &-nav > li > a {
+    padding: @padding-base-vertical @padding-base-horizontal;
+    margin: 12px 6px;
+    border: 1px solid transparent;
+    border-radius: @border-radius-base;
+
+    &:hover {
+      border: 1px solid #ddd;
+    }
+  }
+
+  &-nav > .active > a,
+  &-nav > .active > a:hover {
+    border: 1px solid #ddd;
+  }
+
+  &-default .navbar-nav > .active > a:hover {
+    color: @navbar-default-link-hover-color;
+  }
+
+  &-inverse .navbar-nav > .active > a:hover {
+    color: @navbar-inverse-link-hover-color;
+  }
+
+  &-brand {
+    padding-top: 20px;
+  }
+}
+
+@media (max-width: @grid-float-breakpoint) {
+  .navbar {
+    .navbar-nav > li > a {
+      margin: 0;
+    }
+  }
+}
+
+// Buttons ====================================================================
+
+.btn {
+  font-family: @headings-font-family;
+}
+
+// Typography =================================================================
+
+// Tables =====================================================================
+
+// Forms ======================================================================
+
+legend {
+  font-family: @headings-font-family;
+}
+
+.input-group-addon {
+  font-family: @font-family-sans-serif;
+}
+
+// Navs =======================================================================
+
+.nav {
+  .open > a,
+  .open > a:hover,
+  .open > a:focus {
+    border: 1px solid #ddd;
+  }
+}
+
+.pagination {
+
+  font-family: @headings-font-family;
+
+  &-lg > li > a,
+  &-lg > li > span {
+    padding: 14px 24px;
+  }
+}
+
+.pager {
+
+  font-family: @headings-font-family;
+
+  a {
+    color: @text-color;
+  }
+
+  a:hover {
+    border-color: transparent;
+    color: #fff;
+  }
+
+  .disabled a {
+    border-color: @pager-border;
+  }
+}
+
+// Indicators =================================================================
+
+.close {
+  color: #fff;
+  text-decoration: none;
+  text-shadow: none;
+  opacity: 0.4;
+
+  &:hover,
+  &:focus {
+    color: #fff;
+    opacity: 1;
+  }
+}
+
+.alert {
+  .alert-link {
+    color: @alert-success-text;
+    text-decoration: underline;
+  }
+}
+
+.label {
+  font-family: @headings-font-family;
+  font-weight: normal;
+
+  &-default {
+    border: 1px solid #ddd;
+    color: @text-color;
+  }
+
+}
+
+.badge {
+  padding: 1px 7px 5px;
+  vertical-align: 2px;
+  font-family: @headings-font-family;
+  font-weight: normal;
+}
+
+// Progress bars ==============================================================
+
+// Containers =================================================================
+
+.panel {
+  .box-shadow(none);
+
+  &-default {
+    .close {
+      color: @text-color;
+    }
+  }
+
+  &-primary,
+  &-success,
+  &-warning,
+  &-danger,
+  &-info {
+    .panel-heading {
+      color: #fff;
+    }
+
+    .panel-body {
+      border: 1px solid #ddd;
+      border-top-width: 0;
+      border-radius: 0 0 @border-radius-base @border-radius-base;
+    }
+  }
+}
+
+.modal {
+  .close {
+    color: @text-color;
+  }
+}

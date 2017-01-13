@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="base.group_user" model="res.groups">
+        <field name="comment">the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
+    </record>
+
+    <record id="group_hr_user" model="res.groups">
+        <field name="name">Officer</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">the user will be able to approve document created by employees.</field>
+    </record>
+
+    <record id="group_hr_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="comment">the user will have an access to the human resources configuration as well as statistic reports.</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('group_hr_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    </record>
+
+
+    <record id="group_hr_attendance" model="res.groups">
+        <field name="name">Attendances</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+<data noupdate="1">
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[(4,ref('group_hr_manager'))]"/>
+    </record>
+
+    <record id="hr_dept_comp_rule" model="ir.rule">
+        <field name="name">Department multi company rule</field>
+        <field name="model_id" ref="model_hr_department"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="hr_job_comp_rule" model="ir.rule">
+        <field name="name">Job multi company rule</field>
+        <field name="model_id" ref="model_hr_job"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+</data>
+</odoo>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Values -->
+        <record id="values_view_form_action" model="ir.ui.view">
+            <field name="name">ir.values.form.action</field>
+            <field name="model">ir.values</field>
+            <field name="arch" type="xml">
+                <form string="Action Bindings">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="model_id"/>
+                            <field name="model"/>
+                            <field name="res_id"/>
+                            <field name="key2"/>
+                        </group>
+                        <group>
+                            <field name="action_id"/>
+                            <field name="value_unpickle" colspan="4" string="Action Reference"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="values_view_form_defaults" model="ir.ui.view">
+            <field name="name">ir.values.form.defaults</field>
+            <field name="model">ir.values</field>
+            <field name="arch" type="xml">
+                <form string="User-defined Defaults">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="model"/>
+                            <field name="model_id"/>
+                        </group>
+                        <group>
+                            <field name="key2" string="Condition"/>
+                            <field name="user_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <separator string="Default value or action reference"/>
+                        <field name="value_unpickle" nolabel="1" colspan="2"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="values_view_tree_action" model="ir.ui.view">
+            <field name="name">ir.values.tree.action</field>
+            <field name="model">ir.values</field>
+            <field name="arch" type="xml">
+                <tree string="Action Bindings/Defaults">
+                    <field name="name"/>
+                    <field name="model"/>
+                    <field name="key2"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="values_view_search_action" model="ir.ui.view">
+            <field name="name">ir.values.search.action</field>
+            <field name="model">ir.values</field>
+            <field name="arch" type="xml">
+                <search string="Client Actions">
+                    <field name="name"
+                        filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('key2','ilike',self)]"
+                        string="Client Action"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Model" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Type" domain="[]" context="{'group_by':'key2'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="act_values_form_action" model="ir.actions.act_window">
+            <field name="name">Action Bindings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.values</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="values_view_search_action"/>
+            <field name="domain">[('key','=','action')]</field>
+            <field name="context">{'default_key':'action'}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_values_tree_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="values_view_tree_action"/>
+            <field name="act_window_id" ref="act_values_form_action"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_values_form_view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="values_view_form_action"/>
+            <field name="act_window_id" ref="act_values_form_action"/>
+        </record>
+        <menuitem action="act_values_form_action" id="menu_values_form_action" parent="next_id_6"/>
+
+        <record id="act_values_form_defaults" model="ir.actions.act_window">
+            <field name="name">User-defined Defaults</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.values</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="values_view_search_action"/>
+            <field name="domain">[('key','=','default')]</field>
+            <field name="context">{'default_key':'default','default_key2':''}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_values_defaults_tree_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="values_view_tree_action"/>
+            <field name="act_window_id" ref="act_values_form_defaults"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_values_defaults_form_view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="values_view_form_defaults"/>
+            <field name="act_window_id" ref="act_values_form_defaults"/>
+        </record>
+        <menuitem action="act_values_form_defaults" id="menu_values_form_defaults" parent="next_id_6"/>
+
+</odoo>

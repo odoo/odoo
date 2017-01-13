@@ -1,0 +1,64 @@
+# HG changeset patch
+# Parent 0764cf061d021a0a5b2811f5ec5d835f799630fc
+
+Index: addons/openacademy/views/session_workflow.xml
+===================================================================
+--- addons.orig/openacademy/views/session_workflow.xml	2014-08-26 17:26:17.339783114 +0200
++++ addons/openacademy/views/session_workflow.xml	2014-08-26 17:26:17.331783114 +0200
+@@ -6,24 +6,50 @@
+             <field name="on_create">True</field>
+         </record>
+ 
++        <record model="ir.actions.server" id="set_session_to_draft">
++            <field name="name">Set session to Draft</field>
++            <field name="model_id" ref="model_openacademy_session"/>
++            <field name="code">
++model.search([('id', 'in', context['active_ids'])]).action_draft()
++            </field>
++        </record>
+         <record model="workflow.activity" id="draft">
+             <field name="name">Draft</field>
+             <field name="wkf_id" ref="wkf_session"/>
+             <field name="flow_start" eval="True"/>
+-            <field name="kind">function</field>
+-            <field name="action">action_draft()</field>
++            <field name="kind">dummy</field>
++            <field name="action"></field>
++            <field name="action_id" ref="set_session_to_draft"/>
++        </record>
++
++        <record model="ir.actions.server" id="set_session_to_confirmed">
++            <field name="name">Set session to Confirmed</field>
++            <field name="model_id" ref="model_openacademy_session"/>
++            <field name="code">
++model.search([('id', 'in', context['active_ids'])]).action_confirm()
++            </field>
+         </record>
+         <record model="workflow.activity" id="confirmed">
+             <field name="name">Confirmed</field>
+             <field name="wkf_id" ref="wkf_session"/>
+-            <field name="kind">function</field>
+-            <field name="action">action_confirm()</field>
++            <field name="kind">dummy</field>
++            <field name="action"></field>
++            <field name="action_id" ref="set_session_to_confirmed"/>
++        </record>
++
++        <record model="ir.actions.server" id="set_session_to_done">
++            <field name="name">Set session to Done</field>
++            <field name="model_id" ref="model_openacademy_session"/>
++            <field name="code">
++model.search([('id', 'in', context['active_ids'])]).action_done()
++            </field>
+         </record>
+         <record model="workflow.activity" id="done">
+             <field name="name">Done</field>
+             <field name="wkf_id" ref="wkf_session"/>
+-            <field name="kind">function</field>
+-            <field name="action">action_done()</field>
++            <field name="kind">dummy</field>
++            <field name="action"></field>
++            <field name="action_id" ref="set_session_to_done"/>
+         </record>
+ 
+         <record model="workflow.transition" id="session_draft_to_confirmed">

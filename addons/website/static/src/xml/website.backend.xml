@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <div t-name="WidgetWebsiteButton" class="o_stat_info published">
+        <span class="o_stat_text o_value"/>
+        <span class="o_stat_text">On Website</span>
+    </div>
+
+    <t t-name="website.WebsiteDashboardMain">
+        <div class="o_dashboards">
+            <div class="container-fluid o_website_dashboard">
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.dashboard_visits">
+        <div class="row o_dashboard_visits">
+            <div class="col-xs-12 o_box">
+                <h2>Visits</h2>
+                <div t-if="widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id">
+                    <div class="row js_analytics_components"/>
+                    <a href="#" t-if="widget.groups.system" class="js_link_analytics_settings">Edit my Analytics Client ID</a>
+                </div>
+                <div t-if="!(widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id)" class="col-md-12">
+                    <div class="o_demo_background">
+                        <div class="o_layer">
+                        </div>
+                        <div class="o_buttons text-center">
+                            <h3>There is no data currently available.</h3>
+                            <button t-if="widget.groups.system" class="btn btn-sm btn-primary js_link_analytics_settings center-block mb8">Link my Analytics Account</button>
+                            <h5 t-if="!widget.groups.system">You do not have sufficient access rights to configure the Google Analytics account.</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <div t-name="website.unauthorized_analytics" class="col-xs-12 js_unauthorized_message mb16">
+        <span t-if="reason === 'not_connected'">You need to log in to your Google Account before: </span>
+        <span t-if="reason === 'no_right'">You do not seem to have access to this Analytics Account.</span>
+    </div>
+
+    <div t-name="website.ga_dialog_content">
+        Your Google Analytic Client ID: <input type="text" name="ga_client_id" t-att-value="ga_key" style="width: 100%"></input>
+        <br/>Go to our <a href="https://www.odoo.com/documentation/user/9.0/website/google_analytics.html" target="_blank">User Documentation</a> to get more information.
+    </div>
+
+    <t t-name="website.DateRangeButtons">
+        <div class="btn-group btn-group-sm o_date_range_buttons">
+            <button class="btn btn-sm btn-default js_date_range active" data-date="week">Week</button>
+            <button class="btn btn-sm btn-default js_date_range" data-date="month">Month</button>
+            <button class="btn btn-sm btn-default js_date_range" data-date="year">Year</button>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="website.ButtonGengoTranslator">
+    <a class="btn btn-danger gengo_post" data-action="translation_gengo_post" href="#">Auto Translate</a>
+    <a class="btn btn-danger hidden gengo_wait disabled"  href="#"><i class="fa fa-spinner fa-spin"></i> Wait</a>
+    <a class="btn btn-danger hidden gengo_inprogress disabled"  href="#"> <i class="fa fa-clock-o"></i> Translation in Progress</a>
+    <a class="btn btn-link gengo_info" data-action="translation_gengo_info">Count Words</a>
+</t>
+<t t-name="website.TranslatorDialog">
+    <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
+                    <h2 class="modal-title">Translate this page</h2>
+                </div>
+                <div class="modal-body">
+                    <section>
+                        <p>You are about to enter the translation mode.</p>
+                        <p>
+                            Here are the visuals used to help you translate efficiently:
+                            <ul class="oe_translate_examples">
+                                <li style="background:#ffffb6;">
+                                    Content to translate or you can post them to <b><a href="http://gengo.com/" >Gengo</a></b> for translation. 
+                                </li>
+                                <li data-oe-translation-state="inprogress">
+                                    Translation in process (Gengo)
+                                </li>
+                                <li data-oe-translation-state="translated">
+                                    Already translated content
+                                </li>
+                            </ul>
+                        </p>
+                        <p>
+                            In this mode, you can translate texts or post texts to Gengo for translation.
+                            To change the structure of the page, you must edit the
+                            master page.
+                        </p>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <div>
+                        <input type="checkbox" name="do_not_show"/>
+                        Do not show this dialog later.
+                    </div>
+                    <div>
+                        <button type="button" data-action="activate" class="btn btn-primary">Ok</button>
+                        or
+                        <a data-action="discard" data-dismiss="modal" href="#">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="website.GengoTranslatorPostDialog">
+    <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
+                    <h2 class="modal-title">Select Gengo Translation Service Level</h2>
+                </div>
+                <div class="modal-body">
+                    <section>
+                    <select class="form-control" required="required" autofocus="autofocus">
+                        <option value="machine">By Machine (Free)</option>
+                        <option value="standard">Standard - $ <t t-esc="(widget.new_words * 0.05).toFixed(2)"></t> </option>
+                        <option value="pro">Pro - $ <t t-esc="(widget.new_words * 0.10).toFixed(2)"></t></option>
+                        <option value="ultra">Ultra - $ <t t-esc="(widget.new_words * 0.15).toFixed(2)"></t></option>
+                    </select>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-action="service_level" class="btn btn-primary">Post</button>
+                    or
+                    <a data-action="discard" data-dismiss="modal" href="#">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="website.GengoTranslatorStatisticDialog">
+    <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
+                    <h2 class="modal-title">Translator statistics for this page</h2>
+                </div>
+                <div class="modal-body">
+                    <b>
+                        <div class="text-muted mb16"> <i class="fa fa-search-plus"></i> <t t-esc="widget.new_words"></t> new words found on this page.</div>
+                        <h4><i class="fa fa-tachometer"></i> Gengo Statistics <a href="https://gengo.com/c/dashboard" class="pull-right" target="new">Gengo Dashboard</a></h4>
+                        <hr class="mt8"/>
+                        <div class="text-info mb8"> <i class="fa fa-align-left"></i> Words posted for translate <t t-esc="widget.total"></t></div>
+                        <div class="text-warning mb8"> <i class="fa fa-cogs"></i> Words in progress <t t-esc="widget.inprogess"></t></div>
+                        <div class="text-success mb8"> <i class="fa fa-check"></i> Translated words <t t-esc="widget.done"></t></div>
+                    </b>
+                </div>
+                <div class="modal-footer">
+                    <a data-action="discard" data-dismiss="modal" href="#">Close</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+<t t-name="website.GengoApiConfigDialog">
+    <div class="modal fade oe_website_translator" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
+                    <h2 class="modal-title">Gengo API is not configured</h2>
+                </div>
+                <div class="modal-body">
+                    <b> <h3>Steps for configure Gengo </h3>
+                        <div class="mb16"> 1. Go To your <b><a target="new" href="https://gengo.com/account/api_settings/">Gengo account</a></b> and generate API Keys.</div>
+                        <div class="mb16"> 2. Then paste generated keys in given form</div>
+                        <ul class="list-group">
+                            <li class="list-group-item form-group gengo_group_public">
+                                <h4 class="list-group-item-heading">
+                                    <label  class="control-label">Public key</label>
+                                </h4>
+                                <input type="text" class="form-control url url-source" id="gengo_public_key" placeholder="Paste public key here"/>
+                
+                            </li>
+                            <li class="list-group-item form-group gengo_group_private">
+                                <h4 class="list-group-item-heading">
+                                    <label for="link-external" class="control-label">Private key</label>
+                                </h4>
+                                <input type="text" class="form-control url url-source" id="gengo_private_key" placeholder="Paste private key here"/>
+                            </li>
+                            <li class="list-group-item form-group">
+                                <div>
+                                    <label>
+                                        <input type="checkbox" id="gengo_auto_approve" class="window-new" checked="1"/>
+                                        Auto Approve Translation  <small class="text-muted">- Jobs are Automatically Approved by Gengo.</small>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label>
+                                        <input type="checkbox" id="gengo_sandbox" class="window-new"/>
+                                        Sandbox  <small class="text-muted">- Enable if you using testing account</small>
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                    </b>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-action="set_config" class="btn btn-primary">Submit</button>
+                    or
+                    <a data-action="discard" data-dismiss="modal" href="#">Close</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

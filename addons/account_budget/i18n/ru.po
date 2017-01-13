@@ -1,0 +1,321 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_budget
+# 
+# Translators:
+# KingOPl Slav <87slava13@gmail.com>, 2016
+# dr&mx <dronmax@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Sergey Vilizhanin <sv@grimmette.ru>, 2016
+# Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2016
+# Viktor Pogrebniak <vp@aifil.ru>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>, 2016\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: account_budget
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid ""
+"A budget is a forecast of your company's income and/or expenses\n"
+"                expected for a period in the future. A budget is defined on some\n"
+"                financial accounts and/or analytic accounts (that may represent\n"
+"                projects, departments, categories of products, etc.)"
+msgstr ""
+"Бюджет — это прогноз на прибыль компании и/или расходы\n"
+"ожидаемые на период в будущем. Бюджет определяется \n"
+"по некоторым финансовым счетам и/или аналитическим счетам \n"
+"(это могут быть проекты, отделы, категории продуктов \n"
+"и т. д.)"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post_account_ids
+#: model:ir.ui.view,arch_db:account_budget.view_budget_post_form
+msgid "Accounts"
+msgstr "Счета"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_percentage
+msgid "Achievement"
+msgstr "Достижение"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_account_analytic_account
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_analytic_account_id
+msgid "Analytic Account"
+msgstr "Аналитический счёт"
+
+#. module: account_budget
+#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Approve"
+msgstr "Подтвердить"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_crossovered_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_crossovered_budget_id
+#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_tree
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Budget"
+msgstr "Бюджет"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.act_account_analytic_account_cb_lines
+#: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+msgid "Budget Items"
+msgstr "Статьи бюджета"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_crossovered_budget_lines
+msgid "Budget Line"
+msgstr "Строка бюджета"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_analytic_account_crossovered_budget_line
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post_crossovered_budget_line
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_crossovered_budget_line
+#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_form
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_tree
+msgid "Budget Lines"
+msgstr "Строки бюджета"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_name
+#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Budget Name"
+msgstr "Наименование бюджета"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_account_budget_post
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_general_budget_id
+#: model:ir.ui.view,arch_db:account_budget.view_budget_post_form
+#: model:ir.ui.view,arch_db:account_budget.view_budget_post_search
+#: model:ir.ui.view,arch_db:account_budget.view_budget_post_tree
+msgid "Budgetary Position"
+msgstr "Бюджетная статья"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.open_budget_post_form
+#: model:ir.ui.menu,name:account_budget.menu_budget_post_form
+msgid "Budgetary Positions"
+msgstr "Бюджетные статьи"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
+#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
+#: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
+#: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
+msgid "Budgets"
+msgstr "Бюджеты"
+
+#. module: account_budget
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid ""
+"By keeping track of where your money goes, you may be less\n"
+"                likely to overspend, and more likely to meet your financial\n"
+"                goals. Forecast a budget by detailing the expected revenue per\n"
+"                analytic account and monitor its evolution based on the actuals\n"
+"                realised during that period."
+msgstr ""
+"Отслеживая куда уходят ваши деньги, вы могли  бы\n"
+"меньше расходовать  средства и больше соответствовать \n"
+"вашим финансовым целям. Прогнозируйте бюджет датализируя \n"
+"ожидаемый доход по аналитическим счетам и отслеживайте \n"
+"его эволюцию на основе фактических данных реализованных \n"
+"в течение этого периода."
+
+#. module: account_budget
+#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Cancel Budget"
+msgstr "Отменить бюджет"
+
+#. module: account_budget
+#: selection:crossovered.budget,state:0
+msgid "Cancelled"
+msgstr "Отменено"
+
+#. module: account_budget
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid "Click to create a new budget."
+msgstr "Нажмите, чтобы создать новый бюджет."
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post_company_id
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_company_id
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_company_id
+msgid "Company"
+msgstr "Компания"
+
+#. module: account_budget
+#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Confirm"
+msgstr "Подтвердить"
+
+#. module: account_budget
+#: selection:crossovered.budget,state:0
+msgid "Confirmed"
+msgstr "Подтверждено"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post_create_uid
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_create_uid
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_create_uid
+msgid "Created by"
+msgstr "Создал"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post_create_date
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_create_date
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_create_date
+msgid "Created on"
+msgstr "Создано"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post_display_name
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_display_name
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: account_budget
+#: selection:crossovered.budget,state:0
+#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Done"
+msgstr "Выполнено"
+
+#. module: account_budget
+#: selection:crossovered.budget,state:0
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Draft"
+msgstr "Черновик"
+
+#. module: account_budget
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "Draft Budgets"
+msgstr "Черновые бюджеты"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_date_to
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_date_to
+msgid "End Date"
+msgstr "Дата окончания"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post_id
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_id
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post___last_update
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget___last_update
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines___last_update
+msgid "Last Modified on"
+msgstr "Последний раз изменено"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post_write_uid
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_write_uid
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_write_uid
+msgid "Last Updated by"
+msgstr "Последний раз обновил"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post_write_date
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_write_date
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_write_date
+msgid "Last Updated on"
+msgstr "Последний раз обновлено"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_account_budget_post_name
+msgid "Name"
+msgstr "Имя"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_paid_date
+msgid "Paid Date"
+msgstr "Дата оплаты"
+
+#. module: account_budget
+#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Period"
+msgstr "Период"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_planned_amount
+#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Planned Amount"
+msgstr "Запланированная сумма"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_practical_amount
+#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+#: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+msgid "Practical Amount"
+msgstr "Фактическая сумма"
+
+#. module: account_budget
+#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Reset to Draft"
+msgstr "Переместить в черновики"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_creating_user_id
+msgid "Responsible"
+msgstr "Ответственный"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_date_from
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_date_from
+msgid "Start Date"
+msgstr "Дата начала"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_state
+msgid "Status"
+msgstr "Статус"
+
+#. module: account_budget
+#: code:addons/account_budget/models/account_budget.py:89
+#, python-format
+msgid "The Budget '%s' has no accounts!"
+msgstr "Бюджет '%s' не имеет счетов !"
+
+#. module: account_budget
+#: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_theoritical_amount
+#: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
+msgid "Theoretical Amount"
+msgstr "Теоретическая сумма"
+
+#. module: account_budget
+#: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
+msgid "Theoritical Amount"
+msgstr "Теоретическая сумма"
+
+#. module: account_budget
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "To Approve"
+msgstr "К одобрению"
+
+#. module: account_budget
+#: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
+msgid "To Approve Budgets"
+msgstr "Утвердить бюджет"
+
+#. module: account_budget
+#: selection:crossovered.budget,state:0
+msgid "Validated"
+msgstr "Проверено"

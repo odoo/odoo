@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Manufacturing Order -->
+        <record id="mrp_production_tree_view" model="ir.ui.view">
+            <field name="name">mrp.production.tree</field>
+            <field name="model">mrp.production</field>
+            <field name="arch" type="xml">
+                <tree decoration-bf="message_needaction==True" default_order="date_planned_start desc" decoration-info="state=='confirmed'" decoration-danger="date_planned_start&lt;current_date and state not in ('done','cancel')" decoration-muted="state in ('done','cancel')" string="Manufacturing Orders">
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="name"/>
+                    <field name="date_planned_start"/>
+                    <field name="product_id"/>
+                    <field name="product_qty" sum="Total Qty" string="Quantity"/>
+                    <field name="product_uom_id" string="Unit of Measure" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                    <field name="availability"/>
+                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
+                    <field name="origin"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="production_order_server_action" model="ir.actions.server">
+            <field name="name">Plan Orders</field>
+            <field name="model_id" ref="mrp.model_mrp_production"/>
+            <field name="state">code</field>
+            <field name="code">records.button_plan()</field>
+        </record>
+
+        <record id="run_procurement_order_action" model="ir.values">
+            <field name="model_id" ref="mrp.model_mrp_production" />
+            <field name="name">Plan Orders</field>
+            <field name="key2">client_action_multi</field>
+            <field name="key">action</field>
+            <field name="model">mrp.production</field>
+            <field name="value" eval="'ir.actions.server,' + str(ref('production_order_server_action'))" />
+        </record>
+
+        <record id="mrp_production_form_view" model="ir.ui.view">
+            <field name="name">mrp.production.form</field>
+            <field name="model">mrp.production</field>
+            <field name="arch" type="xml">
+                <form string="Manufacturing Orders">
+                <header>
+                    <button name="button_mark_done" attrs="{'invisible': [('check_to_done', '=', False)]}" string="Mark as Done" type="object" class="oe_highlight"/>
+                    <button name="action_assign" attrs="{'invisible': [('availability', 'in', ('assigned', 'none'))]}" string="Check availability" type="object" class="oe_highlight"/>
+                    <button name="button_plan" attrs="{'invisible': ['|', ('state', '!=', 'confirmed'), ('routing_id', '=', False)]}" type="object" string="Create Workorders" class="oe_highlight"/>
+                    <button name="open_produce_product" attrs="{'invisible': ['|', '|', '|', ('check_to_done', '=', True), ('availability', 'not in', ['partially_available', 'assigned']), ('state', 'not in', ('confirmed','progress')), ('routing_id', '!=', False)]}" string="Produce" type="object" class="oe_highlight"/>
+                    <button name="open_produce_product" attrs="{'invisible': ['|', '|', '|', ('check_to_done', '=', True), ('availability', '!=', 'waiting'), ('state', 'not in', ('confirmed','progress')), ('routing_id', '!=', False)]}" string="Produce" type="object"/>
+                    <button name="post_inventory" string="Post Inventory" type="object" attrs="{'invisible': [('post_visible', '=', False)]}"/>
+                    <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': ['|', ('state', 'in', ('done','cancel')), ('check_to_done', '=', True)]}"/>
+                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': ['|', ('availability', '=', 'none'), ('state', 'in', ('cancel'))]}"/>
+                    <button name="button_unreserve" type="object" string="Unreserve" attrs="{'invisible': ['|', ('state', 'in', ['done', 'cancel']), ('availability', 'in', ['none', 'waiting'])]}"/>
+                    <span class="label label-danger" attrs="{'invisible': ['|', ('availability', 'in', ('assigned', 'none')), ('state', 'not in', ('confirmed','progress'))]}">Raw materials not available!</span>
+                    <field name="state" widget="statusbar" statusbar_visible="confirmed,progress,done"/>
+                </header>
+                <sheet>
+                    <field name="post_visible" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_mrp_workorder_production_specific)d" type="action" attrs="{'invisible': [('workorder_count', '=', 0)]}" class="oe_stat_button" icon="fa-play-circle-o">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value"><field name="workorder_done_count" widget="statinfo" nolabel="1"/> / <field name="workorder_count" widget="statinfo" nolabel="1"/></span>
+                                <span class="o_stat_text">Work Orders</span>
+                            </div>
+                        </button>
+                        <button name="%(action_mrp_production_moves)d" type="action" string="Inventory Moves" class="oe_stat_button" icon="fa-arrows-v" attrs="{'invisible': [('state', 'not in', ('progress', 'cancel', 'done'))]}"/>
+                        <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="fa-arrows-v" attrs="{'invisible': [('scrap_count', '=', 0)]}">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value"><field name="scrap_count"/></span>
+                                <span class="o_stat_text">Scraps</span>
+                            </div>
+                        </button>
+                        <field name="workorder_ids" invisible="1"/>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Manufacturing Reference" nolabel="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="has_moves" invisible="1"/>
+                            <field name="check_to_done" invisible="1"/>
+                            <field name="product_id" attrs="{'readonly': [('has_moves', '=', True)]}" domain="[('bom_ids', '!=', False)]"/>
+                            <field name="product_tmpl_id" invisible="1"/>
+                            <label for="product_qty"/>
+                            <div class="o_row">
+                                <field name="product_qty" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                                <button type="action"
+                                    name="%(mrp.action_change_production_qty)d"
+                                    string="Update" states="confirmed,planned,progress" class="oe_link" attrs="{'invisible': [('state','=','done')]}"/>
+                            </div>
+                            <field name="bom_id"
+                                domain="['&amp;', '|',
+                                            ('product_id','=',product_id),
+                                            '&amp;',
+                                                ('product_tmpl_id.product_variant_ids','=',product_id),
+                                                ('product_id','=',False),
+                                                ('type', '=', 'normal')]"
+                                context="{'default_product_tmpl_id': product_tmpl_id}" required="1" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                            <field name="routing_id" groups="mrp.group_mrp_routings"/>
+                        </group>
+                        <group>
+                            <field name="date_planned_start"/>
+                            <field name="date_planned_finished" invisible="1"/>
+                            <field name="user_id"/>
+                            <field name="origin"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Consumed Materials">
+                            <field name="move_raw_ids" options="{'reload_on_button': True}" context="{'default_location_id': location_src_id, 'default_location_dest_id': location_dest_id}">
+                                <tree editable="bottom" delete="0" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty" decoration-danger="quantity_available &lt; product_uom_qty" create="0">
+                                    <field name="product_id" required="1"/>
+                                    <field name="product_uom" groups="product.group_uom"/>
+                                    <field name="has_tracking" invisible="1"/>
+                                    <field name="is_done" invisible="1"/>
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
+                                    <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="quantity_available" attrs="{'invisible': [('is_done', '=', True)]}"/>
+                                    <field name="product_uom_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}" string="To Consume"/>
+                                    <field name="quantity_done" attrs="{'readonly': ['|', ('is_done', '=', True), ('has_tracking', 'in', ['lot','serial'])]}" string="Consumed"/>
+                                    <button name="split_move_lot" string="Register lots" type="object" icon="fa-list"
+                                        attrs="{'invisible': [('has_tracking', 'not in', ['lot','serial'])]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Finished Products">
+                            <field name="move_finished_ids" options="{'reload_on_button': True}" context="{'default_location_id': location_src_id, 'default_location_dest_id': location_dest_id}">
+                                <tree editable="bottom" delete="0" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty" create="0">
+                                    <field name="product_id" required="1"/>
+                                    <field name="product_uom" groups="product.group_uom"/>
+                                    <field name="is_done" invisible="1"/>
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="has_tracking" invisible="1"/>
+                                    <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
+                                    <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="product_uom_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}" string="To Produce"/>
+                                    <field name="quantity_done" attrs="{'readonly': ['|', ('is_done', '=', True), ('has_tracking', 'in', ['lot','serial'])]}" string="Produced"/>
+                                    <button name="split_move_lot" string="Register lots" type="object" icon="fa-list"
+                                        attrs="{'invisible': [('has_tracking', 'not in', ['lot','serial'])]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Miscellaneous">
+                            <group>
+                                <group groups="stock.group_stock_multi_locations">
+                                    <field name="picking_type_id" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                                    <field name="location_src_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                                    <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                                </group>
+                                <group>
+                                    <field name="availability"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="mrp_production_kanban_view" model="ir.ui.view">
+            <field name="name">mrp.production.kanban</field>
+            <field name="model">mrp.production</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
+                     <field name="product_uom_id" options="{'no_open':True,'no_create':True}"/>
+                    <field name="date_planned_start"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <strong><span><t t-esc="record.product_id.value"/></span></strong>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <strong><span class="pull-right text-right"><t t-esc="record.product_qty.value"/> <t t-esc="record.product_uom_id.value"/></span></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6 text-muted">
+                                        <span><t t-esc="record.name.value"/> <t t-esc="record.date_planned_start.value and record.date_planned_start.value.split(' ')[0] or False"/></span>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span t-attf-class="pull-right text-right label #{['draft', 'cancel'].indexOf(record.state.raw_value) > -1 ? 'label-default' : ['none'].indexOf(record.state.raw_value) > -1 ? 'label-danger' : ['confirmed'].indexOf(record.state.raw_value) > -1 ? 'label-warning' : ['done'].indexOf(record.state.raw_value) > -1 ? 'label-success' : 'label-primary'}"><t t-esc="record.state.value"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="view_production_calendar" model="ir.ui.view">
+            <field name="name">mrp.production.calendar</field>
+            <field name="model">mrp.production</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <calendar color="routing_id" date_start="date_planned_start" string="Manufacturing Orders">
+                    <field name="name"/>
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
+                </calendar>
+            </field>
+        </record>
+        <record id="view_production_gantt" model="ir.ui.view">
+            <field name="name">mrp.production.gantt</field>
+            <field name="model">mrp.production</field>
+            <field name="arch" type="xml">
+                <gantt date_stop="date_finished" date_start="date_start" progress="progress" string="Productions" default_group_by="routing_id">
+                </gantt>
+            </field>
+        </record>
+        <record id="view_production_pivot" model="ir.ui.view">
+            <field name="name">mrp.production.pivot</field>
+            <field name="model">mrp.production</field>
+            <field name="arch" type="xml">
+                <pivot string="Manufacturing Orders">
+                    <field name="date_planned_start" type="row"/>
+                </pivot>
+            </field>
+        </record>
+        <record id="view_production_graph" model="ir.ui.view">
+            <field name="name">mrp.production.graph</field>
+            <field name="model">mrp.production</field>
+            <field name="arch" type="xml">
+                <graph string="Manufacturing Orders">
+                    <field name="date_planned_start"/>
+                </graph>
+            </field>
+        </record>
+        <record id="view_mrp_production_filter" model="ir.ui.view">
+            <field name="name">mrp.production.select</field>
+            <field name="model">mrp.production</field>
+            <field name="arch" type="xml">
+                <search string="Search Production">
+                    <field name="name" string="Production" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
+                    <filter string="To Do" name="todo" domain="[('state','in',('confirmed', 'planned','progress'))]"
+                        help="Manufacturing Orders which are in confirmed state."/>
+                    <separator/>
+                    <filter string="Confirmed" name="confirmed" domain="[('state','=','confirmed')]"/>
+                    <filter string="Planned" name="planned" domain="[('state','=','planned')]"/>
+                    <filter string="In Progress" name="inprogress" domain="[('state','=','progress')]"
+                        help="Manufacturing Orders which are currently in production."/>
+                    <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                    <filter string="Waiting" name="waiting" domain="[('availability', '=', 'waiting')]"/>
+                    <separator/>
+                    <filter string="Late" domain="['&amp;', ('date_planned_start', '&lt;', current_date), ('state', '=', 'confirmed')]"
+                        name="late" help="Production started late"/>
+                    <separator/>
+                    <filter string="No Routing" domain="[('routing_id','=', False)]" name="norouting" groups="mrp.group_mrp_routings"/>
+                    <field name="product_id"/>
+                    <field name="product_id" string="Raw Material" filter_domain="[('move_raw_ids.product_id','ilike',self)]"/>
+                    <field name="name" string="Work Center" filter_domain="[('routing_id.operation_ids.workcenter_id','ilike',self)]"/>
+                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Routing" domain="[]" context="{'group_by':'routing_id'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Scheduled Month" domain="[]" context="{'group_by':'date_planned_start'}" help="Scheduled Date by Month"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+
+        <record id="mrp_production_action" model="ir.actions.act_window">
+            <field name="name">Manufacturing Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.production</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_mrp_production_filter"/>
+            <field name="context">{'search_default_todo': True}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a manufacturing order.
+              </p><p>
+                A manufacturing order, based on a bill of materials, will
+                consume raw materials and produce finished products.
+              </p><p>
+                Manufacturing orders are usually proposed automatically based
+                on customer requirements or automated rules like the minimum
+                stock rule.
+              </p>
+            </field>
+        </record>
+
+        <record id="mrp_production_action_picking_deshboard" model="ir.actions.act_window">
+            <field name="name">Manufacturing Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.production</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_mrp_production_filter"/>
+            <field name="context">{}</field>
+        </record>
+
+
+        <menuitem action="mrp_production_action"
+            id="menu_mrp_production_action"
+            parent="menu_mrp_manufacturing"
+            sequence="1"/>
+
+        <record id="mrp_production_action_planning" model="ir.actions.act_window">
+            <field name="name">Manufacturing Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.production</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,pivot,graph</field>
+            <field name="domain">[('state', '=', 'confirmed'), ('routing_id', '!=', False)]</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to start a new manufacturing order.
+              </p><p>
+                A manufacturing order, based on a bill of materials, will
+                consume raw materials and produce finished products.
+              </p><p>
+                Manufacturing orders are usually proposed automatically based
+                on customer requirements or automated rules like the minimum
+                stock rule.
+              </p>
+            </field>
+        </record>
+
+        <record id="mrp_production_action_waiting" model="ir.actions.act_window">
+            <field name="name">Waiting Availability MO</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.production</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,pivot,graph</field>
+            <field name="domain">[('availability', 'in', ('waiting', 'partially_available'))]</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to start a new manufacturing order.
+              </p><p>
+                A manufacturing order, based on a bill of materials, will
+                consume raw materials and produce finished products.
+              </p><p>
+                Manufacturing orders are usually proposed automatically based
+                on customer requirements or automated rules like the minimum
+                stock rule.
+              </p>
+            </field>
+        </record>
+
+    <record id="mrp_production_report" model="ir.actions.act_window">
+        <field name="name">Manufacturing Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot,graph,list,form</field>
+    </record>
+
+    <menuitem id="menu_mrp_workorder_todo"
+            name="Work Orders"
+            action="mrp_workorder_todo"
+            parent="menu_mrp_manufacturing"
+            groups="group_mrp_routings"/>
+
+    <menuitem id="menu_mrp_production_report"
+          name="Manufacturing Orders"
+          parent="menu_mrp_reporting"
+          action="mrp_production_report"
+          sequence="11"/>
+
+    <menuitem id="menu_mrp_work_order_report"
+          name="Work Orders"
+          parent="menu_mrp_reporting"
+          action="mrp_workorder_report"
+          groups="group_mrp_routings"
+          sequence="11"/>
+
+        <record id="act_product_mrp_production" model="ir.actions.act_window">
+            <field name="context">{'search_default_product_id': [active_id]}</field>
+            <field name="name">Manufacturing Orders</field>
+            <field name="res_model">mrp.production</field>
+            <field name="view_id" ref="mrp_production_tree_view"/>
+        </record>
+
+    <record id="action_mrp_production_form" model="ir.actions.act_window">
+        <field name="name">Manufacturing Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+    </record>
+    </data>
+</odoo>

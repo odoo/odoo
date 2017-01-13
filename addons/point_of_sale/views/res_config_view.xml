@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_sale_config_settings_form_pos" model="ir.ui.view">
+            <field name="name">pos.config.settings.form</field>
+            <field name="model">pos.config.settings</field>
+            <field name="arch" type="xml">
+                <form class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <group string="Importable Point of Sale Data">
+                        <label for="div" string="Beverages"/>
+                        <div>
+                            <div>
+                                <field name="module_pos_data_drinks"/>
+                                <label for="module_pos_data_drinks"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group string="Point of Sale">
+                        <field name="module_pos_restaurant" widget="radio"/>
+                        <field name="module_pos_discount" widget="radio"/>
+                        <field name="module_pos_mercury" widget="radio"/>
+                        <field name="module_pos_reprint" widget="radio"/>
+                        <label for="module_pos_loyalty"/>
+                        <div>
+                              <div>
+                                  <field name="module_pos_loyalty" widget="upgrade_boolean"/>
+                                  <label for="module_pos_loyalty" string="Manage loyalty program with points and rewards for customers"/>
+                                  <a href="https://www.odoo.com/page/point-of-sale" target="_blank"> More Info</a>
+                              </div>
+                        </div>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="action_pos_configuration" model="ir.actions.act_window">
+            <field name="name">Configure Point of Sale</field>
+            <field name="res_model">pos.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="menu_pos_global_settings" name="Settings" 
+            parent="menu_point_config_product" sequence="7" action="action_pos_configuration" groups="base.group_system"/>
+</odoo>

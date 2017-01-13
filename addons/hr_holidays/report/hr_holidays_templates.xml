@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="report_holidayssummary">
+    <t t-call="report.html_container">
+        <t t-call="report.internal_layout">
+            <div class="page">
+                <h3 class="mb32">Leaves Summary</h3>
+                <t t-set="info" t-value="get_header_info"/>
+                <h3 class="text-center mb32">
+                    Analyze from <u><t t-esc="info['start_date']"/></u> to <u><t t-esc="info['end_date']"/></u> of the <u><t t-esc="info['holiday_type']"/></u> Leaves.
+                </h3>
+
+                <table class="table table-bordered mb32" style="table-layout:auto">
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <t t-foreach="get_months" t-as="month">
+                                &lt;th class="text-center" colspan=<t t-esc="month['days']"/>&gt;<t t-esc="month['month_name']"/>&lt;/th&gt;
+                            </t>
+                            <th/>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">
+                                <strong>Departments and Employees</strong>
+                            </td>
+                            <t t-foreach="get_day" t-as="day">
+                                &lt;td class="text-center oe_leftfit oe_rightfit" style="background-color:<t t-esc="day['color']"/>!important; font-size: 8px; min-width: 18px"&gt; <t t-esc="day['day_str']"/>&lt;/td&gt;
+                            </t>
+                            <td/>
+                        </tr>
+                        <tr>
+                            <t t-foreach="get_day" t-as="day">
+                                &lt;td class="text-center oe_leftfit oe_rightfit" style="background-color:<t t-esc="day['color']"/>!important; font-size: 10px" &gt; <t t-esc="day['day']"/>&lt;/td&gt;
+                            </t>
+                            <td class="text-center">Sum</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="get_data_from_report" t-as="obj">
+                            <tr t-if="'dept' in obj">
+                                <td style="background-color:#ababab">
+                                    <strong><t t-esc="obj['dept']"/></strong>
+                                </td>
+                                <t t-foreach="obj['color']" t-as="c">
+                                    &lt;td style=background-color:<t t-esc="c['color']"/> !important/&gt;
+                                </t>
+                                <td/>
+                            </tr>
+                            <tr t-foreach="obj['data']" t-as="emp">
+                                <td><t t-esc="emp['emp']"/></td>
+                                <t t-foreach="emp['display']" t-as="details">
+                                    &lt;td style=background-color:<t t-esc="details['color']"/> !important /&gt;
+                                </t>
+                                <td class="text-center"><strong><t t-esc="emp['sum']"/></strong></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+
+                <div class="col-xs-3 col-xs-offset-5 mt32">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-1">Color</th>
+                                <th class="text-center">Leave Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="get_holidays_status" t-as="status">
+                                &lt;td style=background-color:<t t-esc="status['color']"/>!important &gt;&lt;/td&gt;
+                                <td><t t-esc="status['name']"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </t>
+    </t>
+</template>
+
+</odoo>

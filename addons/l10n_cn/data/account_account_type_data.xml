@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--
+
+    Copyright (C) 2008-now  开阖软件 jeff@osbzr.com    < PM and LTS >
+
+    科目类型
+我们借用这个对象生成资产负债表和损益表
+-->
+    <data noupdate="1">
+        <!-- 根科目，不显示在报表行上 -->
+        <record id="user_type_all" model="account.account.type">
+            <field name="name">不显示在报表上</field>
+        </record>
+    </data>
+</odoo>

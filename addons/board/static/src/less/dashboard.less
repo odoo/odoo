@@ -1,0 +1,142 @@
+.o_dashboard {
+    // Dashboard layout
+    .oe_dashboard_layout_1 .oe_dashboard_column {
+        &.index_0 {
+            width: 100%;
+        }
+        &.index_1, &.index_2 {
+            display: none;
+        }
+    }
+    .oe_dashboard_layout_1-1 .oe_dashboard_column {
+        width: 50%;
+        &.index_2 {
+            display: none;
+        }
+    }
+    .oe_dashboard_layout_1-1-1 .oe_dashboard_column {
+        width: 33%;
+    }
+    .oe_dashboard_layout_2-1 .oe_dashboard_column {
+        &.index_0 {
+            width: 70%;
+        }
+        &.index_1 {
+            width: 30%;
+        }
+        &.index_2 {
+            display: none;
+        }
+    }
+    .oe_dashboard_layout_1-2 .oe_dashboard_column {
+        &.index_0 {
+            width: 30%;
+        }
+        &.index_1 {
+            width: 70%;
+        }
+        &.index_2 {
+            display: none;
+        }
+    }
+    .oe_dashboard_column {
+        vertical-align: top;
+    }
+
+    // Layout selector
+    .oe_dashboard_links {
+        text-align: right;
+        margin: 0 4px 6px 0;
+    }
+
+    // Dashboard content
+    .oe_dashboard {
+        width: 100%;
+        .oe_action {
+            margin: 0 8px 8px 0;
+            background-color: white;
+            border: 1px solid;
+            border-color: #e5e5e5 #dbdbdb #d2d2d2;
+            margin: 0 8px 8px 0;
+           .oe_header {
+                font-size: 16px;
+                vertical-align: middle;
+                margin: 0;
+                padding: 12px;
+                &:hover {
+                    cursor: move;
+                }
+                .oe_icon {
+                    float: right;
+                    cursor: pointer;
+                    color: #b3b3b3;
+                    &:hover {
+                        color: #666;
+                        text-decoration: none;
+                    }
+                }
+                .oe_close:after {
+                    content: "×";
+                    margin-left: 4px;
+                }
+                .oe_minimize:after {
+                    content: "-";
+                    margin-left: 4px;
+                }
+                .oe_maximize:after {
+                    content: "+";
+                    margin-left: 4px;
+                }
+                .oe_header_text {
+                    width: auto;
+                    visibility: hidden;
+                    display: inline-block;
+                    cursor: text;
+                }
+                span {
+                    cursor: pointer;
+                }
+            }
+            .oe_header_empty {
+                padding-top: 0;
+                padding-bottom: 2px;
+            }
+            .oe_button_create {
+                margin-left: 4px;
+                padding: 0 4px 0 4px;
+                height: 16px !important;
+            }
+            .oe_content {
+                padding: 0 12px 12px 12px;
+            }
+
+            // Override border of many2manytags defined for form_views
+            .o_kanban_view .o_kanban_record .oe_kanban_list_many2many .o_form_field_many2manytags {
+                border: none;
+            }
+        }
+    }
+}
+
+// Layout selector modal
+.oe_dashboard_layout_selector {
+    ul {
+        white-space: nowrap;
+    }
+    li {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        float: left;
+    }
+    .oe_dashboard_selected_layout {
+        margin-left: -30px;
+        vertical-align: bottom;
+        margin-bottom: 10px;
+    }
+}
+
+// Favorites menu in control panel
+.o_add_to_dashboard {
+    display: none; // hidden by default
+}

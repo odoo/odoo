@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="rating_issue_1" model="rating.rating">
+            <field name="res_model">project.issue</field>
+            <field name="rated_partner_id" ref="base.partner_demo"/>
+            <field name="partner_id" ref="base.partner_demo"/>
+            <field name="res_id" ref="project_issue.crm_case_outputincorrect0"/>
+        </record>
+        <record id="rating_issue_2" model="rating.rating">
+            <field name="res_model">project.issue</field>
+            <field name="rated_partner_id" ref="base.partner_demo"/>
+            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="res_id" ref="project_issue.crm_case_addmenustothemodule0"/>
+        </record>
+        <record id="rating_issue_3" model="rating.rating">
+            <field name="res_model">project.issue</field>
+            <field name="rated_partner_id" ref="base.partner_root"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="res_id" ref="project_issue.crm_case_improvereportsinhrms0"/>
+        </record>
+
+        <function model="project.issue" name="rating_apply" eval="([ref('project_issue.crm_case_outputincorrect0')], 10)"/>
+        <function model="project.issue" name="rating_apply" eval="([ref('project_issue.crm_case_addmenustothemodule0')], 1)"/>
+        <function model="project.issue" name="rating_apply" eval="([ref('project_issue.crm_case_improvereportsinhrms0')], 5)"/>
+    </data>
+</odoo>

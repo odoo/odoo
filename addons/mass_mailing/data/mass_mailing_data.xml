@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Default stages of mass mailing campaigns -->
+        <record id="campaign_stage_1" model="mail.mass_mailing.stage">
+            <field name="name">Schedule</field>
+            <field name="sequence">10</field>
+        </record>
+        <record id="campaign_stage_2" model="mail.mass_mailing.stage">
+            <field name="name">Design</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="campaign_stage_3" model="mail.mass_mailing.stage">
+            <field name="name">Sent</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <!-- Create mailing lists -->
+        <record id="mass_mail_list_1" model="mail.mass_mailing.list">
+            <field name="name">Newsletter</field>
+        </record>
+
+    </data>
+</odoo>

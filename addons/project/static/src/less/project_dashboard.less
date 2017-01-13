@@ -1,0 +1,120 @@
+.o_kanban_view.o_kanban_dashboard.o_project_kanban {
+
+    .o_kanban_record {
+        .o-flex-display();
+        position: relative;
+    }
+
+    .o_project_kanban_main {
+        .o-flex(0, 0, auto);
+        padding: @odoo-horizontal-padding;
+        width: 70%; // for IE11 overflow issue
+
+        // give space for manage section at the bottom
+        margin-bottom: @odoo-horizontal-padding/2 + 19px;
+
+        .o_kanban_card_content {
+            font-size: 12px;
+            .o_primary {
+                font-size: larger;
+            }
+        }
+
+        .o_project_kanban_manage {
+            .o_left {
+                .o-position-absolute(@bottom: 0, @left: 0);
+                padding: @odoo-horizontal-padding/2 @odoo-horizontal-padding;
+            }
+            .o_right {
+                .o-position-absolute(@bottom: 0, @right: 30%);
+                padding: @odoo-horizontal-padding/2 @odoo-horizontal-padding;
+            }
+            .o_kanban_manage_toggle_button:not(:hover) {
+                color: @odoo-main-text-color;
+            }
+        }
+        .o_kanban_card_manage_pane .o_kanban_card_manage_title {
+            margin: 0;
+        }
+    }
+
+    .o_dashboard_star {
+            font-size: 16px;
+
+            &.fa-star-o {
+                color: @odoo-main-color-muted;
+                &:hover {
+                    color: gold;
+                }
+            }
+            &.fa-star {
+                color: gold;
+            }
+        }
+
+    .o_project_kanban_boxes {
+        width: 30%;
+        .o-flex(0, 0, auto);
+
+        .o-flex-display();
+        .o-flex-flow(column, nowrap);
+
+        > a:hover {
+            text-decoration: none;
+        }
+
+        .o_value {
+            font-size: x-large;
+            color: white;
+            display: block;
+        }
+        .o_label {
+            color: white;
+        }
+        .o_needaction{
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            color: white;
+            font-size: small;
+            opacity: 0.5;
+            &:hover{
+                opacity:1;
+            }
+            &::before {
+                content: "\f086";
+                font: normal normal normal 14px/1 FontAwesome;
+            }
+        }
+
+        .o_project_kanban_box {
+            position: relative;
+            text-align: center;
+            padding: 0 0 0 0;
+            .o-flex(1, 1, auto);
+            .o-flex-display();
+            .o-flex-flow(column, nowrap);
+            .o-justify-content(center);
+        }
+        .o_project_kanban_box:nth-child(even) {
+            background-color: grey;
+        }
+        .o_project_kanban_box:nth-child(odd) {
+            background-color: @odoo-brand-optional;
+        }
+    }
+}
+
+.o_kanban_task_cover_image {
+    .o-columns(200px, 4);
+    > img {
+        cursor: pointer;
+        margin-bottom: 1em;
+        border: 1px solid transparent;
+
+        &.o_selected {
+            border-color: @odoo-brand-secondary;
+            box-shadow: 0px 0px 2px 2px @odoo-brand-secondary;
+        }
+    }
+}

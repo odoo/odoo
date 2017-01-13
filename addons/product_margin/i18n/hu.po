@@ -1,0 +1,405 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * product_margin
+# 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
+# Kovács Tibor <kovika@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_num_invoiced
+msgid "# Invoiced in Purchase"
+msgstr "# számlázott a beszerzéskor"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_sale_num_invoiced
+msgid "# Invoiced in Sale"
+msgstr "# Eladáskor számlázott"
+
+#. module: product_margin
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
+msgid "# Purchased"
+msgstr "# Beszerzett"
+
+#. module: product_margin
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
+msgid "Analysis Criteria"
+msgstr "Elemzési kritérium"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_sale_avg_price
+msgid "Avg. Price in Customer Invoices."
+msgstr "Átl. ár a vevő számláin."
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_purchase_avg_price
+msgid "Avg. Price in Vendor Bills "
+msgstr "Átl. ár a brszállítók számláin."
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_avg_price
+#: model:ir.model.fields,field_description:product_margin.field_product_product_sale_avg_price
+msgid "Avg. Unit Price"
+msgstr "Átlagos egységár"
+
+#. module: product_margin
+#: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
+msgid "Cancel"
+msgstr "Érvénytelenít"
+
+#. module: product_margin
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
+msgid "Catalog Price"
+msgstr "Katalógus ár"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_membership
+msgid "Check if the product is eligible for membership."
+msgstr "Vizsgálja meg, hogy a termék alkalmas-e a tagsághoz."
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_margin_create_uid
+msgid "Created by"
+msgstr "Készítette"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_margin_create_date
+msgid "Created on"
+msgstr "Létrehozás dátuma"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_taxes_id
+msgid "Customer Taxes"
+msgstr "Vásárlói értékesítést terhelő adók"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_membership_date_from
+msgid "Date from which membership becomes active."
+msgstr "Dátum ahonnan a tagság aktiválódik."
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_membership_date_to
+msgid "Date until which membership remains active."
+msgstr "Dátum ameddig a tagság aktív maradhat."
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_margin_display_name
+msgid "Display Name"
+msgstr "Megjelenített név"
+
+#. module: product_margin
+#: selection:product.margin,invoice_state:0
+#: selection:product.product,invoice_state:0
+msgid "Draft, Open and Paid"
+msgstr "Tervezet, nyitott és rendezett"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_expected_margin
+msgid "Expected Margin"
+msgstr "Elvárt árrés"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_expected_margin_rate
+msgid "Expected Margin (%)"
+msgstr "Elvárt árrés (%)"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_sale_expected
+msgid "Expected Sale"
+msgstr "Elvárt árbevétel"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_expected_margin
+msgid "Expected Sale - Normal Cost"
+msgstr "Elvárt árbevétel - számított beszerzési érték"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_sales_gap
+msgid "Expected Sale - Turn Over"
+msgstr "Elvárt árbevétel - tényleges árbevétel"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_expected_margin_rate
+msgid "Expected margin * 100 / Expected Sale"
+msgstr "Elvárt árrés * 100 / Elvárt árbevétel"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_property_account_expense_id
+msgid "Expense Account"
+msgstr "Költség főkönyvi számla"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_margin_from_date
+msgid "From"
+msgstr "Kezdő dátum"
+
+#. module: product_margin
+#: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
+msgid "General Information"
+msgstr "Általános információk"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_margin_id
+msgid "ID"
+msgstr "Azonosító ID"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_property_account_income_id
+msgid "Income Account"
+msgstr "Árbevétel főkönyvi számla"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_margin_invoice_state
+#: model:ir.model.fields,field_description:product_margin.field_product_product_invoice_state
+msgid "Invoice State"
+msgstr "Számla állapota"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_margin___last_update
+msgid "Last Modified on"
+msgstr "Utoljára frissítve ekkor"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_margin_write_uid
+msgid "Last Updated by"
+msgstr "Utoljára frissítette"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_margin_write_date
+msgid "Last Updated on"
+msgstr "Utoljára frissítve "
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_date_from
+msgid "Margin Date From"
+msgstr "Árrés ettől a dátumtól"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_date_to
+msgid "Margin Date To"
+msgstr "Árrés eddig a dátumig"
+
+#. module: product_margin
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
+msgid "Margins"
+msgstr "Árrések"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_membership
+msgid "Membership"
+msgstr "Tagság"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_to
+msgid "Membership End Date"
+msgstr "Tagság befejezés dátuma"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_from
+msgid "Membership Start Date"
+msgstr "Tagság kezdő dátum"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_normal_cost
+msgid "Normal Cost"
+msgstr "Számított beszerzési érték"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_purchase_gap
+msgid "Normal Cost - Total Cost"
+msgstr "Számított beszerzési érték - tényleges beszerzési érték"
+
+#. module: product_margin
+#: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
+msgid "Open Margins"
+msgstr "Induló árrések"
+
+#. module: product_margin
+#: selection:product.margin,invoice_state:0
+#: selection:product.product,invoice_state:0
+msgid "Open and Paid"
+msgstr "Nyitott és rendezett"
+
+#. module: product_margin
+#: selection:product.margin,invoice_state:0
+#: selection:product.product,invoice_state:0
+msgid "Paid"
+msgstr "Kifizetve"
+
+#. module: product_margin
+#: model:ir.model,name:product_margin.model_product_product
+msgid "Product"
+msgstr "Termék"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_email_template_id
+msgid "Product Email Template"
+msgstr "Termék e-mail sablon"
+
+#. module: product_margin
+#: model:ir.model,name:product_margin.model_product_margin
+msgid "Product Margin"
+msgstr "Termékárrés"
+
+#. module: product_margin
+#: code:addons/product_margin/wizard/product_margin.py:49
+#: model:ir.actions.act_window,name:product_margin.product_margin_act_window
+#: model:ir.ui.menu,name:product_margin.menu_action_product_margin
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_graph
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
+#, python-format
+msgid "Product Margins"
+msgstr "Termékárrések"
+
+#. module: product_margin
+#: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
+msgid "Properties categories"
+msgstr "Tulajdonságok kategóriái"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_gap
+msgid "Purchase Gap"
+msgstr "Beszerzési különbözet"
+
+#. module: product_margin
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
+msgid "Purchases"
+msgstr "Beszerzések"
+
+#. module: product_margin
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
+msgid "Sales"
+msgstr "Értékesítések"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_sales_gap
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
+msgid "Sales Gap"
+msgstr "Árbevétel különbözet"
+
+#. module: product_margin
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
+msgid "Standard Price"
+msgstr "Elszámoló ár"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_normal_cost
+msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
+msgstr ""
+"A többszörös bekerülési ár és a beszállítói számlák összegének mennyisége"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_turnover
+msgid ""
+"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
+msgstr "A többszörös számlázás összege és a vevő számlák mennyisége"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_total_cost
+msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
+msgstr ""
+"A többszörös számlázási ár és a beszállítói számlák összegének mennyisége"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_sale_expected
+msgid ""
+"Sum of Multiplication of Sale Catalog price and quantity of Customer "
+"Invoices"
+msgstr "A többszörös eladói katalógus ár és a vevő számlák mennyisége"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_sale_num_invoiced
+msgid "Sum of Quantity in Customer Invoices"
+msgstr "Összes mennyiség a kimenő számlákban"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_purchase_num_invoiced
+msgid "Sum of Quantity in Vendor Bills"
+msgstr "Összes mennyiség a beszállítói számlákban"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_property_account_expense_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product."
+msgstr ""
+"A rendszer az alapértelmezett helyett ezt a számlát fogja használni a "
+"költségek értékeinek a jelenlegi terméken."
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_property_account_income_id
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product."
+msgstr ""
+"A rendszer az alapértelmezett helyett ezt a számlát fogja használni az "
+"értékesítések értékeinek a jelenlegi terméken."
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_margin_to_date
+msgid "To"
+msgstr "Címzett"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_total_cost
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
+msgid "Total Cost"
+msgstr "Összes költség"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_total_margin
+msgid "Total Margin"
+msgstr "Összes árrés"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_total_margin_rate
+msgid "Total Margin Rate(%)"
+msgstr "Teljes árrés aránya(%)"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_total_margin_rate
+msgid "Total margin * 100 / Turnover"
+msgstr "Összes árrés * 100 / tényleges árbevétel"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_turnover
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
+msgid "Turnover"
+msgstr "Tényleges árbevétel"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_total_margin
+msgid "Turnover - Standard price"
+msgstr "Tényleges árbevétel - alapár"
+
+#. module: product_margin
+#: model:ir.model.fields,field_description:product_margin.field_product_product_supplier_taxes_id
+msgid "Vendor Taxes"
+msgstr "Beszálító adói"
+
+#. module: product_margin
+#: model:ir.model.fields,help:product_margin.field_product_product_email_template_id
+msgid ""
+"When validating an invoice, an email will be sent to the customer based on "
+"this template. The customer will receive an email for each product linked to"
+" an email template."
+msgstr ""
+"Ha egy számla jóváhagyásra kerül, egy emailt kerül kiküldésre a vásárló "
+"részére ennek a sablonnak az alapján. Az ügyfél azokról a termékekről kap "
+"emailt, melyek egy email sablonhoz tartoznak."

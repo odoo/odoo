@@ -1,0 +1,3120 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_forum
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-10-10 08:44+0000\n"
+"PO-Revision-Date: 2016-01-25 08:56+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_forum
+#: model:mail.template,body_html:website_forum.validation_email
+msgid ""
+"\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
+"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
+"collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px "
+"5px; font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
+"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; "
+"padding:0px; border-collapse:collapse; background:inherit; color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;"
+"\">\n"
+"                <div>\n"
+"                    <hr width=\"100%\" style=\"background-color:"
+"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
+"min-height:1px;line-height:0;margin:0px auto;padding:0\">\n"
+"                </div>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
+"background: #FFFFFF repeat top /100%; color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-"
+"align:justify; margin:0 auto; border-collapse:collapse; background:inherit; "
+"color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
+"                <p>Dear ${object.name},</p>\n"
+"                <p>You have been invited to validate your email in order to "
+"get access to\n"
+"                \"${object.company_id.name}\" Q/A Forums.</p>\n"
+"                <p>To validate your email, please click on the following "
+"link:</p>\n"
+"                <a style=\"margin-left: 15px; padding:5px 10px; border-"
+"radius: 3px; background-color:#875A7B; text-align:center; text-decoration:"
+"none; color:#F7FBFD;\" href=\"${ctx.get('token_url')}\">\n"
+"                    Validate my account for \"${object.company_id.name}\" Q/"
+"A Forums\n"
+"                </a>\n"
+"                <p>Thanks for your participation!</p>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:21
+#, python-format
+msgid ""
+" karma is required to perform this action. You can earn karma by having your "
+"answers upvoted by the community."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_task_count
+msgid "# Tasks"
+msgstr ""
+
+#. module: website_forum
+#: model:mail.template,subject:website_forum.validation_email
+msgid "${object.company_id.name} Forums validation"
+msgstr "${object.company_id.name} 게시판 검증"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.tag
+msgid "&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\"/>&amp;nbsp;&amp;nbsp;"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "&amp;times;"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid "(The above section was adapted from Stackoverflow’s FAQ.)"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid ""
+"(Un)archiving a forum automatically (un)archives its posts. Do you want to "
+"proceed?"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
+msgid ""
+"(Un)archiving a post automatically (un)archives its answers. Do you want to "
+"proceed?"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "(votes - 1) **"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "/ (days + 2) **"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:29
+#, python-format
+msgid "45% of questions shared"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:30
+#, python-format
+msgid ""
+"65% more chance to get an\n"
+"        answer"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<b> [Closed]</b>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<b> [Deleted]</b>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<b> [Offensive]</b>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.users
+msgid "<b> badges:</b>"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"<b>Answers should not add or expand questions</b>. Instead\n"
+"    either edit the question or add a comment."
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"<b>Answers should not add or expand questions</b>. Instead either edit the "
+"question or add a question comment."
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"<b>Answers should not comment other answers</b>. Instead\n"
+"    add a comment on the other answers."
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"<b>Answers should not comment other answers</b>. Instead add a comment on "
+"the other answers."
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"<b>Answers should not start debates</b>\n"
+"    This community Q&amp;A is not a discussion group. Please avoid holding "
+"debates in\n"
+"    your answers as they tend to dilute the essence of questions and "
+"answers. For\n"
+"    brief discussions please use commenting facility."
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"<b>Answers shouldn't just point to other Questions</b>. Instead add a "
+"question comment indication \"Possible duplicate of...\". However, it's ok "
+"to include links to other questions or answers providing relevant additional "
+"information."
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"<b>Answers shouldn't just point to other questions</b>.\n"
+"    Instead add a comment indicating <i>\"Possible duplicate\n"
+"    of...\"</i>. However, it's fine to include links to other\n"
+"    questions or answers providing relevant additional\n"
+"    information."
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"<b>Answers shouldn't just provide a\n"
+"    link a solution</b>. Instead provide the solution\n"
+"    description text in your answer, even if it's just a\n"
+"    copy/paste. Links are welcome, but should be complementary to\n"
+"    answer, referring sources or additional reading."
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"<b>Answers shouldn't just provide a link a solution</b>. Instead provide the "
+"solution description text in your answer, even if it's just a copy/paste. "
+"Links are welcome, but should be complementary to answer, referring sources "
+"or additional reading."
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"<b>Before you ask - please make sure to search for a similar question.</b> "
+"You can\n"
+"    search questions by their title or tags.  It’s also OK to\n"
+"    answer your own question."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_badges
+msgid "<b>No badge yet!</b><br/>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_votes
+msgid "<b>No vote given by you yet!</b>"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"<b>Please avoid asking questions that are too subjective\n"
+"    and argumentative</b> or not relevant to this community."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answer
+msgid ""
+"<b>Please try to give a substantial answer.</b> If you wanted to comment on "
+"the question or answer, just\n"
+"        <b>use the commenting tool.</b> Please remember that you can always "
+"<b>revise your answers</b>\n"
+"        - no need to answer the same question twice. Also, please <b>don't "
+"forget to vote</b>\n"
+"        - it really helps to select the best questions and answers!"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_discussion
+msgid "<b>Share</b> Something Awesome."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
+msgid "<b>[Answer]</b>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.badge
+msgid "<i class=\"text-muted\"> awarded users</i>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_badges
+msgid "<i class=\"text-muted\">awarded users</i>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
+msgid ""
+"<small class=\"text-muted\">\n"
+"                    Flagged\n"
+"                </small>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "<small>profile</small>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid ""
+"<span class=\"caret\"/>\n"
+"                                <span class=\"sr-only\">Select Post</span>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid ""
+"<span class=\"sr-only\">Toggle navigation</span>\n"
+"                        <span class=\"icon-bar\"/>\n"
+"                        <span class=\"icon-bar\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid ""
+"<span class=\"text-muted\">(only one answer per question is allowed)</span>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "<span class=\"text-muted\">bio</span>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "<span class=\"text-muted\">or</span>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "<span class=\"text-muted\">stats</span>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<span> on </span>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid ""
+"<span> • </span>\n"
+"                Flagged"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "<span>By </span>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "About This Community"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Accept <i class=\"fa fa-check\"/>"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_answer_accept_own
+msgid "Accept an answer on own questions"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_answer_accept_all
+msgid "Accept an answer to all questions"
+msgstr "다른 질문에 답변으로 채택되기"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Accepted Answer"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_answer_accept
+msgid "Accepting an answer"
+msgstr "답변 채택하기"
+
+#. module: website_forum
+#: selection:forum.post,state:0
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_active
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_active
+msgid "Active"
+msgstr "활성"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "Activity"
+msgstr "활동"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answer
+msgid "Add a Comment"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:25
+#, python-format
+msgid "Add page in menu"
+msgstr "메뉴에 페이지 추가"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum_allow_share
+msgid ""
+"After posting the user will be proposed to share its question or answer on "
+"social networks, enabling social network propagation of the forum content."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/controllers/main.py:188
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+#, python-format
+msgid "All"
+msgstr "전체"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_bump
+msgid "Allow Bump"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "Answer"
+msgstr "응답"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:504
+#: model:mail.message.subtype,description:website_forum.mt_answer_edit
+#: model:mail.message.subtype,name:website_forum.mt_answer_edit
+#, python-format
+msgid "Answer Edited"
+msgstr "답변 편집"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_answer_accepted
+msgid "Answer accepted"
+msgstr "답변으로 채택됨"
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_a_6
+msgid "Answer accepted with 15 or more votes"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_answer_downvote
+msgid "Answer downvoted"
+msgstr "답변이 반대투표됨"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_answer_flagged
+msgid "Answer flagged"
+msgstr "답변 표시"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_answer
+msgid "Answer questions"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_answer_upvote
+msgid "Answer upvoted"
+msgstr "답변이 찬성"
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_a_4
+msgid "Answer voted up 15 times"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_a_2
+msgid "Answer voted up 4 times"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_a_3
+msgid "Answer voted up 6 times"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_a_5
+msgid "Answer was accepted with 3 or more votes"
+msgstr ""
+
+#. module: website_forum
+#: selection:forum.forum,default_order:0
+msgid "Answered"
+msgstr "답변함"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Answered Questions"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
+msgid "Answered by"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_a_8
+msgid "Answered own question with at least 4 up votes"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_child_ids
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Answers"
+msgstr "응답"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_view_search
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Archived"
+msgstr ""
+
+#. module: website_forum
+#: selection:forum.post,post_type:0
+msgid "Article"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid "Ask Your Question"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "Ask a Question"
+msgstr "질문하기"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_ask
+msgid "Ask questions"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_post
+msgid "Ask questions without validation"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:29
+#, python-format
+msgid "Ask the question in this forum by clicking on the button."
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_26
+msgid "Asked a question and accepted an answer"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_q_1
+msgid "Asked a question with at least 150 views"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_q_2
+msgid "Asked a question with at least 250 views"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_q_3
+msgid "Asked a question with at least 500 views"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_q_7
+msgid "Asked first question with at least one up vote"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_create_date
+msgid "Asked on"
+msgstr "질문일"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "Asked:"
+msgstr "최근 문의 :"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_question_new
+msgid "Asking a question"
+msgstr "질문하기"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Author"
+msgstr "작성자"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_p_1
+msgid "Autobiographer"
+msgstr "자서전작가"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid "Avoid unnecessary introductions (Hi,... Please... Thanks...),"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "Back to"
+msgstr "돌아가기"
+
+#. module: website_forum
+#: code:addons/website_forum/controllers/main.py:323
+#: code:addons/website_forum/controllers/main.py:394
+#, python-format
+msgid "Bad Request"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.badge
+#: model:ir.ui.view,arch_db:website_forum.header
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "Badges"
+msgstr "뱃지"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.badge
+msgid ""
+"Besides gaining reputation with your questions and answers,\n"
+"            you receive badges for being especially helpful. Badges\n"
+"            appear on your profile page, and your posts."
+msgstr ""
+"게다가 질문과 답변으로 명성을 얻고,\n"
+"            특히 도움이 되는 뱃지를 받습니다.\n"
+"            뱃지는 프로필 페이지와 게시물에 나타납니다."
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_profile
+msgid "Biography"
+msgstr "전기"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_bronze_badge
+msgid "Bronze badges count"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_bump_date
+msgid "Bumped on"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:34
+#, python-format
+msgid "By sharing you answer, you will get additional"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_accept
+msgid "Can Accept"
+msgstr "채택 가능"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_answer
+msgid "Can Answer"
+msgstr "답변 가능"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_ask
+msgid "Can Ask"
+msgstr "문의 가능"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_post
+msgid "Can Automatically be Validated"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_close
+msgid "Can Close"
+msgstr "마감 가능"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_comment
+msgid "Can Comment"
+msgstr "의견 가능"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_comment_convert
+msgid "Can Convert to Comment"
+msgstr "의견 변환 가능"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_downvote
+msgid "Can Downvote"
+msgstr "반대 투표 가능"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_edit
+msgid "Can Edit"
+msgstr "편집 가능"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_flag
+msgid "Can Flag"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_moderate
+msgid "Can Moderate"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_unlink
+msgid "Can Unlink"
+msgstr "연결 해제 가능"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_upvote
+msgid "Can Upvote"
+msgstr "찬성 투표 가능"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_view
+msgid "Can View"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_retag
+msgid "Change question tags"
+msgstr "질문 태그 변경"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_badges
+msgid "Check available badges"
+msgstr "가능한 뱃지 확인"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum_allow_bump
+msgid ""
+"Check this box to display a popup for posts older than 10 days without any "
+"given answer. The popup will offer to share it on social networks. When "
+"shared, a question is bumped at the top of the forum."
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_p_4
+#: model:gamification.challenge,name:website_forum.challenge_chief_commentator
+msgid "Chief Commentator"
+msgstr "최고 논평가"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_profile
+msgid "City"
+msgstr "시군구"
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:24
+#, python-format
+msgid "Click <em>Continue</em> to create the forum."
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:71
+#, python-format
+msgid "Click here to accept this answer."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid ""
+"Click here to send a verification email allowing you to participate to the "
+"forum."
+msgstr "이 게시판에 참석할 수 있도록 이메일 확인을 보내려면 여기를 클릭합니다."
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid "Click to get bad question samples"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid "Click to get good question titles"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:64
+#, python-format
+msgid "Click to post your answer."
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:51
+#, python-format
+msgid "Click to post your question."
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:46
+#: selection:forum.post,state:0
+#, python-format
+msgid "Close"
+msgstr "마감"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_all
+msgid "Close all posts"
+msgstr "다른 게시물 마감하기"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_own
+msgid "Close own posts"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_closed_uid
+msgid "Closed by"
+msgstr "마감자"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_closed_date
+msgid "Closed on"
+msgstr "마감일"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_name
+msgid "Closing Reason"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.display_post_answer
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Comment"
+msgstr "의견"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_all
+msgid "Comment all posts"
+msgstr "다른 게시물에 의견 달기"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_own
+msgid "Comment own posts"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Comment this post..."
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_p_2
+#: model:gamification.challenge,name:website_forum.challenge_commentator
+#: model:gamification.challenge.line,name:website_forum.line_chief_commentator
+#: model:gamification.challenge.line,name:website_forum.line_commentator
+#: model:gamification.goal.definition,name:website_forum.definition_commentator
+msgid "Commentator"
+msgstr "논평자"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.display_post_answer
+#: model:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
+msgid "Comments"
+msgstr "의견"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_post_website_message_ids
+msgid "Comments on forum post"
+msgstr "게시물 의견"
+
+#. module: website_forum
+#: model:gamification.challenge,name:website_forum.challenge_configure_profile
+msgid "Complete own biography"
+msgstr "자기 소개 완성"
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_p_1
+#: model:gamification.challenge.line,name:website_forum.line_configure_profile
+#: model:gamification.goal.definition,name:website_forum.definition_configure_profile
+msgid "Completed own biography"
+msgstr "완성된 자기 소개"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid ""
+"Congratulations! Your email has just been validated. You may now participate "
+"to our forums."
+msgstr ""
+"축하합니다! 귀하의 이메일이 검증 되었습니다. 이제 게시판에 참여할 수 있습니"
+"다."
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_content
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Content"
+msgstr "컨텐트"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_convert_all
+msgid "Convert all answers to comments and vice versa"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_accept
+msgid "Convert comment to answer"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_convert_own
+msgid "Convert own answers to comments and vice versa"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_is_correct
+msgid "Correct"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_post_is_correct
+msgid "Correct answer or answer accepted"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_profile
+msgid "Country"
+msgstr "국가"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_profile
+msgid "Country..."
+msgstr "국가..."
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_create_date
+msgid "Create Date"
+msgstr "작성일"
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_32
+msgid "Created a tag used by 15 questions"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_create_uid
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_create_uid
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_create_uid
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_create_uid
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag_create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_create_date
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_create_date
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag_create_date
+msgid "Created on"
+msgstr "작성일"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_4
+#: model:gamification.challenge,name:website_forum.challenge_favorite_question_1
+msgid "Credible Question"
+msgstr "신뢰할 수 있는 질문"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_5
+#: model:gamification.challenge,name:website_forum.challenge_critic
+#: model:gamification.challenge.line,name:website_forum.line_critic
+#: model:gamification.goal.definition,name:website_forum.definition_critic
+msgid "Critic"
+msgstr "비평가"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_default_order
+msgid "Default Order"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_default_post_type
+msgid "Default Post"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_unlink_all
+msgid "Delete all posts"
+msgstr "다른 게시물 삭제하기"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_unlink_own
+msgid "Delete own posts"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_23
+msgid "Deleted own post with 3 or more downvotes"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_6
+msgid "Deleted own post with 3 or more upvotes"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_description
+msgid "Description"
+msgstr "설명"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "Design Welcome Message"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_6
+#: model:gamification.challenge,name:website_forum.challenge_disciplined
+#: model:gamification.challenge.line,name:website_forum.line_disciplined
+#: model:gamification.goal.definition,name:website_forum.definition_disciplined
+msgid "Disciplined"
+msgstr "규율가"
+
+#. module: website_forum
+#: selection:forum.forum,default_post_type:0 selection:forum.post,post_type:0
+msgid "Discussion"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_discussion
+msgid "Discussions"
+msgstr "토론"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_display_name
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_display_name
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_display_name
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_display_name
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag_display_name
+msgid "Display Name"
+msgstr "표시 이름"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_user_bio
+msgid "Display detailed user biography"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_downvote
+msgid "Downvote"
+msgstr "반대 투표"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_post
+msgid "Edit"
+msgstr "편집"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_profile
+msgid "Edit Profile"
+msgstr "프로필 편집"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "Edit Your Bio"
+msgstr "소개 편집"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Edit Your Previous Answer"
+msgstr "이전 답변 편집"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_all
+msgid "Edit all posts"
+msgstr "다른 게시물 편집하기"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_own
+msgid "Edit own posts"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_post
+msgid "Edit reply"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_link
+msgid "Edit your Link"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_post
+msgid "Edit your Post"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_7
+#: model:gamification.challenge,name:website_forum.challenge_editor
+#: model:gamification.challenge.line,name:website_forum.line_editor
+#: model:gamification.goal.definition,name:website_forum.definition_editor
+msgid "Editor"
+msgstr "편집가"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_editor
+msgid "Editor Features: image and links"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_profile
+msgid "Email"
+msgstr "이메일"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_5
+#: model:gamification.challenge,name:website_forum.challenge_enlightened
+#: model:gamification.challenge.line,name:website_forum.line_enlightened
+#: model:gamification.goal.definition,name:website_forum.definition_enlightened
+msgid "Enlightened"
+msgstr "계몽가"
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:19
+#, python-format
+msgid "Enter a name for your new forum."
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_3
+#: model:gamification.challenge,name:website_forum.challenge_famous_question
+msgid "Famous Question"
+msgstr "유명한 질문"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_favourite_count
+msgid "Favorite Count"
+msgstr "즐겨찾기 수"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_5
+#: model:gamification.challenge,name:website_forum.challenge_favorite_question_5
+msgid "Favorite Question"
+msgstr "즐겨찾는 질문"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_favourite_ids
+msgid "Favourite"
+msgstr "즐겨 찾기"
+
+#. module: website_forum
+#: model:gamification.challenge.line,name:website_forum.line_favorite_question_1
+#: model:gamification.goal.definition,name:website_forum.definition_favorite_question_1
+msgid "Favourite Question (1)"
+msgstr "즐겨찾는 질문(1)"
+
+#. module: website_forum
+#: model:gamification.challenge.line,name:website_forum.line_stellar_question_25
+#: model:gamification.goal.definition,name:website_forum.definition_stellar_question_25
+msgid "Favourite Question (25)"
+msgstr "즐겨찾는 질문(25)"
+
+#. module: website_forum
+#: model:gamification.challenge.line,name:website_forum.line_favorite_question_5
+#: model:gamification.goal.definition,name:website_forum.definition_favorite_question_5
+msgid "Favourite Question (5)"
+msgstr "즐겨찾는 질문(5)"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "Favourite Questions"
+msgstr "즐겨찾는 질문"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Filter on"
+msgstr "필터"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_relevancy_post_vote
+msgid "First Relevance Parameter"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_5
+msgid "First downvote"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_7
+msgid "First edit"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_31
+msgid "First upvote"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_flag
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_flag
+msgid "Flag a post as offensive"
+msgstr "모욕 게시물 표시"
+
+#. module: website_forum
+#: selection:forum.post,state:0
+#: model:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Flagged"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_flag_user_id
+msgid "Flagged by"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Followed"
+msgstr "팔로우 중"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "Followed Questions"
+msgstr "팔로우하는 질문"
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"For example, if you ask an interesting question or give a helpful answer, "
+"your\n"
+"    input will be upvoted. On the other hand if the answer is misleading - "
+"it will\n"
+"    be downvoted. Each vote in favor will generate 10 points, each vote "
+"against\n"
+"    will subtract 10 points. There is a limit of 200 points that can be "
+"accumulated\n"
+"    for a question or answer per day. The table given at the end explains "
+"reputation point\n"
+"    requirements for each type of moderation task."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.actions.act_url,name:website_forum.action_open_forum
+#: model:ir.model,name:website_forum.model_forum_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_forum_id
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_forum_id
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag_forum_id
+#: model:ir.ui.menu,name:website_forum.menu_website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_view_search
+#: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
+#: model:website.menu,name:website_forum.menu_questions
+msgid "Forum"
+msgstr "게시판"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_gamification_badge_level
+#: model:ir.model.fields,field_description:website_forum.field_gamification_badge_user_level
+msgid "Forum Badge Level"
+msgstr "게시판 뱃지 수준"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_users_form_forum
+msgid "Forum Karma"
+msgstr "게시판 명성"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_name
+msgid "Forum Name"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_post
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
+msgid "Forum Post"
+msgstr "게시물"
+
+#. module: website_forum
+#: model:ir.actions.act_window,name:website_forum.action_forum_post
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_list
+msgid "Forum Posts"
+msgstr "게시물"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "Forum Settings"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_tag
+msgid "Forum Tag"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.actions.act_window,name:website_forum.action_forum_forum
+#: model:ir.ui.menu,name:website_forum.menu_forum
+#: model:ir.ui.view,arch_db:website_forum.header_footer_custom
+#: model:ir.ui.view,arch_db:website_forum.view_forum_forum_list
+msgid "Forums"
+msgstr "게시판"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_gamification_badge
+msgid "Gamification badge"
+msgstr "게임화 뱃지"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_gamification_challenge
+msgid "Gamification challenge"
+msgstr "도전과제"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_gamification_badge_user
+msgid "Gamification user badge"
+msgstr "게임화 사용자 배지"
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:33
+#, python-format
+msgid "Give your question title."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_gold_badge
+msgid "Gold badges count"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_3
+#: model:gamification.challenge,name:website_forum.challenge_good_answer
+msgid "Good Answer"
+msgstr "고급 답변"
+
+#. module: website_forum
+#: model:gamification.challenge.line,name:website_forum.line_good_answer
+#: model:gamification.goal.definition,name:website_forum.definition_good_answer
+msgid "Good Answer (6)"
+msgstr "고급 답변(6)"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_9
+#: model:gamification.challenge,name:website_forum.challenge_good_question
+msgid "Good Question"
+msgstr "고급 질문"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_graph
+msgid "Graph of Posts"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_4
+#: model:gamification.challenge,name:website_forum.challenge_great_answer
+msgid "Great Answer"
+msgstr "훌륭한 답변"
+
+#. module: website_forum
+#: model:gamification.challenge.line,name:website_forum.line_great_answer
+#: model:gamification.goal.definition,name:website_forum.definition_great_answer
+msgid "Great Answer (15)"
+msgstr "훌륭한 답변(15)"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_10
+#: model:gamification.challenge,name:website_forum.challenge_great_question
+msgid "Great Question"
+msgstr "훌륭한 질문"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Group By"
+msgstr "그룹화"
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_faq
+msgid "Guidelines"
+msgstr "지침"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_6
+#: model:gamification.challenge,name:website_forum.challenge_guru
+msgid "Guru"
+msgstr "전문가"
+
+#. module: website_forum
+#: model:gamification.challenge.line,name:website_forum.line_guru
+#: model:gamification.goal.definition,name:website_forum.definition_guru
+msgid "Guru (15)"
+msgstr "전문가(15)"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_uid_has_answered
+msgid "Has Answered"
+msgstr "답변 완료"
+
+#. module: website_forum
+#: model:forum.forum,name:website_forum.forum_help
+msgid "Help"
+msgstr "도움말"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_id
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_id
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_id
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_id
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag_id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum_karma_dofollow
+msgid ""
+"If the author has not enough karma, a nofollow attribute is added to links"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"If this approach is not for you, please respect the community and use Google"
+"+\n"
+"    communities instead."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid ""
+"If you close this post, it will be hidden for most users. Only\n"
+"            users having a high karma can see closed posts to moderate\n"
+"            them."
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"If you fit in one of these example or if your motivation for asking the\n"
+"    question is “I would like to participate in a discussion about ______”, "
+"then\n"
+"    you should not be asking here but on our mailing lists.\n"
+"    However, if your motivation is “I would like others to explain ______ to "
+"me”,\n"
+"    then you are probably OK."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid ""
+"If you mark this post as offensive, it will be hidden for most users. Only\n"
+"            users having a high karma can see offensive posts to moderate\n"
+"            them."
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:43
+#, python-format
+msgid "Insert tags related to your question."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_user_favourite
+msgid "Is Favourite"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_has_validated_answer
+msgid "Is answered"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_can_display_biography
+msgid "Is the author's biography visible from his post"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "It appears your email has not been verified."
+msgstr "귀하의 이메일이 검증되지 않았다고 표시되었습니다."
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_karma
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "Karma"
+msgstr "명성"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "Karma Gains"
+msgstr "명성 획득"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "Karma Related Rights"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_close
+msgid "Karma to close"
+msgstr "마감하기 명성"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_comment
+msgid "Karma to comment"
+msgstr "덧글달기 명성"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_comment_convert
+msgid "Karma to convert comment to answer"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_edit
+msgid "Karma to edit"
+msgstr "편집하기 명성"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_unlink
+msgid "Karma to unlink"
+msgstr "연결 해제하기 명성"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "Keep Informed"
+msgstr "정보 유지"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum___last_update
+#: model:ir.model.fields,field_description:website_forum.field_forum_post___last_update
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason___last_update
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote___last_update
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag___last_update
+msgid "Last Modified on"
+msgstr "최근 수정"
+
+#. module: website_forum
+#: selection:forum.forum,default_order:0
+msgid "Last Updated"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_write_uid
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_write_uid
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_write_uid
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag_write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_write_date
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_write_date
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_write_date
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag_write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 날짜"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Last activity date"
+msgstr "최근 활동일"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "Last updated:"
+msgstr "최근 갱신 :"
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_25
+msgid "Left 10 answers with score of 10 or more"
+msgstr ""
+
+#. module: website_forum
+#: selection:forum.forum,default_post_type:0
+msgid "Link"
+msgstr "링크"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_link
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Links"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_moderate
+msgid "Moderate posts"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "Moderation Tools"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid "More over:"
+msgstr ""
+
+#. module: website_forum
+#: selection:forum.forum,default_order:0
+msgid "Most Voted"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Most answered"
+msgstr "최고의 답변"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Most voted"
+msgstr "최고 득표"
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:48
+#, python-format
+msgid ""
+"Move this question to the top of the list by sharing it on social networks."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_user_vote
+msgid "My Vote"
+msgstr "개인 투표"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag_name
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
+msgid "Name"
+msgstr "이름"
+
+#. module: website_forum
+#: model:mail.message.subtype,description:website_forum.mt_answer_new
+#: model:mail.message.subtype,name:website_forum.mt_answer_new
+#: model:mail.message.subtype,name:website_forum.mt_forum_answer_new
+msgid "New Answer"
+msgstr "새로운 답변"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "New Discussion"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.editor.js:14
+#: model:ir.ui.view,arch_db:website_forum.content_new_forum
+#, python-format
+msgid "New Forum"
+msgstr "새로운 게시판"
+
+#. module: website_forum
+#: model:mail.message.subtype,description:website_forum.mt_question_new
+#: model:mail.message.subtype,name:website_forum.mt_forum_question_new
+#: model:mail.message.subtype,name:website_forum.mt_question_new
+msgid "New Question"
+msgstr "새로운 질문"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_discussion
+msgid "New Topic"
+msgstr ""
+
+#. module: website_forum
+#: selection:forum.forum,default_order:0
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "Newest"
+msgstr "최신"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_2
+#: model:gamification.challenge,name:website_forum.challenge_nice_answer
+msgid "Nice Answer"
+msgstr "좋은 답변"
+
+#. module: website_forum
+#: model:gamification.challenge.line,name:website_forum.line_nice_answer
+#: model:gamification.goal.definition,name:website_forum.definition_nice_answer
+msgid "Nice Answer (4)"
+msgstr "좋은 답변(4)"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_8
+#: model:gamification.challenge,name:website_forum.challenge_nice_question
+msgid "Nice Question"
+msgstr "좋은 질문"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_dofollow
+msgid "Nofollow links"
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:871
+#: code:addons/website_forum/models/forum.py:891
+#, python-format
+msgid "Not allowed to vote for its own post"
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:935
+#, python-format
+msgid "Not enough karma to create a new Tag"
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:494
+#, python-format
+msgid "Not enough karma to retag."
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_2
+#: model:gamification.challenge,name:website_forum.challenge_notable_question
+msgid "Notable Question"
+msgstr "주목할만한 질문"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag_posts_count
+msgid "Number of Posts"
+msgstr "게시물 수"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_views
+msgid "Number of Views"
+msgstr "조회수"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_child_count
+msgid "Number of answers"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_count_flagged_posts
+msgid "Number of flagged posts"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_count_posts_waiting_validation
+msgid "Number of posts waiting for validation"
+msgstr ""
+
+#. module: website_forum
+#: selection:forum.post,state:0
+#: model:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Offensive"
+msgstr "모욕"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+msgid "On"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:29
+#, python-format
+msgid "On average,"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "Options"
+msgstr "선택 사항"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "Orders"
+msgstr "주문"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_all
+msgid "Our forums"
+msgstr "게시판"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_23
+#: model:gamification.challenge,name:website_forum.challenge_peer_pressure
+#: model:gamification.challenge.line,name:website_forum.line_peer_pressure
+#: model:gamification.goal.definition,name:website_forum.definition_peer_pressure
+msgid "Peer Pressure"
+msgstr "집단 압박"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "Pending"
+msgstr "보류"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "People"
+msgstr "사용자"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_plain_content
+msgid "Plain Content"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_post
+msgid "Please enter a descriptive question (should finish by a '?')"
+msgstr "서술식으로 질문을 입력해 주십시오('?'로 마침)"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_profile
+msgid ""
+"Please enter a valid email address in order to receive notifications from "
+"answers or comments."
+msgstr ""
+"답변 또는 의견에 대한 알림을 수신하기 위한 유효한 이메일 주소를 입력하십시오."
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_1
+#: model:gamification.challenge,name:website_forum.challenge_popular_question
+msgid "Popular Question"
+msgstr "인기있는 질문"
+
+#. module: website_forum
+#: model:gamification.challenge.line,name:website_forum.line_popular_question
+#: model:gamification.goal.definition,name:website_forum.definition_popular_question
+msgid "Popular Question (150)"
+msgstr "인기있는 질문(150)"
+
+#. module: website_forum
+#: model:gamification.challenge.line,name:website_forum.line_notable_question
+#: model:gamification.goal.definition,name:website_forum.definition_notable_question
+msgid "Popular Question (250)"
+msgstr "인기있는 질문(250)"
+
+#. module: website_forum
+#: model:gamification.challenge.line,name:website_forum.line_famous_question
+#: model:gamification.goal.definition,name:website_forum.definition_famous_question
+msgid "Popular Question (500)"
+msgstr "인기있는 질문(500)"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_post_id
+#: model:ir.ui.view,arch_db:website_forum.close_post
+#: model:ir.ui.view,arch_db:website_forum.new_link
+#: model:ir.ui.view,arch_db:website_forum.post_comment
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Post"
+msgstr "게시물"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answer
+msgid "Post Answer"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_post_reason
+msgid "Post Closing Reason"
+msgstr "게시 마감 사유"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_reply
+msgid "Post Comment"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_website_message_ids
+msgid "Post Messages"
+msgstr "게시 메시지"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_link
+msgid "Post Title"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "Post Types"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid "Post Your Question"
+msgstr "질문 게시"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_discussion
+msgid "Post Your Topic"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Post:"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_p_2
+msgid "Posted 10 comments"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_p_4
+msgid "Posted 100 comments"
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:438
+#, python-format
+msgid "Posting answer on a [Deleted] or [Closed] question is not possible"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag_post_ids
+#: model:ir.ui.menu,name:website_forum.menu_forum_posts
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Posts"
+msgstr "게시물"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid "Provide enough details and, if possible, give an example."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_profile
+msgid "Public profile"
+msgstr "일반 프로필"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_25
+#: model:gamification.challenge,name:website_forum.challenge_pundit
+#: model:gamification.challenge.line,name:website_forum.line_pundit
+#: model:gamification.goal.definition,name:website_forum.definition_pundit
+msgid "Pundit"
+msgstr "전문가"
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:58
+#, python-format
+msgid "Put your answer here."
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:37
+#, python-format
+msgid "Put your question here."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header_footer_custom
+msgid "Q&amp;amp;A"
+msgstr ""
+
+#. module: website_forum
+#: selection:forum.forum,default_post_type:0 selection:forum.post,post_type:0
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_parent_id
+msgid "Question"
+msgstr "질의"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:507
+#: model:mail.message.subtype,description:website_forum.mt_question_edit
+#: model:mail.message.subtype,name:website_forum.mt_question_edit
+#, python-format
+msgid "Question Edited"
+msgstr "질문 편집"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_question_downvote
+msgid "Question downvoted"
+msgstr "질문에 반대투표됨"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "Question has accepted answer"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.404
+msgid "Question not found!"
+msgstr "질문을 찾을 수 없습니다!"
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_q_4
+msgid "Question set as favorite by 1 user"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_q_6
+msgid "Question set as favorite by 25 users"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_q_5
+msgid "Question set as favorite by 5 users"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "Question tools"
+msgstr "질문 도구"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_gen_question_upvote
+msgid "Question upvoted"
+msgstr "질문에 찬성투표됨"
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_q_10
+msgid "Question voted up 15 times"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_q_8
+msgid "Question voted up 4 times"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_q_9
+msgid "Question voted up 6 times"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_question
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Questions"
+msgstr "질문"
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:525
+#, python-format
+msgid "Re: %s"
+msgstr "회신 : %s"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "Read Guidelines"
+msgstr "지침 읽기"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_profile
+msgid "Real name"
+msgstr "실명"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_closed_reason_id
+msgid "Reason"
+msgstr "사유"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_reason_type
+msgid "Reason Type"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "Reason:"
+msgstr "이유 :"
+
+#. module: website_forum
+#: model:gamification.badge,description:website_forum.badge_a_1
+msgid "Received at least 3 upvote for an answer for the first time"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "Redirect to external link"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Reject <i class=\"fa fa-times\"/>"
+msgstr ""
+
+#. module: website_forum
+#: selection:forum.forum,default_order:0
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_relevancy
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Relevance"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+msgid "Relevance Computation"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Reply"
+msgstr "회신"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_self_reply
+msgid "Reply to own question"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.404
+#: model:ir.ui.view,arch_db:website_forum.private_profile
+msgid "Return to the question list."
+msgstr "질문 목록으로 돌아갑니다."
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_moderator_id
+msgid "Reviewed by"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_post
+msgid "Save"
+msgstr "저장"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_26
+#: model:gamification.challenge,name:website_forum.challenge_scholar
+#: model:gamification.challenge.line,name:website_forum.line_scholar
+#: model:gamification.goal.definition,name:website_forum.definition_scholar
+msgid "Scholar"
+msgstr "학자"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Search in Post"
+msgstr "게시물 검색"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_relevancy_time_decay
+msgid "Second Relevance Parameter"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
+msgid "See post"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "Seen:"
+msgstr "조회 :"
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_tour_forum.js:15
+#, python-format
+msgid "Select this menu item to create a new forum."
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_8
+#: model:gamification.challenge,name:website_forum.challenge_self_learner
+#: model:gamification.challenge.line,name:website_forum.line_self_learner
+#: model:gamification.goal.definition,name:website_forum.definition_self_learner
+msgid "Self-Learner"
+msgstr "자가 학습자"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"Set a clear, explicit and concise question title\n"
+"                (check"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Share"
+msgstr "공유"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_link
+msgid ""
+"Share an awesome link. Your post will appear in the 'Newest' top-menu.\n"
+"            If the community vote on your post, it will get traction by "
+"being promoted\n"
+"            in the homepage."
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:39
+#, python-format
+msgid ""
+"Share this content to increase your chances to be featured on the front page "
+"and attract more visitors."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_allow_share
+msgid "Sharing Options"
+msgstr "공유 옵션"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_silver_badge
+msgid "Silver badges count"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:23
+#, python-format
+msgid "Sorry you must be logged in to perform this action"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:70
+#, python-format
+msgid "Sorry you must be logged to flag a post"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:118
+#, python-format
+msgid "Sorry you must be logged to vote"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:168
+#, python-format
+msgid "Sorry, anonymous users cannot choose correct answer."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.404
+msgid "Sorry, this question is not available anymore."
+msgstr "죄송합니다, 이 질문은 더이상 사용할 수 없습니다."
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:113
+#, python-format
+msgid "Sorry, you cannot vote for your own posts"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Sort by"
+msgstr "정렬 기준"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "Stats"
+msgstr "통계"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_state
+msgid "Status"
+msgstr "상태"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_6
+#: model:gamification.challenge,name:website_forum.challenge_stellar_question_25
+msgid "Stellar Question"
+msgstr "주요한 질문"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_q_7
+#: model:gamification.challenge,name:website_forum.challenge_student
+msgid "Student"
+msgstr "학생"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+#: model:ir.ui.view,arch_db:website_forum.new_link
+msgid "Submit a Link"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_31
+#: model:gamification.challenge,name:website_forum.challenge_supporter
+#: model:gamification.challenge.line,name:website_forum.line_supporter
+#: model:gamification.goal.definition,name:website_forum.definition_supporter
+msgid "Supporter"
+msgstr "후원자"
+
+#. module: website_forum
+#: model:ir.actions.act_window,name:website_forum.forum_tag_action
+#: model:ir.ui.menu,name:website_forum.menu_forum_tag
+#: model:ir.ui.view,arch_db:website_forum.forum_tag_view_form
+#: model:ir.ui.view,arch_db:website_forum.forum_tag_view_list
+#: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
+msgid "Tag"
+msgstr "태그"
+
+#. module: website_forum
+#: sql_constraint:forum.tag:0
+msgid "Tag name already exists !"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_tag_ids
+#: model:ir.ui.view,arch_db:website_forum.edit_post
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+#: model:ir.ui.view,arch_db:website_forum.header
+#: model:ir.ui.view,arch_db:website_forum.new_discussion
+#: model:ir.ui.view,arch_db:website_forum.new_link
+#: model:ir.ui.view,arch_db:website_forum.new_question
+#: model:ir.ui.view,arch_db:website_forum.tag
+msgid "Tags"
+msgstr "태그"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_task_ids
+msgid "Tasks"
+msgstr ""
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_32
+#: model:gamification.challenge,name:website_forum.challenge_taxonomist
+#: model:gamification.challenge.line,name:website_forum.line_taxonomist
+#: model:gamification.goal.definition,name:website_forum.definition_taxonomist
+msgid "Taxonomist"
+msgstr "분류가"
+
+#. module: website_forum
+#: model:gamification.badge,name:website_forum.badge_a_1
+#: model:gamification.challenge,name:website_forum.challenge_teacher
+#: model:gamification.challenge.line,name:website_forum.line_teacher
+#: model:gamification.goal.definition,name:website_forum.definition_teacher
+msgid "Teacher"
+msgstr "교사"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_post_bump_date
+msgid ""
+"Technical field allowing to bump a question. Writing on this field will "
+"trigger a write on write_date and therefore bump the post. Directly writing "
+"on write_date is currently not supported and this field is a workaround."
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:9
+#, python-format
+msgid "Thanks for posting!"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "The"
+msgstr "The"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "The flagged queue is empty."
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"The goal of this site is create a relevant knowledge base that would answer\n"
+"    questions related to Odoo."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "The offensive queue is empty."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "The validation queue is empty."
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"Therefore questions and answers can be edited like wiki pages by experienced "
+"users of\n"
+"    this site in order to improve the overall quality of the knowledge base "
+"content.\n"
+"    Such privileges are granted based on user karma level: you will be able "
+"to do the same\n"
+"    once your karma gets high enough."
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"This community is for professional and enthusiast users,\n"
+"    partners and programmers. You can ask questions about:"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,description:website_forum.forum_help
+msgid ""
+"This community is for professionals and enthusiasts of our products and "
+"services. Share and discuss the best content and new marketing ideas, build "
+"your professional profile and become a better marketer together."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum_relevancy_post_vote
+msgid ""
+"This formula is used in order to sort by relevance. The variable 'votes' "
+"represents number of votes for a post, and 'days' is number of days since "
+"the post creation"
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:414
+#, python-format
+msgid "This forum does not allow %s"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:80
+#, python-format
+msgid "This post can not be flagged"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:75
+#, python-format
+msgid "This post is already flagged"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.private_profile
+msgid "This profile is private!"
+msgstr "비공개 프로필입니다!"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Threads"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_name
+msgid "Title"
+msgstr "제목"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_post
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid "Title must not be empty"
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/controllers/main.py:323
+#: code:addons/website_forum/controllers/main.py:394
+#, python-format
+msgid "Title should not be empty."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_recipient_id
+msgid "To"
+msgstr "받는 사람"
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"To prevent your question from being flagged and possibly removed, avoid "
+"asking\n"
+"    subjective questions where …"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_count
+msgid "Total Votes"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "Trending"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_post_type
+msgid "Type"
+msgstr "유형"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_content_link
+msgid "URL"
+msgstr "URL"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_post_content_link
+msgid "URL of Link Articles"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_link
+msgid "URL to Share"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Unanswered"
+msgstr "미답변"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_unlink_all
+msgid "Unlink all comments"
+msgstr "다른 의견 해제하기"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_comment_unlink_own
+msgid "Unlink own comments"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_profile
+msgid "Update"
+msgstr "갱신"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_write_date
+msgid "Update on"
+msgstr "갱신일"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_write_uid
+msgid "Updated by"
+msgstr "갱신자"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_upvote
+msgid "Upvote"
+msgstr "찬성투표"
+
+#. module: website_forum
+#: model:gamification.challenge.line,name:website_forum.line_student
+#: model:gamification.goal.definition,name:website_forum.definition_student
+msgid "Upvoted question (1)"
+msgstr "질문 찬성투표(1)"
+
+#. module: website_forum
+#: model:gamification.challenge.line,name:website_forum.line_great_question
+#: model:gamification.goal.definition,name:website_forum.definition_great_question
+msgid "Upvoted question (15)"
+msgstr "질문 찬성투표(15)"
+
+#. module: website_forum
+#: model:gamification.challenge.line,name:website_forum.line_nice_question
+#: model:gamification.goal.definition,name:website_forum.definition_nice_question
+msgid "Upvoted question (4)"
+msgstr "질문 찬성투표(4)"
+
+#. module: website_forum
+#: model:gamification.challenge.line,name:website_forum.line_good_question
+#: model:gamification.goal.definition,name:website_forum.definition_good_question
+msgid "Upvoted question (6)"
+msgstr "질문 찬성투표(6)"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_user_id
+msgid "User"
+msgstr "사용자"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_res_users
+msgid "Users"
+msgstr "사용자"
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum_allow_question
+msgid ""
+"Users can answer only once per question. Contributors can edit answers and "
+"mark the right ones."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.display_post_question_block
+msgid "View"
+msgstr "화면"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "View Your Badges"
+msgstr "뱃지 화면"
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_forum_post_vote
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_vote
+msgid "Vote"
+msgstr "투표"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_ids
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "Votes"
+msgstr "투표"
+
+#. module: website_forum
+#: selection:forum.post,state:0
+msgid "Waiting Validation"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Waiting for validation"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_forum_waiting_posts_count
+msgid "Waiting post"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_link
+msgid ""
+"We keep a high level of quality in showcased posts, around 20% of the "
+"submited\n"
+"            posts will be featured."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.edit_profile
+msgid "Website"
+msgstr "웹사이트"
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum_welcome_message
+msgid "Welcome Message"
+msgstr "환영 메시지"
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid "What kinds of questions can I ask here?"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid "What should I avoid in my answers?"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid "What should I avoid in my questions?"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"When a question or answer is upvoted, the user who posted them will gain "
+"some\n"
+"    points, which are called \"karma points\". These points serve as a "
+"rough\n"
+"    measure of the community trust to him/her. Various moderation tasks are\n"
+"    gradually assigned to the users based on those points."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,help:website_forum.field_forum_forum_allow_link
+msgid "When clicking on the post, it redirects to an external link"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid "Why can other people edit my questions/answers?"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"You already have one pending post.<br/>\n"
+"            Please wait for a moderator to validate your previous post "
+"before continuing."
+msgstr ""
+
+#. module: website_forum
+#: code:addons/website_forum/models/forum.py:139
+#, python-format
+msgid "You cannot choose %s as default post since the forum does not allow it."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answer
+msgid "You cannot post an empty answer"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"You should only ask practical, answerable questions based\n"
+"    on actual problems that you face. Chatty, open-ended\n"
+"    questions diminish the usefulness of this site and push\n"
+"    other questions off the front page."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answer
+msgid "Your Answer"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_discussion
+msgid "Your Discussion Title..."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid "Your Question Title..."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_reply
+msgid "Your Reply"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.faq
+msgid "accept any answer"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid "and"
+msgstr "그리고"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.close_post
+msgid "back to post"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid "bad examples"
+msgstr ""
+
+#. module: website_forum
+#: selection:gamification.badge,level:0
+msgid "bronze"
+msgstr "동"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "by"
+msgstr "작성자"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+msgid "by activity date"
+msgstr "활동 날짜별"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+msgid "by most answered"
+msgstr "최고의 답변별"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+msgid "by most voted"
+msgstr "최고 득표별"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+msgid "by newest"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_index
+msgid "by relevance"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.faq
+msgid "close any posts"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_7
+msgid "contains offensive or malicious remarks"
+msgstr "모욕이나 악의적인 발언 포함"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.faq
+msgid "delete any comment"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.faq
+msgid "delete any question or answer"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.faq
+msgid "delete own comment"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.faq
+msgid "downvote"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_1
+msgid "duplicate post"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_link
+msgid "e.g. https://www.odoo.com"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.faq
+msgid "edit any post, view offensive flags"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid "every answer is equally valid: “What’s your favorite ______?”"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.faq
+msgid "flag offensive, close own questions"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "flagged"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "follower(s)"
+msgstr "팔로워"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "for reason:"
+msgstr "이유 : "
+
+#. module: website_forum
+#: selection:gamification.badge,level:0
+msgid "gold"
+msgstr "금"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid "good examples"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "has been closed"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation
+msgid ""
+"has been posted and require your validation. Click here to access the "
+"question :"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
+msgid "has been posted. Click here to access the post :"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
+msgid "has been posted. Click here to access the question :"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:36
+#, python-format
+msgid "here"
+msgstr "이곳"
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid "how to configure or customize Odoo to specific business needs,"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid "how to develop modules for your own need,"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid "how to install Odoo on a specific infrastructure,"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:34
+#, python-format
+msgid ""
+"if your\n"
+"        answer is selected as the right one. See what you can do with karma"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_13
+msgid "inappropriate and unacceptable statements"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.faq
+msgid "insert text link, upload files"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_11
+msgid "insulting and offensive language"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid "it is a rant disguised as a question: “______ sucks, am I right?”"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "karma"
+msgstr "명성"
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:34
+#, python-format
+msgid "karma points"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "last connection"
+msgstr "최근 접속"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "location"
+msgstr "위치"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "member since"
+msgstr "회원 가입일"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_4
+msgid "not a real post"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_6
+msgid "not relevant or out dated"
+msgstr "관련없음 또는 기간 초과"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_2
+msgid "off-topic or not relevant"
+msgstr "주제 외 또는 관련없음"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
+#: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation
+#: model:ir.ui.view,arch_db:website_forum.post_comment
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "on"
+msgstr "작성일"
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:29
+#, python-format
+msgid ""
+"on social networks get an answer within\n"
+"        5 hours. Questions shared on two social networks have"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "post"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_15
+msgid "racist and hate speech"
+msgstr ""
+
+#. module: website_forum
+#: selection:gamification.badge,level:0
+msgid "silver"
+msgstr "은"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_8
+msgid "spam or advertising"
+msgstr "스팸 또는 광고"
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid "specific questions about Odoo service offers, etc."
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"there is no actual problem to be solved: “I’m curious if other people feel "
+"like I do.”"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_14
+msgid "threatening language"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "time"
+msgstr "번"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "times"
+msgstr "번"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_9
+msgid "too localized"
+msgstr "지나친 일반화"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_3
+msgid "too subjective and argumentative"
+msgstr "지나친 주관과 논쟁"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.faq
+msgid "upvote, add comments"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "views"
+msgstr "회"
+
+#. module: website_forum
+#: model:forum.post.reason,name:website_forum.reason_12
+msgid "violent language"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "votes"
+msgstr "투표수"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.header
+msgid "waiting for validation"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"we are being asked an open-ended, hypothetical question: “What if ______ "
+"happened?”"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "website"
+msgstr "웹 사이트"
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid "what's the best way to use Odoo for a specific business need,"
+msgstr ""
+
+#. module: website_forum
+#: model:forum.forum,faq:website_forum.forum_help
+msgid ""
+"your answer is provided along with the question, and you expect more "
+"answers: “I use ______ for ______, what do you use?”"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.faq
+msgid "your biography can be seen as tooltip"
+msgstr ""

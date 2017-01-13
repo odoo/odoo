@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_payment_advice_tree" model="ir.ui.view">
+        <field name="name">payment.advice.report.tree</field>
+        <field name="model">payment.advice.report</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" create="false" string="Advices Analysis">
+                <field name="nbr" sum="# Payment Lines"/>
+                <field name="name" invisible="1"/>
+                <field name="employee_id" invisible="1"/>
+                <field name="date" invisible="1"/>
+                <field name="bank_id" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="number" invisible="1"/>
+                <field name="bysal" sum="Total Salary"/>
+                <field name="year" invisible="1"/>
+                <field name="day" invisible="1"/>
+                <field name="month" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="cheque_nos" invisible="1"/>
+                <field name="neft" invisible="1"/>
+                <field name="ifsc_code" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_payment_advice_search" model="ir.ui.view">
+        <field name="name">payment.advice.report.search</field>
+        <field name="model">payment.advice.report</field>
+        <field name="arch" type="xml">
+            <search string="Advices Analysis">
+                 <group>
+                    <filter string="Draft" domain="[('state','=','draft')]" help="Payment Advices which are in draft state"/>
+                    <filter string="Confirm" name="confirm" domain="[('state','=','confirm')]" help="Payment Advices which are in confirm state"/>
+                    <separator orientation="vertical"/>
+                    <filter string="NEFT" domain="[('neft','=',True)]" help="Advices which are paid using NEFT transfer"/>
+                    <separator orientation="vertical"/>
+                    <field name="date"/>
+                    <separator orientation="vertical"/>
+                    <field name="number"/>
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="cheque_nos"/>
+                </group>
+                <newline/>
+                 <group expand="0" string="Extended Filters...">
+                    <field name="ifsc_code"/>
+                    <field name="bank_id" widget="selection"/>
+                    <field name="employee_bank_no"/>
+                    <separator orientation="vertical"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                </group>
+                <newline/>
+                <group expand="1" string="Group By">
+                    <filter string="Employee" context="{'group_by':'employee_id'}" />
+                    <filter string="Bank" context="{'group_by':'bank_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Status" context="{'group_by':'state'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Month" name="order_month" context="{'group_by':'month'}" help="Month of Payment Advices"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_payment_advice_report_all" model="ir.actions.act_window">
+        <field name="name">Advices Analysis</field>
+        <field name="res_model">payment.advice.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_payment_advice_tree"/>
+        <field name="context">{'search_default_confirm':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="help">This report performs analysis on Payment Advices</field>
+    </record>
+
+    <menuitem name="Reports" id="menu_l10n_in_hr_payroll_report" parent="hr_payroll.menu_hr_payroll_root" sequence="99" groups="hr_payroll.group_hr_payroll_manager"/>
+    <menuitem action="action_payment_advice_report_all" id="menu_reporting_payment_advice" parent="menu_l10n_in_hr_payroll_report" sequence="5" />
+</odoo>

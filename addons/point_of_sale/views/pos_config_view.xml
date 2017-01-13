@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_config_form" model="ir.ui.view">
+        <field name="name">pos.config.form.view</field>
+        <field name="model">pos.config</field>
+        <field name="arch" type="xml">
+            <form string="Point of Sale Configuration">
+                <sheet>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field name="name"/></h1>
+                    <group col="4">
+                        <field name="picking_type_id" widget="selection" groups="stock.group_stock_multi_locations" />
+                        <field name="stock_location_id" groups="stock.group_stock_multi_locations"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="pricelist_id" groups="product.group_sale_pricelist"/>
+                        <field name="journal_id" widget="selection"/>
+                        <field name="invoice_journal_id" widget="selection"/>
+                        <field name="group_by" groups="account.group_account_user"/>
+                        <field name="barcode_nomenclature_id" />
+                        <field name="sequence_id" readonly="1" groups="base.group_no_one"/>
+                        <field name="fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        <field name="default_fiscal_position_id" options="{'no_create': True}"/>
+                        <field name="active"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                    <separator string="Available Payment Methods" colspan="4"/>
+                    <field name="journal_ids" colspan="4" nolabel="1" context="{'default_journal_user': 1}">
+                        <tree string="Journals">
+                            <field name="code" />
+                            <field name="name" />
+                            <field name="type" />
+                        </tree>
+                    </field>
+                    <group name="features" string="Features" >
+                        <group>
+                            <field name="iface_vkeyboard" />
+                            <field name="iface_invoicing" />
+                            <field name="iface_precompute_cash" />
+                            <field name="iface_start_categ_id" />
+                            <field name="tip_product_id" />
+                            <field name="iface_tax_included" />
+                        </group>
+                        <group>
+                            <field name="iface_big_scrollbars" />
+                            <field name="iface_print_auto" />
+                            <field name="iface_display_categ_images" />
+                            <field name="iface_print_skip_screen"  attrs="{'invisible' : [('iface_print_auto', '=', False)]}" />
+                        </group>
+                    </group>
+                    <group string="Hardware Proxy / PosBox" >
+                        <field name="proxy_ip" />
+                        <field name="iface_print_via_proxy" string="Receipt Printer"/>
+                        <field name="iface_scan_via_proxy" string="Barcode Scanner"/>
+                        <field name="iface_electronic_scale" />
+                        <field name="iface_cashdrawer" />
+                    </group>
+                    <group string="Cash Control">
+                        <field name="cash_control"/>
+                        <field name="default_cashbox_lines_ids" attrs="{'invisible': [('cash_control', '=', False)]}">
+                            <tree string="Cashbox" editable="bottom">
+                                <field name="coin_value"/>
+                                <field name="number"/>
+                                <field name="subtotal"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group name="receipt" string="Receipt" >
+                        <field name="receipt_header" string="Header" placeholder="A custom receipt header message"/>
+                        <field name="receipt_footer" string="Footer" placeholder="A custom receipt footer message"/>
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pos_config_tree" model="ir.ui.view">
+        <field name="name">pos.config.tree.view</field>
+        <field name="model">pos.config</field>
+        <field name="arch" type="xml">
+            <tree string="Point of Sale Configuration">
+                <field name="name" />
+                <field name="stock_location_id" groups="stock.group_stock_multi_locations"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_pos_config_search" model="ir.ui.view">
+        <field name="name">pos.config.search.view</field>
+        <field name="model">pos.config</field>
+        <field name="arch" type="xml">
+            <search string="Point of Sale Config">
+                <field name="name" />
+                <filter string="Inactive" domain="[('active', '=', False)]" />
+                <field name="stock_location_id" groups="stock.group_stock_multi_locations" />
+            </search>
+        </field>
+    </record>
+
+    <act_window
+        id="act_pos_config_sessions"
+        name="Sessions"
+        src_model="pos.config"
+        res_model="pos.session"
+        domain="[('config_id', '=', active_id)]" />
+
+    <record id="action_pos_config_pos" model="ir.actions.act_window">
+        <field name="name">Point of Sale</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.config</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_pos_config_search" />
+    </record>
+
+    <menuitem
+        id="menu_pos_config_pos"
+        parent="menu_point_config_product"
+        action="action_pos_config_pos"
+        groups="group_pos_manager"/>
+
+    <record id="action_pos_config_kanban" model="ir.actions.act_window">
+        <field name="name">Point of Sale</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.config</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain"></field>
+        <field name="search_view_id" ref="view_pos_config_search" />
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new PoS config.
+            </p><p>
+                Configure at least one Point of Sale to be able to sell through the PoS interface.
+            </p>
+        </field>
+    </record>
+
+    <!-- Barcode Nomenclatures -->
+    <menuitem id="menu_pos_barcode_nomenclature_all" parent="menu_point_config_product" action="barcodes.action_barcode_nomenclature_form" sequence="30"/>
+
+    <menuitem id="menu_pos_dashboard" action="action_pos_config_kanban" parent="menu_point_root" name="Dashboard" sequence="1"/>
+</odoo>

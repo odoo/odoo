@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- ir.cron -->
+        <record id="ir_cron_view" model="ir.ui.view">
+            <field name="model">ir.cron</field>
+            <field name="arch" type="xml">
+                <form string="Scheduled Actions">
+                    <header>
+                        <button name="method_direct_trigger" type="object" string="Run Manually" class="oe_highlight"/> 
+                    </header>
+                   <sheet>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="active"/>
+                        <field name="user_id" />
+                        <field name="priority" />
+                    </group>
+                    <notebook>
+                    <page string="Information">
+                        <group col="4">
+                            <field name="interval_number"/>
+                            <field name="interval_type"/>
+                            <newline/>
+                            <field name="nextcall"/>
+                            <field name="numbercall"/>
+                            <field name="doall"/>
+                        </group>
+                    </page>
+                    <page string="Technical Data" groups="base.group_no_one">
+                        <group string="Action to Trigger">
+                            <field name="model"/>
+                            <field name="function"/>
+                        </group>
+                        <label for="args"/>
+                        <field name="args"/>
+                    </page>
+                    </notebook>
+                   </sheet> 
+                </form>
+            </field>
+        </record>
+        <record id="ir_cron_view_tree" model="ir.ui.view">
+            <field name="model">ir.cron</field>
+            <field name="arch" type="xml">
+                <tree string="Scheduled Actions" decoration-muted="(not active)">
+                    <field name="priority" string="Sequence"/>
+                    <field name="name"/>
+                    <field name="nextcall"/>
+                    <field name="interval_number"/>
+                    <field name="interval_type"/>
+                    <field name="numbercall"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="ir_cron_view_calendar">
+            <field name="model">ir.cron</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Scheduled Actions" date_start="nextcall" color="user_id">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                </calendar>
+            </field>
+        </record>
+        <record id="ir_cron_view_search" model="ir.ui.view">
+            <field name="model">ir.cron</field>
+            <field name="arch" type="xml">
+                <search string="Scheduled Actions">
+                    <field name="name" string="Scheduled Action"/>
+                    <field name="user_id"/>
+                    <field name="nextcall"/>
+                    <field name="active"/>
+                    <group expand="0" string="Group By">
+                        <filter string="User" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Execution" domain="[]" context="{'group_by':'nextcall'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="ir_cron_act" model="ir.actions.act_window">
+            <field name="name">Scheduled Actions</field>
+            <field name="res_model">ir.cron</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="context">{'active_test': False}</field>
+            <field name="view_id" ref="ir_cron_view_tree"/>
+        </record>
+        <menuitem id="menu_ir_cron_act" action="ir_cron_act" parent="base.menu_automation"/>
+
+</odoo>

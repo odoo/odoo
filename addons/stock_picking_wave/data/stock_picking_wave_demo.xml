@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+			<!--
+	            Add picking wave   
+	        -->
+		<record id="stock_picking_wave_dry_1" model="stock.picking.wave">
+	        <field name="name">Picking Dry for John</field>
+			<field name="state">in_progress</field>   
+	    </record>
+	        
+		<record id="stock_picking_wave_freeze_1" model="stock.picking.wave">
+	        <field name="name">Picking Freeze for Mickael</field>
+			<field name="state">in_progress</field>
+	    </record>
+	
+			<!--
+	            Add picking   
+	        -->
+	
+		<record id="Picking_A" model="stock.picking">
+			<field name="name">Picking #1</field>
+			<field name="move_type">one</field>
+			<field name="priority">2</field>	
+			<field name="picking_type_id" ref="stock.picking_type_internal"/>
+			<field name="wave_id" ref="stock_picking_wave_freeze_1"/>
+			<field name="location_id" ref="stock.stock_location_stock"/>
+			<field name="location_dest_id" ref="stock.stock_location_output"/>
+		</record>
+		<record id="Picking_B" model="stock.picking">
+			<field name="name">Picking #2</field>
+			<field name="move_type">one</field>		
+			<field name="state">assigned</field>
+			<field name="priority">1</field>		
+			<field name="picking_type_id" ref="stock.picking_type_internal"/>
+			<field name="wave_id" ref="stock_picking_wave_dry_1"/>
+			<field name="location_id" ref="stock.stock_location_stock"/>
+			<field name="location_dest_id" ref="stock.stock_location_output"/>
+		</record>	
+		<record id="Picking_C" model="stock.picking">
+			<field name="name">Picking #3</field>
+			<field name="move_type">one</field>		
+			<field name="state">assigned</field>
+			<field name="priority">1</field>		
+			<field name="picking_type_id" ref="stock.picking_type_internal"/>	
+			<field name="wave_id" ref="stock_picking_wave_freeze_1"/>
+			<field name="location_id" ref="stock.stock_location_stock"/>
+			<field name="location_dest_id" ref="stock.stock_location_output"/>
+		</record>	
+	
+			<!-- add Product -->
+			
+		<record id="product_product_ice_cream_choco" model="product.product">
+	            <field name="name">Ice Cream Chocolate</field>
+	            <field name="default_code">IC-CHOCO</field>
+	            <field name="categ_id" ref="product.product_category_all"/>
+	            <field name="list_price">450.0</field>
+	            <field name="standard_price">300.0</field>
+	            <field name="type">consu</field>
+	            <field name="uom_id" ref="product.product_uom_unit"/>
+	            <field name="uom_po_id" ref="product.product_uom_unit"/>
+	            <field name="description_sale">Ice Cream Chocolate with sticks</field>
+	    </record>
+	    <record id="product_product_ice_cream_vani" model="product.product">
+	            <field name="name">Ice Cream Vanilla</field>
+	            <field name="default_code">IC-VANI</field>
+	            <field name="categ_id" ref="product.product_category_all"/>
+	            <field name="list_price">450.0</field>
+	            <field name="standard_price">300.0</field>
+	            <field name="type">consu</field>
+	            <field name="uom_id" ref="product.product_uom_unit"/>
+	            <field name="uom_po_id" ref="product.product_uom_unit"/>
+	            <field name="description_sale">Ice Cream Vanilla</field>
+	    </record>    
+		<record id="product_product_dry_specu" model="product.product">
+	            <field name="name">Speculoos</field>
+	            <field name="default_code">DRY-SPEC</field>
+	            <field name="categ_id" ref="product.product_category_all"/>
+	            <field name="list_price">150.0</field>
+	            <field name="standard_price">100.0</field>
+	            <field name="type">consu</field>
+	            <field name="uom_id" ref="product.product_uom_unit"/>
+	            <field name="uom_po_id" ref="product.product_uom_unit"/>
+	            <field name="description_sale">Speculoos - A belgian speciality</field>
+	    </record>	
+			
+		
+			<!--
+	            Add stock move   
+	        -->
+	
+		<record id="stock_move1" model="stock.move">
+			<field name="name">A first stock move</field>		
+			<field name="picking_id" ref="Picking_A"/>
+			<field name="location_id" ref="stock.stock_location_stock"/>
+			<field name="location_dest_id" ref="stock.stock_location_output"/>		
+			<field name="product_uom" ref="product.product_uom_unit" />
+			<field name="product_id" ref="product_product_ice_cream_choco"/>
+		</record>
+		<record id="stock_move2" model="stock.move">
+			<field name="name">A second stock move</field>		
+			<field name="picking_id" ref="Picking_A"/>
+			<field name="location_id" ref="stock.stock_location_stock"/>
+			<field name="location_dest_id" ref="stock.stock_location_output"/>		
+			<field name="product_uom" ref="product.product_uom_unit" />
+			<field name="product_id" ref="product_product_ice_cream_vani"/>
+		</record>
+		<record id="stock_move3" model="stock.move">
+			<field name="name">A third stock move</field>		
+			<field name="picking_id" ref="Picking_B"/>
+			<field name="location_id" ref="stock.stock_location_stock"/>
+			<field name="location_dest_id" ref="stock.stock_location_output"/>		
+			<field name="product_uom" ref="product.product_uom_unit" />
+			<!--<field name="product_id" ref="product.product_product_10"/>-->
+			<field name="product_id" ref="product_product_dry_specu"/>		
+		</record>
+		<record id="stock_move4" model="stock.move">
+			<field name="name">A fourth stock move</field>		
+			<field name="picking_id" ref="Picking_C"/>
+			<field name="location_id" ref="stock.stock_location_stock"/>
+			<field name="location_dest_id" ref="stock.stock_location_output"/>		
+			<field name="product_uom" ref="product.product_uom_unit" />		
+			<field name="product_id" ref="product_product_ice_cream_vani"/>		
+		</record>
+
+</odoo>

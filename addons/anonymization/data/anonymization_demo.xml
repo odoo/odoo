@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+    <record id="anonymization_field_ir_actions_todo_name" model="ir.model.fields.anonymization">
+        <field name="model_name">ir.actions.todo</field>
+        <field name="field_name">name</field>
+    </record>
+
+    <record id="anonymization_field_a_non_existing_field_in_an_existing_model" model="ir.model.fields.anonymization">
+        <field name="model_name">res.partner</field>
+        <field name="field_name">a_non_existing_field</field>
+    </record>
+
+    <record id="anonymization_field_a_non_existing_field_in_a_non_existing_model" model="ir.model.fields.anonymization">
+        <field name="model_name">a.non.existing.model</field>
+        <field name="field_name">a_non_existing_field</field>
+    </record>
+
+</data>
+</odoo>
+

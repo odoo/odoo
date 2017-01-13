@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="website_sale" inherit_id="website.snippets" name="Snippet Ecommerce">
+
+    <xpath expr="//div[@id='snippet_options']" position="inside">
+        <div data-js='website_sale'
+            data-selector=".oe_product.oe_grid"
+            data-no-check="true">
+
+          <li class='dropdown-submenu'>
+            <a tabindex="-1" href="#">Size</a>
+            <ul class="dropdown-menu" name="size">
+              <li><a href="#">
+                <table>
+                  <tr><td class="selected"></td><td></td><td></td><td></td></tr>
+                  <tr><td></td><td></td><td></td><td></td></tr>
+                  <tr><td></td><td></td><td></td><td></td></tr>
+                  <tr><td></td><td></td><td></td><td></td></tr>
+                </table>
+              </a></li>
+            </ul>
+          </li>
+          <li class='dropdown-submenu'>
+            <a tabindex="-1" href="#">Styles</a>
+            <ul class="dropdown-menu" name="style">
+            </ul>
+          </li>
+          <li class='dropdown-submenu'>
+              <a tabindex="-1" href="#">Promote</a>
+              <ul class="dropdown-menu">
+                  <li data-go_to="top"><a>Push to top</a></li>
+                  <li data-go_to="up"><a>Push up</a></li>
+                  <li data-go_to="down"><a>Push down</a></li>
+                  <li data-go_to="bottom"><a>Push to bottom</a></li>
+              </ul>
+          </li>
+        </div>
+    </xpath>
+
+</template>
+</odoo>

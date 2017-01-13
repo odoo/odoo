@@ -1,0 +1,37 @@
+<templates>
+    <!-- js-only -->
+    <t t-name="jquery-extend">
+        <ul><li>one</li></ul>
+    </t>
+    <t t-extend="jquery-extend">
+        <t t-jquery="ul" t-operation="append"><li>3</li></t>
+    </t>
+    <t t-extend="jquery-extend">
+        <t t-jquery="ul li:first-child" t-operation="replace"><li>2</li></t>
+    </t>
+    <t t-extend="jquery-extend">
+        <t t-jquery="ul" t-operation="prepend"><li>1</li></t>
+        <t t-jquery="ul" t-operation="before"><hr/></t>
+        <t t-jquery="ul" t-operation="after"><hr/></t>
+    </t>
+    <t t-extend="jquery-extend">
+        <t t-jquery="ul">this.attr('class', 'main');</t>
+    </t>
+    <t t-extend="jquery-extend">
+        <t t-jquery="hr:eq(1)" t-operation="replace"><footer></footer></t>
+    </t>
+    <t t-extend="jquery-extend">
+        <t t-jquery="footer" t-operation="inner"><b>[[end]]</b></t>
+    </t>
+    <result id="jquery-extend"><![CDATA[
+    <hr/><ul class="main"><li>1</li><li>2</li><li>3</li></ul><footer><b>[[end]]</b></footer>
+]]></result>
+
+    <t t-name="jquery-extend-clone" t-extend="jquery-extend">
+        <t t-jquery="ul" t-operation="append"><li>[[cloned template]]</li></t>
+    </t>
+    <result id="jquery-extend-clone"><![CDATA[
+    <ul><li>one</li><li>[[cloned template]]</li></ul>
+]]></result>
+
+</templates>

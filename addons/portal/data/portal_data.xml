@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- The portal group add flag is_portal -->
+        <record id="base.group_portal" model="res.groups">
+            <field name="is_portal" eval="True"/>
+        </record>
+
+        <record id="mail_template_data_portal_welcome" model="mail.template">
+            <field name="name">Portal: new user</field>
+            <field name="model_id" ref="portal.model_portal_wizard_user"/>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="subject">Your Odoo account at ${user.company_id.name}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="True"/>
+            <field name="body_html"><![CDATA[
+<p>
+    Dear ${object.user_id.name or ''},
+</p>
+<p>
+    You have been given access to ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.
+</p>
+<p>
+    Your login account data is:
+</p>
+<ul>
+    <li>Username: ${object.user_id.login or ''}</li>
+    <li>Portal: <a href="${'portal_url' in ctx and ctx['portal_url'] or ''}">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>
+	<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>
+</ul>
+<p>
+	You can set or change your password via the following url:
+</p>
+<ul>
+    <li><a href="${object.user_id.signup_url}">${object.user_id.signup_url}</a></li>
+</ul>
+<p>
+${object.wizard_id.welcome_message or ''}]]></field>
+        </record>
+    </data>
+</odoo>

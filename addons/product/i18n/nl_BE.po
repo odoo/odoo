@@ -1,0 +1,967 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * product
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-29 14:00+0000\n"
+"PO-Revision-Date: 2016-01-14 10:10+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Dutch (Belgium) (http://www.transifex.com/odoo/odoo-9/"
+"language/nl_BE/)\n"
+"Language: nl_BE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: product
+#: code:addons/product/models/product_template.py:302
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopie)"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_active
+#: model:ir.model.fields,field_description:product.field_product_product_active
+#: model:ir.model.fields,field_description:product.field_product_template_active
+#: model:ir.model.fields,field_description:product.field_product_uom_active
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+msgid "Active"
+msgstr "Actief"
+
+#. module: product
+#: model:product.category,name:product.product_category_all
+msgid "All"
+msgstr "Alles"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_view
+msgid "Applicable On"
+msgstr "Toepasbaar op"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_barcode
+#: model:ir.model.fields,field_description:product.field_product_template_barcode
+msgid "Barcode"
+msgstr "Streepjescode"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_base
+msgid "Based on"
+msgstr "Op basis van"
+
+#. module: product
+#: model:product.attribute.value,name:product.product_attribute_value_4
+msgid "Black"
+msgstr "Zwart"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.view_product_price_list
+msgid "Calculate Product Price per Unit Based on Pricelist Version."
+msgstr "Bereken de productprijs per eenheid volgens de prijslijstversie."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_rental
+#: model:ir.model.fields,field_description:product.field_product_template_rental
+msgid "Can be Rent"
+msgstr "Kan worden gehuurd"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_sale_ok
+#: model:ir.model.fields,field_description:product.field_product_template_sale_ok
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Can be Sold"
+msgstr "Verkoopbaar"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.view_product_price_list
+msgid "Cancel"
+msgstr "Annuleren"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category_type
+#: model:ir.ui.view,arch_db:product.product_category_form_view
+msgid "Category Type"
+msgstr "Categorietype"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category_child_id
+msgid "Child Categories"
+msgstr "Onderliggende categorieën"
+
+#. module: product
+#: model:product.attribute,name:product.product_attribute_2
+msgid "Color"
+msgstr "Kleur"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_color
+#: model:ir.model.fields,field_description:product.field_product_template_color
+msgid "Color Index"
+msgstr "Kleurindex"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_company_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_company_id
+#: model:ir.model.fields,field_description:product.field_product_product_company_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_company_id
+#: model:ir.model.fields,field_description:product.field_product_template_company_id
+msgid "Company"
+msgstr "Bedrijf"
+
+#. module: product
+#: code:addons/product/models/product_uom.py:89
+#, python-format
+msgid ""
+"Conversion from Product UoM %s to Default UoM %s is not possible as they "
+"both belong to different Category!."
+msgstr ""
+"Conversie van producteenheid %s naar standaardeenheid %s is niet mogelijk, "
+"omdat de eenheden niet tot dezelfde categorie behoren."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_price_history_cost
+#: model:ir.model.fields,field_description:product.field_product_product_standard_price
+#: model:ir.model.fields,field_description:product.field_product_template_standard_price
+#: selection:product.pricelist.item,base:0
+msgid "Cost"
+msgstr "Kost"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_create_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_line_create_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_price_create_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_create_uid
+#: model:ir.model.fields,field_description:product.field_product_category_create_uid
+#: model:ir.model.fields,field_description:product.field_product_packaging_create_uid
+#: model:ir.model.fields,field_description:product.field_product_price_history_create_uid
+#: model:ir.model.fields,field_description:product.field_product_price_list_create_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist_create_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_create_uid
+#: model:ir.model.fields,field_description:product.field_product_product_create_uid
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_create_uid
+#: model:ir.model.fields,field_description:product.field_product_template_create_uid
+#: model:ir.model.fields,field_description:product.field_product_uom_categ_create_uid
+#: model:ir.model.fields,field_description:product.field_product_uom_create_uid
+msgid "Created by"
+msgstr "Gemaakt door"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_create_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_line_create_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_price_create_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_create_date
+#: model:ir.model.fields,field_description:product.field_product_category_create_date
+#: model:ir.model.fields,field_description:product.field_product_packaging_create_date
+#: model:ir.model.fields,field_description:product.field_product_price_history_create_date
+#: model:ir.model.fields,field_description:product.field_product_price_list_create_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist_create_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_create_date
+#: model:ir.model.fields,field_description:product.field_product_product_create_date
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_create_date
+#: model:ir.model.fields,field_description:product.field_product_template_create_date
+#: model:ir.model.fields,field_description:product.field_product_uom_categ_create_date
+#: model:ir.model.fields,field_description:product.field_product_uom_create_date
+msgid "Created on"
+msgstr "Gemaakt op"
+
+#. module: product
+#: model:ir.model,name:product.model_res_currency
+#: model:ir.model.fields,field_description:product.field_product_pricelist_currency_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_currency_id
+#: model:ir.model.fields,field_description:product.field_product_product_currency_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_currency_id
+#: model:ir.model.fields,field_description:product.field_product_template_currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_price_history_datetime
+msgid "Date"
+msgstr "Datum"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product_uom_id
+#: model:ir.model.fields,help:product.field_product_template_uom_id
+msgid "Default Unit of Measure used for all stock operation."
+msgstr "Standaard maateenheid voor alle voorraadbewegingen."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product_uom_po_id
+#: model:ir.model.fields,help:product.field_product_template_uom_po_id
+msgid ""
+"Default Unit of Measure used for purchase orders. It must be in the same "
+"category than the default unit of measure."
+msgstr ""
+"Standaardmaateenheid voor aankooporders. Deze moet in dezelfde categorie "
+"liggen als de standaardmaateenheid."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_delay
+msgid "Delivery Lead Time"
+msgstr "Leveringstermijn"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_description
+#: model:ir.model.fields,field_description:product.field_product_template_description
+msgid "Description"
+msgstr "Omschrijving"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_display_name
+#: model:ir.model.fields,field_description:product.field_product_attribute_line_display_name
+#: model:ir.model.fields,field_description:product.field_product_attribute_price_display_name
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_display_name
+#: model:ir.model.fields,field_description:product.field_product_category_display_name
+#: model:ir.model.fields,field_description:product.field_product_packaging_display_name
+#: model:ir.model.fields,field_description:product.field_product_price_history_display_name
+#: model:ir.model.fields,field_description:product.field_product_price_list_display_name
+#: model:ir.model.fields,field_description:product.field_product_pricelist_display_name
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_display_name
+#: model:ir.model.fields,field_description:product.field_product_product_display_name
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_display_name
+#: model:ir.model.fields,field_description:product.field_product_template_display_name
+#: model:ir.model.fields,field_description:product.field_product_uom_categ_display_name
+#: model:ir.model.fields,field_description:product.field_product_uom_display_name
+#: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_display_name
+msgid "Display Name"
+msgstr "Schermnaam"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_end
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_date_end
+msgid "End Date"
+msgstr "Einddatum"
+
+#. module: product
+#: code:addons/product/models/product.py:43
+#, python-format
+msgid "Error ! You cannot create recursive categories."
+msgstr "U kunt niet dezelfde categorieën maken."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item_name
+#: model:ir.model.fields,help:product.field_product_pricelist_item_price
+msgid "Explicit rule name for this pricelist line."
+msgstr "Regelnaam voor deze prijslijstlijn."
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "General Information"
+msgstr "Algemene informatie"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product_packaging_ids
+#: model:ir.model.fields,help:product.field_product_template_packaging_ids
+msgid ""
+"Gives the different ways to package the same product. This has no impact on "
+"the picking order and is mainly used if you use the EDI module."
+msgstr ""
+"Toont de verschillende manieren om hetzelfde product te verpakken. Dit heeft "
+"geen invloed op de zendnota. Het wordt hoofdzakelijk gebruikt in de EDI-"
+"module."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item_sequence
+msgid ""
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
+"item is found."
+msgstr ""
+"Bepaalt de volgorde waarin de prijslijstitems worden gecontroleerd. De "
+"evaluatie begint bij het laagste volgnummer en stopt zodra een passend item "
+"is gevonden."
+
+#. module: product
+#: selection:product.pricelist.item,applied_on:0
+msgid "Global"
+msgstr "Algemeen"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_id
+#: model:ir.model.fields,field_description:product.field_product_attribute_line_id
+#: model:ir.model.fields,field_description:product.field_product_attribute_price_id
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_id
+#: model:ir.model.fields,field_description:product.field_product_category_id
+#: model:ir.model.fields,field_description:product.field_product_packaging_id
+#: model:ir.model.fields,field_description:product.field_product_price_history_id
+#: model:ir.model.fields,field_description:product.field_product_price_list_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_id
+#: model:ir.model.fields,field_description:product.field_product_product_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_id
+#: model:ir.model.fields,field_description:product.field_product_template_id
+#: model:ir.model.fields,field_description:product.field_product_uom_categ_id
+#: model:ir.model.fields,field_description:product.field_product_uom_id
+#: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_id
+msgid "ID"
+msgstr "ID"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_image
+msgid "Image"
+msgstr "Afbeelding"
+
+#. module: product
+#: model:product.category,name:product.product_category_2
+msgid "Internal"
+msgstr "Intern"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_code
+#: model:ir.model.fields,field_description:product.field_product_product_default_code
+#: model:ir.model.fields,field_description:product.field_product_template_default_code
+msgid "Internal Reference"
+msgstr "Interne referentie"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute___last_update
+#: model:ir.model.fields,field_description:product.field_product_attribute_line___last_update
+#: model:ir.model.fields,field_description:product.field_product_attribute_price___last_update
+#: model:ir.model.fields,field_description:product.field_product_attribute_value___last_update
+#: model:ir.model.fields,field_description:product.field_product_category___last_update
+#: model:ir.model.fields,field_description:product.field_product_packaging___last_update
+#: model:ir.model.fields,field_description:product.field_product_price_history___last_update
+#: model:ir.model.fields,field_description:product.field_product_price_list___last_update
+#: model:ir.model.fields,field_description:product.field_product_pricelist___last_update
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item___last_update
+#: model:ir.model.fields,field_description:product.field_product_product___last_update
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo___last_update
+#: model:ir.model.fields,field_description:product.field_product_template___last_update
+#: model:ir.model.fields,field_description:product.field_product_uom___last_update
+#: model:ir.model.fields,field_description:product.field_product_uom_categ___last_update
+#: model:ir.model.fields,field_description:product.field_report_product_report_pricelist___last_update
+msgid "Last Modified on"
+msgstr "Laatst Aangepast op"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_line_write_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_price_write_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_write_uid
+#: model:ir.model.fields,field_description:product.field_product_attribute_write_uid
+#: model:ir.model.fields,field_description:product.field_product_category_write_uid
+#: model:ir.model.fields,field_description:product.field_product_packaging_write_uid
+#: model:ir.model.fields,field_description:product.field_product_price_history_write_uid
+#: model:ir.model.fields,field_description:product.field_product_price_list_write_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_write_uid
+#: model:ir.model.fields,field_description:product.field_product_pricelist_write_uid
+#: model:ir.model.fields,field_description:product.field_product_product_write_uid
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_write_uid
+#: model:ir.model.fields,field_description:product.field_product_template_write_uid
+#: model:ir.model.fields,field_description:product.field_product_uom_categ_write_uid
+#: model:ir.model.fields,field_description:product.field_product_uom_write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_line_write_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_price_write_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_write_date
+#: model:ir.model.fields,field_description:product.field_product_attribute_write_date
+#: model:ir.model.fields,field_description:product.field_product_category_write_date
+#: model:ir.model.fields,field_description:product.field_product_packaging_write_date
+#: model:ir.model.fields,field_description:product.field_product_price_history_write_date
+#: model:ir.model.fields,field_description:product.field_product_price_list_write_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_write_date
+#: model:ir.model.fields,field_description:product.field_product_pricelist_write_date
+#: model:ir.model.fields,field_description:product.field_product_product_write_date
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_write_date
+#: model:ir.model.fields,field_description:product.field_product_template_write_date
+#: model:ir.model.fields,field_description:product.field_product_uom_categ_write_date
+#: model:ir.model.fields,field_description:product.field_product_uom_write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category_parent_left
+msgid "Left Parent"
+msgstr "Linkerbovenliggend"
+
+#. module: product
+#: model:product.uom.categ,name:product.uom_categ_length
+msgid "Length / Distance"
+msgstr "Lengte / afstand"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_attribute_line_ids
+msgid "Lines"
+msgstr "Lijnen"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_packaging_ids
+#: model:ir.model.fields,field_description:product.field_product_template_packaging_ids
+msgid "Logistical Units"
+msgstr "Logistieke eenheden"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Max. Margin"
+msgstr "Max. marge"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_max_margin
+msgid "Max. Price Margin"
+msgstr "Max. prijsmarge"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Min. Margin"
+msgstr "Min. marge"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_min_margin
+msgid "Min. Price Margin"
+msgstr "Min. prijsmarge"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_min_quantity
+msgid "Min. Quantity"
+msgstr "Minimumhoeveelheid"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_min_qty
+msgid "Minimal Quantity"
+msgstr "Minimumhoeveelheid"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_name
+#: model:ir.model.fields,field_description:product.field_product_category_name
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_name
+#: model:ir.model.fields,field_description:product.field_product_product_name
+#: model:ir.model.fields,field_description:product.field_product_template_name
+#: model:ir.model.fields,field_description:product.field_product_uom_categ_name
+msgid "Name"
+msgstr "Naam:"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "New Price ="
+msgstr "Nieuwe prijs ="
+
+#. module: product
+#: selection:product.category,type:0
+msgid "Normal"
+msgstr "Normaal"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Notes"
+msgstr "Opmerkingen"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+msgid "Other Information"
+msgstr "Overige informatie"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_base_pricelist_id
+#: selection:product.pricelist.item,base:0
+msgid "Other Pricelist"
+msgstr "Andere prijslijst"
+
+#. module: product
+#: model:ir.model,name:product.model_product_packaging
+#: model:ir.ui.view,arch_db:product.product_packaging_form_view
+#: model:ir.ui.view,arch_db:product.product_packaging_tree_view
+msgid "Packaging"
+msgstr "Verpakking"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.action_packaging_view
+msgid "Packagings"
+msgstr "Verpakkingen"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category_parent_id
+msgid "Parent Category"
+msgstr "Hoofdcategorie"
+
+#. module: product
+#: model:ir.model,name:product.model_res_partner
+msgid "Partner"
+msgstr "Relatie"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price
+#: model:ir.model.fields,field_description:product.field_product_product_price
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_price
+#: model:ir.model.fields,field_description:product.field_product_template_price
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_view
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Price"
+msgstr "Prijs"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Price Computation"
+msgstr "Prijsberekening"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_discount
+msgid "Price Discount"
+msgstr "Korting"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.action_product_price_list
+#: model:ir.model,name:product.model_product_price_list
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model:ir.ui.view,arch_db:product.report_pricelist
+#: model:ir.ui.view,arch_db:product.view_product_price_list
+msgid "Price List"
+msgstr "Prijslijst"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_round
+msgid "Price Rounding"
+msgstr "Prijsafronding"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_surcharge
+msgid "Price Surcharge"
+msgstr "Prijstoeslag"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_price_list_price_list
+msgid "PriceList"
+msgstr "Prijslijst"
+
+#. module: product
+#: model:ir.actions.report.xml,name:product.action_report_pricelist
+#: model:ir.model,name:product.model_product_pricelist
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_pricelist_id
+#: model:ir.model.fields,field_description:product.field_product_product_pricelist_id
+#: model:ir.model.fields,field_description:product.field_product_template_pricelist_id
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Pricelist"
+msgstr "Prijslijst"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_name
+msgid "Pricelist Name"
+msgstr "Prijslijstnaam"
+
+#. module: product
+#: model:ir.model,name:product.model_product_pricelist_item
+msgid "Pricelist item"
+msgstr "Prijslijstitem"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_pricelist_action2
+#: model:ir.model.fields,field_description:product.field_res_country_group_pricelist_ids
+msgid "Pricelists"
+msgstr "Prijslijsten"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.view_product_price_list
+msgid "Print"
+msgstr "Afdrukken"
+
+#. module: product
+#: model:ir.model,name:product.model_product_product
+#: model:ir.model.fields,field_description:product.field_product_packaging_product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_price_history_product_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_product_id
+#: model:ir.model.fields,field_description:product.field_product_product_product_variant_id
+#: model:ir.model.fields,field_description:product.field_product_template_product_variant_id
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+#: model:ir.ui.view,arch_db:product.product_template_tree_view
+#: selection:product.pricelist.item,applied_on:0
+#: model:res.request.link,name:product.req_link_product
+msgid "Product"
+msgstr "Product"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_category_action_form
+#: model:ir.ui.view,arch_db:product.product_category_list_view
+#: model:ir.ui.view,arch_db:product.product_category_search_view
+msgid "Product Categories"
+msgstr "Productcategorieën"
+
+#. module: product
+#: model:ir.model,name:product.model_product_category
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_categ_id
+msgid "Product Category"
+msgstr "Productcategorie"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+#: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Product Name"
+msgstr "Productnaam"
+
+#. module: product
+#: model:ir.model,name:product.model_product_template
+#: model:ir.model.fields,field_description:product.field_product_attribute_line_product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_attribute_price_product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_product_product_tmpl_id
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_tmpl_id
+#: model:ir.ui.view,arch_db:product.product_search_form_view
+msgid "Product Template"
+msgstr "Productsjabloon"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_type
+#: model:ir.model.fields,field_description:product.field_product_template_type
+msgid "Product Type"
+msgstr "Producttype"
+
+#. module: product
+#: model:ir.model,name:product.model_product_uom
+msgid "Product Unit of Measure"
+msgstr "Maateenheid product"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_id
+#: model:ir.ui.view,arch_db:product.product_normal_form_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#: selection:product.pricelist.item,applied_on:0
+msgid "Product Variant"
+msgstr "Productvariant"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_normal_action
+#: model:ir.actions.act_window,name:product.product_normal_action_sell
+#: model:ir.actions.act_window,name:product.product_variant_action
+#: model:ir.model.fields,field_description:product.field_base_config_settings_group_product_variant
+#: model:ir.ui.view,arch_db:product.product_product_tree_view
+msgid "Product Variants"
+msgstr "Product varianten"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_template_action
+#: model:ir.actions.act_window,name:product.product_template_action_all
+#: model:ir.model.fields,field_description:product.field_product_product_product_variant_ids
+#: model:ir.model.fields,field_description:product.field_product_template_product_variant_ids
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Products"
+msgstr "Producten"
+
+#. module: product
+#: model:ir.actions.report.xml,name:product.report_product_label
+#: model:ir.actions.report.xml,name:product.report_product_template_label
+msgid "Products Labels"
+msgstr "Productlabels"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_view
+#: model:ir.ui.view,arch_db:product.product_pricelist_view_tree
+msgid "Products Price List"
+msgstr "Productprijslijst"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_view_search
+msgid "Products Price Search"
+msgstr "Productprijzen zoeken"
+
+#. module: product
+#: code:addons/product/models/product.py:466
+#, python-format
+msgid "Products: "
+msgstr "Producten: "
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_template_lst_price
+#: selection:product.pricelist.item,base:0
+msgid "Public Price"
+msgstr "Publieke prijs"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_description_purchase
+#: model:ir.model.fields,field_description:product.field_product_template_description_purchase
+msgid "Purchase Description"
+msgstr "Aankoopomschrijving"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_uom_po_id
+#: model:ir.model.fields,field_description:product.field_product_template_uom_po_id
+msgid "Purchase Unit of Measure"
+msgstr "Aankoopmaateenheid"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_price_list_qty1
+msgid "Quantity-1"
+msgstr "Hoeveelheid-1"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_price_list_qty2
+msgid "Quantity-2"
+msgstr "Hoeveelheid-2"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_price_list_qty3
+msgid "Quantity-3"
+msgstr "Hoeveelheid-3"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_price_list_qty4
+msgid "Quantity-4"
+msgstr "Hoeveelheid-4"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_price_list_qty5
+msgid "Quantity-5"
+msgstr "Hoeveelheid-5"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_uom_factor
+msgid "Ratio"
+msgstr "Ratio"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_category_parent_right
+msgid "Right Parent"
+msgstr "Rechterhoofd"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+msgid "Rounding Method"
+msgstr "Afrondingsmethode"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_uom_rounding
+msgid "Rounding Precision"
+msgstr "Afronding"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_description_sale
+#: model:ir.model.fields,field_description:product.field_product_template_description_sale
+msgid "Sale Description"
+msgstr "Verkoopomschrijving"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_list_price
+#: model:ir.model.fields,field_description:product.field_product_product_lst_price
+#: model:ir.model.fields,field_description:product.field_product_template_list_price
+msgid "Sale Price"
+msgstr "Verkoopprijs"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
+msgid "Sale Pricelist"
+msgstr "Verkoopprijslijst"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_form_view
+msgid "Sales"
+msgstr "Verkoop"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product_categ_id
+#: model:ir.model.fields,help:product.field_product_template_categ_id
+msgid "Select category for the current product"
+msgstr "Kies de categorie voor dit product"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_sequence
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_sequence
+#: model:ir.model.fields,field_description:product.field_product_packaging_sequence
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_sequence
+#: model:ir.model.fields,field_description:product.field_product_pricelist_sequence
+#: model:ir.model.fields,field_description:product.field_product_product_sequence
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_sequence
+#: model:ir.model.fields,field_description:product.field_product_template_sequence
+msgid "Sequence"
+msgstr "Volgorde"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_template_search_view
+#: model:product.category,name:product.product_category_3
+msgid "Services"
+msgstr "Diensten"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_pricelist_item_price_round
+msgid ""
+"Sets the price so that it is a multiple of this value.\n"
+"Rounding is applied after the discount and before the surcharge.\n"
+"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
+msgstr ""
+"Zet de prijs op een veelvoud van deze waarde.\n"
+"De afronding wordt toegepast na de korting en voor de toeslag.\n"
+"Als u uw prijzen wilt laten eindigen op 9,99, stelt u de afronding in op 10 "
+"en de toeslag op -0,01."
+
+#. module: product
+#: model:product.category,name:product.product_category_4
+msgid "Software"
+msgstr "Software"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_start
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_date_start
+msgid "Start Date"
+msgstr "Begindatum"
+
+#. module: product
+#: code:addons/product/models/product_uom.py:43 sql_constraint:product.uom:0
+#, python-format
+msgid "The conversion ratio for a unit of measure cannot be 0!"
+msgstr "De conversieratio voor een maateenheid mag niet 0 zijn."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_product_volume
+#: model:ir.model.fields,help:product.field_product_template_volume
+msgid "The volume in m3."
+msgstr "Het volume in m3."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_product_supplierinfo_product_uom
+msgid "This comes from the product form."
+msgstr "Dit komt van het productformulier."
+
+#. module: product
+#: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
+msgid ""
+"This pricelist will be used, instead of the default one, for sales to the "
+"current partner"
+msgstr ""
+"Deze prijslijst vervangt de standaardverkoopprijslijst van de huidige "
+"relatie."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_uom_uom_type
+msgid "Type"
+msgstr "Type"
+
+#. module: product
+#: model:product.uom.categ,name:product.product_uom_categ_unit
+msgid "Unit"
+msgstr "Eenheid"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_uom_id
+#: model:ir.model.fields,field_description:product.field_product_template_uom_id
+#: model:ir.model.fields,field_description:product.field_product_uom_name
+msgid "Unit of Measure"
+msgstr "Maateenheid"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_uom_categ_form_action
+msgid "Unit of Measure Categories"
+msgstr "Maateenheid categorieën"
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_uom_form_action
+#: model:ir.ui.view,arch_db:product.product_uom_form_view
+#: model:ir.ui.view,arch_db:product.product_uom_tree_view
+msgid "Units of Measure"
+msgstr "Meeteenheden"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_uom_categ_form_view
+msgid "Units of Measure categories"
+msgstr "Maateenheidcategorieën"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_name
+msgid "Value"
+msgstr "Waarde"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_ids
+#: model:ir.ui.view,arch_db:product.product_attribute_line_form
+#: model:ir.ui.view,arch_db:product.product_attribute_view_form
+msgid "Values"
+msgstr "Waarden"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_value_product_ids
+#: model:ir.ui.view,arch_db:product.product_template_kanban_view
+#: model:ir.ui.view,arch_db:product.product_template_only_form_view
+msgid "Variants"
+msgstr "Varianten"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_supplierinfo_name
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+msgid "Vendor"
+msgstr "Fabrikant"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_seller_ids
+#: model:ir.model.fields,field_description:product.field_product_template_seller_ids
+msgid "Vendors"
+msgstr "Fabrikanten"
+
+#. module: product
+#: selection:product.category,type:0
+msgid "View"
+msgstr "Weergave"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_volume
+#: model:ir.model.fields,field_description:product.field_product_template_volume
+#: model:product.uom.categ,name:product.product_uom_categ_vol
+msgid "Volume"
+msgstr "Volume"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_weight
+#: model:ir.model.fields,field_description:product.field_product_template_weight
+#: model:product.uom.categ,name:product.product_uom_categ_kgm
+msgid "Weight"
+msgstr "Gewicht"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Weights"
+msgstr "Gewichten"
+
+#. module: product
+#: model:ir.model.fields,help:product.field_base_config_settings_group_product_variant
+msgid ""
+"Work with product variant allows you to define some variant of the same "
+"products, an ease the product management in the ecommerce for example"
+msgstr ""
+"Werken met productvarianten biedt u de mogelijkheid om varianten voor "
+"eenzelfde product te definiëren, en vergemakkelijkt het productbeheer voor "
+"bijv. e-Commerce"
+
+#. module: product
+#: model:product.uom.categ,name:product.uom_categ_wtime
+msgid "Working Time"
+msgstr "Werkuren"
+
+#. module: product
+#: model:ir.model,name:product.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_cm
+msgid "cm"
+msgstr "cm"
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+msgid "days"
+msgstr "dagen"
+
+#. module: product
+#: model:ir.model,name:product.model_decimal_precision
+msgid "decimal.precision"
+msgstr "decimal.precision"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_kgm
+msgid "kg"
+msgstr "kg"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_km
+msgid "km"
+msgstr "km"

@@ -1,0 +1,18 @@
+# HG changeset patch
+# Parent 3e800beb7db0f9f05bfd4db275c86e8903d4f127
+# Parent  4082801768b28c2871920e41d23b7879763e763e
+
+diff --git a/academy/models.py b/academy/models.py
+--- a/academy/models.py
++++ b/academy/models.py
+@@ -2,7 +2,7 @@
+ 
+ from odoo import models, fields, api
+ 
+-# class academy(models.Model):
+-#     _name = 'academy.academy'
++class Teachers(models.Model):
++    _name = 'academy.teachers'
+ 
+-#     name = fields.Char()
++    name = fields.Char()

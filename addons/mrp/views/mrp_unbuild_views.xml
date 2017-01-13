@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  Unbuild and scrap menu -->
+
+   <record model="ir.actions.act_window" id="action_mrp_unbuild_moves">
+        <field name="name">Stock Moves</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.move</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">['|', ('unbuild_id', '=', active_id), ('consume_unbuild_id', '=', active_id)]</field>
+    </record>
+
+        <record id="mrp_unbuild_search_view" model="ir.ui.view">
+            <field name="name">mrp.unbuild.search</field>
+            <field name="model">mrp.unbuild</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="product_id"/>
+                    <field name="state"/>
+                    <field name="mo_id"/>
+                    <group expand="0" string="Filters">
+                        <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                        <filter name="done" string="Done" domain="[('state', '=', 'done')]"/>
+                    </group>
+                    <group expand='0' string='Group by...'>
+                        <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
+                        <filter string="Manufacturing Order" name="mogroup" context="{'group_by': 'mo_id'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+
+       <record model="ir.actions.act_window" id="action_mrp_unbuild_moves">
+            <field name="name">Stock Moves</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|', ('unbuild_id', '=', active_id), ('consume_unbuild_id', '=', active_id)]</field>
+        </record>
+
+        <record id="mrp_unbuild_form_view" model="ir.ui.view">
+            <field name="name">mrp.unbuild.form</field>
+            <field name="model">mrp.unbuild</field>
+            <field name="arch" type="xml">
+                <form string="Unbuild Orders">
+                    <header>
+                        <button name="action_unbuild" string="Unbuild" type="object" states="draft" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" name="%(action_mrp_unbuild_moves)d"
+                                    string="Moves" type="action" icon="fa-arrows-v" states="done"/>
+                        </div>
+                        <div class="oe_title">
+                            <h1><field name="name" placeholder="Unbuild Order" nolabel="1"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="product_id" domain="[('bom_ids', '!=', False)]"/>
+                                <field name="bom_id" domain="['|',
+                                            ('product_id','=',product_id),
+                                            '&amp;',
+                                                ('product_tmpl_id.product_variant_ids','=',product_id),
+                                                ('product_id','=',False),
+                                                ('type', '=', 'normal')]"/>
+                                <label for="product_qty"/>
+                                <div class="o_row">
+                                    <field name="product_qty"/>
+                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="mo_id"/>
+                                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                                <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                                <field name="has_tracking" invisible="1"/>
+                                <field name="lot_id" attrs="{'invisible': [('has_tracking', '=', 'none')]}" groups="stock.group_production_lot"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="mrp_unbuild_tree_view" model="ir.ui.view">
+            <field name="name">mrp.unbuild.tree</field>
+            <field name="model">mrp.unbuild</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="product_id"/>
+                    <field name="bom_id"/>
+                    <field name="lot_id" groups="stock.group_production_lot"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom_id" grousp="product.group_uom"/>
+                    <field name="state"/>
+                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                </tree>
+            </field>
+        </record>
+
+    <record model="ir.actions.act_window" id="mrp_unbuild">
+        <field name="name">Unbuild Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.unbuild</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to start a new Unbuild Order
+          </p><p>
+            An unbuild order will do a reverse bill of materials, unbuilding products
+            you produced, but you can also use it to unbuild products you purchased.
+          </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_mrp_unbuild"
+          name="Unbuild Orders"
+          parent="menu_mrp_manufacturing"
+          action="mrp_unbuild"
+          sequence="20"/>
+
+</odoo>

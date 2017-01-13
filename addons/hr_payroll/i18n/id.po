@@ -1,0 +1,1469 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_payroll
+# 
+# Translators:
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2016
+# William Surya Permana <zarambie_game@yahoo.com>, 2016
+# Febrasari Almania <febrasari.almania@gmail.com>, 2016
+# oon arfiandwi <oon.arfiandwi@gmail.com>, 2016
+# Deddy Ddr <deddy.ddr@gmail.com>, 2016
+# Ngalim Siregar <ngalim.siregar@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Ngalim Siregar <ngalim.siregar@gmail.com>, 2016\n"
+"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:46
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (copy)"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_state
+msgid ""
+"* When the payslip is created the status is 'Draft'\n"
+"                \n"
+"* If the payslip is under verification, the status is 'Waiting'.\n"
+"                \n"
+"* If the payslip is confirmed then status is set to 'Done'.\n"
+"                \n"
+"* When user cancel payslip the status is 'Rejected'."
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Address</strong>"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Authorized signature</strong>"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Bank Account</strong>"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "<strong>Date From:</strong>"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Date From</strong>"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "<strong>Date To:</strong>"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Date To</strong>"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Designation</strong>"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Email</strong>"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Identification No</strong>"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Name</strong>"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Reference</strong>"
+msgstr "<strong>Rujukan:</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "<strong>Register Name:</strong>"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "<strong>Total</strong>"
+msgstr "<strong>Total</strong>"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
+msgid ""
+"A contribution register is a third party involved in the salary\n"
+"                payment of the employees. It can be the social security, the\n"
+"                estate or anyone that collect or inject money on payslips."
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Accounting"
+msgstr "Akuntansi"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Accounting Information"
+msgstr "Informasi Akuntansi"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_active
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_active
+msgid "Active"
+msgstr "Aktif"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Add an internal note..."
+msgstr "Tambahkan catatan internal..."
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
+msgid "All Children Rules"
+msgstr "Semua anak-anak aturan"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Always True"
+msgstr "Selalu benar"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_amount
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Amount"
+msgstr "Jumlah"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_select
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_select
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Amount Type"
+msgstr "Jumlah Jenis"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Annually"
+msgstr "Setiap tahun"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_appears_on_payslip
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_appears_on_payslip
+msgid "Appears on Payslip"
+msgstr "Muncul di Payslip"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_python
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_python
+msgid ""
+"Applied this rule for calculation if condition is true. You can specify "
+"condition like basic > 1000."
+msgstr ""
+"Diterapkan aturan ini untuk perhitungan jika kondisi benar. Anda dapat "
+"menentukan kondisi seperti dasar > 1000."
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Apply"
+msgstr "Terapkan"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Bi-monthly"
+msgstr "BI-bulanan"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Bi-weekly"
+msgstr "Dwi-mingguan"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_form
+msgid "Calculations"
+msgstr "Kalkulasi"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+#: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
+msgid "Cancel"
+msgstr "Batalkan"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Cancel Payslip"
+msgstr "Membatalkan Payslip"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:238
+#, python-format
+msgid "Cannot cancel a payslip that is done."
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9067
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+msgid "Category"
+msgstr "Kategori"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Child Rules"
+msgstr "Aturan anak"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_child_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_child_ids
+msgid "Child Salary Rule"
+msgstr "Anak gaji aturan"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_children_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_children_ids
+msgid "Children"
+msgstr "Anak"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Children Definition"
+msgstr "Definisi anak"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
+msgid "Click to add a new contribution register."
+msgstr ""
+
+#. module: hr_payroll
+#: selection:hr.payslip.run,state:0
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+msgid "Close"
+msgstr "Tutup"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_code
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Code"
+msgstr "Kode"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Companies"
+msgstr "Perusahaan"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_company_id
+msgid "Company"
+msgstr "Perusahaan"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Company Contribution"
+msgstr "Kontribusi Perusahaan"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Computation"
+msgstr "Penghitungan"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Compute Sheet"
+msgstr "Hitung Lembar"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_select
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_select
+msgid "Condition Based on"
+msgstr "Kondisi berdasarkan"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Conditions"
+msgstr "Kondisi"
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_configuration
+msgid "Configuration"
+msgstr "Konfigurasi"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_configuration
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Configure Payroll"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Confirm"
+msgstr "Konfirmasi"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_contract_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_contract_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_contract_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_contract_id
+msgid "Contract"
+msgstr "Kontrak"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
+msgid "Contribution"
+msgstr "Kontribusi"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_contribution_register
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_register_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_register_id
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Contribution Register"
+msgstr "Kontribusi Registrasi"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
+msgid "Contribution Register's Payslip Lines"
+msgstr "Kontribusi Register Payslip baris"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_contribution_register_form
+#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_contribution_register_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_filter
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_tree
+msgid "Contribution Registers"
+msgstr "Registrasi Kontribusi"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payroll_config_settings_module_hr_payroll_account
+msgid "Create journal entries from payslips"
+msgstr "Membuat entri jurnal dari payslips"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_credit_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_credit_note
+msgid "Credit Note"
+msgstr "Catatan kredit"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_date_from
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_date_start
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_from
+msgid "Date From"
+msgstr "Dari tanggal:"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_date_to
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_date_end
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_to
+msgid "Date To"
+msgstr "Pada tanggal"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_struct_id
+msgid ""
+"Defines the rules that have to be applied to this payslip, accordingly to "
+"the contract chosen. If you let empty the field contract, this field isn't "
+"mandatory anymore and thus the rules applied will be all the rules set on "
+"the structure of all contracts of the employee valid for the chosen period"
+msgstr ""
+"Mendefinisikan aturan-aturan yang harus diterapkan untuk payslip ini, sesuai"
+" kontrak dipilih. Jika Anda membiarkan kosong bidang kontrak, bidang ini "
+"tidak wajib lagi dan dengan demikian aturan diterapkan akan semua aturan "
+"yang ditentukan pada struktur semua kontrak karyawan berlaku untuk periode "
+"pilihan"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_note
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Description"
+msgstr "Keterangan"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Details By Salary Rule Category"
+msgstr "Rincian gaji aturan Kategori"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_details_by_salary_rule_category
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Details by Salary Rule Category"
+msgstr "Rincian gaji aturan Kategori"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: hr_payroll
+#: selection:hr.payslip,state:0
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Done"
+msgstr "selesai"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+msgid "Done Payslip Batches"
+msgstr "Dilakukan batch Payslip"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Done Slip"
+msgstr "Selesai"
+
+#. module: hr_payroll
+#: selection:hr.payslip,state:0 selection:hr.payslip.run,state:0
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Draft"
+msgstr "Konsep"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+msgid "Draft Payslip Batches"
+msgstr "Rancangan Payslip batch"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Draft Slip"
+msgstr "Slip Pembayaran"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_employee
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employee_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_employee_id
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Employee"
+msgstr "Karyawan"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_contract
+msgid "Employee Contract"
+msgstr "Kontrak Karyawan"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_list_view
+msgid "Employee Function"
+msgstr "Fungsi Karyawan"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
+#: model:ir.ui.menu,name:hr_payroll.menu_department_tree
+msgid "Employee Payslips"
+msgstr "Slip Pembayaran"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_employee_ids
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Employees"
+msgstr "Karyawan"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:41
+#, python-format
+msgid "Error ! You cannot create a recursive Salary Structure."
+msgstr ""
+"Kesalahan\n"
+"Anda tidak bisa membuat template akun secara rekursif"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_register_id
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_register_id
+msgid "Eventual third party involved in the salary payment of the employees."
+msgstr "Akhirnya pihak ketiga terlibat dalam pembayaran gaji karyawan."
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_fix
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_fix
+msgid "Fixed Amount"
+msgstr "Jumlah Tetap"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_percentage
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_percentage
+msgid "For example, enter 50.0 to apply a percentage of 50%"
+msgstr "Misalnya, masukkan 50.0 untuk menerapkan persentase 50%"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "General"
+msgstr "Umum"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+msgid "Generate"
+msgstr "Menghasilkan"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+msgid "Generate Payslips"
+msgstr "Slip Pembayaran"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "Menghasilkan payslips untuk semua karyawan yang dipilih"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+msgid "Group By"
+msgstr "Dikelompokkan berdasarkan"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_id
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_id
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_id
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_id
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_run_credit_note
+msgid ""
+"If its checked, indicates that all payslips generated from here are refund "
+"payslips."
+msgstr ""
+"Jika diperiksa, menunjukkan bahwa semua payslips dihasilkan dari sini adalah"
+" pengembalian payslips."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_active
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_active
+msgid ""
+"If the active field is set to false, it will allow you to hide the salary "
+"rule without removing it."
+msgstr ""
+"Jika bidang aktif diatur ke false, itu akan memungkinkan Anda untuk "
+"menyembunyikan aturan gaji tanpa menghapus itu."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_credit_note
+msgid "Indicates this payslip has a refund of another"
+msgstr "Menunjukkan payslip ini memiliki pengembalian dana lain"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Input Data"
+msgstr "Masukan Data"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_input_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_input_ids
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Inputs"
+msgstr "Masukkan"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Install your country's payroll"
+msgstr "Menginstal penggajian negara Anda"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_note
+msgid "Internal Note"
+msgstr "Tambahkan catatan internal..."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_quantity
+msgid ""
+"It is used in computation for percentage and fixed amount. For e.g. A rule "
+"for Meal Voucher having fixed amount of 1€ per worked day can have its "
+"quantity defined in expression like worked_days.WORK100.number_of_days."
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
+msgid ""
+"It is used in computation. For e.g. A rule for sales having 1% commission of"
+" basic salary for per product can defined in expression like result = "
+"inputs.SALEURO.amount * contract.wage*0.01."
+msgstr ""
+"Hal ini digunakan dalam perhitungan. Untuk misalnya aturan A untuk penjualan"
+" memiliki komisi 1% dari gaji pokok untuk per produk dapat didefinisikan "
+"dalam ekspresi seperti hasil = masukan. SALEURO.amount * contract.wage*0.01."
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails___last_update
+msgid "Last Modified on"
+msgstr "Terakhir diubah pada"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_write_uid
+msgid "Last Updated by"
+msgstr "Terakhir diperbarui oleh"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbaharui pada"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_module_hr_payroll_account
+msgid "Link your payroll to accounting system"
+msgstr "Link penggajian Anda ke sistem akuntansi"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_category_parent_id
+msgid ""
+"Linking a salary category to its parent is used only for the reporting "
+"purpose."
+msgstr ""
+"Menghubungkan kategori gaji ke induknya digunakan hanya untuk tujuan "
+"pelaporan."
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_paid
+msgid "Made Payment Order ? "
+msgstr "Membuat pembayaran?"
+
+#. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_manager
+msgid "Manager"
+msgstr "Manajer"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_max
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_max
+msgid "Maximum Range"
+msgstr "jangkauan"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_min
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_min
+msgid "Minimum Range"
+msgstr "jangkauan"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Miscellaneous"
+msgstr "Data Lain-lain"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Monthly"
+msgstr "Bulanan"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_name
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Name"
+msgstr "Nama"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:323
+#, python-format
+msgid "Normal Working Days paid at 100%"
+msgstr "Hari kerja normal dibayar pada 100%"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
+msgid "Notes"
+msgstr "Catatan"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_days
+msgid "Number of Days"
+msgstr "Jumlah hari"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_hours
+msgid "Number of Hours"
+msgstr "Jumlah jam"
+
+#. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_user
+msgid "Officer"
+msgstr "Petugas"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Other Inputs"
+msgstr "Masukkan"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_parent_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_parent_id
+msgid "Parent"
+msgstr "Induk"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_parent_rule_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_parent_rule_id
+msgid "Parent Salary Rule"
+msgstr "Induk"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_partner_id
+msgid "Partner"
+msgstr "Rekanan"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_payslip_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_slip_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_payslip_id
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Pay Slip"
+msgstr "Slip Pembayaran"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "PaySlip Batch"
+msgstr "PaySlip Batch"
+
+#. module: hr_payroll
+#: model:ir.actions.report.xml,name:hr_payroll.payslip_details_report
+msgid "PaySlip Details"
+msgstr "Rincian PaySlip"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
+msgid "PaySlip Lines"
+msgstr "Baris"
+
+#. module: hr_payroll
+#: model:ir.actions.report.xml,name:hr_payroll.action_contribution_register
+msgid "PaySlip Lines By Conribution Register"
+msgstr "PaySlip Lines oleh Conribution daftar"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "PaySlip Lines by Contribution Register"
+msgstr "Mendaftar PaySlip Lines oleh kontribusi"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
+msgid "PaySlip Lines by Contribution Registers"
+msgstr "PaySlip Lines oleh kontribusi register"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "PaySlip Name"
+msgstr "Nama"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.open_payroll_modules
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_root
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Payroll"
+msgstr "Penggajian"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_filter
+msgid "Payroll Structures"
+msgstr "Penggajian"
+
+#. module: hr_payroll
+#: model:ir.actions.report.xml,name:hr_payroll.action_report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Payslip"
+msgstr "Payslip"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:224
+#, python-format
+msgid "Payslip 'Date From' must be before 'Date To'."
+msgstr "Payslip 'Tanggal dari' harus dilakukan sebelum 'Tanggal ke'."
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_run_id
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+msgid "Payslip Batches"
+msgstr "Batch payslip"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_count
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Payslip Computation Details"
+msgstr "Payslip perhitungan detail"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_input
+msgid "Payslip Input"
+msgstr "Masukan payslip"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_line_ids
+msgid "Payslip Inputs"
+msgstr "Input payslip"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_line
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_form
+msgid "Payslip Line"
+msgstr "Jalur payslip"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.act_contribution_reg_payslip_lines
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_ids
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Payslip Lines"
+msgstr "Jalur Payslip"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Payslip Lines by Contribution Register"
+msgstr "Mendaftar PaySlip Lines oleh kontribusi"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_name
+msgid "Payslip Name"
+msgstr "Nama payslip"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_run
+msgid "Payslip Run"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_line_ids
+msgid "Payslip Worked Days"
+msgstr "Payslip bekerja hari"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_employee_payslip_count
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_employee_slip_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_slip_ids
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.view,arch_db:hr_payroll.payroll_hr_employee_view_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_tree
+msgid "Payslips"
+msgstr "Slip Pembayaran"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_tree
+msgid "Payslips Batches"
+msgstr "Batch payslips"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+msgid "Payslips by Employees"
+msgstr "Payslips oleh karyawan"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_percentage
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_percentage
+msgid "Percentage (%)"
+msgstr "Presentase"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_percentage_base
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_percentage_base
+msgid "Percentage based on"
+msgstr "Persentase berdasarkan"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Period"
+msgstr "Periode"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
+msgid "Print"
+msgstr "Cetak"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_python_compute
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_python_compute
+msgid "Python Code"
+msgstr "Kode Python"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_python
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_python
+msgid "Python Condition"
+msgstr "Kondisi Python"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Python Expression"
+msgstr "Ekspresi Python"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_quantity
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_quantity
+msgid "Quantity"
+msgstr "Jumlah"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "Quantity/Rate"
+msgstr "Jumlah tingkat"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Quantity/rate"
+msgstr "Jumlah tingkat"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Quarterly"
+msgstr "Triwulanan"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Range"
+msgstr "jangkauan"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range
+msgid "Range Based on"
+msgstr "Berbagai berdasarkan"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_rate
+msgid "Rate (%)"
+msgstr "Rating"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_number
+msgid "Reference"
+msgstr "Rujukan"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Refund"
+msgstr "Refund"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:244
+#, python-format
+msgid "Refund: "
+msgstr "Pengembalian dana"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_register_line_ids
+msgid "Register Line"
+msgstr "Baris Pendaftaran"
+
+#. module: hr_payroll
+#: selection:hr.payslip,state:0
+msgid "Rejected"
+msgstr "Ditolak"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_salary_rule_id
+msgid "Rule"
+msgstr "Kaidah"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
+msgid "Salary Categories"
+msgstr "Kategori Gaji"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Salary Computation"
+msgstr "Perhitungan Gaji"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree_view
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
+msgid "Salary Rule Categories"
+msgstr "Gaji aturan Kategori"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
+msgid "Salary Rule Categories Hierarchy"
+msgstr "Gaji aturan kategori hirarki"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Salary Rule Category"
+msgstr "Gaji aturan Kategori"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_rule_input
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_input_id
+msgid "Salary Rule Input"
+msgstr "Gaji aturan Input"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_rule_ids
+#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_salary_rule_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_list
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_tree
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+msgid "Salary Rules"
+msgstr "Aturan gaji"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:548
+#: code:addons/hr_payroll/models/hr_payroll.py:595
+#, python-format
+msgid "Salary Slip of %s for %s"
+msgstr "Slip gaji dari %s untuk %s"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payroll_structure
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_struct_id
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_tree
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_tree
+msgid "Salary Structure"
+msgstr "Struktur Gaji"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
+msgid "Salary Structures"
+msgstr "Struktur gaji"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_tree
+msgid "Salary Structures Hierarchy"
+msgstr "Gaji struktur hierarki"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_schedule_pay
+msgid "Scheduled Pay"
+msgstr "Dijadwalkan membayar"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+msgid "Search Payslip Batches"
+msgstr "Cari Payslip batch"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Search Payslip Lines"
+msgstr "Cari Payslip baris"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Search Payslips"
+msgstr "Cari Slip Pembayaran"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+msgid "Search Salary Rule"
+msgstr "Cari gaji aturan"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Semi-annually"
+msgstr "Semi setiap tahunnya"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_sequence
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_sequence
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_sequence
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_sequence
+msgid "Sequence"
+msgstr "Urutan"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Set to Draft"
+msgstr "Set ke Draft"
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_global_settings
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Settings"
+msgstr "Pengaturan"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "States"
+msgstr "Negara"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_state
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_state
+msgid "Status"
+msgstr "Status"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_struct_id
+msgid "Structure"
+msgstr "Struktur"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_code
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_code
+msgid ""
+"The code of salary rules can be used as reference in computation of other "
+"rules. In that case, it is case sensitive."
+msgstr ""
+"Kode gaji aturan dapat digunakan sebagai acuan dalam perhitungan aturan "
+"lain. Dalam hal ini, sensitif kasus."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_code
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days_code
+#: model:ir.model.fields,help:hr_payroll.field_hr_rule_input_code
+msgid "The code that can be used in the salary rules"
+msgstr "Kode yang dapat digunakan dalam aturan gaji"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_select
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_select
+msgid "The computation method for the rule amount."
+msgstr "Metode komputasi untuk jumlah aturan."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_contract_id
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days_contract_id
+msgid "The contract for which applied this input"
+msgstr "Kontrak yang diterapkan masukan ini"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range_max
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range_max
+msgid "The maximum amount, applied for this rule."
+msgstr "Jumlah maksimum, diterapkan untuk aturan ini."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range_min
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range_min
+msgid "The minimum amount, applied for this rule."
+msgstr "Jumlah minimum, diterapkan untuk aturan ini."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range
+msgid ""
+"This will be used to compute the % fields values; in general it is on basic,"
+" but you can also use categories code fields in lowercase as a variable "
+"names (hra, ma, lta, etc.) and the variable basic."
+msgstr ""
+"Ini akan digunakan untuk menghitung nilai-nilai bidang %; secara umum hal "
+"ini pada dasar, tetapi Anda juga dapat menggunakan kategori kode bidang "
+"dalam huruf kecil sebagai nama variabel (hra, ma, lta, dll) dan variabel "
+"dasar."
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+msgid ""
+"This wizard will generate payslips for all selected employee(s) based on the"
+" dates and credit note specified on Payslips Run."
+msgstr ""
+"Wizard ini akan menghasilkan payslips untuk semua employee(s) dipilih "
+"berdasarkan tanggal dan catatan kredit yang ditentukan di Payslips Run."
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_total
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Total"
+msgstr "Total"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Total Working Days"
+msgstr "Total hari kerja"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_sequence
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_sequence
+msgid "Use to arrange calculation sequence"
+msgstr "Gunakan untuk mengatur urutan perhitungan"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_appears_on_payslip
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_appears_on_payslip
+msgid "Used to display the salary rule on payslip."
+msgstr "Digunakan untuk menampilkan aturan gaji pada payslip."
+
+#. module: hr_payroll
+#: selection:hr.payslip,state:0
+msgid "Waiting"
+msgstr "Menunggu"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Weekly"
+msgstr "Mingguan"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Worked Day"
+msgstr "Hari kerja"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Worked Days"
+msgstr "Bekerja hari"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Worked Days & Inputs"
+msgstr "Bekerja hari & input"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:770
+#, python-format
+msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
+msgstr ""
+"Salah persentase dasar atau kuantitasnya ditentukan untuk gaji aturan %s "
+"(%s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:776
+#, python-format
+msgid "Wrong python code defined for salary rule %s (%s)."
+msgstr "Kode salah python yang didefinisikan untuk gaji aturan %s (%s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:799
+#, python-format
+msgid "Wrong python condition defined for salary rule %s (%s)."
+msgstr "Kondisi salah python yang didefinisikan untuk gaji aturan %s (%s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:763
+#, python-format
+msgid "Wrong quantity defined for salary rule %s (%s)."
+msgstr "Salah kuantitasnya ditentukan untuk gaji aturan %s (%s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:793
+#, python-format
+msgid "Wrong range condition defined for salary rule %s (%s)."
+msgstr "Salah berbagai kondisi didefinisikan untuk gaji aturan %s (%s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:268
+#, python-format
+msgid "You cannot delete a payslip which is not draft or cancelled!"
+msgstr "Anda tidak dapat menghapus payslip yang tidak draft atau dibatalkan!"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:24
+#, python-format
+msgid "You must select employee(s) to generate payslip(s)."
+msgstr "Anda harus memilih employee(s) untuk menghasilkan payslip(s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:838
+#, python-format
+msgid "You must set a contract to create a payslip line."
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payroll_config_settings
+msgid "hr.payroll.config.settings"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_salary_rule
+msgid "hr.salary.rule"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
+msgid "report.hr_payroll.report_contributionregister"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
+msgid "report.hr_payroll.report_payslipdetails"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_percentage_base
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_percentage_base
+msgid "result will be affected to a variable"
+msgstr "hasil akan terpengaruh ke variabel"

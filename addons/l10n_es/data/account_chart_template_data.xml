@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Plantillas de los planes contables - Asignación del resto de valores -->
+        <record id="account_chart_template_common" model="account.chart.template">
+            <field name="property_account_receivable_id" ref="pgc_4300_child"/>
+            <field name="property_account_payable_id" ref="pgc_4100_child"/>
+            <field name="property_account_expense_categ_id" ref="pgc_600_child"/>
+            <field name="property_account_income_categ_id" ref="pgc_7000_child"/>
+            <field name="income_currency_exchange_account_id" ref="pgc_768_child"/>
+            <field name="expense_currency_exchange_account_id" ref="pgc_668_child"/>
+        </record>
+</odoo>

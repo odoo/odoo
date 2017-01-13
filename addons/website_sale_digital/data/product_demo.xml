@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="website_sale_digital.product_1" model="product.template">
+        <field name="name">Alice's Adventures in Wonderland - Lewis Caroll</field>
+        <field name="standard_price">2</field>
+        <field name="list_price">4.50</field>
+        <field name="type">service</field>
+        <field name="website_published" eval="True"/>
+        <field name="image" type="base64" file="website_sale_digital/static/digital_product_1.jpg"/>
+        <field name="description">Novel by Lewis Caroll.</field>
+        <field name="description_sale">Alice's Adventures in Wonderland (commonly shortened to Alice in Wonderland) is an 1865 novel written by English author Charles Lutwidge Dodgson under the pseudonym Lewis Carroll. It tells of a girl named Alice falling through a rabbit hole into a fantasy world populated by peculiar, anthropomorphic creatures. The tale plays with logic, giving the story lasting popularity with adults as well as with children. It is considered to be one of the best examples of the literary nonsense genre. Its narrative course and structure, characters and imagery have been enormously influential in both popular culture and literature, especially in the fantasy genre.</field>
+    </record>
+
+    <record id="website_sale_digital.attach1" model="ir.attachment">
+        <field name="name">alice.pdf</field>
+        <field name="datas_fname">alice.pdf</field>
+        <field name="type">binary</field>
+        <field name="datas" type="base64" file="website_sale_digital/static/alice.pdf"/>
+        <field name="res_id" ref="website_sale_digital.product_1"/>
+        <field name="res_model">product.template</field>
+        <field name="product_downloadable">True</field>
+    </record>
+
+</odoo>

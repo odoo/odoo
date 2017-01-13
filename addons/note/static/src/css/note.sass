@@ -1,0 +1,26 @@
+@charset "utf-8"
+
+@mixin rotate($a)
+  -webkit-transform: rotate($a) 
+  -o-transform: rotate($a) 
+  -moz-transform: rotate($a)
+
+@mixin transition($what:all,$duration:100ms)
+  -webkit-transition: $what $duration cubic-bezier(0.5,0,0.5,1)
+  -moz-transition: $what $duration cubic-bezier(0.5,0,0.5,1)
+  -ms-transition: $what $duration cubic-bezier(0.5,0,0.5,1)
+  transition: $what $duration cubic-bezier(0.5,0,0.5,1)
+
+.o_kanban_group
+  .note_text_line_through
+    text-decoration: line-through
+
+.openerp
+  .oe_form
+    .oe_pad.oe_memo
+      width: auto
+    .oe_form_field.oe_memo
+      margin: 0
+      padding: 0px
+      width: 100%
+      min-height: 200px

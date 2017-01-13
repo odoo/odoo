@@ -1,0 +1,91 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_order_dates
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 9.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2015-09-08 08:03+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_order_dates
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_commitment_date
+msgid "Commitment Date"
+msgstr "약속 날짜"
+
+#. module: sale_order_dates
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_requested_date
+msgid ""
+"Date by which the customer has requested the items to be delivered.\n"
+"When this Order gets confirmed, the Delivery Order's expected date will be "
+"computed based on this date and the Company's Security Delay.\n"
+"Leave this field empty if you want the Delivery Order to be processed as "
+"soon as possible. In that case the expected date will be computed using the "
+"default method: based on the Product Lead Times and the Company's Security "
+"Delay."
+msgstr ""
+"고객이 납품 항목을 요청한 날짜.\n"
+"주문을 확인할 때 납품 주문의 예상 날짜는 이 날짜와 회사의 보안상 지연에 기초"
+"하여 계산됩니다.\n"
+"납품 주문이 가능한 한 빨리 처리되길 원한다면 이 필드를 비워둡니다. 그런 경우 "
+"예정일은 기본적인 방법을 사용하여 계산됩니다 : 상품 리드 시간과 회사의 보안 "
+"지연에 따릅니다."
+
+#. module: sale_order_dates
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
+msgid ""
+"Date by which the products are sure to be delivered. This is a date that you "
+"can promise to the customer, based on the Product Lead Times."
+msgstr ""
+"상품 납품이 확실시되는 날짜. 이것은 당신이 제품 리드 타임을 기반으로 고객에"
+"게 약속 할 수 있는 날짜입니다."
+
+#. module: sale_order_dates
+#: model:ir.model.fields,help:sale_order_dates.field_sale_order_effective_date
+msgid "Date on which the first Delivery Order was created."
+msgstr "첫 번째 납품 주문이 생성된 날짜."
+
+#. module: sale_order_dates
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_effective_date
+msgid "Effective Date"
+msgstr "유효 날짜"
+
+#. module: sale_order_dates
+#: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
+msgid "Requested Date"
+msgstr "요청한 날짜"
+
+#. module: sale_order_dates
+#: code:addons/sale_order_dates/models/sale_order.py:56
+#, python-format
+msgid "Requested date is too soon!"
+msgstr "요청 날짜가 너무 빠릅니다!"
+
+#. module: sale_order_dates
+#: model:ir.model,name:sale_order_dates.model_sale_order
+msgid "Sales Order"
+msgstr "판매 주문"
+
+#. module: sale_order_dates
+#: model:ir.model,name:sale_order_dates.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "판매 주문 명세"
+
+#. module: sale_order_dates
+#: code:addons/sale_order_dates/models/sale_order.py:57
+#, python-format
+msgid ""
+"The date requested by the customer is sooner than the commitment date. You "
+"may be unable to honor the customer's request."
+msgstr ""
+"고객이 요청한 날짜가 약속 날짜보다 빠릅니다. 귀하는 고객의 요구를 만족시키지 "
+"못할 수 있습니다."

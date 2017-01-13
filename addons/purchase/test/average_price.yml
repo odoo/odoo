@@ -1,0 +1,134 @@
+-
+  Set a product as using average price.
+-
+  !record {model: product.product, id: product_average_icecream}:
+    default_code: AVG
+    name: Average Ice Cream
+    type: product
+    categ_id: product.product_category_1
+    uom_id: product.product_uom_kgm
+    uom_po_id: product.product_uom_kgm
+    valuation: real_time
+    cost_method: average
+    property_stock_account_input: o_expense
+    property_stock_account_output: o_income
+    supplier_taxes_id: []
+    description: Average Ice Cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
+- 
+  I create a draft Purchase Order for first incoming shipment for 10 pieces at 60€
+- 
+  !record {model: purchase.order, id: purchase_order_average1}:
+    partner_id: base.res_partner_3
+    order_line:
+      - product_id: product_average_icecream
+        product_qty: 10.0
+        product_uom: product.product_uom_kgm
+        price_unit: 60.0
+        name: 'Average Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
+- 
+  I confirm the first purchase order
+-
+  !python {model: purchase.order, id: purchase_order_average1}: |
+    self.button_confirm()
+- 
+  I check the "Approved" status of purchase order 1
+-
+  !assert {model: purchase.order, id: purchase_order_average1}:
+    - state == 'purchase'
+- 
+  Process the reception of purchase order 1
+-
+  !python {model: purchase.order, id: purchase_order_average1}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
+- 
+  Check the standard price of the product (average icecream).
+- 
+  !python {model: product.product, id: product_average_icecream}: |
+    assert self.qty_available == 10.0, 'Wrong quantity in stock after first reception'
+    assert self.standard_price == 60.0, 'Standard price should be the price of the first reception!'
+- 
+  I create a draft Purchase Order for second incoming shipment for 30 pieces at 80€
+- 
+  !record {model: purchase.order, id: purchase_order_average2}:
+    partner_id: base.res_partner_3
+    order_line:
+      - product_id: product_average_icecream
+        product_qty: 30.0
+        product_uom: product.product_uom_kgm
+        price_unit: 80.0
+        name: 'Average Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
+- 
+  I confirm the second purchase order
+- 
+  !python {model: purchase.order, id: purchase_order_average2}: |
+    self.button_confirm()
+-
+  Process the reception of purchase order 2
+- 
+  !python {model: purchase.order, id: purchase_order_average2}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
+- 
+  Check the standard price
+- 
+  !python {model: product.product, id: product_average_icecream}: |
+    assert self.standard_price == 75.0, 'After second reception, we should have an average price of 75.0 on the product'
+- 
+  Create picking to send some goods
+- 
+  !record {model: stock.picking, id: outgoing_average_shipment}:
+    picking_type_id: stock.picking_type_out
+- 
+  Create move for picking
+- 
+  !record {model: stock.move, id: outgoing_shipment_average_icecream}:
+    picking_id: outgoing_average_shipment
+    product_id: product_average_icecream
+    product_uom: product.product_uom_kgm
+    location_id: stock.stock_location_stock
+    location_dest_id: stock.stock_location_customers
+    product_uom_qty: 20.0
+- 
+  I assign this outgoing shipment and process the delivery
+- 
+  !python {model: stock.picking, id: outgoing_average_shipment}: |
+    self.action_assign()
+    self.do_transfer()
+- 
+  Check the standard price (60 * 10 + 30 * 80) / 40 = 75.0 did not change
+- 
+  !python {model: product.product, id: product_average_icecream}: |
+    assert self.standard_price == 75.0, 'Standard price should not have changed with outgoing picking!'
+    assert self.qty_available == 20.0, 'Pieces were not picked correctly as the quantity on hand is wrong'
+- 
+  Make a new purchase order with 500 g Average Ice Cream at a price of 0.2€/g
+- 
+  !record {model: purchase.order, id: purchase_order_average3}:
+    partner_id: base.res_partner_3
+    order_line:
+      - product_id: product_average_icecream
+        product_qty: 500.0
+        product_uom: product.product_uom_gram
+        price_unit: 0.2
+        name: 'Average Ice Cream'
+        date_planned: !eval time.strftime('%Y-%m-%d')
+- 
+  I confirm the first purchase order
+-
+  !python {model: purchase.order, id: purchase_order_average3}: |
+    self.button_confirm()
+- 
+  Process the reception of purchase order 3 in grams
+- 
+  !python {model: purchase.order, id: purchase_order_average3}: |
+    picking = self.picking_ids[0]
+    picking.do_transfer()
+- 
+  Check price is (75.0*20 + 200*0.5) / 20.5 = 78.04878
+- 
+  !python {model: product.product, id: product_average_icecream}: |
+    assert self.qty_available == 20.5, 'Reception of purchase order in grams leads to wrong quantity in stock'
+    assert round(self.standard_price, 2) == 78.05, 'Standard price as average price of third reception with other UoM incorrect! Got %s instead of 78.05' % (round(self.standard_price, 2),)

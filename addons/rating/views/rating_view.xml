@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_rating_rating_kanban">
+            <field name="name">rating.rating.kanban</field>
+            <field name="model">rating.rating</field>
+            <field name="arch" type="xml">
+                <kanban create="false" class="oe_background_grey">
+                    <field name="rating"/>
+                    <field name="res_name"/>
+                    <field name="feedback"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-att-title="record.feedback.raw_value ? 'Feedback:\n' + record.feedback.raw_value : ''">
+                                <img t-attf-src="/rating/static/src/img/rating_#{record.rating.raw_value}.png"
+                                    data-html="true" data-placement="bottom" class="pull-left"/>
+                                <div style="margin-left: 80px">
+                                    <div><b><field name="rated_partner_id"/></b></div>
+                                    <div><span class="text-muted">by </span><field name="partner_id"/></div>
+                                    <div t-if="record.res_name.raw_value"><span class="text-muted">for </span><field name="res_name"/></div>
+                                    <div><span class="text-muted">on </span><field name="create_date"/></div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_rating_rating_pivot">
+            <field name="name">rating.rating.pivot</field>
+            <field name="model">rating.rating</field>
+            <field name="arch" type="xml">
+                <pivot string="Rating Average" display_quantity="true">
+                    <field name="rated_partner_id" type="row"/>
+                    <field name="create_date" type="col"/>
+                    <field name="rating" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_rating_rating_graph">
+           <field name="name">rating.rating.graph</field>
+           <field name="model">rating.rating</field>
+           <field name="arch" type="xml">
+                <graph string="Rating Average" type="bar">
+                    <field name="create_date" type="row"/>
+                    <field name="rating" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_rating_rating_search">
+            <field name="name">rating.rating.search</field>
+            <field name="model">rating.rating</field>
+            <field name="arch" type="xml">
+                <search string="Ratings">
+                    <field name="rated_partner_id"/>
+                    <field name="rating"/>
+                    <field name="partner_id"/>
+                    <field name="res_name"/>
+                    <field name="res_id"/>
+                    <filter string="Happy" domain="[('rating', '&gt;=', 7)]"/>
+                    <filter string="Okay" domain="[('rating', '&gt;', 3), ('rating', '&lt;', 7)]"/>
+                    <filter string="Unhappy" domain="[('rating', '&gt;=', 1), ('rating', '&lt;=',3)]"/>
+                    <separator/>
+                    <filter string="My Ratings" domain="[('rated_partner_id.user_ids', 'in', [uid])]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Rated User" name="Responsible" context="{'group_by':'rated_partner_id'}"/>
+                        <filter string="Customer" name="customer" context="{'group_by':'partner_id'}"/>
+                        <filter string="Rating" name="rating" context="{'group_by':'rating'}"/>
+                        <filter string="Resource" name="resource" context="{'group_by':'res_name'}"/>
+                        <filter string="Day" context="{'group_by':'create_date:day'}"/>
+                        <filter string="Month" context="{'group_by':'create_date:month'}"/>
+                        <filter string="Year" context="{'group_by':'create_date:year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_view_rating" model="ir.actions.act_window">
+            <field name="name">Rating</field>
+            <field name="res_model">rating.rating</field>
+            <field name="view_mode">kanban,graph,pivot</field>
+            <field name="domain">[('consumed','=',True)]</field>    
+            <field name="help" type="html">
+                <p>
+                    There is no rating for this object at the moment.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

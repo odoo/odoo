@@ -1,0 +1,860 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * project_issue
+# 
+# Translators:
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Sergio Hevia <sah@talleresbernesga.com>, 2016
+# Alejandro Die Sanchis <marketing@domatix.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Antonio Trueba <atgayol@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Alejandro Santana <alejandrosantana@anubia.es>, 2016
+# José Vicente <txusev@gmail.com>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Luis Martínez Ontalba <tecnisagra.ontalba@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
+# Luis Triana <luis.triana@jarsa.com.mx>, 2016
+# Rafael Blasco <rafabn@antiun.com>, 2016
+# Daniel Santibáñez Polanco <dansanti@gmail.com>, 2016
+# Jairo Llopis <yajo.sk8@gmail.com>, 2016
+# RGB Consulting <odoo@rgbconsulting.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2016\n"
+"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_email
+msgid "# Emails"
+msgstr "Nº de emails"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_res_partner_issue_count
+msgid "# Issues"
+msgstr "Nº incidencias"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_nbr_issues
+msgid "# of Issues"
+msgstr "Nº de incidencias"
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:156
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (copia)"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+msgid "<b>Category:</b>"
+msgstr "Categoría"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+msgid "<b>Project:</b>"
+msgstr "<b>Proyecto:</b>"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
+msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
+msgstr "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">como </span>"
+
+#. module: project_issue
+#: selection:project.config.settings,module_project_issue_sheet:0
+msgid "Activate timesheets on issues"
+msgstr "Activar horarios en incidencias"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_active
+msgid "Active"
+msgstr "Activo"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
+msgid "Add an internal note..."
+msgstr "Añadir una nota interna..."
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
+msgid ""
+"An Issue's kanban state indicates special situations affecting it:\n"
+"\n"
+"                                           * Normal is the default situation\n"
+"\n"
+"                                           * Blocked indicates something is preventing the progress of this issue\n"
+"\n"
+"                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Cuenta analítica"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Archived"
+msgstr "Archivado"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_open
+msgid "Assigned"
+msgstr "Asignado"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_user_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_user_id
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Assigned to"
+msgstr "Asignada a"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_delay_close
+msgid "Avg. Delay to Close"
+msgstr "Retraso prom. hasta cierre"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_delay_open
+msgid "Avg. Delay to Open"
+msgstr "Retraso promedio para abrir"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_working_hours_close
+msgid "Avg. Working Hours to Close"
+msgstr "Horas de trabajo prom. para cerrar"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_working_hours_open
+msgid "Avg. Working Hours to Open"
+msgstr "Horas de trabajo prom. para abrir"
+
+#. module: project_issue
+#: selection:project.issue,kanban_state:0
+msgid "Blocked"
+msgstr "Bloqueada"
+
+#. module: project_issue
+#: model:project.issue,legend_done:project_issue.crm_case_buginaccountsmodule0
+#: model:project.issue,legend_done:project_issue.crm_case_constrainterror0
+#: model:project.issue,legend_done:project_issue.crm_case_errorinprogram0
+#: model:project.issue,legend_done:project_issue.crm_case_improvereportsinpms0
+#: model:project.issue,legend_done:project_issue.crm_case_includeattendancesheetinproject0
+#: model:project.issue,legend_done:project_issue.crm_case_newfeaturestobeadded0
+#: model:project.issue,legend_done:project_issue.crm_case_patcheserrorinprogram0
+#: model:project.issue,legend_done:project_issue.crm_case_programnotgivingproperoutput0
+msgid "Buzz or set as done"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.filters,name:project_issue.filter_issue_report_responsible
+msgid "By Responsible"
+msgstr "Por responsable"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_channel
+msgid "Channel"
+msgstr "Canal"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_account_analytic_account_use_issues
+#: model:ir.model.fields,help:project_issue.field_project_project_use_issues
+msgid "Check this box to manage customer activities through this project"
+msgstr ""
+"Marcar esta opción para gestionar las actividades de los clientes a través "
+"de este proyecto"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_closed
+msgid "Closed"
+msgstr "Cerrado"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_color
+msgid "Color Index"
+msgstr "Índice de Colores"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_channel
+msgid "Communication channel."
+msgstr "Canal de comunicación"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_company_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_company_id
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Company"
+msgstr "Compañía"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_partner_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_partner_id
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_create_date
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Create Date"
+msgstr "Fecha de Creación"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Create Day"
+msgstr "Crear día"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
+msgid "Creation Date"
+msgstr "Fecha de Creación"
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:296
+#, python-format
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:298
+#, python-format
+msgid "Customer Email"
+msgstr "Correo electrónico del cliente"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_project_label_issues
+msgid "Customize the issues label, for example to call them cases."
+msgstr ""
+"Personalice la etiqueta de las incidencias, por ejemplo para llamarlas "
+"casos."
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date
+msgid "Date"
+msgstr "Fecha"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_date_closed
+msgid "Date of Closing"
+msgstr "Fecha de cierre"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_opening_date
+msgid "Date of Opening"
+msgstr "Fecha de apertura"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_days_since_creation
+msgid "Days since creation date"
+msgstr "Días desde la fecha de creación"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_inactivity_days
+msgid "Days since last action"
+msgstr "Días desde la última acción"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_day_open
+msgid "Days to Assign"
+msgstr "Dias a asignar"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_day_close
+msgid "Days to Close"
+msgstr "Días para el cierre"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_deadline
+msgid "Deadline"
+msgstr "Fecha límite"
+
+#. module: project_issue
+#: model:ir.filters,name:project_issue.filter_issue_report_delay
+msgid "Delay"
+msgstr "Retraso"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+msgid "Delete"
+msgstr "Suprimir"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
+msgid "Description"
+msgstr "Descripción"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_days_since_creation
+msgid "Difference in days between creation date and current date"
+msgstr "Diferencia en días desde la fecha de creación a la fecha actual"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_inactivity_days
+msgid "Difference in days between last action and current date"
+msgstr "Diferencia en días desde la última acción a la fecha actual"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_display_name
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_display_name
+msgid "Display Name"
+msgstr "Nombre a mostrar"
+
+#. module: project_issue
+#: selection:project.config.settings,module_project_issue_sheet:0
+msgid "Do not track working hours on issues"
+msgstr "No controlar tiempo de trabajo en las incidencias"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
+msgid "Duration"
+msgstr "Duración"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+msgid "Edit Issue"
+msgstr "Editar incidencia"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_email_from
+msgid "Email"
+msgstr "Correo electrónico"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
+msgid "Extra Info"
+msgstr "Información extra"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_feature_tree_view
+msgid "Feature Tracker Tree"
+msgstr "Árbol de gestión de funcionalidades"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_feature_tree_view
+msgid "Feature description"
+msgstr "Descripción funcionalidad"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Helpdesk & Support"
+msgstr "Mesa de ayuda (helpdesk) y soporte"
+
+#. module: project_issue
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
+msgid "High"
+msgstr "Alta"
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:271
+#, python-format
+msgid "I take it"
+msgstr "Lo tengo"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_id
+msgid "ID"
+msgstr "ID"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_name
+#: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Issue"
+msgstr "Incidencia"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_blocked
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
+msgid "Issue Blocked"
+msgstr "Incidencia bloqueada"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_new
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_new
+msgid "Issue Opened"
+msgstr "Incidencia abierta"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_ready
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_ready
+msgid "Issue Ready"
+msgstr "Incidencia preparada"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
+msgid "Issue Stage Changed"
+msgstr "Etapa de incidencia cambiada"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
+msgid "Issue Summary..."
+msgstr "Resumen de la incidencia..."
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Issue Tracker Search"
+msgstr "Buscar en el gestor de incidencias"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
+msgid "Issue Tracker Tree"
+msgstr "Árbol del gestor de incidencias"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_blocked
+msgid "Issue blocked"
+msgstr "Incidencia bloqueada"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_new
+msgid "Issue opened"
+msgstr "Incidencia abierta"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_ready
+msgid "Issue ready for next stage"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
+#: model:ir.actions.act_window,name:project_issue.action_view_issues
+#: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
+#: model:ir.model.fields,field_description:project_issue.field_project_project_issue_count
+#: model:ir.model.fields,field_description:project_issue.field_project_project_issue_ids
+#: model:ir.model.fields,field_description:project_issue.field_project_project_issue_needaction_count
+#: model:ir.ui.menu,name:project_issue.menu_project_issue_track
+#: model:ir.ui.view,arch_db:project_issue.project_issue_calendar_view
+#: model:ir.ui.view,arch_db:project_issue.res_partner_issues_button_view
+#: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
+#: model:ir.ui.view,arch_db:project_issue.view_project_kanban_inherited
+msgid "Issues"
+msgstr "Incidencias"
+
+#. module: project_issue
+#: model:ir.actions.act_window,name:project_issue.action_project_issue_report
+#: model:ir.actions.act_window,name:project_issue.action_project_issue_report_filtered
+#: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
+msgid "Issues Analysis"
+msgstr "Análisis de incidencias"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_blocked
+msgid "Kanban Blocked Explanation"
+msgstr "Explicación del kanban bloqueado"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_normal
+msgid "Kanban Ongoing Explanation"
+msgstr "Explicación del kanban en proceso"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_kanban_state
+msgid "Kanban State"
+msgstr "Estado de kanban"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_done
+msgid "Kanban Valid Explanation"
+msgstr "Explicación del kanban válido"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_last
+msgid "Last Action"
+msgstr "Última acción"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Last Message"
+msgstr "Ultimo mensaje"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue___last_update
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report___last_update
+msgid "Last Modified on"
+msgstr "Última modificación en"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_last_stage_update
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_date_last_stage_update
+msgid "Last Stage Update"
+msgstr "última actualización de la etapa"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: project_issue
+#: selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
+msgid "Low"
+msgstr "Baja"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "My Issues"
+msgstr "Mis incidencias"
+
+#. module: project_issue
+#: model:project.issue,legend_blocked:project_issue.crm_case_buginaccountsmodule0
+#: model:project.issue,legend_blocked:project_issue.crm_case_constrainterror0
+#: model:project.issue,legend_blocked:project_issue.crm_case_errorinprogram0
+#: model:project.issue,legend_blocked:project_issue.crm_case_improvereportsinpms0
+#: model:project.issue,legend_blocked:project_issue.crm_case_includeattendancesheetinproject0
+#: model:project.issue,legend_blocked:project_issue.crm_case_newfeaturestobeadded0
+#: model:project.issue,legend_blocked:project_issue.crm_case_patcheserrorinprogram0
+#: model:project.issue,legend_blocked:project_issue.crm_case_programnotgivingproperoutput0
+msgid "Need functional or technical help"
+msgstr "Necesita ayuda funcional o técnica"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "New"
+msgstr "Nuevo"
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:275
+#, python-format
+msgid "New Issue"
+msgstr "Nueva incidencia"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_next
+msgid "Next Action"
+msgstr "Próxima acción"
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:322
+#, python-format
+msgid "No Subject"
+msgstr "Sin asunto"
+
+#. module: project_issue
+#: selection:project.config.settings,module_rating_project_issue:0
+msgid "No customer rating"
+msgstr "Sin puntuación de usuario"
+
+#. module: project_issue
+#: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
+#: selection:project.issue.report,priority:0
+msgid "Normal"
+msgstr "Normal"
+
+#. module: project_issue
+#: model:project.issue,legend_blocked:project_issue.crm_case_createnewobject0
+#: model:project.issue,legend_blocked:project_issue.crm_case_pagenotfound0
+#: model:project.issue,legend_blocked:project_issue.crm_case_problemloadingpage0
+#: model:project.issue,legend_blocked:project_issue.crm_case_programmingerror0
+msgid "Not validated"
+msgstr "No validado"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
+msgid "Number of Days to close the project issue"
+msgstr "Número de días para cerrar la incidencia de proyecto"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_open
+msgid "Number of Days to open the project issue."
+msgstr "Número de días para abrir la incidencia de proyecto."
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_blocked
+msgid ""
+"Override the default value displayed for the blocked state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_done
+msgid ""
+"Override the default value displayed for the done state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_normal
+msgid ""
+"Override the default value displayed for the normal state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_res_partner
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: project_issue
+#: code:addons/project_issue/models/account_analytic_account.py:16
+#, python-format
+msgid ""
+"Please remove existing issues in the project linked to the accounts you want"
+" to delete."
+msgstr ""
+"Por favor, elimine las incidencias existentes en el proyecto vinculado a las"
+" cuentas que quiere borrar."
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_priority
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_priority
+#: model:ir.ui.view,arch_db:project_issue.project_feature_tree_view
+#: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Priority"
+msgstr "Prioridad"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_description
+msgid "Private Note"
+msgstr "Nota privada"
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_project_project
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_project_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_project_id
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Project"
+msgstr "Proyecto"
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_graph
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_pivot
+msgid "Project Issue"
+msgstr "Incidencia proyecto"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_graph_view
+#: model:ir.ui.view,arch_db:project_issue.project_issue_pivot_view
+msgid "Project Issues"
+msgstr "Incidencias de proyecto"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_project_issue_sheet
+msgid ""
+"Provides timesheet support for the issues/bugs management in project.\n"
+"-This installs the module project_issue_sheet."
+msgstr ""
+"Proveer de soporte de partes de horas para la gestión de incidencias/errores en los proyectos.\n"
+"- Esto instala el módulo project_issue_sheet."
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
+msgid "Rating on issue"
+msgstr ""
+
+#. module: project_issue
+#: selection:project.issue,kanban_state:0
+msgid "Ready for next stage"
+msgstr "Lista para la siguiente etapa"
+
+#. module: project_issue
+#: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
+msgid "Ready to reopen"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Search"
+msgstr "Búsqueda"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_stage_id
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_stage_id
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Stage"
+msgstr "Etapa"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_stage
+msgid "Stage Changed"
+msgstr "Etapa cambiada"
+
+#. module: project_issue
+#: model:mail.message.subtype,description:project_issue.mt_issue_stage
+#: model:mail.message.subtype,description:project_issue.mt_project_issue_stage
+msgid "Stage changed"
+msgstr "Etapa cambiada"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_tag_ids
+msgid "Tags"
+msgstr "Etiquetas"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_task_id
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Task"
+msgstr "Tarea"
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_project_task_type
+msgid "Task Stage"
+msgstr "Etapa de la tarea"
+
+#. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
+#: model:ir.actions.act_window,help:project_issue.action_view_issues
+#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
+msgid ""
+"The Odoo issues tracker allows you to efficiently manage things\n"
+"                    like internal requests, software development bugs, customer\n"
+"                    complaints, project troubles, material breakdowns, etc."
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
+msgid ""
+"These email addresses will be added to the CC field of all inbound\n"
+"        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_email_from
+msgid "These people will receive email."
+msgstr "Estas personas recibirán correo electronico."
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_rating_project_issue
+msgid "This allows customers to give rating on issue"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.action_project_issue_report
+#: model:ir.actions.act_window,help:project_issue.action_project_issue_report_filtered
+msgid ""
+"This report on the project issues allows you to analyse the quality of your "
+"support or after-sales services. You can track the issues per age. You can "
+"analyse the time required to open or close an issue, the number of email to "
+"exchange and the time spent on average by issues."
+msgstr ""
+"Este informe sobre las incidencias del proyecto permite analizar la calidad "
+"de su soporte o los servicios postventa. Puede hacer un seguimiento de las "
+"incidencias por antigüedad. Puede analizar el tiempo requerido en abrir o "
+"cerrar una incidencia, el número de correos intercambiados y el tiempo "
+"gastado en promedio por incidencia."
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Timesheets"
+msgstr "Partes de horas"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
+msgid "Timesheets on Issues"
+msgstr ""
+
+#. module: project_issue
+#: selection:project.config.settings,module_rating_project_issue:0
+msgid "Track customer satisfaction on issues"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
+msgid "Unassigned"
+msgstr "No asignado"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Unread Messages"
+msgstr "Mensajes por leer"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
+#: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
+msgid "Use Issues"
+msgstr "Usar incidencias"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_project_label_issues
+msgid "Use Issues as"
+msgstr "Usar incidencias como"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_user_email
+msgid "User Email"
+msgstr "Email del usuario"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_email_cc
+msgid "Watchers Emails"
+msgstr "Email de los observadores"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_open
+msgid "Working Hours to assign the Issue"
+msgstr "Horas laborables para asignar la incidencia"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_working_hours_close
+msgid "Working Hours to close the Issue"
+msgstr "Horas laborables para cerrar la incidencia"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_task_id
+msgid ""
+"You can link this issue to an existing task or directly create a new one "
+"from here"
+msgstr ""
+"Puede enlazar esta incidencia a una tarea existente o crear una nueva desde "
+"aquí"
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:191
+#, python-format
+msgid "issues"
+msgstr "incidencias"
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_project_config_settings
+msgid "project.config.settings"
+msgstr "Parámetros de configuración de proyectos"
+
+#. module: project_issue
+#: model:ir.model,name:project_issue.model_project_issue_report
+msgid "project.issue.report"
+msgstr "proyecto.incidencia.informe"

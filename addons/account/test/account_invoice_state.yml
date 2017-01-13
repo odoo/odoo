@@ -1,0 +1,60 @@
+-
+  In order to test Confirm Draft Invoice wizard I create an invoice and confirm it with this wizard
+-
+  !record {model: account.invoice, id: account_invoice_state}:
+    company_id: base.main_company
+    currency_id: base.EUR
+    invoice_line_ids:
+      - name: 'Computer SC234'
+        price_unit: 450.0
+        quantity: 1.0
+        product_id: product.product_product_3
+        uom_id: product.product_uom_unit
+    partner_id: base.res_partner_12
+    reference_type: none
+-
+  I check that Initially customer invoice state is "Draft"
+-
+  !assert {model: account.invoice, id: account_invoice_state}:
+    - state == 'draft'
+-
+  I called the "Confirm Draft Invoices" wizard
+-
+  !record {model: account.invoice.confirm, id: account_invoice_confirm_0}:
+    {}
+-
+  I clicked on Confirm Invoices Button
+-
+  !python {model: account.invoice.confirm, id: False}: |
+    self.browse(ref("account_invoice_confirm_0")).with_context({"lang": 'en_US',
+      "tz": False, "active_model": "account.invoice", "active_ids": [ref("account_invoice_state")],
+      "type": "out_invoice", "active_id": ref("account_invoice_state"), }).invoice_confirm()
+-
+  I check that customer invoice state is "Open"
+-
+  !assert {model: account.invoice, id: account_invoice_state}:
+    - state == 'open'
+-
+  I check the journal associated and put this journal as not
+-
+  !python {model: account.invoice, id: account_invoice_state}: |
+    moves = self.env['account.move.line'].search([('invoice_id', '=', self.id)])
+    assert (len(moves) > 0), 'You should have multiple moves'
+    moves[0].journal_id.write({'update_posted': True})
+-
+  In order to check the "Cancel Selected Invoices" wizard in odoo I cancelled this open invoice using this wizard
+-
+  !record {model: account.invoice.cancel, id: account_invoice_cancel_0}:
+    {}
+-
+  I clicked on Cancel Invoices Button
+-
+  !python {model: account.invoice.cancel, id: False}: |
+    self.browse(ref("account_invoice_cancel_0")).with_context({"lang": 'en_US',
+      "tz": False, "active_model": "account.invoice", "active_ids": [ref("account_invoice_state")],
+      "type": "out_invoice", "active_id": ref("account_invoice_state"), }).invoice_cancel()
+-
+  I check that customer invoice is in the cancel state
+-
+  !assert {model: account.invoice, id: account_invoice_state}:
+    - state == 'cancel'

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="web_planner_view_tree" model="ir.ui.view">
+        <field name="name">web.planner.view.tree</field>
+        <field name="model">web.planner</field>
+        <field name="arch" type="xml">
+            <tree string="Planner" editable="top">
+                <field name="name"/>
+                <field name="progress" readonly="True"/>
+                <field name="planner_application" readonly="True"/>
+                <field name="menu_id" readonly="True"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="web_planner_view_search" model="ir.ui.view">
+        <field name="name">web.planner.view.search</field>
+        <field name="model">web.planner</field>
+        <field name="arch" type="xml">
+            <search string="Planner">
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="unactive" string="Inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="web_planner_action" model="ir.actions.act_window">
+        <field name="name">Planners</field>
+        <field name="res_model">web.planner</field>
+        <field name="view_type">form</field>
+        <field name='view_mode'>tree</field>
+        <field name="view_id" ref="web_planner_view_tree"/>
+        <field name="context">{'search_default_active': True}</field>
+        <field name="search_view_id" ref="web_planner_view_search"/>
+    </record>
+
+    <menuitem
+        id="web_planner_menu"
+        name="Planners"
+        action="web_planner_action"
+        parent="base.next_id_2"
+        sequence="10"/>
+
+</odoo>

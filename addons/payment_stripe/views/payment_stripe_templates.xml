@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="stripe_acquirer_button">
+            <form t-if="acquirer" method="post" target="_self">
+                <script src="https://checkout.stripe.com/checkout.js"></script>
+                <input type='hidden' name='stripe_image' t-att-value="acquirer.stripe_image_url"/>
+                <input type='hidden' name='merchant' t-att-value='acquirer.company_id.name'/>
+                <input type='hidden' name='amount' t-att-value="amount"/>
+                <input type="hidden" name='return_url' t-att-value='returndata'/>
+                <!--Order Information -->
+                <input type='hidden' name='invoice_num' t-att-value='reference'/>
+                <input type='hidden' name='currency' t-att-value='currency'/>
+                <input type='hidden' name='currency_id' t-att-value='currency_id'/>
+                <!-- Billing Information-->
+                <input type='hidden' name='name' t-att-value='name'/>
+                <input type='hidden' name='address_line1' t-att-value='address_line1'/>
+                <input type='hidden' name='address_city' t-att-value='address_city'/>
+                <input type='hidden' name='address_zip' t-att-value='address_zip'/>
+                <input type='hidden' name='address_country' t-att-value='address_country'/>
+                <input type='hidden' name='phone' t-att-value='phone'/>
+                <input type='hidden' name='email' t-att-value='email'/>
+                <input id="acquirer_stripe" type='hidden' name="acquirer" t-att-value="acquirer.id"/>
+                <input type='hidden' name="stripe_key" t-att-value="acquirer.stripe_publishable_key"/>
+                <!-- Submit-->
+                <button id="pay_stripe" width="100px" t-att-class="submit_class">
+                    <img t-if="not submit_txt" src="/payment_stripe/static/src/img/stripe_icon.png"/>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>
+                </button>
+                <script type="text/javascript" src="/payment_stripe/static/src/js/stripe.js"></script>
+            </form>
+        </template>
+
+        <template id="stripe_s2s_form">
+            <form method="post" t-att-action="'/payment/stripe/s2s/create' if not json else '/payment/stripe/s2s/create_json'">
+                <div t-att-class="'row' if bootstrap_formatting else None">
+                    <div t-att-class="'form-group col-md-8' if bootstrap_formatting else 'form-group'">
+                        <label class="control-label" for="cc_number">Card Number</label>
+                        <input type="tel" name="cc_number" id="cc_number" class="form-control" placeholder="&#8226;&#8226;&#8226;&#8226;&#32;&#8226;&#8226;&#8226;&#8226;&#32;&#8226;&#8226;&#8226;&#8226;&#32;&#8226;&#8226;&#8226;&#8226;&#32;"/>
+                        <div class="card_placeholder"></div>
+                        <div class="visa"></div>
+                        <input type="hidden" name="cc_brand" value=""/>
+                    </div>
+                    <div t-att-class="'form-group col-md-4' if bootstrap_formatting else 'form-group'">
+                        <label class="control-label" for="cvc">CVC</label>
+                        <input type="text" name="cvc" id="cvc" class="form-control" maxlength="4" placeholder="CVC"/>
+                    </div>
+                    <div t-att-class="'form-group col-md-7' if bootstrap_formatting else 'form-group'">
+                        <label class="control-label" for="cc_holder_name">Card Holder Name</label>
+                        <input type="text" name="cc_holder_name" id="cc_holder_name" class="form-control"/>
+                    </div>
+                    <div t-att-class="'form-group col-md-5' if bootstrap_formatting else 'form-group'">
+                        <label class="control-label" for="cc_expires_mm">Expiration Date</label>
+                        <input type="text" name="cc_expiry" id="cc_expiry" class="form-control" maxlength="7" placeholder="MM / YY"/>
+                    </div>
+                    <input type="hidden" name="acquirer_id" t-att-value="id"/>
+                    <input t-if="return_url" type="hidden" name="return_url" t-att-value="return_url"/>
+                    <input t-if="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="clearfix"/>
+                </div>
+                <button t-att-class="submit_class" class="btn btn-primary" type="submit">
+                    <span t-if="not submit_txt">Confirm <span class="fa fa-long-arrow-right"></span></span>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/></span>
+                </button>
+            </form>
+        </template>
+
+        <template id="payment_stripe_redirect" name="Payment Stripe">
+            <script type="text/javascript">
+                window.location.href = '<t t-esc="return_url"/>';
+            </script>
+        </template>
+    </data>
+</odoo>

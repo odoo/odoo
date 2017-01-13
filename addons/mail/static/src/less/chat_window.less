@@ -1,0 +1,137 @@
+@o-chat-window-bg: white;
+@o-chat-window-width: 300px;
+
+.o_chat_window {
+    .o-flex-display();
+    .o-flex-flow(column, nowrap);
+    position: fixed;
+    width: @o-chat-window-width;
+    max-width: 100%;
+    height: 400px;
+    max-height: 100%;
+    font-size: 12px;
+    background-color: @o-chat-window-bg;
+    border: 1px solid gray;
+    border-radius: 3px;
+    z-index: 3;
+
+    @media (max-width: @screen-xs-max) {
+        width: 100%;
+        height: 100%!important;
+        &.o_folded {
+            display: none;
+        }
+    }
+
+    @media print {
+        display: none;
+    }
+
+    .o_chat_header {
+        .o-flex-display();
+        .o-flex(0, 0, auto);
+        color: white;
+        background-color: @odoo-brand-primary;
+        padding: 5px;
+
+        @media (max-width: @screen-xs-max) {
+            height: @navbar-height;
+            .o_chat_title, .o_chat_window_close {
+                font-size: 22px;
+            }
+        }
+
+        .o_chat_title {
+            cursor: pointer;
+            .o-flex(1, 1, auto);
+            .o-text-overflow();
+        }
+
+        .o_chat_window_close {
+            color: white;
+            padding: 3px;
+            margin-left: 5px;
+            &:hover {
+                background-color: darken(@odoo-brand-primary, 10%);
+            }
+        }
+    }
+
+    .o_mail_thread {
+        .o-flex(1, 1, auto);
+        overflow: auto;
+
+        .o_thread_date_separator {
+            margin-top: 0px;
+            margin-bottom: 15px;
+            border-color: lightgray;
+            .o_thread_date {
+                background-color: @o-chat-window-bg;
+            }
+        }
+        .o_thread_message {
+            .o_thread_message_sidebar {
+                margin-right: 5px;
+            }
+            padding: 4px 5px;
+        }
+    }
+
+    .o_chat_composer {
+        .o-flex(0, 0, auto);
+        > input {
+            padding: 5px;
+            width: 100%;
+        }
+    }
+}
+
+.o_chat_window_dropdown {
+    width: auto;
+    height: 28px;
+    color: white;
+    background-color: @odoo-brand-primary;
+    cursor: pointer;
+
+    @media (max-width: @screen-xs-max) {
+        display: none;
+    }
+
+    .o_chat_window_dropdown_toggler {
+        padding: 5px;
+
+        .o_total_unread_counter {
+            .o-position-absolute(-10px, 0, auto, auto);
+            background-color: @odoo-brand-optional;
+            padding: 0 2px;
+            font-size: smaller;
+        }
+    }
+    &.open .o_chat_window_dropdown_toggler .o_total_unread_counter {
+        display: none;
+    }
+
+    > ul {
+        max-width: @o-chat-window-width;
+        padding: 0;
+
+        > li.o_chat_header {
+            font-size: 12px;
+            padding: 3px 5px;
+            &~li.o_chat_header {
+                border-top: 1px solid white;
+            }
+            &:hover {
+                background-color: darken(@odoo-brand-primary, 10%);
+                color: white;
+            }
+        }
+    }
+}
+
+.o_ui_blocked .o_chat_window {
+    z-index: 1101; // blockUI's z-index is 1100
+}
+.o_no_chat_window .o_chat_window {
+    display: none;
+}

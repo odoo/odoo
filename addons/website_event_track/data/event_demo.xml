@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="event_track_tag1" model="event.track.tag">
+            <field name="name">Technical</field>
+        </record>
+        <record id="event_track_tag2" model="event.track.tag">
+            <field name="name">Business</field>
+        </record>
+        <record id="event_track_tag3" model="event.track.tag">
+            <field name="name">Lightning Talks</field>
+        </record>
+        <record id="event_track_tag4" model="event.track.tag">
+            <field name="name">Round Table</field>
+        </record>
+        <!--
+            This should be done at the end so that the menu is complete
+        -->
+        <record id="event.event_0" model="event.event">
+            <field name="show_tracks">True</field>
+            <field name="show_track_proposal">True</field>
+        </record>
+
+        <!-- Show menu after so that the menu is created with tracks -->
+
+        <record id="event.event_0" model="event.event">
+            <field name="show_menu">True</field>
+        </record>
+
+        <!-- Sponsorships -->
+
+        <record id="event_sponsor_0" model="event.sponsor">
+            <field name="event_id" ref="event.event_0"/>
+            <field name="sponsor_type_id" ref="event_sponsor_type1"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="url">http://odoo.com</field>
+        </record>
+
+        <record id="event_sponsor_1" model="event.sponsor">
+            <field name="event_id" ref="event.event_0"/>
+            <field name="sponsor_type_id" ref="event_sponsor_type2"/>
+            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="url">http://odoo.com</field>
+        </record>
+
+        <record id="event_sponsor_2" model="event.sponsor">
+            <field name="event_id" ref="event.event_0"/>
+            <field name="sponsor_type_id" ref="event_sponsor_type2"/>
+            <field name="partner_id" ref="base.res_partner_3"/>
+        </record>
+
+        <record id="event_sponsor_3" model="event.sponsor">
+            <field name="event_id" ref="event.event_0"/>
+            <field name="sponsor_type_id" ref="event_sponsor_type3"/>
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="url">http://odoo.com</field>
+        </record>
+
+        <!-- Tracks -->
+        <record id="base.res_partner_address_16" model="res.partner">
+            <field name="website">http://facebook.com/odoo</field>
+            <field name="website_description" type="xml">
+                <p>
+                    Ayaan has in the IT sector <b>since 20 years</b>. He
+                    develops software to help develop websites.  He sold his
+                    first company at 30 years old and manage to grow OpenCorp
+                    from 1 to 55 employees mostly by reselling services on
+                    Odoo.
+                </p><p>
+                    Ayaan is the <b>author of several books</b>, including Amazon best seller
+                    "How Odoo will change the business world!".
+                </p>
+            </field>
+        </record>
+</odoo>

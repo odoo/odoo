@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_mail_form">
+            <field name="name">mail.mail.form</field>
+            <field name="model">mail.mail</field>
+            <field name="arch" type="xml">
+                <form string="Email message">
+                    <header>
+                        <button name="send" string="Send Now" type="object" states='outgoing' class="oe_highlight"/>
+                        <button name="mark_outgoing" string="Retry" type="object" states='exception,cancel'/>
+                        <button name="cancel" string="Cancel" type="object" states='outgoing'/>
+                        <field name="state" widget="statusbar" statusbar_visible="outgoing,sent,received,exception,cancel"/>
+                    </header>
+                    <sheet>
+                        <field name="mail_message_id" required="0" invisible="1"/>
+                        <label for="subject" class="oe_edit_only"/>
+                        <h2><field name="subject"/></h2>
+                        <div style="vertical-align: top;">
+                            by <field name="author_id" class="oe_inline" string="User"/> on <field name="date" readonly="1" class="oe_inline"/>
+                            <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="fa-reply text-warning"
+                                context="{'default_composition_mode':'reply', 'default_parent_id': mail_message_id}" states='received,sent,exception,cancel'/>
+                        </div>
+                        <group>
+                            <field name="email_from"/>
+                            <field name="email_to"/>
+                            <field name="recipient_ids" widget="many2many_tags"/>
+                            <field name="email_cc"/>
+                            <field name="reply_to"/>
+                            <field name="scheduled_date"/>
+                        </group>
+                        <notebook>
+                            <page string="Body">
+                                <field name="body_html" widget="html" options="{'style-inline': true}"/>
+                            </page>
+                            <page string="Advanced" groups="base.group_no_one">
+                                <group>
+                                    <group string="Status">
+                                        <field name="auto_delete"/>
+                                        <field name="notification"/>
+                                        <field name="message_type"/>
+                                        <field name="mail_server_id"/>
+                                        <field name="model"/>
+                                        <field name="res_id"/>
+                                    </group>
+                                    <group string="Headers">
+                                        <field name="message_id"/>
+                                        <field name="references"/>
+                                        <field name="headers"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Attachments">
+                                <field name="attachment_ids"/>
+                            </page>
+                            <page string="Failure Reason" attrs="{'invisible': [('state', '!=', 'exception')]}">
+                                <field name="failure_reason"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_tree">
+            <field name="name">mail.mail.tree</field>
+            <field name="model">mail.mail</field>
+            <field name="arch" type="xml">
+                <tree string="Emails" decoration-muted="state in ('sent', 'cancel')" decoration-info="state=='outgoing'" decoration-danger="state=='exception'">
+                    <field name="date"/>
+                    <field name="subject"/>
+                    <field name="author_id" string="User"/>
+                    <field name="message_id" invisible="1"/>
+                    <field name="recipient_ids" invisible="1"/>
+                    <field name="model" invisible="1"/>
+                    <field name="res_id" invisible="1"/>
+                    <field name="email_from" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="message_type" invisible="1"/>
+                    <button name="send" string="Send Now" type="object" icon="fa-paper-plane text-success" states='outgoing'/>
+                    <button name="mark_outgoing" string="Retry" type="object" icon="fa-repeat text-success" states='exception,cancel'/>
+                    <button name="cancel" string="Cancel Email" type="object" icon="fa-times-circle text-danger" states='outgoing'/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mail_search">
+            <field name="name">mail.mail.search</field>
+            <field name="model">mail.mail</field>
+            <field name="arch" type="xml">
+                <search string="Email Search">
+                    <field name="email_from" filter_domain="['|', '|',('email_from','ilike',self), ('email_to','ilike',self), ('subject','ilike',self)]" string="Email"/>
+                    <field name="date"/>
+                    <filter name="received" string="Received" domain="[('state','=','received')]"/>
+                    <filter name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>
+                    <filter name="sent" string="Sent" domain="[('state','=','sent')]"/>
+                    <filter name="exception" string="Failed" domain="[('state','=','exception')]"/>
+                    <separator/>
+                    <filter name="type_email" string="Email" domain="[('message_type','=','email')]"/>
+                    <filter name="type_comment" string="Comment" domain="[('message_type','=','comment')]"/>
+                    <filter name="type_notification" string="Notification" domain="[('message_type','=','notification')]"/>
+                    <group expand="0" string="Extended Filters...">
+                        <field name="author_id"/>
+                        <field name="recipient_ids"/>
+                        <field name="model"/>
+                        <field name="res_id"/>
+                    </group>
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Author" name="author" context="{'group_by':'author_id'}"/>
+                        <filter string="Thread" name="thread" domain="[]" context="{'group_by':'message_id'}"/>
+                        <filter string="Month" name="month" help="Creation Month" domain="[]" context="{'group_by':'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_view_mail_mail" model="ir.actions.act_window">
+            <field name="name">Emails</field>
+            <field name="res_model">mail.mail</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="view_mail_search"/>
+        </record>
+
+        <!-- Add menu entry in Settings/Email -->
+        <menuitem name="Emails" id="menu_mail_mail" parent="base.menu_email" action="action_view_mail_mail" />
+    </data>
+</odoo>

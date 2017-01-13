@@ -1,0 +1,52 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_cancel
+# 
+# Translators:
+# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Jeffery Chen Fan <jeffery9@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_cancel
+#: model:ir.model,name:account_cancel.model_account_bank_statement
+msgid "Bank Statement"
+msgstr "银行对账单"
+
+#. module: account_cancel
+#: model:ir.model,name:account_cancel.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "银行对账单行"
+
+#. module: account_cancel
+#: model:ir.ui.view,arch_db:account_cancel.bank_statement_cancel_form_inherit
+#: model:ir.ui.view,arch_db:account_cancel.payment_cancel_form_inherit
+msgid "Cancel"
+msgstr "取消"
+
+#. module: account_cancel
+#: model:ir.ui.view,arch_db:account_cancel.invoice_form_cancel_inherit
+#: model:ir.ui.view,arch_db:account_cancel.invoice_supplier_cancel_form_inherit
+msgid "Cancel Invoice"
+msgstr "取消发票"
+
+#. module: account_cancel
+#: code:addons/account_cancel/models/account_bank_statement.py:28
+#, python-format
+msgid "Please set the bank statement to New before canceling."
+msgstr "新建银行对帐单前请取消之前设置的银行对帐单。"
+
+#. module: account_cancel
+#: model:ir.ui.view,arch_db:account_cancel.bank_statement_draft_form_inherit
+msgid "Reset to New"
+msgstr "重置为草稿"

@@ -1,0 +1,48 @@
+# HG changeset patch
+# Parent 84e2b0b43fc61fd0bcbb44c1929755d44ee58ae5
+
+Index: addons/openacademy/demo.xml
+===================================================================
+--- addons.orig/openacademy/demo.xml	2014-08-26 17:25:52.683783480 +0200
++++ addons/openacademy/demo.xml	2014-08-26 17:25:52.679783480 +0200
+@@ -1,25 +1,19 @@
+ <odoo>
+     <data>
+-        <!--  -->
+-        <!--   <record id="object0" model="openacademy.openacademy"> -->
+-        <!--     <field name="name">Object 0</field> -->
+-        <!--   </record> -->
+-        <!--  -->
+-        <!--   <record id="object1" model="openacademy.openacademy"> -->
+-        <!--     <field name="name">Object 1</field> -->
+-        <!--   </record> -->
+-        <!--  -->
+-        <!--   <record id="object2" model="openacademy.openacademy"> -->
+-        <!--     <field name="name">Object 2</field> -->
+-        <!--   </record> -->
+-        <!--  -->
+-        <!--   <record id="object3" model="openacademy.openacademy"> -->
+-        <!--     <field name="name">Object 3</field> -->
+-        <!--   </record> -->
+-        <!--  -->
+-        <!--   <record id="object4" model="openacademy.openacademy"> -->
+-        <!--     <field name="name">Object 4</field> -->
+-        <!--   </record> -->
+-        <!--  -->
++        <record model="openacademy.course" id="course0">
++            <field name="name">Course 0</field>
++            <field name="description">Course 0's description
++
++Can have multiple lines
++            </field>
++        </record>
++        <record model="openacademy.course" id="course1">
++            <field name="name">Course 1</field>
++            <!-- no description for this one -->
++        </record>
++        <record model="openacademy.course" id="course2">
++            <field name="name">Course 2</field>
++            <field name="description">Course 2's description</field>
++        </record>
+     </data>
+ </odoo>

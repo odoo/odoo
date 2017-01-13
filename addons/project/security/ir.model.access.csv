@@ -1,0 +1,20 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_project_project,project.project,model_project_project,project.group_project_user,1,0,0,0
+access_project_project_manager,project.project,model_project_project,project.group_project_manager,1,1,1,1
+access_account_analytic_account_user,account.analytic.account,analytic.model_account_analytic_account,project.group_project_user,1,0,0,0
+access_account_analytic_account_manager,account.analytic.account,analytic.model_account_analytic_account,project.group_project_manager,1,1,1,1
+access_project_task_type_user,project.task.type.user,model_project_task_type,base.group_user,1,0,0,0
+access_project_task_type_project_user,project.task.type.project.user,model_project_task_type,project.group_project_user,1,0,0,0
+access_project_task_type_manager,project.task.type manager,model_project_task_type,project.group_project_manager,1,1,1,1
+access_project_task,project.task,model_project_task,project.group_project_user,1,1,1,1
+access_report_project_task_user,report.project.task.user,model_report_project_task_user,project.group_project_manager,1,1,1,1
+access_partner_task user,base.res.partner user,base.model_res_partner,project.group_project_user,1,0,0,0
+access_task_on_partner,project.task on partners,model_project_task,base.group_user,1,0,0,0
+access_project_on_partner,project.project on partners,model_project_project,base.group_user,1,0,0,0
+access_account_analytic_line_project,account.analytic.line project,analytic.model_account_analytic_line,project.group_project_manager,1,1,1,1
+access_resource_calendar,project.resource_calendar user,resource.model_resource_calendar,project.group_project_user,1,0,0,0
+access_resource_calendar_attendance,project.resource_calendar_attendance user,resource.model_resource_calendar_attendance,project.group_project_user,1,0,0,0
+access_resource_calendar_leaves_user,resource.calendar.leaves user,resource.model_resource_calendar_leaves,project.group_project_user,1,1,1,1
+access_project_tags_all,project.project_tags_all,model_project_tags,,1,0,0,0
+access_project_tags_manager,project.project_tags_manager,model_project_tags,project.group_project_manager,1,1,1,1
+access_mail_alias,mail.alias,mail.model_mail_alias,project.group_project_manager,1,1,1,1

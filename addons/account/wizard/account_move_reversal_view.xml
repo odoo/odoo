@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_move_reversal" model="ir.ui.view">
+            <field name="name">account.move.reversal.form</field>
+            <field name="model">account.move.reversal</field>
+            <field name="arch" type="xml">
+                <form string="Account Move Reversal">
+                    <group col="4">
+                        <field name="date"/>
+                        <field name="journal_id"/>
+                    </group>
+                    <footer>
+                        <button string="Reverse Moves" name="reverse_moves" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_view_account_move_reversal" model="ir.actions.act_window">
+            <field name="name">Reverse Moves</field>
+            <field name="res_model">account.move.reversal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_move_reversal"/>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.values" id="action_account_move_reversal">
+            <field name="model_id" ref="account.model_account_move" />
+            <field name="name">Reverse Moves</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' +str(ref('action_view_account_move_reversal'))" />
+            <field name="key">action</field>
+            <field name="model">account.move</field>
+        </record>
+    </data>
+</odoo>

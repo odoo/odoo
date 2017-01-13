@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record model="ir.ui.view" id="base_gengo_translation_wizard_from">
+            <field name="name">base.gengo.translation.form</field>
+            <field name="model">base.gengo.translations</field>
+            <field name="arch" type="xml">
+                <form string="Gengo Request Form">
+                    <div class="alert alert-warning text-center" attrs="{'invisible': [('authorized_credentials', '=', True)]}">
+                        <label string="Gengo Public or Private keys are wrong or missing."/>
+                        <button type="object" name="open_company" string="Click here to Configure Gengo Parameters" icon="fa-cogs" class="oe_inline oe_link"/>
+                        <field name="authorized_credentials" invisible="1"/>
+                    </div>
+                    <group>
+                        <field name="lang_id"/>
+                    </group>
+                    <group>
+	                    <group>
+	                            <field name="sync_type" widget="radio"/>
+	                    </group>
+	                    <group>
+	                            <field name="sync_limit" required="1"/>
+	                    </group>
+                    </group>
+                    <footer>
+                        <button name="act_update" string="Send" type="object" class="btn-primary"/>
+                        <button name="act_cancel" special="cancel" string="Cancel" type="object" class="btn-default"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wizard_base_gengo_translations" model="ir.actions.act_window">
+            <field name="name">Gengo: Manual Request of Translation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.gengo.translations</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem id="menu_action_wizard_base_gengo_translations" action="action_wizard_base_gengo_translations" parent="base.menu_translation_app"/>
+
+</odoo>

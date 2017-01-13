@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="issue_project_manager_rule" model="ir.rule">
+            <field name="name">Project/Issue: project manager: see all</field>
+            <field name="model_id" ref="model_project_issue"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+        </record>
+
+        <record id="issue_user_rule" model="ir.rule">
+            <field name="name">Project/Issue: employees: no need to follow or (following project or following issue</field>
+            <field name="model_id" ref="model_project_issue"/>
+            <field name="domain_force">['|',
+                                            ('project_id.privacy_visibility', '!=', 'followers'),
+                                            '|',
+                                                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                                                ('message_partner_ids', 'in', [user.partner_id.id]),
+                                        ]</field>
+            <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        </record>
+
+    </data>
+</odoo>

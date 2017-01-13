@@ -1,0 +1,1469 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_payroll
+# 
+# Translators:
+# Myat Thu <myat90thu@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:56+0000\n"
+"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"Last-Translator: Myat Thu <myat90thu@gmail.com>, 2016\n"
+"Language-Team: Burmese (https://www.transifex.com/odoo/teams/41243/my/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: my\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:46
+#, python-format
+msgid "%s (copy)"
+msgstr "%s(ကူးမည်)"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_state
+msgid ""
+"* When the payslip is created the status is 'Draft'\n"
+"                \n"
+"* If the payslip is under verification, the status is 'Waiting'.\n"
+"                \n"
+"* If the payslip is confirmed then status is set to 'Done'.\n"
+"                \n"
+"* When user cancel payslip the status is 'Rejected'."
+msgstr ""
+"* When the payslip is created the status is 'Draft'\n"
+"                \n"
+"* If the payslip is under verification, the status is 'Waiting'.\n"
+"                \n"
+"* If the payslip is confirmed then status is set to 'Done'.\n"
+"                \n"
+"* When user cancel payslip the status is 'Rejected'."
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Address</strong>"
+msgstr "<strong>လိပ်စာ</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Authorized signature</strong>"
+msgstr "<strong>လုပ်ပိုင်ခွင့်ရှိသူ၏ လက်မှတ်</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Bank Account</strong>"
+msgstr "<strong>ဘဏ်စာရင်း</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "<strong>Date From:</strong>"
+msgstr "<strong>နေ့စွဲ မှ:</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Date From</strong>"
+msgstr "<strong>နေ့စွဲ မှ</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "<strong>Date To:</strong>"
+msgstr "<strong>နေ့စွဲ သို့</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Date To</strong>"
+msgstr "<strong>နေ့စွဲ သို့</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Designation</strong>"
+msgstr "<strong>ခန့်အပ် ရာထူး</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Email</strong>"
+msgstr "<strong>အီးမေးလ်</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Identification No</strong>"
+msgstr "<strong>သက်သေခံ အမှတ်</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Name</strong>"
+msgstr "<strong>အမည်</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "<strong>Reference</strong>"
+msgstr "<strong>အထောက်အထား</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "<strong>Register Name:</strong>"
+msgstr "<strong>စာရင်းသွင်းသူ အမည်</strong>"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "<strong>Total</strong>"
+msgstr "<strong>စုစုပေါင်း</strong>"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
+msgid ""
+"A contribution register is a third party involved in the salary\n"
+"                payment of the employees. It can be the social security, the\n"
+"                estate or anyone that collect or inject money on payslips."
+msgstr ""
+"A contribution register is a third party involved in the salary\n"
+"                payment of the employees. It can be the social security, the\n"
+"                estate or anyone that collect or inject money on payslips."
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Accounting"
+msgstr "စာရင်းအင်းပညာ"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Accounting Information"
+msgstr "စာရင်းကိုင် အချက်အလက်"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_active
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_active
+msgid "Active"
+msgstr "တက်ကြွသည်။"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Add an internal note..."
+msgstr "မှတ်စုတိုမှတ်ရန်"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
+msgid "All Children Rules"
+msgstr "All Children Rules"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Always True"
+msgstr "Always True"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_amount
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Amount"
+msgstr "ပမာဏ"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_select
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_select
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Amount Type"
+msgstr "ပမာဏ အမျိုးအစား"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Annually"
+msgstr "နှစ်စဉ်"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_appears_on_payslip
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_appears_on_payslip
+msgid "Appears on Payslip"
+msgstr "လစာပေးစာရွက်တွင် ဖော်ပြသည်"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_python
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_python
+msgid ""
+"Applied this rule for calculation if condition is true. You can specify "
+"condition like basic > 1000."
+msgstr ""
+"Applied this rule for calculation if condition is true. You can specify "
+"condition like basic > 1000."
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Apply"
+msgstr "လုပ်ဆောင်သည်။"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Bi-monthly"
+msgstr "Bi-monthly"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Bi-weekly"
+msgstr "Bi-weekly"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_form
+msgid "Calculations"
+msgstr "တွက်ချက်မှုများ"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+#: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
+msgid "Cancel"
+msgstr "မလုပ်ဆောင်တော့ပါ။"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Cancel Payslip"
+msgstr "လစာပေးစာရွက်ကို ဆက်မလုပ်တော့ပါ"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:238
+#, python-format
+msgid "Cannot cancel a payslip that is done."
+msgstr "လစာပေးစာရွက်ကို ဖျက်သိမ်းမရပါ လုပ်ဆောင်ချက်အကုန်ပြီးဆုံးပါက"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9067
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+msgid "Category"
+msgstr "အမျိုးအစားများ"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Child Rules"
+msgstr "Child Rules"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_child_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_child_ids
+msgid "Child Salary Rule"
+msgstr "Child Salary Rule"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_children_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_children_ids
+msgid "Children"
+msgstr "ကလေး"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Children Definition"
+msgstr "ကလေး သတ်မှတ်ချက်"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
+msgid "Click to add a new contribution register."
+msgstr "Click to add a new contribution register."
+
+#. module: hr_payroll
+#: selection:hr.payslip.run,state:0
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+msgid "Close"
+msgstr "ပိတ်သည်"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_code
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Code"
+msgstr "ကုဒ်"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Companies"
+msgstr "ကုမ္ပဏီများ"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_company_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_company_id
+msgid "Company"
+msgstr "ကုမ္ပဏီ"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Company Contribution"
+msgstr "Company Contribution"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Computation"
+msgstr "Computation"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Compute Sheet"
+msgstr "Compute Sheet"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_select
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_select
+msgid "Condition Based on"
+msgstr "Condition Based on"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Conditions"
+msgstr "Conditions"
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_configuration
+msgid "Configuration"
+msgstr "ပြင်ဆင်ရန်"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_configuration
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Configure Payroll"
+msgstr "Configure Payroll"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Confirm"
+msgstr "အတည်ပြုသည်"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_contract_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_contract_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_contract_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_contract_id
+msgid "Contract"
+msgstr "စာချုပ်"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
+msgid "Contribution"
+msgstr "Contribution"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_contribution_register
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_register_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_register_id
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Contribution Register"
+msgstr "Contribution Register"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
+msgid "Contribution Register's Payslip Lines"
+msgstr "Contribution Register's Payslip Lines"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_contribution_register_form
+#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_contribution_register_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_filter
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_tree
+msgid "Contribution Registers"
+msgstr "Contribution Registers"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payroll_config_settings_module_hr_payroll_account
+msgid "Create journal entries from payslips"
+msgstr "Create journal entries from payslips"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_create_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_create_uid
+msgid "Created by"
+msgstr "တည်ဆောက်သူ"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_create_date
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_create_date
+msgid "Created on"
+msgstr "တည်ဆောက်သည့်အချိန်"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_credit_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_credit_note
+msgid "Credit Note"
+msgstr "အကြွေးမှတ်စု"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_date_from
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_date_start
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_from
+msgid "Date From"
+msgstr "နေ့စွဲမှ"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_date_to
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_date_end
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_to
+msgid "Date To"
+msgstr "နေ့စွဲသို့"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_struct_id
+msgid ""
+"Defines the rules that have to be applied to this payslip, accordingly to "
+"the contract chosen. If you let empty the field contract, this field isn't "
+"mandatory anymore and thus the rules applied will be all the rules set on "
+"the structure of all contracts of the employee valid for the chosen period"
+msgstr ""
+"Defines the rules that have to be applied to this payslip, accordingly to "
+"the contract chosen. If you let empty the field contract, this field isn't "
+"mandatory anymore and thus the rules applied will be all the rules set on "
+"the structure of all contracts of the employee valid for the chosen period"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_note
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_note
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Description"
+msgstr "ဖော်ပြချက်"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Details By Salary Rule Category"
+msgstr "Details By Salary Rule Category"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_details_by_salary_rule_category
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Details by Salary Rule Category"
+msgstr "Details by Salary Rule Category"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_display_name
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_display_name
+msgid "Display Name"
+msgstr "ပြချင်သော အမည်"
+
+#. module: hr_payroll
+#: selection:hr.payslip,state:0
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Done"
+msgstr "ပြီးဆုံးသည်"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+msgid "Done Payslip Batches"
+msgstr "Payslip Batches ပြီးဆုံးသည်"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Done Slip"
+msgstr "လစာစလစ် လုပ်ဆောင်ချက်ပြီးဆုံးသည်"
+
+#. module: hr_payroll
+#: selection:hr.payslip,state:0 selection:hr.payslip.run,state:0
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Draft"
+msgstr "အကြမ်း"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+msgid "Draft Payslip Batches"
+msgstr "Payslip Batches အကြမ်းထည်"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Draft Slip"
+msgstr "စလစ် အကြမ်း"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_employee
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employee_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_employee_id
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Employee"
+msgstr "၀န်ထမ်း"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_contract
+msgid "Employee Contract"
+msgstr "၀န်ထမ်းခန့်အပ်ခြင်း စာချုပ်"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_list_view
+msgid "Employee Function"
+msgstr "၀န်ထမ်း လုပ်ဆောင်ချက်"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
+#: model:ir.ui.menu,name:hr_payroll.menu_department_tree
+msgid "Employee Payslips"
+msgstr "၀န်ထမ်းလစာ စလစ်များ"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_employee_ids
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Employees"
+msgstr "၀န်းထမ်းများ"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:41
+#, python-format
+msgid "Error ! You cannot create a recursive Salary Structure."
+msgstr "Error ! You cannot create a recursive Salary Structure."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_register_id
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_register_id
+msgid "Eventual third party involved in the salary payment of the employees."
+msgstr "Eventual third party involved in the salary payment of the employees."
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_fix
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_fix
+msgid "Fixed Amount"
+msgstr "ကိန်းသေသတ်မှတ်ထားသော ပမာဏ"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_percentage
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_percentage
+msgid "For example, enter 50.0 to apply a percentage of 50%"
+msgstr "For example, enter 50.0 to apply a percentage of 50%"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "General"
+msgstr "အထွေထွေ"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+msgid "Generate"
+msgstr "Generate"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_by_employees
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+msgid "Generate Payslips"
+msgstr "Generate Payslips"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "Generate payslips for all selected employees"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+msgid "Group By"
+msgstr "မူတည်၍"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_id
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_id
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_id
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_id
+msgid "ID"
+msgstr "နံပါတ်"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_run_credit_note
+msgid ""
+"If its checked, indicates that all payslips generated from here are refund "
+"payslips."
+msgstr ""
+"If its checked, indicates that all payslips generated from here are refund "
+"payslips."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_active
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_active
+msgid ""
+"If the active field is set to false, it will allow you to hide the salary "
+"rule without removing it."
+msgstr ""
+"If the active field is set to false, it will allow you to hide the salary "
+"rule without removing it."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_credit_note
+msgid "Indicates this payslip has a refund of another"
+msgstr "Indicates this payslip has a refund of another"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Input Data"
+msgstr "ထည့်သွင်းရမည့် အချက်အလက်"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_input_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_input_ids
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+msgid "Inputs"
+msgstr "ထည့်သွင်းမှုများ"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Install your country's payroll"
+msgstr "Install your country's payroll"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_note
+msgid "Internal Note"
+msgstr "မှတ်စု"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_quantity
+msgid ""
+"It is used in computation for percentage and fixed amount. For e.g. A rule "
+"for Meal Voucher having fixed amount of 1€ per worked day can have its "
+"quantity defined in expression like worked_days.WORK100.number_of_days."
+msgstr ""
+"It is used in computation for percentage and fixed amount. For e.g. A rule "
+"for Meal Voucher having fixed amount of 1€ per worked day can have its "
+"quantity defined in expression like worked_days.WORK100.number_of_days."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
+msgid ""
+"It is used in computation. For e.g. A rule for sales having 1% commission of"
+" basic salary for per product can defined in expression like result = "
+"inputs.SALEURO.amount * contract.wage*0.01."
+msgstr ""
+"It is used in computation. For e.g. A rule for sales having 1% commission of"
+" basic salary for per product can defined in expression like result = "
+"inputs.SALEURO.amount * contract.wage*0.01."
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister___last_update
+#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails___last_update
+msgid "Last Modified on"
+msgstr "နောက်ဆုံးပြင်ဆင်ချိန်"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_write_uid
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_write_uid
+msgid "Last Updated by"
+msgstr "နောက်ဆုံးပြင်ဆင်သူ"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_write_date
+#: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_write_date
+msgid "Last Updated on"
+msgstr "နောက်ဆုံးပြင်ဆင်ချိန်"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_module_hr_payroll_account
+msgid "Link your payroll to accounting system"
+msgstr "Link your payroll to accounting system"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_category_parent_id
+msgid ""
+"Linking a salary category to its parent is used only for the reporting "
+"purpose."
+msgstr ""
+"Linking a salary category to its parent is used only for the reporting "
+"purpose."
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_paid
+msgid "Made Payment Order ? "
+msgstr "အမှာစာ အတွက် ငွေပေးချေမှုလုပ်မှာလား"
+
+#. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_manager
+msgid "Manager"
+msgstr "မန်နေဂျာ"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_max
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_max
+msgid "Maximum Range"
+msgstr "Maximum Range"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_min
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_min
+msgid "Minimum Range"
+msgstr "Minimum Range"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Miscellaneous"
+msgstr "အမျိုးမျိုးစုပေါင်းသော"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Monthly"
+msgstr "လစဉ်"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_name
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_name
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Name"
+msgstr "အမည်"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:323
+#, python-format
+msgid "Normal Working Days paid at 100%"
+msgstr "Normal Working Days paid at 100%"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
+msgid "Notes"
+msgstr "မှတ်စုများ"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_days
+msgid "Number of Days"
+msgstr "Number of Days"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_hours
+msgid "Number of Hours"
+msgstr "Number of Hours"
+
+#. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_user
+msgid "Officer"
+msgstr "ကြီးကြပ်ရေးမှူး"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Other Inputs"
+msgstr "အခြားထည့်သွင်းမှုများ"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_parent_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_parent_id
+msgid "Parent"
+msgstr "Parent"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_parent_rule_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_parent_rule_id
+msgid "Parent Salary Rule"
+msgstr "Parent Salary Rule"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_partner_id
+msgid "Partner"
+msgstr "မိတ်ဖက်"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_payslip_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_slip_id
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_payslip_id
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Pay Slip"
+msgstr "Pay Slip"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "PaySlip Batch"
+msgstr "PaySlip Batch"
+
+#. module: hr_payroll
+#: model:ir.actions.report.xml,name:hr_payroll.payslip_details_report
+msgid "PaySlip Details"
+msgstr "PaySlip Details"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_payslip_lines_contribution_register
+msgid "PaySlip Lines"
+msgstr "PaySlip Lines"
+
+#. module: hr_payroll
+#: model:ir.actions.report.xml,name:hr_payroll.action_contribution_register
+msgid "PaySlip Lines By Conribution Register"
+msgstr "PaySlip Lines By Conribution Register"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "PaySlip Lines by Contribution Register"
+msgstr "Contribution Register's Payslip Lines"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_payslip_lines_contribution_register
+msgid "PaySlip Lines by Contribution Registers"
+msgstr "PaySlip Lines by Contribution Registers"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "PaySlip Name"
+msgstr "လစာပေးမှုစာရွက် အမည်"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.open_payroll_modules
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_root
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Payroll"
+msgstr "လစာပေးလုပ်ဆောင်ချက်"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_filter
+msgid "Payroll Structures"
+msgstr "လစာပေးလုပ်ဆောင်ချက် သတ်မှတ်ချက်များ"
+
+#. module: hr_payroll
+#: model:ir.actions.report.xml,name:hr_payroll.action_report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Payslip"
+msgstr "လစာပေးစာရွက်"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:224
+#, python-format
+msgid "Payslip 'Date From' must be before 'Date To'."
+msgstr "Payslip 'Date From' must be before 'Date To'."
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_run_id
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+msgid "Payslip Batches"
+msgstr "Payslip Batches ပြီးဆုံးသည်"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.act_payslip_lines
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_count
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Payslip Computation Details"
+msgstr "Payslip Computation Details"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_input
+msgid "Payslip Input"
+msgstr "Payslip Input"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_line_ids
+msgid "Payslip Inputs"
+msgstr "Payslip Inputs"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_line
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_form
+msgid "Payslip Line"
+msgstr "Payslip Line"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.act_contribution_reg_payslip_lines
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_ids
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Payslip Lines"
+msgstr "Payslip Lines"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Payslip Lines by Contribution Register"
+msgstr "Payslip Lines by Contribution Register"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_name
+msgid "Payslip Name"
+msgstr "အမည်"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_run
+msgid "Payslip Run"
+msgstr "Payslip Run"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_line_ids
+msgid "Payslip Worked Days"
+msgstr "Payslip Worked Days"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_employee_payslip_count
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_employee_slip_ids
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_slip_ids
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.view,arch_db:hr_payroll.payroll_hr_employee_view_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_tree
+msgid "Payslips"
+msgstr "Payslips"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payslip_run_tree
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payslip_run
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_tree
+msgid "Payslips Batches"
+msgstr "Payslips Batches"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+msgid "Payslips by Employees"
+msgstr "Payslips by Employees"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_percentage
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_percentage
+msgid "Percentage (%)"
+msgstr "ရာခိုင်နှုန်း ( %)"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_percentage_base
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_percentage_base
+msgid "Percentage based on"
+msgstr "ရာခိုင်နှုန်းတွင် အခြေခံသည်"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Period"
+msgstr "အချိတ်အကန့်အသတ်"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
+msgid "Print"
+msgstr "စာရွက်ထုတ်သည်"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,amount_select:0
+#: selection:hr.salary.rule,amount_select:0
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_python_compute
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_python_compute
+msgid "Python Code"
+msgstr "Python Code"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_python
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_python
+msgid "Python Condition"
+msgstr "Python Condition"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Python Expression"
+msgstr "Python Expression"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_quantity
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_quantity
+msgid "Quantity"
+msgstr "အရေအတွက်"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+msgid "Quantity/Rate"
+msgstr "အရေအတွက်"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Quantity/rate"
+msgstr "အရေအတွက်"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Quarterly"
+msgstr "Quarterly"
+
+#. module: hr_payroll
+#: selection:hr.payslip.line,condition_select:0
+#: selection:hr.salary.rule,condition_select:0
+msgid "Range"
+msgstr "ကြား"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range
+msgid "Range Based on"
+msgstr "ကြားတွင် အခြေခံသည်"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_rate
+msgid "Rate (%)"
+msgstr "အရေအတွက်"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_code
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_number
+msgid "Reference"
+msgstr "စာချုပ် မှီငြမ်းချက်"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Refund"
+msgstr "ပြန်ပေးသည်"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:244
+#, python-format
+msgid "Refund: "
+msgstr "ပြန်ပေးသည်"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_register_line_ids
+msgid "Register Line"
+msgstr "Register Line"
+
+#. module: hr_payroll
+#: selection:hr.payslip,state:0
+msgid "Rejected"
+msgstr "ငြင်းဆိုသည်"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_salary_rule_id
+msgid "Rule"
+msgstr "စည်းကမ်း"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
+msgid "Salary Categories"
+msgstr "လစာအမျိုးအစားများ"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Salary Computation"
+msgstr "လစာတွက်ချက်ခြင်း"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_tree_view
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_salary_rule_category_filter
+msgid "Salary Rule Categories"
+msgstr "Salary Rule Categories"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_salary_rule_category_tree_view
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_salary_rule_category_tree_view
+msgid "Salary Rule Categories Hierarchy"
+msgstr "Salary Rule Categories Hierarchy"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_salary_rule_category
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Salary Rule Category"
+msgstr "Salary Rule Category"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_rule_input
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_rule_input_input_id
+msgid "Salary Rule Input"
+msgstr "Salary Rule Input"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_salary_rule_form
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_rule_ids
+#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_salary_rule_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_list
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_tree
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+msgid "Salary Rules"
+msgstr "Salary Rules"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:548
+#: code:addons/hr_payroll/models/hr_payroll.py:595
+#, python-format
+msgid "Salary Slip of %s for %s"
+msgstr "Salary Slip of %s for %s"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payroll_structure
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_struct_id
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_tree
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_tree
+msgid "Salary Structure"
+msgstr "လစာ သတ်မှတ်ချက်"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
+msgid "Salary Structures"
+msgstr "လစာပေးလုပ်ဆောင်ချက် သတ်မှတ်ချက်များ"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_tree
+msgid "Salary Structures Hierarchy"
+msgstr "လစာပေးရန် ဇယားသတ်မှတ်ချက်"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_schedule_pay
+msgid "Scheduled Pay"
+msgstr "Scheduled Pay"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
+msgid "Search Payslip Batches"
+msgstr "Search Payslip Batches"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
+msgid "Search Payslip Lines"
+msgstr "Search Payslip Lines"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "Search Payslips"
+msgstr "Search Payslips"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
+msgid "Search Salary Rule"
+msgstr "Search Salary Rule"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Semi-annually"
+msgstr "Semi-annually"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_sequence
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_sequence
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_sequence
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_sequence
+msgid "Sequence"
+msgstr "Sequence"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Set to Draft"
+msgstr "Set to Draft"
+
+#. module: hr_payroll
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_global_settings
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+msgid "Settings"
+msgstr "ပြင်ဆင်ချက်များ"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
+msgid "States"
+msgstr "အဆင့်များ"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_state
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_state
+msgid "Status"
+msgstr "အခြေအနေ"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_struct_id
+msgid "Structure"
+msgstr "သတ်မှတ်အဆင့်များ"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_code
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_code
+msgid ""
+"The code of salary rules can be used as reference in computation of other "
+"rules. In that case, it is case sensitive."
+msgstr ""
+"The code of salary rules can be used as reference in computation of other "
+"rules. In that case, it is case sensitive."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_code
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days_code
+#: model:ir.model.fields,help:hr_payroll.field_hr_rule_input_code
+msgid "The code that can be used in the salary rules"
+msgstr "The code that can be used in the salary rules"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_select
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_select
+msgid "The computation method for the rule amount."
+msgstr "The computation method for the rule amount."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_contract_id
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_worked_days_contract_id
+msgid "The contract for which applied this input"
+msgstr "The contract for which applied this input"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range_max
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range_max
+msgid "The maximum amount, applied for this rule."
+msgstr "The maximum amount, applied for this rule."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range_min
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range_min
+msgid "The minimum amount, applied for this rule."
+msgstr "The minimum amount, applied for this rule."
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range
+msgid ""
+"This will be used to compute the % fields values; in general it is on basic,"
+" but you can also use categories code fields in lowercase as a variable "
+"names (hra, ma, lta, etc.) and the variable basic."
+msgstr ""
+"This will be used to compute the % fields values; in general it is on basic,"
+" but you can also use categories code fields in lowercase as a variable "
+"names (hra, ma, lta, etc.) and the variable basic."
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
+msgid ""
+"This wizard will generate payslips for all selected employee(s) based on the"
+" dates and credit note specified on Payslips Run."
+msgstr ""
+"This wizard will generate payslips for all selected employee(s) based on the"
+" dates and credit note specified on Payslips Run."
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_total
+#: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
+msgid "Total"
+msgstr "စုစုပေါင်း"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Total Working Days"
+msgstr "စုစုပေါင်း အလုပ်လုပ်ရက်"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_sequence
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_sequence
+msgid "Use to arrange calculation sequence"
+msgstr "Use to arrange calculation sequence"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_appears_on_payslip
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_appears_on_payslip
+msgid "Used to display the salary rule on payslip."
+msgstr "Used to display the salary rule on payslip."
+
+#. module: hr_payroll
+#: selection:hr.payslip,state:0
+msgid "Waiting"
+msgstr "စောင့်ဆိုင်းသည်"
+
+#. module: hr_payroll
+#: selection:hr.contract,schedule_pay:0
+msgid "Weekly"
+msgstr "အပတ်စဉ်"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Worked Day"
+msgstr "အလုပ်လုပ်ရက်"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Worked Days"
+msgstr "အလုပ်လုပ်ရက်များ"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
+msgid "Worked Days & Inputs"
+msgstr "အလုပ်လုပ်ရက်များ နှင့် ထည့်သွင်းမှုများ"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:770
+#, python-format
+msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
+msgstr "Wrong percentage base or quantity defined for salary rule %s (%s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:776
+#, python-format
+msgid "Wrong python code defined for salary rule %s (%s)."
+msgstr "Wrong python code defined for salary rule %s (%s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:799
+#, python-format
+msgid "Wrong python condition defined for salary rule %s (%s)."
+msgstr "Wrong python condition defined for salary rule %s (%s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:763
+#, python-format
+msgid "Wrong quantity defined for salary rule %s (%s)."
+msgstr "Wrong quantity defined for salary rule %s (%s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:793
+#, python-format
+msgid "Wrong range condition defined for salary rule %s (%s)."
+msgstr "Wrong range condition defined for salary rule %s (%s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:268
+#, python-format
+msgid "You cannot delete a payslip which is not draft or cancelled!"
+msgstr "You cannot delete a payslip which is not draft or cancelled!"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:24
+#, python-format
+msgid "You must select employee(s) to generate payslip(s)."
+msgstr "You must select employee(s) to generate payslip(s)."
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:838
+#, python-format
+msgid "You must set a contract to create a payslip line."
+msgstr "You must set a contract to create a payslip line."
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payroll_config_settings
+msgid "hr.payroll.config.settings"
+msgstr "hr.payroll.config.settings"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_salary_rule
+msgid "hr.salary.rule"
+msgstr "hr.salary.rule"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
+msgid "report.hr_payroll.report_contributionregister"
+msgstr "report.hr_payroll.report_contributionregister"
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
+msgid "report.hr_payroll.report_payslipdetails"
+msgstr "report.hr_payroll.report_payslipdetails"
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_percentage_base
+#: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_percentage_base
+msgid "result will be affected to a variable"
+msgstr "result will be affected to a variable"

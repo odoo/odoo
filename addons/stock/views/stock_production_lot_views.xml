@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record model="ir.actions.act_window" id="lot_open_quants">
+            <field name="name">Quants</field>
+            <field name="context">{'search_default_lot_id': active_id}</field>
+            <field name="res_model">stock.quant</field>
+        </record>
+
+    <record id="view_production_lot_form" model="ir.ui.view">
+        <field name="name">stock.production.lot.form</field>
+        <field name="model">stock.production.lot</field>
+        <field name="arch" type="xml">
+            <form string="Lots/Serial Numbers">
+                <sheet>
+                <div class="oe_button_box" name="button_box">
+                        <button name="%(lot_open_quants)d" icon="fa-arrows" class="oe_stat_button" string="Locate" type="action" attrs="{'invisible': [('quant_ids','=',[])]}"/>
+                        <button name="action_traceability" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="object" attrs="{'invisible': [('quant_ids','=',[])]}"/>
+                        <field name="quant_ids" invisible="True"/>
+                </div>
+                <div class="oe_title">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" placeholder="e.g. LOT/0001/20121"/>
+                    </h1>
+                </div>
+                <group name="main_group">
+                    <group>
+                        <field name="product_id"/>
+                            <label for="product_qty"/>
+                            <div class="o_row">
+                                <field name="product_qty"/>
+                                <field name="product_uom_id" groups="product.group_uom"/>
+                            </div>
+                        <field name="ref"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Products">
+                        <field name="quant_ids">
+                            <tree string="Stock Moves">
+                                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                                <field name="qty"/>
+                            </tree>
+                         </field>
+                    </page>
+                </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_production_lot_tree" model="ir.ui.view">
+        <field name="name">stock.production.lot.tree</field>
+        <field name="model">stock.production.lot</field>
+        <field name="arch" type="xml">
+            <tree string="Lots/Serial Numbers">
+                <field name="name"/>
+                <field name="ref"/>
+                <field name="product_id"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="search_product_lot_filter">
+        <field name="name">Production Lots Filter</field>
+        <field name="model">stock.production.lot</field>
+        <field name="arch" type="xml">
+            <search string="Product Lots Filter">
+                <field name="name" string="Product Lots" filter_domain="['|',('name','ilike',self),('ref','ilike',self)]"/>
+                <field name="product_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_production_lot_form" model="ir.actions.act_window">
+        <field name="name">Lots/Serial Numbers</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.production.lot</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_production_lot_tree"/>
+        <field name="search_view_id" ref="search_product_lot_filter"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add a lot/serial number.
+          </p><p>
+            This is the list of all the production lots you recorded. When
+            you select a lot, you can get the traceability of the products contained in lot.
+          </p>
+        </field>
+    </record>
+    <menuitem action="action_production_lot_form" id="menu_action_production_lot_form"
+        parent="menu_stock_inventory_control" groups="stock.group_production_lot"
+        sequence="101"/>
+</odoo>

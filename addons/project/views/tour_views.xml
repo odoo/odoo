@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Make the xmlid of menus required by the Project tour available in webclient -->
+    <record id="menu_main_pm" model="ir.ui.menu">
+        <field name="load_xmlid" eval="True"/>
+    </record>
+    <record id="menu_projects" model="ir.ui.menu">
+        <field name="load_xmlid" eval="True"/>
+    </record>
+    <record id="base.menu_administration" model="ir.ui.menu">
+        <field name="load_xmlid" eval="True"/>
+    </record>
+</odoo>

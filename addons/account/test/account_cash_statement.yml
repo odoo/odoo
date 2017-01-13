@@ -1,0 +1,62 @@
+-
+  TODO: improve this test and add the use of cashbox lines to set the ending balance and use of the confirmation wizard
+-
+  In order to test Cash statement I create a Cash statement and confirm it and check its move created
+-
+ !record {model: account.cash.statement, id: account_cash_statement_1, view: False}:
+    date: !eval time.strftime('%Y-%m-%d')
+    name: /
+    user_id: base.user_root
+    balance_start: 120.0
+    balance_end: 120.0
+-
+  I check that Initially cash statement is in the "Draft" state
+-
+  !assert {model: account.cash.statement, id: account_cash_statement_1}:
+    - state == 'draft'
+
+-
+  I clicked on Open CashBox button to open the cashbox
+-
+ !python {model: account.cash.statement, id: account_cash_statement_1}: |
+   context = {"lang": "en_US", "tz": False,
+            "active_model": "account.cash.statement",
+            "active_ids": [ref("account_cash_statement_1")],
+            "active_id": ref("account_cash_statement_1"), }
+   self.with_context(context).button_open()
+-
+  I check that now cash statement is in the "Open" state
+-
+  !assert {model: account.cash.statement, id: account_cash_statement_1}:
+    - state == 'open'
+-
+  I enter values in Closing balance before close the cashbox
+-
+  !record {model: account.cash.statement, id: account_cash_statement_1, view: False}:
+    line_ids:
+      - amount: 1000.0
+        date: !eval time.strftime('%Y-%m-%d')
+        name: test
+        partner_id: base.res_partner_4
+        sequence: 0.0
+        account_id: account.credit_account
+    balance_end: 1120.0
+-
+  I clicked on Close CashBox button to close the cashbox
+-
+ !python {model: account.bank.statement, id: False}: |
+      self.browse(ref("account_bank_statement_1")).with_context({"lang": "en_US", "tz": False, "active_model": "account.bank.statement", "active_ids": [ref("account_bank_statement_1")], "active_id": ref("account_bank_statement_1"), }).button_confirm_cash()
+-
+  I check that bank statement state is now "Closed"
+-
+  !assert {model: account.bank.statement, id: account_bank_statement_1}:
+    - state == 'confirm'
+
+-
+  I check that move lines created for cash statement and move state is Posted
+-
+  !python {model: account.cash.statement, id: account_cash_statement_1}: |
+    move_line_obj = self.env['account.move.line']
+    assert self.move_line_ids, "Move lines not created for cash statement"
+    for line in self.move_line_ids:
+      assert line.move_id.state == 'posted', "Move state is not posted"

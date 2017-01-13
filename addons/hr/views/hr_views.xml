@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Top menu item -->
+        <menuitem
+            id="menu_hr_root"
+            name="Employees"
+            groups="group_hr_manager,group_hr_user,base.group_user"
+            web_icon="hr,static/description/icon.png"
+            sequence="75"/>
+
+        <menuitem
+            id="menu_hr_main"
+            name="Human Resources"
+            parent="menu_hr_root"
+            sequence="0"/>
+
+        <menuitem
+            id="menu_hr_reporting_timesheet"
+            name="Reports"
+            parent="menu_hr_root"
+            groups="group_hr_manager,group_hr_user"
+            sequence="99"/>
+
+        <menuitem
+            id="menu_human_resources_configuration"
+            name="Configuration"
+            parent="menu_hr_root"
+            groups="group_hr_manager"
+            sequence="100"/>
+
+        <!-- Employee -->
+        <record id="view_employee_form" model="ir.ui.view">
+            <field name="name">hr.employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <form string="Employee">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" groups="hr.group_hr_user"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image":"image_medium"}'/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="Employee's Name"/>
+                            </h1>
+                        </div>
+                        <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" options="{'no_create_edit': True}" groups="hr.group_hr_user"/>
+                        <notebook>
+                            <page name="public" string="Public Information">
+                                <group>
+                                    <group string="Contact Information">
+                                        <field name="address_id"
+                                            context="{'show_address': 1}"
+                                            options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        <field name="mobile_phone"/>
+                                        <field name="work_location"/>
+                                        <field name="work_email" widget="email"/>
+                                        <field name="work_phone"/>
+                                    </group>
+                                    <group string="Position">
+                                        <field name="department_id"/>
+                                        <field name="job_id"/>
+                                        <field name="parent_id"/>
+                                        <field name="coach_id"/>
+                                        <field name="calendar_id"/>
+                                    </group>
+                                </group>
+                                <field name="notes" placeholder="Other Information ..." colspan="4"/>
+                            </page>
+                            <page string="Personal Information" groups="hr.group_hr_user">
+                                <group>
+                                    <group string="Citizenship &amp; Other Information">
+                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="identification_id" groups="hr.group_hr_user"/>
+                                        <field name="passport_id" groups="hr.group_hr_user"/>
+                                        <field name="bank_account_id"/>
+                                    </group>
+                                    <group string="Contact Information">
+                                        <field name="address_home_id"
+                                            context="{'show_address': 1}"
+                                            options='{"always_reload": True, "highlight_first_line": True}'/>
+                                    </group>
+                                    <group string="Status">
+                                        <field name="gender"/>
+                                        <field name="marital"/>
+                                    </group>
+                                    <group string="Birth">
+                                        <field name="birthday"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="HR Settings" groups="hr.group_hr_user">
+                                <group>
+                                    <group string='Status' name="active_group">
+                                        <field name="company_id" groups="base.group_multi_company"/>
+                                        <field name="user_id" string="Related User"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_employee_tree" model="ir.ui.view">
+            <field name="name">hr.employee.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <tree string="Employees" decoration-bf="message_needaction==True">
+                    <field name="name"/>
+                    <field name="work_phone"/>
+                    <field name="work_email"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="parent_id"/>
+                    <field name="coach_id" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_employee_filter" model="ir.ui.view">
+            <field name="name">hr.employee.search</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <search string="Employees">
+                    <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
+                    <field name="department_id"/>
+                    <field name="category_ids" groups="hr.group_hr_user"/>
+                    <field name="job_id" />
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Manager" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="Coach" domain="[]" context="{'group_by':'coach_id'}"/>
+                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Job" domain="[]" context="{'group_by':'job_id'}"/>
+                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    </group>
+                </search>
+             </field>
+         </record>
+
+    <record id="hr_kanban_view_employees" model="ir.ui.view">
+        <field name="name">hr.employee.kanban</field>
+        <field name="model">hr.employee</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <kanban class="o_hr_employee_kanban">
+                <field name="last_login"/>
+                <field name="message_is_follower"/>
+                <field name="message_follower_ids"/>
+                <field name="message_ids"/>
+                <field name="message_needaction_counter"/>
+                <templates>
+                    <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click">
+                        <field name="category_ids"/>
+                        <div class="o_kanban_image">
+                            <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)"/>
+                            <div class="o_employee_summary_icons">
+                                <t t-if="record.message_needaction_counter.raw_value">
+                                    <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                </t>
+                                <span title='Messages'><i class='fa fa-comments'/><t t-esc="record.message_ids.raw_value.length"/></span>
+                                <span title='Followers'><i class='fa fa-users'/><t t-esc="record.message_follower_ids.raw_value.length"/></span>
+                            </div>
+                        </div>
+                        <div class="oe_kanban_details">
+                            <strong>
+                                <field name="name"/>
+                            </strong>
+                            <ul>
+                                <li id="last_login"/>
+                                <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
+                                <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
+                                <li t-if="record.work_email.raw_value"><i class="fa fa-envelope"></i> <field name="work_email"/></li>
+                                <li t-if="record.work_phone.raw_value"><i class="fa fa-phone"></i> <field name="work_phone"/></li>
+                                <li t-if="record.mobile_phone.raw_value"><i class="fa fa-mobile"></i> <field name="mobile_phone"/></li>
+                            </ul>
+                            <div class="o_kanban_button">
+                                <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="o_follow_btn o_following btn btn-sm btn-default">
+                                    <span class="o_unfollow">Unfollow</span>
+                                    <span class="o_following">Following</span>
+                                </button>
+                                <button t-if="!record.message_is_follower.raw_value" name="action_follow" type="object" class="o_follow_btn o_follow btn btn-sm btn-primary">Follow</button>
+                            </div>
+                        </div>
+                    </div>
+                    </t>
+                </templates>
+            </kanban>
+
+        </field>
+    </record>
+
+        <record id="open_view_employee_tree" model="ir.actions.act_window">
+            <field name="name">Employees Structure</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">tree</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_employee_tree"/>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="search_view_id" ref="view_employee_filter"/>
+        </record>
+
+        <record id="open_view_employee_list" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_employee_filter"/>
+        </record>
+
+        <record id="open_view_employee_list_my" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_employee_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new employee.
+              </p><p>
+                With just a quick glance on the Odoo employee screen, you
+                can easily find all the information you need for each person;
+                contact data, job position, availability, etc.
+              </p>
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_open_view_employee_list_my"
+            action="open_view_employee_list_my"
+            parent="menu_hr_root"
+            sequence="3"/>
+
+        <!-- Employee tree by manager -->
+        <record id="view_partner_tree2" model="ir.ui.view">
+            <field name="name">hr.employee.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="field_parent">child_ids</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <tree string="Employees">
+                    <field name="name"/>
+                    <field name="work_phone"/>
+                    <field name="work_email"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="coach_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_employee_action_subordinate_hierachy" model="ir.actions.act_window">
+            <field name="name">Subordinate Hierarchy</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.employee</field>
+            <field name="domain">[('id','in',active_ids)]</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="view_partner_tree2"/>
+        </record>
+
+        <record id="hr_employee_action_subordinate_hierachy_mutli" model="ir.values">
+            <field name="name">Subordinate Hierarchy</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('hr_employee_action_subordinate_hierachy'))"/>
+            <field name="key">action</field>
+            <field name="key2">client_action_multi</field>
+            <field name="model">hr.employee</field>
+        </record>
+
+        <!-- Employee Category -->
+       <record id="view_employee_category_form" model="ir.ui.view">
+            <field name="name">hr.employee.category.form</field>
+            <field name="model">hr.employee.category</field>
+            <field name="arch" type="xml">
+                <form string="Employee Tags">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_employee_category_list" model="ir.ui.view">
+            <field name="name">hr.employee.category.list</field>
+            <field name="model">hr.employee.category</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Employees Tags">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="open_view_categ_form" model="ir.actions.act_window">
+            <field name="name">Employee Tags</field>
+            <field name="res_model">hr.employee.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            id="menu_view_employee_category_form"
+            action="open_view_categ_form"
+            parent="menu_human_resources_configuration"
+            groups="base.group_no_one"
+            sequence="1"/>
+
+        <!-- hr.job -->
+        <record id="view_hr_job_form" model="ir.ui.view">
+            <field name="name">hr.job.form</field>
+            <field name="model">hr.job</field>
+            <field name="arch" type="xml">
+                <form string="Job">
+                    <header>
+                        <button name="set_recruit" string="Launch Recruitment" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button name="set_open" string="Stop Recruitment" states="recruit" type="object" groups="base.group_user"/>
+                        <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" placeholder="e.g. Sales Manager"/></h1>
+                        </div>
+                        <group name="employee_data">
+                            <group>
+                                <field name="department_id"/>
+                                <field name="no_of_recruitment"/>
+                            </group>
+                        </group>
+                        <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
+                            <label for="description"/>
+                            <field name="description"/>
+                        </div>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_hr_job_tree" model="ir.ui.view">
+            <field name="name">hr.job.tree</field>
+            <field name="model">hr.job</field>
+            <field name="arch" type="xml">
+                <tree string="Job" decoration-bf="message_needaction==True">
+                    <field name="name"/>
+                    <field name="department_id"/>
+                    <field name="no_of_employee"/>
+                    <field name="no_of_recruitment"/>
+                    <field name="expected_employees"/>
+                    <field name="no_of_hired_employee"/>
+                    <field name="state"/>
+                    <field name="message_needaction" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_job_filter" model="ir.ui.view">
+            <field name="name">hr.job.search</field>
+            <field name="model">hr.job</field>
+            <field name="arch" type="xml">
+                <search string="Jobs">
+                    <field name="name" string="Job"/>
+                    <filter domain="[('state','=','open')]" string="In Position"/>
+                    <filter domain="[('state','=','recruit')]" string="In Recruitment" name="in_recruitment"/>
+                    <field name="department_id"/>
+                    <separator/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_hr_job" model="ir.actions.act_window">
+            <field name="name">Job Positions</field>
+            <field name="res_model">hr.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_job_filter"/>
+            <field name="context">{"search_default_Current":1}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new job position.
+              </p><p>
+                Job Positions are used to define jobs and their requirements.
+                You can keep track of the number of employees you have per job
+                position and follow the evolution according to what you planned
+                for the future.
+              </p><p>
+                You can attach a survey to a job position. It will be used in
+                the recruitment process to evaluate the applicants for this job
+                position.
+              </p>
+            </field>
+        </record>
+
+        <record id="act_employee_from_department" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,form,tree</field>
+            <field name="search_view_id" ref="view_employee_filter"/>
+            <field name="context">{
+                "search_default_department_id": [active_id],
+                "default_department_id": active_id}
+            </field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new employee.
+              </p><p>
+                With just a quick glance on the Odoo employee screen, you
+                can easily find all the information you need for each person;
+                contact data, job position, availability, etc.
+              </p>
+            </field>
+        </record>
+
+        <!-- hr.department -->
+        <record id="view_department_form" model="ir.ui.view">
+            <field name="name">hr.department.form</field>
+            <field name="model">hr.department</field>
+            <field name="arch" type="xml">
+                <form string="department">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="manager_id"/>
+                            <field name="parent_id"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_department_tree" model="ir.ui.view">
+            <field name="name">hr.department.tree</field>
+            <field name="model">hr.department</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Companies">
+                    <field name="display_name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="manager_id"/>
+                    <field name="parent_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_department_filter" model="ir.ui.view">
+            <field name="name">hr.department.search</field>
+            <field name="model">hr.department</field>
+            <field name="arch" type="xml">
+                <search string="Departments">
+                    <field name="name" string="Department"/>
+                    <field name="manager_id" />
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+             </field>
+        </record>
+
+        <record id="hr_department_view_kanban" model="ir.ui.view" >
+            <field name="name">hr.department.kanban</field>
+            <field name="model">hr.department</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey o_kanban_dashboard o_hr_kanban">
+                    <field name="name"/>
+                    <field name="company_id"/>
+                    <field name="manager_id"/>
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary"><field name="name"/></div>
+                                        <div class="o_secondary"><field name="company_id"/></div>
+                                    </div>
+                                    <div class="o_kanban_manage_button_section">
+                                        <a class="o_kanban_manage_toggle_button" href="#">More <i class="fa fa-caret-down"/></a>
+                                    </div>
+                                </div>
+                                <div class="container o_kanban_card_content o_visible">
+                                    <div class="row">
+                                        <div class="col-xs-6 o_kanban_primary_left">
+                                            <button class="btn btn-primary" name="%(act_employee_from_department)d" type="action">Employees</button>
+                                        </div>
+                                        <div class="col-xs-6 o_kanban_primary_right">
+                                        </div>
+                                    </div>
+                                </div><div class="container o_kanban_card_manage_pane o_invisible">
+                                    <div class="row">
+                                        <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_to_do">
+                                            <div class="o_kanban_card_manage_title">
+                                                <span>To Do</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_to_approve">
+                                            <div class="o_kanban_card_manage_title">
+                                                <span>To Approve</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_reports">
+                                            <div class="o_kanban_card_manage_title">
+                                                <span>Reports</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                        <div class="col-xs-8">
+                                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                        </div>
+                                        <div class="col-xs-4 text-right">
+                                            <a type="edit">Settings</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="open_module_tree_department" model="ir.actions.act_window">
+            <field name="name">Departments</field>
+            <field name="res_model">hr.department</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_department_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a department.
+              </p><p>
+                Odoo's department structure is used to manage all documents
+                related to employees by departments: expenses, timesheets,
+                leaves and holidays, recruitments, etc.
+              </p>
+            </field>
+        </record>
+
+        <menuitem
+            action="open_module_tree_department"
+            id="menu_hr_department_tree"
+            parent="menu_hr_root"
+            sequence="90"
+            groups="group_hr_user"/>
+
+    </data>
+</odoo>

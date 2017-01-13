@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+	    <record id="invoice_analysis_comp_rule" model="ir.rule">
+	        <field name="name">Intrastat multi-company</field>
+	        <field name="model_id" ref="model_report_intrastat"/>
+	        <field name="global" eval="True"/>
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+	    </record>
+	</data>
+</odoo>

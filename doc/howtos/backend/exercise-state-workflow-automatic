@@ -1,0 +1,19 @@
+# HG changeset patch
+# Parent 3b19489a47d41e72f88490eb389a05977761c8d2
+
+Index: addons/openacademy/views/session_workflow.xml
+===================================================================
+--- addons.orig/openacademy/views/session_workflow.xml	2014-08-26 17:26:16.583783126 +0200
++++ addons/openacademy/views/session_workflow.xml	2014-08-26 17:26:16.579783126 +0200
+@@ -46,5 +46,11 @@
+             <field name="act_to" ref="done"/>
+             <field name="signal">done</field>
+         </record>
++
++        <record model="workflow.transition" id="session_auto_confirm_half_filled">
++            <field name="act_from" ref="draft"/>
++            <field name="act_to" ref="confirmed"/>
++            <field name="condition">taken_seats &gt; 50</field>
++        </record>
+     </data>
+ </odoo>

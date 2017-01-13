@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Set demo karma for test tour as demo user-->
+        <record id="base.user_demo" model="res.users">
+            <field name="karma">20</field>
+        </record>
+
+        <!-- Tag -->
+        <record id="tags_0" model="forum.tag">
+            <field name="name">Contract</field>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+        <record id="tags_1" model="forum.tag">
+            <field name="name">Action</field>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+        <record id="tags_2" model="forum.tag">
+            <field name="name">ecommerce</field>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+        <record id="tags_3" model="forum.tag">
+            <field name="name">Development</field>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+
+        <!-- Questions -->
+        <record id="question_0" model="forum.post">
+            <field name="name">How to configure alerts for employee contract expiration</field>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+            <field name="post_type">question</field>
+            <field name="views">3</field>
+            <field name="tag_ids" eval="[(4,ref('website_forum.tags_0')), (4,ref('website_forum.tags_1'))]"/>
+        </record>
+        <record id="question_1" model="forum.post">
+            <field name="name">CMS replacement for ERP and eCommerce</field>
+            <field name="views">8</field>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+            <field name="content"><![CDATA[<p>I use Wordpress as a CMS and eCommerce platform. The developing in Wordpress is quite easy and solid but it missing ERP feature (there is single plugin to integrate with Frontaccounting) so I wonder:
+
+Can I use Odoo as a replacement CMS of Wordpress + eCommerce plugin?
+
+In simple words does Odoo became CMS+ERP platform?</p>]]></field>
+            <field name="post_type">question</field>
+            <field name="tag_ids" eval="[(4,ref('website_forum.tags_2'))]"/>
+        </record>
+
+        <!-- Answer -->
+        <record id="answer_0" model="forum.post">
+            <field name="forum_id" ref="website_forum.forum_help"/>
+            <field name="content"><![CDATA[<p>Just for posterity so other can see. Here are the steps to set automatic alerts on any contract.. i.e. HR Employee, or Fleet for example. I will use fleet as an example.</p>
+<ul>
+    <li>Step 1. As a user who has access rights to Technical Features, go to Settings --> Automated Actions. Create A new Automated Action. For the Related Document Model choose.. Contract information on a vehicle (you can also type in the actual model name.. fleet.vehicle.log.contract ) . Set the trigger date to ... Contract Expiration Date. The Next Field (Delay After Trigger Date) is a bit ridiculous. Who wants to be reminded of a contract expiration AFTER the fact? The field should say Days Before Date to Fire Action and the number should be converted to a negative. IMHO. Any way... to get a workable solution you must enter in the number in the negative. So for instance like me if you want to be warned 35 days BEFORE the expiration... put in Delay After Trigger Date.. the number -35 But the sake of testing, right now just put in -1 for 1 day before. Save the Action.
+    <li>Step 2. Go to Server Actions and create new Action. Call it Fleet Contract Expiration Warning. The Object will be the same as above .. Contract information on a vehicle. The Action Type is Email. For email address I just put my email. Under subject put in... [[object.name]]. This will tell you the name of the car. Message you can put any text message you like. Now save the Server Action.</li>
+    <li>Step 3. Now go back to the Automated Action you created and go to the Action tab next to the conditions tab. Click Add and add the server action you created . In this case Fleet Contract Expiration Warning. Then Save.</li>
+    <li>Step 4. To test, set a contract to expire tomorrow under one of your fleets vehicles. Then Save it.</li>
+    <li>Step 5. Go to Scheduled Actions.. Set interval number to 1. Interval Unit to Minutes. Then Set the Next Execution date to 2 minutes from now. If your SMTP is configured correctly you will start to get a mail every minute with the reminder.</li></ul>]]></field>
+            <field name="parent_id" ref="question_0" />
+            <field name="post_type">question</field>
+        </record>
+        <record id="answer_1" model="forum.post">
+            <field name="forum_id" ref="website_forum.forum_help"/>
+            <field name="content"><![CDATA[
+<p><span class="oe_social_share" data-social="twitter linkedin facebook" data-hashtags="#odoo #CMS">Odoo v8 (next release) provides a web module and an e-commerce module: www.odoo.com/page/website-builder</span>
+The CMS editor in Odoo web is nice but I prefer Drupal for customization and there is a Drupal module for Odoo. I think WP is better than Odoo web too.
+</p>]]></field>
+            <field name="parent_id" ref="question_1"/>
+            <field name="post_type">question</field>
+        </record>
+
+        <!-- Article-->
+        <record id="article_0" model="forum.post">
+            <field name="content_link">https://www.odoo.com</field>
+            <field name="name">Discover Odoo, an open source ERP.</field>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+            <field name="post_type">link</field>
+            <field name="views">6</field>
+            <field name="tag_ids" eval="[(4,ref('website_forum.tags_3'))]"/>
+        </record>
+
+        <!-- Discussion-->
+        <record id="discussion_0" model="forum.post">
+            <field name="name">How to setup a regular PostgreSQL database backup</field>
+            <field name="content">I'm not familiar with PostgreSQL database administration , so I figured I might ask for help from someone more knowledgeable on the subject.
+
+What would you recommend in order to setup a regular (daily) OpenERP database backup?
+
+Ideally, this would be done without stopping the database (hot backup). Is it possible to setup incremental backups, e.g., one weekly reference backup and daily incremental backups?
+
+Are there any automation scripts available I might use?
+
+(I'm using Ubuntu Server.)</field>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+            <field name="post_type">discussion</field>
+            <field name="views">5</field>
+        </record>
+
+        <record id="reply_1" model="forum.post">
+            <field name="forum_id" ref="website_forum.forum_help"/>
+            <field name="content"><![CDATA[<p>I use the following setup:</p>
+                <ol>
+                    <li>Backup-Script</li>
+                    <li>Housekeeping script (deletes backups which are older than 30 days)</li>
+                    <li>Create daily cronjobs in to run Backup and Housekeeping Script. The backup runs daily at 1am and the housekeeping job runs daily at 5am.</li>
+                </ol>]]>
+            </field>
+            <field name="parent_id" ref="discussion_0"/>
+            <field name="post_type">discussion</field>
+        </record>
+
+        <!-- Post Vote  -->
+        <record id="post_vote_0" model="forum.post.vote">
+            <field name="post_id" ref="question_0"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="vote">1</field>
+        </record>
+        <record id="post_vote_1" model="forum.post.vote">
+            <field name="post_id" ref="answer_0"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="vote">1</field>
+        </record>
+        <record id="post_vote_3" model="forum.post.vote">
+            <field name="post_id" ref="article_0"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="vote">1</field>
+        </record>
+
+        <!-- Run Scheduler -->
+        <function model="gamification.challenge" name="_cron_update"/>
+
+    </data>
+</odoo>

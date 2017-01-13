@@ -1,0 +1,1481 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_slides
+# 
+# Translators:
+# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-10-10 08:44+0000\n"
+"PO-Revision-Date: 2016-10-10 08:44+0000\n"
+"Last-Translator: Jeffery Chen Fan <jeffery9@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_slides
+#: model:mail.template,body_html:website_slides.slide_template_shared
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>\n"
+"    ${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        View <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
+msgstr ""
+
+#. module: website_slides
+#: model:mail.template,body_html:website_slides.slide_template_published
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>\n"
+"    A new ${object.slide_type} <strong>${object.name}</strong> has been published on ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        View <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
+msgid "# Views"
+msgstr "#视图"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_views
+msgid "# of Embedded Views"
+msgstr "嵌入式视图"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_views
+msgid "# of Website Views"
+msgstr "# 网站视图"
+
+#. module: website_slides
+#: model:mail.template,subject:website_slides.slide_template_shared
+msgid "${user.name} shared a ${object.slide_type} with you!"
+msgstr "${user.name} 向你分享了 ${object.slide_type}!"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid ""
+"(Un)archiving a channel automatically (un)archives its slides. Do you want "
+"to proceed?"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_search
+msgid ". Please try again with different keywords."
+msgstr ".请用不用的关键字在输入一次"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
+msgstr ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> 邮件</b>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_embed\"><i class=\"fa fa-code\"/> Embed</b>"
+msgstr ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_embed\"><i class=\"fa fa-code\"/> 嵌入</b>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> Share</b>"
+msgstr ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> 共享</b>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "<b>Share:</b>"
+msgstr "<b>分享:</b>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-align-justify\"/> Transcript"
+msgstr "<i class=\"fa fa-align-justify\"/> 副本"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "<i class=\"fa fa-arrow-right\"/> See all"
+msgstr "<i class=\"fa fa-arrow-right\"/> 查看全部"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-bar-chart\"/> Statistics"
+msgstr "<i class=\"fa fa-bar-chart\"/> 统计量"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-circle-o\"/> Website Views"
+msgstr "<i class=\"fa fa-circle-o\"/> 网站视图"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "<i class=\"fa fa-cloud-upload\"/> Upload"
+msgstr "<i class=\"fa fa-cloud-upload\"/> 上传"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-code\"/> Embeded Views"
+msgstr "<i class=\"fa fa-code\"/> 内嵌视图"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-comments-o\"/> Comments"
+msgstr "<i class=\"fa fa-comments-o\"/> 评论"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                        Send Email"
+msgstr ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"发送邮件"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+#: model:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-exclamation-triangle\"/> This"
+msgstr "<i class=\"fa fa-exclamation-triangle\"/> 这个"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-home\"/> About"
+msgstr "<i class=\"fa fa-home\"/> 关于"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "<i class=\"fa fa-home\"/> Home"
+msgstr "<i class=\"fa fa-home\"/> 主页"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<i class=\"fa fa-info-circle\"/>\n"
+"                                        The social sharing module will be unlocked when a moderator will allow your publication."
+msgstr "<i class=\"fa fa-info-circle\"/>社会共享的模块将被解锁，当主持人允许你的出版物。"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-play\"/> Total Views"
+msgstr "<i class=\"fa fa-play\"/> 全部视图"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-share-alt\"/> Share"
+msgstr "<i class=\"fa fa-share-alt\"/> 分享"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "<i class=\"fa fa-spinner fa-spin\"/> Loading ..."
+msgstr "<i class=\"fa fa-spinner fa-spin\"/> 载入 ..."
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-thumbs-down\"/> Dislikes"
+msgstr "<i class=\"fa fa-thumbs-down\"/> 不喜欢"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-thumbs-up\"/> Likes"
+msgstr "<i class=\"fa fa-thumbs-up\"/> 喜欢"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
+msgstr ""
+"<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<span class=\"badge\" id=\"google-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
+msgstr ""
+"<span class=\"badge\" id=\"google-badge\">0</span>\n"
+"<i class=\"fa fa-google-plus-square\"/> 谷歌+"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
+msgstr ""
+"<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
+"<i class=\"fa fa-linkedin-square\"/>领英"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<span class=\"badge\" id=\"total-share\">0</span>\n"
+"                                                    <i class=\"fa fa-share-alt\"/> Social Shares"
+msgstr ""
+"<span class=\"badge\" id=\"total-share\">0</span>\n"
+"<i class=\"fa fa-share-alt\"/> 社区分享"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
+msgstr ""
+"<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
+"<i class=\"fa fa-twitter-square\"/> 推特"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "<span class=\"help-block\">Send presentation through email</span>"
+msgstr "<span class=\"help-block\">通过邮件发送介绍</span>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_media
+msgid ""
+"<span class=\"help-block\">Use permanent link to share in social "
+"media</span>"
+msgstr "<span class=\"help-block\">用固定链接在社交媒体里分享</span>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<span class=\"text-muted small\">views</span>"
+msgstr "<span class=\"text-muted small\">视图</span>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "<span class=\"text-muted\">Sort by:</span>"
+msgstr "<span class=\"text-muted\">排序方式:</span>"
+
+#. module: website_slides
+#: sql_constraint:slide.tag:0
+msgid "A tag must be unique!"
+msgstr "标签必须唯一!"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Actions"
+msgstr "动作"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
+msgid "Active"
+msgstr "有效"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Archived"
+msgstr "已存档"
+
+#. module: website_slides
+#: selection:slide.slide,download_security:0
+msgid "Authentified Users Only"
+msgstr "这有认证的用户可以"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_5
+msgid "Awesome Timesheet by Odoo"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see
+msgid "Can See"
+msgstr "可以看"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_upload
+msgid "Can Upload"
+msgstr "可以上传"
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.action_ir_slide_category
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_category_ids
+#: model:ir.ui.menu,name:website_slides.menu_action_ir_slide_category
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Categories"
+msgstr "类别"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:251
+#: code:addons/website_slides/static/src/xml/website_slides.xml:54
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_category_id
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+#: model:ir.ui.view,arch_db:website_slides.view_slides_category_form
+#: model:ir.ui.view,arch_db:website_slides.view_slides_category_tree
+#, python-format
+msgid "Category"
+msgstr "类别"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_channel_id
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Channel"
+msgstr "频道"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_group_ids
+msgid "Channel Groups"
+msgstr "频道组"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "Channel Settings"
+msgstr "频道设定"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:171
+#, python-format
+msgid ""
+"Channel contains the given title, please change before Save or Publish."
+msgstr "标题在频道里已经存在，请在保存或者发布前修改标题。"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_channel
+msgid "Channel for Slides"
+msgstr "幻灯片频道"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Channel visibility"
+msgstr "频道是否可见"
+
+#. module: website_slides
+#: model:ir.actions.act_url,name:website_slides.action_open_channels
+#: model:ir.actions.act_window,name:website_slides.action_slide_channels
+#: model:ir.ui.menu,name:website_slides.menu_action_slide_channels
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Channels"
+msgstr "频道"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_datas
+msgid "Content"
+msgstr "内容"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:20
+#, python-format
+msgid "Content Preview"
+msgstr "内容预览"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:290
+#, python-format
+msgid ""
+"Could not fetch data from url. Document or access right not available.\n"
+"Here is the received response: %s"
+msgstr ""
+
+#. module: website_slides
+#: code:addons/website_slides/models/slides.py:307
+#, python-format
+msgid ""
+"Could not fetch data from url. Document or access right not available:\n"
+"%s"
+msgstr ""
+"无法从网址获得数据。文件或者访问权限不存在:\n"
+"%s"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_1
+msgid ""
+"Create a beautiful and professional eCommerce on your website with Odoo. \n"
+"\n"
+"Find out more at https://www.odoo.com/page/e-commerce"
+msgstr ""
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:220
+#, python-format
+msgid "Create new tag '%s'"
+msgstr "创建新的标签 '%s'"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: website_slides
+#: model:slide.channel,description:website_slides.channel_public
+msgid ""
+"Default channel for slides, all public users can access content of this "
+"channel."
+msgstr "默认的幻灯片频道，所有的公众用户都可以访问这个频道。"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:60
+#: code:addons/website_slides/static/src/xml/website_slides.xml:62
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_description
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_description
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+#, python-format
+msgid "Description"
+msgstr "说明"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:72
+#, python-format
+msgid "Discard"
+msgstr "丢弃"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_2
+msgid ""
+"Discover the all-in-one business management software solution that fits any business size and use case.\n"
+"\n"
+"Learn more at https://odoo.com"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_dislikes
+msgid "Dislikes"
+msgstr "不喜欢"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_category_sequence
+#: model:ir.model.fields,help:website_slides.field_slide_channel_sequence
+msgid "Display order"
+msgstr "显示顺序"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+#: selection:slide.slide,slide_type:0
+msgid "Document"
+msgstr "单据"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_document_id
+msgid "Document ID"
+msgstr "文档ID"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_url
+msgid "Document URL"
+msgstr "文档网址"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "Documents"
+msgstr "文档"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "Download"
+msgstr "下载"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_5
+msgid ""
+"Download Awesome Timesheet by Odoo and discover how easy time tracking and employee management can be!\n"
+"\n"
+"Chrome: http://bit.ly/2613LcY\n"
+"iOS: http://bit.ly/1ZUZsZD"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_download_security
+msgid "Download Security"
+msgstr "下载安全"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Email Address"
+msgstr "Email地址"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_publish_template_id
+msgid "Email template to send slide publication through email"
+msgstr "发送已经发布的幻灯片的邮件模板"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_share_template_id
+msgid "Email template used when sharing a slide"
+msgstr "分享幻灯片的邮件模板"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_code
+msgid "Embed Code"
+msgstr "嵌入代码"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embedcount_ids
+msgid "Embed Count"
+msgstr "嵌入计数"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_embed
+msgid "Embed in your website"
+msgstr "嵌入你的网页"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_embed
+msgid "Embedded Slides View Counter"
+msgstr "嵌入幻灯片观看计数"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Embeds"
+msgstr "嵌入"
+
+#. module: website_slides
+#: model:slide.channel,name:website_slides.channel_private
+msgid "Employee Channel"
+msgstr "员工频道"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_access_error_msg
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Error Message"
+msgstr "错误消息"
+
+#. module: website_slides
+#: selection:slide.slide,download_security:0
+msgid "Everyone"
+msgstr "所有人"
+
+#. module: website_slides
+#: selection:slide.channel,promote_strategy:0
+msgid "Featured Presentation"
+msgstr "特性介绍"
+
+#. module: website_slides
+#: model:slide.category,name:website_slides.category_1
+msgid "Featured Presentations"
+msgstr "特性介绍"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_promoted_slide_id
+msgid "Featured Slide"
+msgstr "特性幻灯片"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_promote_strategy
+msgid "Featuring Policy"
+msgstr "特性政策"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/controllers/main.py:300
+#: code:addons/website_slides/static/src/js/slides_upload.js:90
+#, python-format
+msgid "File is too big. File size cannot exceed 25MB"
+msgstr "文件太大. 文件大小不能超过 25 MB"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
+msgid "Full Access"
+msgstr "完全访问"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "General"
+msgstr "一般"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_website_config_settings_website_slide_google_app_key
+msgid "Google Doc Key"
+msgstr "谷歌文档密钥"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_graph
+msgid "Graph of Slides"
+msgstr "幻灯片图表"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Group By"
+msgstr "分组"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_group_ids
+msgid "Groups allowed to see presentations in this channel"
+msgstr "能在这个频道查看内容的讨论组"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_upload_group_ids
+msgid ""
+"Groups allowed to upload presentations in this channel. If void, every user "
+"can upload."
+msgstr "能在这个频道上传文件的讨论组。所有的用户都可以上传，如果设置为空。"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image
+msgid "Image"
+msgstr "图像"
+
+#. module: website_slides
+#: selection:slide.slide,slide_type:0
+msgid "Infographic"
+msgstr "信息图"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "Infographics"
+msgstr "信息图"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:322
+#, python-format
+msgid ""
+"Internal server error, please try again later or contact administrator.\n"
+"Here is the error message: %s"
+msgstr ""
+"服务器内部错误，请稍后再尝试或者联系管理员。\n"
+"这里是错误信息：%s"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:85
+#, python-format
+msgid "Invalid file type. Please select pdf or image file"
+msgstr "错误的文件类型。请选择pfd文件或者图像"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category___last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel___last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed___last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide___last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag___last_update
+msgid "Last Modified on"
+msgstr "最后修改日"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: website_slides
+#: selection:slide.channel,promote_strategy:0
+msgid "Latest Published"
+msgstr "最新发布"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_likes
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Likes"
+msgstr "类似"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_medium
+msgid "Medium"
+msgstr "普通"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_access_error_msg
+msgid "Message to display when not accessible due to access rights"
+msgstr "消息时显示无法访问，由于访问权限"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_mime_type
+msgid "Mime-type"
+msgstr "类型"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+#: selection:slide.channel,promote_strategy:0
+msgid "Most Viewed"
+msgstr "经常浏览的"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+#: selection:slide.channel,promote_strategy:0
+msgid "Most Voted"
+msgstr "最多评价"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_name
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Name"
+msgstr "名字"
+
+#. module: website_slides
+#: model:mail.template,subject:website_slides.slide_template_published
+msgid "New ${object.slide_type} published on ${object.channel_id.name}"
+msgstr "在${object.channel_id.name}发布的新的${object.slide_type}"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "Newest"
+msgstr "最新"
+
+#. module: website_slides
+#: selection:slide.channel,promote_strategy:0
+msgid "No Featured Presentation"
+msgstr "非特性介绍"
+
+#. module: website_slides
+#: selection:slide.slide,download_security:0
+msgid "No One"
+msgstr "没有人"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.channel_not_found
+msgid "No channel created or published yet."
+msgstr "暂时没有频道被建立或者发布"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "No presentation available."
+msgstr "没有介绍"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "No presentation published yet."
+msgstr "暂时没有介绍被发布"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
+msgid "Number of Documents"
+msgstr "文档数量"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_infographics
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_infographics
+msgid "Number of Infographics"
+msgstr "信息图数量"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_presentations
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_presentations
+msgid "Number of Presentations"
+msgstr "介绍数量"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_videos
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_videos
+msgid "Number of Videos"
+msgstr "视频数量"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_2
+msgid "Odoo All-in-One Software Demonstration"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.category,name:website_slides.category_2
+msgid "Odoo Days"
+msgstr "Odoo 日期"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_0
+msgid "Odoo Explained"
+msgstr "Odoo 说明"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_6
+msgid "Odoo Marketing - part 1: ATTRACT"
+msgstr "Odoo营销 - 第1部分：吸引"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_7
+msgid "Odoo Marketing - part 1: ATTRACT_2"
+msgstr "Odoo营销 - 第1部分：吸引_2"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_8
+msgid "Odoo Marketing - part 1: ATTRACT_3"
+msgstr "Odoo营销 - 第1部分：吸引_3"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_10
+msgid "Odoo Roadmap & Strategy - Fabien Pinckaers"
+msgstr "Odoo路线图和战略-Fabien Pinckaers"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_3
+msgid "Odoo Sign Demonstration"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_1
+msgid "Odoo Website & E-commerce Demonstration"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_6
+msgid ""
+"Odoo's fully-integrated marketing app will help you to attract, convert and "
+"close new leads. Check out our three-part video and discover more at "
+"www.odoo.com"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_7
+#: model:slide.slide,description:website_slides.slide_8
+msgid ""
+"Odoo's fully-integrated marketing app will help you to attract, convert and close new leads. Check out our three-part video and discover more at www.odoo.com\n"
+"\n"
+"Video made by Miroslava Ganzarcikova and Sophia Eribo."
+msgstr ""
+"Odoo的完全整合营销应用程序将帮助你吸引，转换和关闭新的线索。看看我们的三部分组成的视频，发现更多的由Miroslava "
+"Ganzarcikova和Sophia Eribo制作 www.odoo.com 视频。"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_9
+msgid "Open Days 2014 Infographic"
+msgstr "开放日2014年信息图"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_11
+msgid "OpenSource CMS, A performance comparison - Mantavya Gajjar"
+msgstr "开源CMS，性能对比 - Mantavya Gajjar"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:28
+#, python-format
+msgid "PDF or Image File"
+msgstr "PDF或图像文件"
+
+#. module: website_slides
+#: model:slide.channel,name:website_slides.channel_partial
+msgid "Partner Channel"
+msgstr "合作伙伴渠道"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "Please"
+msgstr "请"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides.js:56
+#, python-format
+msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
+msgstr "请<a href=\"/web?redirect=%s\">登录</A>投票这张幻灯片"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slides.py:310
+#: code:addons/website_slides/models/slides.py:533
+#, python-format
+msgid "Please enter valid Youtube or Google Doc URL"
+msgstr "请输入有效的YouTube或谷歌文档的URL"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:282
+#, python-format
+msgid "Please enter valid youtube or google doc url"
+msgstr "请输入有效的YouTube的或谷歌文档的URL"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Post"
+msgstr "过账"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"Post comment with email address (confirmation of email is required in order "
+"to publish comment on website) or please"
+msgstr "张贴评论使用电子邮件地址(确认电子邮件是必需的，以公布于网页上的评论)或请"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_slide_id
+#: selection:slide.slide,slide_type:0
+msgid "Presentation"
+msgstr "展示"
+
+#. module: website_slides
+#: model:mail.message.subtype,description:website_slides.mt_channel_slide_published
+#: model:mail.message.subtype,name:website_slides.mt_channel_slide_published
+msgid "Presentation Published"
+msgstr "展示发布"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_footer
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+#: model:website.menu,name:website_slides.website_menu_slides
+msgid "Presentations"
+msgstr "展示"
+
+#. module: website_slides
+#: selection:slide.channel,visibility:0
+msgid "Private"
+msgstr "私有的"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.channels
+msgid "Private channel"
+msgstr "私人频道"
+
+#. module: website_slides
+#: selection:slide.channel,visibility:0
+msgid "Public"
+msgstr "公开"
+
+#. module: website_slides
+#: model:slide.channel,name:website_slides.channel_public
+msgid "Public Channel"
+msgstr "公开频道"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_date_published
+msgid "Publish Date"
+msgstr "发布日期"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Published"
+msgstr "已发布"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_publish_template_id
+msgid "Published Template"
+msgstr "发布的模板"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Related"
+msgstr "相关的"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "Results for"
+msgstr "结果为"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid ""
+"Review your channel settings to promote your most viewed or recent published"
+" presentation"
+msgstr "查看你的频道设置，以促进你的观看次数最多的或最近发布的演示文稿"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_0
+msgid ""
+"Run your business with a comprehensive suite of business apps. Do it easily with Odoo! \n"
+"\n"
+"http://odoo.com/start"
+msgstr "有一整套的业务应用程序运行你的业务。轻松地与Odoo做到这一点！http://odoo.com/start"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:70
+#, python-format
+msgid "Save and Publish"
+msgstr "保存和发布"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:69
+#, python-format
+msgid "Save as Draft"
+msgstr "存为草稿"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Search Slides"
+msgstr "搜索幻灯片"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Security"
+msgstr "安全"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.channels
+msgid "Select a Channel"
+msgstr "选择频道"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_embed
+msgid "Select page to start with"
+msgstr "选择页面开始"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_sequence
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_sequence
+msgid "Sequence"
+msgstr "序号"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_media
+msgid "Share Link"
+msgstr "分享链接"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Share count"
+msgstr "分享数"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_media
+msgid "Share on Social Networks"
+msgstr "分享到社交网络"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "Share with a friend"
+msgstr "与朋友分享"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_share_template_id
+msgid "Shared Template"
+msgstr "共享的模板"
+
+#. module: website_slides
+#: selection:slide.channel,visibility:0
+msgid "Show channel but restrict presentations"
+msgstr "显示频道，但限制介绍"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Slide"
+msgstr "幻灯片"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_tag
+msgid "Slide Tag"
+msgstr "幻灯片标签"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_custom_slide_id
+msgid "Slide to Promote"
+msgstr "幻灯片推进"
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.action_slides_slides
+#: model:ir.model,name:website_slides.model_slide_slide
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_slide_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_slide_ids
+#: model:ir.ui.menu,name:website_slides.menu_website_slides_root
+#: model:ir.ui.menu,name:website_slides.submenu_action_slides_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_tree
+msgid "Slides"
+msgstr "幻灯片"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_category
+msgid "Slides Category"
+msgstr "幻灯片分类"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_search
+msgid "Sorry, but nothing matches your search criteria"
+msgstr "抱歉，没有符合你的搜索条件"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_3
+msgid ""
+"Stop doing manual printing and scanning. Move to electronic signature with Odoo Sign!\n"
+"\n"
+"Discover more at https://www.odoo.com/page/sign"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_tag_form
+msgid "Tag"
+msgstr "标签"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:274
+#: code:addons/website_slides/static/src/xml/website_slides.xml:48
+#: model:ir.actions.act_window,name:website_slides.action_slide_tag
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_tag_ids
+#: model:ir.ui.menu,name:website_slides.menu_slide_tag
+#: model:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
+#, python-format
+msgid "Tags"
+msgstr "标签"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Tags..."
+msgstr "标签..."
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "The"
+msgstr "这"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide_slide_type
+msgid ""
+"The document type will be set automatically based on the document URL and "
+"properties (e.g. height and width for presentation and document)."
+msgstr ""
+
+#. module: website_slides
+#: sql_constraint:slide.slide:0
+msgid "The slide name must be unique within a channel"
+msgstr "幻灯片名称必须是一个通道内是唯一的"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_url
+msgid "Third Party Website URL"
+msgstr "第三方网站网址"
+
+#. module: website_slides
+#: model:slide.channel,access_error_msg:website_slides.channel_partial
+#: model:slide.channel,access_error_msg:website_slides.channel_private
+#: model:slide.channel,access_error_msg:website_slides.channel_public
+msgid "This channel is private and its content is restricted to some users."
+msgstr "这个频道是私有的，它的内容仅限于某些用户。"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:286
+#, python-format
+msgid ""
+"This video already exists in this channel <a target=\"_blank\" "
+"href=\"/slides/slide/%s\">click here to view it </a>"
+msgstr "此视频已存在于该通道<a target=\"_blank\" href=\"/slides/slide/%s\">点击这里查看</A>"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_thumb
+msgid "Thumbnail"
+msgstr "略所图"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:42
+#: code:addons/website_slides/static/src/xml/website_slides.xml:44
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_name
+#, python-format
+msgid "Title"
+msgstr "称谓"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_total
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_total
+msgid "Total"
+msgstr "总计"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_total_views
+msgid "Total # Views"
+msgstr "总的视图数"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_index_content
+msgid "Transcript"
+msgstr "副本"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_type
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Type"
+msgstr "类型"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:141
+#, python-format
+msgid "Uncategorized"
+msgstr "未归类"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "Uncategorized presentation"
+msgstr "未分类的演示"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slides.py:522
+#, python-format
+msgid "Unknown document"
+msgstr "未知文档"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
+msgid "Unpublished"
+msgstr "未发布"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
+msgid "Upload Groups"
+msgstr "上传组"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid ""
+"Upload PDF presentations, documents, videos or infographic using the button "
+"below."
+msgstr "使用下面的按钮上传PDF演示文稿，文档，视频或信息图表。"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:9
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+#, python-format
+msgid "Upload Presentation"
+msgstr "上传演示"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:12
+#, python-format
+msgid "Uploading presentation..."
+msgstr "上传演示..."
+
+#. module: website_slides
+#: model:slide.channel,description:website_slides.channel_private
+msgid "Used to publish internal slides of company."
+msgstr "用来发布公司内部的幻灯片。"
+
+#. module: website_slides
+#: model:slide.channel,description:website_slides.channel_partial
+msgid "Used to publish slides in partner network privately."
+msgstr "用于私下发布的合作伙伴网络的幻灯片"
+
+#. module: website_slides
+#: selection:slide.slide,slide_type:0
+msgid "Video"
+msgstr "视频"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "Videos"
+msgstr "视频"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
+msgid "Views"
+msgstr "视图"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.related_slides
+msgid "Views ."
+msgstr "视图"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_visibility
+msgid "Visibility"
+msgstr "可见性"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Waiting for validation"
+msgstr "等待验证"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Website"
+msgstr "网站"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_website_message_ids
+msgid "Website Messages"
+msgstr "网站消息"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_website_config_settings
+msgid "Website Slides"
+msgstr "网站幻灯片"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide_website_message_ids
+msgid "Website communication history"
+msgstr "网站沟通历史"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Write a comment..."
+msgstr "写一个评论..."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:115
+#, python-format
+msgid "You can not upload password protected file."
+msgstr "你无法上传密码保护的文件。"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides.js:65
+#, python-format
+msgid "You have already voted for this slide"
+msgstr "你已经投了这张幻灯片"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Your Name"
+msgstr "你的姓名"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:36
+#, python-format
+msgid "Youtube Video URL"
+msgstr "YouTube视频网址"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:34
+#, python-format
+msgid "Youtube or Google Doc URL"
+msgstr "YouTube或谷歌文档的网址"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide_document_id
+msgid "Youtube or Google Document ID"
+msgstr "YouTube或谷歌文档ID"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide_url
+msgid "Youtube or Google Document URL"
+msgstr "YouTube或谷歌文档的网址"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "by email!"
+msgstr "通过电子邮件！"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "is empty."
+msgstr "空的"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "is private"
+msgstr "私人的"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+#: model:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
+msgid "is private."
+msgstr "私人的"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "login"
+msgstr "登录"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "on"
+msgstr "在"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:70
+#, python-format
+msgid "or"
+msgstr "或"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_search
+msgid "results found for the given criteria"
+msgstr "发现对于给定的标准结果"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "suggest_slide.name"
+msgstr "suggest_slide.name"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "to post comment"
+msgstr "张贴评论"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "to send this"
+msgstr "发送"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_website_config_settings
+msgid "website.config.settings"
+msgstr "website.config.settings"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "your-friend@domain.com"
+msgstr "your-friend@domain.com"

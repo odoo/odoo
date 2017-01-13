@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Action Rule Form View -->
+        <record id="view_base_action_rule_form" model="ir.ui.view">
+            <field name="name">base.action.rule.form</field>
+            <field name="model">base.action.rule</field>
+            <field name="arch" type="xml">
+                <form string="Action Rule">
+                    <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                        <group>
+                            <group>
+                                <field name="model_id"/>
+                                <field name="model" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="active"/>
+                                <field name="sequence"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Conditions">
+                                <group attrs="{'invisible': [('model', '!=', False)]}">
+                                    <p><b>Please choose the document type before setting the conditions.</b></p>
+                                </group>
+                                <group attrs="{'invisible': [('model', '=', False)]}">
+                                    <field name="kind"/>
+                                    <label for="filter_pre_id" attrs="{'invisible': [('kind', '!=', 'on_write')]}"/>
+                                    <div attrs="{'invisible': [('kind', '!=', 'on_write')]}">
+                                        <field name="filter_pre_domain" widget="char_domain" options="{'model_field': 'model'}"
+                                            class="o_row"/>
+                                        <div class="oe_edit_only o_row">Set selection based on a search filter:
+                                            <field name="filter_pre_id" domain="[('model_id', '=', model), '|', ('user_id', '=', uid), ('user_id', '=', False)]"
+                                                class="o_row" context="{'default_model_id': model, 'default_active': False, 'active_test': False}"/></div>
+                                    </div>
+                                    <label for="filter_id"/>
+                                    <div>
+                                        <field name="filter_domain" widget="char_domain" options="{'model_field': 'model'}"
+                                            class="o_row"/>
+                                        <div class="oe_edit_only o_row">Set selection based on a search filter:
+                                            <field name="filter_id" domain="[('model_id', '=', model), '|', ('user_id', '=', uid), ('user_id', '=', False)]"
+                                                class="o_row" context="{'default_model_id': model, 'default_active': False, 'active_test': False}"/>
+                                        </div>
+                                    </div>
+                                    <field name="on_change_fields"
+                                        attrs="{'invisible': [('kind', '!=', 'on_change')], 'required': [('kind', '=', 'on_change')]}"/>
+                                    <field name="trg_date_id"
+                                        attrs="{'invisible': [('kind', '!=', 'on_time')], 'required': [('kind', '=', 'on_time')]}"/>
+                                    <label for="trg_date_range" string="Delay After Trigger Date"
+                                        attrs="{'invisible': [('trg_date_id','=',False)]}"/>
+                                    <div attrs="{'invisible': [('trg_date_id','=',False)]}">
+                                        <field name="trg_date_range" class="o_row"/>
+                                        <field name="trg_date_range_type" class="o_row" attrs="{'required': [('trg_date_id','!=',False)]}"/>
+                                    </div>
+                                    <field name="trg_date_calendar_id" class="o_row"
+                                        attrs="{'invisible': ['|', ('trg_date_id','=',False), ('trg_date_range_type', '!=', 'day')]}"/>
+                                </group>
+                                <div attrs="{'invisible': [('model', '=', False)]}">
+                                    <p>Select when the action must be run, and choose records and/or timing conditions.</p>
+                                    <p groups="base.group_no_one">You may also use filters instead of choosing records. In order to create a new filter:</p>
+                                    <ul groups="base.group_no_one">
+                                        <li>Go to your "Related Document Model" page and set the filter parameters in the "Search" view (Example of filter based on Leads/Opportunities: Creation Date "is equal to" 01/01/2012)</li>
+                                        <li>In this same "Search" view, select the menu "Save Current Filter", enter the name (Ex: Create the 01/01/2012) and add the option "Share with all users"</li>
+                                    </ul>
+                                </div>
+                            </page>
+                            <page string="Actions">
+                                <group name="action_field" col="4" string="Fields to Change">
+                                    <field name="act_user_id"/>
+                                    <field name="act_followers" widget="many2many_tags"/>
+                                </group>
+                                <group name="action_server" string="Server actions to run">
+                                    <field name="server_action_ids" domain="[('model_id','=', model_id)]" nolabel="1" context="{'default_model_id': model_id}">
+                                        <tree string="Server Actions">
+                                            <field name="sequence"/>
+                                            <field name="name"/>
+                                            <field name="state"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                           </page>
+                       </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action Rule Tree View -->
+        <record id="view_base_action_rule_tree" model="ir.ui.view">
+            <field name="name">base.action.rule.tree</field>
+            <field name="model">base.action.rule</field>
+            <field name="arch" type="xml">
+                <tree string="Action Rule">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="kind"/>
+                    <field name="model_id"/>
+                    <field name="filter_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_base_action_rule_search" model="ir.ui.view">
+            <field name="name">base.action.rule.search</field>
+            <field name="model">base.action.rule</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="model_id"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action Rule Action -->
+        <record id="base_action_rule_act" model="ir.actions.act_window">
+            <field name="name">Automated Actions</field>
+            <field name="res_model">base.action.rule</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_base_action_rule_tree"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to setup a new automated action rule. 
+              </p><p>
+                Use automated actions to automatically trigger actions for
+                various screens. Example: a lead created by a specific user may
+                be automatically set to a specific sales team, or an
+                opportunity which still has status pending after 14 days might
+                trigger an automatic reminder email.
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_base_action_rule_form"
+            parent="base.menu_automation" action="base_action_rule_act" sequence="1"/>
+
+</odoo>

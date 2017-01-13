@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="rating_rating_action_issue" model="ir.actions.act_window">
+            <field name="name">Customer Ratings</field>
+            <field name="res_model">rating.rating</field>
+            <field name="view_mode">kanban,pivot,graph</field>
+            <field name="domain">[('res_model','=','project.issue'),('res_id','=',active_id), ('consumed', '=', True)]</field>
+            <field name="help" type="html">
+                <p>
+                    Customer ratings on issues. If you have no rating, change your project Settings to activate it.
+                </p>
+            </field>
+        </record>
+
+        <record id="project_issue_view_form_inherit_rating" model="ir.ui.view">
+            <field name="name">project.issue.view.form.inherit.rating</field>
+            <field name="model">project.issue</field>
+            <field name="inherit_id" ref="project_issue.project_issue_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="%(rating_rating_action_issue)d" type="action"
+                            class="oe_stat_button" icon="fa-smile-o">
+                        <field name="rating_count" string="Rating" widget="statinfo"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_issue_view_kanban_inherit_rating" model="ir.ui.view">
+            <field name="name">project.issue.view.kanban.inherit.rating</field>
+            <field name="model">project.issue</field>
+            <field name="inherit_id" ref="project_issue.project_issue_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='color']" position="after">
+                    <field name="rating_last_value"/>
+                    <field name="rating_ids"/>
+                </xpath>
+                <xpath expr="//div[@class='oe_kanban_bottom_left']" position="inside">
+                    <b t-if="record.rating_ids.raw_value.length">
+                        <span style="font-weight:bold;" class="fa fa-fw mt4 fa-smile-o text-success" t-if="record.rating_last_value.value == 10" title="Latest Rating: Happy"/>
+                        <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-if="record.rating_last_value.value == 5" title="Latest Rating: Average"/>
+                        <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-if="record.rating_last_value.value == 1" title="Latest Rating: Not Happy"/>
+                    </b>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- inherit get state button on project -->
+        <record id="project_issue_view_rating" model="ir.ui.view">
+            <field name="name">project.issue.view.rating</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button name="action_view_issue_rating"
+                        attrs="{'invisible': ['|', '|', ('use_issues','=', False), ('rating_status', '=', 'no'), ('percentage_satisfaction_issue', '=', -1)]}"
+                        class="oe_stat_button oe_percent"
+                        type="object"
+                        icon="fa-smile-o">
+                        <field string="% On issues" name="percentage_satisfaction_issue" widget="statinfo"/>
+                     </button>
+                </div>
+            </field>
+        </record>
+
+    </data>
+</odoo>

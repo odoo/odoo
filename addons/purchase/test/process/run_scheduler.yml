@@ -1,0 +1,40 @@
+-
+  In order to test the scheduler to generate RFQ, I create a new product
+-
+  !record {model: product.product, id: scheduler_product, view: False}:
+    name: scheduler prod
+    type: product
+    seller_ids:
+      - delay: 1
+        name: base.res_partner_2
+        min_qty: 5.0
+-
+  Add Buy route
+- 
+  !python {model: product.product, id: scheduler_product}: |
+    self.write({"route_ids": [(4, ref("purchase.route_warehouse0_buy"))]})
+-
+  I create a procurement order.
+-
+  !record {model: procurement.order, id: procurement_order_testcase0}:
+    location_id: stock.stock_location_stock
+    name: Test scheduler for RFQ
+    product_id: scheduler_product
+    product_qty: 15.0
+-
+  I run the scheduler.
+-
+  !python {model: procurement.order, id: False}: |
+    self.run_scheduler()
+-
+  I check Generated RFQ.
+-
+  !python {model: procurement.order, id: procurement_order_testcase0}: |
+    assert self.purchase_line_id, 'RFQ should be generated!'
+-
+  I delete the line from the purchase order and check that the move and the procurement are cancelled
+-
+  !python {model: procurement.order, id: procurement_order_testcase0}: |
+    self.purchase_line_id.unlink()
+    self.refresh()
+    assert self.state == 'exception', 'Procurement should be in exception'

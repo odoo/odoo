@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- Table Of Content -->
+        <record id="toc_functional_doc" model="forum.documentation.toc">
+            <field name="name">Functional Documentation</field>
+            <field name="introduction" type="html">
+                <p class="text-muted">
+                    This documentation is produced using the best posts from the
+                    <a href="/forum">community forum</a>.
+                </p>
+            </field>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+        <record id="toc_sale" model="forum.documentation.toc">
+            <field name="name">Sales Management</field>
+            <field name="parent_id" ref="toc_functional_doc"/>
+            <field name="introduction" type="html">
+                <p class="text-muted">
+                    Tracks leads, boost opportunities and close deals.
+                    This serie of how-to will help you develop your business.
+                </p>
+            </field>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+        <record id="toc_sale_customer" model="forum.documentation.toc">
+            <field name="name">Customers</field>
+            <field name="parent_id" ref="toc_sale"/>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+        <record id="toc_sale_so" model="forum.documentation.toc">
+            <field name="name">Sales orders</field>
+            <field name="parent_id" ref="toc_sale"/>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+        <record id="toc_0" model="forum.documentation.toc">
+            <field name="name">Sales &amp; Warehouse</field>
+            <field name="parent_id" ref="toc_sale"/>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+        <record id="toc_crm" model="forum.documentation.toc">
+            <field name="name">Customer Relationship Management</field>
+            <field name="parent_id" ref="toc_functional_doc"/>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+        <record id="toc_crm_lead" model="forum.documentation.toc">
+            <field name="name">Lead &amp; Opportunity</field>
+            <field name="parent_id" ref="toc_crm"/>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+        <record id="toc_crm_claim" model="forum.documentation.toc">
+            <field name="name">Claims</field>
+            <field name="parent_id" ref="toc_crm"/>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+        <record id="toc_crm_after_sale" model="forum.documentation.toc">
+            <field name="name">After-sale communication</field>
+            <field name="parent_id" ref="toc_crm"/>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+        <record id="toc_website" model="forum.documentation.toc">
+            <field name="name">Website</field>
+            <field name="parent_id" ref="toc_functional_doc"/>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+        <record id="toc_cms_ecommerce" model="forum.documentation.toc">
+            <field name="name">CMS &amp; eCommerce</field>
+            <field name="parent_id" ref="toc_website"/>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+        <record id="toc_hrm" model="forum.documentation.toc">
+            <field name="name">Human Resources Management</field>
+            <field name="parent_id" ref="toc_functional_doc"/>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+        <record id="toc_hrm_contract" model="forum.documentation.toc">
+            <field name="name">Employee Contract</field>
+            <field name="parent_id" ref="toc_hrm"/>
+            <field name="forum_id" ref="website_forum.forum_help"/>
+        </record>
+
+        <!-- Questions -->
+        <record id="website_forum.question_0" model="forum.post">
+            <field name="documentation_toc_id" ref="toc_hrm_contract"/>
+        </record>
+        <record id="website_forum.question_1" model="forum.post">
+            <field name="documentation_toc_id" ref="toc_cms_ecommerce"/>
+        </record>
+
+ </odoo>

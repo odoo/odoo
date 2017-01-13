@@ -1,0 +1,140 @@
+.o_kanban_view {
+
+    .o_visible {
+        width: 100%;
+
+        /* This is a hack ; without this, a scrollbar appears
+         * to scroll horizontally because of inline-block and width: 100%,
+         * but they are both necessary.
+        */
+        overflow: hidden;
+    }
+
+    /* This is a hack but this is the least ugly way to do it:
+     * We want two blocks (a visible one and an invisible one)
+     * to be overlap but both height should be equal to the
+     * height of the biggest block. Solution : put 0 width for
+     * the invisible on. The 0 padding and margin is mandatory for
+     * the elements to use the same space in both state (visible
+     * and invisible).
+    */
+    .o_invisible {
+        width: 0;
+        visibility: hidden;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+        overflow: hidden;
+
+        * {
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+            margin-left: 0px !important;
+            margin-right: 0px !important;
+        }
+    }
+
+    &.o_kanban_dashboard.o_kanban_ungrouped, &.o_kanban_dashboard.o_kanban_grouped {
+
+        // If invisible, elem will no take more than its original height
+        a, span {
+            .o-text-overflow(block);
+            position: relative;
+        }
+
+        a {
+            color: @odoo-brand-optional;
+            &.o_inline_link {
+                display: inline;
+            }
+            &:focus, &:active, &:focus:active {
+                outline: none;
+            }
+        }
+
+        .o_kanban_record {
+            padding: 0;
+            position: relative;
+            @media (max-width: @screen-xs-max) {
+                margin-bottom: 10px;
+            }
+
+            .row .row {
+                margin-left: 0px;
+                margin-right: 0px;
+
+                > div {
+                    padding-left: 0px;
+                    padding-right: 0px;
+                }
+            }
+        }
+
+        .o_kanban_card_header {
+            .o-flex-display();
+            background-color: @odoo-brand-lightsecondary;
+            position: relative;
+
+            .o_kanban_card_header_title {
+                .o-flex(3, 0, 0);
+                padding: @odoo-horizontal-padding/2 @odoo-horizontal-padding;
+
+                .o_primary {
+                    color: @odoo-brand-optional;
+                    font-weight: 700;
+                }
+            }
+
+            .o_kanban_manage_button_section {
+                .o-flex(1, 0, 0);
+                padding: @odoo-horizontal-padding;
+
+                .o_kanban_manage_toggle_button {
+                    text-align: right;
+                }
+            }
+        }
+
+        .o_kanban_card_content {
+            display: inline-block;
+            vertical-align: top;
+
+            > .row > div {
+                padding-top: @odoo-horizontal-padding;
+                padding-bottom: @odoo-horizontal-padding;
+            }
+
+            .o_kanban_primary_bottom {
+                background-color: @odoo-brand-lightsecondary;
+                .o-position-absolute(@bottom: 0);
+            }
+        }
+
+        .o_kanban_card_manage_pane {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .o_kanban_card_manage_section {
+            padding-top: @odoo-horizontal-padding/2;
+            padding-bottom: @odoo-horizontal-padding/2;
+        }
+
+        .o_kanban_card_manage_title {
+            font-weight: bold;
+            border-bottom: 1px solid;
+            border-color: @odoo-brand-lightsecondary;
+            margin-bottom: @odoo-horizontal-padding/2;
+            padding-bottom: @odoo-horizontal-padding/2;
+        }
+
+        .o_kanban_card_manage_settings {
+            padding-top: @odoo-horizontal-padding/2;
+            padding-bottom: @odoo-horizontal-padding/2;
+
+            border-top: 1px solid;
+            border-color: @odoo-brand-lightsecondary;
+        }
+    }
+}

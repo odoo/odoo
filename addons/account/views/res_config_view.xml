@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="open_account_charts_modules" model="ir.actions.act_window">
+            <field name="name">Chart Templates</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context" eval="{'search_default_category_id': ref('base.module_category_localization')}"/>
+            <field name="search_view_id" ref="base.view_module_filter"/>
+        </record>
+
+        <record id="view_account_config_settings" model="ir.ui.view">
+            <field name="name">account settings</field>
+            <field name="model">account.config.settings</field>
+            <field name="arch" type="xml">
+                <form string="Configure Accounting" class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <field name="has_default_company" invisible="1" />
+                    <field name="has_chart_of_accounts" invisible="1"/>
+                    <field name="complete_tax_set" invisible="1"/>
+                    <group string="Company" groups="base.group_multi_company">
+                        <label for="id" string="Company"/>
+                        <div>
+                            <div attrs="{'invisible': [('has_default_company', '=', True)]}">
+                                <field name="company_id"
+                                    options="{'no_create': True}"
+                                    class="oe_inline"/>
+                            </div>
+                            <div attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}">
+                                <field name="expects_chart_of_accounts" class="oe_inline"/>
+                                <label for="expects_chart_of_accounts"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group string="Chart of Accounts" attrs="{'invisible': [('expects_chart_of_accounts','=',False)]}">
+                        <label for="id" string="Chart of Account"/>
+                        <div>
+                            <div>
+                                <button type="object" name="open_company" string="Configure your company data" class="oe_link btn-link"/>
+                            </div>
+                            <div>
+                                <label for="chart_template_id" attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}"/>
+                                <field name="chart_template_id"
+                                    widget="selection"
+                                    domain="[('visible','=', True)]"
+                                    class="oe_inline" attrs="{'readonly': [('has_chart_of_accounts','!=',False)]}"/>
+                                <button string="Install more chart templates"
+                                    icon="fa-arrow-right text-success"
+                                    name="%(open_account_charts_modules)d"
+                                    type="action"
+                                    class="oe_link" attrs="{'invisible': [('has_chart_of_accounts','!=',False)]}"/>
+                            </div>
+                            <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}">
+                                <label for="sale_tax_id"/>
+                                <field name="sale_tax_id"
+                                    domain="[('chart_template_id', 'parent_of', chart_template_id),('type_tax_use','in',('sale','all'))]"
+                                    class="oe_inline"/>
+                            </div>
+                            <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}">
+                                <label for="purchase_tax_id"/>
+                                <field name="purchase_tax_id"
+                                    domain="[('chart_template_id', 'parent_of', chart_template_id),('type_tax_use','in',('purchase', 'all'))]"
+                                    class="oe_inline"/>
+                            </div>
+                            <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',True), ('has_chart_of_accounts','!=',False)]}">
+                                <label for="sale_tax_rate"/>
+                                <field name="sale_tax_rate"/>
+                            </div>
+                            <div attrs="{'invisible': ['|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',True), ('has_chart_of_accounts','!=',False)]}">
+                                <label for="purchase_tax_rate"/>
+                                <field name="purchase_tax_rate" />
+                            </div>
+                            <div attrs="{'invisible': ['|', ('chart_template_id','=',False), ('has_chart_of_accounts','!=',False)]}">
+                                <label for="template_transfer_account_id"/>
+                                <field name="template_transfer_account_id" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group string="Fiscal Year" groups="account.group_account_user">
+                        <label for="id" string="Fiscal Year Last Day"/>
+                        <div>
+                            <field name="fiscalyear_last_month" class="oe_inline"/>
+                            <span style="margin-right:5px;"></span>
+                            <field name="fiscalyear_last_day" class="oe_inline oe_text_right"/>
+                        </div>
+                        <label for="id" string="Lock Entries"/>
+                        <div>
+                            <div>
+                                <label for="period_lock_date"/>
+                                <field name="period_lock_date" class="oe_inline"/>
+                            </div>
+                            <div>
+                                <label for="fiscalyear_lock_date"/>
+                                <field name="fiscalyear_lock_date" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group string="Accounting &amp; Finance" name="accounting">
+                        <label for="id" string="Options"/>
+                        <div name="account_config">
+                            <div>
+                                <label for="currency_id"/>
+                                <field name="currency_id" options="{'no_create': True}" class="oe_inline"/>
+                            </div>
+                        </div>
+                        <label for="id" string="Features" groups="account.group_account_user"/>
+                        <div groups="account.group_account_user">
+                            <div>
+                                <field name="module_account_reports" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_reports"/>
+                                <a href="https://www.odoo.com/page/accounting" target="_blank"> More Info </a>
+                            </div>
+                            <div>
+                                <field name="group_analytic_accounting" class="oe_inline"/>
+                                <label for="group_analytic_accounting"/>
+                            </div>
+                            <div>
+                                <field name="module_account_asset" class="oe_inline"/>
+                                <label for="module_account_asset"/>
+                            </div>
+                            <div>
+                                <field name="module_account_deferred_revenue" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_deferred_revenue"/>
+                            </div>
+                            <div>
+                                <field name="module_account_budget" class="oe_inline"/>
+                                <label for="module_account_budget"/>
+                            </div>
+                            <div>
+                                <field name="module_account_tax_cash_basis" class="oe_inline"/>
+                                <label for="module_account_tax_cash_basis" />
+                                <p id="journal_config_message" attrs="{'invisible': [('module_account_tax_cash_basis','=',False)]}">
+                                    Once this module is installed, you have to configure Tax Cash Basis Journal.
+                                </p>
+                            </div>
+                        </div>
+                    </group>
+                    <separator string="Bank &amp; Cash" groups="account.group_account_user"/>
+                    <group name="bank_cash" groups="account.group_account_user">
+                        <label for="id" string="Bank Statements"/>
+                        <div name="bank_statement_import_options">
+                            <div>
+                                <field name="module_account_yodlee" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_yodlee"/>
+                                <a href="https://www.odoo.com/page/accounting-features"> View supported banks</a>
+                            </div>
+                            <div>
+                                <field name="module_account_plaid" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_plaid"/>
+                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
+                            </div>
+                            <div>
+                                <field name="module_account_bank_statement_import_qif" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_bank_statement_import_qif"/>
+                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
+                            </div>
+                            <div>
+                                <field name="module_account_bank_statement_import_ofx" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_bank_statement_import_ofx"/>
+                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
+                            </div>
+                            <div>
+                                <field name="module_account_bank_statement_import_csv" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_bank_statement_import_csv"/>
+                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
+                            </div>
+                        </div>
+                        <label for="id" string="Automate Payments"/>
+                        <div name="bank_payments">
+                            <div>
+                                <field name="module_account_sepa" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_sepa"/>
+                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
+                            </div>
+                            <div>
+                                <field name="module_l10n_us_check_printing" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_l10n_us_check_printing"/>
+                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
+                            </div>
+                        </div>
+                        <label for="id" string="Configuration"/>
+                        <div name="bank_options">
+                            <div name='company_footer'>
+                                <label for="company_footer"/>
+                                <field name="company_footer"/>
+                            </div>
+                            <div attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
+                                <label for="transfer_account_id"/>
+                                <field name="transfer_account_id" class="oe_inline" attrs="{'required': [('has_chart_of_accounts','!=',False)]}"/>
+                            </div>
+                        </div>
+                    </group>
+                    <separator string="Multi Currencies" groups="account.group_account_user"/>
+                    <group name="multi_currency" groups="account.group_account_user">
+                        <label for="id" string="Configuration"/>
+                        <div name="group_multi_currency">
+                            <field name="group_multi_currency" class="oe_inline"/>
+                            <label for="group_multi_currency"/>
+                            <group attrs="{'invisible': [('group_multi_currency', '&lt;&gt;', True)]}" col="2">
+                                <group>
+                                    <field name="currency_exchange_journal_id"/>
+                                </group>
+                            </group>
+                        </div>
+                    </group>
+                    <separator string="Invoicing &amp; Payments" groups="account.group_account_user"/>
+                    <group groups="account.group_account_user">
+                        <label for="id" string="Customer"/>
+                        <div name="customer_payments">
+                            <div>
+                                <field name="group_proforma_invoices" class="oe_inline"/>
+                                <label for="group_proforma_invoices"/>
+                            </div>
+                            <div>
+                                <field name="module_account_reports_followup" class="oe_inline" widget="upgrade_boolean"/>
+                                <label for="module_account_reports_followup"/>
+                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
+                            </div>
+                            <div>
+                                <field name="module_account_batch_deposit" widget="upgrade_boolean"/>
+                                <label for="module_account_batch_deposit"/>
+                                <a href="https://www.odoo.com/page/accounting-features" target="_blank"> More Info</a>
+                            </div>
+                        </div>
+                        <field name="group_warning_account" widget="radio"/>
+                    </group>
+                    <group attrs="{'invisible': [('has_chart_of_accounts','=',False)]}">
+                        <label for="id" string="Taxes"/>
+                        <div name="invoice_taxes">
+                            <div>
+                                <label for="default_sale_tax_id"/>
+                                <field name="default_sale_tax_id"
+                                    domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"
+                                    class="oe_inline"/>
+                            </div>
+                            <div>
+                                <label for="default_purchase_tax_id"/>
+                                <field name="default_purchase_tax_id"
+                                    domain="[('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company_id)]"
+                                    class="oe_inline"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Payments"/>
+                        <div name="customer_payments">
+                            <div name='payment_acquirer'/>
+                        </div>
+                    </group>
+                    <!-- Invisible section which is inherited in other modules -->
+                    <separator name="analytic_account" string="Analytic Accounting" invisible="1"/>
+                    <group name="analytic_account_sale" invisible="1">
+                        <label for="id" string="Sale"/>
+                    </group>
+                    <group name="analytic_account_purchase" invisible="1">
+                        <label for="id" string="Purchase"/>
+                    </group>
+                    <group name="followup" position="before">
+                        <field name="use_anglo_saxon"/>
+                        <field name="bank_account_code_prefix" groups="base.group_no_one"/>
+                        <field name="cash_account_code_prefix" groups="base.group_no_one"/>
+                        <field name="code_digits" groups="base.group_no_one"/>
+                        <field name="tax_calculation_rounding_method" groups="base.group_no_one"/>
+                    </group>
+                    <group string="Overdue Payments" name="followup">
+                        <field name="overdue_msg"/>
+                    </group>
+                    <div>
+                        <span>(*) This configuration is related to the company you're logged into.</span>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_config" model="ir.actions.act_window">
+            <field name="name">Configure Accounting</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="menu_account_config" name="Settings" parent="menu_finance_configuration"
+            sequence="0" action="action_account_config" groups="base.group_system"/>
+    </data>
+</odoo>

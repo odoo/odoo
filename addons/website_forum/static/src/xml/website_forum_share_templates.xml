@@ -1,0 +1,59 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="website.social_modal">
+        <div class="modal fade" id="oe_social_share_modal">
+            <div class="modal-dialog modal-content">
+                <div class="modal-header alert alert-info mb0">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">x</span>
+                    </button>
+                    <h4 class="modal-title">Thanks for posting!</h4>
+                </div>
+                <div class="modal-body">
+                    <t t-if="target_type == 'question'" t-call="website_forum.social_message_question"/>
+                    <t t-if="target_type == 'answer'" t-call="website_forum.social_message_answer"/>
+                    <t t-if="target_type == 'default'" t-call="website_forum.social_message_default"/>
+                    <div class="share-icons text-center">
+                        <t t-foreach="medias" t-as="media">
+                            <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share #{media}">
+                                <span class="fa fa-square fa-stack-2x"></span>
+                                <span t-attf-class="oe_social_#{media} fa fa-#{media} fa-stack-1x fa-inverse"></span>
+                            </a>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website_forum.social_message_question">
+        <p>On average, <b>45% of questions shared</b> on social networks get an answer within
+        5 hours. Questions shared on two social networks have <b>65% more chance to get an
+        answer</b> !</p>
+    </t>
+    <t t-name="website_forum.social_message_answer">
+        <p>By sharing you answer, you will get additional <b>karma points</b> if your
+        answer is selected as the right one. See what you can do with karma
+        <a href="https://www.odoo.com/forum/how-to/miscellaneous-14/how-does-karma-work-odoo-v8-forum-software-57845" target="_blank">here</a>.</p>
+    </t>
+    <t t-name="website_forum.social_message_default">
+        <p>Share this content to increase your chances to be featured on the front page and attract more visitors.</p>
+    </t>
+
+    <t t-name="website.social_alert">
+        <div class="alert alert-info alert-dismissable" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&#215;</span>
+                <span class="sr-only">Close</span>
+            </button>
+            <p>Move this question to the top of the list by sharing it on social networks.</p><br/>
+            <div>
+                <t t-foreach="medias" t-as="media">
+                    <a style="cursor: pointer" t-attf-class="fa-stack fa-lg share oe_share_bump #{media}">
+                        <span class="fa fa-square fa-stack-2x"></span>
+                        <span t-attf-class="oe_social_#{media} fa fa-#{media} fa-stack-1x fa-inverse"></span>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,101 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_tax_cash_basis
+# 
+# Translators:
+# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
+# Ted Wang <feiyuwang2012@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:55+0000\n"
+"PO-Revision-Date: 2016-09-07 08:55+0000\n"
+"Last-Translator: Ted Wang <feiyuwang2012@gmail.com>, 2016\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_move
+msgid "Account Entry"
+msgstr "会计分录"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_cash_basis_account
+msgid "Account use when creating entry for tax cash basis"
+msgstr "创建税务现金基础时的帐户使用"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_move_line
+msgid "Journal Item"
+msgstr "日记账项目"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_partial_reconcile
+msgid "Partial Reconcile"
+msgstr "部分调节"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_use_cash_basis
+msgid ""
+"Select this if the tax should use cash basis,which will create an entry for "
+"this tax on a given account during reconciliation"
+msgstr "如果税务应使用现金基础，选择此项，这将在对帐期间在给定帐户中创建此税项的条目"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_tax
+msgid "Tax"
+msgstr "税金"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
+msgid "Tax Cash Basis Entry of"
+msgstr "税金现金收付制分录"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_config_settings_tax_cash_basis_journal_id
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_res_company_tax_cash_basis_journal_id
+msgid "Tax Cash Basis Journal"
+msgstr "税金现金收付制日记账"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_cash_basis_account
+msgid "Tax Received Account"
+msgstr "税金接收科目"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,help:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
+msgid ""
+"Technical field used to keep track of the tax cash basis reconciliation.This"
+" is needed when cancelling the source: it will post the inverse journal "
+"entry to cancel that part too."
+msgstr "用于跟踪税收现金基础对账的技术领域。取消来源时需要这样：它将通过反向日记帐分录以取消该部分。"
+
+#. module: account_tax_cash_basis
+#: code:addons/account_tax_cash_basis/models/account_partial_reconcile.py:80
+#, python-format
+msgid ""
+"There is no tax cash basis journal defined for this company: \"%s\" \n"
+"Configure it in Accounting/Configuration/Settings"
+msgstr ""
+"这个公司没有定义税收收付实现制: \"%s\" \n"
+"在Accounting/Configuration/Settings下设置"
+
+#. module: account_tax_cash_basis
+#: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_use_cash_basis
+msgid "Use Cash Basis"
+msgstr "使用现金收付制"
+
+#. module: account_tax_cash_basis
+#: model:ir.model,name:account_tax_cash_basis.model_account_config_settings
+msgid "account.config.settings"
+msgstr "account.config.settings"

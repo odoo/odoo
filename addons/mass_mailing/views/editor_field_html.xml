@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="assets_mail_themes">
+    <link rel="stylesheet" type="text/less" href="/mass_mailing/static/src/less/themes/theme_default.less"/>
+</template>
+
+<template id="FieldTextHtmlInline" name="Editor layout">
+    <t t-call="web_editor.layout">
+        <t t-set="head_mm_field_text_html_inline">
+            <t t-if="enable_editor">
+                <t t-call-assets="mass_mailing.assets_mail_themes"/>
+                <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing_editor.js"></script>
+            </t>
+        </t>
+        <t t-set="head" t-value="head_mm_field_text_html_inline + (head or '')"/>
+
+        <div t-if="not edit_translations" id="editable_area" class="o_editable o_mail_area" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html"><t t-raw="content"/></div>
+        <div t-if="edit_translations" id="editable_area" class="o_mail_area"><t t-raw="content"/></div>
+    </t>
+</template>
+
+<template id="FieldTextHtmlPopupContent" name="Editor layout">
+    <t t-call="web_editor.layout">
+        <t t-set="head">
+            <link rel="stylesheet" href="/mass_mailing/static/src/css/mass_mailing_popup.css" type="text/css"/>
+        </t>
+        <div class="modal-dialog modal-md show" id="o_newsletter_popup">
+            <div class="modal-content o_popup_modal_content">
+                <div class="o_popup_modal_body text-center">
+                    <div class="o_popup_content_dev">
+                        <div id="editable_area" class="o_editable o_mail_area" t-att-data-oe-model="model" t-att-data-oe-field="field" t-att-data-oe-id="res_id" data-oe-type="html">
+                            <!-- Can be removed once default values are ok for the editor -->
+                            <t t-raw="content"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+ </template>
+</odoo>

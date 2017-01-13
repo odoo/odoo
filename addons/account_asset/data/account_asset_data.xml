@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+	<record model="ir.cron" id="account_asset_cron">
+        <field name="name">Generate Asset Entries</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model" eval="'account.asset.asset'"/>
+        <field name="function" eval="'_cron_generate_entries'"/>
+        <field name="args" eval="'()'" />
+    </record>
+</odoo>

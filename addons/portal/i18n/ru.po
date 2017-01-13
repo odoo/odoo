@@ -1,0 +1,273 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * portal
+# 
+# Translators:
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-07 08:57+0000\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2016\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: portal
+#: model:mail.template,body_html:portal.mail_template_data_portal_welcome
+msgid ""
+"\n"
+"<p>\n"
+"    Dear ${object.user_id.name or ''},\n"
+"</p>\n"
+"<p>\n"
+"    You have been given access to ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
+"</p>\n"
+"<p>\n"
+"    Your login account data is:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Username: ${object.user_id.login or ''}</li>\n"
+"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"\t<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"</ul>\n"
+"<p>\n"
+"\tYou can set or change your password via the following url:\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"${object.wizard_id.welcome_message or ''}"
+msgstr ""
+"\n"
+"<p>\n"
+"    Dear ${object.user_id.name or ''},\n"
+"</p>\n"
+"<p>\n"
+"    You have been given access to ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
+"</p>\n"
+"<p>\n"
+"    Your login account data is:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Имя пользователя: ${object.user_id.login or ''}</li>\n"
+"    <li>Портал: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"\t<li>База данных: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"</ul>\n"
+"<p>\n"
+"\tВы можете установить или изменить пароль с помощью следующего url:\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"${object.wizard_id.welcome_message or ''}"
+
+#. module: portal
+#: model:ir.model,name:portal.model_res_groups
+msgid "Access Groups"
+msgstr "Группы доступа"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Apply"
+msgstr "Применить "
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Cancel"
+msgstr "Отмена"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_partner_id
+msgid "Contact"
+msgstr "Контакт"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Contacts"
+msgstr "Контакты"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_create_uid
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_create_uid
+msgid "Created by"
+msgstr "Создал"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_create_date
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_create_date
+msgid "Created on"
+msgstr "Создано"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_display_name
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
+msgid "Email"
+msgstr "Email"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_id
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_id
+msgid "ID"
+msgstr "ID"
+
+#. module: portal
+#: model:ir.model.fields,help:portal.field_res_groups_is_portal
+msgid "If checked, this group is usable as a portal."
+msgstr "Если отмечено, эта группа может использоваться в портале."
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_in_portal
+msgid "In Portal"
+msgstr "В портале"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
+msgid "Invitation Message"
+msgstr "Приглашение"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard___last_update
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user___last_update
+msgid "Last Modified on"
+msgstr "Последний раз изменено"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_write_uid
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_write_uid
+msgid "Last Updated by"
+msgstr "Последний раз обновил"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_write_date
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_write_date
+msgid "Last Updated on"
+msgstr "Последний раз обновлено"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_user_id
+msgid "Login User"
+msgstr "Логин пользовтеля"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.group_search_view
+msgid "Non-Portal Groups"
+msgstr "Группы не связанные с порталом"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
+#: model:ir.model.fields,field_description:portal.field_res_groups_is_portal
+msgid "Portal"
+msgstr "Портал"
+
+#. module: portal
+#: model:ir.actions.act_window,name:portal.partner_wizard_action
+#: model:ir.model,name:portal.model_portal_wizard
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "Portal Access Management"
+msgstr "Доступ к порталу"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.group_search_view
+msgid "Portal Groups"
+msgstr "Группы портала"
+
+#. module: portal
+#: model:ir.model,name:portal.model_portal_wizard_user
+msgid "Portal User Config"
+msgstr "Настройка пользователя портала"
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid ""
+"Select which contacts should belong to the portal in the list below.\n"
+"                        The email address of each selected contact must be valid and unique.\n"
+"                        If necessary, you can fix any contact's email address directly in the list."
+msgstr ""
+"Выберите какие контакты должны принадлежать порталу в списке ниже.\n"
+"                        Адрес эл. почты каждого выбранного контакта должен быть действующим и уникальным.\n"
+"                        Если необходимо, вы можете исправить некоторые адреса эл. почты прямо в этом списке."
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:106
+#, python-format
+msgid "Several contacts have the same email: "
+msgstr "У некоторых контактов одинаковый адрес эл. почты: "
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:103
+#, python-format
+msgid "Some contacts don't have a valid email: "
+msgstr "У некоторых контактов нет эл. почты: "
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:109
+#, python-format
+msgid "Some contacts have the same email as an existing portal user:"
+msgstr ""
+"У некоторых контактов такой же адрес эл. почты, как у существующих "
+"пользователей портала:"
+
+#. module: portal
+#: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
+msgid "The portal that users can be added in or removed from."
+msgstr "Портал, в котором можно добавить или удалить пользователей."
+
+#. module: portal
+#: model:ir.ui.view,arch_db:portal.wizard_view
+msgid "This text is included in the email sent to new portal users."
+msgstr "Этот текст включается в эл. письмо новым пользователям портала."
+
+#. module: portal
+#: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
+msgid "This text is included in the email sent to new users of the portal."
+msgstr ""
+"Этот текст был включен в письмо, отправленное новому пользователю портала."
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:112
+#, python-format
+msgid ""
+"To resolve this error, you can: \n"
+"- Correct the emails of the relevant contacts\n"
+"- Grant access only to contacts with unique emails"
+msgstr ""
+"Для устранения этой ошибки, Вы можете:\n"
+"- Изменить эл. адреса соотвествующих контактов\n"
+"- Предоставить доступ только контактам с уникальными адресами"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
+msgid "Users"
+msgstr "Пользователи"
+
+#. module: portal
+#: model:ir.model.fields,field_description:portal.field_portal_wizard_user_wizard_id
+msgid "Wizard"
+msgstr "Мастер"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:179
+#, python-format
+msgid ""
+"You must have an email address in your User Preferences to send emails."
+msgstr ""
+"Чтобы отправлять письма, вам нужно указать эл. почту в настройках "
+"пользователя."
+
+#. module: portal
+#: model:mail.template,subject:portal.mail_template_data_portal_welcome
+msgid "Your Odoo account at ${user.company_id.name}"
+msgstr "Ваша учетная запись на Odoo ${user.company_id.name}"

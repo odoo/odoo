@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_analytic_line_form_inherit_account" model="ir.ui.view">
+            <field name="name">account.analytic.line.form.inherit.account</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='account_id']" position="after">
+                        <field name="general_account_id"/>
+                        <field name="ref"/>
+                        <field name="partner_id"/>
+                        <field name="move_id" readonly="1"/>
+                    </xpath>
+                    <xpath expr="//field[@name='amount']" position="after">
+                        <field name="company_currency_id" invisible="1"/>
+                        <field name="amount_currency" invisible="1"/>
+                        <field name="analytic_amount_currency"/>
+                        <field name="product_id"/>
+                        <field name="product_uom_id" class="oe_inline"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <record id="view_account_analytic_line_tree_inherit_account" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree.inherit.account</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_tree"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='date']" position="after">
+                        <field name="ref" invisible="context.get('to_invoice', False)"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <record id="view_account_analytic_line_filter_inherit_account" model="ir.ui.view">
+            <field name="name">account.analytic.line.select.inherit.account</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_filter"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='date']" position="after">
+                        <field name="product_id"/>
+                        <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
+                    </xpath>
+                    <xpath expr="//group[@name='groupby']" position="after">
+                        <filter string="Financial Account" context="{'group_by':'general_account_id'}"/>
+                        <filter string="Product" context="{'group_by':'product_id'}"/>
+                        <filter string="Partner" context="{'group_by':'partner_id'}"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_line_pivot" model="ir.ui.view">
+            <field name="name">account.analytic.line.pivot</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_pivot"/>
+            <field name="arch" type="xml">
+                <field name="account_id" position="after">
+                    <field name="partner_id" type="row"/>
+                </field>
+            </field>
+        </record>
+
+        <menuitem
+            name="Analytic Accounts"
+            parent="menu_finance_entries"
+            action="analytic.action_analytic_account_form"
+            id="menu_action_analytic_account_tree2"
+            sequence="30"
+            groups="analytic.group_analytic_accounting"/>
+        <menuitem
+            name="Analytic Entries"
+            parent="menu_finance_entries"
+            action="analytic.account_analytic_line_action_entries"
+            id="menu_action_analytic_lines_tree"
+            sequence="35"
+            groups="analytic.group_analytic_accounting"/>
+        <menuitem action="analytic.action_account_analytic_account_form" id="account_analytic_def_account"
+            parent="menu_analytic_accounting"
+            groups="analytic.group_analytic_accounting" sequence="0"/>
+
+
+        <record model="ir.actions.act_window" id="analytic_line_reporting_pivot">
+            <field name="name">Analytic Entries</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="analytic.view_account_analytic_line_pivot"/>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="analytic.view_account_analytic_line_filter"/>
+        </record>
+
+        <menuitem
+            name="Analytic Entries"
+            parent="account_reports_business_intelligence_menu"
+            action="analytic_line_reporting_pivot"
+            id="menu_action_analytic_lines_reporting"
+            sequence="35"
+            groups="analytic.group_analytic_accounting"/>
+
+        <menuitem
+            id="account_analytic_tag_menu"
+            name="Analytic Accounts Tags"
+            parent="menu_analytic_accounting"
+            action="analytic.account_analytic_tag_action"
+            groups="base.group_no_one"/>
+
+    </data>
+</odoo>
