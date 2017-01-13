@@ -267,105 +267,21 @@ class BaseModel(object):
 
     @api.model_cr_context
     def _field_create(self):
-        """ Reflect the models and its fields in the models 'ir.model' and
+        """ Reflect the model and its fields in the models 'ir.model' and
         'ir.model.fields'. Also create entries in 'ir.model.data' if the key
         'module' is passed to the context.
         """
-        cr = self._cr
+        # reflect the model in 'ir.model'
+        self.env['ir.model']._reflect(self)
 
-        # create/update the entries in 'ir.model' and 'ir.model.data'
-        params = {
-            'model': self._name,
-            'name': self._description,
-            'info': next(cls.__doc__ for cls in type(self).mro() if cls.__doc__),
-            'state': 'manual' if self._custom else 'base',
-            'transient': self._transient,
-        }
-        cr.execute(""" UPDATE ir_model
-                       SET name=%(name)s, info=%(info)s, transient=%(transient)s
-                       WHERE model=%(model)s
-                       RETURNING id """, params)
-        if not cr.rowcount:
-            cr.execute(""" INSERT INTO ir_model (model, name, info, state, transient)
-                           VALUES (%(model)s, %(name)s, %(info)s, %(state)s, %(transient)s)
-                           RETURNING id """, params)
-        model = self.env['ir.model'].browse(cr.fetchone()[0])
-        self._context['todo'].append((10, model.modified, [list(params)]))
-
-        if 'module' in self._context:
-            xmlid = 'model_' + self._name.replace('.', '_')
-            cr.execute("SELECT * FROM ir_model_data WHERE name=%s AND module=%s",
-                       (xmlid, self._context['module']))
-            if not cr.rowcount:
-                cr.execute(""" INSERT INTO ir_model_data (name, date_init, date_update, module, model, res_id)
-                               VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s) """,
-                           (xmlid, self._context['module'], 'ir.model', model.id))
-
-        # create/update the entries in 'ir.model.fields' and 'ir.model.data'
+        # reflect the fields in 'ir.model.fields'
+        cr = self.env.cr
         cr.execute("SELECT * FROM ir_model_fields WHERE model=%s", (self._name,))
-        cols = {rec['name']: rec for rec in cr.dictfetchall()}
+        existing = {row['name']: row for row in cr.dictfetchall()}
 
-        Fields = self.env['ir.model.fields']
-
-        # sparse fields should be created at the end, as they depend on their serialized field
-        model_fields = sorted(self._fields.itervalues(), key=lambda field: bool(field.sparse))
-        for field in model_fields:
-            vals = {
-                'model_id': model.id,
-                'model': self._name,
-                'name': field.name,
-                'field_description': field.string,
-                'help': field.help or None,
-                'ttype': field.type,
-                'relation': field.comodel_name or None,
-                'index': bool(field.index),
-                'store': bool(field.store),
-                'copy': bool(field.copy),
-                'related': ".".join(field.related) if field.related else None,
-                'readonly': bool(field.readonly),
-                'required': bool(field.required),
-                'selectable': bool(field.search or field.store),
-                'translate': bool(field.translate),
-                'relation_field': field.inverse_name if field.type == 'one2many' else None,
-                'serialization_field_id': None,
-                'relation_table': field.relation if field.type == 'many2many' else None,
-                'column1': field.column1 if field.type == 'many2many' else None,
-                'column2': field.column2 if field.type == 'many2many' else None,
-            }
-            if field.sparse:
-                # resolve link to serialization_field if specified by name
-                serialization_field = Fields.search([('model', '=', vals['model']), ('name', '=', field.sparse)])
-                if not serialization_field:
-                    raise UserError(_("Serialization field `%s` not found for sparse field `%s`!") % (field.sparse, field.name))
-                vals['serialization_field_id'] = serialization_field.id
-
-            if field.name not in cols:
-                query = "INSERT INTO ir_model_fields (%s) VALUES (%s) RETURNING id" % (
-                    ",".join(vals),
-                    ",".join("%%(%s)s" % name for name in vals),
-                )
-                cr.execute(query, vals)
-                field_id = cr.fetchone()[0]
-                self._context['todo'].append((20, Fields.browse(field_id).modified, [list(vals)]))
-
-                module = field._module or self._context.get('module')
-                if module:
-                    xmlid = 'field_%s_%s' % (self._table, field.name)
-                    cr.execute("SELECT name FROM ir_model_data WHERE name=%s", (xmlid,))
-                    if cr.fetchone():
-                        xmlid = xmlid + "_" + str(field_id)
-                    cr.execute(""" INSERT INTO ir_model_data (name, date_init, date_update, module, model, res_id)
-                                   VALUES (%s, (now() at time zone 'UTC'), (now() at time zone 'UTC'), %s, %s, %s) """,
-                               (xmlid, module, 'ir.model.fields', field_id))
-
-            elif not all(cols[field.name][key] == vals[key] for key in vals):
-                names = set(vals) - {'model', 'name'}
-                query = "UPDATE ir_model_fields SET %s WHERE model=%%(model)s AND name=%%(name)s RETURNING id" % (
-                    ",".join("%s=%%(%s)s" % (name, name) for name in names),
-                )
-                cr.execute(query, vals)
-                field_id = cr.fetchone()[0]
-                self._context['todo'].append((20, Fields.browse(field_id).modified, [names]))
+        reflect = self.env['ir.model.fields']._reflect
+        for field in self._fields.itervalues():
+            reflect(field, existing)
 
         self.invalidate_cache()
 

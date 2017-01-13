@@ -35,6 +35,28 @@ def make_compute(text, deps):
     return api.depends(*deps)(func)
 
 
+# generic INSERT and UPDATE queries
+INSERT_QUERY = "INSERT INTO {table} ({cols}) VALUES ({vals}) RETURNING id"
+UPDATE_QUERY = "UPDATE {table} SET {assignment} WHERE {condition} RETURNING id"
+
+def query_insert(cr, table, values):
+    query = INSERT_QUERY.format(
+        table=table,
+        cols=",".join(values),
+        vals=",".join(map("%({0})s".format, values)),
+    )
+    cr.execute(query, values)
+
+def query_update(cr, table, values, selectors):
+    setters = set(values) - set(selectors)
+    query = UPDATE_QUERY.format(
+        table=table,
+        assignment=",".join(map("{0}=%({0})s".format, setters)),
+        condition=" AND ".join(map("{0}=%({0})s".format, selectors)),
+    )
+    cr.execute(query, values)
+
+
 #
 # IMPORTANT: this must be the first model declared in the module
 #
@@ -189,6 +211,39 @@ class IrModel(models.Model):
             'model': 'x_' + '_'.join(name.lower().split(' ')),
         }
         return self.create(vals).name_get()[0]
+
+    def _reflect(self, model):
+        """ Reflect the given model and its fields in the models 'ir.model' and
+        'ir.model.fields'. Also create entries in 'ir.model.data' if the key
+        'module' is passed into the context.
+        """
+        cr = self.env.cr
+
+        # create/update the entries in 'ir.model' and 'ir.model.data'
+        params = {
+            'model': model._name,
+            'name': model._description,
+            'info': next(cls.__doc__ for cls in type(model).mro() if cls.__doc__),
+            'state': 'manual' if model._custom else 'base',
+            'transient': model._transient,
+        }
+        query_update(cr, self._table, params, ['model'])
+        if not cr.rowcount:
+            query_insert(cr, self._table, params)
+
+        record = self.browse(cr.fetchone())
+        self._context['todo'].append((10, record.modified, [list(params)]))
+
+        if 'module' in self._context:
+            xmlid = 'model_' + model._name.replace('.', '_')
+            cr.execute("SELECT * FROM ir_model_data WHERE name=%s AND module=%s",
+                       (xmlid, self._context['module']))
+            if not cr.rowcount:
+                cr.execute(""" INSERT INTO ir_model_data (module, name, model, res_id, date_init, date_update)
+                               VALUES (%s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')) """,
+                           (self._context['module'], xmlid, record._name, record.id))
+
+        return record
 
     @api.model
     def _instanciate(self, model_data):
@@ -612,6 +667,82 @@ class IrModelFields(models.Model):
         for field in self:
             res.append((field.id, '%s (%s)' % (field.field_description, field.model)))
         return res
+
+    def _reflect_values(self, field, existing):
+        """ Return the values corresponding to the given ``field``. """
+        model = self.env['ir.model']._get(field.model_name)
+        vals = {
+            'model_id': model.id,
+            'model': field.model_name,
+            'name': field.name,
+            'field_description': field.string,
+            'help': field.help or None,
+            'ttype': field.type,
+            'relation': field.comodel_name or None,
+            'index': bool(field.index),
+            'store': bool(field.store),
+            'copy': bool(field.copy),
+            'related': ".".join(field.related) if field.related else None,
+            'readonly': bool(field.readonly),
+            'required': bool(field.required),
+            'selectable': bool(field.search or field.store),
+            'translate': bool(field.translate),
+            'relation_field': field.inverse_name if field.type == 'one2many' else None,
+            'serialization_field_id': None,
+            'relation_table': field.relation if field.type == 'many2many' else None,
+            'column1': field.column1 if field.type == 'many2many' else None,
+            'column2': field.column2 if field.type == 'many2many' else None,
+        }
+        if field.sparse:
+            serialization_field = self.env[field.model_name]._fields.get(field.sparse)
+            if serialization_field is None:
+                raise UserError(_("Serialization field `%s` not found for sparse field `%s`!") % (field.sparse, field.name))
+            serialization_record = self._reflect(serialization_field, existing)
+            vals['serialization_field_id'] = serialization_record.id
+        return vals
+
+    def _reflect(self, field, existing):
+        """ Reflect the given field in the model `ir.model.fields` and return
+            its corresponding record.
+        """
+        vals = self._reflect_values(field, existing)
+        existing_data = existing.get(field.name)
+
+        if existing_data is None:
+            cr = self.env.cr
+            # create an entry in this table
+            query_insert(cr, self._table, vals)
+            record = self.browse(cr.fetchone())
+            self._context['todo'].append((20, record.modified, [list(vals)]))
+            # create a corresponding xml id
+            module = field._module or self._context.get('module')
+            if module:
+                model = self.env[field.model_name]
+                xmlid = 'field_%s_%s' % (model._table, field.name)
+                cr.execute("SELECT name FROM ir_model_data WHERE name=%s", (xmlid,))
+                if cr.fetchone():
+                    xmlid = xmlid + "_" + str(record.id)
+                cr.execute(""" INSERT INTO ir_model_data (module, name, model, res_id, date_init, date_update)
+                               VALUES (%s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')) """,
+                           (module, xmlid, record._name, record.id))
+            # update existing (for recursive calls)
+            existing[field.name] = dict(vals, id=record.id)
+            return record
+
+        if not all(existing_data[key] == val for key, val in vals.iteritems()):
+            cr = self.env.cr
+            # update the entry in this table
+            query_update(cr, self._table, vals, ['model', 'name'])
+            record = self.browse(cr.fetchone())
+            modified = set(vals) - set(['model', 'name'])
+            self._context['todo'].append((20, record.modified, [modified]))
+            # update existing (for recursive calls)
+            existing_data.update(vals)
+            return record
+
+        else:
+            # nothing to update, simply return the corresponding record
+            return self.browse(existing_data['id'])
 
     def _instanciate_attrs(self, field_data, partial):
         """ Return the parameters for a field instance for ``field_data``. """
