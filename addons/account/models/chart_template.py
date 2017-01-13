@@ -393,6 +393,28 @@ class AccountChartTemplate(models.Model):
             new_account = self.create_record_with_xmlid(company, account_template, 'account.account', vals)
             acc_template_ref[account_template.id] = new_account
         return acc_template_ref
+    
+    def _get_reconcile_vals(self, company, account_reconcile_model, acc_template_ref, tax_template_ref):
+        """ This method generates a dictionnary of all the values for the account reconcile model that will be created.
+        """
+        self.ensure_one()
+        vals = {
+                'name': account_reconcile_model.name,
+                'sequence': account_reconcile_model.sequence,
+                'has_second_line': account_reconcile_model.has_second_line,
+                'company_id': company.id,
+                'account_id': acc_template_ref[account_reconcile_model.account_id.id],
+                'label': account_reconcile_model.label,
+                'amount_type': account_reconcile_model.amount_type,
+                'amount': account_reconcile_model.amount,
+                'tax_id': account_reconcile_model.tax_id and tax_template_ref[account_reconcile_model.tax_id.id] or False,
+                'second_account_id': account_reconcile_model.second_account_id and acc_template_ref[account_reconcile_model.second_account_id.id] or False,
+                'second_label': account_reconcile_model.second_label,
+                'second_amount_type': account_reconcile_model.second_amount_type,
+                'second_amount': account_reconcile_model.second_amount,
+                'second_tax_id': account_reconcile_model.second_tax_id and tax_template_ref[account_reconcile_model.second_tax_id.id] or False,
+            }
+        return val
 
     @api.multi
     def generate_account_reconcile_model(self, tax_template_ref, acc_template_ref, company):
@@ -409,22 +431,7 @@ class AccountChartTemplate(models.Model):
             ('account_id.chart_template_id', '=', self.id)
         ])
         for account_reconcile_model in account_reconcile_models:
-            vals = {
-                'name': account_reconcile_model.name,
-                'sequence': account_reconcile_model.sequence,
-                'has_second_line': account_reconcile_model.has_second_line,
-                'company_id': company.id,
-                'account_id': acc_template_ref[account_reconcile_model.account_id.id],
-                'label': account_reconcile_model.label,
-                'amount_type': account_reconcile_model.amount_type,
-                'amount': account_reconcile_model.amount,
-                'tax_id': account_reconcile_model.tax_id and tax_template_ref[account_reconcile_model.tax_id.id] or False,
-                'second_account_id': account_reconcile_model.second_account_id and acc_template_ref[account_reconcile_model.second_account_id.id] or False,
-                'second_label': account_reconcile_model.second_label,
-                'second_amount_type': account_reconcile_model.second_amount_type,
-                'second_amount': account_reconcile_model.second_amount,
-                'second_tax_id': account_reconcile_model.second_tax_id and tax_template_ref[account_reconcile_model.second_tax_id.id] or False,
-            }
+            vals = self._get_reconcile_vals(company, account_reconcile_model, acc_template_ref, tax_template_ref)
             self.create_record_with_xmlid(company, account_reconcile_model, 'account.reconcile.model', vals)
         return True
 
