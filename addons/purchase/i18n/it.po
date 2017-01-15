@@ -16,13 +16,14 @@
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2016
 # Innovazione <innovazione@lesvil.it>, 2016
 # Giuseppe Castellani <giuseppecastellani@gmail.com>, 2016
+# Giuliano Lotta <giuliano.lotta@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-29 13:59+0000\n"
 "PO-Revision-Date: 2016-09-29 13:59+0000\n"
-"Last-Translator: Giuseppe Castellani <giuseppecastellani@gmail.com>, 2016\n"
+"Last-Translator: Giuliano Lotta <giuliano.lotta@gmail.com>, 2017\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +56,27 @@ msgid ""
 "<p>If you have any question, do not hesitate to contact us.</p>\n"
 "<p>Best regards,</p>\n"
 msgstr ""
+"\n"
+"<p>Gentile\n"
+"% if object.partner_id.is_company and object.child_ids:\n"
+"    ${object.partner_id.child_ids[0].name}\n"
+"% else :\n"
+"    ${object.partner_id.name}\n"
+"% endif\n"
+",</p><p>\n"
+"Vi inviamo in allegato una ${object.state in ('draft', 'sent') and 'Richiesta di Preventivo' or \"Conferma d'Ordine\"} <strong>${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    con riferimento: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"per un valore di <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"da parte di ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>Nel caso di dubbi o domande, non esitate a contattarci.</p>\n"
+"<p>Saluti,</p>\n"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -80,6 +102,26 @@ msgid ""
 "<p>You can reply to this email if you have any questions.</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
+"\n"
+"<p>Gentile ${object.partner_id.name} \n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Vi inviamo in allegato una <strong>${object.state in ('draft', 'sent') and 'Richiesta di Preventivo' or \"Conferma d'Ordine\"} ${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    con riferimento: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"per un valore di <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"da parte di ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>Potete scrivere a questo indirizzo mail per richieste di chiarimento.</p>\n"
+"<p>Saluti,</p>\n"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_stock_dropshipping
@@ -104,12 +146,12 @@ msgstr "# Acquisti"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_supplier_invoice_count
 msgid "# Vendor Bills"
-msgstr "# Fatture Fornnitori"
+msgstr "# Fatture Fornitori"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_count
 msgid "# of Bills"
-msgstr ""
+msgstr "# di Fatture"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_nbr_lines
@@ -119,7 +161,7 @@ msgstr "# di righe"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_order_count
 msgid "# of Purchase Order"
-msgstr "# dell'ordine di acquisto"
+msgstr "# dell'Ordine di Acquisto"
 
 #. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase
@@ -133,13 +175,13 @@ msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
 msgstr ""
-"<span>(*) Questa configurazione è collegata all'azienda con cui vi siete "
+"<span>(*) Questa configurazione è collegata all'azienda con cui siete "
 "connessi.</span>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Date Req.</strong>"
-msgstr "<strong>Richiesta dati </strong>"
+msgstr "<strong>Data richiesta</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -227,7 +269,7 @@ msgstr "Permette ai fornitori di consegnare direttamente ai vostri clienti"
 #. module: purchase
 #: selection:res.company,po_lock:0
 msgid "Allow to edit purchase orders"
-msgstr ""
+msgstr "Permette di modificare gli ordini di acquisto"
 
 #. module: purchase
 #: selection:purchase.config.settings,group_manage_vendor_price:0
@@ -363,7 +405,7 @@ msgstr "Ricevuta"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,invoice_status:0
 msgid "Bills Received"
-msgstr ""
+msgstr "Fatture Ricevute"
 
 #. module: purchase
 #: selection:product.template,purchase_line_warn:0
@@ -455,7 +497,7 @@ msgstr "Clicca per creare una richiesta di quotazione"
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
 msgid "Click to create a vendor bill."
-msgstr ""
+msgstr "Clicca per creare la fattura di un fornitore"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -517,7 +559,7 @@ msgstr "conferma ordini d'acquisto in una fase "
 #. module: purchase
 #: selection:res.company,po_lock:0
 msgid "Confirmed purchase orders are not editable"
-msgstr ""
+msgstr "Gli ordini di acquisto confermati non sono modificabili"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_control

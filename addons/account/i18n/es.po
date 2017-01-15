@@ -12,7 +12,7 @@
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Antonio Trueba <atgayol@gmail.com>, 2016
 # Alejandro Santana <alejandrosantana@anubia.es>, 2016
-# Luis Triana <luis.triana@jarsa.com.mx>, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Esteban Echeverry <tebanep@nubark.com>, 2016
 # Alejandro Die Sanchis <marketing@domatix.com>, 2016
 # ulises aldana <rauleo88@hotmail.com>, 2016
@@ -51,8 +51,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-11-14 15:53+0000\n"
+"POT-Creation-Date: 2017-01-11 13:04+0000\n"
+"PO-Revision-Date: 2017-01-11 13:04+0000\n"
 "Last-Translator: Cristian Salamea <ovnicraft@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -1801,6 +1801,7 @@ msgstr "Le permite usar la contabilidad analítica"
 #: model:ir.model.fields,field_description:account.field_cash_box_in_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_out_amount
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_amount
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_account_payment_tree
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
@@ -1808,6 +1809,11 @@ msgstr "Le permite usar la contabilidad analítica"
 #, python-format
 msgid "Amount"
 msgstr "Importe"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line_analytic_amount_currency
+msgid "Amount Currency"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
@@ -4094,11 +4100,6 @@ msgid "Email composition wizard"
 msgstr "Asistente de redacción de correo electrónico."
 
 #. module: account
-#: model:ir.model,name:account.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
-msgstr "Asistente de redacción de correo electrónico para la encuesta"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_enable_filter
 msgid "Enable Comparison"
 msgstr "Habilitar comparación"
@@ -5359,20 +5360,20 @@ msgstr "Factura debe estar en estado borrador o proforma para validarla."
 #: code:addons/account/models/account_invoice.py:587
 #, python-format
 msgid ""
-"Invoice must be in draft,Pro-forma or open state in order to be cancelled."
-msgstr "Factura debe estar en estado borrador o proforma para ser cancelada."
+"Invoice must be in draft, Pro-forma or open state in order to be cancelled."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:581
 #, python-format
-msgid "Invoice must be paid in order to set it to register payemnt."
-msgstr "Factura debe ser pagada para registrar otro pago"
+msgid "Invoice must be paid in order to set it to register payment."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:573
 #, python-format
-msgid "Invoice must be validated in order to set it to register payemnt."
-msgstr "Factura debe estar validada para registrar pagos"
+msgid "Invoice must be validated in order to set it to register payment."
+msgstr ""
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
@@ -9091,6 +9092,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_line_amount_currency
+#: model:ir.model.fields,help:account.field_account_analytic_line_analytic_amount_currency
 msgid ""
 "The amount expressed in the related account currency if not equal to the "
 "company one."
@@ -9099,7 +9101,7 @@ msgstr ""
 "de la compañía."
 
 #. module: account
-#: code:addons/account/models/account_move.py:426
+#: code:addons/account/models/account_move.py:436
 #, python-format
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"

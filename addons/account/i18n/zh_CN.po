@@ -5,6 +5,7 @@
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
 # Talway <9010446@qq.com>, 2016
+# Yuan Xulei <hi@yxl.name>, 2016
 # 老窦 北京 <2662059195@qq.com>, 2016
 # xiaobin wu <bd5dml@gmail.com>, 2016
 # Ted Wang <feiyuwang2012@gmail.com>, 2016
@@ -12,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-11-14 15:53+0000\n"
+"POT-Creation-Date: 2017-01-11 13:04+0000\n"
+"PO-Revision-Date: 2017-01-11 13:04+0000\n"
 "Last-Translator: Ted Wang <feiyuwang2012@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -1675,6 +1676,7 @@ msgstr "允许使用分析会计"
 #: model:ir.model.fields,field_description:account.field_cash_box_in_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_out_amount
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_amount
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_account_payment_tree
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
@@ -1682,6 +1684,11 @@ msgstr "允许使用分析会计"
 #, python-format
 msgid "Amount"
 msgstr "金额"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line_analytic_amount_currency
+msgid "Amount Currency"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
@@ -3922,11 +3929,6 @@ msgid "Email composition wizard"
 msgstr "Email撰写向导"
 
 #. module: account
-#: model:ir.model,name:account.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
-msgstr "调查功能电子邮件撰写向导"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_enable_filter
 msgid "Enable Comparison"
 msgstr "启用比较"
@@ -5099,20 +5101,20 @@ msgstr "发票确认前必须是草稿或形式发票状态。"
 #: code:addons/account/models/account_invoice.py:587
 #, python-format
 msgid ""
-"Invoice must be in draft,Pro-forma or open state in order to be cancelled."
-msgstr "发票必须处于草稿，形式或开放状态才能取消。"
+"Invoice must be in draft, Pro-forma or open state in order to be cancelled."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:581
 #, python-format
-msgid "Invoice must be paid in order to set it to register payemnt."
-msgstr "必须支付发票才能将其设置为注册付款。"
+msgid "Invoice must be paid in order to set it to register payment."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:573
 #, python-format
-msgid "Invoice must be validated in order to set it to register payemnt."
-msgstr "登记付款前必须先确认发票。"
+msgid "Invoice must be validated in order to set it to register payment."
+msgstr ""
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
@@ -7049,7 +7051,7 @@ msgstr "价格百分比"
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Percentage of Price Tax Included"
-msgstr "价格百分比"
+msgstr "含税价格百分比"
 
 #. module: account
 #: selection:account.reconcile.model,second_amount_type:0
@@ -8711,13 +8713,14 @@ msgstr "如果是多币种的分录，币种会用另外一个选项的币种呈
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_line_amount_currency
+#: model:ir.model.fields,help:account.field_account_analytic_line_analytic_amount_currency
 msgid ""
 "The amount expressed in the related account currency if not equal to the "
 "company one."
 msgstr "如果不等于公司那一个，金额以相关科目的货币表示。"
 
 #. module: account
-#: code:addons/account/models/account_move.py:426
+#: code:addons/account/models/account_move.py:436
 #, python-format
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
