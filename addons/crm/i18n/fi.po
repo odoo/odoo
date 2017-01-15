@@ -18,13 +18,14 @@
 # Sanna Edelman <direct@generare.com>, 2016
 # Timo Koukkari <timo.koukkari@seamk.fi>, 2016
 # Tommi Rintala <tommi.rintala@gmail.com>, 2016
+# artol <arto.leskinen@tek.fi>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-14 13:41+0000\n"
 "PO-Revision-Date: 2016-12-14 13:41+0000\n"
-"Last-Translator: Tommi Rintala <tommi.rintala@gmail.com>, 2016\n"
+"Last-Translator: artol <arto.leskinen@tek.fi>, 2017\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -184,6 +185,7 @@ msgid ""
 "<b>Drag &amp; drop opportunities</b> between columns as you progress in your"
 " sales cycle."
 msgstr ""
+"<b>Raahaa &amp; pudota mahdollisuuksia</b> sarakkeiden välillä edetessäsi."
 
 #. module: crm
 #. openerp-web
@@ -192,11 +194,13 @@ msgstr ""
 msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr ""
+"<b>Kutsu kolleegoita</b> sähköpostilla.<br/><i>Lisää yksi postiosoite per "
+"rivi.</i>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<i class=\"fa fa-envelope-o\"/> Ask Our Experts"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope-o\"/> Kysy asiantuntijoiltamme"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
@@ -217,6 +221,9 @@ msgid ""
 "attached to this opportunity.</p><p class=\"mb0\">Type <i>'@'</i> to mention"
 " people - it's like cc-ing on emails.</p>"
 msgstr ""
+"<p><b>Lähetä viestejä</b> ja saa vastaukset automaattisesti kytkettyä tähän "
+"mahdollisuuteen.</p><p class=\"mb0\">Kirjoita <i>'@'</i> jakaaksesi viestin "
+"muille.</p>"
 
 #. module: crm
 #: model:ir.actions.server,body_html:crm.action_email_reminder_lead
@@ -228,6 +235,12 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"<p>Hei ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>Mahdollisuus <strong>${object.name}</strong> ei ole ollut aktiivinen 5 päivään.</p>\n"
+"%if object.description:\n"
+"<p>Mahdollisuus : </p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>Kiitos!</p>\n"
 
 #. module: crm
 #. openerp-web
@@ -239,6 +252,10 @@ msgid ""
 "after</li><li>second call 3 days after, ...</li></ol><p "
 "class='mb0'><i>Select a standard activity for now on.</i></p>"
 msgstr ""
+"<p>Pystyt muokkaamaan seuranta-aktiviteetteja. "
+"Esimerkit:</p><ol><li>esittelysähköposti</li><li>soitto 10 päivän "
+"päästä</li><li>toinen soitto 3 päivää myöhemmin, ...</li></ol><p "
+"class='mb0'><i>Valitse vakio aktiviteettisi.</i></p>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -410,6 +427,11 @@ msgid ""
 "                                        <span class=\"small\">Recommended if &gt;50 items</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n"
+"                                        <strong>Lataa tiedosto</strong><br/>\n"
+"                                        <span class=\"small\">Suositeltavaa, jos  &gt;50 kohdetta</span>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -465,6 +487,11 @@ msgid ""
 "                                        <span class=\"small\">Recommended if &lt;50 items</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"&#57440;\"/>\n"
+"                                        <strong> Luo käsin</strong><br/>\n"
+"                                        <span class=\"small\">Suositeltavaa, jos &lt;50 kohdetta</span>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -499,6 +526,9 @@ msgid ""
 "                                        <strong>Specific Price per Audience</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Kohderyhmäkohtainen hinta</strong>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -507,6 +537,9 @@ msgid ""
 "                                        <strong>Unique Price (default)</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>Yksi hinta (oletus)</strong>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -552,6 +585,7 @@ msgid ""
 "<strong>Click on 'Reporting' in the main menu </strong>and browse "
 "statistics:"
 msgstr ""
+"<strong>Valitse 'Raportointi' päävalikossa</strong> ja selaa tilastoja:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3390,7 +3424,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_web_planner
 msgid "Planner"
-msgstr ""
+msgstr "Suunnittelija"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:592
@@ -4823,7 +4857,7 @@ msgstr "Tuntematon"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "use Odoo API to import through scripts"
-msgstr ""
+msgstr "käytä Odoo API-rajapintaa tuontiin ohjelmallisesti"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

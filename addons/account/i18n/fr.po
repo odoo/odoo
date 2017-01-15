@@ -25,9 +25,9 @@
 # zoe <yann.hoareau@migs.re>, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
-# Quentin THEURET <quentin@theuret.net>, 2016
 # Nacim ABOURA <nacim.aboura@gmail.com>, 2016
 # ShevAbam <shevabam@gmail.com>, 2016
+# Alexis de Lattre <alexis@via.ecp.fr>, 2016
 # Fabrice Henrion <fhe@odoo.com>, 2016
 # lucasdeliege <deliegelucas@gmail.com>, 2016
 # Frédéric Clementi <frederic.clementi@camptocamp.com>, 2016
@@ -35,6 +35,7 @@
 # Ilone Math <ilonemail2@gmail.com>, 2016
 # Miguel Vidali <mvidali129@gmail.com>, 2016
 # Hamid Darabi <hamid.darabi@gmail.com>, 2016
+# Quentin THEURET <quentin@theuret.net>, 2016
 # Simon Jejcic <simon.jejcic@gmail.com>, 2016
 # Matillon Samantha <smatillon@gmail.com>, 2016
 # Benedicte HANET <hanetb@gmail.com>, 2016
@@ -45,19 +46,19 @@
 # Tony Barbou <tonybarbou@live.fr>, 2016
 # Stéphane Bidoul (ACSONE) <stephane.bidoul@acsone.eu>, 2016
 # Lionel Sausin <ls@numerigraphe.com>, 2016
-# Alexis de Lattre <alexis@via.ecp.fr>, 2016
 # Simon Mainguy <simongmainguy@gmail.com>, 2016
 # Lamia Ishak <lamiaishak@hotmail.co.uk>, 2016
 # Hubert TETARD <htetard@apik-conseils.com>, 2016
-# leemannd <leemannd@gmail.com>, 2016
+# zeroheure <xavier@alternatif.org>, 2016
+# leemannd <denis.leemann@camptocamp.com>, 2016
 # Jérémy Donas <LeDistordu@users.noreply.github.com>, 2016
 # Jeanjean Noname <monsieur.spock@gmail.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-11-14 15:53+0000\n"
+"POT-Creation-Date: 2017-01-11 13:04+0000\n"
+"PO-Revision-Date: 2017-01-11 13:04+0000\n"
 "Last-Translator: Jeanjean Noname <monsieur.spock@gmail.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -116,12 +117,12 @@ msgstr ""
 "    (<i>${object.partner_id.parent_id.name}</i>)\n"
 "% endif\n"
 ",</p>\n"
-"<p>Voici votre facture <strong>${object.number}</strong>\n"
+"<p>Votre facture <strong>${object.number}</strong>\n"
 "% if object.origin:\n"
 "(référence : ${object.origin} )\n"
 "% endif\n"
-"qui s'élève à <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
-"de ${object.company_id.name}.\n"
+"émise par ${object.company_id.name}\n"
+"s'élève à <strong>${object.amount_total} ${object.currency_id.name}</strong>.\n"
 "</p>\n"
 "\n"
 "% if is_online:\n"
@@ -135,7 +136,7 @@ msgstr ""
 "% if object.state=='paid':\n"
 "    <p>Cette facture est déjà payée.</p>\n"
 "% else:\n"
-"    <p>S'il vous plaît effectuer le paiement dans les meilleurs délais.</p>\n"
+"    <p>Veuillez effectuer le paiement le plus tôt possible.</p>\n"
 "% endif\n"
 "\n"
 "<p>Merci,</p>\n"
@@ -1003,7 +1004,7 @@ msgstr ""
 #: code:addons/account/models/account.py:535
 #, python-format
 msgid "A bank account can only belong to one journal."
-msgstr ""
+msgstr "Un compte bancaire doit être attaché à un seul journal."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1049,7 +1050,7 @@ msgstr "Une liste des taxes courantes avec leur taux."
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "A list of your customer and supplier payment terms."
-msgstr ""
+msgstr "Une liste de vos conditions de paiement client et fournisseur."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1217,7 +1218,7 @@ msgstr "Affectation des comptes"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Account Move Reversal"
-msgstr "Renversement de la pièce comptable"
+msgstr "Extourne de la pièce comptable"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_accounts_wizard_acc_name
@@ -1383,7 +1384,7 @@ msgstr "Ligne d'écriture lettrée (écriture d'écart)"
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account move reversal"
-msgstr "Renversement de la pièce comptable"
+msgstr "Extourne de la pièce comptable"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_src_id
@@ -1517,7 +1518,7 @@ msgstr "Affectation des comptes"
 #: model:ir.actions.act_window,name:account.account_tag_action
 #: model:ir.ui.menu,name:account.account_tag_menu
 msgid "Accounts Tags"
-msgstr ""
+msgstr "Étiquettes du compte"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1772,7 +1773,7 @@ msgstr "Autoriser les factures proforma"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_multi_currency
 msgid "Allows to work in a multi currency environment"
-msgstr ""
+msgstr "Vous permet de travailler avec plusieurs devises"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_group_proforma_invoices
@@ -1802,6 +1803,7 @@ msgstr "Vous permet d'utiliser la comptabilité analytique"
 #: model:ir.model.fields,field_description:account.field_cash_box_in_amount
 #: model:ir.model.fields,field_description:account.field_cash_box_out_amount
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_amount
+#: model:ir.ui.view,arch_db:account.report_invoice_document
 #: model:ir.ui.view,arch_db:account.view_account_payment_tree
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model:ir.ui.view,arch_db:account.view_account_supplier_payment_tree
@@ -1809,6 +1811,11 @@ msgstr "Vous permet d'utiliser la comptabilité analytique"
 #, python-format
 msgid "Amount"
 msgstr "Montant"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line_analytic_amount_currency
+msgid "Amount Currency"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual
@@ -4098,11 +4105,6 @@ msgid "Email composition wizard"
 msgstr "Assistant de composition de courriel"
 
 #. module: account
-#: model:ir.model,name:account.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
-msgstr "Assistant de composition de courriel pour les sondages"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_enable_filter
 msgid "Enable Comparison"
 msgstr "Activer le comparatif"
@@ -4857,7 +4859,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal_journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
-msgstr "Si vide, utilise le journal de la pièce à renverser."
+msgstr "Si vide, utilise le journal de la pièce à extourner."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_include_base_amount
@@ -5058,7 +5060,7 @@ msgstr "Importer des fichiers .qif"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_csv
 msgid "Import in .csv format"
-msgstr ""
+msgstr "Importer au format .csv"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_bank_statement_import_ofx
@@ -5362,19 +5364,19 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:587
 #, python-format
 msgid ""
-"Invoice must be in draft,Pro-forma or open state in order to be cancelled."
+"Invoice must be in draft, Pro-forma or open state in order to be cancelled."
 msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:581
 #, python-format
-msgid "Invoice must be paid in order to set it to register payemnt."
+msgid "Invoice must be paid in order to set it to register payment."
 msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:573
 #, python-format
-msgid "Invoice must be validated in order to set it to register payemnt."
+msgid "Invoice must be validated in order to set it to register payment."
 msgstr ""
 
 #. module: account
@@ -7492,7 +7494,7 @@ msgstr "Plus Autre revenu"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
 msgid "Post"
-msgstr "Publier"
+msgstr "Comptabiliser"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8126,12 +8128,12 @@ msgstr "Reconnaissance des revenus"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_date
 msgid "Reversal date"
-msgstr "Date de renversement"
+msgstr "Date de l'extourne"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
 msgid "Reverse Entry"
-msgstr "Écriture de renversement"
+msgstr "Écriture d'extourne"
 
 #. module: account
 #: code:addons/account/wizard/account_move_reversal.py:20
@@ -8139,7 +8141,7 @@ msgstr "Écriture de renversement"
 #: model:ir.ui.view,arch_db:account.view_account_move_reversal
 #, python-format
 msgid "Reverse Moves"
-msgstr "Renverser les pièces"
+msgstr "Extourner les pièces"
 
 #. module: account
 #: selection:account.financial.report,sign:0
@@ -9099,6 +9101,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_line_amount_currency
+#: model:ir.model.fields,help:account.field_account_analytic_line_analytic_amount_currency
 msgid ""
 "The amount expressed in the related account currency if not equal to the "
 "company one."
@@ -9107,7 +9110,7 @@ msgstr ""
 "différente de celle de la société."
 
 #. module: account
-#: code:addons/account/models/account_move.py:426
+#: code:addons/account/models/account_move.py:436
 #, python-format
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
@@ -10020,7 +10023,7 @@ msgstr "Factures Impayées"
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
-msgstr "non-comptabilisée"
+msgstr "Non-comptabilisée"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
@@ -11067,7 +11070,7 @@ msgstr "report.account.report_trialbalance"
 #: code:addons/account/models/account_move.py:215
 #, python-format
 msgid "reversal of: "
-msgstr "renversement de :"
+msgstr "extourne de :"
 
 #. module: account
 #. openerp-web
