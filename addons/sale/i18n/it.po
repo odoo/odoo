@@ -72,6 +72,45 @@ msgid ""
 "% endif\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Gentile ${object.partner_id.name}\n"
+"% set access_action = object.get_access_action()\n"
+"% set doc_name = 'Preventivo' if object.state in ('draft', 'sent') else \"Conferma d'Ordine\"\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_name = is_online and object.template_id and 'Accept and pay %s online' % doc_name or 'View %s' % doc_name\n"
+"% set access_url = is_online and access_action['url'] or object.get_signup_url()\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Vi inviamo un/una  ${doc_name} <strong>${object.name}</strong>\n"
+"% if object.origin:\n"
+"(with reference: ${object.origin} )\n"
+"% endif\n"
+"per un valore di <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"    <br/><br/>\n"
+"% if is_online:\n"
+"    <center>\n"
+"        <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
+"        <br/><br/>\n"
+"        <span style=\"color:#888888\">(or view attached PDF)</span>\n"
+"    </center>\n"
+"    <br/>\n"
+"% endif\n"
+"\n"
+"<p>Potete rispondere a questo indirizzo per eventuali richieste di chiarimento.</p>\n"
+"<p>Vi ringraziamo,</p>\n"
+"\n"
+"<p style=\"color:#eeeeee;\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
@@ -110,6 +149,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}${object.state == 'draft' and "
 "'_draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -144,6 +185,8 @@ msgid ""
 "<b>Invite salespeople or managers</b> via email.<br/><i>Enter one email per "
 "line.</i>"
 msgstr ""
+"<b>Invita commerciali o manager</b> via email.<br/><i>inserisci una mail per"
+" riga.</i>"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_data_notification_email_sale_order
@@ -227,13 +270,15 @@ msgid ""
 "                to buy an extra pack of hours, because he used all his support\n"
 "                hours.</i>"
 msgstr ""
+"<i>Esempio: offerte di servizi prepagati per cui il cliente deve\n"
+"                comprare un nuovo pacchetto ore, perché ha esaurito le ore disponibili.</i>"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:64
 #, python-format
 msgid "<p><b>Confirm the order</b> if the customer purchases.</p>"
-msgstr ""
+msgstr "<p><b>Conferma l'ordine</b> se il cliente acquista.</p>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -269,7 +314,7 @@ msgstr "<strong>Indirizzo di spedizione:</strong>"
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Subtotal: </strong>"
-msgstr ""
+msgstr "<strong>Subtotale: </strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -295,6 +340,7 @@ msgstr "Singolo prezzo di vendita per prodotto"
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
 msgstr ""
+"Un warning può essere associato ad un prodotto o ad un cliente (Vendite)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id

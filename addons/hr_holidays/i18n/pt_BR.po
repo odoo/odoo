@@ -52,7 +52,7 @@ msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 #: code:addons/hr_holidays/models/hr_holidays.py:331
 #, python-format
 msgid "%s on %s : %.2f day(s)"
-msgstr ""
+msgstr "%s em %s : %.2f dia(s)"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -109,6 +109,7 @@ msgid ""
 "Absent Employee(s), Whose leaves request are either confirmed or validated "
 "on today"
 msgstr ""
+"Empregado(s) Ausente(s), cujo pedido de folhas é confirmado ou validado hoje"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
@@ -129,7 +130,7 @@ msgstr "Ativo"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Active Leaves and Allocations"
-msgstr ""
+msgstr "Folhas ativas e atribuições"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -201,7 +202,7 @@ msgstr "Atribuição a Aprovar"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Allocations"
-msgstr ""
+msgstr "Alocações"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_limit
@@ -256,6 +257,11 @@ msgid ""
 "                - 38 Hours/Week, 5 Days/Week: 1 Day = 7.6 Hours\n"
 "                - 45 Hours/Week, 5 Days/Week: 1 Day = 9.0 Hours"
 msgstr ""
+"Média de horas de trabalho por dia. É usado em um pedido de licença de "
+"empregado para calcular o número de dias consumidos com base no calendário "
+"de recursos. Pode ser usado para lidar com vários tipos de contratos, por "
+"exemplo: - 38 Horas/Semana, 5 Dias/Semana: 1 Dia = 7,6 Horas-- 45 "
+"Horas/Semana, 5 Dias/Semana: 1 Dia = 9,0 Horas"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -335,19 +341,19 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_allocation_holidays
 msgid "Click here to create a new leave allocation request."
-msgstr ""
+msgstr "Clique aqui para criar um novo pedido de alocação de férias."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_department_holidays_allocation_approve
 msgid "Click here to create a new leave allocation."
-msgstr ""
+msgstr "Clique aqui para criar um novo pedido de alocação."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_company_allocation
 #: model:ir.actions.act_window,help:hr_holidays.open_department_holidays_approve
 #: model:ir.actions.act_window,help:hr_holidays.open_employee_leaves
 msgid "Click here to create a new leave request."
-msgstr ""
+msgstr "Clique para criar uma nova solicitação de licença."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -425,7 +431,7 @@ msgstr "Tipo de Folga Atual"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Current Year"
-msgstr ""
+msgstr "Ano Atual"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
@@ -557,7 +563,7 @@ msgstr "Relatório do Resumo de Folgas do RH por funcionário"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_uom_id
 msgid "Hours per Day"
-msgstr ""
+msgstr "Horas por Dia"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_department
@@ -827,17 +833,17 @@ msgstr "Licenças/Atribuições Reprovadas"
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_confirmed
 msgid "Leaves/Allocations Confirmed"
-msgstr ""
+msgstr "Folhas/alocações confirmadas"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_first_validated
 msgid "Leaves/Allocations First Approval"
-msgstr ""
+msgstr "Licenças/Atribuições: primeira aprovação"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2016"
-msgstr ""
+msgstr "Folgas Restantes 2016"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -1195,6 +1201,14 @@ msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \n"
 " You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in Leaves Application to manage the leave days of the employees if the configuration does not allow to use this field."
 msgstr ""
+"O recurso por trás do campo 'Restante Legal Folhas' só pode ser usado quando"
+" há apenas um tipo de licença com a opção 'Permitir substituir limite' "
+"desmarcada. (%s Encontrado). Caso contrário, a atualização é ambígua, pois "
+"não podemos decidir qual tipo de licença a atualização deve ser feita. Você "
+"pode preferir usar os menus clássicos 'Solicitações de Saída' e "
+"'Solicitações de alocação' localizados no Aplicação de folhas para gerenciar"
+" os dias de férias dos funcionários se a configuração não permitir usar esse"
+" campo."
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -1246,6 +1260,8 @@ msgid ""
 "This color will be used in the leaves summary located in Reporting > Leaves "
 "by Department."
 msgstr ""
+"Esta cor será usada no resumo da folga localizada em Relatórios\\Folgas por "
+"Departamento."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_leaves_taken
