@@ -388,7 +388,7 @@ class AccountMoveLine(models.Model):
     statement_id = fields.Many2one('account.bank.statement', string='Statement',
         help="The bank statement used for bank reconciliation", index=True, copy=False)
     reconciled = fields.Boolean(compute='_amount_residual', store=True)
-    full_reconcile_id = fields.Many2one('account.full.reconcile', string="Matching Number")
+    full_reconcile_id = fields.Many2one('account.full.reconcile', string="Matching Number", copy=False)
     matched_debit_ids = fields.One2many('account.partial.reconcile', 'credit_move_id', String='Matched Debits',
         help='Debit journal items that are matched with this journal item.')
     matched_credit_ids = fields.One2many('account.partial.reconcile', 'debit_move_id', String='Matched Credits',
@@ -1358,7 +1358,7 @@ class AccountPartialReconcile(models.Model):
     company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True,
         help='Utility field to express amount currency')
     company_id = fields.Many2one('res.company', related='debit_move_id.company_id', store=True, string='Currency')
-    full_reconcile_id = fields.Many2one('account.full.reconcile', string="Full Reconcile")
+    full_reconcile_id = fields.Many2one('account.full.reconcile', string="Full Reconcile", copy=False)
 
     def create_exchange_rate_entry(self, aml_to_fix, amount_diff, diff_in_currency, currency, move_date):
         """ Automatically create a journal entry to book the exchange rate difference.
