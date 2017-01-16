@@ -111,7 +111,7 @@ class account_journal(models.Model):
             data.append({'label':label,'value':0.0, 'type': 'past' if i<0 else 'future'})
 
         # Build SQL query to find amount aggregated by week
-        select_sql_clause = """SELECT sum(residual_company_signed) as total, min(date) as aggr_date from account_invoice where journal_id = %(journal_id)s and state = 'open'"""
+        select_sql_clause = self._get_bar_graph_select_query()
         query = ''
         start_date = (first_day_of_week + timedelta(days=-7))
         for i in range(0,6):
@@ -124,13 +124,28 @@ class account_journal(models.Model):
                 query += " UNION ALL ("+select_sql_clause+" and date >= '"+start_date.strftime(DF)+"' and date < '"+next_date.strftime(DF)+"')"
                 start_date = next_date
 
-        self.env.cr.execute(query, {'journal_id':self.id})
+        self.env.cr.execute(query)
         query_results = self.env.cr.dictfetchall()
         for index in range(0, len(query_results)):
             if query_results[index].get('aggr_date') != None:
                 data[index]['value'] = query_results[index].get('total')
 
         return [{'values': data}]
+        
+        
+    def _get_bar_graph_select_query(self):
+        """
+        Returns the base SELECT SQL query used to gather the bar graph's data.
+        Modifying the data displayed in the graph can be done by overriding
+        this method (but the columns of the result must of course remain the same).
+        Beware that this must be a 'base' query, in the sense the calling function
+        will append UNION expressions to complete it.
+        """
+        
+        return """SELECT sum(residual_company_signed) as total, min(date) as aggr_date 
+               FROM account_invoice 
+               WHERE journal_id = %s and state = 'open'""" % (self.id)
+
 
     @api.multi
     def get_journal_dashboard_datas(self):
@@ -162,31 +177,23 @@ class account_journal(models.Model):
         #TODO need to check if all invoices are in the same currency than the journal!!!!
         elif self.type in ['sale', 'purchase']:
             title = _('Bills to pay') if self.type == 'purchase' else _('Invoices owed to you')
-            # optimization to find total and sum of invoice that are in draft, open state
-            query = """SELECT state, amount_total, currency_id AS currency FROM account_invoice WHERE journal_id = %s AND state NOT IN ('paid', 'cancel');"""
-            self.env.cr.execute(query, (self.id,))
-            query_results = self.env.cr.dictfetchall()
+            
+            query = self._get_open_bills_to_pay_query()
+            self.env.cr.execute(query)
+            query_results_to_pay = self.env.cr.dictfetchall()
+            
+            query = self._get_drafts_and_proformas_bills_query()
+            self.env.cr.execute(query)
+            query_results_drafts_prof = self.env.cr.dictfetchall()           
+            
             today = datetime.today()
             query = """SELECT amount_total, currency_id AS currency FROM account_invoice WHERE journal_id = %s AND date < %s AND state = 'open';"""
             self.env.cr.execute(query, (self.id, today))
             late_query_results = self.env.cr.dictfetchall()
-            sum_draft = 0.0
-            number_draft = 0
-            number_waiting = 0
-            for result in query_results:
-                cur = self.env['res.currency'].browse(result.get('currency'))
-                if result.get('state') in ['draft', 'proforma', 'proforma2']:
-                    number_draft += 1
-                    sum_draft += cur.compute(result.get('amount_total'), currency)
-                elif result.get('state') == 'open':
-                    number_waiting += 1
-                    sum_waiting += cur.compute(result.get('amount_total'), currency)
-            sum_late = 0.0
-            number_late = 0
-            for result in late_query_results:
-                cur = self.env['res.currency'].browse(result.get('currency'))
-                number_late += 1
-                sum_late += cur.compute(result.get('amount_total'), currency)
+            
+            (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay,currency)
+            (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts_prof,currency)
+            (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results,currency)
 
         return {
             'number_to_reconcile': number_to_reconcile,
@@ -203,6 +210,49 @@ class account_journal(models.Model):
             'bank_statements_source': self.bank_statements_source,
             'title': title, 
         }
+    
+    
+    def _get_open_bills_to_pay_query(self):
+        """
+        Returns the SQL query used to gather the open bills data.
+        
+        Modifying the way these data are gathered can be done by overriding
+        this method (but the columns of the result must of course remain the same).
+        """
+        
+        return """SELECT state, amount_total, currency_id AS currency 
+                  FROM account_invoice 
+                  WHERE journal_id = %s AND state = 'open';""" % (self.id)
+        
+        
+    def _get_drafts_and_proformas_bills_query(self):
+        """
+        Returns the SQL query used to gather the bills in draft and proforma 
+        states data.
+        
+        Modifying the way these data are gathered can be done by overriding
+        this method (but the columns of the result must of course remain the same).
+        """
+        
+        return """SELECT state, amount_total, currency_id AS currency 
+                  FROM account_invoice 
+                  WHERE journal_id = %s AND state IN ('draft', 'proforma', 'proforma2');""" % (self.id)
+                 
+                 
+    def _count_results_and_sum_amounts(self,results_dict,target_currency):
+        """
+        Returns a tupe of the form (count,sum), where count is the total number
+        of invoices in result_dict, and sum, the sum of their balances 
+        (amount_total field), expressed in target_currency.
+        """
+        rslt_count = 0
+        rslt_sum = 0.0
+        for result in results_dict:
+            cur = self.env['res.currency'].browse(result.get('currency'))
+            rslt_count += 1
+            rslt_sum += cur.compute(result.get('amount_total'), target_currency)
+        return (rslt_count, rslt_sum)
+
 
     @api.multi
     def action_create_new(self):
