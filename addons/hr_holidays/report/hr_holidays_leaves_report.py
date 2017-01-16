@@ -27,7 +27,7 @@ class HrHolidaysRemainingLeavesUser(models.Model):
                     hhs.name as leave_type
                 FROM
                     hr_holidays as hrs, hr_employee as hre,
-                    resource_resource as rr,hr_holidays_status as hhs
+                    work_resource as rr,hr_holidays_status as hhs
                 WHERE
                     hrs.employee_id = hre.id and
                     hre.resource_id =  rr.id and

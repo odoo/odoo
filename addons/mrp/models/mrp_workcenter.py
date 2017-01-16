@@ -10,7 +10,7 @@ from odoo import api, exceptions, fields, models, _
 class MrpWorkcenter(models.Model):
     _name = 'mrp.workcenter'
     _description = 'Work Center'
-    _inherits = {'resource.resource': 'resource_id'}
+    _inherits = {'work.resource': 'resource_id'}
     _order = "sequence, id"
 
     note = fields.Text(
@@ -25,7 +25,7 @@ class MrpWorkcenter(models.Model):
     color = fields.Integer('Color')
     time_start = fields.Float('Time before prod.', help="Time in minutes for the setup.")
     time_stop = fields.Float('Time after prod.', help="Time in minutes for the cleaning.")
-    resource_id = fields.Many2one('resource.resource', 'Resource', ondelete='cascade', required=True)
+    resource_id = fields.Many2one('work.resource', 'Resource', ondelete='cascade', required=True)
     routing_line_ids = fields.One2many('mrp.routing.workcenter', 'workcenter_id', "Routing Lines")
 
     order_ids = fields.One2many('mrp.workorder', 'workcenter_id', "Orders")
@@ -206,7 +206,7 @@ class MrpWorkcenterProductivity(models.Model):
                 d2 = fields.Datetime.from_string(blocktime.date_end)
                 diff = d2 - d1
                 if (blocktime.loss_type not in ('productive', 'performance')) and blocktime.workcenter_id.calendar_id:
-                    r = blocktime.workcenter_id.calendar_id.get_working_hours(d1, d2, resource_id=blocktime.workcenter_id.resource_id.id)
+                    r = blocktime.workcenter_id.calendar_id.get_work_hours_count(d1, d2, resource_id=blocktime.workcenter_id.resource_id.id)
                     blocktime.duration = round(r * 60, 2)
                 else:
                     blocktime.duration = round(diff.total_seconds() / 60.0, 2)

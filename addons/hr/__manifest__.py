@@ -30,7 +30,7 @@ You can manage:
     'depends': [
         'base_setup',
         'mail',
-        'resource',
+        'work_resource',
         'web_kanban',
     ],
     'data': [

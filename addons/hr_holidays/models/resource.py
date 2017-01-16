@@ -6,7 +6,7 @@ from odoo import api, fields, models
 
 class Calendar(models.Model):
 
-    _inherit = "resource.calendar"
+    _inherit = "work.calendar"
 
     uom_id = fields.Many2one("product.uom", string="Hours per Day", required=True,
         default=lambda self: self.env.ref('product.product_uom_hour'),
@@ -19,7 +19,7 @@ class Calendar(models.Model):
 
 class CalendarLeaves(models.Model):
 
-    _inherit = "resource.calendar.leaves"
+    _inherit = "work.calendar.leave"
     _description = "Leave Detail"
 
     holiday_id = fields.Many2one("hr.holidays", string='Leave Request')

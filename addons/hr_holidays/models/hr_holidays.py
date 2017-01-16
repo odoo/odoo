@@ -280,13 +280,7 @@ class Holidays(models.Model):
 
         if employee_id:
             employee = self.env['hr.employee'].browse(employee_id)
-            resource = employee.resource_id
-            if resource and resource.calendar_id:
-                hours = resource.calendar_id.get_working_hours(from_dt, to_dt, resource_id=resource.id, compute_leaves=True)
-                uom_hour = resource.calendar_id.uom_id
-                uom_day = self.env.ref('product.product_uom_day')
-                if uom_hour and uom_day:
-                    return uom_hour._compute_quantity(hours, uom_day)
+            return employee.get_work_days_count(from_dt, to_dt)
 
         time_delta = to_dt - from_dt
         return math.ceil(time_delta.days + float(time_delta.seconds) / 86400)
@@ -382,7 +376,7 @@ class Holidays(models.Model):
     def _create_resource_leave(self):
         """ This method will create entry in resource calendar leave object at the time of holidays validated """
         for leave in self:
-            self.env['resource.calendar.leaves'].create({
+            self.env['work.calendar.leave'].create({
                 'name': leave.name,
                 'date_from': leave.date_from,
                 'holiday_id': leave.id,
@@ -395,7 +389,7 @@ class Holidays(models.Model):
     @api.multi
     def _remove_resource_leave(self):
         """ This method will create entry in resource calendar leave object at the time of holidays cancel/removed """
-        return self.env['resource.calendar.leaves'].search([('holiday_id', 'in', self.ids)]).unlink()
+        return self.env['work.calendar.leave'].search([('holiday_id', 'in', self.ids)]).unlink()
 
     @api.multi
     def action_draft(self):

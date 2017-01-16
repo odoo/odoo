@@ -61,7 +61,7 @@ class Contract(models.Model):
     date_end = fields.Date('End Date')
     trial_date_start = fields.Date('Trial Start Date')
     trial_date_end = fields.Date('Trial End Date')
-    working_hours = fields.Many2one('resource.calendar', string='Working Schedule')
+    working_hours = fields.Many2one('work.calendar', string='Working Schedule')
     wage = fields.Float('Wage', digits=(16, 2), required=True, help="Basic Salary of the employee")
     advantages = fields.Text('Advantages')
     notes = fields.Text('Notes')

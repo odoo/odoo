@@ -30,7 +30,7 @@ class Job(models.Model):
 
     _name = "hr.job"
     _description = "Job Position"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'resource.resource.mixin']
 
     name = fields.Char(string='Job Title', required=True, index=True, translate=True)
     expected_employees = fields.Integer(compute='_compute_employees', string='Total Forecasted Employees', store=True,
@@ -97,7 +97,7 @@ class Employee(models.Model):
     _name = "hr.employee"
     _description = "Employee"
     _order = 'name_related'
-    _inherits = {'resource.resource': "resource_id"}
+    _inherits = {'work.resource': "resource_id"}
     _inherit = ['mail.thread']
 
     _mail_post_access = 'read'
@@ -138,7 +138,7 @@ class Employee(models.Model):
     parent_id = fields.Many2one('hr.employee', string='Manager')
     category_ids = fields.Many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', string='Tags')
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Subordinates')
-    resource_id = fields.Many2one('resource.resource', string='Resource',
+    resource_id = fields.Many2one('work.resource', string='Resource',
         ondelete='cascade', required=True, auto_join=True)
     coach_id = fields.Many2one('hr.employee', string='Coach')
     job_id = fields.Many2one('hr.job', string='Job Title')

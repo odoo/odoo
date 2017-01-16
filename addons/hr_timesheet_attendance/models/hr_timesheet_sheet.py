@@ -136,7 +136,7 @@ class hr_timesheet_sheet_sheet_day(models.Model):
                                 account_analytic_line l
                                 LEFT JOIN hr_timesheet_sheet_sheet s ON s.id = l.sheet_id
                                 JOIN hr_employee e ON s.employee_id = e.id
-                                JOIN resource_resource r ON e.resource_id = r.id
+                                JOIN work_resource r ON e.resource_id = r.id
                                 LEFT JOIN res_users u ON r.user_id = u.id
                                 LEFT JOIN res_partner p ON u.partner_id = p.id
                             group by l.date::date, s.id, timezone
@@ -159,7 +159,7 @@ class hr_timesheet_sheet_sheet_day(models.Model):
                                 ON s.id = a.sheet_id
                                 JOIN hr_employee e
                                 ON a.employee_id = e.id
-                                JOIN resource_resource r
+                                JOIN work_resource r
                                 ON e.resource_id = r.id
                                 LEFT JOIN res_users u
                                 ON r.user_id = u.id

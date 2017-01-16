@@ -12,9 +12,9 @@ access_partner_task user,base.res.partner user,base.model_res_partner,project.gr
 access_task_on_partner,project.task on partners,model_project_task,base.group_user,1,0,0,0
 access_project_on_partner,project.project on partners,model_project_project,base.group_user,1,0,0,0
 access_account_analytic_line_project,account.analytic.line project,analytic.model_account_analytic_line,project.group_project_manager,1,1,1,1
-access_resource_calendar,project.resource_calendar user,resource.model_resource_calendar,project.group_project_user,1,0,0,0
-access_resource_calendar_attendance,project.resource_calendar_attendance user,resource.model_resource_calendar_attendance,project.group_project_user,1,0,0,0
-access_resource_calendar_leaves_user,resource.calendar.leaves user,resource.model_resource_calendar_leaves,project.group_project_user,1,1,1,1
+access_work_calendar,project.work_calendar user,work_resource.model_work_calendar,project.group_project_user,1,0,0,0
+access_work_calendar_attendance,project.work_calendar_attendance user,work_resource.model_work_calendar_attendance,project.group_project_user,1,0,0,0
+access_work_calendar_leave_user,work.calendar.leave user,work_resource.model_work_calendar_leave,project.group_project_user,1,1,1,1
 access_project_tags_all,project.project_tags_all,model_project_tags,,1,0,0,0
 access_project_tags_manager,project.project_tags_manager,model_project_tags,project.group_project_manager,1,1,1,1
 access_mail_alias,mail.alias,mail.model_mail_alias,project.group_project_manager,1,1,1,1

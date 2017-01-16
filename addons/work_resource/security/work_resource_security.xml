@@ -4,7 +4,7 @@
 
     <record model="ir.rule" id="resource_own_leaves">
         <field name="name">Resource: see own leaves</field>
-        <field name="model_id" ref="model_resource_calendar_leaves"/>
+        <field name="model_id" ref="model_work_calendar_leave"/>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         <field name="domain_force">['|',
                                         ('resource_id', '=', False),

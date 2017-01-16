@@ -25,7 +25,7 @@ class TestsStockCalendar(common.TransactionCase):
         })
 
         # Create a calendar
-        self.resource_calendar_id = self.env['resource.calendar'].create({
+        self.resource_calendar_id = self.env['work.calendar'].create({
             'name': 'Calendar',
             'attendance_ids': [(0, 0, {
                 'name': 'Thursday',
