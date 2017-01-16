@@ -27,8 +27,11 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     def _default_uom(self):
-        uom_categ_id = self.env.ref('product.product_uom_categ_kgm').id
-        return self.env['product.uom'].search([('category_id', '=', uom_categ_id), ('factor', '=', 1)], limit=1)
+        weight_uom_id = self.env.ref('product.product_uom_kgm', raise_if_not_found=False)
+        if not weight_uom_id:
+            uom_categ_id = self.env.ref('product.product_uom_categ_kgm').id
+            weight_uom_id = self.env['product.uom'].search([('category_id', '=', uom_categ_id), ('factor', '=', 1)], limit=1)
+        return weight_uom_id
 
     @api.one
     @api.depends('pack_operation_ids')
