@@ -738,7 +738,7 @@
             <field name="name">Leaves Analysis</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
-            <field name="view_mode">pivot,graph</field>
+            <field name="view_mode">graph,pivot</field>
             <field name="domain">[('holiday_type','=','employee')]</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
@@ -747,7 +747,7 @@
             <field name="name">Leaves Analysis</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
-            <field name="view_mode">pivot,graph</field>
+            <field name="view_mode">graph,pivot</field>
             <field name="domain">[('holiday_type','=','employee')]</field>
             <field name="context">{
                 'search_default_department_id': [active_id],

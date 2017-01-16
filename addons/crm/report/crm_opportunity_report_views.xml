@@ -158,8 +158,8 @@
              <field name="context">{'search_default_opportunity': True, 'search_default_current': True, 'active_test': True, 'search_default_my': True, 'search_default_archived': True}</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
-                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')}),
-                          (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')})]"/>
+                          (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')}),
+                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')})]"/>
              <field name="help">Pipeline Analysis gives you an instant access to
 your opportunities with information such as the expected revenue, planned cost,
 missed deadlines or the number of interactions per opportunity. This report is
@@ -194,8 +194,8 @@ with the the sales channel.</field>
             <field name="context">{'search_default_current': True, 'active_test': True}</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
-                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot_lead')}),
-                          (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph_lead')})]"/>
+                          (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph_lead')}),
+                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot_lead')})]"/>
             <field name="help">This report analyses the source of your leads
 (including those converted into opportunities).</field>
         </record>

@@ -59,7 +59,7 @@
            <field name="name">Leads Analysis</field>
            <field name="res_model">crm.opportunity.report</field>
            <field name="context">{"search_default_month":1}</field>
-           <field name="view_mode">pivot,graph</field>
+           <field name="view_mode">graph,pivot</field>
            <field name="view_id" ref="crm.crm_opportunity_report_view_pivot_lead"/>
            <field name="domain">[('type', '=', 'lead'),('team_id', '=', active_id)]</field>
            <field name="context">{'active_test': True}</field>
@@ -69,7 +69,7 @@
        <record id="action_report_crm_opportunity_salesteam" model="ir.actions.act_window">
             <field name="name">Pipeline Analysis</field>
             <field name="res_model">crm.opportunity.report</field>
-            <field name="view_mode">pivot,graph</field>
+            <field name="view_mode">graph,pivot</field>
             <field name="view_id" ref="crm.crm_opportunity_report_view_pivot"/>
             <field name="domain">[('type', '=', 'opportunity'), ('team_id', '=', active_id)]</field>
             <field name="context">{'active_test': True}</field>

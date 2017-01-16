@@ -188,7 +188,7 @@
         <record id="hr_expense_actions_all" model="ir.actions.act_window">
             <field name="name">All Expenses</field>
             <field name="res_model">hr.expense</field>
-            <field name="view_mode">pivot,graph,tree,kanban,form</field>
+            <field name="view_mode">graph,pivot,tree,kanban,form</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -376,7 +376,7 @@
             <field name="name">Expenses Analysis</field>
             <field name="res_model">hr.expense</field>
             <field name="view_type">form</field>
-            <field name="view_mode">pivot,graph</field>
+            <field name="view_mode">graph,pivot</field>
             <field name="context">{
                 'search_default_uncancelled': 1,
                 }
@@ -640,7 +640,7 @@
         <record id="action_hr_expense_sheet_all_all" model="ir.actions.act_window">
             <field name="name">All Expense Reports</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_mode">pivot,graph,tree,kanban,form</field>
+            <field name="view_mode">graph,pivot,tree,kanban,form</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
             <field name="domain">[]</field>
             <field name="context">{}</field>
@@ -722,7 +722,7 @@
             <field name="name">Expense Reports Analysis</field>
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_type">form</field>
-            <field name="view_mode">pivot,graph</field>
+            <field name="view_mode">graph,pivot</field>
             <field name="context">{
                 'search_default_department_id': [active_id],
                 'default_department_id': active_id}

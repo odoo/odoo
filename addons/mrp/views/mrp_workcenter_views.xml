@@ -95,7 +95,7 @@
             <field name="res_model">mrp.workorder</field>
             <field name="domain">[('workcenter_id','=', active_id),('state','=','done')]</field>
             <field name="view_type">form</field>
-            <field name="view_mode">pivot,graph,tree,form,gantt</field>
+            <field name="view_mode">graph,pivot,tree,form,gantt</field>
         </record>
 
         <record model="ir.actions.act_window" id="mrp_workorder_report">
