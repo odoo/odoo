@@ -36,7 +36,7 @@ class EventTicket(models.Model):
     name = fields.Char(string='Name', required=True, translate=True)
     event_id = fields.Many2one('event.event', string="Event", required=True, ondelete='cascade')
     product_id = fields.Many2one('product.product', string='Product',
-        required=True, domain=["|", ("event_type_id", "!=", False), ("event_ok", "=", True)],
+        required=True, domain=[("event_ok", "=", True)],
         default=_default_product_id)
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', string='Registrations')
     price = fields.Float(string='Price', digits=dp.get_precision('Product Price'))
