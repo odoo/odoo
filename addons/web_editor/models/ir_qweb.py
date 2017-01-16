@@ -123,7 +123,7 @@ class ManyToOne(models.AbstractModel):
     def attributes(self, record, field_name, options, values):
         attrs = super(ManyToOne, self).attributes(record, field_name, options, values)
         many2one = getattr(record, field_name)
-        if many2one:
+        if many2one and options.get('inherit_branding'):
             attrs['data-oe-many2one-id'] = many2one.id
             attrs['data-oe-many2one-model'] = many2one._name
         return attrs
@@ -151,7 +151,8 @@ class Contact(models.AbstractModel):
     @api.model
     def attributes(self, record, field_name, options, values):
         attrs = super(Contact, self).attributes(record, field_name, options, values)
-        attrs['data-oe-contact-options'] = json.dumps(options)
+        if options.get('inherit_branding'):
+            attrs['data-oe-contact-options'] = json.dumps(options)
         return attrs
 
     # helper to call the rendering of contact field
