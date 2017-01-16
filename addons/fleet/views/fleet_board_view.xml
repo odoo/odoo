@@ -4,7 +4,7 @@
       <field name="name">Costs Analysis</field>
       <field name="res_model">fleet.vehicle.cost</field>
       <field name="view_type">form</field>
-      <field name="view_mode">pivot,graph</field>
+      <field name="view_mode">graph,pivot</field>
       <field name="view_id"></field>  <!-- force empty -->
       <field name="context">{"search_default_parent_false" : True,}</field>
       <field name="help" type="html">
@@ -25,7 +25,7 @@
         <field name="act_window_id" ref="fleet_costs_reporting_action"/>
     </record>
     <record id="fleet_reporting_graph_action" model="ir.actions.act_window.view">
-        <field name="sequence" eval="2"/>
+        <field name="sequence" eval="1"/>
         <field name="view_mode">graph</field>
         <field name="view_id" ref="fleet_vehicle_cost_view_graph"/>
         <field name="act_window_id" ref="fleet_costs_reporting_action"/>
@@ -35,7 +35,7 @@
       <field name="name">Indicative Costs Analysis</field>
       <field name="res_model">fleet.vehicle.cost</field>
       <field name="view_type">form</field>
-      <field name="view_mode">pivot,graph</field>
+      <field name="view_mode">graph,pivot</field>
      <field name="view_id"></field>  <!-- force empty -->
       <field name="context">{"search_default_parent_true" : True,}</field>
       <field name="help" type="html">
@@ -55,9 +55,8 @@
         <field name="view_id" ref="fleet_vehicle_cost_indicative_view_pivot"/>
         <field name="act_window_id" ref="fleet_costs_reporting_non_effective_action"/>
     </record>
-    
     <record id="view_fleet_non_effective_graph_action" model="ir.actions.act_window.view">
-        <field name="sequence" eval="2"/>
+        <field name="sequence" eval="1"/>
         <field name="view_mode">graph</field>
         <field name="view_id" ref="fleet_vehicle_cost_indicative_view_graph"/>
         <field name="act_window_id" ref="fleet_costs_reporting_non_effective_action"/>
