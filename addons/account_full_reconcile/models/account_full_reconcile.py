@@ -8,7 +8,7 @@ from openerp import api, fields, models
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
-    full_reconcile_id = fields.Many2one('account.full.reconcile', string="Matching Number")
+    full_reconcile_id = fields.Many2one('account.full.reconcile', string="Matching Number", copy=False)
 
     @api.model
     def compute_full_after_batch_reconcile(self):
@@ -48,7 +48,7 @@ class AccountMoveLine(models.Model):
 class AccountPartialReconcile(models.Model):
     _inherit = "account.partial.reconcile"
 
-    full_reconcile_id = fields.Many2one('account.full.reconcile', string="Full Reconcile")
+    full_reconcile_id = fields.Many2one('account.full.reconcile', string="Full Reconcile", copy=False)
 
     @api.model
     def create(self, vals):
