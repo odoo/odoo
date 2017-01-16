@@ -261,7 +261,7 @@ var FieldTextHtml = widget.extend({
             attr.translatable = 1;
         }
         if (session.debug) {
-            attr.debug = 1;
+            attr.debug = session.debug;
         }
 
         attr.lang = attr.enable_editor ? 'en_US' : this.session.user_context.lang;
