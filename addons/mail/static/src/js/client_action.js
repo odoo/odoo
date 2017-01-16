@@ -123,8 +123,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             this.$(".o_mail_annoying_notification_bar").slideUp();
             var def = window.Notification.requestPermission();
             if (def) {
-                def.then(function () {
-                    utils.send_notification('Permission granted', 'Odoo has now the permission to send you native notifications on this device.');
+                def.then(function (value) {
+                    if (value === 'denied') {
+                        utils.send_notification('Permission denied', 'Odoo will not have the permission to send native notifications on this device.');
+                    } else {
+                        utils.send_notification('Permission granted', 'Odoo has now the permission to send you native notifications on this device.');
+                    }
                 });
             }
         },
