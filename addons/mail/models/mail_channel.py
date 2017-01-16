@@ -32,6 +32,7 @@ class Channel(models.Model):
     on documents. """
     _description = 'Discussion channel'
     _name = 'mail.channel'
+    _is_business = True
     _mail_flat_thread = False
     _mail_post_access = 'read'
     _inherit = ['mail.thread']

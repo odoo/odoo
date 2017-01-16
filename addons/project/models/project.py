@@ -49,6 +49,7 @@ class ProjectTaskType(models.Model):
 class Project(models.Model):
     _name = "project.project"
     _description = "Project"
+    _is_business = True
     _inherit = ['mail.alias.mixin', 'mail.thread']
     _inherits = {'account.analytic.account': "analytic_account_id"}
     _order = "sequence, name, id"
@@ -285,6 +286,7 @@ class Project(models.Model):
 class Task(models.Model):
     _name = "project.task"
     _description = "Task"
+    _is_business = True
     _date_name = "date_start"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _mail_post_access = 'read'

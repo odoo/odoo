@@ -17,6 +17,7 @@ class CrmTeam(models.Model):
     _name = "crm.team"
     _inherit = ['mail.thread']
     _description = "Sales Channel"
+    _is_business = True
     _order = "name"
 
     @api.model
