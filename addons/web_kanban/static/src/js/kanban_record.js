@@ -78,7 +78,22 @@ var KanbanRecord = Widget.extend({
             var widget = new Widget(self, field, $field);
             widget.replace($field);
             self.sub_widgets.push(widget);
+            self._set_field_display(widget, field);
         });
+    },
+
+    _set_field_display: function(widget, field) {
+        // attribute display
+        if (field.__attrs.display === 'right') {
+            widget.$el.addClass('pull-right');
+        } else if (field.__attrs.display === 'full') {
+            widget.$el.addClass('o_text_block');
+        }
+
+        // attribute bold
+        if (field.__attrs.bold) {
+            widget.$el.addClass('o_text_bold');
+        }
     },
 
     start: function() {
