@@ -144,9 +144,6 @@ class WebsiteMail(http.Controller):
         field_domain = request.env[res_model]._fields['website_message_ids'].domain
         domain += field_domain(request.env[res_model]) if callable(field_domain) else field_domain
         domain += [('res_id', '=', res_id)]
-        # None published can see only the published messages
-        if not request.env.user.has_group('website.group_website_publisher'):
-            domain += [('website_published', '=', True)]
         # Check access
         Message = request.env['mail.message']
         if kw.get('token'):
