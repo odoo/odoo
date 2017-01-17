@@ -797,31 +797,32 @@ var CalendarView = View.extend({
                         self.now_filter_ids = [];
 
                         var color_field = self.fields[self.color_field];
-                        _.each(events, function (e) {
-                            var key,val = null;
-                            if (color_field.type == "selection") {
-                                key = e[self.color_field];
-                                val = _.find(color_field.selection, function(name){ return name[0] === key;});
-                            } else {
-                                key = e[self.color_field][0];
-                                val = e[self.color_field];
-                            }
-                            if (!self.all_filters[key]) {
-                                filter_item = {
-                                    value: key,
-                                    label: val[1],
-                                    color: self.get_color(key),
-                                    avatar_model: (utils.toBoolElse(self.avatar_filter, true) ? self.avatar_filter : false ),
-                                    is_checked: true
-                                };
-                                self.all_filters[key] = filter_item;
-                            }
-                            if (! _.contains(self.now_filter_ids, key)) {
-                                self.now_filter_ids.push(key);
-                            }
-                        });
-
-                        if (self.sidebar) {
+                        if (color_field) {
+                            _.each(events, function (e) {
+                                var key,val = null;
+                                if (color_field.type == "selection") {
+                                    key = e[self.color_field];
+                                    val = _.find(color_field.selection, function(name){ return name[0] === key;});
+                                } else {
+                                    key = e[self.color_field][0];
+                                    val = e[self.color_field];
+                                }
+                                if (!self.all_filters[key]) {
+                                    filter_item = {
+                                        value: key,
+                                        label: val[1],
+                                        color: self.get_color(key),
+                                        avatar_model: (utils.toBoolElse(self.avatar_filter, true) ? self.avatar_filter : false ),
+                                        is_checked: true
+                                    };
+                                    self.all_filters[key] = filter_item;
+                                }
+                                if (! _.contains(self.now_filter_ids, key)) {
+                                    self.now_filter_ids.push(key);
+                                }
+                            });
+                        }
+                        if (self.sidebar && color_field) {
                             self.sidebar.filter.render();
 
                             events = $.map(events, function (e) {
