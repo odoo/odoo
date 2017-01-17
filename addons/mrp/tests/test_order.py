@@ -345,3 +345,85 @@ class TestMrpOrder(TestMrpCommon):
                                            'product_uom_id': self.product_6.uom_id.id,})
         self.assertEqual(production.routing_id.id, False, 'The routing field should be empty on the mo')
         self.assertEqual(production.move_raw_ids[0].location_id.id, self.warehouse_1.wh_input_stock_loc_id.id, 'Raw moves start location should have altered.')
+
+    def test_multiple_post_inventory(self):
+        """ Check the consumed quants of the produced quants when intermediate calls to `post_inventory` during a MO."""
+
+        # create a bom for `custom_laptop` with components that aren't tracked
+        unit = self.ref("product.product_uom_unit")
+        custom_laptop = self.env.ref("product.product_product_27")
+        custom_laptop.tracking = 'none'
+        product_charger = self.env['product.product'].create({
+            'name': 'Charger',
+            'type': 'product',
+            'uom_id': unit,
+            'uom_po_id': unit})
+        product_keybord = self.env['product.product'].create({
+            'name': 'Usb Keybord',
+            'type': 'product',
+            'uom_id': unit,
+            'uom_po_id': unit})
+        bom_custom_laptop = self.env['mrp.bom'].create({
+            'product_tmpl_id': custom_laptop.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': unit,
+            'bom_line_ids': [(0, 0, {
+                'product_id': product_charger.id,
+                'product_qty': 1,
+                'product_uom_id': unit
+            }), (0, 0, {
+                'product_id': product_keybord.id,
+                'product_qty': 1,
+                'product_uom_id': unit
+            })]
+        })
+
+        # put the needed products in stock
+        source_location_id = self.ref('stock.stock_location_14')
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Inventory Product Table',
+            'filter': 'partial',
+            'line_ids': [(0, 0, {
+                'product_id': product_charger.id,
+                'product_uom_id': product_charger.uom_id.id,
+                'product_qty': 2,
+                'location_id': source_location_id
+            }), (0, 0, {
+                'product_id': product_keybord.id,
+                'product_uom_id': product_keybord.uom_id.id,
+                'product_qty': 2,
+                'location_id': source_location_id
+            })]
+        })
+        inventory.action_done()
+
+        # create a mo for this bom
+        mo_custom_laptop = self.env['mrp.production'].create({
+            'product_id': custom_laptop.id,
+            'product_qty': 2,
+            'product_uom_id': unit,
+            'bom_id': bom_custom_laptop.id
+        })
+        mo_custom_laptop.action_assign()
+        self.assertEqual(mo_custom_laptop.availability, 'assigned')
+
+        # produce one item, call `post_inventory`
+        context = {"active_ids": [mo_custom_laptop.id], "active_id": mo_custom_laptop.id}
+        custom_laptop_produce = self.env['mrp.product.produce'].with_context(context).create({'product_qty': 1.00})
+        custom_laptop_produce.do_produce()
+        mo_custom_laptop.post_inventory()
+
+        # check the consumed quants of the produced quant
+        first_move = mo_custom_laptop.move_finished_ids.filtered(lambda mo: mo.state == 'done')
+        self.assertEquals(sum(first_move.quant_ids.mapped('consumed_quant_ids').mapped('qty')), 2)
+
+        second_move = mo_custom_laptop.move_finished_ids.filtered(lambda mo: mo.state == 'confirmed')
+
+        # produce the second item, call `post_inventory`
+        context = {"active_ids": [mo_custom_laptop.id], "active_id": mo_custom_laptop.id}
+        custom_laptop_produce = self.env['mrp.product.produce'].with_context(context).create({'product_qty': 1.00})
+        custom_laptop_produce.do_produce()
+        mo_custom_laptop.post_inventory()
+
+        # check the consumed quants of the newly produced quant
+        self.assertEquals(sum(second_move.quant_ids.mapped('consumed_quant_ids').mapped('qty')), 2)
