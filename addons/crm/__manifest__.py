@@ -41,6 +41,9 @@ Dashboard for CRM will include:
         'web_tour',
     ],
     'data': [
+        'security/crm_security.xml',
+        'security/ir.model.access.csv',
+
         'data/crm_activity_data.xml',
         'data/crm_data.xml',
         'data/crm_stage_data.xml',
@@ -48,9 +51,6 @@ Dashboard for CRM will include:
         'data/crm_lead_data.xml',
         'data/web_planner_data.xml',
         'data/mail_template_data.xml',
-
-        'security/crm_security.xml',
-        'security/ir.model.access.csv',
 
         'wizard/base_partner_merge_views.xml',
         'wizard/crm_activity_log_views.xml',
