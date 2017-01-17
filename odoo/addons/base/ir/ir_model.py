@@ -54,11 +54,10 @@ class Unknown(models.AbstractModel):
 class IrModel(models.Model):
     _name = 'ir.model'
     _description = "Models"
-    _order = 'is_business DESC, model ASC'
+    _order = 'model'
 
     name = fields.Char(string='Model Description', translate=True, required=True)
     model = fields.Char(default='x_', required=True, index=True)
-    is_business = fields.Boolean('Business Model', help='Used to differentiate important business models from technical and secondary models')
     info = fields.Text(string='Information')
     field_id = fields.One2many('ir.model.fields', 'model_id', string='Fields', required=True, copy=True,
         default=lambda self: [(0, 0, {'name': 'x_name', 'field_description': 'Name', 'ttype': 'char'})])

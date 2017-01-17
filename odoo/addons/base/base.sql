@@ -17,7 +17,6 @@ CREATE TABLE ir_model (
   id serial,
   model varchar NOT NULL,
   name varchar,
-  is_business boolean,
   state varchar,
   info text,
   transient boolean,

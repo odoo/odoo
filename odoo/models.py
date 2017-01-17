@@ -227,7 +227,6 @@ class BaseModel(object):
 
     _name = None                # the model name
     _description = None         # the model's informal name
-    _is_business = False        # should be True for important business models
     _custom = False             # should be True for custom models only
 
     _inherit = None             # Python-inherited models ('model' or ['model'])
@@ -277,18 +276,17 @@ class BaseModel(object):
         params = {
             'model': self._name,
             'name': self._description,
-            'is_business': self._is_business,
             'info': next(cls.__doc__ for cls in type(self).mro() if cls.__doc__),
             'state': 'manual' if self._custom else 'base',
             'transient': self._transient,
         }
         cr.execute(""" UPDATE ir_model
-                       SET name=%(name)s, is_business=%(is_business)s, info=%(info)s, transient=%(transient)s
+                       SET name=%(name)s, info=%(info)s, transient=%(transient)s
                        WHERE model=%(model)s
                        RETURNING id """, params)
         if not cr.rowcount:
-            cr.execute(""" INSERT INTO ir_model (model, name, is_business, info, state, transient)
-                           VALUES (%(model)s, %(name)s, %(is_business)s, %(info)s, %(state)s, %(transient)s)
+            cr.execute(""" INSERT INTO ir_model (model, name, info, state, transient)
+                           VALUES (%(model)s, %(name)s, %(info)s, %(state)s, %(transient)s)
                            RETURNING id """, params)
         model = self.env['ir.model'].browse(cr.fetchone()[0])
         self._context['todo'].append((10, model.modified, [list(params)]))
