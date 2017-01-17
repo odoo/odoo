@@ -558,6 +558,9 @@ class Users(models.Model):
         """
         assert group_ext_id and '.' in group_ext_id, "External ID must be fully qualified"
         module, ext_id = group_ext_id.split('.')
+        self._cr.execute("SELECT 1 FROM ir_model_data WHERE module=%s AND name=%s", (module, ext_id))
+        if not bool(self._cr.fetchone()):
+            _logger.warning("group %s.%s not found" % (module, ext_id))
         self._cr.execute("""SELECT 1 FROM res_groups_users_rel WHERE uid=%s AND gid IN
                             (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                          (self._uid, module, ext_id))
