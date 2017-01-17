@@ -225,12 +225,12 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="name" readonly="1"/>
+                                <field name="name"/>
                                 <field name="field_description"/>
-                                <field name="model_id" readonly="1"/>
+                                <field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
                             </group>
                             <group>
-                                <field name="ttype" readonly="1"/>
+                                <field name="ttype"/>
                                 <field name="help"/>
                             </group>
                         </group>
