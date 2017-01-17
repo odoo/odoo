@@ -501,7 +501,7 @@ class IrTranslation(models.Model):
         :param model_name: the name of a model
         :return: the model's fields' strings as a dictionary `{field_name: field_string}`
         """
-        fields = self.env['ir.model.fields'].sudo().search([('model', '=', model_name)])
+        fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
         return {field.name: field.field_description for field in fields}
 
     @api.model
@@ -513,7 +513,7 @@ class IrTranslation(models.Model):
         :param model_name: the name of a model
         :return: the model's fields' help as a dictionary `{field_name: field_help}`
         """
-        fields = self.env['ir.model.fields'].sudo().search([('model', '=', model_name)])
+        fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
         return {field.name: field.help for field in fields}
 
     @api.multi
@@ -752,7 +752,7 @@ class IrTranslation(models.Model):
 
         :return: action definition to open the list of available translations
         """
-        fields = self.env['ir.model.fields'].sudo().search([('model', '=', model_name)])
+        fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
         view = self.env.ref("base.view_translation_tree", False) or self.env['ir.ui.view']
         return {
             'name': _("Technical Translations"),

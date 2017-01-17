@@ -233,8 +233,8 @@ class MergePartnerAutomatic(models.TransientModel):
             update_records('marketing.campaign.workitem', src=partner, field_model='object_id.model')
             update_records('ir.model.data', src=partner)
 
-        records = self.env['ir.model.fields'].sudo().search([('ttype', '=', 'reference')])
-        for record in records:
+        records = self.env['ir.model.fields'].search([('ttype', '=', 'reference')])
+        for record in records.sudo():
             try:
                 Model = self.env[record.model]
                 field = Model._fields[record.name]
@@ -250,7 +250,7 @@ class MergePartnerAutomatic(models.TransientModel):
                 values = {
                     record.name: 'res.partner,%d' % dst_partner.id,
                 }
-                records_ref.write(values)
+                records_ref.sudo().write(values)
 
     @api.model
     def _update_values(self, src_partners, dst_partner):

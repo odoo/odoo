@@ -79,7 +79,7 @@ class Property(models.Model):
                 else:
                     field_id = self.env['ir.model.fields'].browse(field_id)
 
-                value = '%s,%d' % (field_id.sudo().relation, value)
+                value = '%s,%d' % (field_id.relation, value)
 
         values[field] = value
         return values
