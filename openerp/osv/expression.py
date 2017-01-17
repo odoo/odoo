@@ -981,6 +981,10 @@ class expression(object):
 
                 if call_null:
                     o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
+                    if column._fields_id in comodel._inherit_fields:
+                        # we need to select from originating table
+                        comodel = model.pool.get(
+                            comodel._inherit_fields[column._fields_id][3])
                     push(create_substitution_leaf(leaf, ('id', o2m_op, select_distinct_from_where_not_null(cr, column._fields_id, comodel._table)), model))
 
             elif column._type == 'many2many':
