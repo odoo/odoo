@@ -251,7 +251,7 @@ class mail_mail(osv.Model):
                 # `datas` (binary field) could bloat the browse cache, triggerring
                 # soft/hard mem limits with temporary data.
                 attachment_ids = [a.id for a in mail.attachment_ids]
-                attachments = [(a['datas_fname'], base64.b64decode(a['datas']))
+                attachments = [(a['datas_fname'], base64.b64decode(a['datas'] or ''))
                                  for a in ir_attachment.read(cr, SUPERUSER_ID, attachment_ids,
                                                              ['datas_fname', 'datas'])]
 
