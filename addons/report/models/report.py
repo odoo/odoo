@@ -97,7 +97,7 @@ class Report(models.Model):
         if values is None:
             values = {}
 
-        context = dict(self.env.context, inherit_branding=True)  # Tell QWeb to brand the generated html
+        context = dict(self.env.context, inherit_branding=values.get('editable'), fields_not_editable=True)  # Tell QWeb to brand the generated html
 
         view_obj = self.env['ir.ui.view']
         # Browse the user instead of using the sudo self.env.user
@@ -111,13 +111,13 @@ class Report(models.Model):
         values.update(
             time=time,
             context_timestamp=lambda t: fields.Datetime.context_timestamp(self.with_context(tz=user.tz), t),
-            editable=True,
+            editable=True, # force editable
             user=user,
             res_company=user.company_id,
             website=website,
             web_base_url=self.env['ir.config_parameter'].sudo().get_param('web.base.url', default='')
         )
-        return view_obj.render_template(template, values)
+        return view_obj.with_context(context).render_template(template, values)
 
     #--------------------------------------------------------------------------
     # Main report methods
@@ -140,6 +140,7 @@ class Report(models.Model):
                 'doc_ids': docids,
                 'doc_model': report.model,
                 'docs': docs,
+                'editable': bool(data and data.get('enable_editor')),
             }
             return self.render(report.report_name, docargs)
     @api.model
