@@ -220,6 +220,7 @@ class calendar_attendee(osv.Model):
                                                       'datas_fname': 'invitation.ics',
                                                       'datas': str(ics_file).encode('base64')})]
                 vals['model'] = None  # We don't want to have the mail in the tchatter while in queue!
+                vals['res_id'] = False
                 the_mailmess = mail_pool.browse(cr, uid, mail_id, context=context).mail_message_id
                 mailmess_pool.write(cr, uid, [the_mailmess.id], vals, context=context)
                 mail_ids.append(mail_id)
