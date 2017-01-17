@@ -795,6 +795,7 @@ class GoogleCalendar(models.AbstractModel):
                 actToDo = event.OP
                 actSrc = event.OP.src
 
+                # To avoid redefining 'self', all method below should use 'recs' instead of 'self'
                 recs = self.with_context(curr_attendee=event.OE.attendee_id)
 
                 if isinstance(actToDo, NothingToDo):
@@ -828,12 +829,9 @@ class GoogleCalendar(models.AbstractModel):
 
                             if event_to_synchronize[base_event][0][1].OE.event_id:
                                 parent_event['id'] = "%s-%s" % (event_to_synchronize[base_event][0][1].OE.event_id, new_google_event_id)
-                                res = self.update_from_google(parent_event, event.GG.event, "copy")
+                                res = recs.update_from_google(parent_event, event.GG.event, "copy")
                             else:
-                                self.create_from_google(event, my_partner_id)
-
-                            parent_event['id'] = "%s-%s" % (event_to_synchronize[base_event][0][1].OE.event_id, new_google_event_id)
-                            res = recs.update_from_google(parent_event, event.GG.event, "copy")
+                                recs.create_from_google(event, my_partner_id)
                         else:
                             parent_oe_id = event_to_synchronize[base_event][0][1].OE.event_id
                             if parent_oe_id:
