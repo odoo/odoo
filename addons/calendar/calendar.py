@@ -221,6 +221,7 @@ class calendar_attendee(osv.Model):
                                                       'datas_fname': 'invitation.ics',
                                                       'datas': str(ics_file).encode('base64')})]
                 vals['model'] = None  # We don't want to have the mail in the tchatter while in queue!
+                vals['res_id'] = False
                 the_mailmess = mail_pool.browse(cr, uid, mail_id, context=context).mail_message_id
                 mailmess_pool.write(cr, uid, [the_mailmess.id], vals, context=context)
                 mail_ids.append(mail_id)
@@ -1596,11 +1597,11 @@ class calendar_event(osv.Model):
             super(calendar_event, self).write(cr, uid, real_ids, values, context=context)
 
             # set end_date for calendar searching
-            if values.get('recurrency') and values.get('end_type', 'count') in ('count', unicode('count')) and \
-                    (values.get('rrule_type') or values.get('count') or values.get('start') or values.get('stop')):
-                for id in real_ids:
-                    final_date = self._get_recurrency_end_date(cr, uid, id, context=context)
-                    super(calendar_event, self).write(cr, uid, [id], {'final_date': final_date}, context=context)
+            if any(field in values for field in ['recurrency', 'end_type', 'count', 'rrule_type', 'start', 'stop']):
+                for event in self.browse(cr, uid, real_ids, context=context):
+                    if event.recurrency and event.end_type in ('count', unicode('count')):
+                        final_date = self._get_recurrency_end_date(cr, uid, event.id, context=context)
+                        super(calendar_event, self).write(cr, uid, [event.id], {'final_date': final_date}, context=context)
 
             attendees_create = False
             if values.get('partner_ids', False):
@@ -1694,7 +1695,8 @@ class calendar_event(osv.Model):
         for r in result:
             if r['user_id']:
                 user_id = type(r['user_id']) in (tuple, list) and r['user_id'][0] or r['user_id']
-                if user_id == uid:
+                partner_id = self.pool['res.users'].browse(cr, uid, uid, context).partner_id.id
+                if user_id == uid or partner_id in r.get("partner_ids", []):
                     continue
             if r['class'] == 'private':
                 for f in r.keys():

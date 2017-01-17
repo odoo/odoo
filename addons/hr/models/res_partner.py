@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, models
+from openerp.exceptions import AccessError
 
 class Partner(models.Model):
 
@@ -11,12 +12,10 @@ class Partner(models.Model):
         """ Extend the mail's static mention suggestions by adding the employees. """
         suggestions = super(Partner, self).get_static_mention_suggestions()
 
-        employee_group_id = self.env['ir.model.data'].xmlid_to_res_id('base.group_user')
-        self._cr.execute("""
-            SELECT P.id, P.name, P.email
-            FROM res_users U
-                INNER JOIN res_groups_users_rel R ON U.id = R.uid
-                INNER JOIN res_partner P ON P.id = U.partner_id
-            WHERE R.gid = %s AND U.active = 't'""", (employee_group_id,))
-        suggestions.append(self._cr.dictfetchall())
-        return suggestions
+        try:
+            employee_group = self.env.ref('base.group_user')
+            for user in employee_group.users:
+                suggestions.append((user.partner_id.id, user.name, user.email)) 
+            return suggestions
+        except AccessError:
+            return suggestions
