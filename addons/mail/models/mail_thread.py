@@ -1133,7 +1133,7 @@ class MailThread(models.AbstractModel):
             dest_aliases = Alias.search([('alias_name', 'in', rcpt_tos_localparts)])
             if dest_aliases:
                 routes = []
-                for alias in dest_aliases.sudo():
+                for alias in dest_aliases:
                     user_id = alias.alias_user_id.id
                     if not user_id:
                         # TDE note: this could cause crashes, because no clue that the user

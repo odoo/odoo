@@ -226,7 +226,7 @@ class AccountChartTemplate(models.Model):
             account = getattr(self, record[0])
             value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
             if value:
-                field = self.env['ir.model.fields'].sudo().search([('name', '=', record[0]), ('model', '=', record[1]), ('relation', '=', record[2])])
+                field = self.env['ir.model.fields'].search([('name', '=', record[0]), ('model', '=', record[1]), ('relation', '=', record[2])], limit=1)
                 vals = {
                     'name': record[0],
                     'company_id': company.id,

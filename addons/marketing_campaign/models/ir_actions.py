@@ -11,6 +11,6 @@ class IrActionsReportXml(models.Model):
     def search(self, args, offset=0, limit=None, order=None, count=False):
         model_id = self.env.context.get('object_id')
         if model_id:
-            model = self.env['ir.model'].browse(model_id).sudo().model
+            model = self.env['ir.model'].browse(model_id).model
             args.append(('model', '=', model))
         return super(IrActionsReportXml, self).search(args, offset=offset, limit=limit, order=order, count=count)

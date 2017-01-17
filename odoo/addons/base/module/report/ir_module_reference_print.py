@@ -20,7 +20,7 @@ class IrModelReferenceReport(models.AbstractModel):
         data = Data.search([('model', '=', 'ir.model.fields'), ('module', '=', module.name), ('name', 'like', fname_wildcard)])
         if data:
             res_ids = data.mapped('res_ids')
-            fnames = self.env['ir.model.fields'].sudo().browse(res_ids).mapped('name')
+            fnames = self.env['ir.model.fields'].browse(res_ids).mapped('name')
             return sorted(self.env[model].fields_get(fnames).iteritems())
         return []
 

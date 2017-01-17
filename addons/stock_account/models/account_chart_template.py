@@ -21,7 +21,7 @@ class AccountChartTemplate(models.Model):
         PropertyObj = self.env['ir.property']  # Property Stock Journal
         value = self.env['account.journal'].search([('company_id', '=', company.id), ('code', '=', 'STJ'), ('type', '=', 'general')], limit=1)
         if value:
-            field = self.env['ir.model.fields'].sudo().search([('name', '=', 'property_stock_journal'), ('model', '=', 'product.category'), ('relation', '=', 'account.journal')])
+            field = self.env['ir.model.fields'].search([('name', '=', 'property_stock_journal'), ('model', '=', 'product.category'), ('relation', '=', 'account.journal')], limit=1)
             vals = {
                 'name': 'property_stock_journal',
                 'company_id': company.id,
@@ -45,7 +45,7 @@ class AccountChartTemplate(models.Model):
             account = getattr(self, record)
             value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
             if value:
-                field = self.env['ir.model.fields'].sudo().search([('name', '=', record), ('model', '=', 'product.category'), ('relation', '=', 'account.account')])
+                field = self.env['ir.model.fields'].search([('name', '=', record), ('model', '=', 'product.category'), ('relation', '=', 'account.account')], limit=1)
                 vals = {
                     'name': record,
                     'company_id': company.id,
