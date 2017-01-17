@@ -66,6 +66,17 @@
             </field>
         </record>
 
+        <record id="view_base_automation_search" model="ir.ui.view">
+            <field name="name">base.automation.search</field>
+            <field name="model">base.automation</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="model_id"/>
+                </search>
+            </field>
+        </record>
+
         <!-- automation Action -->
         <record id="base_automation_act" model="ir.actions.act_window">
             <field name="name">Automated Actions</field>
