@@ -802,6 +802,13 @@ class mail_message(osv.Model):
             message_id = tools.generate_tracking_message_id('private')
         return message_id
 
+    @api.multi
+    def _invalidate_documents(self):
+        """ Invalidate the cache of the documents followed by ``self``. """
+        for record in self:
+            if record.res_id:
+                self.env[record.model].invalidate_cache(ids=[record.res_id])
+
     def create(self, cr, uid, values, context=None):
         context = dict(context or {})
         default_starred = context.pop('default_starred', False)
@@ -816,6 +823,7 @@ class mail_message(osv.Model):
             values['record_name'] = self._get_record_name(cr, uid, values, context=context)
 
         newid = super(mail_message, self).create(cr, uid, values, context)
+        self.browse(cr, uid, newid, context)._invalidate_documents()
 
         self._notify(cr, uid, newid, context=context,
                      force_send=context.get('mail_notify_force_send', True),
@@ -837,6 +845,14 @@ class mail_message(osv.Model):
         res = super(mail_message, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         return res
 
+    @api.multi
+    def write(self, vals):
+        if 'model' in vals or 'res_id' in vals:
+            self._invalidate_documents()
+        res = super(mail_message, self).write(vals)
+        self._invalidate_documents()
+        return res
+
     def unlink(self, cr, uid, ids, context=None):
         # cascade-delete attachments that are directly attached to the message (should only happen
         # for mail.messages that act as parent for a standalone mail.mail record).
@@ -848,6 +864,7 @@ class mail_message(osv.Model):
                     attachments_to_delete.append(attach.id)
         if attachments_to_delete:
             self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)
+        self.browse(cr, uid, ids, context)._invalidate_documents()
         return super(mail_message, self).unlink(cr, uid, ids, context=context)
 
     #------------------------------------------------------
