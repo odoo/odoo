@@ -259,6 +259,27 @@ class Website(models.Model):
         return [("sale_ok", "=", True)]
 
     @api.multi
+    def _prepare_sale_order_values(self, partner, pricelist):
+        self.ensure_one()
+        affiliate_id = request.session.get('affiliate_id')
+        salesperson_id = affiliate_id if self.env['res.users'].sudo().browse(affiliate_id).exists() else request.website.salesperson_id.id
+        addr = partner.address_get(['delivery', 'invoice'])
+        values = {
+            'partner_id': partner.id,
+            'pricelist_id': pricelist.id,
+            'payment_term_id': partner.property_payment_term_id.id,
+            'team_id': self.salesteam_id.id,
+            'partner_invoice_id': addr['invoice'],
+            'partner_shipping_id': addr['delivery'],
+            'user_id': salesperson_id or self.salesperson_id.id,
+        }
+        company = self.company_id or pricelist.company_id
+        if company:
+            values['company_id'] = company.id
+
+        return values
+
+    @api.multi
     def sale_get_order(self, force_create=False, code=None, update_pricelist=False, force_pricelist=False):
         """ Return the current sale order after mofications specified by params.
         :param bool force_create: Create sale order if not already existing
@@ -289,25 +310,8 @@ class Website(models.Model):
         # create so if needed
         if not sale_order and (force_create or code):
             # TODO cache partner_id session
-            affiliate_id = request.session.get('affiliate_id')
-            if self.env['res.users'].sudo().browse(affiliate_id).exists():
-                salesperson_id = affiliate_id
-            else:
-                salesperson_id = request.website.salesperson_id.id
-            addr = partner.address_get(['delivery', 'invoice'])
-            so_data = {
-                'partner_id': partner.id,
-                'pricelist_id': pricelist_id,
-                'payment_term_id': partner.property_payment_term_id.id,
-                'team_id': self.salesteam_id.id,
-                'partner_invoice_id': addr['invoice'],
-                'partner_shipping_id': addr['delivery'],
-                'user_id': salesperson_id or self.salesperson_id.id,
-            }
-            company = self.company_id or self.env['product.pricelist'].browse(pricelist_id).sudo().company_id
-            if company:
-                so_data['company_id'] = company.id
-
+            pricelist = self.env['product.pricelist'].browse(pricelist_id).sudo()
+            so_data = self._prepare_sale_order_values(partner, pricelist)
             sale_order = self.env['sale.order'].sudo().create(so_data)
 
             # set fiscal position
