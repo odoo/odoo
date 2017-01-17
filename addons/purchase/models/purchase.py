@@ -645,7 +645,7 @@ class PurchaseOrderLine(models.Model):
                 sum_existing_moves = sum(x.product_qty for x in procurement.move_ids if x.state != 'cancel')
                 existing_proc_qty = procurement.product_id.uom_id._compute_quantity(sum_existing_moves, procurement.product_uom)
                 procurement_qty = procurement.product_uom._compute_quantity(procurement.product_qty, line.product_uom) - existing_proc_qty
-                if float_compare(procurement_qty, 0.0, precision_rounding=procurement.product_uom.rounding) > 0:
+                if float_compare(procurement_qty, 0.0, precision_rounding=procurement.product_uom.rounding) > 0 and float_compare(diff_quantity, 0.0, precision_rounding=line.product_uom.rounding) > 0:
                     tmp = template.copy()
                     tmp.update({
                         'product_uom_qty': min(procurement_qty, diff_quantity),
