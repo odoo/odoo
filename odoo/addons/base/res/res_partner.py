@@ -130,7 +130,6 @@ class Partner(models.Model):
     _description = 'Contact'
     _inherit = ['format.address.mixin']
     _name = "res.partner"
-    _is_business = True
     _order = "display_name"
 
     def _default_category(self):

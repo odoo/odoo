@@ -9,7 +9,6 @@ from odoo.tools.safe_eval import safe_eval
 class ProjectIssue(models.Model):
     _name = "project.issue"
     _description = "Project Issue"
-    _is_business = True
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = "priority desc, create_date desc"
     _mail_post_access = 'read'
