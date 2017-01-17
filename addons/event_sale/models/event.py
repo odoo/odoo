@@ -44,6 +44,7 @@ class EventTicket(models.Model):
     is_expired = fields.Boolean(string='Is Expired', compute='_compute_is_expired')
 
     price_reduce = fields.Float(string="Price Reduce", compute="_compute_price_reduce", digits=dp.get_precision('Product Price'))
+    price_reduce_taxinc = fields.Float(compute='_get_price_reduce_tax', string='Price Reduce Tax inc')
     # seats fields
     seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')],
         string='Available Seat', required=True, store=True, compute='_compute_seats', default="limited")
@@ -70,6 +71,13 @@ class EventTicket(models.Model):
             product = record.product_id
             discount = product.lst_price and (product.lst_price - product.price) / product.lst_price or 0.0
             record.price_reduce = (1.0 - discount) * record.price
+
+    def _get_price_reduce_tax(self):
+        for record in self:
+            # sudo necessary here since the field is most probably accessed through the website
+            tax_ids = record.sudo().product_id.taxes_id.filtered(lambda r: r.company_id == record.event_id.company_id)
+            taxes = tax_ids.compute_all(record.price_reduce, record.event_id.company_id.currency_id, 1.0, product=record.product_id)
+            record.price_reduce_taxinc = taxes['total_included']
 
     @api.multi
     @api.depends('seats_max', 'registration_ids.state')
