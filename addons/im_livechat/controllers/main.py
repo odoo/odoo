@@ -90,9 +90,10 @@ class LivechatController(http.Controller):
                 'feedback': reason,
             }
             if not channel.rating_ids:
+                res_model_id = request.env['ir.model'].sudo().search([('model', '=', channel._name)], limit=1).id
                 values.update({
                     'res_id': channel.id,
-                    'res_model': 'mail.channel',
+                    'res_model_id': res_model_id,
                 })
                 # find the partner (operator)
                 if channel.channel_partner_ids:
