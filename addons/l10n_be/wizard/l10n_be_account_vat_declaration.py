@@ -136,16 +136,6 @@ class l10n_be_vat_declaration(osv.osv_memory):
 
         data_of_file = """<?xml version="1.0"?>
 <ns2:VATConsignment xmlns="http://www.minfin.fgov.be/InputCommon" xmlns:ns2="http://www.minfin.fgov.be/VATConsignment" VATDeclarationsNbr="1">
-    <ns2:Representative>
-        <RepresentativeID identificationType="NVAT" issuedBy="%(issued_by)s">%(only_vat)s</RepresentativeID>
-        <Name>%(cmpny_name)s</Name>
-        <Street>%(address)s</Street>
-        <PostCode>%(post_code)s</PostCode>
-        <City>%(city)s</City>
-        <CountryCode>%(country_code)s</CountryCode>
-        <EmailAddress>%(email)s</EmailAddress>
-        <Phone>%(phone)s</Phone>
-    </ns2:Representative>
     <ns2:VATDeclaration SequenceNumber="1" DeclarantReference="%(send_ref)s">
         <ns2:Declarant>
             <VATNumber xmlns="http://www.minfin.fgov.be/InputCommon">%(only_vat)s</VATNumber>

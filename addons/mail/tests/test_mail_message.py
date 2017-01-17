@@ -444,3 +444,8 @@ class TestMailMessage(TestMail):
             {'subject': 'Subject', 'body': 'Body text'},
             {'default_composition_mode': 'comment', 'default_parent_id': pigs_msg_id})
         mail_compose.send_mail(cr, user_raoul_id, [compose_id])
+
+    def test_60_cache_invalidation(self):
+        msg_cnt = len(self.group_pigs.message_ids)
+        self.group_pigs.message_post(body='Hi!', subject='test')
+        self.assertEqual(len(self.group_pigs.message_ids), msg_cnt + 1)
