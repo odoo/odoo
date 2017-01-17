@@ -76,7 +76,7 @@
     <t t-call="web.layout">
         <t t-set="html_data" t-value="{
             'lang': lang and lang.replace('_', '-'),
-            'data-website-id': website.id if (editable or translatable) and website else None,
+            'data-website-id': website.id if website else None,
             'data-editable': '1' if editable else None,
             'data-translatable': '1' if translatable else None,
             'data-edit_translations': '1' if edit_translations else None,

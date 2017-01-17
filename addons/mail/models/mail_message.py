@@ -701,6 +701,13 @@ class Message(models.Model):
             message_id = tools.generate_tracking_message_id('private')
         return message_id
 
+    @api.multi
+    def _invalidate_documents(self):
+        """ Invalidate the cache of the documents followed by ``self``. """
+        for record in self:
+            if record.res_id:
+                self.env[record.model].invalidate_cache(ids=[record.res_id])
+
     @api.model
     def create(self, values):
         # coming from mail.js that does not have pid in its values
@@ -717,6 +724,7 @@ class Message(models.Model):
             values['record_name'] = self._get_record_name(values)
 
         message = super(Message, self).create(values)
+        message._invalidate_documents()
 
         if not self.env.context.get('message_create_from_mail_mail'):
             message._notify(force_send=self.env.context.get('mail_notify_force_send', True),
@@ -731,6 +739,14 @@ class Message(models.Model):
         return super(Message, self).read(fields=fields, load=load)
 
     @api.multi
+    def write(self, vals):
+        if 'model' in vals or 'res_id' in vals:
+            self._invalidate_documents()
+        res = super(Message, self).write(vals)
+        self._invalidate_documents()
+        return res
+
+    @api.multi
     def unlink(self):
         # cascade-delete attachments that are directly attached to the message (should only happen
         # for mail.messages that act as parent for a standalone mail.mail record).
@@ -738,6 +754,7 @@ class Message(models.Model):
         self.mapped('attachment_ids').filtered(
             lambda attach: attach.res_model == self._name and (attach.res_id in self.ids or attach.res_id == 0)
         ).unlink()
+        self._invalidate_documents()
         return super(Message, self).unlink()
 
     #------------------------------------------------------
