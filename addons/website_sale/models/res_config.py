@@ -31,7 +31,7 @@ class WebsiteConfigSettings(models.TransientModel):
     module_sale_coupon = fields.Boolean("Manage coupons and promotional offers")
 
     group_website_multiimage = fields.Boolean(string='Multi-Images', implied_group='website_sale.group_website_multi_image')
-    group_discount_per_so_line = fields.Boolean(string="Discounted Prices", implied_group='sale.group_discount_per_so_line')
+    group_discount_per_line = fields.Boolean(string="Discounted Prices", implied_group='account.group_discount_per_line')
     group_delivery_invoice_address = fields.Boolean(string="Shipping Address", implied_group='sale.group_delivery_invoice_address')
 
     module_website_sale_options = fields.Boolean("Optional Products", help='Installs *e-Commerce Optional Products*')
@@ -120,9 +120,9 @@ class WebsiteConfigSettings(models.TransientModel):
                 'module_website_sale_delivery': True,
             })
 
-    @api.onchange('group_discount_per_so_line')
-    def _onchange_group_discount_per_so_line(self):
-        if self.group_discount_per_so_line:
+    @api.onchange('group_discount_per_line')
+    def _onchange_group_discount_per_line(self):
+        if self.group_discount_per_line:
             self.update({
                 'sale_pricelist_setting_split_1': True,
             })
