@@ -67,7 +67,7 @@ class SaleCouponProgram(models.Model):
     @api.model
     def create(self, vals):
         program = super(SaleCouponProgram, self).create(vals)
-        if 'discount_line_product_id' not in vals:
+        if not vals.get('discount_line_product_id', False):
             discount_line_product_id = self.env['product.product'].create({
                 'name': program.reward_id.name_get()[0][1],
                 'type': 'service',
