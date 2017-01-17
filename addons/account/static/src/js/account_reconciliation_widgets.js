@@ -1585,7 +1585,7 @@ var bankStatementReconciliation = abstractReconciliation.extend({
     goToCreatePreset: function() {
         this.action_manager.do_action({
             type: 'ir.actions.act_window',
-            res_model: 'account.operation.template',
+            res_model: 'account.reconcile.model',
             views: [[false, 'form']],
             target: 'current'
         });
