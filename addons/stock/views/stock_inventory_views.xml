@@ -94,7 +94,7 @@
                             <kanban class="o_kanban_mobile">
                                 <field name="product_id"  domain="[('type','=','product')]"/>
                                 <field name="product_uom_id" groups="product.group_uom" string="UoM"/>
-                                <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_locations"/>
+                                <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_stock_multi_locations"/>
                                 <field name="prod_lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
                                 <field name="package_id" domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]"/>
                                 <field name="partner_id"/>
