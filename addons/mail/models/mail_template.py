@@ -365,7 +365,7 @@ class MailTemplate(models.Model):
         for record in records:
             res_to_rec[record.id] = record
         variables = {
-            'format_date': lambda date, format=False, context=self._context: format_dae(self.env, date, format),
+            'format_date': lambda date, format=False, context=self._context: format_date(self.env, date, format),
             'format_tz': lambda dt, tz=False, format=False, context=self._context: format_tz(self.env, dt, tz, format),
             'user': self.env.user,
             'ctx': self._context,  # context kw would clash with mako internals
