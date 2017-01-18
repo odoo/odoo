@@ -232,7 +232,7 @@ return Widget.extend({
 
         var legend_right = config.device.size_class > config.device.SIZES.XS;
 
-        var chart = nv.models.pieChart();
+        var chart = nv.models.pieChart().labelType('percent');
         chart.options({
           delay: 250,
           showLegend: legend_right || _.size(data) <= MAX_LEGEND_LENGTH,
