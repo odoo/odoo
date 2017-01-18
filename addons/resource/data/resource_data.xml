@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="resource_calendar_std" model="resource.calendar">
+        <field name="name">Standard 40 Hours/Week</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="base.main_company" model="res.company">
+        <field name="resource_calendar_id" ref="resource_calendar_std"/>
+    </record>
+
+    <function id="_init_data_resource_calendar"
+        model="res.company"
+        name="_init_data_resource_calendar"
+        eval="[]"/>
+</odoo>
