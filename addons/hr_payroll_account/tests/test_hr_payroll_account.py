@@ -70,7 +70,7 @@ class TestHrPayrollAccount(common.TransactionCase):
             'type_id': self.ref('hr_contract.hr_contract_type_emp'),
             'employee_id': self.hr_employee_john.id,
             'struct_id': self.hr_structure_softwaredeveloper.id,
-            'working_hours': self.ref('resource.timesheet_group1'),
+            'working_hours': self.ref('resource.resource_calendar_std'),
             'journal_id': self.ref('hr_payroll_account.expenses_journal'),
         })
 
