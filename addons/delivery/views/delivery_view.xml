@@ -2,7 +2,6 @@
 <odoo>
         <!-- Delivery Carriers -->
         <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_config_settings" groups="stock.group_stock_manager" sequence="50"/>
-        <menuitem id="sale_menu_delivery" name="Delivery" parent="sales_team.menu_sale_config" groups="sales_team.group_sale_manager" sequence="12"/>
 
         <record id="action_delivery_packaging_view" model="ir.actions.act_window">
             <field name="name">Packagings</field>
@@ -146,7 +145,7 @@
         </record>
 
         <menuitem action="action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="menu_delivery" sequence="1"/>
-        <menuitem action="action_delivery_carrier_form" id="sale_menu_action_delivery_carrier_form" parent="sale_menu_delivery" sequence="1"/>
+        <menuitem action="action_delivery_carrier_form" id="sale_menu_action_delivery_carrier_form" parent="sale.menu_sales_config" sequence="4"/>
 
         <record id="view_delivery_price_rule_form" model="ir.ui.view">
             <field name="name">delivery.price.rule.form</field>

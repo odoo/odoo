@@ -13,24 +13,23 @@
         <menuitem
             id= "menu_sales_config"
             parent= "sales_team.menu_sale_config"
-            sequence= "1"
+            sequence= "3"
             name= "Sales"
             groups= "sales_team.group_sale_manager,sales_team.group_sale_salesman,account.group_account_manager,account.group_account_user"/>
 
-        <menuitem id="menu_product" name="Product Variants" parent="sales_team.menu_base_partner" sequence="9" groups="product.group_product_variant"/>
-        <menuitem id="sales_team.menu_sales" name="Sales" parent="sales_team.menu_base_partner" sequence="5"/>
-        <menuitem action="product.product_template_action" id="menu_product_template_action" parent="sales_team.menu_sales" sequence="13" />
-        <menuitem id="sale.prod_config_main" name="Products" parent="sales_team.menu_sale_config" sequence="2"/>
-        <menuitem action="product.attribute_action" id="menu_attribute_action" parent="sale.prod_config_main" sequence="4" groups="product.group_product_variant"/>
-        <menuitem action="product.variants_action" id="menu_variants_action" parent="sale.prod_config_main" sequence="5" groups="product.group_product_variant"/>
-        <menuitem id="menu_products" action="product.product_normal_action_sell" parent="sales_team.menu_sales" groups="product.group_product_variant" sequence="99"/>
-        <menuitem action="product.product_category_action_form" id="menu_product_category_action_form" parent="sale.prod_config_main" sequence="2"/>
-        <menuitem id="next_id_16" name="Units of Measure" parent="sale.prod_config_main" sequence="30" groups="product.group_uom"/>
-        <menuitem action="product.product_uom_form_action" id="menu_product_uom_form_action" parent="sale.prod_config_main" sequence="6" groups="product.group_uom"/>
-        <menuitem action="product.product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="sale.prod_config_main" sequence="7" groups="base.group_no_one"/>
-        <menuitem id="menu_product_pricelist_main" name="Pricelists" parent="sales_team.menu_sale_config" groups="product.group_sale_pricelist" sequence="3"/>
-        <menuitem action="product.product_pricelist_action2" id="menu_product_pricelist_action2" parent="menu_product_pricelist_main" sequence="1" groups="product.group_sale_pricelist"/>
-
+        <menuitem id="product_menu_catalog" name="Catalog" action="product.product_template_action" parent="sales_team.menu_base_partner" sequence="7"/>
+        <menuitem id="menu_product" name="Product Variants" parent="product_menu_catalog" sequence="2" groups="product.group_product_variant"/>
+        <menuitem id="sales_team.menu_sales" name="Sales" parent="sales_team.menu_base_partner" sequence="4"/>
+        <menuitem action="product.product_template_action" id="menu_product_template_action" parent="product_menu_catalog" groups="product.group_product_variant,product.group_sale_pricelist" sequence="1" />
+        <menuitem id="sale.prod_config_main" name="Products" parent="sales_team.menu_sale_config" sequence="5"/>
+        <menuitem action="product.attribute_action" id="menu_attribute_action" parent="sale.prod_config_main" sequence="1" groups="product.group_product_variant"/>
+        <menuitem action="product.variants_action" id="menu_variants_action" parent="sale.prod_config_main" sequence="2" groups="product.group_product_variant"/>
+        <menuitem id="menu_products" action="product.product_normal_action_sell" parent="product_menu_catalog" groups="product.group_product_variant" sequence="2"/>
+        <menuitem action="product.product_category_action_form" name="Internal Categories" id="menu_product_category_action_form" parent="sale.prod_config_main" sequence="4"/>
+        <menuitem id="next_id_16" name="Units of Measure" parent="sale.prod_config_main" sequence="6" groups="product.group_uom"/>
+        <menuitem action="product.product_uom_form_action" id="menu_product_uom_form_action" parent="sale.prod_config_main" sequence="7" groups="product.group_uom"/>
+        <menuitem action="product.product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="sale.prod_config_main" sequence="8" groups="product.group_uom"/>
+        <menuitem id="menu_product_pricelist_main" name="Pricelists" parent="product_menu_catalog" action="product.product_pricelist_action2" groups="product.group_sale_pricelist" sequence="3"/>
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
@@ -470,7 +469,7 @@
             sequence="12" groups="sales_team.group_sale_salesman,sales_team.group_sale_manager"/>
 
         <record id="action_orders_to_invoice" model="ir.actions.act_window">
-            <field name="name">Sales to Invoice</field>
+            <field name="name">Orders to Invoice</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
