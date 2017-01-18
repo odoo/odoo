@@ -146,7 +146,6 @@ class HolidaysType(models.Model):
 
 
 class Holidays(models.Model):
-
     _name = "hr.holidays"
     _description = "Leave"
     _order = "type desc, date_from desc"
@@ -155,7 +154,37 @@ class Holidays(models.Model):
     def _default_employee(self):
         return self.env.context.get('default_employee_id') or self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
+    # description
     name = fields.Char('Description')
+    employee_id = fields.Many2one(
+        'hr.employee', string='Employee', default=_default_employee, track_visibility='onchange',
+        index=True, readonly=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    department_id = fields.Many2one(
+        'hr.department', string='Department',
+        readonly=True, related='employee_id.department_id', store=True)
+    user_id = fields.Many2one(
+        'res.users', string='User', default=lambda self: self.env.uid,
+        readonly=True, related='employee_id.user_id', related_sudo=True, store=True)
+    holiday_status_id = fields.Many2one(
+        "hr.holidays.status", string="Leave Type",
+        readonly=True, required=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    type = fields.Selection([
+        ('remove', 'Leave Request'),
+        ('add', 'Allocation Request')],
+        string='Request Type', default='remove', track_visibility='always',
+        index=True, readonly=True, required=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+        help="Choose 'Leave Request' if someone wants to take an off-day. "
+             "\nChoose 'Allocation Request' if you want to increase the number of leaves available for someone")
+    holiday_type = fields.Selection([
+        ('employee', 'By Employee'),
+        ('category', 'By Employee Tag')],
+        string='Allocation Mode', default='employee',
+        readonly=True, required=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+        help='By Employee: Allocation/Request for individual Employee, By Employee Tag: Allocation/Request for group of employees in category')
     state = fields.Selection([
         ('draft', 'To Submit'),
         ('cancel', 'Cancelled'),
@@ -170,44 +199,42 @@ class Holidays(models.Model):
             "\nThe status is 'Approved', when holiday request is approved by manager.")
     payslip_status = fields.Boolean('Reported in last payslips',
         help='Green this button when the leave has been taken into account in the payslip.')
-    report_note = fields.Text('HR Comments')
-    user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, store=True, default=lambda self: self.env.uid, readonly=True)
-    date_from = fields.Datetime('Start Date', readonly=True, index=True, copy=False,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
-    date_to = fields.Datetime('End Date', readonly=True, copy=False,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
-    holiday_status_id = fields.Many2one("hr.holidays.status", string="Leave Type", required=True, readonly=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, track_visibility='onchange')
-    manager_id = fields.Many2one('hr.employee', string='First Approval', readonly=True, copy=False,
-        help='This area is automatically filled by the user who validate the leave')
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    number_of_days_temp = fields.Float('Allocation', readonly=True, copy=False,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
-    number_of_days = fields.Float('Number of Days', compute='_compute_number_of_days', store=True, track_visibility='onchange')
-    meeting_id = fields.Many2one('calendar.event', string='Meeting')
-    type = fields.Selection([
-            ('remove', 'Leave Request'),
-            ('add', 'Allocation Request')
-        ], string='Request Type', required=True, readonly=True, index=True, track_visibility='always', default='remove',
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
-        help="Choose 'Leave Request' if someone wants to take an off-day. "
-             "\nChoose 'Allocation Request' if you want to increase the number of leaves available for someone")
+    # tag specific
+    category_id = fields.Many2one(
+        'hr.employee.category', string='Employee Tag',
+        readonly=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, help='Category of Employee')
     parent_id = fields.Many2one('hr.holidays', string='Parent')
     linked_request_ids = fields.One2many('hr.holidays', 'parent_id', string='Linked Requests')
-    department_id = fields.Many2one('hr.department', related='employee_id.department_id', string='Department', readonly=True, store=True)
-    category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, help='Category of Employee')
-    holiday_type = fields.Selection([
-        ('employee', 'By Employee'),
-        ('category', 'By Employee Tag')
-    ], string='Allocation Mode', readonly=True, required=True, default='employee',
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
-        help='By Employee: Allocation/Request for individual Employee, By Employee Tag: Allocation/Request for group of employees in category')
-    manager_id2 = fields.Many2one('hr.employee', string='Second Approval', readonly=True, copy=False,
+    # time
+    date_from = fields.Datetime(
+        'Start Date', copy=False, track_visibility='onchange',
+        index=True, readonly=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    date_to = fields.Datetime(
+        'End Date', copy=False, track_visibility='onchange',
+        readonly=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    number_of_days_temp = fields.Float(
+        'Allocation', copy=False, readonly=True,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    number_of_days = fields.Float(
+        'Number of Days', track_visibility='onchange',
+        compute='_compute_number_of_days', store=True)
+    # validation
+    manager_id = fields.Many2one(
+        'hr.employee', string='First Approval',
+        copy=False, readonly=True,
+        help='This area is automatically filled by the user who validate the leave')
+    manager_id2 = fields.Many2one(
+        'hr.employee', string='Second Approval',
+        copy=False, readonly=True,
         help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
     double_validation = fields.Boolean('Apply Double Validation', related='holiday_status_id.double_validation')
+    report_note = fields.Text('HR Comments')
+    # technical
+    meeting_id = fields.Many2one('calendar.event', string='Meeting')
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
 
     @api.multi
