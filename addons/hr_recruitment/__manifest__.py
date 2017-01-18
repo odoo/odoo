@@ -18,11 +18,9 @@ You can define the different phases of interviews and easily rate the applicant 
 """,
     'website': 'https://www.odoo.com/page/recruitment',
     'depends': [
-        'decimal_precision',
         'hr',
         'calendar',
         'fetchmail',
-        'web_kanban_gauge',
         'utm',
         'document',
         'web_tour',
