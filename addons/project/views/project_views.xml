@@ -246,7 +246,6 @@
                     <field name="alias_id"/>
                     <field name="alias_name"/>
                     <field name="alias_domain"/>
-                    <field name="doc_count"/>
                     <field name="is_favorite"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -289,12 +288,6 @@
                                         </a>
                                         <a t-if="record.task_needaction_count.raw_value" class="o_needaction" name="%(act_project_project_2_project_task_all)d" type="action" context="{'search_default_message_needaction': 1}">
                                             <t t-esc="record.task_needaction_count.raw_value"/>
-                                        </a>
-                                    </div>
-                                    <div t-if="record.doc_count.raw_value" class="o_project_kanban_box">
-                                        <a name="attachment_tree_view" type="object">
-                                            <span class="o_value"><t t-esc="record.doc_count.value"/></span>
-                                            <span class="o_label">Documents</span>
                                         </a>
                                     </div>
                                 </div>
