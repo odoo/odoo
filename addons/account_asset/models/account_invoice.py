@@ -85,7 +85,7 @@ class AccountInvoiceLine(models.Model):
         if self.invoice_id.type == 'out_invoice' and self.asset_category_id:
             self.account_id = self.asset_category_id.account_asset_id.id
         elif self.invoice_id.type == 'in_invoice' and self.asset_category_id:
-            self.account_id = self.asset_category_id.account_depreciation_id.id
+            self.account_id = self.asset_category_id.account_asset_id.id
 
     @api.onchange('uom_id')
     def _onchange_uom_id(self):
