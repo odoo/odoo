@@ -124,7 +124,7 @@ class account_journal(models.Model):
             data.append({'label':label,'value':0.0, 'type': 'past' if i<0 else 'future'})
 
         # Build SQL query to find amount aggregated by week
-        select_sql_clause = self._get_bar_graph_select_query()
+        (select_sql_clause, query_args) = self._get_bar_graph_select_query()
         query = ''
         start_date = (first_day_of_week + timedelta(days=-7))
         for i in range(0,6):
@@ -137,7 +137,7 @@ class account_journal(models.Model):
                 query += " UNION ALL ("+select_sql_clause+" and date >= '"+start_date.strftime(DF)+"' and date < '"+next_date.strftime(DF)+"')"
                 start_date = next_date
 
-        self.env.cr.execute(query)
+        self.env.cr.execute(query,query_args)
         query_results = self.env.cr.dictfetchall()
         for index in range(0, len(query_results)):
             if query_results[index].get('aggr_date') != None:
@@ -149,16 +149,19 @@ class account_journal(models.Model):
 
     def _get_bar_graph_select_query(self):
         """
-        Returns the base SELECT SQL query used to gather the bar graph's data.
+        Returns a tuple coontaining the base SELECT SQL query used to gather
+        the bar graph's data as its first element, and the arguments dictionary
+        for it as its second.
+
         Modifying the data displayed in the graph can be done by overriding
         this method (but the columns of the result must of course remain the same).
         Beware that this must be a 'base' query, in the sense the calling function
         will append UNION expressions to complete it.
         """
 
-        return """SELECT sum(residual_company_signed) as total, min(date) as aggr_date
+        return ("""SELECT sum(residual_company_signed) as total, min(date) as aggr_date
                FROM account_invoice
-               WHERE journal_id = %s and state = 'open'""" % (self.id)
+               WHERE journal_id = %(journal_id)s and state = 'open'""", {'journal_id':self.id})
 
 
     @api.multi
@@ -191,12 +194,14 @@ class account_journal(models.Model):
                     account_sum = query_results[0].get('sum')
         #TODO need to check if all invoices are in the same currency than the journal!!!!
         elif self.type in ['sale', 'purchase']:
-            query = self._get_open_bills_to_pay_query()
-            self.env.cr.execute(query)
+            title = _('Bills to pay') if self.type == 'purchase' else _('Invoices owed to you')
+
+            (query, query_args) = self._get_open_bills_to_pay_query()
+            self.env.cr.execute(query,query_args)
             query_results_to_pay = self.env.cr.dictfetchall()
 
-            query = self._get_draft_bills_query()
-            self.env.cr.execute(query)
+            (query, query_args) = self._get_draft_bills_query()
+            self.env.cr.execute(query,query_args)
             query_results_drafts = self.env.cr.dictfetchall()
 
             today = datetime.today()
@@ -226,29 +231,32 @@ class account_journal(models.Model):
 
     def _get_open_bills_to_pay_query(self):
         """
-        Returns the SQL query used to gather the open bills data.
+        Returns a tuple contaning the SQL query used to gather the open bills
+        data as its first element, and the arguments dictionary to use to run
+        it as its second.
 
         Modifying the way these data are gathered can be done by overriding
         this method (but the columns of the result must of course remain the same).
         """
 
-        return """SELECT state, amount_total, currency_id AS currency
+        return ("""SELECT state, amount_total, currency_id AS currency
                   FROM account_invoice
-                  WHERE journal_id = %s AND state = 'open';""" % (self.id)
+                  WHERE journal_id = %(journal_id)s AND state = 'open';""", {'journal_id':self.id})
 
 
-    def _get_draft_bills_query(self):
+    def _get_drafts_and_proformas_bills_query(self):
         """
-        Returns the SQL query used to gather the bills in draft
-        state data.
+        Returns a tuple containing as its first element the SQL query used to
+        gather the bills in draft state data, and the arguments
+        dictionary to use to run it as its second.
 
         Modifying the way these data are gathered can be done by overriding
         this method (but the columns of the result must of course remain the same).
         """
 
-        return """SELECT state, amount_total, currency_id AS currency
+        return ("""SELECT state, amount_total, currency_id AS currency
                   FROM account_invoice
-                  WHERE journal_id = %s AND state = 'draft';""" % (self.id)
+                  WHERE journal_id = %(journal_id)s AND state = 'draft';""", {'journal_id':self.id})
 
 
     def _count_results_and_sum_amounts(self,results_dict,target_currency):
