@@ -3,7 +3,7 @@
 
     <!-- template use to render a Registration Badge -->
     <template id="event_registration_report_template_badge">
-        <t t-call="report.html_container">
+        <t t-call="report.basic_layout">
             <t t-foreach="docs" t-as="o">
                 <div class="page">
                     <div class="row">
@@ -55,7 +55,7 @@
 
     <!-- template use to edit Event Badget (allow to set the HTML badge fields) -->
     <template id="event_event_report_template_badge">
-        <t t-call="report.html_container">
+        <t t-call="report.basic_layout">
             <div class="page">
                 <t t-foreach="docs" t-as="event">
                     <div class="row">
