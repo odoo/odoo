@@ -9,13 +9,17 @@
                     <group>
                         <field name="product_tmpl_id" invisible="1"/>
                         <field name="product_variant_count" invisible="1"/>
+                        <field name="tracking" invisible="1"/>
                         <field name="product_id" widget="selection"
                             domain="[('product_tmpl_id', '=', product_tmpl_id)]"
                             attrs="{'readonly': [('product_variant_count', '=', 1)]}"/>
                         <field name="location_id" groups="stock.group_stock_multi_locations"/>
                         <field name="new_quantity"/>
-                        <field name="lot_id"  context="{'search_default_product_id':product_id,'default_product_id':product_id}" groups="stock.group_production_lot"/>
-                        <p groups="stock.group_production_lot" class="oe_grey">
+                        <field name="lot_id"
+                               context="{'search_default_product_id':product_id,'default_product_id':product_id}"
+                               groups="stock.group_production_lot"
+                               attrs="{'invisible': [('tracking', '=', 'none')]}" />
+                        <p groups="stock.group_production_lot" class="oe_grey" attrs="{'invisible': [('tracking', '=', 'none')]}">
                             When you select a serial number (lot), the quantity is corrected with respect to
                             the quantity of that serial number (lot) and not to the total quantity of the product.
                         </p>

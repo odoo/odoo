@@ -18,6 +18,7 @@ class ProductChangeQuantity(models.TransientModel):
         'New Quantity on Hand', default=1,
         digits=dp.get_precision('Product Unit of Measure'), required=True,
         help='This quantity is expressed in the Default Unit of Measure of the product.')
+    tracking = fields.Selection(related='product_tmpl_id.tracking')
     lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number', domain="[('product_id','=',product_id)]")
     location_id = fields.Many2one('stock.location', 'Location', required=True, domain="[('usage', '=', 'internal')]")
 
