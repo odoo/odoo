@@ -186,12 +186,12 @@
         <field name="model">resource.calendar.attendance</field>
         <field name="arch" type="xml">
             <tree string="Working Time" editable="top">
-                <field name="name"/>
                 <field name="dayofweek"/>
+                <field name="attendance_type"/>
                 <field name="hour_from" widget="float_time"/>
                 <field name="hour_to" widget="float_time"/>
-                <field name="date_from"/>
-                <field name="date_to"/>
+                <field name="date_from" groups="base.group_no_one"/>
+                <field name="date_to" groups="base.group_no_one"/>
             </tree>
         </field>
     </record>
@@ -202,7 +202,6 @@
         <field name="arch" type="xml">
             <form string="Working Time">
                 <group>
-                    <field name="name"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="dayofweek"/>

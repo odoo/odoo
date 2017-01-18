@@ -37,16 +37,17 @@ class ResourceCalendar(models.Model):
 
     def _get_default_attendance_ids(self):
         return [
-            (0, 0, {'name': _('Monday Morning'), 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),
-            (0, 0, {'name': _('Monday Evening'), 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17}),
-            (0, 0, {'name': _('Tuesday Morning'), 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12}),
-            (0, 0, {'name': _('Tuesday Evening'), 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17}),
-            (0, 0, {'name': _('Wednesday Morning'), 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12}),
-            (0, 0, {'name': _('Wednesday Evening'), 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17}),
-            (0, 0, {'name': _('Thursday Morning'), 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12}),
-            (0, 0, {'name': _('Thursday Evening'), 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17}),
-            (0, 0, {'name': _('Friday Morning'), 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12}),
-            (0, 0, {'name': _('Friday Evening'), 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17})
+            (5, 0),
+            (0, 0, {'dayofweek': '0', 'attendance_type': 'am'}),
+            (0, 0, {'dayofweek': '0', 'attendance_type': 'pm'}),
+            (0, 0, {'dayofweek': '1', 'attendance_type': 'am'}),
+            (0, 0, {'dayofweek': '1', 'attendance_type': 'pm'}),
+            (0, 0, {'dayofweek': '2', 'attendance_type': 'am'}),
+            (0, 0, {'dayofweek': '2', 'attendance_type': 'pm'}),
+            (0, 0, {'dayofweek': '3', 'attendance_type': 'am'}),
+            (0, 0, {'dayofweek': '3', 'attendance_type': 'pm'}),
+            (0, 0, {'dayofweek': '4', 'attendance_type': 'am'}),
+            (0, 0, {'dayofweek': '4', 'attendance_type': 'pm'}),
         ]
 
     name = fields.Char(required=True)
@@ -622,7 +623,9 @@ class ResourceCalendarAttendance(models.Model):
     _description = "Work Detail"
     _order = 'dayofweek, hour_from'
 
-    name = fields.Char(required=True)
+    calendar_id = fields.Many2one(
+        'resource.calendar', string="Working Hours",
+        ondelete='cascade', required=True)
     dayofweek = fields.Selection([
         ('0', 'Monday'),
         ('1', 'Tuesday'),
@@ -630,13 +633,44 @@ class ResourceCalendarAttendance(models.Model):
         ('3', 'Thursday'),
         ('4', 'Friday'),
         ('5', 'Saturday'),
-        ('6', 'Sunday')
-        ], 'Day of Week', required=True, index=True, default='0')
-    date_from = fields.Date(string='Starting Date')
-    date_to = fields.Date(string='End Date')
-    hour_from = fields.Float(string='Work from', required=True, index=True, help="Start and End time of working.")
-    hour_to = fields.Float(string='Work to', required=True)
-    calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
+        ('6', 'Sunday')],
+        string='Week Day', required=True, index=True)
+    date_from = fields.Date(string='Applicable From')
+    date_to = fields.Date(string='Applicable To')
+    hour_from = fields.Float(
+        string='Start Hour',
+        index=True, required=True)
+    hour_to = fields.Float(
+        string='End Hour',
+        index=True, required=True)
+    attendance_type = fields.Selection([
+        ('day', 'Day'),
+        ('am', 'Half Day (morning)'),
+        ('pm', 'Half Day (afternoon)'),
+        ('other', 'Stock Quant Packaging')],
+        string='Attendance Type',
+        default='other', required=True,
+        help='Use lots on incoming stock pickings sale order lines to enable sale order automatic project computation')
+    is_half_day = fields.Boolean()
+    is_day = fields.Boolean()
+
+    @api.onchange('attendance_type')
+    def _onchange_attendance_type(self):
+        if self.attendance_type in ['day', 'am', 'other']:
+            self.hour_from = '8.0'
+        elif self.attendance_type == 'pm':
+            self.hour_from = '13.0'
+        if self.attendance_type in ['day', 'pm', 'other']:
+            self.hour_to = '17.0'
+        elif self.attendance_type == 'am':
+            self.hour_to = '12.0'
+
+    @api.multi
+    def name_get(self):
+        res = []
+        for attendance in self:
+            res.append((attendance.id, '%s (%s)' % (attendance.dayofweek, attendance.attendance_type)))
+        return res
 
 
 def hours_time_string(hours):
