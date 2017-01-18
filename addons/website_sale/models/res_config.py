@@ -41,7 +41,7 @@ class WebsiteConfigSettings(models.TransientModel):
     module_portal = fields.Boolean("Activate the customer portal", help="""Give your customers access to their documents.""")
 
     # the next 2 fields represent sale_pricelist_setting from sale.config.settings, they are split here for the form view, to improve usability
-    sale_pricelist_setting_split_1 = fields.Boolean(default=0, string="Multiple Prices per Products")
+    sale_pricelist_setting_split_1 = fields.Boolean(default=0, string="Multiple Prices per Product")
     sale_pricelist_setting_split_2 = fields.Selection([
         (0, 'Multiple prices per product (e.g. customer segments, currencies)'),
         (1, 'Prices computed from formulas (discounts, margins, roundings)')
