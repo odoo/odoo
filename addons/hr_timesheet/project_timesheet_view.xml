@@ -153,7 +153,7 @@
                         <a name="%(act_hr_timesheet_line_by_project)d" type="action">Timesheets</a>
                     </div>
                 </xpath>
-                <xpath expr="//div[contains(@class, 'o_project_kanban_box')]/div[last()]" position="before">
+                <xpath expr="//div[contains(@class, 'o_project_kanban_box')]/div[last()]" position="after">
                     <div attrs="{'invisible': [('allow_timesheets', '=', False)]}" class="o_project_kanban_box">
                         <a t-if="record.allow_timesheets.raw_value" name="%(act_hr_timesheet_line_by_project)d" type="action">
                             <span class="o_label">Timesheets</span>
