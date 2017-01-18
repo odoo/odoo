@@ -496,7 +496,7 @@ class product_product(osv.osv):
         'active': lambda *a: 1,
         'price_extra': lambda *a: 0.0,
         'price_margin': lambda *a: 1.0,
-        'color': 0,
+        'color': '',
     }
 
     _name = "product.product"
@@ -523,7 +523,7 @@ class product_product(osv.osv):
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Sale Price')),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True, select=True),
-        'color': fields.integer('Color Index'),
+        'color': fields.char('Color', size=16, required=True),
         'product_image': fields.binary('Image'),
     }
     
