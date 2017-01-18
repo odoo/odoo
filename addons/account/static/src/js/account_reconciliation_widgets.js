@@ -1587,7 +1587,7 @@ var bankStatementReconciliation = abstractReconciliation.extend({
             type: 'ir.actions.act_window',
             res_model: 'account.reconcile.model',
             views: [[false, 'form']],
-            target: 'current'
+            target: 'new'
         });
     },
 });
