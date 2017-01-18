@@ -41,7 +41,7 @@ class ProjectIssueReport(models.Model):
                     c.working_hours_open,
                     c.working_hours_close,
                     c.stage_id,
-                    date(c.date_closed) as date_closed,
+                    c.date_closed as date_closed,
                     c.company_id as company_id,
                     c.priority as priority,
                     c.project_id as project_id,
