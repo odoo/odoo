@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, exceptions, models
+from odoo import api, exceptions, models, fields
+from odoo.addons.website.models.website import slug
+
 
 class Project(models.Model):
     _inherit = ['project.project']
@@ -37,6 +39,12 @@ class Project(models.Model):
 
 class Task(models.Model):
     _inherit = ['project.task']
+
+    website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
+
+    def _compute_website_url(self):
+        for task in self:
+            task.website_url = '/my/task/%s' % slug(task)
 
     @api.multi
     def get_access_action(self):
