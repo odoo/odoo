@@ -51,7 +51,11 @@
                             <span t-field="ticket.price_reduce" t-options='{
                              "widget": "monetary",
                              "display_currency": website.pricelist_id.currency_id
-                            }'/>
+                            }' groups="sale.group_show_price_subtotal"/>
+                            <span t-field="ticket.price_reduce_taxinc" t-options='{
+                             "widget": "monetary",
+                             "display_currency": website.pricelist_id.currency_id
+                            }' groups="sale.group_show_price_total"/>
                             <span itemprop="price" style="display:none;" t-esc="ticket.price"/>
                             <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
                         </t>
