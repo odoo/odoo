@@ -1493,20 +1493,16 @@ ListView.Groups = Class.extend({
         });
     },
     setup_resequence_rows: function (list, dataset) {
+        var sequence_field = _(this.columns).findWhere({'widget': 'handle'});
+        var seqname = sequence_field ? sequence_field.name : 'sequence';
+
         // drag and drop enabled if list is not sorted (unless it is sorted by
-        // sequence (ASC)), and there is a visible column with @widget=handle
-        // or "sequence" column in the view.
-        if ((dataset.sort && dataset.sort() && dataset.sort() !== 'sequence'
-            && dataset.sort() !== 'sequence ASC')
-            || !_(this.columns).any(function (column) {
-                    return column.widget === 'handle'
-                        || column.name === 'sequence'; })) {
+        // its sequence field (ASC)), and there is a visible column with
+        // @widget=handle or "sequence" column in the view.
+        if ((dataset.sort && [seqname, seqname + 'ASC', ''].indexOf(dataset.sort()) === -1)
+            || !_(this.columns).findWhere({'name': seqname})) {
             return;
         }
-        var sequence_field = _(this.columns).find(function (c) {
-            return c.widget === 'handle';
-        });
-        var seqname = sequence_field ? sequence_field.name : 'sequence';
 
         // ondrop, move relevant record & fix sequences
         list.$current.sortable({
