@@ -442,7 +442,8 @@ class AccountMoveLine(models.Model):
 
         balance = 0
         for line in self._context['line_ids']:
-            balance += line[2]['debit'] - line[2]['credit']
+            if line[2]:
+                balance += line[2]['debit'] - line[2]['credit']
 
         if balance < 0:
             rec.update({'debit': -balance})
