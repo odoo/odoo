@@ -63,8 +63,10 @@ class project_task(osv.osv):
             context = {}
         if not default:
             default = {}
-        default['timebox_id'] = False
-        default['context_id'] = False
+        if not default.get('timebox_id'):    	
+            default['timebox_id'] = False
+        if not default.get('context_id'):    
+            default['context_id'] = False
         return super(project_task,self).copy_data(cr, uid, id, default, context)
 
     def _get_context(self,cr, uid, context=None):
