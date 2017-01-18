@@ -396,7 +396,9 @@ class BaseModel(object):
                 RETURNING id
             """, params)
         model_id = cr.fetchone()[0]
-        if 'module' in context:
+
+        if self._module == context.get('module'):
+            # self._module is the name of the module that last extended self
             name_id = 'model_'+self._name.replace('.', '_')
             cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, context['module']))
             if not cr.rowcount:
