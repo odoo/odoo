@@ -7,17 +7,17 @@ from odoo import tools
 from odoo.tools.translate import _
 
 from odoo.fields import Date
-from odoo.addons.website.models.website import url_for
 
 
-def get_record_pager(ids, id, url):
-    if id in ids:
-        idx = ids.index(id)
+def get_records_pager(ids, current):
+    if current.id in ids:
+        idx = ids.index(current.id)
         return {
-            'prev_record': idx != 0 and url_for(url % ids[idx - 1]),
-            'next_record': idx < len(ids) - 1 and url_for(url % ids[idx + 1])
+            'prev_record': idx != 0 and current.browse(ids[idx - 1]).website_url,
+            'next_record': idx < len(ids) - 1 and current.browse(ids[idx + 1]).website_url
         }
     return {}
+
 
 class website_account(http.Controller):
 

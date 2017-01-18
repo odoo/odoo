@@ -5,7 +5,7 @@ from odoo import http, _
 from odoo.exceptions import AccessError
 from odoo.http import request
 
-from odoo.addons.website_portal.controllers.main import website_account, get_record_pager
+from odoo.addons.website_portal.controllers.main import website_account, get_records_pager
 
 
 class website_account(website_account):
@@ -80,6 +80,7 @@ class website_account(website_account):
         )
         # search the count to display, according to the pager data
         quotations = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager['offset'])
+        request.session['my_quotes_history'] = quotations.ids[:100]
 
         values.update({
             'date': date_begin,
@@ -158,7 +159,7 @@ class website_account(website_account):
             'order': order.sudo(),
             'order_invoice_lines': order_invoice_lines,
         }
-        values.update(get_record_pager(history, order.id, '/my/orders/%d'))
+        values.update(get_records_pager(history, order))
         return request.render("website_portal_sale.orders_followup", values)
 
     #

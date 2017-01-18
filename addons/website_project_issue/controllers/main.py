@@ -4,7 +4,7 @@
 from collections import OrderedDict
 
 from odoo import http, _
-from odoo.addons.website_portal.controllers.main import website_account, get_record_pager
+from odoo.addons.website_portal.controllers.main import website_account, get_records_pager
 from odoo.http import request
 
 
@@ -78,7 +78,7 @@ class WebsiteAccount(website_account):
                 search_domain += [('message_ids.body', 'ilike', search)]
                 search_all += 1
             if search_in == 'all':
-                search_domain[:0] = ['|']*(search_all-1)
+                search_domain[:0] = ['|'] * (search_all - 1)
             domain += search_domain
 
         # issue count
@@ -119,5 +119,5 @@ class WebsiteAccount(website_account):
         issue = request.env['project.issue'].browse(issue_id)
         vals = {'issue': issue}
         history = request.session.get('my_issues_history', [])
-        vals.update(get_record_pager(history, issue_id, '/my/issues/%d'))
+        vals.update(get_records_pager(history, issue))
         return request.render("website_project_issue.my_issues_issue", vals)

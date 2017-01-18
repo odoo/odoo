@@ -6,7 +6,7 @@ from collections import OrderedDict
 from odoo import http, _
 from odoo.http import request
 
-from odoo.addons.website_portal.controllers.main import website_account, get_record_pager
+from odoo.addons.website_portal.controllers.main import website_account, get_records_pager
 
 
 class WebsiteAccount(website_account):
@@ -68,9 +68,9 @@ class WebsiteAccount(website_account):
 
     @http.route(['/my/project/<model("project.project"):project>'], type='http', auth="user", website=True)
     def my_project(self, project=None, **kw):
-        vals = { 'project': project, }
+        vals = {'project': project, }
         history = request.session.get('my_projects_history', [])
-        vals.update(get_record_pager(history, project.id, '/my/project/%d'))
+        vals.update(get_records_pager(history, project))
         return request.render("website_project.my_project", vals)
 
     @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
@@ -142,5 +142,5 @@ class WebsiteAccount(website_account):
     def my_task(self, task=None, **kw):
         vals = {'task': task, 'user': request.env.user}
         history = request.session.get('my_tasks_history', [])
-        vals.update(get_record_pager(history, task.id, '/my/task/%d'))
+        vals.update(get_records_pager(history, task))
         return request.render("website_project.my_task", vals)
