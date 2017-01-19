@@ -30,7 +30,7 @@
         </field>
     </record>
     <record id="product_pos_category_action" model="ir.actions.act_window">
-        <field name="name">Pos Product Categories</field>
+        <field name="name">PoS Categories</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">pos.category</field>
         <field name="view_type">form</field>
@@ -50,5 +50,8 @@
         </field>
     </record>
 
-    <menuitem id="menu_product_pos_category" action="product_pos_category_action" parent="menu_point_config_product" sequence="20" />
+    <menuitem id="menu_product_pos_category"
+        action="product_pos_category_action"
+        parent="point_of_sale.pos_config_menu_configuration_product"
+        sequence="30"/>
 </odoo>

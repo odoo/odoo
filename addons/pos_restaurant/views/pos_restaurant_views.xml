@@ -74,11 +74,10 @@
             </field>
         </record>
 
-        <menuitem
-            parent="point_of_sale.menu_point_config_product"
+        <menuitem id="menu_restaurant_floor_all"
+            parent="point_of_sale.pos_config_menu_configuration"
             action="action_restaurant_floor_form"
-            id="menu_restaurant_floor_all"
-            sequence="30"
+            sequence="10"
             groups="point_of_sale.group_pos_manager"/>
 
         <!--     RESTAURANT PRINTERS     -->
@@ -130,11 +129,10 @@
             </field>
         </record>
 
-        <menuitem
-            parent="point_of_sale.menu_point_config_product"
+        <menuitem id="menu_restaurant_printer_all"
+            parent="point_of_sale.pos_config_menu_configuration"
             action="action_restaurant_printer_form"
-            id="menu_restaurant_printer_all"
-            sequence="30"
+            sequence="15"
             groups="point_of_sale.group_pos_manager"/>
 
 </odoo>
