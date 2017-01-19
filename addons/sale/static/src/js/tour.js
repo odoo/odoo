@@ -21,7 +21,7 @@ tour.register('sale_tour', {
 }, {
     trigger: ".o_list_button_add",
     extra_trigger: ".o_sale_order",
-    content: _t("Let's create a new quotation.<br/><i>Note that colored buttons usually points to the next logical actions in any screen.</i>"),
+    content: _t("Let's create a new quotation.<br/><i>Note that colored buttons usually point to the next logical actions.</i>"),
     position: "right",
 }, {
     trigger: ".o_form_required input",
@@ -41,7 +41,7 @@ tour.register('sale_tour', {
 }, {
     trigger: ".modal-body .o_form_required input, .o_list_editable .o_form_required input",
     extra_trigger: ".o_sale_order",
-    content: _t("Select a product, or create a new one on the fly. The product will define the default sale price (that you can change), taxes and description automatically."),
+    content: _t("Select a product, or create a new one on the fly. The product will define the default sales price (that you can change), taxes and description automatically."),
     position: "right",
     run: "text Ipad",
 }, {
@@ -59,13 +59,13 @@ tour.register('sale_tour', {
     content: _t("Once your quotation is ready, you can save, print or send it by email."),
     position: "right",
 }, {
-    trigger: ".o_sale_confirm",
+    trigger: ".o_sale_print",
     extra_trigger: ".o_sale_order.o_form_readonly",
-    content: _t("<p><b>Confirm the order</b> if the customer purchases.</p>"),
+    content: _t("<p><b>Print this quotation.</b> If not yet done, you will be requested to set your company data and to select a document layout.</p>"),
     position: "bottom"
 }, {
     trigger: ".breadcrumb li:not(.active):last",
-    extra_trigger: ".o_sale_order [data-id='sale'].btn-primary, .o_sale_order [data-id='sale'].oe_active",
+    extra_trigger: ".o_sale_order [data-id='sent'].btn-primary, .o_sale_order [data-id='sent'].oe_active",
     content: _t("Use the breadcrumbs to <b>go back to preceeding screens</b>."),
     position: "bottom"
 }, {
