@@ -259,6 +259,10 @@ class IrModel(models.Model):
         return CustomModel
 
 
+# retrieve field types defined by the framework only (not extensions)
+FIELD_TYPES = [(key, key) for key in sorted(fields.Field.by_type)]
+
+
 class IrModelFields(models.Model):
     _name = 'ir.model.fields'
     _description = "Fields"
@@ -276,7 +280,7 @@ class IrModelFields(models.Model):
                                help="The model this field belongs to")
     field_description = fields.Char(string='Field Label', default='', required=True, translate=True)
     help = fields.Text(string='Field Help', translate=True)
-    ttype = fields.Selection(selection='_get_field_types', string='Field Type', required=True)
+    ttype = fields.Selection(selection=FIELD_TYPES, string='Field Type', required=True)
     selection = fields.Char(string='Selection Options', default="",
                             help="List of options for a selection field, "
                                  "specified as a Python expression defining a list of (key, label) pairs. "
@@ -309,11 +313,6 @@ class IrModelFields(models.Model):
                                                       "a list of comma-separated field names, like\n\n"
                                                       "    name, partner_id.name")
     store = fields.Boolean(string='Stored', default=True, help="Whether the value is stored in the database.")
-
-    @api.model
-    def _get_field_types(self):
-        # retrieve the possible field types from the field classes' metaclass
-        return sorted((key, key) for key in fields.MetaField.by_type)
 
     @api.depends()
     def _in_modules(self):

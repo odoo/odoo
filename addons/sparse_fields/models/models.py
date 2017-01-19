@@ -6,6 +6,7 @@ from odoo import models, fields, api
 class IrModelFields(models.Model):
     _inherit = 'ir.model.fields'
 
+    ttype = fields.Selection(selection_add=[('serialized', 'serialized')])
     serialization_field_id = fields.Many2one('ir.model.fields', string='Serialization Field',
         ondelete='cascade', domain="[('ttype','=','serialized')]",
         help="If set, this field will be stored in the sparse structure of the "
