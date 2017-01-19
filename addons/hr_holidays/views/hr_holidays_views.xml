@@ -65,7 +65,7 @@
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
                 <calendar string="Leave Request" color="employee_id"
-                          date_start="date_from" date_stop="date_to"
+                          date_start="date_from" date_stop="date_to" all_day="all_day"
                           mode="month"
                           quick_add="False" avatar_model="hr.employee">
                     <field name="display_name"/>
@@ -101,6 +101,10 @@
                             <label for="number_of_days_temp" string="Duration"/>
                             <div>
                                 <div attrs="{'invisible': [('type', '=', 'add')]}">
+                                    <field name="no_day_span"/>
+                                    <field name="all_day"/>
+                                    <field name="date_from_type"/>
+                                    <field name="date_to_type"/>
                                     <field name="date_from" attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>
                                     <label string="-" class="oe_inline"/>
                                     <field name="date_to"  attrs="{'required':[('type', '=', 'remove')]}" class="oe_inline"/>

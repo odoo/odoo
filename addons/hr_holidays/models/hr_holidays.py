@@ -208,10 +208,26 @@ class Holidays(models.Model):
     parent_id = fields.Many2one('hr.holidays', string='Parent')
     linked_request_ids = fields.One2many('hr.holidays', 'parent_id', string='Linked Requests')
     # time
+    all_day = fields.Boolean('All day')
+    no_day_span = fields.Integer('Span', compute='_compute_no_day_span')
+    date_from_type = fields.Selection([
+        ('day', 'Day'),
+        ('am', 'Morning'),
+        ('pm', 'Afternoon'),
+        ('other', 'Other')], string='From Type',
+        required=True)
+    date_date_from = fields.Date('Starting')
     date_from = fields.Datetime(
         'Start Date', copy=False, track_visibility='onchange',
         index=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    date_to_type = fields.Selection([
+        ('day', 'Day'),
+        ('am', 'Morning'),
+        ('pm', 'Afternoon'),
+        ('other', 'Other')], string='To Type',
+        required=True)
+    date_date_to = fields.Date('Ending')
     date_to = fields.Datetime(
         'End Date', copy=False, track_visibility='onchange',
         readonly=True,
@@ -236,6 +252,10 @@ class Holidays(models.Model):
     # technical
     meeting_id = fields.Many2one('calendar.event', string='Meeting')
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
+
+    @api.depends('date_from', 'date_to')
+    def _compute_no_day_span(self):
+        return (fields.Datetime.from_string(self.date_from) - fields.Datetime.from_string(self.date_to)).days
 
     @api.multi
     @api.depends('number_of_days_temp', 'type')
@@ -317,6 +337,22 @@ class Holidays(models.Model):
 
         time_delta = to_dt - from_dt
         return math.ceil(time_delta.days + float(time_delta.seconds) / 86400)
+
+    @api.onchange('all_day')
+    def _onchange_all_day(self):
+        if self.all_day:
+            self.date_from_type = 'day'
+            self.date_to_type = 'day'
+
+    @api.onchange('date_from_type')
+    def _onchange_date_from_type(self):
+        if self.employee_id and self.date_from_type in ('day', 'am', 'other'):
+            self.date_from = self.employee_id.resource_id.get_start_work_hour()
+
+    @api.onchange('date_to_type')
+    def _onchagne_date_to_type(self):
+        if self.employee_id and self.date_to_type in ('day', 'pm', 'other'):
+            self.date_to = self.employee_id.resource_id.get_end_work_hour()
 
     @api.onchange('date_from')
     def _onchange_date_from(self):
