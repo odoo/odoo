@@ -657,13 +657,13 @@ class ResourceCalendarAttendance(models.Model):
     @api.onchange('attendance_type')
     def _onchange_attendance_type(self):
         if self.attendance_type in ['day', 'am', 'other']:
-            self.hour_from = '8.0'
+            self.hour_from = 8.0
         elif self.attendance_type == 'pm':
-            self.hour_from = '13.0'
+            self.hour_from = 13.0
         if self.attendance_type in ['day', 'pm', 'other']:
-            self.hour_to = '17.0'
+            self.hour_to = 17.0
         elif self.attendance_type == 'am':
-            self.hour_to = '12.0'
+            self.hour_to = 12.0
 
     @api.multi
     def name_get(self):
@@ -671,6 +671,15 @@ class ResourceCalendarAttendance(models.Model):
         for attendance in self:
             res.append((attendance.id, '%s (%s)' % (attendance.dayofweek, attendance.attendance_type)))
         return res
+
+    @api.model
+    def create(self, vals):
+        if vals.get('attendance_type') in ('day', 'am', 'pm'):
+            if not vals.get('hour_from'):
+                vals['hour_from'] = vals['attendance_type'] in ('day', 'am') and 8.0 or 13.0
+            if not vals.get('hour_to'):
+                vals['hour_from'] = vals['attendance_type'] in ('day', 'pm') and 17.0 or 12.0
+        return super(ResourceCalendarAttendance, self).create(vals)
 
 
 def hours_time_string(hours):
