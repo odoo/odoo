@@ -35,6 +35,28 @@ def make_compute(text, deps):
     return api.depends(*deps)(func)
 
 
+# generic INSERT and UPDATE queries
+INSERT_QUERY = "INSERT INTO {table} ({cols}) VALUES ({vals}) RETURNING id"
+UPDATE_QUERY = "UPDATE {table} SET {assignment} WHERE {condition} RETURNING id"
+
+def query_insert(cr, table, values):
+    query = INSERT_QUERY.format(
+        table=table,
+        cols=",".join(values),
+        vals=",".join(map("%({0})s".format, values)),
+    )
+    cr.execute(query, values)
+
+def query_update(cr, table, values, selectors):
+    setters = set(values) - set(selectors)
+    query = UPDATE_QUERY.format(
+        table=table,
+        assignment=",".join(map("{0}=%({0})s".format, setters)),
+        condition=" AND ".join(map("{0}=%({0})s".format, selectors)),
+    )
+    cr.execute(query, values)
+
+
 #
 # IMPORTANT: this must be the first model declared in the module
 #
@@ -190,6 +212,39 @@ class IrModel(models.Model):
         }
         return self.create(vals).name_get()[0]
 
+    def _reflect(self, model):
+        """ Reflect the given model and its fields in the models 'ir.model' and
+        'ir.model.fields'. Also create entries in 'ir.model.data' if the key
+        'module' is passed into the context.
+        """
+        cr = self.env.cr
+
+        # create/update the entries in 'ir.model' and 'ir.model.data'
+        params = {
+            'model': model._name,
+            'name': model._description,
+            'info': next(cls.__doc__ for cls in type(model).mro() if cls.__doc__),
+            'state': 'manual' if model._custom else 'base',
+            'transient': model._transient,
+        }
+        query_update(cr, self._table, params, ['model'])
+        if not cr.rowcount:
+            query_insert(cr, self._table, params)
+
+        record = self.browse(cr.fetchone())
+        self._context['todo'].append((10, record.modified, [list(params)]))
+
+        if 'module' in self._context:
+            xmlid = 'model_' + model._name.replace('.', '_')
+            cr.execute("SELECT * FROM ir_model_data WHERE name=%s AND module=%s",
+                       (xmlid, self._context['module']))
+            if not cr.rowcount:
+                cr.execute(""" INSERT INTO ir_model_data (module, name, model, res_id, date_init, date_update)
+                               VALUES (%s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')) """,
+                           (self._context['module'], xmlid, record._name, record.id))
+
+        return record
+
     @api.model
     def _instanciate(self, model_data):
         """ Return a class for the custom model given by parameters ``model_data``. """
@@ -202,6 +257,10 @@ class IrModel(models.Model):
             __doc__ = model_data['info']
 
         return CustomModel
+
+
+# retrieve field types defined by the framework only (not extensions)
+FIELD_TYPES = [(key, key) for key in sorted(fields.Field.by_type)]
 
 
 class IrModelFields(models.Model):
@@ -221,7 +280,7 @@ class IrModelFields(models.Model):
                                help="The model this field belongs to")
     field_description = fields.Char(string='Field Label', default='', required=True, translate=True)
     help = fields.Text(string='Field Help', translate=True)
-    ttype = fields.Selection(selection='_get_field_types', string='Field Type', required=True)
+    ttype = fields.Selection(selection=FIELD_TYPES, string='Field Type', required=True)
     selection = fields.Char(string='Selection Options', default="",
                             help="List of options for a selection field, "
                                  "specified as a Python expression defining a list of (key, label) pairs. "
@@ -242,11 +301,6 @@ class IrModelFields(models.Model):
     groups = fields.Many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id')
     selectable = fields.Boolean(default=True)
     modules = fields.Char(compute='_in_modules', string='In Apps', help='List of modules in which the field is defined')
-    serialization_field_id = fields.Many2one('ir.model.fields', 'Serialization Field', domain="[('ttype','=','serialized')]",
-                                             ondelete='cascade', help="If set, this field will be stored in the sparse "
-                                                                      "structure of the serialization field, instead "
-                                                                      "of having its own database column. This cannot be "
-                                                                      "changed after creation.")
     relation_table = fields.Char(help="Used for custom many2many fields to define a custom relation table name")
     column1 = fields.Char(string='Column 1', help="Column referring to the record in the model table")
     column2 = fields.Char(string="Column 2", help="Column referring to the record in the comodel table")
@@ -259,11 +313,6 @@ class IrModelFields(models.Model):
                                                       "a list of comma-separated field names, like\n\n"
                                                       "    name, partner_id.name")
     store = fields.Boolean(string='Stored', default=True, help="Whether the value is stored in the database.")
-
-    @api.model
-    def _get_field_types(self):
-        # retrieve the possible field types from the field classes' metaclass
-        return sorted((key, key) for key in fields.MetaField.by_type)
 
     @api.depends()
     def _in_modules(self):
@@ -522,15 +571,6 @@ class IrModelFields(models.Model):
 
     @api.multi
     def write(self, vals):
-        # For the moment renaming a sparse field or changing the storing system
-        # is not allowed. This may be done later
-        if 'serialization_field_id' in vals or 'name' in vals:
-            for field in self:
-                if 'serialization_field_id' in vals and field.serialization_field_id.id != vals['serialization_field_id']:
-                    raise UserError(_('Changing the storing system for field "%s" is not allowed.') % field.name)
-                if field.serialization_field_id and (field.name != vals['name']):
-                    raise UserError(_('Renaming sparse field "%s" is not allowed') % field.name)
-
         # if set, *one* column can be renamed here
         column_rename = None
 
@@ -613,9 +653,76 @@ class IrModelFields(models.Model):
             res.append((field.id, '%s (%s)' % (field.field_description, field.model)))
         return res
 
-    @api.model
-    def _instanciate(self, field_data, partial):
-        """ Return a field instance corresponding to parameters ``field_data``. """
+    def _reflect_values(self, field, existing):
+        """ Return the values corresponding to the given ``field``. """
+        model = self.env['ir.model']._get(field.model_name)
+        return {
+            'model_id': model.id,
+            'model': field.model_name,
+            'name': field.name,
+            'field_description': field.string,
+            'help': field.help or None,
+            'ttype': field.type,
+            'relation': field.comodel_name or None,
+            'index': bool(field.index),
+            'store': bool(field.store),
+            'copy': bool(field.copy),
+            'related': ".".join(field.related) if field.related else None,
+            'readonly': bool(field.readonly),
+            'required': bool(field.required),
+            'selectable': bool(field.search or field.store),
+            'translate': bool(field.translate),
+            'relation_field': field.inverse_name if field.type == 'one2many' else None,
+            'relation_table': field.relation if field.type == 'many2many' else None,
+            'column1': field.column1 if field.type == 'many2many' else None,
+            'column2': field.column2 if field.type == 'many2many' else None,
+        }
+
+    def _reflect(self, field, existing):
+        """ Reflect the given field in the model `ir.model.fields` and return
+            its corresponding record.
+        """
+        vals = self._reflect_values(field, existing)
+        existing_data = existing.get(field.name)
+
+        if existing_data is None:
+            cr = self.env.cr
+            # create an entry in this table
+            query_insert(cr, self._table, vals)
+            record = self.browse(cr.fetchone())
+            self._context['todo'].append((20, record.modified, [list(vals)]))
+            # create a corresponding xml id
+            module = field._module or self._context.get('module')
+            if module:
+                model = self.env[field.model_name]
+                xmlid = 'field_%s_%s' % (model._table, field.name)
+                cr.execute("SELECT name FROM ir_model_data WHERE name=%s", (xmlid,))
+                if cr.fetchone():
+                    xmlid = xmlid + "_" + str(record.id)
+                cr.execute(""" INSERT INTO ir_model_data (module, name, model, res_id, date_init, date_update)
+                               VALUES (%s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')) """,
+                           (module, xmlid, record._name, record.id))
+            # update existing (for recursive calls)
+            existing[field.name] = dict(vals, id=record.id)
+            return record
+
+        if not all(existing_data[key] == val for key, val in vals.iteritems()):
+            cr = self.env.cr
+            # update the entry in this table
+            query_update(cr, self._table, vals, ['model', 'name'])
+            record = self.browse(cr.fetchone())
+            modified = set(vals) - set(['model', 'name'])
+            self._context['todo'].append((20, record.modified, [modified]))
+            # update existing (for recursive calls)
+            existing_data.update(vals)
+            return record
+
+        else:
+            # nothing to update, simply return the corresponding record
+            return self.browse(existing_data['id'])
+
+    def _instanciate_attrs(self, field_data, partial):
+        """ Return the parameters for a field instance for ``field_data``. """
         attrs = {
             'manual': True,
             'string': field_data['field_description'],
@@ -627,7 +734,6 @@ class IrModelFields(models.Model):
             'readonly': bool(field_data['readonly']),
             'store': bool(field_data['store']),
         }
-        # FIXME: ignore field_data['serialization_field_id']
         if field_data['ttype'] in ('char', 'text', 'html'):
             attrs['translate'] = bool(field_data['translate'])
             attrs['size'] = field_data['size'] or None
@@ -661,7 +767,11 @@ class IrModelFields(models.Model):
         # add compute function if given
         if field_data['compute']:
             attrs['compute'] = make_compute(field_data['compute'], field_data['depends'])
+        return attrs
 
+    def _instanciate(self, field_data, partial):
+        """ Return a field instance corresponding to parameters ``field_data``. """
+        attrs = self._instanciate_attrs(field_data, partial)
         return fields.Field.by_type[field_data['ttype']](**attrs)
 
 

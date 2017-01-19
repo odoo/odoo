@@ -498,40 +498,6 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.sudo(user1).foo, 'alpha')
         self.assertEqual(record.sudo(user2).foo, 'default')
 
-    def test_28_sparse(self):
-        """ test sparse fields. """
-        record = self.env['test_new_api.sparse'].create({})
-        self.assertFalse(record.data)
-
-        partner = self.env.ref('base.main_partner')
-        values = [
-            ('boolean', True),
-            ('integer', 42),
-            ('float', 3.14),
-            ('char', 'John'),
-            ('selection', 'two'),
-            ('partner', partner.id),
-        ]
-        for n, (key, val) in enumerate(values):
-            record.write({key: val})
-            self.assertEqual(record.data, dict(values[:n+1]))
-
-        for key, val in values[:-1]:
-            self.assertEqual(record[key], val)
-        self.assertEqual(record.partner, partner)
-
-        for n, (key, val) in enumerate(values):
-            record.write({key: False})
-            self.assertEqual(record.data, dict(values[n+1:]))
-
-        # check reflection of sparse fields in 'ir.model.fields'
-        names = [name for name, _ in values]
-        domain = [('model', '=', 'test_new_api.sparse'), ('name', 'in', names)]
-        fields = self.env['ir.model.fields'].search(domain)
-        self.assertEqual(len(fields), len(names))
-        for field in fields:
-            self.assertEqual(field.serialization_field_id.name, 'data')
-
     def test_30_read(self):
         """ test computed fields as returned by read(). """
         discussion = self.env.ref('test_new_api.discussion_0')
