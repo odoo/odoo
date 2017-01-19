@@ -27,7 +27,7 @@ class BaseConfigSettings(models.TransientModel):
         self.ensure_one()
         template = self.env.ref('report.view_company_report_form', False)
         return {
-            'name': _('Choose Your Report Layout'),
+            'name': _('Choose Your Document Layout'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',

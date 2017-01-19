@@ -275,7 +275,7 @@ class Report(models.Model):
         if (self.env.uid == SUPERUSER_ID) and ((not self.env.user.company_id.external_report_layout) or (not self.env.user.company_id.logo)) and config:
             template = self.env.ref('report.view_company_report_form', False)
             return {
-                'name': _('Choose Your Report Layout'),
+                'name': _('Choose Your Document Layout'),
                 'type': 'ir.actions.act_window',
                 'context': {'default_report_name': report_name},
                 'view_type': 'form',

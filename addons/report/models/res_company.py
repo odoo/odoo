@@ -12,7 +12,7 @@ class ResCompany(models.Model):
         ('boxed', 'Boxed'),
         ('clean', 'Clean'),
         ('standard', 'Standard'),
-    ], string='Report Template')
+    ], string='Document Template')
 
     def open_company_edit_report(self):
         self.ensure_one()
