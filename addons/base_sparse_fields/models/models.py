@@ -49,7 +49,7 @@ class IrModelFields(models.Model):
         return attrs
 
 
-class TestSparse(models.Model):
+class TestSparse(models.TransientModel):
     _name = 'sparse_fields.test'
 
     data = fields.Serialized()
