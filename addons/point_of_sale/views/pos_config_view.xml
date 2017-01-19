@@ -119,9 +119,9 @@
 
     <menuitem
         id="menu_pos_config_pos"
-        parent="menu_point_config_product"
+        parent="point_of_sale.pos_config_menu_configuration"
         action="action_pos_config_pos"
-        groups="group_pos_manager"/>
+        groups="group_pos_manager" sequence="5"/>
 
     <record id="action_pos_config_kanban" model="ir.actions.act_window">
         <field name="name">Point of Sale</field>
@@ -141,7 +141,10 @@
     </record>
 
     <!-- Barcode Nomenclatures -->
-    <menuitem id="menu_pos_barcode_nomenclature_all" parent="menu_point_config_product" action="barcodes.action_barcode_nomenclature_form" sequence="30"/>
+    <menuitem id="menu_pos_barcode_nomenclature_all"
+        parent="point_of_sale.pos_config_menu_configuration"
+        action="barcodes.action_barcode_nomenclature_form"
+        sequence="40"/>
 
     <menuitem id="menu_pos_dashboard" action="action_pos_config_kanban" parent="menu_point_root" name="Dashboard" sequence="1"/>
 </odoo>

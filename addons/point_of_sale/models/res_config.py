@@ -21,7 +21,7 @@ class PosConfiguration(models.TransientModel):
     default_pricelist_setting = fields.Selection([
         ('percentage', 'Multiple prices per product (e.g. quantity, shop-specific)'),
         ('formula', 'Price computed from formulas (discounts, margins, rounding)')
-        ], string="Pricelists", default_model='pos.config.settings')
+        ], string="Multiple Prices per Products", default_model='pos.config.settings')
     module_pos_restaurant = fields.Boolean(string="Restaurant")
     module_pos_loyalty = fields.Boolean(string="Loyalty Program")
     module_pos_discount = fields.Boolean(string="Global Discounts")
