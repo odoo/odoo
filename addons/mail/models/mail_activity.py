@@ -44,7 +44,7 @@ class MailActivity(models.Model):
     def default_get(self, fields):
         res = super(MailActivity, self).default_get(fields)
         if not fields or 'res_model_id' in fields and res.get('res_model'):
-            res['res_model_id'] = self.env['ir.model'].sudo().search([('model', '=', res['res_model'])]).id
+            res['res_model_id'] = self.env['ir.model']._get(res['res_model']).id
         return res
 
     # owner
