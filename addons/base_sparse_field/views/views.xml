@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Add 'serialization_field_id' in ir.model form view -->
+        <record model="ir.ui.view" id="model_form_view">
+            <field name="model">ir.model</field>
+            <field name="inherit_id" ref="base.view_model_form"/>
+            <field name="arch" type="xml">
+                <field name="related" position="before">
+                    <field name="serialization_field_id"
+                        domain="[('ttype','=','serialized'), ('model_id','=',parent.model)]"
+                        attrs="{'readonly': [('state','=','base')]}"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Add 'serialization_field_id' in ir.model.fields form view -->
+        <record model="ir.ui.view" id="field_form_view">
+            <field name="model">ir.model.fields</field>
+            <field name="inherit_id" ref="base.view_model_fields_form"/>
+            <field name="arch" type="xml">
+                <field name="related" position="before">
+                    <field name="serialization_field_id"
+                        domain="[('ttype','=','serialized'), ('model_id','=',model_id)]"
+                        attrs="{'readonly': [('state','=','base')]}"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>
