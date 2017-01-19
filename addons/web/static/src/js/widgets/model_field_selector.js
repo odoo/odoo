@@ -5,6 +5,8 @@ var core = require("web.core");
 var Model = require("web.DataModel");
 var Widget = require("web.Widget");
 
+var _t = core._t;
+
 /// The ModelFieldSelector widget can be used to select a particular field chain from a given model.
 var ModelFieldSelector = Widget.extend({
     template: "FieldSelector",
@@ -49,7 +51,15 @@ var ModelFieldSelector = Widget.extend({
 
         // Handle a direct change in the debug input
         "change input": function() {
-            this.setChain(this.$input.val());
+            var userChain = this.$input.val();
+            if (!this.options.followRelations) {
+                var fields = userChain.split(".");
+                if (fields.length > 1) {
+                    this.do_warn(_t("Relation not allowed"), _t("You cannot follow relations for this field chain construction"));
+                    userChain = fields[0];
+                }
+            }
+            this.setChain(userChain);
             this.validate(true);
             this._prefill().then(this.displayPage.bind(this, ""));
             this.trigger_up("field_chain_changed", {chain: this.chain});
@@ -121,6 +131,9 @@ var ModelFieldSelector = Widget.extend({
     /// @param options - an object with several options:
     ///                     - filters: an object which contains suboptions which determine the fields which are used
     ///                         - searchable: a boolean which is true if only the searchable fields have to be used (true by default)
+    ///                     - fields: the list of fields info to use when no relation has been followed (default to null,
+    ///                         which indicates that the widget has to request the model fields itself)
+    ///                     - followRelations: allow to follow relation when building the chain (true by default)
     ///                     - debugMode: a boolean which is true if the widget is in debug mode (false by default)
     init: function (parent, model, chain, options) {
         this._super.apply(this, arguments);
@@ -129,6 +142,8 @@ var ModelFieldSelector = Widget.extend({
         this.chain = chain;
         this.options = _.extend({
             filters: {},
+            fields: null,
+            followRelations: true,
             debugMode: false,
         }, options || {});
         this.options.filters = _.extend({
@@ -139,8 +154,6 @@ var ModelFieldSelector = Widget.extend({
         this.selectedField = false;
         this.isSelected = true;
         this.dirty = false;
-
-        this.debug = this.options.debugMode;
     },
     willStart: function () {
         return $.when(
@@ -230,7 +243,13 @@ var ModelFieldSelector = Widget.extend({
     /// @param model - the model name whose fields have to be fetched
     /// @return a deferred which is resolved once the fields have been added
     _pushPageData: function (model) {
-        return fieldsCache.getFields(model, this.options.filters).then((function (fields) {
+        var def;
+        if (this.model === model && this.options.fields) {
+            def = $.when(sortFields(this.options.fields));
+        } else {
+            def = fieldsCache.getFields(model, this.options.filters);
+        }
+        return def.then((function (fields) {
             this.pages.push(fields);
         }).bind(this));
     },
@@ -250,7 +269,12 @@ var ModelFieldSelector = Widget.extend({
             if (prevField) title = prevField.string;
         }
         this.$(".o_field_selector_popover_header .o_field_selector_title").text(title);
-        this.$(".o_field_selector_page").replaceWith(core.qweb.render("FieldSelector.page", {lines: page, animation: animation, debug: this.debug}));
+        this.$(".o_field_selector_page").replaceWith(core.qweb.render("FieldSelector.page", {
+            lines: page,
+            followRelations: this.options.followRelations,
+            animation: animation,
+            debug: this.options.debugMode,
+        }));
     },
     /// The goToPrevPage method removes the last page, adapts the field chain and displays the new last page.
     goToPrevPage: function () {
@@ -301,12 +325,7 @@ var fieldsCache = {
             false,
             ["store", "searchable", "type", "string", "relation", "selection", "related"],
         ]).then((function (fields) {
-            var field_data = [];
-            _.each(_.sortBy(_.keys(fields), function (f) { return fields[f].string; }), function (key) {
-                fields[key]["name"] = key;
-                field_data.push(fields[key]);
-            });
-            this.cache[model] = field_data;
+            this.cache[model] = sortFields(fields);
         }).bind(this));
         return this.cacheDefs[model];
     },
@@ -316,6 +335,14 @@ var fieldsCache = {
         });
     },
 };
+
+function sortFields(fields) {
+    return _.chain(fields)
+        .pairs()
+        .sortBy(function (p) { return p[1].string; })
+        .map(function (p) { return _.extend({name: p[0]}, p[1]); })
+        .value();
+}
 
 return ModelFieldSelector;
 });
