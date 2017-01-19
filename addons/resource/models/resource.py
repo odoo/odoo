@@ -716,6 +716,16 @@ class ResourceResource(models.Model):
             default.update(name=_('%s (copy)') % (self.name))
         return super(ResourceResource, self).copy(default)
 
+    def get_start_work_hour(self, dt=None):
+        # TDE FIXME: clean that when cleaning calendar API
+        working_days = self.calendar_id.get_working_intervals_of_day(dt)
+        return working_days and working_days[0][0]
+
+    def get_end_work_hour(self, dt=None):
+        # TDE FIXME: clean that when cleaning calendar API
+        working_days = self.calendar_id.get_working_intervals_of_day(dt)
+        return working_days and working_days[-1][1]
+
     def _is_work_day(self, date):
         """ Whether the provided date is a work day for the subject resource.
 
