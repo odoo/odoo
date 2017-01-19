@@ -347,12 +347,12 @@ class Holidays(models.Model):
     @api.onchange('date_from_type')
     def _onchange_date_from_type(self):
         if self.employee_id:
-            self.date_from = self.employee_id.resource_id.get_start_work_hour(self.date_from_type)
+            self.date_from = self.employee_id.resource_id.get_start_work_hour(self.date_from_type, fields.Datetime.from_string(self.date_from))
 
     @api.onchange('date_to_type')
     def _onchagne_date_to_type(self):
         if self.employee_id:
-            self.date_to = self.employee_id.resource_id.get_end_work_hour(self.date_to_type)
+            self.date_to = self.employee_id.resource_id.get_end_work_hour(self.date_to_type, fields.Datetime.from_string(self.date_to))
 
     @api.onchange('date_from')
     def _onchange_date_from(self):
