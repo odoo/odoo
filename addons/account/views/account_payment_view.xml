@@ -89,7 +89,11 @@
                             <button class="oe_stat_button" name="button_invoices"
                                     string="Invoices" type="object"
                                     attrs="{'invisible':[('has_invoices','=',False)]}" icon="fa-bars"/>
+                            <button class="oe_stat_button" name="open_payment_matching_screen"
+                                    string="Payment Matching" type="object"
+                                    attrs="{'invisible':[('move_reconciled','=',True)]}" icon="fa-university"/>
                             <field name="has_invoices" invisible="1"/>
+                            <field name="move_reconciled" invisible="1"/>
                         </div>
                         <field name="id" invisible="1"/>
                         <div class="oe_title" attrs="{'invisible': [('state', '=', 'draft')]}">
