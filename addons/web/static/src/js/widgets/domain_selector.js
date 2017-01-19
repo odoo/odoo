@@ -58,19 +58,18 @@ var DomainNode = Widget.extend({
     /// @param domain - an array of the prefix representation of the domain (or a string which represents it)
     /// @param options - an object with possible values:
     ///                    - readonly, a boolean to indicate if the widget is readonly or not (default to true)
-    ///                    - fs_filters, an object with a series of filters to use for the field selector (see @FieldSelector)
+    ///                    - debugMode, a boolean which is true if the widget should be in debug mode (default to false)
+    ///                    - @see ModelFieldSelector for other options
     init: function (parent, model, domain, options) {
         this._super.apply(this, arguments);
 
         this.model = model;
         this.options = _.extend({
             readonly: true,
-            fs_filters: {},
             debugMode: false,
         }, options || {});
 
         this.readonly = this.options.readonly;
-        this.fs_filters = this.options.fs_filters;
         this.debug = this.options.debugMode;
     },
     /// The getDomain method is an abstract method which should returns the prefix domain
