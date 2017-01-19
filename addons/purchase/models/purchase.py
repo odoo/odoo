@@ -870,7 +870,7 @@ class ProcurementOrder(models.Model):
         """Return the datetime value to use as Order Date (``date_order``) for the
            Purchase Order created to satisfy the given procurement. """
         self.ensure_one()
-        seller_delay = int(self.product_id._select_seller().delay)
+        seller_delay = int(self.product_id._select_seller(quantity=self.product_qty, uom_id=self.product_uom).delay)
         return schedule_date - relativedelta(days=seller_delay)
 
     @api.multi
