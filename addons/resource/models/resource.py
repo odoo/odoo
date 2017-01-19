@@ -716,14 +716,34 @@ class ResourceResource(models.Model):
             default.update(name=_('%s (copy)') % (self.name))
         return super(ResourceResource, self).copy(default)
 
-    def get_start_work_hour(self, dt=None):
+    def get_start_work_hour(self, attendance_type, dt=None):
         # TDE FIXME: clean that when cleaning calendar API
         working_days = self.calendar_id.get_working_intervals_of_day(dt)
+
+        tmp_dt = dt if dt is not None else datetime.datetime.now().replace(hour=0, minute=0, second=0)
+        if attendance_type in 'pm':
+            pm_slots = self.calendar_id.get_attendances_for_weekday(tmp_dt).filtered(lambda att: att.attendance_type == 'pm')
+            if pm_slots and working_days:
+                if working_days[0][0].hour > pm_slots[0].hour_from:
+                    return working_days[0][0]
+                else:
+                    return tmp_dt.replace(hour=0, minute=0, second=0) + timedelta(seconds=(pm_slots[0].hour_from * 3600))
+
         return working_days and working_days[0][0]
 
-    def get_end_work_hour(self, dt=None):
+    def get_end_work_hour(self, attendance_type, dt=None):
         # TDE FIXME: clean that when cleaning calendar API
         working_days = self.calendar_id.get_working_intervals_of_day(dt)
+
+        tmp_dt = dt if dt is not None else datetime.datetime.now().replace(hour=0, minute=0, second=0)
+        if attendance_type in 'am':
+            am_slots = self.calendar_id.get_attendances_for_weekday(tmp_dt).filtered(lambda att: att.attendance_type == 'am')
+            if am_slots and working_days:
+                if working_days[-1][1].hour < am_slots[-1].hour_to:
+                    return working_days[-1][1]
+                else:
+                    return tmp_dt.replace(hour=0, minute=0, second=0) + timedelta(seconds=(am_slots[-1].hour_to * 3600))
+
         return working_days and working_days[-1][1]
 
     def _is_work_day(self, date):
