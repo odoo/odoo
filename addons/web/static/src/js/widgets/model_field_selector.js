@@ -119,8 +119,9 @@ var ModelFieldSelector = Widget.extend({
     /// @param model - a string with the model name (e.g. "res.partner")
     /// @param chain - a string with the initial field chain (e.g. "company_id.name")
     /// @param options - an object with several options:
-    ///                     - filters: an object which contains a series of filters to use
-    ///                     - debugMode: a boolean which is true if the widget is in debug mode
+    ///                     - filters: an object which contains suboptions which determine the fields which are used
+    ///                         - searchable: a boolean which is true if only the searchable fields have to be used (true by default)
+    ///                     - debugMode: a boolean which is true if the widget is in debug mode (false by default)
     init: function (parent, model, chain, options) {
         this._super.apply(this, arguments);
 
@@ -130,6 +131,9 @@ var ModelFieldSelector = Widget.extend({
             filters: {},
             debugMode: false,
         }, options || {});
+        this.options.filters = _.extend({
+            searchable: true,
+        }, this.options.filters);
 
         this.pages = [];
         this.selectedField = false;
@@ -307,7 +311,6 @@ var fieldsCache = {
         return this.cacheDefs[model];
     },
     filter: function (model, filters) {
-        filters = _.defaults(filters || {}, {searchable: true});
         return _.filter(this.cache[model], function (f) {
             return !filters.searchable || f.searchable;
         });

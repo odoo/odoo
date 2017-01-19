@@ -12,7 +12,6 @@ return Dialog.extend({
         this.model = model;
         this.options = _.extend({
             readonly: true,
-            fs_filters: {},
             debugMode: false,
         }, options || {});
 
