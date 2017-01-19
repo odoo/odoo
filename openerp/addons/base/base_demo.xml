@@ -53,5 +53,26 @@ Mr Demo</field>
             <field eval="time.strftime('%Y-06-06')" name="name"/>
         </record>
 
+        <record id="extended_view" model="ir.ui.view">
+            <field name="model">ir.ui.view</field>
+            <field name="inherit_id" ref="view_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="attributes">
+                    <attribute name="check_xml_bug">not fixed</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record id="bugged_view" model="ir.ui.view">
+            <field name="model">ir.ui.view</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="extended_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@check_xml_bug='not fixed']" position="attributes">
+                    <attribute name="check_xml_bug">fixed</attribute>
+                </xpath>
+            </field>
+        </record>
+        <delete id="bugged_view" model="ir.ui.view"/>
+        <delete id="extended_view" model="ir.ui.view"/>
     </data>
 </openerp>
