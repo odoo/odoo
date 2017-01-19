@@ -3558,6 +3558,7 @@ class BaseModel(object):
                 # check Python constraints for inversed fields
                 self._validate_fields(set(new_vals) - set(old_vals))
 
+        self.check_access_rule('write')
         return True
 
     @api.multi
