@@ -91,25 +91,23 @@ odoo.define('website_sale.website_sale', function (require) {
             if (!product_dom.length) {
                 return;
             }
-            _.each(product_dom, function (prod) {
-                _.each($(prod).data("attribute_value_ids"), function(entry) {
-                    if (product_ids.indexOf(entry[0]) === -1) {
-                        product_ids.push(entry[0]);
-                    }
-                });
-            });
+            var attribute_value_ids = product_dom.data("attribute_value_ids");
+            if(_.isString(attribute_value_ids)) {
+                attribute_value_ids = JSON.parse(attribute_value_ids.replace(/'/g, '"'));
+            }
+            _.each(attribute_value_ids, function(entry) {
+                product_ids.push(entry[0]);});
+            var qty = $(event.target).closest('form').find('input[name="add_qty"]').val();
 
             if ($("#product_detail").length) {
                 // display the reduction from the pricelist in function of the quantity
                 ajax.jsonRpc("/shop/get_unit_price", 'call', {'product_ids': product_ids,'add_qty': parseInt(qty)})
                 .then(function (data) {
-                    _.each(product_dom, function (prod) {
-                        var current = $(prod).data("attribute_value_ids");
-                        for(var j=0; j < current.length; j++){
-                            current[j][2] = data[current[j][0]];
-                        }
-                        $(prod).trigger("change");
-                    });
+                    var current = attribute_value_ids;
+                    for(var j=0; j < current.length; j++){
+                        current[j][2] = data[current[j][0]];
+                    }
+                    product_dom.attr("data-attribute_value_ids", JSON.stringify(current)).trigger("change");
                 });
             }
         });
@@ -307,6 +305,9 @@ odoo.define('website_sale.website_sale', function (require) {
             var $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
             var $optional_price = $parent.find(".oe_optional:first .oe_currency_value");
             var variant_ids = $ul.data("attribute_value_ids");
+            if(_.isString(variant_ids)) {
+                variant_ids = JSON.parse(variant_ids.replace(/'/g, '"'));
+            }
             var values = [];
             var unchanged_values = $parent.find('div.oe_unchanged_value_ids').data('unchanged_value_ids') || [];
 
