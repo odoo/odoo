@@ -40,9 +40,9 @@ class Project(models.Model):
 class Task(models.Model):
     _inherit = ['project.task']
 
-    website_url = fields.Char('Website URL', compute='_website_url', help='The full URL to access the document through the website.')
+    website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
 
-    def _website_url(self):
+    def _compute_website_url(self):
         for task in self:
             task.website_url = '/my/task/%s' % slug(task)
 
