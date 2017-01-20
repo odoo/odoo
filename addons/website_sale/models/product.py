@@ -126,12 +126,6 @@ class ProductTemplate(models.Model):
                                         help="Categories can be published on the Shop page (online catalog grid) to help "
                                         "customers find all the items within a category. To publish them, go to the Shop page, "
                                         "hit Customize and turn *Product Categories* on. A product can belong to several categories.")
-    availability = fields.Selection([
-        ('empty', 'Display Nothing'),
-        ('in_stock', 'In Stock'),
-        ('warning', 'Warning'),
-    ], "Availability", default='empty', help="Adds an availability status on the web product page.")
-    availability_warning = fields.Text("Availability Warning", translate=True)
     product_image_ids = fields.One2many('product.image', 'product_tmpl_id', string='Images')
 
     website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
