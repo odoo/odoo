@@ -10,7 +10,6 @@ class ProductChangeQuantity(models.TransientModel):
     _name = "stock.change.product.qty"
     _description = "Change Product Quantity"
 
-    # TDE FIXME: strange dfeault method, was present before migration ? to check
     product_id = fields.Many2one('product.product', 'Product', required=True)
     product_tmpl_id = fields.Many2one('product.template', 'Template', required=True)
     product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count')
@@ -27,23 +26,19 @@ class ProductChangeQuantity(models.TransientModel):
         res = super(ProductChangeQuantity, self).default_get(fields)
         if not res.get('product_id') and self.env.context.get('active_id') and self.env.context.get('active_model') == 'product.template' and self.env.context.get('active_id'):
             res['product_id'] = self.env['product.product'].search([('product_tmpl_id', '=', self.env.context['active_id'])], limit=1).id
+            res['product_tmpl_id'] = self.env.context['active_id']
         elif not res.get('product_id') and self.env.context.get('active_id') and self.env.context.get('active_model') == 'product.product' and self.env.context.get('active_id'):
-            res['product_id'] = self.env['product.product'].browse(self.env.context['active_id']).id
+            res['product_id'] = self.env.context['active_id']
+            res['product_tmpl_id'] = self.env['product.product'].browse(self.env.context['active_id']).product_tmpl_id.id
         if 'location_id' in fields and not res.get('location_id'):
             res['location_id'] = self.env.ref('stock.stock_location_stock').id
         return res
 
     @api.onchange('location_id', 'product_id')
     def onchange_location_id(self):
-        # TDE FIXME: should'nt we use context / location ?
         if self.location_id and self.product_id:
-            availability = self.product_id._product_available()
+            availability = self.product_id.with_context(location=self.location_id.id)._product_available()
             self.new_quantity = availability[self.product_id.id]['qty_available']
-
-    @api.onchange('product_id')
-    def onchange_product_id(self):
-        if self.product_id:
-            self.product_tmpl_id = self.onchange_product_id_dict(self.product_id.id)['product_tmpl_id']
 
     @api.multi
     def _prepare_inventory_line(self):
@@ -58,20 +53,7 @@ class ProductChangeQuantity(models.TransientModel):
                'theoretical_qty': th_qty,
                'prod_lot_id': self.lot_id.id,
         }
-
         return res
-
-
-    def onchange_product_id_dict(self, product_id):
-        return {
-            'product_tmpl_id': self.env['product.product'].browse(product_id).product_tmpl_id.id,
-        }
-
-    @api.model
-    def create(self, values):
-        if values.get('product_id'):
-            values.update(self.onchange_product_id_dict(values['product_id']))
-        return super(ProductChangeQuantity, self).create(values)
 
     @api.constrains('new_quantity')
     def check_new_quantity(self):
