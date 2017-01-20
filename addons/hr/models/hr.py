@@ -145,8 +145,6 @@ class Employee(models.Model):
     passport_id = fields.Char('Passport No')
     color = fields.Integer('Color Index', default=0)
     city = fields.Char(related='address_id.city')
-    login = fields.Char(related='user_id.login', readonly=True)
-    last_login = fields.Datetime(related='user_id.login_date', string='Latest Connection', readonly=True)
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary("Photo", default=_default_image, attachment=True,
