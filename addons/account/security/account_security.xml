@@ -5,8 +5,12 @@
     <record id="group_account_invoice" model="res.groups">
         <field name="name">Billing</field>
         <field name="category_id" ref="base.module_category_accounting_and_finance"/>
-        <field name="users" eval="[(4, ref('base.user_root'))]"/>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- 2 steps to avoid making reference to xml id not defined yet -->
+    <record id="group_account_invoice" model="res.groups">
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
     <record id="group_account_user" model="res.groups">
