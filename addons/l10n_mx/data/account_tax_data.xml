@@ -2,44 +2,16 @@
 <odoo>
   <data noupdate="1">
     <!-- Account Tags -->
-    <record id="tax_tag_01" model="account.account.tag">
-        <field name="name">IVA(0%) VENTAS</field>
+    <record id="tag_iva" model="account.account.tag">
+        <field name="name">IVA</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tax_tag_03" model="account.account.tag">
-        <field name="name">IVA(16%) VENTAS</field>
+    <record id="tag_isr" model="account.account.tag">
+        <field name="name">ISR</field>
         <field name="applicability">taxes</field>
     </record>
-    <record id="tax_tag_04" model="account.account.tag">
-        <field name="name">RET IVA FLETES 4%</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_05" model="account.account.tag">
-        <field name="name">RET IVA ARRENDAMIENTO 10%</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_06" model="account.account.tag">
-        <field name="name">RET ISR ARRENDAMIENTO 10%</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_07" model="account.account.tag">
-        <field name="name">RET ISR HONORARIOS 10%</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_08" model="account.account.tag">
-        <field name="name">RETENCION IVA ARRENDAMIENTO 10.67%</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_09" model="account.account.tag">
-        <field name="name">RETENCION IVA HONORARIOS 10.67%</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_10" model="account.account.tag">
-        <field name="name">IVA(0%) COMPRAS</field>
-        <field name="applicability">taxes</field>
-    </record>
-    <record id="tax_tag_12" model="account.account.tag">
-        <field name="name">IVA(16%) COMPRAS</field>
+    <record id="tag_ieps" model="account.account.tag">
+        <field name="name">IEPS</field>
         <field name="applicability">taxes</field>
     </record>
 
@@ -52,7 +24,7 @@
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="cuenta209_01"/>
         <field name="refund_account_id" ref="cuenta209_01"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_01')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_iva')])]"/>
         <field name="tax_group_id" ref="tax_group_iva"/>
     </record>
 
@@ -65,7 +37,7 @@
         <field name="type_tax_use">sale</field>
         <field name="account_id" ref="cuenta209_01"/>
         <field name="refund_account_id" ref="cuenta209_01"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_03')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_iva')])]"/>
         <field name="tax_group_id" ref="tax_group_iva"/>
     </record>
 
@@ -78,7 +50,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="cuenta216_10"/>
         <field name="refund_account_id" ref="cuenta216_10"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_04')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_ret"/>
     </record>
 
@@ -91,7 +62,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="cuenta216_10"/>
         <field name="refund_account_id" ref="cuenta216_10"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_05')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_ret"/>
     </record>
 
@@ -104,7 +74,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="cuenta216_03"/>
         <field name="refund_account_id" ref="cuenta216_03"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_06')])]"/>
         <field name="tax_group_id" ref="tax_group_isr_ret"/>
     </record>
 
@@ -117,7 +86,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="cuenta216_04"/>
         <field name="refund_account_id" ref="cuenta216_04"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_07')])]"/>
         <field name="tax_group_id" ref="tax_group_isr_ret"/>
     </record>
 
@@ -130,7 +98,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="cuenta216_10"/>
         <field name="refund_account_id" ref="cuenta216_10"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_08')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_ret"/>
     </record>
 
@@ -143,7 +110,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="cuenta216_10"/>
         <field name="refund_account_id" ref="cuenta216_10"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_09')])]"/>
         <field name="tax_group_id" ref="tax_group_iva_ret"/>
     </record>
 
@@ -156,7 +122,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="cuenta119_01"/>
         <field name="refund_account_id" ref="cuenta119_01"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_10')])]"/>
         <field name="tax_group_id" ref="tax_group_iva"/>
     </record>
 
@@ -169,7 +134,6 @@
         <field name="type_tax_use">purchase</field>
         <field name="account_id" ref="cuenta119_01"/>
         <field name="refund_account_id" ref="cuenta119_01"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_12')])]"/>
         <field name="tax_group_id" ref="tax_group_iva"/>
     </record>
   </data>
