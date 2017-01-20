@@ -21,6 +21,8 @@ from odoo.exceptions import UserError
 import odoo.release
 import odoo.sql_db
 import odoo.tools
+from odoo.sql_db import db_connect
+from odoo.release import version_info
 
 _logger = logging.getLogger(__name__)
 
@@ -341,6 +343,26 @@ def list_dbs(force=False):
             res = []
     res.sort()
     return res
+
+def list_db_incompatible(databases):
+    '''
+        Retuns a list of databases that are incompatible with this version of Odoo
+        
+        @param databases: A list of the Postgresql databases found
+        @return: A list of databases that are incompatible with this version of Odoo     
+    '''
+    incompatible_databases = []
+    for database_name in databases:
+        with closing(db_connect(database_name).cursor()) as cursor:
+            BASE_VERSION = version_info[0]
+            cursor.execute("select exists(select * from information_schema.tables where table_name='ir_module_module')")
+            if cursor.fetchone()[0]:
+                cursor.execute("SELECT * FROM ir_module_module WHERE name=%s AND split_part(latest_version, '.', 1) = %s", ('base', str(BASE_VERSION)))
+                if not cursor.fetchone():incompatible_databases.append(database_name)
+            else:
+                incompatible_databases.append(database_name)
+    return incompatible_databases
+
 
 def exp_list(document=False):
     if not odoo.tools.config['list_db']:
