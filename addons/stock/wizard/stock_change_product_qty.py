@@ -34,10 +34,10 @@ class ProductChangeQuantity(models.TransientModel):
             res['location_id'] = self.env.ref('stock.stock_location_stock').id
         return res
 
-    @api.onchange('location_id', 'product_id')
+    @api.onchange('location_id', 'product_id', 'lot_id')
     def onchange_location_id(self):
         if self.location_id and self.product_id:
-            availability = self.product_id.with_context(location=self.location_id.id)._product_available()
+            availability = self.product_id.with_context(location=self.location_id.id, lot_id=self.lot_id.id)._product_available()
             self.new_quantity = availability[self.product_id.id]['qty_available']
 
     @api.multi
