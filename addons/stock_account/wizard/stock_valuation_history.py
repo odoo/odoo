@@ -26,15 +26,22 @@ class wizard_valuation_history(osv.osv_memory):
         ctx['history_date'] = data['date']
         ctx['search_default_group_by_product'] = True
         ctx['search_default_group_by_location'] = True
-        return {
-            'domain': "[('date', '<=', '" + data['date'] + "')]",
-            'name': _('Stock Value At Date'),
-            'view_type': 'form',
-            'view_mode': 'tree',
-            'res_model': 'stock.history',
-            'type': 'ir.actions.act_window',
-            'context': ctx,
-        }
+
+        action = self.pool.get('ir.model.data').xmlid_to_object(cr, uid, 'stock_account.action_stock_history', context=context)
+        if not action:
+            action = {
+                'view_type': 'form',
+                'view_mode': 'tree,graph,pivot',
+                'res_model': 'stock.history',
+                'type': 'ir.actions.act_window',
+            }
+        else:
+            action = action[0].read()[0]
+
+        action['domain'] = "[('date', '<=', '" + data['date'] + "')]"
+        action['name'] = _('Stock Value At Date')
+        action['context'] = ctx
+        return action
 
 
 class stock_history(osv.osv):
