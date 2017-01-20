@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="website_config_settings_view_form_inherit_website_sale_stock" model="ir.ui.view">
+        <field name="name">website.config.settings.inherit.website.sale.stock</field>
+        <field name="model">website.config.settings</field>
+        <field name="inherit_id" ref="website_sale.website_config_settings_view_form_inherit_website_sale" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='digital_content_setting']" position="after">
+                <div class="col-xs-12 col-md-6 o_setting_box" id="product_availability">
+                    <div class="o_setting_left_pane" />
+                    <div class="o_setting_right_pane">
+                        <label string="Inventory Availability" />
+                        <div class="text-muted">
+                            Set default inventory availability
+                        </div>
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="inventory_availability" string="Inventory Availability" class="col-md-3 o_light_label" />
+                                <field name="inventory_availability" class="oe_inline" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
