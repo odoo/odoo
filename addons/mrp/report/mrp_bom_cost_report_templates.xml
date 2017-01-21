@@ -6,24 +6,21 @@
                 <t t-call="report.internal_layout">
                     <div class="page">
                         <t t-set="currency" t-value="line['currency']"/>
+                        <h1><t t-esc="line['name']"/></h1><br/>
+                        <b><t t-esc="line['product_uom_qty']"/> <t t-esc="line['product_uom'].name"/></b>
+                        <table>
+                            <tbody>
+                                <tr t-foreach="line['attributes']" t-as="attrib">
+                                    <td><span t-esc="attrib[0]"/></td>
+                                    <td><span t-esc="attrib[1]"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h2>Cost Structure</h2>
                         <table class="table table-condensed">
                             <thead>
                                 <tr>
-                                    <th colspan="6">
-                                        <h1><t t-esc="line['name']"/></h1><br/>
-                                        <b><t t-esc="line['product_uom_qty']"/> <t t-esc="line['product_uom'].name"/></b>
-                                        <table>
-                                            <tbody>
-                                                <tr t-foreach="line['attributes']" t-as="attrib">
-                                                    <td><span t-esc="attrib[0]"/></td>
-                                                    <td><span t-esc="attrib[1]"/></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <h2>Cost Structure</h2>
-                                    </th>
-                                </tr>
-                                <tr>
+                                    <th>Reference</th>
                                     <th colspan="3">Raw Materials</th>
                                     <th class="col-sm-2 text-right">Quantity</th>
                                     <th class="col-sm-2 text-right">Unit Cost</th>
@@ -32,6 +29,9 @@
                             </thead>
                             <tbody>
                                 <tr t-foreach="line['lines']" t-as="bom_line">
+                                    <td>
+                                        <span t-field="bom_line['product_id'].default_code"/>
+                                    </td>
                                     <td colspan="3">
                                         <span t-att-res-id="bom_line['product_id'].id" res-model="product.product" view-type="form" t-esc="bom_line['product_id'].name"/>
                                     </td>
@@ -46,7 +46,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th colspan="5" class="text-right">Total Cost of Raw Materials</th>
+                                    <th colspan="6" class="text-right">Total Cost of Raw Materials</th>
                                     <th class="text-right">
                                         <span t-esc="line['total']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                     </th>
