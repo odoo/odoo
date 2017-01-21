@@ -3652,6 +3652,8 @@ class BaseModel(object):
             return True
         if isinstance(ids, (int, long)):
             ids = [ids]
+        if not context:
+            context = {}
 
         result_store = self._store_get_values(cr, uid, ids, self._fields.keys(), context)
 
