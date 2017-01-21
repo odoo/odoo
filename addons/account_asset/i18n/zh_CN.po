@@ -6,8 +6,8 @@
 # Connie Xiao <connie.xiao@elico-corp.com>, 2015
 # fausthuang, 2015
 # Gang LIU <liu9ang@hotmail.com>, 2016
-# Jeffery Chenn <jeffery9@gmail.com>, 2015
-# Jeffery Chenn <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2015
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # zhining wu <wzn63@21cn.com>, 2015
 # 卓忆科技 <zhanghao@jointd.com>, 2015
 # 陈欢 <404551458@qq.com>, 2015
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-09-23 08:50+0000\n"
+"PO-Revision-Date: 2017-01-17 09:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-9/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -447,6 +447,16 @@ msgstr "折旧日期"
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_id
 msgid "Depreciation Entry"
 msgstr "折旧分录"
+
+#. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_depreciation_id
+msgid "Depreciation Entries: Asset Account"
+msgstr ""
+
+#. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_income_recognition_id
+msgid "Depreciation Entries: Expense Account"
+msgstr ""
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
@@ -894,7 +904,13 @@ msgid "Reason"
 msgstr "理由"
 
 #. module: account_asset
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
+msgid "Recognition Account"
+msgstr ""
+
+#. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_income_recognition_id
+#: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Recognition Income Account"
 msgstr "收入确认科目"
 

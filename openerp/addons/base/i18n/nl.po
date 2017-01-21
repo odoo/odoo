@@ -7,7 +7,7 @@
 # Eric Geens <eric.geens@vitabiz.be>, 2015
 # Eric Geens <ericgeens@yahoo.com>, 2015
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2015
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015-2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2015-2017
 # Sebastiaan Wiewel <baswiewel@hotmail.com>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-22 07:25+0000\n"
-"PO-Revision-Date: 2016-11-19 08:32+0000\n"
+"PO-Revision-Date: 2017-01-20 14:13+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -193,7 +193,7 @@ msgid ""
 "\n"
 "        \"Python Code\" defines the amount of the tax.\n"
 "        "
-msgstr "\n        Een belasting die in python-code wordt berekend bestaat uit twee blokken python-code die lokaal worden uitgevoerd, en die gegevens bevatten zoals eenheidsprijs, product of relatie.\n\n        \"Code toe te passen\" bepaalt of de belasting al dan niet moet worden toegepast.\n\n        \"Python code\" bepaalt het bedrag van de belasting.\n        "
+msgstr "\nEen BTW die in python-code wordt berekend bestaat uit twee blokken python-code die lokaal worden uitgevoerd, en die gegevens bevatten zoals eenheidsprijs, product of relatie.\n\n\"Code toe te passen\" bepaalt of de BTW al dan niet moet worden toegepast.\n\n \"Python code\" bepaalt het bedrag van de BTW.\n        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -298,7 +298,7 @@ msgstr "\n        Aanpassen van de basismodule Boekhouding voor de Enterprise Ed
 msgid ""
 "\n"
 "        Allows to use python code to define taxes"
-msgstr "\n        Gebruik python code om belastingen te berekenen"
+msgstr "\n        Gebruik python code om BTW te berekenen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_voip
@@ -449,7 +449,7 @@ msgid ""
 "    Add an option on tax to allow them to be cash based, meaning that during reconciliation, if there is a tax with\n"
 "    cash basis involved, a new journal entry will be create containing those taxes value.\n"
 "    "
-msgstr "\n    Optie om belastingen op kasbasis toe te staan. Dit betekent dat indien er tijdens het afletteren een belasting op kasbasis is,\n    er een nieuwe boeking gemaakt zal worden met de waarde van deze belasting.\n    "
+msgstr "\nOptie om BTW op kasbasis toe te staan. Dit betekent dat indien er tijdens het afletteren een BTW op kasbasis is,\ner een nieuwe boeking gemaakt zal worden met de waarde van deze BTW.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_documentation_examples
@@ -885,7 +885,7 @@ msgid ""
 "Plan contable argentino e impuestos de acuerdo a disposiciones vigentes\n"
 "\n"
 "    "
-msgstr "\nArgentijns rekeningschema en belastingsstructuur.\n=============================================\n\nArgentijnse boekhouding en belastingen volgens de geldende voorschriften\n\n    "
+msgstr "\nArgentijns rekeningschema en BTW structuur.\n=============================================\n\nArgentijnse boekhouding en BTW volgens de geldende voorschriften\n\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_forum
@@ -1191,7 +1191,7 @@ msgid ""
 "Plan contable chileno e impuestos de acuerdo a disposiciones vigentes\n"
 "\n"
 "    "
-msgstr "\nChileense localisatie voor boekhouding en belastingen\n===================================================\nChileense boekhouding en belastingen volgens de geldende voorschriften .\n\n    "
+msgstr "\nChileense localisatie voor boekhouding en BTW\n===================================================\nChileense boekhouding en BTW volgens de geldende voorschriften .\n\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_decimal_precision
@@ -3177,7 +3177,7 @@ msgid ""
 "    * the 2015 chart of taxes is implemented to a large extent,\n"
 "      see the first sheet of tax.xls for details of coverage\n"
 "    * to update the chart of tax template, update tax.xls and run tax2csv.py\n"
-msgstr "\nDit is de basismodule voor het rekeningschema van Luxemburg.\n======================================================================\n    * Het officiële Luxemburgse rekeningschema (wet van juni 2009 + 2011 rekening en BTW),\n    * Het BTW-code schema voor Luxemburg\n    * De meest gebruikte BTW's gebruikt in Luxemburg\n    * Standaard fiscale positie voor lokaal, intracom en extracom\n\nOpmerkingen:\n* Het rekeningschema van 2015 is geïmplementeerd in grote maten,\nzie de eerste sheet van tax.xls voor details over wat ondersteund is\n* om de belastingweergave sjabloon te wijzigen, updatet u tax.xls en voert u tax2csv.py uit\n"
+msgstr "\nDit is de basismodule voor het rekeningschema van Luxemburg.\n======================================================================\n    * Het officiële Luxemburgse rekeningschema (wet van juni 2009 + 2011 rekening en BTW),\n    * Het BTW-code schema voor Luxemburg\n    * De meest gebruikte BTW's gebruikt in Luxemburg\n    * Standaard fiscale positie voor lokaal, intracom en extracom\n\nOpmerkingen:\n* Het rekeningschema van 2015 is geïmplementeerd in grote maten,\nzie de eerste sheet van BTW.xls voor details over wat ondersteund is\n* om de belastingweergave sjabloon te wijzigen, updatet u BTW.xls en voert u tax2csv.py uit\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma
@@ -4941,7 +4941,7 @@ msgstr "Rapportage grootboekrekeningen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_cash_basis
 msgid "Account Tax Cash Basis"
-msgstr "Belasting kasbasis"
+msgstr "BTW kasbasis"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_generic_modules_accounting
@@ -5353,7 +5353,7 @@ msgstr "Maakt het mogelijk voor een kassamedewerker om een ticket opnieuw afdruk
 #. module: base
 #: model:ir.module.module,summary:base.module_account_tax_cash_basis
 msgid "Allow to have cash basis on tax"
-msgstr "Sta kasbasis op belastingen toe"
+msgstr "Sta kasbasis op BTW toe"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_version
@@ -7854,7 +7854,7 @@ msgstr "Uitgestelde inkomsten beheer voor contracten"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_python
 msgid "Define Taxes as Python Code"
-msgstr "Definieer belastingen als Python code"
+msgstr "Definieer BTW als Python code"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
