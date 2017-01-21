@@ -3727,7 +3727,8 @@ class BaseModel(object):
                     obj._store_set_values(cr, uid, rids, fields, context)
 
         # recompute new-style fields
-        recs.recompute()
+        if recs.env.recompute and context.get('recompute', True):
+            recs.recompute()
 
         # auditing: deletions are infrequent and leave no trace in the database
         _unlink.info('User #%s deleted %s records with IDs: %r', uid, self._name, ids)
