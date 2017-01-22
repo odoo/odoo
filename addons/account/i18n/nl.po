@@ -1626,7 +1626,7 @@ msgstr "Geavanceerde instellingen"
 #: model:ir.ui.menu,name:account.menu_finance_entries
 #: model:res.groups,name:account.group_account_manager
 msgid "Adviser"
-msgstr "Auditeur"
+msgstr "Controller"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_include_base_amount
@@ -4999,12 +4999,12 @@ msgstr ""
 "Als u 'Afronden per regel' kiest dan wordt voor elke BTW het bedrag eerst "
 "berekend en afgerond voor elke inkooporder-, verkooporder en factuurregel en"
 " vervolgens worden deze afgeronde bedragen opgeteld, wat leidt tot het "
-"totale bedrag voor deze BTW. Als u 'Globaal Afrond' dan wordt voor elke BTW "
-"het bedrag berekend voor elke  inkooporder-, verkooporder en factuurregel, "
-"dan zullen deze bedragen worden opgeteld en uiteindelijk wordt dit totale "
-"BTW bedrag afgerond. Als u verkoopt met prijzen inclusief BTW, moet u kiezen"
-" voor 'Afronden per regel', omdat u er zeker van wilt zijn dat de som van uw"
-" regels gelijk zijn aan het totale bedrag met BTW."
+"totale bedrag voor deze BTW. Als u 'Afronden over totaal' kiest dan wordt "
+"voor elke BTW het bedrag berekend voor elke  inkooporder-, verkooporder en "
+"factuurregel, dan zullen deze bedragen worden opgeteld en uiteindelijk wordt"
+" dit totale BTW bedrag afgerond. Als u verkoopt met prijzen inclusief BTW, "
+"moet u kiezen voor 'Afronden per regel', omdat u er zeker van wilt zijn dat "
+"de som van uw regels gelijk zijn aan het totale bedrag met BTW."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_tax_calculation_rounding_method
@@ -5020,7 +5020,7 @@ msgstr ""
 "Afronden per regel: voor elke factuurregel wordt eerst het BTW-bedrag berekend\n"
 "en afgerond. Daarna worden de afgeronde bedragen opgeteld wat resulteert in het\n"
 "BTW totaalbedrag. \n"
-"Globaal afronden: voor elke factuurregel wordt het BTW-bedrag berekend en deze bedragen worden bij elkaar opgeteld. Op het einde wordt het totale BTW-bedrag afgerond.\n"
+"Over totaal afronden: voor elke factuurregel wordt het BTW-bedrag berekend en deze bedragen worden bij elkaar opgeteld. Op het einde wordt het totale BTW-bedrag afgerond.\n"
 "Als u verkoopt met prijzen inclusief BTW, moet u kiezen voor 'afronden per regel', omdat u zeker wilt zijn dat de subtotalen van uw inclusief BTW regels gelijk zijn aan het totale bedrag met BTW."
 
 #. module: account
@@ -6180,7 +6180,7 @@ msgstr "Blokkeerdatum"
 #: model:ir.model.fields,field_description:account.field_account_config_settings_period_lock_date
 #: model:ir.model.fields,field_description:account.field_res_company_period_lock_date
 msgid "Lock Date for Non-Advisers"
-msgstr "Blokkeerdatum voor niet adviseurs"
+msgstr "Blokkeerdatum voor iedereen behalve de controller"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -6624,9 +6624,9 @@ msgid ""
 "No users, including Advisers, can edit accounts prior to and inclusive of "
 "this date. Use it for fiscal year locking for example."
 msgstr ""
-"Geen enkele gebruiker, ook geen auditeurs, kunnen rekeningen wijzigen voor "
-"deze datum, met inbegrip van de dag zelf. U kunt dit bijvoorbeeld gebruiken "
-"om uw fiscaal jaar te vergrendelen."
+"Geen enkele gebruiker, ook geen controllers, kunnen rekeningen wijzigen voor"
+" deze datum, met inbegrip van de dag zelf. U kunt dit bijvoorbeeld gebruiken"
+" om uw fiscaal jaar te vergrendelen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_code_digits
@@ -6906,9 +6906,9 @@ msgid ""
 "of this date. Use it for period locking inside an open fiscal year, for "
 "example."
 msgstr ""
-"Enkel gebruikers met de rol 'Auditeur' kunnen rekeningen wijzigen voor deze "
-"datum, met inbegrip van de dag zelf. U kunt dit bijvoorbeeld gebruiken om "
-"een periode binnen een open fiscaal jaar te vergrendelen."
+"Enkel gebruikers met de rol 'Controller' kunnen rekeningen wijzigen voor "
+"deze datum, met inbegrip van de dag zelf. U kunt dit bijvoorbeeld gebruiken "
+"om een periode binnen een open fiscaal jaar te vergrendelen."
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -7041,7 +7041,7 @@ msgstr "Uitstaande transacties"
 #: code:addons/account/models/account_invoice.py:116
 #, python-format
 msgid "Outstanding credits"
-msgstr "Uitstaande inkomsten"
+msgstr "Openstaande credit facturen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_outstanding_credits_debits_widget
@@ -8238,7 +8238,7 @@ msgstr "Controleer de lijst van beschikbare valuta (van de"
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round Globally"
-msgstr "Globaal afronden"
+msgstr "Over totaal afronden"
 
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
@@ -10667,7 +10667,7 @@ msgid ""
 msgstr ""
 "De datum %s is vergrendeld. U kunt geen boekingen voor deze datum "
 "toevoegen/wijzigen. Controleer de instellingen of vraag iemand met de rol "
-"'Auditeur'"
+"'Controller'"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:938
