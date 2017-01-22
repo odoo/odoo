@@ -3417,7 +3417,7 @@ msgstr "Tarjetas de Crédito"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Credit Note"
-msgstr "Abono"
+msgstr "Factura rectificativa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_credit_account_id
@@ -5316,7 +5316,7 @@ msgstr "Referencia factura"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_refund
 msgid "Invoice Refund"
-msgstr "Abono factura"
+msgstr "Factura rectificativa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_state
@@ -7943,12 +7943,12 @@ msgstr "Referencia/Descripción"
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #, python-format
 msgid "Refund"
-msgstr "Abono"
+msgstr "Factura rectificativa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date_invoice
 msgid "Refund Date"
-msgstr "Fecha de abono"
+msgstr "Fecha de rectificación"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_id
@@ -7964,7 +7964,7 @@ msgstr "Factura rectificativa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_filter_refund
 msgid "Refund Method"
-msgstr "Método de abono"
+msgstr "Método de rectificación"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_refund_filter_refund
@@ -7972,8 +7972,8 @@ msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
 msgstr ""
-"Abono basado en este tipo. No lo puede Modificar o Cancelar si la factura ya"
-" está conciliada"
+"Factura rectificativa basada en este tipo. No se puede modificar o cancelar "
+"si la factura ya está conciliada"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -10131,7 +10131,7 @@ msgid ""
 "                                so that you can edit it."
 msgstr ""
 "Utilice esta opción si quiere cancelar una factura y crear una nueva.\n"
-"Se creará un abono, validado y conciliado con la factura actual.\n"
+"Se creará una factura rectificativa, validada y conciliada con la factura actual.\n"
 "Se creará una factura borrador nueva para que pueda editarla."
 
 #. module: account
@@ -10142,8 +10142,8 @@ msgid ""
 "                                with the invoice. You will not be able to modify the credit note."
 msgstr ""
 "Utilice esta opción si quiere cancelar una factura que no debería haber\n"
-"emitido. Se creará un abono, validado y conciliado con la factura.\n"
-"No será posible modificar el abono."
+"emitido. Se creará una factura rectificativa, validada y conciliada con la factura actual.\n"
+"No será posible modificar la misma."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_type_include_initial_balance
@@ -10825,8 +10825,8 @@ msgid ""
 "                                waiting for the document to be issued by\n"
 "                                your supplier/customer."
 msgstr ""
-"Podrá editar y validar este\n"
-"abono directamente o dejarlo como borrador, \n"
+"Podrá editar y validar esta\n"
+"factura rectificativa directamente o dejarla como borrador, \n"
 "en espera de que su proveedor/cliente expida el \n"
 "documento correspondiente."
 
