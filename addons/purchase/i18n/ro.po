@@ -91,6 +91,26 @@ msgid ""
 "<p>You can reply to this email if you have any questions.</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
+"\n"
+"<p>Dragă${object.partner_id.name} \n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Atașat se găsește <strong>${object.state in ('draft', 'sent') and 'cererea de cotație' or 'comanda de achziție'} ${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    cu referința: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (Origine: ${object.origin})\n"
+"% endif\n"
+"în valoare de <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"de la ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>Puteți răspunde la acest email dacă aveți întrebări.</p>\n"
+"<p>Mulțumesc,</p>\n"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_stock_dropshipping
@@ -148,7 +168,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Date Req.</strong>"
-msgstr ""
+msgstr "<strong>Dată Nec.</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -159,7 +179,7 @@ msgstr "<strong>Descriere:</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Expected Date</strong>"
-msgstr ""
+msgstr "<strong>Dată estimată</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -174,7 +194,7 @@ msgstr "<strong>Dată comandă:</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Our Order Reference:</strong>"
-msgstr ""
+msgstr "<strong>Referința noastră din comenzii:</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -211,7 +231,7 @@ msgstr "<strong>Preț unitar</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Your Order Reference</strong>"
-msgstr ""
+msgstr "<strong>Referința dumneavoastră</strong>"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
@@ -1628,13 +1648,13 @@ msgstr ""
 #: code:addons/purchase/models/account_invoice.py:184
 #, python-format
 msgid "This vendor bill has been created from: %s"
-msgstr ""
+msgstr "Această factură a fost creată din: %s"
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:198
 #, python-format
 msgid "This vendor bill has been modified from: %s"
-msgstr ""
+msgstr "Acestă factură a fost modificată din: %s"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1713,7 +1733,7 @@ msgstr "Unități de măsură"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Unlock"
-msgstr ""
+msgstr "Deblocat"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
@@ -1728,7 +1748,7 @@ msgstr "Valoare fără taxe"
 #. module: purchase
 #: selection:purchase.config.settings,group_costing_method:0
 msgid "Use a 'Fixed', 'Real' or 'Average' price costing method"
-msgstr ""
+msgstr "Se folosesc metodele de preț 'Standard', 'Real' sau 'Mediu ponderat'"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
