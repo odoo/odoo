@@ -1,0 +1,1550 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * website_slides
+# 
+# Translators:
+# Chan Nath <channath@gmail.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-10-10 08:44+0000\n"
+"PO-Revision-Date: 2016-10-10 08:44+0000\n"
+"Last-Translator: Chan Nath <channath@gmail.com>, 2016\n"
+"Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: km\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_slides
+#: model:mail.template,body_html:website_slides.slide_template_shared
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>\n"
+"    ${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        View <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
+msgstr ""
+"\n"
+"<p>ជំរាបសួរ</p>\n"
+"<p>\n"
+"    ${user.name} ចែករំលែក ${object.slide_type} <strong>${object.name}</strong> ជាមួយអ្នក!\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        មើល <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
+
+#. module: website_slides
+#: model:mail.template,body_html:website_slides.slide_template_published
+msgid ""
+"\n"
+"<p>Hello,</p>\n"
+"<p>\n"
+"    A new ${object.slide_type} <strong>${object.name}</strong> has been published on ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        View <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
+msgstr ""
+"\n"
+"<p>ជំរាបសួរ</p>\n"
+"<p>\n"
+"    ${object.slide_type} <strong>${object.name}</strong> ថ្មីត្រូវបានចេញផ្សាយនៅលើ ${object.channel_id.name} នៅ ${format_tz(object.write_date, tz=user.tz)}\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        មើល <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
+msgid "# Views"
+msgstr "# ទស្សនីយភាព"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_views
+msgid "# of Embedded Views"
+msgstr "# នៃទស្សនីយភាពបង្កប់"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_views
+msgid "# of Website Views"
+msgstr "# នៃទស្សនីយភាពវេបសាយ"
+
+#. module: website_slides
+#: model:mail.template,subject:website_slides.slide_template_shared
+msgid "${user.name} shared a ${object.slide_type} with you!"
+msgstr "${user.name} ចែករំលែក ${object.slide_type} ជាមួយអ្នក!"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid ""
+"(Un)archiving a channel automatically (un)archives its slides. Do you want "
+"to proceed?"
+msgstr ""
+"(ដោះ)បណ្ណសារឆានែលដោយស្វ័យប្រវត្តិ (ដោះ)បណ្ណសារស្លាយរបស់ខ្លួន។ "
+"តើអ្នកចង់បន្តឬ?"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_search
+msgid ". Please try again with different keywords."
+msgstr "សូមព្យាយាមម្ដងទៀតជាមួយនឹងពាក្យគន្លឹះផ្សេងគ្នា។"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
+msgstr ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> អ៊ីមែល</b>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_embed\"><i class=\"fa fa-code\"/> Embed</b>"
+msgstr ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_embed\"><i class=\"fa fa-code\"/> បង្កប់</b>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> Share</b>"
+msgstr ""
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> ចែករំលែក</b>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "<b>Share:</b>"
+msgstr "<b>ចែករំលែក: </b>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-align-justify\"/> Transcript"
+msgstr "<i class=\"fa fa-align-justify\"/> ប្រតិចារិក"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "<i class=\"fa fa-arrow-right\"/> See all"
+msgstr "<i class=\"fa fa-arrow-right\"/> មើលទាំងអស់"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-bar-chart\"/> Statistics"
+msgstr "<i class=\"fa fa-bar-chart\"/> ស្ថិតិ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-circle-o\"/> Website Views"
+msgstr "<i class=\"fa fa-circle-o\"/> មើលវែបសាយ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "<i class=\"fa fa-cloud-upload\"/> Upload"
+msgstr "<i class=\"fa fa-cloud-upload\"/> ផ្ទុកឡើង"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-code\"/> Embeded Views"
+msgstr "<i class=\"fa fa-code\"/> ទស្សនីយភាពបង្កប់"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-comments-o\"/> Comments"
+msgstr "<i class=\"fa fa-comments-o\"/> យោបល់"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                        Send Email"
+msgstr ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                        ផ្ញើអ៊ីម៉ែល"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+#: model:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-exclamation-triangle\"/> This"
+msgstr "<i class=\"fa fa-exclamation-triangle\"/> នេះ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-home\"/> About"
+msgstr "<i class=\"fa fa-home\"/>អំពី"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "<i class=\"fa fa-home\"/> Home"
+msgstr "<i class=\"fa fa-home\"/> គេហ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<i class=\"fa fa-info-circle\"/>\n"
+"                                        The social sharing module will be unlocked when a moderator will allow your publication."
+msgstr ""
+"<i class=\"fa fa-info-circle\"/>\n"
+"                                        ម៉ូឌុលចែកចាយសង្គមនឹងត្រូវបានដោះសោនៅពេលអ្នកសម្របសម្រួលអនុញ្ញាតឱ្យការចុះផ្សាយរបស់អ្នក។"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-play\"/> Total Views"
+msgstr "<i class=\"fa fa-play\"/> ចំនួនមើលសរុប"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-share-alt\"/> Share"
+msgstr "<i class=\"fa fa-share-alt\"/> ចែកចាយ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "<i class=\"fa fa-spinner fa-spin\"/> Loading ..."
+msgstr "<i class=\"fa fa-spinner fa-spin\"/> កំពុងផ្ទុក ..."
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-thumbs-down\"/> Dislikes"
+msgstr "<i class=\"fa fa-thumbs-down\"/> មិនចូលចិត្ត"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<i class=\"fa fa-thumbs-up\"/> Likes"
+msgstr "<i class=\"fa fa-thumbs-up\"/> ការចូលចិត្ត"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
+msgstr ""
+"<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-facebook-square\"/> ហ្វេសប៊ុក"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<span class=\"badge\" id=\"google-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
+msgstr ""
+"<span class=\"badge\" id=\"google-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-google-plus-square\"/> ហ្គូហ្គល់+"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
+msgstr ""
+"<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-linkedin-square\"/> លីងអ៊ីន"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<span class=\"badge\" id=\"total-share\">0</span>\n"
+"                                                    <i class=\"fa fa-share-alt\"/> Social Shares"
+msgstr ""
+"<span class=\"badge\" id=\"total-share\">0</span>\n"
+"                                                    <i class=\"fa fa-share-alt\"/> ចែករំលែកសង្គម"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
+msgstr ""
+"<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
+"                                                    <i class=\"fa fa-twitter-square\"/> ធ្វីតថឺ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "<span class=\"help-block\">Send presentation through email</span>"
+msgstr "<span class=\"help-block\">ផ្ញើបទបង្ហាញតាមរយៈអ៊ីម៉ែល</span>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_media
+msgid ""
+"<span class=\"help-block\">Use permanent link to share in social "
+"media</span>"
+msgstr ""
+"<span class=\"help-"
+"block\">ប្រើតំណអចិន្រ្តៃយ៍ដើម្បីចែករំលែកនៅក្នុងប្រព័ន្ធផ្សព្វផ្សាយសង្គម</span>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "<span class=\"text-muted small\">views</span>"
+msgstr "<span class=\"text-muted small\">ទិដ្ឋភាព</span>"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "<span class=\"text-muted\">Sort by:</span>"
+msgstr "<span class=\"text-muted\">តម្រៀបតាម: </span>"
+
+#. module: website_slides
+#: sql_constraint:slide.tag:0
+msgid "A tag must be unique!"
+msgstr "ធែកត្រូវមានតែមួយគត់!"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Actions"
+msgstr "សកម្មភាព"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
+msgid "Active"
+msgstr "សកម្ម"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Archived"
+msgstr "ឯកសារ"
+
+#. module: website_slides
+#: selection:slide.slide,download_security:0
+msgid "Authentified Users Only"
+msgstr "មានតែអ្នកប្រើដែលមានឈ្មោះ"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_5
+msgid "Awesome Timesheet by Odoo"
+msgstr "ថែមស៊ីត ល្អមែនទែនដោយ អូឌូ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see
+msgid "Can See"
+msgstr "អាចឃើញ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_upload
+msgid "Can Upload"
+msgstr "អាចផ្ទុកឡើង"
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.action_ir_slide_category
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_category_ids
+#: model:ir.ui.menu,name:website_slides.menu_action_ir_slide_category
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Categories"
+msgstr "ប្រភេទ"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:251
+#: code:addons/website_slides/static/src/xml/website_slides.xml:54
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_category_id
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+#: model:ir.ui.view,arch_db:website_slides.view_slides_category_form
+#: model:ir.ui.view,arch_db:website_slides.view_slides_category_tree
+#, python-format
+msgid "Category"
+msgstr "ប្រភេទ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_channel_id
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Channel"
+msgstr "ឆានែល"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_group_ids
+msgid "Channel Groups"
+msgstr "ក្រុមឆានែល"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "Channel Settings"
+msgstr "ការកំណត់ឆានែល"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:171
+#, python-format
+msgid ""
+"Channel contains the given title, please change before Save or Publish."
+msgstr "ឆានែលមានចំណងជើងដែលបានផ្ដល់ឱ្យ, សូមផ្លាស់ប្តូរមុនពេលរក្សាទុកឬផ្សាយ។"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_channel
+msgid "Channel for Slides"
+msgstr "ឆានែលសម្រាប់ស្លាយ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Channel visibility"
+msgstr "ភាពមើលឃើញឆានែល"
+
+#. module: website_slides
+#: model:ir.actions.act_url,name:website_slides.action_open_channels
+#: model:ir.actions.act_window,name:website_slides.action_slide_channels
+#: model:ir.ui.menu,name:website_slides.menu_action_slide_channels
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Channels"
+msgstr "ឆានែល"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_datas
+msgid "Content"
+msgstr "មាតិកា"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:20
+#, python-format
+msgid "Content Preview"
+msgstr "មាតិកាមើលជាមុន"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:290
+#, python-format
+msgid ""
+"Could not fetch data from url. Document or access right not available.\n"
+"Here is the received response: %s"
+msgstr ""
+"មិនអាចចាប់ទិន្នន័យពី URL។ មិនមានឯកសារឬសិទ្ធិចូលដំណើរការ\n"
+" ទីនេះគឺជាការឆ្លើយតបបានទទួល: %s"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slides.py:307
+#, python-format
+msgid ""
+"Could not fetch data from url. Document or access right not available:\n"
+"%s"
+msgstr ""
+"មិនអាចចាប់ទិន្នន័យពី URL ។ មិនមានឯកសារឬសិទ្ធិចូលដំណើរការ \n"
+"%s"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_1
+msgid ""
+"Create a beautiful and professional eCommerce on your website with Odoo. \n"
+"\n"
+"Find out more at https://www.odoo.com/page/e-commerce"
+msgstr ""
+"បង្កើតអ៊ីខមមើស ប្រកបដោយវិជ្ជាជីវៈនិងស្រស់ស្អាតនៅលើគេហទំព័ររបស់អ្នកជាមួយអូឌូ។ \n"
+"\n"
+"ស្វែងយល់បន្ថែមនៅ https://www.odoo.com/page/e-commerce"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:220
+#, python-format
+msgid "Create new tag '%s'"
+msgstr "បង្កើតធែកថ្មី '%s'"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_uid
+msgid "Created by"
+msgstr "បង្កើតដោយ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_date
+msgid "Created on"
+msgstr "បង្កើតនៅ"
+
+#. module: website_slides
+#: model:slide.channel,description:website_slides.channel_public
+msgid ""
+"Default channel for slides, all public users can access content of this "
+"channel."
+msgstr ""
+"ឆានែលលំនាំដើមសម្រាប់ស្លាយ "
+"អ្នកប្រើប្រាស់ទាំងអស់អាចចូលដំណើរការជាសាធារណៈមាតិកាឆានែលនេះ។"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:60
+#: code:addons/website_slides/static/src/xml/website_slides.xml:62
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_description
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_description
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+#, python-format
+msgid "Description"
+msgstr "ការពិពណ៌​នា​"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:72
+#, python-format
+msgid "Discard"
+msgstr "បោះបង់"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_2
+msgid ""
+"Discover the all-in-one business management software solution that fits any business size and use case.\n"
+"\n"
+"Learn more at https://odoo.com"
+msgstr ""
+"រុករកដំណោះស្រាយគ្រប់គ្រងអាជីវកម្មដែលមានគ្រប់កម្មវិធីទាំងអស់ដែលសមនឹងទំហំពាណិជ្ជកម្មនិងការប្រើប្រាស់ណាមួយ។\n"
+"\n"
+"សិក្សាបន្ថែមនៅ https://odoo.com"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_dislikes
+msgid "Dislikes"
+msgstr "មិនចូលចិត្ត"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_display_name
+msgid "Display Name"
+msgstr "ឈ្មោះសំរាប់បង្ហាញ"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_category_sequence
+#: model:ir.model.fields,help:website_slides.field_slide_channel_sequence
+msgid "Display order"
+msgstr "បង្ហាញការបញ្ជាទិញ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+#: selection:slide.slide,slide_type:0
+msgid "Document"
+msgstr "ឯកសារ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_document_id
+msgid "Document ID"
+msgstr "អត្ត. ឯកសារ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_url
+msgid "Document URL"
+msgstr "URL របស់ឯកសារ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "Documents"
+msgstr "ឯកសារ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "Download"
+msgstr "ទាញយក"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_5
+msgid ""
+"Download Awesome Timesheet by Odoo and discover how easy time tracking and employee management can be!\n"
+"\n"
+"Chrome: http://bit.ly/2613LcY\n"
+"iOS: http://bit.ly/1ZUZsZD"
+msgstr ""
+"ទាញយក ថែមស៊ីត ល្អមែនទែនដោយ អូឌូ និងរកឃើញរបៀបក្នុងការតាមដាននិងគ្រប់គ្រងពេលវេលាបុគ្គលិកយ៉ាងងាយស្រួល! \n"
+"Chrome: http://bit.ly/2613LcY\n"
+"iOS: http://bit.ly/1ZUZsZD"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_download_security
+msgid "Download Security"
+msgstr "សន្ដិសុខនៃការទាញយក"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Email Address"
+msgstr "អាស័យ​ដ្ឋាន​អ៊ី​ម៉េ​ល"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_publish_template_id
+msgid "Email template to send slide publication through email"
+msgstr "ទំរង់គំរូអ៊ីម៉ែលដើម្បីផ្ញើស្លាយចេញផ្សាយរយៈអ៊ីម៉ែល"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_share_template_id
+msgid "Email template used when sharing a slide"
+msgstr "ទំរង់គំរូអ៊ីម៉ែលដែលបានប្រើនៅពេលការចែករំលែកស្លាយ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_code
+msgid "Embed Code"
+msgstr "កូដបង្កប់"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embedcount_ids
+msgid "Embed Count"
+msgstr "បង្កប់ការរាប់"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_embed
+msgid "Embed in your website"
+msgstr "បង្កប់ក្នុងវែបសាយរបស់អ្នក"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_embed
+msgid "Embedded Slides View Counter"
+msgstr "កុងទ័រមើលស្លាយបានបង្កប់"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Embeds"
+msgstr "ការបង្កប់"
+
+#. module: website_slides
+#: model:slide.channel,name:website_slides.channel_private
+msgid "Employee Channel"
+msgstr "ឆានែលបុគ្គលិក"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_access_error_msg
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Error Message"
+msgstr "សារកំហុស"
+
+#. module: website_slides
+#: selection:slide.slide,download_security:0
+msgid "Everyone"
+msgstr "គ្រប់គ្នា"
+
+#. module: website_slides
+#: selection:slide.channel,promote_strategy:0
+msgid "Featured Presentation"
+msgstr "បទបង្ហាញជាគុណលក្ខណៈ"
+
+#. module: website_slides
+#: model:slide.category,name:website_slides.category_1
+msgid "Featured Presentations"
+msgstr "បទបង្ហាញដែល​មាន​លក្ខណៈ​ពិសេស"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_promoted_slide_id
+msgid "Featured Slide"
+msgstr "ស្លាយជាគុណលក្ខណៈ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_promote_strategy
+msgid "Featuring Policy"
+msgstr "គោលនយោបាយជាគុណលក្ខណៈ"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/controllers/main.py:300
+#: code:addons/website_slides/static/src/js/slides_upload.js:90
+#, python-format
+msgid "File is too big. File size cannot exceed 25MB"
+msgstr "ឯកសារមានទំហំធំពេក។ ទំហំឯកសារមិនអាចលើសពី ២៥MB"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
+msgid "Full Access"
+msgstr "ចូលដំណើរការពេញសិទ្ធ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "General"
+msgstr "ទូទៅ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_website_config_settings_website_slide_google_app_key
+msgid "Google Doc Key"
+msgstr "គន្លឹះឯក. ហ្គូហ្គល់"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_graph
+msgid "Graph of Slides"
+msgstr "ក្រាហ្វនៃស្លាយ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Group By"
+msgstr "ជា​ក្រុម​តាម"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_group_ids
+msgid "Groups allowed to see presentations in this channel"
+msgstr "ក្រុមអនុញ្ញាតឱ្យឃើញបទបង្ហាញនៅក្នុងប៉ុស្តិ៍នេះ"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_upload_group_ids
+msgid ""
+"Groups allowed to upload presentations in this channel. If void, every user "
+"can upload."
+msgstr ""
+"ក្រុមអនុញ្ញាតឱ្យផ្ទុកឡើងនូវបទបង្ហាញក្នុងឆានែលនេះ។ "
+"បើទុកជាមោឃៈរាល់អ្នកប្រើអាចផ្ទុកឡើង។"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image
+msgid "Image"
+msgstr "Image"
+
+#. module: website_slides
+#: selection:slide.slide,slide_type:0
+msgid "Infographic"
+msgstr "ក្រាហ្វិចព័ត៌មាន"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "Infographics"
+msgstr "ក្រាហ្វិចព័ត៌មាន"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:322
+#, python-format
+msgid ""
+"Internal server error, please try again later or contact administrator.\n"
+"Here is the error message: %s"
+msgstr ""
+"កំហុសម៉ាស៊ីនមេខាងក្នុង, សូមព្យាយាមម្តងទៀតនៅពេលក្រោយឬអ្នកគ្រប់គ្រងទំនាក់ទំនង \n"
+"ទីនេះ គឺជាសារកំហុស។ %s"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:85
+#, python-format
+msgid "Invalid file type. Please select pdf or image file"
+msgstr "ប្រភេទឯកសារមិនត្រឹមត្រូវ។ សូមជ្រើសឯកសារ PDF ឬរូបភាព"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category___last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel___last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed___last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide___last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag___last_update
+msgid "Last Modified on"
+msgstr "កាលបរិច្ឆេតកែប្រែចុងក្រោយ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_uid
+msgid "Last Updated by"
+msgstr "ផ្លាស់ប្តូរចុងក្រោយ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_date
+msgid "Last Updated on"
+msgstr "ផ្លាស់ប្តូរចុងក្រោយ"
+
+#. module: website_slides
+#: selection:slide.channel,promote_strategy:0
+msgid "Latest Published"
+msgstr "ចេញផ្សាយចុងក្រោយ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_likes
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Likes"
+msgstr "ចូលចិត្ត"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_medium
+msgid "Medium"
+msgstr "Medium"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_access_error_msg
+msgid "Message to display when not accessible due to access rights"
+msgstr "សារបង្ហាញនៅពេលមិនអាចចូលដំណើរការដោយសារតែសិទ្ធិចូលដំណើរការ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_mime_type
+msgid "Mime-type"
+msgstr "Mime-type"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+#: selection:slide.channel,promote_strategy:0
+msgid "Most Viewed"
+msgstr "ការមើលច្រើនបំផុត"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+#: selection:slide.channel,promote_strategy:0
+msgid "Most Voted"
+msgstr "ការបោះឆ្នោតច្រើនជាងគេ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag_name
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Name"
+msgstr "ឈ្មោះ"
+
+#. module: website_slides
+#: model:mail.template,subject:website_slides.slide_template_published
+msgid "New ${object.slide_type} published on ${object.channel_id.name}"
+msgstr "${object.slide_type} published on ${object.channel_id.name}ថ្មី"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "Newest"
+msgstr "ថ្មីបំផុត"
+
+#. module: website_slides
+#: selection:slide.channel,promote_strategy:0
+msgid "No Featured Presentation"
+msgstr "គ្មានបទបង្ហាញពិសេស"
+
+#. module: website_slides
+#: selection:slide.slide,download_security:0
+msgid "No One"
+msgstr "គ្មាន​នរណា​ម្នាក់"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.channel_not_found
+msgid "No channel created or published yet."
+msgstr "មិនមានឆានែលបានបង្កើតឬដែលបានចេញផ្សាយនៅឡើយទេ។"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "No presentation available."
+msgstr "មិនមានបទបង្ហាញ។"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "No presentation published yet."
+msgstr "មិនមានបទបង្ហាញដែលបានចេញផ្សាយទេ។"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
+msgid "Number of Documents"
+msgstr "ចំនួនឯកសារ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_infographics
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_infographics
+msgid "Number of Infographics"
+msgstr "ចំនួននៃ ក្រាហ្វិចព័ត៌មាន"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_presentations
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_presentations
+msgid "Number of Presentations"
+msgstr "ចំនួននៃការបង្ហាញ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_videos
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_videos
+msgid "Number of Videos"
+msgstr "ចំនួននៃវីដេអូ"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_2
+msgid "Odoo All-in-One Software Demonstration"
+msgstr "ដេម៉ូអូឌូ កម្មវិធីទាំងអស់នៅក្នុងតែមួយ"
+
+#. module: website_slides
+#: model:slide.category,name:website_slides.category_2
+msgid "Odoo Days"
+msgstr "ទិវាថ្ងៃអូឌូ"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_0
+msgid "Odoo Explained"
+msgstr "អូឌូដែលបានពន្យល់"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_6
+msgid "Odoo Marketing - part 1: ATTRACT"
+msgstr "អូឌូម៉ាឃីតធីង-ផ្នែក1៖ ទាក់ទាញ"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_7
+msgid "Odoo Marketing - part 1: ATTRACT_2"
+msgstr "អូឌូម៉ាឃីតធីង-ផ្នែក1៖ ទាក់ទាញ_2"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_8
+msgid "Odoo Marketing - part 1: ATTRACT_3"
+msgstr "អូឌូម៉ាឃីតធីង-ផ្នែក1៖ ទាក់ទាញ_3"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_10
+msgid "Odoo Roadmap & Strategy - Fabien Pinckaers"
+msgstr "យុទ្ធសាស្រ្តនិងផែនទី​វិថី អូឌូ - Fabien Pinckaers"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_3
+msgid "Odoo Sign Demonstration"
+msgstr "ដេម៉ូអូឌូសាញ"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_1
+msgid "Odoo Website & E-commerce Demonstration"
+msgstr "ដេម៉ូអូឌូវេបសាយនិង អ៊ីខមមើស"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_6
+msgid ""
+"Odoo's fully-integrated marketing app will help you to attract, convert and "
+"close new leads. Check out our three-part video and discover more at "
+"www.odoo.com"
+msgstr ""
+"កម្មវិធីទីផ្សារបានរួមបញ្ចូលពេញលេញ អូឌូ នឹងជួយអ្នកក្នុងការទាក់ទាញ, "
+"បម្លែងនិងបិទតម្រុយថ្មី។ "
+"សូម​ពិនិត្យ​មើលវីដេអូបីផ្នែករបស់យើងនិងស្វែងយល់បន្ថែមនៅ www.odoo.com"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_7
+#: model:slide.slide,description:website_slides.slide_8
+msgid ""
+"Odoo's fully-integrated marketing app will help you to attract, convert and close new leads. Check out our three-part video and discover more at www.odoo.com\n"
+"\n"
+"Video made by Miroslava Ganzarcikova and Sophia Eribo."
+msgstr ""
+"កម្មវិធីទីផ្សារបានរួមបញ្ចូលពេញលេញ អូឌូ នឹងជួយអ្នកក្នុងការទាក់ទាញ, បម្លែងនិងបិទតម្រុយថ្មី។ សូម​ពិនិត្យ​មើលវីដេអូបីផ្នែករបស់យើងនិងស្វែងយល់បន្ថែមនៅ www.odoo.com\n"
+"វីដេអូផលិតដោយ Miroslava Ganzarcikova និងសូហ្វៀ អេរិបូ"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_9
+msgid "Open Days 2014 Infographic"
+msgstr "ទិវាបើកទូលាយ 2014 ក្រាហ្វិកព័ត៌មាន"
+
+#. module: website_slides
+#: model:slide.slide,name:website_slides.slide_11
+msgid "OpenSource CMS, A performance comparison - Mantavya Gajjar"
+msgstr "CMS កូដចំហ ការប្រៀបធៀបដំណើរការ - Mantavya Gajjar"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:28
+#, python-format
+msgid "PDF or Image File"
+msgstr "PDF ឬ រូបភាព"
+
+#. module: website_slides
+#: model:slide.channel,name:website_slides.channel_partial
+msgid "Partner Channel"
+msgstr "ឆានែលរបស់ដៃគូ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "Please"
+msgstr "សូម"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides.js:56
+#, python-format
+msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
+msgstr "សូម <a href=\"/web?redirect=%s\">ឡកចូល</a> ដើម្បីបោះឆ្នោតស្លាយនេះ"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slides.py:310
+#: code:addons/website_slides/models/slides.py:533
+#, python-format
+msgid "Please enter valid Youtube or Google Doc URL"
+msgstr "សូមបញ្ចូល URL យូធ្យូប ឬ ហ្គូហ្គល់ ដុកដែលមានសុពលភាព"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:282
+#, python-format
+msgid "Please enter valid youtube or google doc url"
+msgstr "សូមបញ្ចូល URL យូធ្យូប ឬ ហ្គូហ្គល់ ដុកដែលមានសុពលភាព"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Post"
+msgstr "ប៉ុស្ត"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid ""
+"Post comment with email address (confirmation of email is required in order "
+"to publish comment on website) or please"
+msgstr ""
+"បង្ហោះមតិជាមួយអាសយដ្ឋានអ៊ីមែល "
+"(ការបញ្ជាក់របស់អ៊ីម៉ែលគឺត្រូវបានទាមទារដើម្បីបោះផ្សាយការអត្ថាធិប្បាយនៅលើវែបសាយ)"
+" ឬសូម"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_slide_id
+#: selection:slide.slide,slide_type:0
+msgid "Presentation"
+msgstr "បទ​បង្ហាញ"
+
+#. module: website_slides
+#: model:mail.message.subtype,description:website_slides.mt_channel_slide_published
+#: model:mail.message.subtype,name:website_slides.mt_channel_slide_published
+msgid "Presentation Published"
+msgstr "បទបង្ហាញដែលបានចេញផ្សាយ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_footer
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+#: model:website.menu,name:website_slides.website_menu_slides
+msgid "Presentations"
+msgstr "បទបង្ហាញ"
+
+#. module: website_slides
+#: selection:slide.channel,visibility:0
+msgid "Private"
+msgstr "ឯកជន"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.channels
+msgid "Private channel"
+msgstr "ឆានែលឯកជន"
+
+#. module: website_slides
+#: selection:slide.channel,visibility:0
+msgid "Public"
+msgstr "សាធារណៈ"
+
+#. module: website_slides
+#: model:slide.channel,name:website_slides.channel_public
+msgid "Public Channel"
+msgstr "ឆានែលជាសាធារណៈ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_date_published
+msgid "Publish Date"
+msgstr "កាលបរិច្ឆេទបោះផ្សាយ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Published"
+msgstr "ចេញផ្សាយ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_publish_template_id
+msgid "Published Template"
+msgstr "ទំព័រគំរូចេញផ្សាយ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Related"
+msgstr "ដែលទាក់ទង"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "Results for"
+msgstr "លទ្ធផលសម្រាប់"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid ""
+"Review your channel settings to promote your most viewed or recent published"
+" presentation"
+msgstr ""
+"ពិនិត្យការកំណត់ឆានែលរបស់អ្នកលើកកម្ពស់បទបង្ហាញដែលបានចេញផ្សាយថ្មីៗឬការមើលច្រើនបំផុតរបស់អ្នក"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_0
+msgid ""
+"Run your business with a comprehensive suite of business apps. Do it easily with Odoo! \n"
+"\n"
+"http://odoo.com/start"
+msgstr ""
+"ដំណើរការអាជីវកម្មរបស់អ្នកជាមួយនឹងឈុតនៃកម្មវិធីអាជីវកម្មដ៏លំអិត។ ធ្វើវាបានយ៉ាងងាយជាមួយ អូឌូ! \n"
+"http://odoo.com/start"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:70
+#, python-format
+msgid "Save and Publish"
+msgstr "រក្សាទុកនិងការចេញផ្សាយ"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:69
+#, python-format
+msgid "Save as Draft"
+msgstr "រក្សាទុកជាសេចក្តីព្រៀង"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Search Slides"
+msgstr "ស្វែងរកស្លាយ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Security"
+msgstr "សន្ដិសុខ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.channels
+msgid "Select a Channel"
+msgstr "ជ្រើសឆានែលមួយ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_embed
+msgid "Select page to start with"
+msgstr "ជ្រើសទំព័រដើម្បីចាប់ផ្តើមជាមួយ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_sequence
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_sequence
+msgid "Sequence"
+msgstr "លំដាប់"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_media
+msgid "Share Link"
+msgstr "ចែករំលែកតំណភ្ជាប់"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Share count"
+msgstr "ចែករំលែកការរាប់"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_media
+msgid "Share on Social Networks"
+msgstr "ចែករំលែកលើបណ្តាញសង្គម"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "Share with a friend"
+msgstr "ចែករំលែកជាមួយមិត្តភក្តិ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_share_template_id
+msgid "Shared Template"
+msgstr "ទំព័រគំរូដែលបានចែករំលែក"
+
+#. module: website_slides
+#: selection:slide.channel,visibility:0
+msgid "Show channel but restrict presentations"
+msgstr "បង្ហាញឆានែលប៉ុន្តែមានការកម្រិតលើបទបង្ហាញ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Slide"
+msgstr "ស្លាយ"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_tag
+msgid "Slide Tag"
+msgstr "ធែកស្លាយ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_custom_slide_id
+msgid "Slide to Promote"
+msgstr "ស្លាយដែលត្រូវលើកកំពស់"
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.action_slides_slides
+#: model:ir.model,name:website_slides.model_slide_slide
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_slide_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_slide_ids
+#: model:ir.ui.menu,name:website_slides.menu_website_slides_root
+#: model:ir.ui.menu,name:website_slides.submenu_action_slides_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_tree
+msgid "Slides"
+msgstr "ស្លាយ"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_category
+msgid "Slides Category"
+msgstr "ប្រភេទស្លាយ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_search
+msgid "Sorry, but nothing matches your search criteria"
+msgstr "សូមអភ័យទោស មិនមានអ្វីផ្គូផ្គងលក្ខណៈវិនិច្ឆ័យស្វែងរករបស់អ្នកទេ"
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_3
+msgid ""
+"Stop doing manual printing and scanning. Move to electronic signature with Odoo Sign!\n"
+"\n"
+"Discover more at https://www.odoo.com/page/sign"
+msgstr ""
+"ឈប់ធ្វើការបោះពុម្ពនិងស្កេនដោយដៃ។ ផ្លាស់ទៅហត្ថលេខាអេឡិចត្រូនិកជាមួយអូឌូ! \n"
+"ស្វែងយល់បន្ថែមនៅ https://www.odoo.com/page/sign"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_tag_form
+msgid "Tag"
+msgstr "ធែក"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:274
+#: code:addons/website_slides/static/src/xml/website_slides.xml:48
+#: model:ir.actions.act_window,name:website_slides.action_slide_tag
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_tag_ids
+#: model:ir.ui.menu,name:website_slides.menu_slide_tag
+#: model:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
+#, python-format
+msgid "Tags"
+msgstr "ធែក"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Tags..."
+msgstr "ធែក ..."
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "The"
+msgstr "*"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide_slide_type
+msgid ""
+"The document type will be set automatically based on the document URL and "
+"properties (e.g. height and width for presentation and document)."
+msgstr ""
+"ប្រភេទឯកសារនេះនឹងត្រូវបានកំណត់ដោយស្វ័យប្រវត្តិដោយផ្អែកលើ URL "
+"ឯកសារនិងលក្ខណៈសម្បត្តិ (ឧ. កម្ពស់និងទទឹងសម្រាប់បទបង្ហាញនិងឯកសារ)។"
+
+#. module: website_slides
+#: sql_constraint:slide.slide:0
+msgid "The slide name must be unique within a channel"
+msgstr "ឈ្មោះស្លាយត្រូវតែមានតែមួយគត់នៅក្នុងឆានែល"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed_url
+msgid "Third Party Website URL"
+msgstr "URL របស់វែបសាយភាគីទីបី"
+
+#. module: website_slides
+#: model:slide.channel,access_error_msg:website_slides.channel_partial
+#: model:slide.channel,access_error_msg:website_slides.channel_private
+#: model:slide.channel,access_error_msg:website_slides.channel_public
+msgid "This channel is private and its content is restricted to some users."
+msgstr ""
+"ឆានែលនេះជាឯកជននិងមាតិការបស់វាត្រូវបានដាក់កម្រិតសំរាប់អ្នកប្រើមួយចំនួន។"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:286
+#, python-format
+msgid ""
+"This video already exists in this channel <a target=\"_blank\" "
+"href=\"/slides/slide/%s\">click here to view it </a>"
+msgstr ""
+"វីដេអូនេះមាននៅក្នុងឆានែលនេះហើយ <a target=\"_blank\" "
+"href=\"/slides/slide/%s\">ចុចនៅទីនេះដើម្បីមើលវា</a>"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_thumb
+msgid "Thumbnail"
+msgstr "រូបតូច"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:42
+#: code:addons/website_slides/static/src/xml/website_slides.xml:44
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_name
+#, python-format
+msgid "Title"
+msgstr "ចំណងជើង​"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_category_total
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_total
+msgid "Total"
+msgstr "សរុប​"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_total_views
+msgid "Total # Views"
+msgstr "សរុប # មើល"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_index_content
+msgid "Transcript"
+msgstr "ប្រតិចារិក"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_type
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Type"
+msgstr "ប្រភេទ"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:141
+#, python-format
+msgid "Uncategorized"
+msgstr "មិនមានចំណាត់ថ្នាក់"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "Uncategorized presentation"
+msgstr "បទបង្ហាញមិនបានចំណាត់ថ្នាក់"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slides.py:522
+#, python-format
+msgid "Unknown document"
+msgstr "ឯកសារមិនស្គាល់"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
+msgid "Unpublished"
+msgstr "ឈប់ផ្សាយ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
+msgid "Upload Groups"
+msgstr "ក្រុមផ្ទុកឡើង"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid ""
+"Upload PDF presentations, documents, videos or infographic using the button "
+"below."
+msgstr ""
+"ផ្ទុកឡើងធ្វើបទបង្ហាញជា PDF ឯកសារវីដេអូឬ ក្រាហ្វិចព័ត៌មាន "
+"ដោយប្រើប៊ូតុងខាងក្រោម។"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:9
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+#, python-format
+msgid "Upload Presentation"
+msgstr "ផ្ទុកឡើងបទបង្ហាញ"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:12
+#, python-format
+msgid "Uploading presentation..."
+msgstr "ផ្ទុកឡើងបទបង្ហាញ ..."
+
+#. module: website_slides
+#: model:slide.channel,description:website_slides.channel_private
+msgid "Used to publish internal slides of company."
+msgstr "បានប្រើដើម្បីបោះទំរង់គំរូស្លាយផ្ទៃក្នុងរបស់ក្រុមហ៊ុន។"
+
+#. module: website_slides
+#: model:slide.channel,description:website_slides.channel_partial
+msgid "Used to publish slides in partner network privately."
+msgstr "បានប្រើដើម្បីបោះទំរង់គំរូស្លាយនៅក្នុងបណ្តាញដៃគូឯកជន។"
+
+#. module: website_slides
+#: selection:slide.slide,slide_type:0
+msgid "Video"
+msgstr "វីដេអូ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+msgid "Videos"
+msgstr "វីដេអូ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
+msgid "Views"
+msgstr "ទស្សនីយភាព"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.related_slides
+msgid "Views ."
+msgstr "ទស្សនីយភាព.."
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_visibility
+msgid "Visibility"
+msgstr "ភាពមើលឃើញ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Waiting for validation"
+msgstr "កំពុងរង់ចាំការផ្ទៀងផ្ទាត់"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Website"
+msgstr "វែបសាយ"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_website_message_ids
+msgid "Website Messages"
+msgstr "សារវែបសាយ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_website_config_settings
+msgid "Website Slides"
+msgstr "ស្លាយវែបសាយ"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide_website_message_ids
+msgid "Website communication history"
+msgstr "ប្រវត្តិទំនាក់ទំនងវែបសាយ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Write a comment..."
+msgstr "សរសេរមតិយោបល់ ..."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:115
+#, python-format
+msgid "You can not upload password protected file."
+msgstr "អ្នកមិនអាចផ្ទុកឡើងឯកសារការពារពាក្យសម្ងាត់។"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides.js:65
+#, python-format
+msgid "You have already voted for this slide"
+msgstr "អ្នកបានបោះឆ្នោតរួចហើយសម្រាប់ស្លាយនេះ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "Your Name"
+msgstr "ឈ្មោះ​របស់​អ្នក​"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:36
+#, python-format
+msgid "Youtube Video URL"
+msgstr "URL យូធ្យូប វីដេអូ"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:34
+#, python-format
+msgid "Youtube or Google Doc URL"
+msgstr "ស្វែងរក យូធ្យូប URL របស់ដុកឬ ហ្គូហ្គល់"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide_document_id
+msgid "Youtube or Google Document ID"
+msgstr "យូធ្យូប ឬ ហ្គូហ្គល់ លេខសម្គាល់ឯកសារ"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide_url
+msgid "Youtube or Google Document URL"
+msgstr "ស្វែងរក យូធ្យូប ឬ URL ហ្គូហ្គល់ ឯកសារ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "by email!"
+msgstr "ដោយអ៊ីម៉ែល!"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.home
+msgid "is empty."
+msgstr "គឺទទេ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "is private"
+msgstr "គឺឯកជន"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+#: model:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
+msgid "is private."
+msgstr "គឺឯកជន"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "login"
+msgstr "បើកចូល"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "on"
+msgstr "នៅ"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides.xml:70
+#, python-format
+msgid "or"
+msgstr "ឬ​"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_search
+msgid "results found for the given criteria"
+msgstr "លទ្ធផលរកឃើញសម្រាប់លក្ខណៈវិនិច្ឆ័យដែលបានផ្តល់ឱ្យ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "suggest_slide.name"
+msgstr "suggest_slide.name"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+msgid "to post comment"
+msgstr "ដើម្បីបង្ហោះសេចក្តីអធិប្បាយ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "to send this"
+msgstr "ផ្ញើនេះ"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_website_config_settings
+msgid "website.config.settings"
+msgstr "website.config.settings"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "your-friend@domain.com"
+msgstr "មិត្ត@ដូមេន.ខម"
