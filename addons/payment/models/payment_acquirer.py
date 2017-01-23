@@ -429,7 +429,7 @@ class PaymentTransaction(models.Model):
     # duplicate partner / transaction data to store the values at transaction time
     partner_id = fields.Many2one('res.partner', 'Partner', track_visibility='onchange')
     partner_name = fields.Char('Partner Name')
-    partner_lang = fields.Selection(_lang_get, 'Language', default='en_US')
+    partner_lang = fields.Selection(_lang_get, 'Language', default=lambda self: self.env.lang)
     partner_email = fields.Char('Email')
     partner_zip = fields.Char('Zip')
     partner_address = fields.Char('Address')
