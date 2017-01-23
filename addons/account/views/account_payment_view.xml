@@ -271,5 +271,23 @@
             key2="client_action_multi"
         />
 
+        <!-- Action confirm_payments for multi -->
+        <record id="action_account_confirm_payments" model="ir.actions.server">
+            <field name="name">Confirm Payments</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="code">
+                if context.get('active_model') == 'account.payment' and context.get('active_ids'):
+                    action = self.pool['account.payment'].post(cr, uid, context['active_ids'], context=context)
+            </field>
+        </record>
+
+        <record id="account_confirm_payments" model="ir.values">
+            <field name="model_id" ref="account.model_account_payment" />
+            <field name="name">Confirm Payments</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,' +str(ref('action_account_confirm_payments'))" />
+            <field name="key">action</field>
+            <field name="model">account.payment</field>
+        </record>
     </data>
 </openerp>
