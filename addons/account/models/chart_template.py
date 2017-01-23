@@ -226,7 +226,7 @@ class AccountChartTemplate(models.Model):
             account = getattr(self, record[0])
             value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
             if value:
-                field = self.env['ir.model.fields'].sudo().search([('name', '=', record[0]), ('model', '=', record[1]), ('relation', '=', record[2])])
+                field = self.env['ir.model.fields'].search([('name', '=', record[0]), ('model', '=', record[1]), ('relation', '=', record[2])], limit=1)
                 vals = {
                     'name': record[0],
                     'company_id': company.id,
@@ -394,22 +394,11 @@ class AccountChartTemplate(models.Model):
             acc_template_ref[account_template.id] = new_account
         return acc_template_ref
 
-    @api.multi
-    def generate_account_reconcile_model(self, tax_template_ref, acc_template_ref, company):
-        """ This method for generating accounts from templates.
-
-            :param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
-            :param acc_template_ref: dictionary with the mappping between the account templates and the real accounts.
-            :param company_id: company_id selected from wizard.multi.charts.accounts.
-            :returns: return new_account_reconcile_model for reference purpose.
-            :rtype: dict
+    def _prepare_reconcile_model_vals(self, company, account_reconcile_model, acc_template_ref, tax_template_ref):
+        """ This method generates a dictionnary of all the values for the account.reconcile.model that will be created.
         """
         self.ensure_one()
-        account_reconcile_models = self.env['account.reconcile.model.template'].search([
-            ('account_id.chart_template_id', '=', self.id)
-        ])
-        for account_reconcile_model in account_reconcile_models:
-            vals = {
+        return {
                 'name': account_reconcile_model.name,
                 'sequence': account_reconcile_model.sequence,
                 'has_second_line': account_reconcile_model.has_second_line,
@@ -425,6 +414,23 @@ class AccountChartTemplate(models.Model):
                 'second_amount': account_reconcile_model.second_amount,
                 'second_tax_id': account_reconcile_model.second_tax_id and tax_template_ref[account_reconcile_model.second_tax_id.id] or False,
             }
+
+    @api.multi
+    def generate_account_reconcile_model(self, tax_template_ref, acc_template_ref, company):
+        """ This method for generating accounts from templates.
+
+            :param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
+            :param acc_template_ref: dictionary with the mappping between the account templates and the real accounts.
+            :param company_id: company_id selected from wizard.multi.charts.accounts.
+            :returns: return new_account_reconcile_model for reference purpose.
+            :rtype: dict
+        """
+        self.ensure_one()
+        account_reconcile_models = self.env['account.reconcile.model.template'].search([
+            ('account_id.chart_template_id', '=', self.id)
+        ])
+        for account_reconcile_model in account_reconcile_models:
+            vals = self._prepare_reconcile_model_vals(company, account_reconcile_model, acc_template_ref, tax_template_ref)
             self.create_record_with_xmlid(company, account_reconcile_model, 'account.reconcile.model', vals)
         return True
 
@@ -511,9 +517,14 @@ class AccountTaxTemplate(models.Model):
             res.append((record.id, name))
         return res
 
-    def _get_tax_vals(self, company):
+    def _get_tax_vals(self, company, tax_template_to_tax):
         """ This method generates a dictionnary of all the values for the tax that will be created.
         """
+        # Compute children tax ids
+        children_ids = []
+        for child_tax in self.children_tax_ids:
+            if tax_template_to_tax.get(child_tax.id):
+                children_ids.append(tax_template_to_tax[child_tax.id])
         self.ensure_one()
         val = {
             'name': self.name,
@@ -528,6 +539,7 @@ class AccountTaxTemplate(models.Model):
             'include_base_amount': self.include_base_amount,
             'analytic': self.analytic,
             'tag_ids': [(6, 0, [t.id for t in self.tag_ids])],
+            'children_tax_ids': [(6, 0, children_ids)],
             'tax_adjustment': self.tax_adjustment,
             'use_cash_basis': self.use_cash_basis,
             'cash_basis_account': self.cash_basis_account,
@@ -549,13 +561,7 @@ class AccountTaxTemplate(models.Model):
         todo_dict = {}
         tax_template_to_tax = {}
         for tax in self:
-            # Compute children tax ids
-            children_ids = []
-            for child_tax in tax.children_tax_ids:
-                if tax_template_to_tax.get(child_tax.id):
-                    children_ids.append(tax_template_to_tax[child_tax.id])
-            vals_tax = tax._get_tax_vals(company)
-            vals_tax['children_tax_ids'] = children_ids and [(6, 0, children_ids)] or []
+            vals_tax = tax._get_tax_vals(company, tax_template_to_tax)
             new_tax = self.env['account.chart.template'].create_record_with_xmlid(company, tax, 'account.tax', vals_tax)
             tax_template_to_tax[tax.id] = new_tax
             # Since the accounts have not been created yet, we have to wait before filling these fields

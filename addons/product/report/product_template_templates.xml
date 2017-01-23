@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="report_producttemplatelabel">
-    <t t-call="report.html_container">
+    <t t-call="report.basic_layout">
         <div class="page">
             <t t-foreach="docs" t-as="template">
                 <t t-foreach="template.product_variant_ids" t-as="product">

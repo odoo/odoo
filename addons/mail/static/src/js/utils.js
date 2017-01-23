@@ -130,7 +130,6 @@ var accented_letters_mapping = {
     'oe': 'œ',
     'u': '[ùúûűü]',
     'y': '[ýÿ]',
-    ' ': '[()\\[\\]]',
 };
 function unaccent (str) {
     _.each(accented_letters_mapping, function (value, key) {

@@ -37,6 +37,16 @@ footer {
     display: none!important;
 }
 
+.o_text_overflow {
+    .text-overflow()
+}
+
+.o_div_text_overflow * > div {
+    // .text-overflow() we don't want wordwrap
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 // Odoo options classes
 
 .jumbotron {

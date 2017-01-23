@@ -679,8 +679,9 @@
         </button>
         <span class="text-warning o_domain_error_message hidden"><i class="fa fa-exclamation-triangle"/> Invalid domain</span>
         <button t-if="widget.options.in_dialog &amp;&amp; !widget.get('effective_readonly')"
-            class="btn btn-sm btn-primary o_form_field_domain_dialog_button">Edit domain</button>
+            class="btn btn-xs btn-primary o_form_field_domain_dialog_button">Edit domain</button>
     </div>
+    <div class="o_domain_model_missing o_hidden">Select a model to add a filter.</div>
 </div>
 
 <t t-name="DomainNode.ControlPanel">
@@ -711,7 +712,7 @@
 <div t-name="DomainSelector" t-attf-class="o_domain_node o_domain_tree o_domain_selector #{widget.readonly ? 'o_read_mode' : 'o_edit_mode'}">
     <t t-if="widget.children.length === 0">
         <span>Match <strong>all records</strong></span>
-        <button t-if="!widget.readonly" class="btn btn-sm btn-primary o_domain_add_first_node_button"><i class="fa fa-plus"/> Add filter</button>
+        <button t-if="!widget.readonly" class="btn btn-xs btn-primary o_domain_add_first_node_button"><i class="fa fa-plus"/> Add filter</button>
     </t>
     <t t-else="">
         <div>

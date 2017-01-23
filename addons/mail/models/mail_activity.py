@@ -44,7 +44,7 @@ class MailActivity(models.Model):
     def default_get(self, fields):
         res = super(MailActivity, self).default_get(fields)
         if not fields or 'res_model_id' in fields and res.get('res_model'):
-            res['res_model_id'] = self.env['ir.model'].sudo().search([('model', '=', res['res_model'])]).id
+            res['res_model_id'] = self.env['ir.model']._get(res['res_model']).id
         return res
 
     # owner
@@ -65,7 +65,7 @@ class MailActivity(models.Model):
     icon = fields.Char('Icon', related='activity_type_id.icon')
     summary = fields.Char('Summary')
     note = fields.Html('Note')
-    date_deadline = fields.Date('Due Date', index=True, required=True, default=fields.Date.today)
+    date_deadline = fields.Date('Deadline', index=True, required=True, default=fields.Date.today)
     # description
     user_id = fields.Many2one(
         'res.users', 'Assigned to',

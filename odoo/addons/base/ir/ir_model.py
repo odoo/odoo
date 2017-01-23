@@ -234,7 +234,8 @@ class IrModel(models.Model):
         record = self.browse(cr.fetchone())
         self._context['todo'].append((10, record.modified, [list(params)]))
 
-        if 'module' in self._context:
+        if self._module == self._context.get('module'):
+            # self._module is the name of the module that last extended self
             xmlid = 'model_' + model._name.replace('.', '_')
             cr.execute("SELECT * FROM ir_model_data WHERE name=%s AND module=%s",
                        (xmlid, self._context['module']))

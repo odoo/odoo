@@ -812,20 +812,26 @@ function transform_qweb_template (node, fvg, many2manys) {
             } else if (fields_registry.contains(ftype)) {
                 // do nothing, the kanban record will handle it
             } else {
-                if (node.attrs.bold) {
-                    node.tag = 'strong';
-                    var children_node = {
-                        attrs: {},
-                        children: [],
-                        tag: qweb.prefix,
-                    };
-                    children_node.attrs[qweb.prefix + '-esc'] = 'record.' + node.attrs.name + '.value';
-                    node.children.push(children_node);
-                } else {
-                    node.tag = qweb.prefix;
-                    node.attrs[qweb.prefix + '-esc'] = 'record.' + node.attrs.name + '.value';
-                }
+                node.tag = 'span';
+                var child_node = {
+                    attrs: {},
+                    children: [],
+                    tag: qweb.prefix,
+                };
+                child_node.attrs[qweb.prefix + '-esc'] = 'record.' + node.attrs.name + '.value';
+                node.children.push(child_node);
 
+                // set class according to field attribute
+                var child_classes = [];
+                if (node.attrs.display === 'right') {
+                    child_classes.push('pull-right');
+                } else if (node.attrs.display === 'full') {
+                    child_classes.push('o_text_block');
+                }
+                if (node.attrs.bold) {
+                    child_classes.push('o_text_bold');
+                }
+                node.attrs['class'] = child_classes.join(' ');
             }
             break;
         case 'button':

@@ -5,7 +5,7 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, MissingError
 from odoo.tools import pickle
 
-EXCLUDED_FIELDS = set((
+EXCLUDED_FIELDS = set(('code',
     'report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml',
     'report_sxw_content_data', 'report_rml_content_data', 'search_view', ))
 
