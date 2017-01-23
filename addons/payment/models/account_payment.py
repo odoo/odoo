@@ -17,7 +17,8 @@ class AccountPayment(models.Model):
     def _onchange_partner_id(self):
         res = {}
         if self.partner_id:
-            res['domain'] = {'payment_token_id': [('partner_id', '=', self.partner_id.id), ('acquirer_id.auto_confirm', '!=', 'authorize')]}
+            partners = self.partner_id | self.partner_id.commercial_partner_id | self.partner_id.commercial_partner_id.child_ids
+            res['domain'] = {'payment_token_id': [('partner_id', 'in', partners.ids), ('acquirer_id.auto_confirm', '!=', 'authorize')]}
 
         return res
 
