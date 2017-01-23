@@ -1217,7 +1217,7 @@ class Export(http.Controller):
         info = {}
         fields = self.fields_get(model)
         if ".id" in export_fields:
-            fields['.id'] = fields.pop('id', {'string': 'ID'})
+            fields['.id'] = fields.get('id', {'string': 'ID'})
 
         # To make fields retrieval more efficient, fetch all sub-fields of a
         # given field at the same time. Because the order in the export list is
