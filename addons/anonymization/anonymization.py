@@ -399,7 +399,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             table_name = self.pool[model_name]._table
 
             # get the current value
-            sql = "select id, %s from %s" % (field_name, table_name)
+            sql = "select id, \"%s\" from \"%s\"" % (field_name, table_name)
             cr.execute(sql)
             records = cr.dictfetchall()
             for record in records:
@@ -436,7 +436,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 if anonymized_value is None:
                     self._raise_after_history_update(cr, uid, history_id, _('Error !'), _("Anonymized value can not be empty."))
 
-                sql = "update %(table)s set %(field)s = %%(anonymized_value)s where id = %%(id)s" % {
+                sql = "update \"%(table)s\" set \"%(field)s\" = %%(anonymized_value)s where id = %%(id)s" % {
                     'table': table_name,
                     'field': field_name,
                 }
