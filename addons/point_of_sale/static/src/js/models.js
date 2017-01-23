@@ -682,6 +682,8 @@ exports.PosModel = Backbone.Model.extend({
             flushed.always(function(ids){
                 pushed.resolve();
             });
+            // return a Promise in mutex action
+            return flushed;
         });
         return pushed;
     },
@@ -782,6 +784,9 @@ exports.PosModel = Backbone.Model.extend({
         var self = this;
         var timeout = typeof options.timeout === 'number' ? options.timeout : 7500 * orders.length;
 
+        // hold order_ids to deleting it correctly, see issue https://github.com/odoo/odoo/pull/15190
+        var order_ids = _.pluck(orders, 'id');
+
         // we try to send the order. shadow prevents a spinner if it takes too long. (unless we are sending an invoice,
         // then we want to notify the user that we are waiting on something )
         var posOrderModel = new Model('pos.order');
@@ -796,8 +801,8 @@ exports.PosModel = Backbone.Model.extend({
                 timeout: timeout
             }
         ).then(function (server_ids) {
-            _.each(orders, function (order) {
-                self.db.remove_order(order.id);
+            _.each(order_ids, function (order_id) {
+                self.db.remove_order(order_id);
             });
             self.set('failed',false);
             return server_ids;
