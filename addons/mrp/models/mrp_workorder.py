@@ -377,8 +377,6 @@ class MrpWorkorder(models.Model):
         self.ensure_one()
         self.end_all()
         self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
-        if not self.production_id.workorder_ids.filtered(lambda x: x.state not in ('done','cancel')):
-            self.production_id.post_inventory() # User should put it to done manually
 
     @api.multi
     def end_previous(self, doall=False):

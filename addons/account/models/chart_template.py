@@ -394,22 +394,11 @@ class AccountChartTemplate(models.Model):
             acc_template_ref[account_template.id] = new_account
         return acc_template_ref
 
-    @api.multi
-    def generate_account_reconcile_model(self, tax_template_ref, acc_template_ref, company):
-        """ This method for generating accounts from templates.
-
-            :param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
-            :param acc_template_ref: dictionary with the mappping between the account templates and the real accounts.
-            :param company_id: company_id selected from wizard.multi.charts.accounts.
-            :returns: return new_account_reconcile_model for reference purpose.
-            :rtype: dict
+    def _prepare_reconcile_model_vals(self, company, account_reconcile_model, acc_template_ref, tax_template_ref):
+        """ This method generates a dictionnary of all the values for the account.reconcile.model that will be created.
         """
         self.ensure_one()
-        account_reconcile_models = self.env['account.reconcile.model.template'].search([
-            ('account_id.chart_template_id', '=', self.id)
-        ])
-        for account_reconcile_model in account_reconcile_models:
-            vals = {
+        return {
                 'name': account_reconcile_model.name,
                 'sequence': account_reconcile_model.sequence,
                 'has_second_line': account_reconcile_model.has_second_line,
@@ -425,6 +414,23 @@ class AccountChartTemplate(models.Model):
                 'second_amount': account_reconcile_model.second_amount,
                 'second_tax_id': account_reconcile_model.second_tax_id and tax_template_ref[account_reconcile_model.second_tax_id.id] or False,
             }
+
+    @api.multi
+    def generate_account_reconcile_model(self, tax_template_ref, acc_template_ref, company):
+        """ This method for generating accounts from templates.
+
+            :param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
+            :param acc_template_ref: dictionary with the mappping between the account templates and the real accounts.
+            :param company_id: company_id selected from wizard.multi.charts.accounts.
+            :returns: return new_account_reconcile_model for reference purpose.
+            :rtype: dict
+        """
+        self.ensure_one()
+        account_reconcile_models = self.env['account.reconcile.model.template'].search([
+            ('account_id.chart_template_id', '=', self.id)
+        ])
+        for account_reconcile_model in account_reconcile_models:
+            vals = self._prepare_reconcile_model_vals(company, account_reconcile_model, acc_template_ref, tax_template_ref)
             self.create_record_with_xmlid(company, account_reconcile_model, 'account.reconcile.model', vals)
         return True
 

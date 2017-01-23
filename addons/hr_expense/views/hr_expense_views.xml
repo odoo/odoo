@@ -562,7 +562,7 @@
                     <filter string="New Mail" name="message_unread" domain="[('message_unread', '=', True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Employee" domain="[]" context="{'group_by': 'employee_id'}"/>
-                        <filter string="Department" domain="[]" context="{'group_by': 'department_id'}" groups="hr.group_multi_departments"/>
+                        <filter string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
                         <filter string="Company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Expenses Month" domain="[]" context="{'group_by': 'accounting_date'}" help="Expenses by Month"/>
                         <filter string="State" domain="[]" context="{'group_by': 'state'}" name="state"/>

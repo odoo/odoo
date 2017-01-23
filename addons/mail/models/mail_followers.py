@@ -118,23 +118,31 @@ class Followers(models.Model):
     # Modifying followers change access rights to individual documents. As the
     # cache may contain accessible/inaccessible data, one has to refresh it.
     #
+    @api.multi
+    def _invalidate_documents(self):
+        """ Invalidate the cache of the documents followed by ``self``. """
+        for record in self:
+            if record.res_id:
+                self.env[record.res_model].invalidate_cache(ids=[record.res_id])
+
     @api.model
     def create(self, vals):
         res = super(Followers, self).create(vals)
-        self.invalidate_cache()
+        res._invalidate_documents()
         return res
 
     @api.multi
     def write(self, vals):
+        if 'res_model' in vals or 'res_id' in vals:
+            self._invalidate_documents()
         res = super(Followers, self).write(vals)
-        self.invalidate_cache()
+        self._invalidate_documents()
         return res
 
     @api.multi
     def unlink(self):
-        res = super(Followers, self).unlink()
-        self.invalidate_cache()
-        return res
+        self._invalidate_documents()
+        return super(Followers, self).unlink()
 
     _sql_constraints = [
         ('mail_followers_res_partner_res_model_id_uniq', 'unique(res_model,res_id,partner_id)', 'Error, a partner cannot follow twice the same object.'),

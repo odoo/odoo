@@ -330,7 +330,7 @@ class Holidays(models.Model):
     def name_get(self):
         res = []
         for leave in self:
-            res.append((leave.id, _("%s on %s : %.2f day(s)") % (leave.employee_id.name, leave.holiday_status_id.name, leave.number_of_days_temp)))
+            res.append((leave.id, _("%s on %s : %.2f day(s)") % (leave.employee_id.name or leave.category_id.name, leave.holiday_status_id.name, leave.number_of_days_temp)))
         return res
 
     def _check_state_access_right(self, vals):

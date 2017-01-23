@@ -173,6 +173,7 @@ class Attendee(models.Model):
                                                       'datas_fname': 'invitation.ics',
                                                       'datas': str(ics_file).encode('base64')})]
                 vals['model'] = None  # We don't want to have the mail in the tchatter while in queue!
+                vals['res_id'] = False
                 current_mail = self.env['mail.mail'].browse(mail_id)
                 current_mail.mail_message_id.write(vals)
                 mails_to_send |= current_mail
@@ -1360,11 +1361,11 @@ class Meeting(models.Model):
             super(Meeting, real_meetings).write(values)
 
             # set end_date for calendar searching
-            if values.get('recurrency') and values.get('end_type', 'count') in ('count', unicode('count')) and \
-                    (values.get('rrule_type') or values.get('count') or values.get('start') or values.get('stop')):
+            if any(field in values for field in ['recurrency', 'end_type', 'count', 'rrule_type', 'start', 'stop']):
                 for real_meeting in real_meetings:
-                    final_date = real_meeting._get_recurrency_end_date()
-                    super(Meeting, real_meeting).write({'final_date': final_date})
+                    if real_meeting.recurrency and real_meeting.end_type in ('count', unicode('count')):
+                        final_date = real_meeting._get_recurrency_end_date()
+                        super(Meeting, real_meeting).write({'final_date': final_date})
 
             attendees_create = False
             if values.get('partner_ids', False):
@@ -1464,7 +1465,8 @@ class Meeting(models.Model):
         for r in result:
             if r['user_id']:
                 user_id = type(r['user_id']) in (tuple, list) and r['user_id'][0] or r['user_id']
-                if user_id == self.env.user.id:
+                partner_id = self.env.user.partner_id.id
+                if user_id == self.env.user.id or partner_id in r.get("partner_ids", []):
                     continue
             if r['privacy'] == 'private':
                 for f in r.keys():
