@@ -25,6 +25,19 @@ class Team(models.Model):
         compute='_compute_opportunities',
         string='Amount of quotations to invoice', readonly=True)
     dashboard_graph_model = fields.Selection(selection_add=[('pipeline', 'Pipeline')])
+    dashboard_graph_period_pipeline = fields.Selection([
+        ('week', 'Within a Week'),
+        ('month', 'Within a Month'),
+        ('year', 'Within a Year'),
+    ], string='Expected to Close', help="The time period this channel's dashboard graph will consider.",
+        compute="_compute_dashboard_graph_period_pipeline", inverse="_inverse_dashboard_graph_period_pipeline")
+    dashboard_graph_group_pipeline = fields.Selection([
+        ('day', 'Expected Closing Day'),
+        ('week', 'Expected Closing Week'),
+        ('month', 'Expected Closing Month'),
+        ('user', 'Salesperson'),
+        ('stage', 'Stage'),
+    ], string='Group by', default='day', help="How this channel's dashboard graph will group the results.")
 
     def _compute_unassigned_leads_count(self):
         leads_data = self.env['crm.lead'].read_group([
@@ -47,6 +60,14 @@ class Team(models.Model):
         for team in self:
             team.opportunities_count = counts.get(team.id, 0)
             team.opportunities_amount = amounts.get(team.id, 0)
+
+    def _compute_dashboard_graph_period_pipeline(self):
+        for channel in self:
+            channel.dashboard_graph_period_pipeline = channel.dashboard_graph_period
+
+    def _inverse_dashboard_graph_period_pipeline(self):
+        for channel in self.filtered(lambda ch: ch.dashboard_graph_model == 'pipeline'):
+                channel.dashboard_graph_period = channel.dashboard_graph_period_pipeline
 
     def get_alias_model_name(self, vals):
         return 'crm.lead'
@@ -76,6 +97,23 @@ class Team(models.Model):
             self.use_opportunities = False
             self.use_leads = False
         return super(Team, self)._onchange_team_type()
+
+    @api.onchange('dashboard_graph_model')
+    def _onchange_dashboard_graph_model(self):
+        if self.dashboard_graph_model == 'pipeline':
+            self.dashboard_graph_period_pipeline = self.dashboard_graph_period
+            self.dashboard_graph_group_pipeline = self.dashboard_graph_group
+        else:
+            self.dashboard_graph_period = self.dashboard_graph_period_pipeline
+            if not self.dashboard_graph_group:
+                self.dashboard_graph_group = self._fields['dashboard_graph_group'].default(self)
+
+    @api.onchange('dashboard_graph_group_pipeline')
+    def _onchange_dashboard_graph_group_pipeline(self):
+        if self.dashboard_graph_group_pipeline == 'stage':
+            self.dashboard_graph_group = False
+        else:
+            self.dashboard_graph_group = self.dashboard_graph_group_pipeline
 
     @api.constrains('dashboard_graph_model', 'use_opportunities')
     def _check_graph_model(self):
@@ -170,10 +208,25 @@ class Team(models.Model):
             return [start_date, end_date]
         return super(Team, self)._graph_get_dates(today)
 
+    def _get_graph(self):
+        graph_datas = super(Team, self)._get_graph()
+        if self.dashboard_graph_model == 'pipeline' and self.dashboard_graph_group_pipeline == 'stage':
+            stage_data = self.env['crm.stage'].browse([d['label'] for d in graph_datas[0]['values']]).read(['sequence', 'name'])
+            stage_data = {d['id']: {'name': d['name'], 'sequence': d['sequence']} for d in stage_data}
+            graph_datas[0]['values'] = sorted(graph_datas[0]['values'], key=lambda el: stage_data[el['label']]['sequence'])
+            for gdata in graph_datas[0]['values']:
+                gdata['label'] = stage_data[gdata['label']]['name']
+        return graph_datas
+
     def _graph_date_column(self):
         if self.dashboard_graph_model == 'pipeline':
             return 'date_deadline'
         return super(Team, self)._graph_date_column()
+
+    def _graph_x_query(self):
+        if self.dashboard_graph_model == 'pipeline' and self.dashboard_graph_group_pipeline == 'stage':
+            return 'stage_id'
+        return super(Team, self)._graph_x_query()
 
     def _graph_y_query(self):
         if self.dashboard_graph_model == 'pipeline':

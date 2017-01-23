@@ -108,6 +108,18 @@
                             string="Accept Emails From"
                             attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
                    </xpath>
+                    <field name="dashboard_graph_period" position="attributes">
+                        <attribute name="attrs">{'invisible': [('dashboard_graph_model', '=', 'pipeline')]}</attribute>
+                    </field>
+                    <field name="dashboard_graph_period" position="after">
+                        <field name="dashboard_graph_period_pipeline" attrs="{'invisible': [('dashboard_graph_model', '!=', 'pipeline')]}"/>
+                    </field>
+                    <field name="dashboard_graph_group" position="attributes">
+                        <attribute name="attrs">{'invisible': [('dashboard_graph_model', '=', 'pipeline')]}</attribute>
+                    </field>
+                    <field name="dashboard_graph_group" position="after">
+                        <field name="dashboard_graph_group_pipeline" attrs="{'invisible': [('dashboard_graph_model', '!=', 'pipeline')]}"/>
+                    </field>
                 </field>
             </record>
 

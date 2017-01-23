@@ -94,7 +94,7 @@
                             </group>
                         </group>
                         <notebook>
-                            <page name="members" string="Team Members">
+                            <page name="members" string="Team Members" attrs="{'invisible': [('team_type', 'in', ['pos', 'ebay'])]}">
                                 <field name="member_ids" options="{'not_delete': True}">
                                     <kanban quick_create="false" create="true" delete="true">
                                         <field name="id"/>
@@ -117,9 +117,9 @@
                             </page>
                             <page string="Dashboard" name="dashboard">
                                 <group string="Graph" name="graph">
-                                    <field name="dashboard_graph_model"/>
-                                    <field name="dashboard_graph_group"/>
+                                    <field name="dashboard_graph_model" attrs="{'readonly': [('team_type', 'in', ['pos', 'ebay'])]}"/>
                                     <field name="dashboard_graph_period"/>
+                                    <field name="dashboard_graph_group"/>
                                 </group>
                             </page>
                         </notebook>
