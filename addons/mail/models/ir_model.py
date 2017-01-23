@@ -10,21 +10,9 @@ class IrModel(models.Model):
     _order = 'is_mail_thread DESC, model ASC'
 
     is_mail_thread = fields.Boolean(
-        string="Mail Thread", oldname='mail_thread',
-        compute='_compute_is_mail_thread', inverse='_inverse_is_mail_thread', store=True,
+        string="Mail Thread", oldname='mail_thread', default=False,
         help="Whether this model supports messages and notifications.",
     )
-
-    @api.depends('model')
-    def _compute_is_mail_thread(self):
-        MailThread = self.pool['mail.thread']
-        for rec in self:
-            if rec.model != 'mail.thread':
-                Model = self.pool.get(rec.model)
-                rec.is_mail_thread = Model and issubclass(Model, MailThread)
-
-    def _inverse_is_mail_thread(self):
-        pass        # do nothing; this enables to set the value of the field
 
     @api.multi
     def write(self, vals):
@@ -43,10 +31,15 @@ class IrModel(models.Model):
             self.pool.signal_registry_change()
         return res
 
+    def _reflect_model_params(self, model):
+        vals = super(IrModel, self)._reflect_model_params(model)
+        vals['is_mail_thread'] = issubclass(type(model), self.pool['mail.thread'])
+        return vals
+
     @api.model
     def _instanciate(self, model_data):
         model_class = super(IrModel, self)._instanciate(model_data)
-        if model_data.get('is_mail_thread'):
+        if model_data.get('is_mail_thread') and model_class._name != 'mail.thread':
             parents = model_class._inherit or []
             parents = [parents] if isinstance(parents, basestring) else parents
             model_class._inherit = parents + ['mail.thread']
@@ -58,19 +51,13 @@ class IrModelField(models.Model):
 
     track_visibility = fields.Selection(
         [('onchange', "On Change"), ('always', "Always")], string="Tracking",
-        compute='_compute_track_visibility', inverse='_inverse_track_visibility', store=True,
         help="When set, every modification to this field will be tracked in the chatter.",
     )
 
-    @api.depends('name')
-    def _compute_track_visibility(self):
-        for rec in self:
-            if rec.model in self.env:
-                field = self.env[rec.model]._fields.get(rec.name)
-                rec.track_visibility = getattr(field, 'track_visibility', False)
-
-    def _inverse_track_visibility(self):
-        pass        # do nothing; this enables to set the value of the field
+    def _reflect_field_params(self, field):
+        vals = super(IrModelField, self)._reflect_field_params(field)
+        vals['track_visibility'] = getattr(field, 'track_visibility', None)
+        return vals
 
     def _instanciate_attrs(self, field_data, partial):
         attrs = super(IrModelField, self)._instanciate_attrs(field_data, partial)
