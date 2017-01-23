@@ -504,6 +504,8 @@ class SaleOrder(models.Model):
     def _get_tax_amount_by_group(self):
         self.ensure_one()
         res = {}
+        result = {}
+        vals = {}
         currency = self.currency_id or self.company_id.currency_id
         for line in self.order_line:
             base_tax = 0
@@ -514,11 +516,19 @@ class SaleOrder(models.Model):
                                          product=line.product_id, partner=line.order_partner_id)['taxes'][0]['amount']
                 res[group] += amount
                 if tax.include_base_amount:
-                    base_tax += tax.compute_all(line.price_reduce + base_tax, quantity=1, product=line.product_id,
-                                                partner=line.order_partner_id)['taxes'][0]['amount']
-        res = sorted(res.items(), key=lambda l: l[0].sequence)
-        res = map(lambda l: (l[0].name, l[1]), res)
-        return res
+                    base_tax += tax.compute_all(line.price_reduce + base_tax, quantity=1)['taxes'][0]['amount']
+            for tax_group in line.tax_id.mapped('tax_group_id'):
+                if tax_group in res.keys():
+                    result.setdefault(tax_group, 0.0)
+                    result[tax_group] += line.price_subtotal
+        for key in (res.viewkeys() | result.keys()):
+            if key in res:
+                vals.setdefault(key, []).append(res[key])
+            if key in result:
+                vals.setdefault(key, []).append(result[key])
+        vals = sorted(vals.items(), key=lambda l: l[0].sequence)
+        vals = map(lambda l: (l[0].name, l[1][0], l[1][1]), vals)
+        return vals
 
 
 class SaleOrderLine(models.Model):

@@ -1133,13 +1133,25 @@ class AccountInvoice(models.Model):
     def _get_tax_amount_by_group(self):
         self.ensure_one()
         res = {}
+        result = {}
+        vals = {}
         currency = self.currency_id or self.company_id.currency_id
         for line in self.tax_line_ids:
             res.setdefault(line.tax_id.tax_group_id, 0.0)
             res[line.tax_id.tax_group_id] += line.amount
-        res = sorted(res.items(), key=lambda l: l[0].sequence)
-        res = map(lambda l: (l[0].name, l[1]), res)
-        return res
+        for inv_line in self.invoice_line_ids:
+            for tax_group in inv_line.invoice_line_tax_ids.mapped('tax_group_id'):
+                if tax_group in res.keys():
+                    result.setdefault(tax_group, 0.0)
+                    result[tax_group] += inv_line.price_subtotal
+        for key in (res.viewkeys() | result.keys()):
+            if key in res:
+                vals.setdefault(key, []).append(res[key])
+            if key in result:
+                vals.setdefault(key, []).append(result[key])
+        vals = sorted(vals.items(), key=lambda l: l[0].sequence)
+        vals = map(lambda l: (l[0].name, l[1][0], l[1][1]), vals)
+        return vals
 
 
 class AccountInvoiceLine(models.Model):
