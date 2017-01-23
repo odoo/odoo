@@ -15,11 +15,14 @@
                 <xpath expr="//group[@name='action_wrapper']" position="inside">
                     <group>
                         <field name="user_id"/>
-                        <field name="priority"/>
-                        <field name="interval_number"/>
-                        <field name="interval_type"/>
+                        <label for="interval_number" string="Execute Every"/>
+                        <div>
+                            <field name="interval_number" class="oe_inline"/>
+                            <field name="interval_type" class="oe_inline"/>
+                        </div>
                         <field name="nextcall"/>
                         <field name="numbercall"/>
+                        <field name="priority"/>
                         <field name="doall"/>
                     </group>
                 </xpath>
@@ -29,7 +32,7 @@
             <field name="model">ir.cron</field>
             <field name="arch" type="xml">
                 <tree string="Scheduled Actions" decoration-muted="(not active)">
-                    <field name="priority" string="Sequence"/>
+                    <field name="priority"/>
                     <field name="name"/>
                     <field name="nextcall"/>
                     <field name="interval_number"/>

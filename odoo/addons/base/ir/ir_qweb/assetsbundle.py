@@ -390,7 +390,7 @@ class AssetsBundle(object):
 
     def get_preprocessor_error(self, stderr, source=None):
         """Improve and remove sensitive information from sass/less compilator error messages"""
-        error = stderr.split('Load paths')[0].replace('  Use --trace for backtrace.', '')
+        error = misc.ustr(stderr).split('Load paths')[0].replace('  Use --trace for backtrace.', '')
         if 'Cannot load compass' in error:
             error += "Maybe you should install the compass gem using this extra argument:\n\n" \
                      "    $ sudo gem install compass --pre\n"

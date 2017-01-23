@@ -76,7 +76,7 @@ class DiagramView(http.Controller):
             for i, fld in enumerate(connector_fields):
                 t['options'][connector_fields_string[i]] = tr[fld]
 
-        fields = http.request.env['ir.model.fields'].sudo()
+        fields = http.request.env['ir.model.fields']
         field = fields.search([('model', '=', model), ('relation', '=', node)])
         node_act = http.request.env[node]
         search_acts = node_act.search([(field.relation_field, '=', id)])

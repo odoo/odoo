@@ -527,7 +527,7 @@ class Website(models.Model):
                       of the same.
             :rtype: list({name: str, url: str})
         """
-        request.context = dict(request.context, **context)
+        request.context = dict(request.context, **self.env.context)
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
         url_set = set()

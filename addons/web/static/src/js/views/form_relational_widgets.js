@@ -1062,8 +1062,10 @@ var One2ManyListView = X2ManyListView.extend({
             this._dataset_changed = false;
         });
 
-        this.on('warning', this, function(e) { // In case of a one2many, we do not want any warning which comes from the editor
-            e.stop_propagation();
+        this.on('warning', this, function(e) { // In case of editable list view, we do not want any warning which comes from the editor
+            if (this.editable()) {
+                e.stop_propagation();
+            }
         });
     },
     do_add_record: function () {

@@ -12,7 +12,7 @@
     </record>
 
     <template id="print_employee_badge">
-        <t t-call="report.html_container">
+        <t t-call="report.basic_layout">
             <div class="page">
                 <t t-foreach="docs" t-as="employee">
                     <div class="col-sm-6">
