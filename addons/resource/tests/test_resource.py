@@ -3,11 +3,11 @@
 
 import babel.dates
 
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta, date, time
 from dateutil.relativedelta import relativedelta
 
 from odoo.fields import Date, Datetime
-from odoo.addons.resource.models.resource import seconds
+from odoo.addons.resource.models.resource import to_naive_utc, to_naive_user_tz
 from odoo.addons.resource.tests.common import TestResourceCommon
 
 
@@ -71,13 +71,12 @@ class TestIntervals(TestResourceCommon):
 
     def test_interval_schedule_hours_backwards(self):
         cleaned_intervals = self.env['resource.calendar']._interval_merge(self.intervals)
-        cleaned_intervals.reverse()
-        result = self.env['resource.calendar']._interval_schedule_hours(cleaned_intervals, 5.5, remove_at_end=False)
+        result = self.env['resource.calendar']._interval_schedule_hours(cleaned_intervals, 5.5, backwards=True)
         self.assertEqual(len(result), 2)
         # First interval: 03, 8-10 untouched
-        self.assertEqual(result[0][:2], (Datetime.from_string('2013-02-04 17:00:00'), Datetime.from_string('2013-02-04 21:00:00')))
+        self.assertEqual(result[1][:2], (Datetime.from_string('2013-02-04 17:00:00'), Datetime.from_string('2013-02-04 21:00:00')))
         # First interval: 04, 08-11:30
-        self.assertEqual(result[1][:2], (Datetime.from_string('2013-02-04 12:30:00'), Datetime.from_string('2013-02-04 14:00:00')))
+        self.assertEqual(result[0][:2], (Datetime.from_string('2013-02-04 12:30:00'), Datetime.from_string('2013-02-04 14:00:00')))
 
 
 class TestCalendarBasics(TestResourceCommon):
@@ -122,19 +121,19 @@ class TestCalendarBasics(TestResourceCommon):
 
     def test_calendar_working_day_intervals_no_leaves(self):
         # Test: day0 without leaves: 1 interval
-        intervals = self.calendar._get_day_work_intervals(start_dt=Datetime.from_string('2013-02-12 09:08:07'))
+        intervals = self.calendar._get_day_work_intervals(Date.from_string('2013-02-12'), start_time=time(9, 8, 7))
         self.assertEqual(len(intervals), 1)
         self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-12 09:08:07'), Datetime.from_string('2013-02-12 16:00:00')))
         self.assertEqual(intervals[0][2]['attendances'], self.att_1)
 
         # Test: day1, beginning at 10:30 -> work from 10:30 (arrival) until 16:00
-        intervals = self.calendar._get_day_work_intervals(start_dt=Datetime.from_string('2013-02-19 10:30:00'))
+        intervals = self.calendar._get_day_work_intervals(Date.from_string('2013-02-19'), start_time=time(10, 30, 0))
         self.assertEqual(len(intervals), 1)
         self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-19 10:30:00'), Datetime.from_string('2013-02-19 16:00:00')))
         self.assertEqual(intervals[0][2]['attendances'], self.att_1)
 
         # Test: day3 without leaves: 2 interval
-        intervals = self.calendar._get_day_work_intervals(start_dt=Datetime.from_string('2013-02-15 10:11:12'))
+        intervals = self.calendar._get_day_work_intervals(Date.from_string('2013-02-15'), start_time=time(10, 11, 12))
         self.assertEqual(len(intervals), 2)
         self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
         self.assertEqual(intervals[1][:2], (Datetime.from_string('2013-02-15 16:00:00'), Datetime.from_string('2013-02-15 23:00:00')))
@@ -143,14 +142,15 @@ class TestCalendarBasics(TestResourceCommon):
 
     def test_calendar_working_day_intervals_leaves_generic(self):
         # Test: day0 with leaves outside range: 1 interval
-        intervals = self.calendar._get_day_work_intervals(start_dt=Datetime.from_string('2013-02-12 07:00:00'), compute_leaves=True)
+        intervals = self.calendar._get_day_work_intervals(Date.from_string('2013-02-12'), start_time=time(7, 0, 0), compute_leaves=True)
         self.assertEqual(len(intervals), 1)
         self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-12 08:00:00'), Datetime.from_string('2013-02-12 16:00:00')))
 
         # Test: day0 with leaves: 2 intervals because of leave between 9 and 12, ending at 15:45:30
-        intervals = self.calendar._get_day_work_intervals(start_dt=Datetime.from_string('2013-02-19 08:15:00'),
-                                                               end_dt=Datetime.from_string('2013-02-19 15:45:30'),
-                                                               compute_leaves=True)
+        intervals = self.calendar._get_day_work_intervals(Date.from_string('2013-02-19'),
+                                                          start_time=time(8, 15, 0),
+                                                          end_time=time(15, 45, 30),
+                                                          compute_leaves=True)
         self.assertEqual(len(intervals), 2)
         self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-19 08:15:00'), Datetime.from_string('2013-02-19 09:00:00')))
         self.assertEqual(intervals[1][:2], (Datetime.from_string('2013-02-19 12:00:00'), Datetime.from_string('2013-02-19 15:45:30')))
@@ -162,7 +162,8 @@ class TestCalendarBasics(TestResourceCommon):
     def test_calendar_working_day_intervals_leaves_resource(self):
         # Test: day1+14 on leave, with resource leave computation
         intervals = self.calendar._get_day_work_intervals(
-            Datetime.from_string('2013-02-26 07:00:00'),
+            Date.from_string('2013-02-26'),
+            start_time=time(7, 0, 0),
             compute_leaves=True,
             resource_id=self.resource1_id
         )
@@ -177,7 +178,7 @@ class TestCalendarBasics(TestResourceCommon):
             'date_from': self.date2 + relativedelta(days=7),
             'date_to': False,
         })
-        intervals = self.calendar._get_day_work_intervals(start_dt=self.date2)
+        intervals = self.calendar._get_day_work_intervals(self.date2.date(), start_time=self.date2.time())
         self.assertEqual(len(intervals), 1)
         self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
 
@@ -185,7 +186,7 @@ class TestCalendarBasics(TestResourceCommon):
             'date_from': False,
             'date_to': self.date2 - relativedelta(days=7),
         })
-        intervals = self.calendar._get_day_work_intervals(start_dt=self.date2)
+        intervals = self.calendar._get_day_work_intervals(self.date2.date(), start_time=self.date2.time())
         self.assertEqual(len(intervals), 1)
         self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
 
@@ -193,7 +194,7 @@ class TestCalendarBasics(TestResourceCommon):
             'date_from': self.date2 + relativedelta(days=7),
             'date_to': self.date2 - relativedelta(days=7),
         })
-        intervals = self.calendar._get_day_work_intervals(start_dt=self.date2)
+        intervals = self.calendar._get_day_work_intervals(self.date2.date(), start_time=self.date2.time())
         self.assertEqual(len(intervals), 1)
         self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
 
@@ -201,14 +202,14 @@ class TestCalendarBasics(TestResourceCommon):
             'date_from': self.date2,
             'date_to': self.date2,
         })
-        intervals = self.calendar._get_day_work_intervals(start_dt=self.date2)
+        intervals = self.calendar._get_day_work_intervals(self.date2.date(), start_time=self.date2.time())
         self.assertEqual(len(intervals), 2)
         self.assertEqual(intervals[0][:2], (Datetime.from_string('2013-02-15 10:11:12'), Datetime.from_string('2013-02-15 13:00:00')))
         self.assertEqual(intervals[1][:2], (Datetime.from_string('2013-02-15 16:00:00'), Datetime.from_string('2013-02-15 23:00:00')))
 
     def test_calendar_working_hours_of_date(self):
         # Test: day1, beginning at 10:30 -> work from 10:30 (arrival) until 16:00
-        wh = self.calendar.get_work_hours_count(Datetime.from_string('2013-02-19 10:30:00'), Datetime.from_string('2013-02-19 18:00:00'))
+        wh = self.calendar.get_work_hours_count(Datetime.from_string('2013-02-19 10:30:00'), Datetime.from_string('2013-02-19 18:00:00'), self.resource1_id, compute_leaves=False)
         self.assertEqual(wh, 5.5)
 
 
@@ -220,7 +221,8 @@ class ResourceWorkingHours(TestResourceCommon):
         res = self.calendar.get_work_hours_count(
             Datetime.from_string('2013-02-12 06:00:00'),
             Datetime.from_string('2013-02-22 23:00:00'),
-            compute_leaves=False, resource_id=self.resource1_id)
+            self.resource1_id,
+            compute_leaves=False)
         self.assertEqual(res, 40.0)
 
     def test_calendar_working_hours_leaves(self):
@@ -229,8 +231,31 @@ class ResourceWorkingHours(TestResourceCommon):
         res = self.calendar.get_work_hours_count(
             Datetime.from_string('2013-02-12 06:00:00'),
             Datetime.from_string('2013-02-22 23:00:00'),
-            compute_leaves=True, resource_id=self.resource1_id)
+            self.resource1_id,
+            compute_leaves=True)
         self.assertEqual(res, 33.0)
+
+    def test_calendar_timezone(self):
+        # user in timezone UTC-9 asks for work hours
+        #  Limits: between 2013-02-19 10:00:00 and 2013-02-26 15:30:00 (User TZ)
+        #          between 2013-02-19 19:00:00 and 2013-02-27 00:30:00 (UTC)
+        # Leaves:  between 2013-02-21 10:00:00 and 2013-02-26 12:00:00 (User TZ)
+        # res: 19/02 (10-16 (beginning)) + 22/02 (0 (leave)) + 26/02 (12-15.30 (leave+ending))
+        self.env.user.tz = 'US/Alaska'
+        (self.leave1 | self.leave2 | self.leave3).unlink()
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'Timezoned Leaves',
+            'calendar_id': self.calendar.id,
+            'resource_id': self.resource1_id,
+            'date_from': to_naive_utc(Datetime.from_string('2013-02-21 10:00:00'), self.env.user),
+            'date_to': to_naive_utc(Datetime.from_string('2013-02-26 12:00:00'), self.env.user)
+        })
+        res = self.calendar.get_work_hours_count(
+            to_naive_utc(Datetime.from_string('2013-02-19 10:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2013-02-26 15:30:00'), self.env.user),
+            self.resource1_id,
+            compute_leaves=True)
+        self.assertEqual(res, 9.5)
 
     def test_calendar_hours_scheduling_backward(self):
         res = self.calendar._schedule_hours(-40, day_dt=Datetime.from_string('2013-02-12 09:00:00'))
@@ -249,7 +274,7 @@ class ResourceWorkingHours(TestResourceCommon):
         td = timedelta()
         for item in res:
             td += item[1] - item[0]
-        self.assertEqual(seconds(td) / 3600.0, 40.0)
+        self.assertEqual(td.total_seconds() / 3600.0, 40.0)
 
     def test_calendar_hours_scheduling_forward(self):
         res = self.calendar._schedule_hours(40, day_dt=Datetime.from_string('2013-02-12 09:00:00'))
@@ -264,7 +289,7 @@ class ResourceWorkingHours(TestResourceCommon):
         td = timedelta()
         for item in res:
             td += item[1] - item[0]
-        self.assertEqual(seconds(td) / 3600.0, 40.0)
+        self.assertEqual(td.total_seconds() / 3600.0, 40.0)
 
     def test_calendar_hours_scheduling_forward_leaves_resource(self):
         res = self.calendar._schedule_hours(
@@ -284,16 +309,16 @@ class ResourceWorkingHours(TestResourceCommon):
         td = timedelta()
         for item in res:
             td += item[1] - item[0]
-        self.assertEqual(seconds(td) / 3600.0, 40.0)
+        self.assertEqual(td.total_seconds() / 3600.0, 40.0)
 
     def test_calendar_days_scheduling(self):
-        res = self.calendar.plan_days(5, day_date=Datetime.from_string('2013-02-12 09:08:07') )
+        res = self.calendar.plan_days(5, Datetime.from_string('2013-02-12 09:08:07') )
         self.assertEqual(res.date(), Datetime.from_string('2013-02-26 00:00:00').date(), 'resource_calendar: wrong days scheduling')
-        res = self.calendar.plan_days(-2, day_date=Datetime.from_string('2013-02-12 09:08:07') )
+        res = self.calendar.plan_days(-2, Datetime.from_string('2013-02-12 09:08:07') )
         self.assertEqual(res.date(), Datetime.from_string('2013-02-08 00:00:00').date(), 'resource_calendar: wrong days scheduling')
 
         res = self.calendar.plan_days(
-            5, day_date=Datetime.from_string('2013-02-12 09:08:07'),
+            5, Datetime.from_string('2013-02-12 09:08:07'),
             compute_leaves=True, resource_id=self.resource1_id)
         self.assertEqual(res.date(), Datetime.from_string('2013-03-01 00:00:00').date(), 'resource_calendar: wrong days scheduling')
 
@@ -345,7 +370,7 @@ class TestWorkDays(TestResourceCommon):
         # saturday and sunday
         self.assertEqual(
             [d for d in self._days if d.weekday() not in (5, 6)],
-            list(r._iter_work_days(WAR_START, WAR_END))
+            list(r.calendar_id._iter_work_days(WAR_START, WAR_END, r.id))
         )
 
     def test_global_leaves(self):
@@ -369,8 +394,8 @@ class TestWorkDays(TestResourceCommon):
             if d.weekday() not in (5, 6)
             if d < date(1932, 11, 9) or d > date(1932, 11, 12)
         ]
-        self.assertEqual(days, list(r1._iter_work_days(WAR_START, WAR_END)))
-        self.assertEqual(days, list(r2._iter_work_days(WAR_START, WAR_END)))
+        self.assertEqual(days, list(r1.calendar_id._iter_work_days(WAR_START, WAR_END, r1.id)))
+        self.assertEqual(days, list(r2.calendar_id._iter_work_days(WAR_START, WAR_END, r2.id)))
 
     def test_personal_leaves(self):
         """ Leaves with a resource_id apply only to that resource
@@ -391,10 +416,10 @@ class TestWorkDays(TestResourceCommon):
         })
 
         weekdays = [d for d in self._days if d.weekday() not in (5, 6)]
-        self.assertEqual(weekdays, list(r1._iter_work_days(WAR_START, WAR_END)))
+        self.assertEqual(weekdays, list(r1.calendar_id._iter_work_days(WAR_START, WAR_END, r1.id)))
         self.assertEqual([
             d for d in weekdays if d < date(1932, 11, 9) or d > date(1932, 11, 12)],
-            list(r2._iter_work_days(WAR_START, WAR_END))
+            list(r2.calendar_id._iter_work_days(WAR_START, WAR_END, r2.id))
         )
 
     def test_mixed_leaves(self):
@@ -419,17 +444,17 @@ class TestWorkDays(TestResourceCommon):
             if d.weekday() not in (5, 6)
             if d < date(1932, 11, 9) or d > date(1932, 11, 12)
             if d < date(1932, 12, 2)],
-            list(r._iter_work_days(WAR_START, WAR_END))
+            list(r.calendar_id._iter_work_days(WAR_START, WAR_END, r.id))
         )
 
         # _is_work_day is built on _iter_work_days, but it's probably a good
         # idea to ensure it does do what it should
-        self.assertTrue(r._is_work_day(date(1932, 11, 8)))
-        self.assertTrue(r._is_work_day(date(1932, 11, 14)))
-        self.assertTrue(r._is_work_day(date(1932, 12, 1)))
+        self.assertTrue(r.calendar_id._is_work_day(date(1932, 11, 8), r.id))
+        self.assertTrue(r.calendar_id._is_work_day(date(1932, 11, 14), r.id))
+        self.assertTrue(r.calendar_id._is_work_day(date(1932, 12, 1), r.id))
 
-        self.assertFalse(r._is_work_day(date(1932, 11, 11)))  # global leave
-        self.assertFalse(r._is_work_day(date(1932, 11, 13)))  # sun
-        self.assertFalse(r._is_work_day(date(1932, 11, 19)))  # sat
-        self.assertFalse(r._is_work_day(date(1932, 11, 20)))  # sun
-        self.assertFalse(r._is_work_day(date(1932, 12, 6)))  # personal leave
+        self.assertFalse(r.calendar_id._is_work_day(date(1932, 11, 11), r.id))  # global leave
+        self.assertFalse(r.calendar_id._is_work_day(date(1932, 11, 13), r.id))  # sun
+        self.assertFalse(r.calendar_id._is_work_day(date(1932, 11, 19), r.id))  # sat
+        self.assertFalse(r.calendar_id._is_work_day(date(1932, 11, 20), r.id))  # sun
+        self.assertFalse(r.calendar_id._is_work_day(date(1932, 12, 6), r.id))  # personal leave

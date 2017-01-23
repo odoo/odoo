@@ -91,8 +91,7 @@ class ProjectIssue(models.Model):
                 issue.day_open = (dt_date_open - dt_create_date).total_seconds() / (24.0 * 3600)
                 if issue.project_id.resource_calendar_id:
                     issue.working_hours_open = issue.project_id.resource_calendar_id.get_work_hours_count(
-                        dt_create_date, dt_date_open,
-                        compute_leaves=True, resource_id=False)
+                        dt_create_date, dt_date_open, False, compute_leaves=True)
                 else:
                     issue.working_hours_open = 0
 
@@ -101,8 +100,7 @@ class ProjectIssue(models.Model):
                 issue.day_close = (dt_date_closed - dt_create_date).total_seconds() / (24.0 * 3600)
                 if issue.project_id.resource_calendar_id:
                     issue.working_hours_close = issue.project_id.resource_calendar_id.get_work_hours_count(
-                        dt_create_date, dt_date_closed,
-                        compute_leaves=True, resource_id=False)
+                        dt_create_date, dt_date_closed, False, compute_leaves=True)
                 else:
                     issue.working_hours_close = 0
 
