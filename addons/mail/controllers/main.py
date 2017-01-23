@@ -75,12 +75,13 @@ class MailController(http.Controller):
             return cls._redirect_to_messaging()
 
         # the record has a window redirection: check access rights
-        if not RecordModel.sudo(uid).check_access_rights('read', raise_exception=False):
-            return cls._redirect_to_messaging()
-        try:
-            record_sudo.sudo(uid).check_access_rule('read')
-        except AccessError:
-            return cls._redirect_to_messaging()
+        if uid is not None:
+            if not RecordModel.sudo(uid).check_access_rights('read', raise_exception=False):
+                return cls._redirect_to_messaging()
+            try:
+                record_sudo.sudo(uid).check_access_rule('read')
+            except AccessError:
+                return cls._redirect_to_messaging()
 
         url_params = {
             'view_type': record_action['view_type'],

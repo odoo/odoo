@@ -165,8 +165,8 @@
                 </group>
                 <group name="email_template_and_project" position="before">
                     <group name="sale_condition" string="Sale Conditions">
-                        <label for="warranty" groups="stock.group_stock_production_lot"/>
-                        <div groups="stock.group_stock_production_lot">
+                        <label for="warranty" groups="stock.group_production_lot"/>
+                        <div groups="stock.group_production_lot">
                             <field name="warranty" class="oe_inline"/> months
                         </div>
                         <label for="sale_delay"/>
@@ -177,6 +177,29 @@
                 </group>
             </field>
         </record>
+
+        <record id="product_template_view_form_procurement_button" model="ir.ui.view">
+            <field name="name">product.template.stock.stat.button.group</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="procurement.product_template_view_form_procurement_button"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='%(procurement.procurement_order_action_product_template_stat)d']" position="attributes">
+                   <attribute name="groups">base.group_no_one,stock.group_adv_location</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_product_view_form_procurement_button" model="ir.ui.view">
+            <field name="name">product.product.stock.stat.button.group</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="procurement.product_product_view_form_procurement_button"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='%(procurement.procurement_order_action_product_product_stat)d']" position="attributes">
+                   <attribute name="groups">base.group_no_one,stock.group_adv_location</attribute>
+                </xpath>
+            </field>
+        </record>
+
 
         <record model="ir.ui.view" id="product_template_kanban_stock_view">
             <field name="name">Product Template Kanban Stock</field>

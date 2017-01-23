@@ -68,6 +68,12 @@ CREATE TABLE res_users (
     primary key(id)
 );
 
+CREATE TABLE res_groups (
+    id serial NOT NULL,
+    name varchar NOT NULL,
+    primary key(id)
+);
+
 CREATE TABLE ir_module_category (
     id serial NOT NULL,
     create_uid integer, -- references res_users on delete set null,
@@ -201,3 +207,7 @@ select setval('res_partner_id_seq', 2);
 insert into res_users (id, login, password, active, partner_id, company_id) VALUES (1, 'admin', 'admin', true, 1, 1);
 insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('user_root', 'base', 'res.users', true, 1);
 select setval('res_users_id_seq', 2);
+
+insert into res_groups (id, name) VALUES (1, 'Employee');
+insert into ir_model_data (name, module, model, noupdate, res_id) VALUES ('group_user', 'base', 'res.groups', true, 1);
+select setval('res_groups_id_seq', 2);
