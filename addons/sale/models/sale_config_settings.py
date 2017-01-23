@@ -21,7 +21,7 @@ class SaleConfiguration(models.TransientModel):
         implied_group='product.group_product_pricelist')
     group_uom = fields.Boolean("Units of Measure",
         implied_group='product.group_uom')
-    group_discount_per_so_line = fields.Boolean("Discounts", implied_group='sale.group_discount_per_so_line')
+    group_discount_per_line = fields.Boolean("Discounts", implied_group='account.group_discount_per_line')
     group_stock_packaging = fields.Boolean("Packaging", implied_group='product.group_stock_packaging',
         help="""Ability to select a package type in sales orders and 
                 to force a quantity that is a multiple of the number of units per package.""")
