@@ -65,10 +65,10 @@ class CrmTeam(models.Model):
         ('user', 'Salesperson'),
     ], string='Group by', default='day', help="How this channel's dashboard graph will group the results.")
     dashboard_graph_period = fields.Selection([
-        ('week', 'This Week'),
-        ('month', 'This Month'),
-        ('year', 'This Year'),
-    ], string='Period', default='month', help="The time period this channel's dashboard graph will consider.")
+        ('week', 'Last Week'),
+        ('month', 'Last Month'),
+        ('year', 'Last Year'),
+    ], string='Scale', default='month', help="The time period this channel's dashboard graph will consider.")
 
     @api.depends('dashboard_graph_group', 'dashboard_graph_model', 'dashboard_graph_period')
     def _compute_dashboard_graph(self):

@@ -6,10 +6,10 @@
         <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='dashboard_graph_model']" position="attributes">
-                <attribute name="attrs">{'invisible': [('team_type', '=', 'pos')]}</attribute>
+                <attribute name="attrs">{'readonly': [('team_type', 'in', ['pos', 'ebay'])]}</attribute>
             </xpath>
             <xpath expr="//field[@name='dashboard_graph_group']" position="attributes">
-                <attribute name="attrs">{'invisible': [('team_type', '=', 'pos')]}</attribute>
+                <attribute name="attrs">{'invisible': ['|', ('dashboard_graph_model', '=', 'pipeline'), ('team_type', '=', 'pos')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='dashboard_graph_group']" position="after">
                 <field name="dashboard_graph_group_pos" attrs="{'invisible': [('team_type', '!=', 'pos')]}"/>
