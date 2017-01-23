@@ -27,15 +27,15 @@
 
               <!-- Form -->
               <div data-js='website_form_editor' data-selector='.s_website_form' data-drop-in=".oe_structure, [data-oe-type=html]">
-                  <li data-website_form_model_modal="">
+                  <li data-website_form_model_modal="" data-no-preview="true">
                       <a>Change Form Parameters</a>
                   </li>
-                  <li data-website_form_field_modal="">
+                  <li data-website_form_field_modal="" data-no-preview="true">
                       <a>Add an existing field</a>
                   </li>
                   <li class="dropdown-submenu">
                       <a>Add a custom field</a>
-                      <ul class="dropdown-menu">
+                      <ul class="dropdown-menu" data-no-preview="true">
                           <li data-website_form_custom_field="char"><a>Text</a></li>
                           <li data-website_form_custom_field="text"><a>Long Text</a></li>
                           <li data-website_form_custom_field="integer"><a>Number</a></li>
@@ -53,13 +53,13 @@
 
               <!-- Field -->
               <div data-js='website_form_editor' data-selector=".form-field" data-drop-near=".form-field">
-                    <!-- <li data-website_form_field_parameters="">
+                    <!-- <li data-website_form_field_parameters="" data-no-preview="true">
                     <a>Field Parameters</a>
                     </li> -->
-                    <!-- <li data-website_form_editor_field_reset="">
+                    <!-- <li data-website_form_editor_field_reset="" data-no-preview="true">
                         <a>Reset Field</a>
                     </li> -->
-                    <li data-toggle_class="o_website_form_field_hidden">
+                    <li data-toggle-class="o_website_form_field_hidden" data-no-preview="true">
                         <a>Hidden</a>
                     </li>
               </div>
@@ -72,7 +72,7 @@
 
               <!-- Required option for fields that are not required fields of the model -->
               <div data-js='website_form_editor_field' data-selector=".form-field:not(.o_website_form_required)">
-                    <li data-website_form_field_require="" data-toggle_class="o_website_form_required_custom">
+                    <li data-website_form_field_require="" data-toggle-class="o_website_form_required_custom" data-no-preview="true">
                         <a>Required</a>
                     </li>
               </div>

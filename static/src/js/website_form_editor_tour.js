@@ -128,7 +128,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Click on Hidden",
-            trigger:  ".oe_overlay_options:visible li[data-toggle_class='o_website_form_field_hidden'] a"
+            trigger:  ".oe_overlay_options:visible li[data-toggle-class='o_website_form_field_hidden'] a"
         },
         {
             content:  "Check the resulting field",
@@ -561,7 +561,7 @@ odoo.define('website_form_editor.tour', function(require) {
             trigger:  ".o_website_form_send"
         },
         {
-            content:  "Check if required fields was detected and check a product. If this fails, you probably broke the clean_for_save.",
+            content:  "Check if required fields was detected and check a product. If this fails, you probably broke the cleanForSave.",
             extra_trigger:  "form:has(#o_website_form_result.text-danger)" +
                             ":has(.form-field:has(label:contains('Name')):not(.has-error))" +
                             ":has(.form-field:has(label:contains('Your Message')):not(.has-error))" +
