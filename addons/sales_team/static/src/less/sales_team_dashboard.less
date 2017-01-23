@@ -9,21 +9,21 @@
             min-width: 450px;
         }
         .o_kanban_card_upper_content {
-            margin-bottom: @odoo-horizontal-padding*3 + @o-kanban-progressbar-height + 85px;
+            margin-bottom: @odoo-horizontal-padding*2 + @o-kanban-progressbar-height + 85px;
         }
         .o_sales_team_kanban_graph_section {
             margin-bottom: @odoo-horizontal-padding*2 + @o-kanban-progressbar-height;
             .o-position-absolute(@bottom: 0, @left: 0, @right: 0);
             .o_graph_linechart {
                 > svg {
-                    height: 75px;
+                    height: 80px;
 
                     // X axis
                     g.nv-x.nv-axis {
                         // move the labels up, so they aren't hidden below the graph, and the lines back down.
                         transform: translateY(50px);
                         line {
-                            transform: translateY(25px);
+                            transform: translateY(30px);
                         }
                         .nv-axislabel{
                             transform:translateY(-78px);
@@ -63,7 +63,7 @@
             }
             .o_graph_barchart {
                 > svg {
-                    height: 75px;
+                    height: 95px;
                     overflow: visible;
                     g.nv-barsWrap {
                         g.nv-group.nv-series-0 {
