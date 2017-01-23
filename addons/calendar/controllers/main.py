@@ -39,14 +39,16 @@ class CalendarController(http.Controller):
         with registry.cursor() as cr:
             # Since we are in auth=none, create an env with SUPERUSER_ID
             env = Environment(cr, SUPERUSER_ID, {})
-            attendee = env['calendar.attendee'].search([('access_token', '=', token)])
+            attendee = env['calendar.attendee'].search([('access_token', '=', token), ('event_id', '=', int(id))])
+            if not attendee:
+                return request.not_found()
             timezone = attendee.partner_id.tz
             lang = attendee.partner_id.lang or 'en_US'
             event = env['calendar.event'].with_context(tz=timezone, lang=lang).browse(int(id))
 
-            # If user is logged, redirect to form view of event
+            # If user is internal and logged, redirect to form view of event
             # otherwise, display the simplifyed web page with event informations
-            if request.session.uid:
+            if request.session.uid and request.env['res.users'].browse(request.session.uid).user_has_groups('base.group_user'):
                 return werkzeug.utils.redirect('/web?db=%s#id=%s&view_type=form&model=calendar.event' % (db, id))
 
             # NOTE : we don't use request.render() since:
