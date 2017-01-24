@@ -141,7 +141,10 @@ class wizard_user(osv.osv_memory):
                 user_id = False
                 # create a user if necessary, and make sure it is in the portal group
                 if not user:
-                    company_id = wizard_user.partner_id.company_id.id
+                    if wizard_user.partner_id.company_id:
+                        company_id = wizard_user.partner_id.company_id.id
+                    else:
+                        company_id = self.pool['res.company']._company_default_get(cr, uid, 'res.users', context=context)
                     user_id = self._create_user(cr, SUPERUSER_ID, wizard_user.id, dict(context, company_id=company_id))
                 else:
                     user_id = user.id
