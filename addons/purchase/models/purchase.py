@@ -13,9 +13,6 @@ from odoo.addons.base.res.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.addons import decimal_precision as dp
 
 
-import logging
-_logger = logging.getLogger(__name__) #TODO DEBUG
-
 class PurchaseOrder(models.Model):
     _name = "purchase.order"
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -523,12 +520,9 @@ class PurchaseOrderLine(models.Model):
 
     @api.depends('invoice_lines.invoice_id.state')
     def _compute_qty_invoiced(self):
-        _logger.warn("houba! houba!")
         for line in self:
             qty = 0.0
             for inv_line in line.invoice_lines:
-                
-                _logger.warn("C'est luiiii !"+str(inv_line.invoice_id.state))
                 if inv_line.invoice_id.state not in ['cancel']:
                     if inv_line.invoice_id.type == 'in_invoice':
                         qty += inv_line.uom_id._compute_quantity(inv_line.quantity, line.product_uom)
