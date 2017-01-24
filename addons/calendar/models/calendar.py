@@ -551,7 +551,7 @@ class Meeting(models.Model):
 
         for meeting in recurring_meetings:
             rset1._exdate.append(todate(meeting.recurrent_id_date))
-        return [d.astimezone(pytz.UTC) for d in rset1]
+        return [timezone.localize(d.replace(tzinfo=None), is_dst=True).astimezone(pytz.UTC) for d in rset1]
 
     @api.multi
     def _get_recurrency_end_date(self):
