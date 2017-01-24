@@ -11,6 +11,19 @@
         @media (min-width: @screen-sm-min) {
             min-width: 450px;
         }
+        .o_dashboard_star {
+            font-size: 12px;
+
+            &.fa-star-o {
+                color: @odoo-main-color-muted;
+                &:hover {
+                    color: gold;
+                }
+            }
+            &.fa-star {
+                color: gold;
+            }
+        }
         .o_kanban_card_upper_content {
             margin-bottom: @odoo-horizontal-padding*2 + @o-kanban-progressbar-height + 85px;
         }
@@ -193,5 +206,12 @@
 
     &.o_kanban_nocontent .o_sales_dashboard {
         margin: 0;
+    }
+
+    &.o_kanban_grouped {
+        .o-flex-flow(row, wrap);
+        .o_kanban_record {
+            min-width: inherit;
+        }
     }
 }

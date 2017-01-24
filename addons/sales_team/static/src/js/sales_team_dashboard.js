@@ -227,7 +227,7 @@ var SalesTeamDashboardView = KanbanView.extend({
     }),
     display_name: _lt('Dashboard'),
     icon: 'fa-dashboard',
-    searchview_hidden: true,
+    searchview_hidden: false,
 });
 
 view_registry.add('sales_team_dashboard', SalesTeamDashboardView);
