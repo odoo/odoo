@@ -3,6 +3,17 @@
     <data noupdate="1">
 
         <!-- This will set the unit of measure used in projects and tasks.-->
+        <record id="product.uom_categ_wtime" model="product.uom.categ">
+            <field name="name">Working Time</field>
+        </record>
+
+        <record id="product.product_uom_hour" model="product.uom">
+            <field name="name">Hour(s)</field>
+            <field name="category_id" ref="product.uom_categ_wtime"/>
+            <field name="factor" eval="8.0"/>
+            <field name="uom_type">smaller</field>
+        </record>
+
         <record id="base.main_company" model="res.company">
             <field name="project_time_mode_id" ref="product.product_uom_hour"></field>
         </record>

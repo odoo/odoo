@@ -30,6 +30,17 @@
             <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
         </record>
 
+        <record id="product.product_uom_categ_unit" model="product.uom.categ">
+            <field name="name">Unit</field>
+        </record>
+
+        <record id="product.product_uom_unit" model="product.uom">
+            <field name="category_id" ref="product.product_uom_categ_unit"/>
+            <field name="name">Unit(s)</field>
+            <field name="factor" eval="1.0"/>
+            <field name="rounding" eval="0.001"/>
+        </record>
+
         <record id="product_product_consumable" model="product.product">
             <field name="name">Miscellaneous</field>
             <field name="standard_price">13.0</field>

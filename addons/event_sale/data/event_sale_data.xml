@@ -6,6 +6,17 @@
             <field name="name">Generic Events</field>
         </record>
 
+        <record id="product.product_uom_categ_unit" model="product.uom.categ">
+            <field name="name">Unit</field>
+        </record>
+
+        <record id="product.product_uom_unit" model="product.uom">
+            <field name="category_id" ref="product.product_uom_categ_unit"/>
+            <field name="name">Unit(s)</field>
+            <field name="factor" eval="1.0"/>
+            <field name="rounding" eval="0.001"/>
+        </record>
+
         <record id="product_product_event" model="product.product">
             <field name="list_price">10.0</field>
             <field name="event_ok" eval="True"/>
