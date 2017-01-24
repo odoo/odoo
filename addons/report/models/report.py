@@ -142,11 +142,34 @@ class Report(models.Model):
                 'docs': docs,
             }
             return self.render(report.report_name, docargs)
+            
     @api.model
     def get_pdf(self, docids, report_name, html=None, data=None):
-        """This method generates and returns pdf version of a report.
         """
-
+        This method generates and returns pdf version of a report. It also generate 
+        the corresponding attachment.
+        """
+        attachment_callback_data = {}
+        pdf_report = self._generate_pdf_report(docids,report_name, html=html, data=data, report_attachment_callback_data=attachment_callback_data)
+        
+        if attachment_callback_data: #If values were inserted into the dictionary
+            self._generate_attachment(attachment_callback_data, pdf_report)        
+        
+        return pdf_report
+        
+    def _generate_pdf_report(self, docids, report_name, html=None, data=None, report_attachment_callback_data=None):
+        """
+        This method generates the pdf version of a report and directly returns 
+        it as the content of a variable.
+        
+        If specified, the report_attachment_callback_data argument must be a dictionary.
+        After the call, it will contain key-value pairs allowing
+        generating the corresponding attachment once we have 
+        post-processed the result of this call (this must be managed by overriding
+        the get_pdf function, which immediately generates the attachment with no
+        post-processing by default).
+        """
+        
         if self._check_wkhtmltopdf() == 'install':
             # wkhtmltopdf is not installed
             # the call should be catched before (cf /report/check_wkhtmltopdf) but
@@ -263,6 +286,7 @@ class Report(models.Model):
             headerhtml, footerhtml, contenthtml, context.get('landscape'),
             paperformat, specific_paperformat_args, save_in_attachment,
             context.get('set_viewport_size'),
+            report_attachment_callback_data = report_attachment_callback_data
         )
 
     @api.noguess
@@ -372,7 +396,7 @@ class Report(models.Model):
         return wkhtmltopdf_state
 
     @api.model
-    def _run_wkhtmltopdf(self, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None, set_viewport_size=False):
+    def _run_wkhtmltopdf(self, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None, set_viewport_size=False, report_attachment_callback_data=None):
         """Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
 
@@ -464,25 +488,15 @@ class Report(models.Model):
                     raise UserError(_('Wkhtmltopdf failed (error code: %s). '
                                       'Message: %s') % (str(process.returncode), err))
 
-                # Save the pdf in attachment if marked
-                if reporthtml[0] is not False and save_in_attachment.get(reporthtml[0]):
-                    with open(pdfreport_path, 'rb') as pdfreport:
-                        attachment = {
-                            'name': save_in_attachment.get(reporthtml[0]),
-                            'datas': base64.encodestring(pdfreport.read()),
-                            'datas_fname': save_in_attachment.get(reporthtml[0]),
-                            'res_model': save_in_attachment.get('model'),
-                            'res_id': reporthtml[0],
-                        }
-                        try:
-                            self.env['ir.attachment'].create(attachment)
-                        except AccessError:
-                            _logger.info("Cannot save PDF report %r as attachment", attachment['name'])
-                        else:
-                            _logger.info('The PDF document %s is now saved in the database',
-                                         attachment['name'])
-
+                if report_attachment_callback_data is not None and reporthtml[0] and save_in_attachment.get(reporthtml[0]):
+                    #We fill the callback data dict with the data of the attachment to be created
+                    report_attachment_callback_data['name'] = save_in_attachment.get(reporthtml[0])
+                    report_attachment_callback_data['datas_fname'] = save_in_attachment.get(reporthtml[0])
+                    report_attachment_callback_data['res_model'] = save_in_attachment.get('model')
+                    report_attachment_callback_data['res_id'] = reporthtml[0]
+                
                 pdfdocuments.append(pdfreport_path)
+                
             except:
                 raise
 
@@ -504,6 +518,24 @@ class Report(models.Model):
                 _logger.error('Error when trying to remove file %s' % temporary_file)
 
         return content
+        
+    def _generate_attachment(self, attachment_data, pdf_report):#TODO: documenter
+        """
+        Creates the attachment related to an alreagy generated pdf report (whose
+        content is directly passed via the pdf_report argument), based on the 
+        values contained in the attachment_data dictionary. This method is 
+        designed to be called on a dictionary built by the report_attachment_callback_data
+        argument of the _generate_pdf_report function.
+        """
+        to_create = attachment_data.copy()
+        to_create['datas'] = base64.encodestring(pdf_report)
+        
+        try:
+           self.env['ir.attachment'].create(to_create)
+        except AccessError:
+            _logger.info("Cannot save PDF report %r as attachment", to_create['name'])
+        else:
+            _logger.info('The PDF document %s is now saved in the database', to_create['name'])
 
     @api.model
     def _get_report_from_name(self, report_name):
