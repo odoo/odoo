@@ -544,7 +544,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                     custom_updates.sort(key=itemgetter('sequence'))
                     queries = [(record['query'], record['query_type']) for record in custom_updates if record['query_type']]
                 elif table_name:
-                    queries = [("update %(table)s set %(field)s = %%(value)s where id = %%(id)s" % {
+                    queries = [("update \"%(table)s\" set \"%(field)s\" = %%(value)s where id = %%(id)s" % {
                         'table': table_name,
                         'field': line['field_id'],
                     }, 'sql')]
