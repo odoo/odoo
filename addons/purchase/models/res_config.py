@@ -27,7 +27,7 @@ class PurchaseConfigSettings(models.TransientModel):
         implied_group='product.group_product_variant')
     group_uom = fields.Boolean("Units of Measure",
         implied_group='product.group_uom')
-    module_purchase_requisition = fields.Boolean("Calls for Tenders")
+    module_purchase_requisition = fields.Boolean("Purchase Agreements")
     group_warning_purchase = fields.Boolean("Warnings", implied_group='purchase.group_warning_purchase')
     module_stock_dropshipping = fields.Boolean("Dropshipping")
     group_manage_vendor_price = fields.Boolean("Vendor Pricelists",
