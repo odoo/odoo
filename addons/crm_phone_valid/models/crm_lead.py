@@ -13,8 +13,9 @@ try:
         def _check_phone(self, phone):
             if not phone:
                 return phone
+            company = self.env.user.company_id
             try:
-                country = self.country_id and self.country_id.code or self.env.user.company_id.country_id.code or False
+                country = self.country_id and self.country_id.code or company.country_id.code or False
                 nbr = phonenumbers.parse(phone, country)
             except Exception, e:
                 raise UserError(_('Unable to parse the phone number!'))
@@ -23,7 +24,7 @@ try:
             if not phonenumbers.is_valid_number(nbr):
                 raise UserError(_('Invalid phone number, the prefix does not belong to a valid NPA!'))
             fmt = phonenumbers.PhoneNumberFormat.INTERNATIONAL
-            if nbr.country_code == self.env.user.company_id.country_id.phone_code:
+            if (nbr.country_code == company.country_id.phone_code) and (company.crm_phone_valid_method=='national'):
                 fmt = phonenumbers.PhoneNumberFormat.NATIONAL
             nbr2 = phonenumbers.format_number(nbr, fmt)
             return nbr2

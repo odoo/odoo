@@ -15,6 +15,7 @@ Validate phone numbers and normalize them on leads and contacts:
 - use the international format for all others
         """,
     'data': [
+        'views/res_config_view.xml'
     ],
     'depends': ['crm'],
 }
