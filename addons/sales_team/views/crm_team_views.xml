@@ -26,7 +26,6 @@
                 <menuitem action="base.action_res_bank_form" id="menu_action_res_bank_form" parent="menu_config_bank_accounts" sequence="1" groups="base.group_no_one"/>
                 <menuitem action="base.action_res_partner_bank_account_form" id="menu_action_res_partner_bank_form" parent="menu_config_bank_accounts" groups="base.group_no_one" sequence="2"/>
 
-
     
         <!-- Cateamions Search view -->
         <record id="crm_team_salesteams_search" model="ir.ui.view">
@@ -34,7 +33,7 @@
             <field name="model">crm.team</field>
             <field name="arch" type="xml">
                 <search string="Salesteams Search">
-                    <filter name="personal" string="My Salesteams" domain="['|', ('member_ids', '=', uid), ('user_id', '=', uid)]"/>
+                   <filter name="my_favorites" string="My Favorites" domain="[('favorite_user_ids', 'in', uid)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field name="name"/>
@@ -52,7 +51,7 @@
             <field name="res_model">crm.team</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,form</field>
-            <field name="context">{}</field>
+            <field name="context">{'search_default_my_favorites': 1}</field>
             <field name="view_id" ref="crm_team_salesteams_search"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">

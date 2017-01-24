@@ -11,6 +11,7 @@
                 <field name="color"/>
                 <field name="dashboard_graph_type"/>
                 <field name="currency_id"/>
+                <field name="is_favorite"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div>
@@ -65,6 +66,15 @@
                                     </div>
                                     <div class="col-xs-4 text-right">
                                         <a type="edit">Settings</a>
+                                    </div>
+                                </div>
+                                <div class="row mb16">
+                                    <div class="col-xs-6">
+                                        <a type="object" name="toggle_favorite">
+                                            <i t-attf-class="fa o_dashboard_star #{record.is_favorite.raw_value ? 'fa-star' : 'fa-star-o'}" title="Click to add/remove from favorite"/>
+                                            <l t-if="record.is_favorite.raw_value"> Remove from My Favorites</l>
+                                            <l t-elif="!record.is_favorite.raw_value"> Add to My Favorites</l>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
