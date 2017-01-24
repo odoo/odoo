@@ -330,7 +330,7 @@ class Website(models.Model):
             request.session['sale_order_id'] = sale_order.id
 
             if request.website.partner_id.id != partner.id:
-                partner.write({'last_website_so_id': sale_order_id})
+                partner.write({'last_website_so_id': sale_order.id})
 
         if sale_order:
 
