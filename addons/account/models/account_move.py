@@ -216,19 +216,27 @@ class AccountMove(models.Model):
         return True
 
     @api.multi
+    def _reverse_move(self, date=None, journal_id=None):
+        self.ensure_one()
+        reversed_move = self.copy(default={
+            'date': date,
+            'journal_id': journal_id.id if journal_id else self.journal_id.id,
+            'ref': _('reversal of: ') + self.name})
+        for acm_line in reversed_move.line_ids:
+            acm_line.with_context(check_move_validity=False).write({
+                'debit': acm_line.credit,
+                'credit': acm_line.debit,
+                'amount_currency': -acm_line.amount_currency
+            })
+        return reversed_move
+
+    @api.multi
     def reverse_moves(self, date=None, journal_id=None):
         date = date or fields.Date.today()
         reversed_moves = self.env['account.move']
         for ac_move in self:
-            reversed_move = ac_move.copy(default={'date': date,
-                'journal_id': journal_id.id if journal_id else ac_move.journal_id.id,
-                'ref': _('reversal of: ') + ac_move.name})
-            for acm_line in reversed_move.line_ids:
-                acm_line.with_context(check_move_validity=False).write({
-                    'debit': acm_line.credit,
-                    'credit': acm_line.debit,
-                    'amount_currency': -acm_line.amount_currency
-                    })
+            reversed_move = ac_move._reverse_move(date=date,
+                                                  journal_id=journal_id)
             reversed_moves |= reversed_move
         if reversed_moves:
             reversed_moves._post_validate()
