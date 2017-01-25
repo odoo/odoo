@@ -29,4 +29,3 @@ class WebsiteRatingProject(http.Controller):
             'partner_issue_rating': request.env['project.rating']._get_partner_rating("project_issue", "project.issue", project_id),
         }
         return request.render('website_rating_project_issue.project_rating_page', values)
-

@@ -47,9 +47,10 @@ class ProjectTask(models.AbstractModel):
             LEFT JOIN
                 %s as TASK ON RATING.res_id = TASK.id
             WHERE
-                RATING.res_model = '%s' AND RATING.partner_id IS NOT NULL AND RATING.create_date >= current_date - interval '90' day AND TASK.project_id = %s
+                RATING.res_model = '%s' AND RATING.partner_id IS NOT NULL AND RATING.create_date >= current_date - interval '90' day AND TASK.project_id = %s AND RATING.rating IN (1,5,10)
             GROUP BY
-                RATING.partner_id, days
+                RATING.partner_id, days, RATING.write_date
+            ORDER BY RATING.write_date desc
         """ % (table, model, project_id))
 
         all_record = self.env.cr.dictfetchall()
@@ -108,9 +109,9 @@ class ProjectTask(models.AbstractModel):
         for day, rating in matrix:
             total = statistic[day]['total']
             percentage = 'percentage_%s' % rating
-            statistic[day][percentage] = total and round(statistic[day][rating] * 100 / float(total)) or 0.0
+            statistic[day][percentage] = total and "%.1f" % ((statistic[day][rating] * 100 / float(total))) or 0.0
 
-        partner_ratings = sorted(partner_ratings, key=lambda k: k['15 days']['total'], reverse=True)
+        partner_ratings = sorted(partner_ratings, key=lambda k: k['15 days']['total'], reverse=True)[:5]
         return {
             'partner_rating': partner_ratings,
             'statistic': statistic,

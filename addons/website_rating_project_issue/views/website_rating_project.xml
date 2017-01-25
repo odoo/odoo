@@ -88,7 +88,7 @@
         <!-- Top rated partner details view -->
         <template id="project_rating_data_top_partner">
             <t t-foreach="topdata['partner_rating']" t-as='partner'>
-                <div class="row mt8" t-if="partner['15 days']['total']">
+                <div class="row mt8" t-if="partner['15 days']['total']" title="Top 5 partner ratings of last 15 days.">
                     <div class="col-sm-2">
                         <img t-if="partner['partner_id'].image" class="o-top-partner-image" t-attf-src="data:image/png;base64,#{partner['partner_id'].image}"/>
                         <img  t-if="not partner['partner_id'].image" class="o-top-partner-image" src='/web/static/src/img/placeholder.png'/>
@@ -100,7 +100,7 @@
                                 <span t-if="partner['15 days'][rating] and rating != 'total'">
                                     <img t-if="rating == 'avg'" title="average" class="o-top-rating-image" src='/rating/static/src/img/rating_5.png'/>
                                     <img t-if="rating == 'happy'" title="happy" class="o-top-rating-image" src='/rating/static/src/img/rating_10.png'/>
-                                    <img t-if="rating == 'unhappy'" title="unhappy"  class="o-top-rating-image" src='/rating/static/src/img/rating_0.png'/>
+                                    <img t-if="rating == 'unhappy'" title="unhappy"  class="o-top-rating-image" src='/rating/static/src/img/rating_1.png'/>
                                     <t t-esc="partner['15 days'][rating]"/>
                                 </span>
                             </t>
@@ -120,7 +120,7 @@
                     </div>
                     <div class="col-md-9">
                         <div class="mt4">
-                            <t t-esc="rating.partner_id.name"/>-<span class="rating-timeduration"><t t-esc="rating.create_date"/></span>
+                            <strong><t t-esc="rating.partner_id.name"/></strong> - <span class="rating-timeduration"><t t-esc="rating.create_date"/></span>
                         </div>
                         <div>
                             <strong>Rated By: </strong><t t-esc="rating.partner_id.name"/>
@@ -129,7 +129,7 @@
                 </div>
                 <div class="row" t-if="rating.feedback">
                     <div class="col-md-12">
-                        <strong>Description: </strong><t t-esc="rating.feedback" />
+                        <strong>Feedback: </strong><t t-esc="rating.feedback" />
                     </div>
                 </div>
             </div>
