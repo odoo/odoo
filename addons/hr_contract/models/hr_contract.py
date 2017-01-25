@@ -61,7 +61,9 @@ class Contract(models.Model):
     date_end = fields.Date('End Date')
     trial_date_start = fields.Date('Trial Start Date')
     trial_date_end = fields.Date('Trial End Date')
-    working_hours = fields.Many2one('resource.calendar', string='Working Schedule')
+    resource_calendar_id = fields.Many2one(
+        'resource.calendar', 'Working Schedule',
+        default=lambda self: self.env['res.company']._company_default_get().resource_calendar_id.id)
     wage = fields.Float('Wage', digits=(16, 2), required=True, help="Basic Salary of the employee")
     advantages = fields.Text('Advantages')
     notes = fields.Text('Notes')
@@ -80,6 +82,7 @@ class Contract(models.Model):
         if self.employee_id:
             self.job_id = self.employee_id.job_id
             self.department_id = self.employee_id.department_id
+            self.resource_calendar_id = self.employee_id.resource_calendar_id
 
     @api.constrains('date_start', 'date_end')
     def _check_dates(self):

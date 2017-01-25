@@ -55,7 +55,7 @@
                     <field name="name" string="Contracts"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
-                    <field name="working_hours"/>
+                    <field name="resource_calendar_id"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="state"/>
@@ -115,7 +115,7 @@
                                     <div>
                                         <field name="date_start" class="oe_inline"/><span attrs="{'invisible': ['|', ('date_start', '=', False), ('date_end', '=', False)]}"> - </span><field name="date_end" class="oe_inline"/>
                                     </div>
-                                    <field name="working_hours"/>
+                                    <field name="resource_calendar_id"/>
                                 </group>
                             </group>
                             <separator string="Notes"/>
@@ -147,7 +147,7 @@
                     <field name="employee_id"/>
                     <field name="type_id"/>
                     <field name="job_id"/>
-                    <field name="working_hours"/>
+                    <field name="resource_calendar_id"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <field name="wage" invisible="1"/>

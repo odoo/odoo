@@ -320,7 +320,7 @@ class HrPayslip(models.Model):
 
         res = []
         #fill only if the contract as a working schedule linked
-        for contract in self.env['hr.contract'].browse(contract_ids).filtered(lambda contract: contract.working_hours):
+        for contract in self.env['hr.contract'].browse(contract_ids).filtered(lambda contract: contract.resource_calendar_id):
             attendances = {
                  'name': _("Normal Working Days paid at 100%"),
                  'sequence': 1,
@@ -334,7 +334,7 @@ class HrPayslip(models.Model):
             day_to = fields.Datetime.from_string(date_to)
             nb_of_days = (day_to - day_from).days + 1
             for day in range(0, nb_of_days):
-                working_hours_on_day = contract.working_hours.get_work_hours_count(day_from + timedelta(days=day), False, contract.employee_id.resource_id.id)
+                working_hours_on_day = contract.resource_calendar_id.get_work_hours_count(day_from + timedelta(days=day), False, contract.employee_id.resource_id.id)
                 if working_hours_on_day:
                     #the employee had to work
                     leave_type = was_on_leave(contract.employee_id.id, day_from + timedelta(days=day))
