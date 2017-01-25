@@ -235,7 +235,7 @@ class IrModel(models.Model):
             query_insert(cr, self._table, params)
 
         record = self.browse(cr.fetchone())
-        self._context['todo'].append((10, record.modified, [set(params) - {'model', 'state'}]))
+        self.pool.post_init(record.modified, set(params) - {'model', 'state'})
 
         if model._module == self._context.get('module'):
             # self._module is the name of the module that last extended self
@@ -700,7 +700,7 @@ class IrModelFields(models.Model):
             # create an entry in this table
             query_insert(cr, self._table, params)
             record = self.browse(cr.fetchone())
-            self._context['todo'].append((20, record.modified, [list(params)]))
+            self.pool.post_init(record.modified, list(params))
             # create a corresponding xml id
             module = field._module or self._context.get('module')
             if module:
@@ -722,7 +722,7 @@ class IrModelFields(models.Model):
             # update the entry in this table
             query_update(cr, self._table, params, ['model', 'name'])
             record = self.browse(cr.fetchone())
-            self._context['todo'].append((20, record.modified, [diff]))
+            self.pool.post_init(record.modified, diff)
             # update fields_data (for recursive calls)
             field_data.update(params)
             return record
