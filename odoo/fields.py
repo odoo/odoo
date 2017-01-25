@@ -2262,7 +2262,7 @@ class Many2many(_RelationalMulti):
         # table name for custom relation all starts with x_, see __init__
         if not rel.startswith('x_'):
             IMR = model.env['ir.model.relation']
-            IMR._reflect_relation(model, rel, self._module)
+            model.pool.post_init(IMR._reflect_relation, model, rel, self._module)
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (rel,))
         if not cr.dictfetchall():
             if self.comodel_name not in model.env:
