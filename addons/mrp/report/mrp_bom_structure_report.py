@@ -16,12 +16,9 @@ class BomStructureReport(models.AbstractModel):
                 res['pname'] = l.product_id.name_get()[0][1]
                 res['pcode'] = l.product_id.default_code
                 qty_per_bom = l.bom_id.product_qty
-                if uom and uom != l.product_uom_id:
-                    qty = uom._compute_quantity(qty, l.product_uom_id)
-                if uom and  l.product_uom_id != l.bom_id.product_uom_id:
-                    qty_per_bom = l.bom_id.product_uom_id._compute_quantity(qty_per_bom, l.product_uom_id)
-                    res['pqty'] = (l.product_qty *qty)/ qty_per_bom
-                elif uom:
+                if uom:
+                    if uom != l.bom_id.product_uom_id:
+                        qty = uom._compute_quantity(qty, l.bom_id.product_uom_id)
                     res['pqty'] = (l.product_qty *qty)/ qty_per_bom
                 else:
                     #for the first case, the ponderation is right
