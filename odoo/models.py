@@ -2162,10 +2162,9 @@ class BaseModel(object):
             - add the SQL constraints given on the model,
             - add the indexes on indexed fields,
 
-            Also reflect models, fields, relations and constraints.
-
             Also prepare post-init stuff to:
             - add foreign key constraints,
+            - reflect models, fields, relations and constraints,
             - mark fields to recompute on existing records.
 
             Note: you should not override this method. Instead, you can modify
@@ -2184,10 +2183,11 @@ class BaseModel(object):
             recs = self.with_context(active_test=False).search([])
             recs._recompute_todo(field)
 
+        self.pool.post_init(self._reflect)
+
         cr = self._cr
         parent_store_compute = False
         update_custom_fields = self._context.get('update_custom_fields', False)
-        self._reflect()
         create = not self._table_exist()
 
         if self._auto:
