@@ -479,8 +479,8 @@ class MrpProduction(models.Model):
         self.write({'state': 'cancel'})
         return True
 
-    @api.multi
     def _cal_price(self, consumed_moves):
+        self.ensure_one()
         return True
 
     @api.multi

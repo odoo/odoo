@@ -189,6 +189,7 @@ td {
     height: 100%;
     display: table;
     border: none;
+    overflow: hidden;
 }
 .pos .window .subwindow{
     display: table-row;
@@ -211,6 +212,19 @@ td {
 .pos .subwindow .subwindow-container-fix{
     height: 100%;
     position: relative;
+}
+
+.pos .clientlist-screen .window,
+.pos .clientlist-screen .full-content .subwindow{
+    display: block;
+}
+.pos .clientlist-screen .full-content .subwindow-container{
+    display: block;
+    height: 100%;
+}
+.pos .clientlist-screen .full-content .subwindow.collapsed,
+.pos .clientlist-screen .full-content .subwindow-container.collapsed{
+    height: auto;
 }
 
 /* ---- Scrollers ----- */
@@ -703,6 +717,7 @@ td {
     display: inline-block;
     float: right;
     text-align: center;
+    width: 216px;
     margin: 16px;
     margin-top: 8px;
     margin-left: 0px;
