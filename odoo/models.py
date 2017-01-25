@@ -2150,24 +2150,23 @@ class BaseModel(object):
 
     @api.model_cr_context
     def _auto_init(self):
-        """ Reflect the model and initialize the database schema of ``self``:
-        - create the corresponding table in database,
-        - add the parent columns in database,
-        - add the '_log_access' columns if required,
-        - report on database columns no more existing in ``self._fields``,
-        - remove no more existing not null constraints,
-        - alter existing database columns to match ``self._fields``,
-        - create database tables to match ``self._fields``,
-        - add database indices to match ``self._fields``,
-        - save in self._foreign_keys a list a foreign keys to create (see
-          _auto_end).
+        """ Initialize the database schema of ``self``:
+            - create the corresponding table,
+            - create/update the necessary columns/tables for fields,
+            - initialize new columns on existing rows,
+            - add the SQL constraints given on the model,
+            - add the indexes on indexed fields,
 
-        Note: you should not override this method. Instead, you can modify the
-        model's database schema by overriding method :meth:`~.init`, which is
-        called right after this one.
+            Also reflect models, fields, relations and constraints.
+
+            Also prepare post-init stuff to:
+            - add foreign key constraints,
+            - mark fields to recompute on existing records.
+
+            Note: you should not override this method. Instead, you can modify
+            the model's database schema by overriding method :meth:`~.init`,
+            which is called right after this one.
         """
-        assert 'todo' in self._context, "Context not passed correctly to method _auto_init()."
-
         type(self)._foreign_keys = set()
         raise_on_invalid_object_name(self._name)
 
@@ -2176,10 +2175,13 @@ class BaseModel(object):
         # has not been added in database yet!
         self = self.with_context(prefetch_fields=False)
 
+        def recompute(field):
+            _logger.info("Storing computed values of %s", field)
+            recs = self.with_context(active_test=False).search([])
+            recs._recompute_todo(field)
+
         cr = self._cr
         parent_store_compute = False
-        stored_fields = []              # new-style stored fields with compute
-        todo_end = self._context['todo']
         update_custom_fields = self._context.get('update_custom_fields', False)
         self._reflect()
         create = not self._table_exist()
@@ -2218,7 +2220,7 @@ class BaseModel(object):
                 if not field.column_type:
                     # the field is not stored as a column
                     if field.check_schema(self) and field.compute:
-                        stored_fields.append(field)
+                        self.pool.post_init(recompute, field)
 
                 else:
                     res = column_data.get(name)
@@ -2363,7 +2365,7 @@ class BaseModel(object):
 
                         # remember new-style stored fields with compute method
                         if field.compute:
-                            stored_fields.append(field)
+                            self.pool.post_init(recompute, field)
 
                         # and add constraints if needed
                         if field.type == 'many2one' and field.store:
@@ -2404,20 +2406,6 @@ class BaseModel(object):
         if parent_store_compute:
             self._parent_store_compute()
             cr.commit()
-
-        if stored_fields:
-            # trigger computation of new-style stored fields with a compute
-            def func():
-                fnames = [f.name for f in stored_fields]
-                _logger.info("Storing computed values of %s fields %s",
-                             self._name, ', '.join(sorted(fnames)))
-                recs = self.with_context(active_test=False).search([])
-                if recs:
-                    recs.invalidate_cache(fnames, recs.ids)
-                    for f in stored_fields:
-                        recs._recompute_todo(f)
-
-            todo_end.append((1000, func, ()))
 
     @api.model_cr_context
     def _auto_end(self):
