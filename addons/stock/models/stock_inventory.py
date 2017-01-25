@@ -338,11 +338,11 @@ class InventoryLine(models.Model):
             theoretical_qty = self.product_id.uom_id._compute_quantity(theoretical_qty, self.product_uom_id)
         self.theoretical_qty = theoretical_qty
 
-    @api.onchange('product_id', 'product_uom_id')
-    def onchange_product_or_uom(self):
+    @api.onchange('product_id')
+    def onchange_product(self):
         res = {}
         # If no UoM or incorrect UoM put default one from product
-        if self.product_id and (not self.product_uom_id or self.product_id.uom_id.category_id != self.product_uom_id.category_id):
+        if self.product_id:
             self.product_uom_id = self.product_id.uom_id
             res['domain'] = {'product_uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         return res

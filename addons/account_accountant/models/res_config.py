@@ -22,6 +22,8 @@ class AccountConfigSettings(models.TransientModel):
         (11, 'November'),
         (12, 'December')
         ], related='company_id.fiscalyear_last_month', default=12)
+    period_lock_date = fields.Date(related='company_id.period_lock_date')
+    fiscalyear_lock_date = fields.Date(related='company_id.fiscalyear_lock_date')
     use_anglo_saxon = fields.Boolean(string='Anglo-Saxon Accounting', related='company_id.anglo_saxon_accounting')
     transfer_account_id = fields.Many2one('account.account', string="Transfer Account",
         related='company_id.transfer_account_id',
