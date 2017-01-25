@@ -858,7 +858,7 @@ class Message(models.Model):
     def _invalidate_documents(self):
         """ Invalidate the cache of the documents followed by ``self``. """
         for record in self:
-            if record.res_id:
+            if record.model and record.res_id:
                 self.env[record.model].invalidate_cache(ids=[record.res_id])
 
     @api.model
