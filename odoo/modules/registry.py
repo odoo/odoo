@@ -275,12 +275,13 @@ class Registry(Mapping):
         lazy_property.reset_all(self)
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
 
-        # load custom models
-        ir_model = env['ir.model']
-        cr.execute('SELECT * FROM ir_model WHERE state=%s', ('manual',))
-        for model_data in cr.dictfetchall():
-            model_class = ir_model._instanciate(model_data)
-            model_class._build_model(self, cr)
+        # load custom models (except when loading 'base')
+        if self._init_modules:
+            ir_model = env['ir.model']
+            cr.execute('SELECT * FROM ir_model WHERE state=%s', ('manual',))
+            for model_data in cr.dictfetchall():
+                model_class = ir_model._instanciate(model_data)
+                model_class._build_model(self, cr)
 
         # prepare the setup on all models
         models = env.values()

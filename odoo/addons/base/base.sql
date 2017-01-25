@@ -12,49 +12,6 @@ CREATE TABLE ir_act_url (primary key(id)) INHERITS (ir_actions);
 CREATE TABLE ir_act_server (primary key(id)) INHERITS (ir_actions);
 CREATE TABLE ir_act_client (primary key(id)) INHERITS (ir_actions);
 
-
-CREATE TABLE ir_model (
-  id serial,
-  model varchar NOT NULL,
-  name varchar,
-  state varchar,
-  info text,
-  transient boolean,
-  primary key(id)
-);
-
-CREATE TABLE ir_model_fields (
-  id serial,
-  model varchar NOT NULL,
-  model_id integer references ir_model on delete cascade,
-  name varchar NOT NULL,
-  state varchar default 'base',
-  field_description varchar,
-  help varchar,
-  ttype varchar,
-  relation varchar,
-  relation_field varchar,
-  index boolean,
-  copy boolean,
-  related varchar,
-  readonly boolean default False,
-  required boolean default False,
-  selectable boolean default False,
-  translate boolean default False,
-  relation_table varchar,
-  column1 varchar,
-  column2 varchar,
-  store boolean,
-  primary key(id)
-);
-
-CREATE TABLE res_lang (
-    id serial,
-    name VARCHAR(64) NOT NULL UNIQUE,
-    code VARCHAR(16) NOT NULL UNIQUE,
-    primary key(id)
-);
-
 CREATE TABLE res_users (
     id serial NOT NULL,
     active boolean default True,
@@ -136,34 +93,6 @@ CREATE TABLE ir_model_data (
     res_id integer,
     primary key(id)
 );
-
--- Records foreign keys and constraints installed by a module (so they can be
--- removed when the module is uninstalled):
---   - for a foreign key: type is 'f',
---   - for a constraint: type is 'u' (this is the convention PostgreSQL uses).
-CREATE TABLE ir_model_constraint (
-    id serial NOT NULL,
-    date_init timestamp without time zone,
-    date_update timestamp without time zone,
-    module integer NOT NULL references ir_module_module on delete restrict,
-    model integer NOT NULL references ir_model on delete restrict,
-    type character varying(1) NOT NULL,
-    definition varchar,
-    name varchar NOT NULL,
-    primary key(id)
-);
-
--- Records relation tables (i.e. implementing many2many) installed by a module
--- (so they can be removed when the module is uninstalled).
-CREATE TABLE ir_model_relation (
-    id serial NOT NULL,
-    date_init timestamp without time zone,
-    date_update timestamp without time zone,
-    module integer NOT NULL references ir_module_module on delete restrict,
-    model integer NOT NULL references ir_model on delete restrict,
-    name varchar NOT NULL,
-    primary key(id)
-);  
 
 CREATE TABLE res_currency (
     id serial,

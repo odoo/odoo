@@ -544,6 +544,8 @@ class BaseModel(object):
 
     @api.model
     def _add_manual_fields(self, partial):
+        if not self.pool._init_modules:
+            return
         IrModelFields = self.env['ir.model.fields']
         manual_fields = self.pool.get_manual_fields(self._cr, self._name)
         for name, field_data in manual_fields.iteritems():
