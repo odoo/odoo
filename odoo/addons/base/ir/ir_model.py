@@ -674,6 +674,7 @@ class IrModelFields(models.Model):
             'field_description': field.string,
             'help': field.help or None,
             'ttype': field.type,
+            'state': 'manual' if field.manual else 'base',
             'relation': field.comodel_name or None,
             'index': bool(field.index),
             'store': bool(field.store),
