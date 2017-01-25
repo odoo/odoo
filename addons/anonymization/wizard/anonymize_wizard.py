@@ -164,7 +164,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
             table_name = self.env[model_name]._table
 
             # get the current value
-            self.env.cr.execute("select id, %s from %s" % (field_name, table_name))
+            self.env.cr.execute('select id, "%s" from "%s"' % (field_name, table_name))
             for record in self.env.cr.dictfetchall():
                 data.append({"model_id": model_name, "field_id": field_name, "id": record['id'], "value": record[field_name]})
 
@@ -196,7 +196,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
                 if anonymized_value is None:
                     raise UserError('%s: %s' % (error_type, _("Anonymized value can not be empty.")))
 
-                sql = "update %(table)s set %(field)s = %%(anonymized_value)s where id = %%(id)s" % {
+                sql = 'update "%(table)s" set "%(field)s" = %%(anonymized_value)s where id = %%(id)s' % {
                     'table': table_name,
                     'field': field_name,
                 }
@@ -285,7 +285,7 @@ class IrModelFieldsAnonymizeWizard(models.TransientModel):
                 custom_updates.sort(key=itemgetter('sequence'))
                 queries = [(record['query'], record['query_type']) for record in custom_updates if record['query_type']]
             elif table_name:
-                queries = [("update %(table)s set %(field)s = %%(value)s where id = %%(id)s" % {
+                queries = [('update "%(table)s" set "%(field)s" = %%(value)s where id = %%(id)s' % {
                     'table': table_name,
                     'field': line['field_id'],
                 }, 'sql')]
