@@ -9,15 +9,10 @@ class WizardMultiChartsAccounts(models.TransientModel):
 
     @api.model
     def _get_default_bank_account_ids(self):
-        return [
-            {'acc_name': _('Cash'), 'account_type': 'cash'},
-            {'acc_name': _('Caja Chica'), 'account_type': 'cash'},
-            {'acc_name': _('Bank'), 'account_type': 'bank'}
-            ]
-
-    @api.model
-    def default_get(self, fields):
-        res = super(WizardMultiChartsAccounts, self).default_get(fields)
-        if 'bank_account_ids' in fields:
-            res.update({'bank_account_ids': self._get_default_bank_account_ids()})
-        return res
+        if self.env.user.company_id.country.code.upper() == 'DO':
+            return [
+                    {'acc_name': _('Cash'), 'account_type': 'cash'},
+                    {'acc_name': _('Caja Chica'), 'account_type': 'cash'},
+                    {'acc_name': _('Bank'), 'account_type': 'bank'}
+                ]
+        return super()._get_default_bank_account_ids()
