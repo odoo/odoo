@@ -58,8 +58,8 @@ Estructura de Codificación del Catálogo de Cuentas:
 ===================================================
 
 **Un dígito** representa la categoría/tipo de cuenta del del estado financiero.
-**1** - Activo        **4** - Costos, Gastos y Pérdidas
-**2** - Pasivo        **5** - Cuentas de Ingresos y Ganancias
+**1** - Activo        **4** - Cuentas de Ingresos y Ganancias
+**2** - Pasivo        **5** - Costos, Gastos y Pérdidas
 **3** - Capital       **6** - Cuentas Liquidadoras de Resultados
 
 **Dos dígitos** representan los rubros de agrupación:
