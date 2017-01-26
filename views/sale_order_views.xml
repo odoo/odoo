@@ -9,19 +9,19 @@
                 <button name="%(sale_coupon.sale_coupon_apply_code_action)d" string="Apply Coupon" type="action" groups="base.group_user" states="draft"/>
             </xpath>
             <xpath expr="//page[@string='Other Information']">
-                <group groups="base.group_no_one">
+                <group invisible="1">
                     <group string="Promotion Program">
                         <field name="promo_code" groups="base.group_no_one"/>
                     </group>
                 </group>
-                <group string="Offered Coupons">
+                <group string="Offered Coupons" invisible="1">
                     <div>
-                        <field name="generated_coupon_ids" groups="base.group_no_one" readonly="1"/>
+                        <field name="generated_coupon_ids" groups="base.group_no_one" readonly="1" widget="many2many_tags"/>
                     </div>
                 </group>
-                <group string="Applied Coupons">
+                <group string="Applied Coupons" invisible="1">
                     <div>
-                        <field name="applied_coupon_ids" groups="base.group_no_one" options="{'no_create': True}"/>
+                        <field name="applied_coupon_ids" groups="base.group_no_one" options="{'no_create': True}" widget="many2many_tags"/>
                     </div>
                 </group>
             </xpath>
