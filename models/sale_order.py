@@ -25,6 +25,7 @@ class SaleOrder(models.Model):
         order = super(SaleOrder, self).copy(dict(default or {}, order_line=False))
         for line in self.order_line.filtered(lambda line: not line.is_reward_line):
             line.copy({'order_id': order.id})
+        order.with_context(sale_coupon_no_loop=False)._create_new_no_code_promo_reward_lines()
         return order
 
     @api.model
