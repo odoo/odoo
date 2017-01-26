@@ -27,11 +27,11 @@ class WebsiteTwitterConfig(models.TransientModel):
     twitter_api_key = fields.Char(
         related='website_id.twitter_api_key',
         string='API Key',
-        help='Twitter API key you can get it from https://apps.twitter.com/app/new')
+        help='Twitter API key you can get it from https://apps.twitter.com/')
     twitter_api_secret = fields.Char(
         related='website_id.twitter_api_secret',
         string='API secret',
-        help='Twitter API secret you can get it from https://apps.twitter.com/app/new')
+        help='Twitter API secret you can get it from https://apps.twitter.com/')
     twitter_tutorial = fields.Boolean(string='Show me how to obtain the Twitter API Key and Secret')
     twitter_screen_name = fields.Char(
         related='website_id.twitter_screen_name',
