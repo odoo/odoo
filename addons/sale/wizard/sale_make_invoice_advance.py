@@ -102,7 +102,11 @@ class sale_advance_payment_inv(osv.osv_memory):
             if wizard.amount <= 0.00:
                 raise UserError(_('The value of Advance Amount must be positive.'))
             if wizard.advance_payment_method == 'percentage':
-                inv_amount = sale.amount_untaxed * wizard.amount / 100
+                tot_paid = 0
+                for invoice in sale.invoice_ids:
+                    if invoice.state not in ('draft', 'cancel'):
+                        tot_paid += invoice.amount_untaxed
+                inv_amount = (sale.amount_untaxed - tot_paid) * wizard.amount / 100
                 if not res.get('name'):
                     res['name'] = self._translate_advance(cr, uid, percentage=True, context=dict(context, lang=sale.partner_id.lang)) % (wizard.amount)
             else:
