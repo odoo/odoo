@@ -1168,7 +1168,6 @@ class TestStockFlow(TestStockCommon):
         total_qty = sum([quant.qty for quant in quants])
         self.assertEqual(total_qty, 0, 'Expecting 0 units lot of lotproduct, but we got %.4f on location stock!' % (total_qty))
 
-
     def test_30_check_with_no_incoming_lot(self):
         """ Picking in without lots and picking out with"""
 
@@ -1235,7 +1234,6 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(sum([x.qty for x in quants if x.lot_id.id == lot1.id]), 1.0, 'Wrong sum of quants with lot 1')
         self.assertEqual(sum([x.qty for x in quants if x.lot_id.id == lot2.id]), 1.0, 'Wrong sum of quants with lot 2')
         self.assertEqual(sum([x.qty for x in quants if x.lot_id.id == lot3.id]), 2.0, 'Wrong sum of quants with lot 3')
-
 
     def test_40_pack_in_pack(self):
         """ Put a pack in pack"""
@@ -1494,3 +1492,194 @@ class TestStockFlow(TestStockCommon):
         # We should also make sure that when matching stock moves with pack operations, it takes the correct
         self.assertEqual(len(picking_out.move_lines[0].linked_move_operation_ids), 2, 'We should only have 2 links beween the move and the 2 operations')
         self.assertEqual(len(picking_out.move_lines[0].quant_ids), 2, 'We should have exactly 2 quants in the end')
+
+    def test_70_picking_state_all_at_once_reserve(self):
+        """ This test will check that the state of the picking is correctly computed according
+        to the state of its move lines and its move type.
+        """
+        # move_type: direct == partial, one == all at once
+        # picking: confirmed == waiting availability, partially_available = partially available
+
+        # -----------------------------------------------------------
+        # "all at once" and "reserve" scenario
+        # -----------------------------------------------------------
+        # get one product in stock
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Inventory Product Table',
+            'filter': 'partial',
+            'line_ids': [(0, 0, {
+                'product_id': self.productA.id,
+                'product_uom_id': self.productA.uom_id.id,
+                'product_qty': 1,
+                'location_id': self.stock_location
+            })]
+        })
+        inventory.action_done()
+
+        # create a "all at once" delivery order for two products
+        picking_out = self.PickingObj.create({
+            'partner_id': self.partner_agrolite_id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+        picking_out.move_type = 'one'
+
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+
+        # validate this delivery order, it should be in the waiting state
+        picking_out.action_assign()
+        self.assertEquals(picking_out.state, "confirmed")
+
+        # receive one product in stock
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Inventory Product Table',
+            'filter': 'partial',
+            'line_ids': [(0, 0, {
+                'product_id': self.productA.id,
+                'product_uom_id': self.productA.uom_id.id,
+                'product_qty': 2,
+                'location_id': self.stock_location
+            })]
+        })
+        inventory.action_done()
+
+        # recheck availability of the delivery order, it should be assigned
+        picking_out.action_assign()
+        self.assertEquals(picking_out.state, "assigned")
+
+    def test_71_picking_state_all_at_once_force_assign(self):
+        """ This test will check that the state of the picking is correctly computed according
+        to the state of its move lines and its move type.
+        """
+        # move_type: direct == partial, one == all at once
+        # picking: confirmed == waiting availability, partially_available = partially available
+
+        # -----------------------------------------------------------
+        # "all at once" and "force assign" scenario
+        # -----------------------------------------------------------
+        # create a "all at once" delivery order for two products
+        picking_out = self.PickingObj.create({
+            'partner_id': self.partner_agrolite_id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+        picking_out.move_type = 'direct'
+
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+
+        # validate this delivery order, it should be in the waiting state
+        picking_out.action_assign()
+        self.assertEquals(picking_out.state, "confirmed")
+
+        # force assign on the delivery order, it should be assigned
+        picking_out.force_assign()
+        self.assertEquals(picking_out.state, "assigned")
+
+    def test_72_picking_state_partial_reserve(self):
+        """ This test will check that the state of the picking is correctly computed according
+        to the state of its move lines and its move type.
+        """
+        # move_type: direct == partial, one == all at once
+        # picking: confirmed == waiting availability, partially_available = partially available
+
+        # -----------------------------------------------------------
+        # "partial" and "reserve" scenario
+        # -----------------------------------------------------------
+        # get one product in stock
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Inventory Product Table',
+            'filter': 'partial',
+            'line_ids': [(0, 0, {
+                'product_id': self.productA.id,
+                'product_uom_id': self.productA.uom_id.id,
+                'product_qty': 1,
+                'location_id': self.stock_location
+            })]
+        })
+        inventory.action_done()
+
+        # create a "partial" delivery order for two products
+        picking_out = self.PickingObj.create({
+            'partner_id': self.partner_agrolite_id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+        picking_out.move_type = 'direct'
+
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+
+        # validate this delivery order, it should be in partially available
+        picking_out.action_assign()
+        self.assertEquals(picking_out.state, "partially_available")
+
+        # receive one product in stock
+        inventory = self.env['stock.inventory'].create({
+            'name': 'Inventory Product Table',
+            'filter': 'partial',
+            'line_ids': [(0, 0, {
+                'product_id': self.productA.id,
+                'product_uom_id': self.productA.uom_id.id,
+                'product_qty': 2,
+                'location_id': self.stock_location
+            })]
+        })
+        inventory.action_done()
+
+        # recheck availability of the delivery order, it should be assigned
+        picking_out.action_assign()
+        self.assertEquals(picking_out.state, "assigned")
+
+    def test_73_picking_state_partial_force_assign(self):
+        """ This test will check that the state of the picking is correctly computed according
+        to the state of its move lines and its move type.
+        """
+        # move_type: direct == partial, one == all at once
+        # picking: confirmed == waiting availability, partially_available = partially available
+
+        # -----------------------------------------------------------
+        # "partial" and "force assign" scenario
+        # -----------------------------------------------------------
+        picking_out = self.PickingObj.create({
+            'partner_id': self.partner_agrolite_id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+        picking_out.move_type = 'direct'
+
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location})
+
+        # validate this delivery order, it should be in the waiting state
+        picking_out.action_assign()
+        self.assertEquals(picking_out.state, "confirmed")
+
+        # force assign on the delivery order, it should be assigned
+        picking_out.force_assign()
+        self.assertEquals(picking_out.state, "assigned")
