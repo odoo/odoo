@@ -4,16 +4,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"POT-Creation-Date: 2017-01-25 02:55+0000\n"
+"PO-Revision-Date: 2017-01-25 02:55+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:123
+#, python-format
+msgid "  (%g remaining out of %g)"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -41,7 +47,7 @@ msgid "!important; font-size: 8px; min-width: 18px\"&gt;"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:331
+#: code:addons/hr_holidays/models/hr_holidays.py:333
 #, python-format
 msgid "%s on %s : %.2f day(s)"
 msgstr ""
@@ -211,7 +217,9 @@ msgid "Appraisal Analysis"
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:551
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
+#, python-format
 msgid "Approve"
 msgstr ""
 
@@ -656,31 +664,31 @@ msgid "Leave Types"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:445
+#: code:addons/hr_holidays/models/hr_holidays.py:431
 #, python-format
 msgid "Leave request must be confirmed (\"To Approve\") in order to approve it."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:460
+#: code:addons/hr_holidays/models/hr_holidays.py:446
 #, python-format
 msgid "Leave request must be confirmed in order to approve it."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:519
+#: code:addons/hr_holidays/models/hr_holidays.py:505
 #, python-format
 msgid "Leave request must be confirmed or validated in order to refuse it."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:432
+#: code:addons/hr_holidays/models/hr_holidays.py:418
 #, python-format
 msgid "Leave request must be in Draft state (\"To Submit\") in order to confirm it."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:417
+#: code:addons/hr_holidays/models/hr_holidays.py:403
 #, python-format
 msgid "Leave request state must be \"Refused\" or \"To Approve\" in order to reset to Draft."
 msgstr ""
@@ -797,7 +805,7 @@ msgstr ""
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2016"
+msgid "Legal Leaves 2017"
 msgstr ""
 
 #. module: hr_holidays
@@ -944,26 +952,26 @@ msgid "Once you have recorded your leave request, it will be sent\n"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:462
+#: code:addons/hr_holidays/models/hr_holidays.py:448
 #, python-format
 msgid "Only an HR Manager can apply the second approval on leave requests."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:415
+#: code:addons/hr_holidays/models/hr_holidays.py:401
 #, python-format
 msgid "Only an HR Manager or the concerned employee can reset to draft."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:440
-#: code:addons/hr_holidays/models/hr_holidays.py:455
+#: code:addons/hr_holidays/models/hr_holidays.py:426
+#: code:addons/hr_holidays/models/hr_holidays.py:441
 #, python-format
 msgid "Only an HR Officer or Manager can approve leave requests."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:514
+#: code:addons/hr_holidays/models/hr_holidays.py:500
 #, python-format
 msgid "Only an HR Officer or Manager can refuse leave requests."
 msgstr ""
@@ -990,7 +998,9 @@ msgid "Red"
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:554
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
+#, python-format
 msgid "Refuse"
 msgstr ""
 
@@ -1146,7 +1156,7 @@ msgid "The number of days must be greater than 0."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:253
+#: code:addons/hr_holidays/models/hr_holidays.py:255
 #, python-format
 msgid "The number of remaining leaves is not sufficient for this leave type.\n"
 "Please verify also the leaves waiting for validation."
@@ -1300,7 +1310,7 @@ msgid "You can assign remaining Legal Leaves for each employee, Odoo\n"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:244
+#: code:addons/hr_holidays/models/hr_holidays.py:245
 #, python-format
 msgid "You can not have 2 leaves that overlaps on same day!"
 msgstr ""
@@ -1318,8 +1328,8 @@ msgid "You cannot reduce validated allocation requests"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:350
-#: code:addons/hr_holidays/models/hr_holidays.py:361
+#: code:addons/hr_holidays/models/hr_holidays.py:352
+#: code:addons/hr_holidays/models/hr_holidays.py:363
 #, python-format
 msgid "You cannot set a leave request as '%s'. Contact a human resource manager."
 msgstr ""
