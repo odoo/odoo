@@ -14,22 +14,22 @@
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
+    <record id="group_hr_attendance" model="res.groups">
+        <field name="name">Manual Attendance</field>
+        <field name="category_id" ref="base.module_category_hr_attendance"/>
+        <field name="comment">The user will gain access to the human resources attendance menu, enabling him to manage his own attendance.</field>
+    </record>
+
     <record id="base.default_user" model="res.users">
         <field name="groups_id" eval="[(4,ref('hr_attendance.group_hr_attendance_manager'))]"/>
     </record>
 
     <record id="hr_attendance.group_hr_attendance_manager" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('hr.group_hr_attendance'))]"/>
+        <field name="implied_ids" eval="[(4, ref('hr_attendance.group_hr_attendance'))]"/>
     </record>
 
     <record id="hr_attendance.group_hr_attendance_user" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('hr.group_hr_attendance'))]"/>
-    </record>
-
-    <record id="hr.group_hr_attendance" model="res.groups">
-        <field name="name">Manual Attendance</field>
-        <field name="category_id" ref="base.module_category_hr_attendance"/>
-        <field name="comment">The user will gain access to the human resources attendance menu, enabling him to manage his own attendance.</field>
+        <field name="implied_ids" eval="[(4, ref('hr_attendance.group_hr_attendance'))]"/>
     </record>
 
     <record id="group_hr_attendance_use_pin" model="res.groups">
