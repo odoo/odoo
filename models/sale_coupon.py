@@ -53,7 +53,7 @@ class SaleCoupon(models.Model):
         amount_total = order.amount_untaxed + order.reward_amount
         if self.program_id.rule_minimum_amount_tax_inclusion == 'tax_included':
             amount_total += order.amount_tax
-        elif self.state in ('used', 'expired') or \
+        if self.state in ('used', 'expired') or \
            (self.expiration_date and self.expiration_date < order.date_order):
             message = {'error': _('This coupon %s has been used or is expired.') % (self.code)}
         elif self.state == 'reserved':
