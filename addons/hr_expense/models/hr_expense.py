@@ -532,7 +532,6 @@ class HrExpenseSheet(models.Model):
     @api.multi
     def action_open_journal_entries(self):
         res = self.env['ir.actions.act_window'].for_xml_id('account', 'action_move_journal_line')
-        refs = [x.name for x in self]
-        res['domain'] = [('ref', 'in', refs)]
+        res['domain'] = [('id', 'in', self.mapped('account_move_id').ids)]
         res['context'] = {}
         return res
