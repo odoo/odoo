@@ -497,10 +497,18 @@ class QWeb(orm.AbstractModel):
             "RTE widgets do not work correctly on %r elements" % node_name
         assert node_name != 't',\
             "t-field can not be used on a t element, provide an actual HTML node"
-
-        record, field_name = template_attributes["field"].rsplit('.', 1)
+        try:
+            record, field_name = template_attributes["field"].rsplit('.', 1)
+        except:
+            # record comes from t-record attribute
+            record, field_name = template_attributes["record"], template_attributes['field']
         record = self.eval_object(record, qwebcontext)
-        field = record._fields[field_name]
+        try:
+            field = record._fields[field_name]
+        except:
+            # field_name could be a variable
+            field_name = self.eval_object(field_name, qwebcontext)
+            field = record._fields[field_name]
         foptions = self.eval_format(template_attributes.get('field-options') or '{}', qwebcontext)
         options = json.loads(foptions)
 
