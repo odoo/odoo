@@ -63,7 +63,6 @@
                             <field name="discount_apply_on" attrs="{'invisible':
                             ['|', ('reward_type', 'in', ('product', 'free_shipping')), ('discount_type', '!=', 'percentage')]}" widget="radio"/>
                             <field name="discount_specific_product_id" attrs="{'invisible': ['|', '|', ('discount_apply_on', '!=', 'specific_product'),('discount_type', '!=', 'percentage'), ('reward_type', 'in', ('product', 'free_shipping'))], 'required': [('reward_type', '=', 'discount'),('discount_apply_on', '=', 'specific_product'),('discount_type', '=', 'percentage')]}" placeholder="Select product"/>
-                            <field name="discount_max_amount" attrs="{'invisible': ['|', ('reward_type', 'in', ('product', 'free_shipping')), ('discount_type', '!=', 'percentage')]}" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                             <label for="discount_max_amount" string="Max Discount Amount" attrs="{'invisible': ['|', ('reward_type', 'in', ('product', 'free_shipping')), ('discount_type', '!=', 'percentage')]}"/>
                             <div attrs="{'invisible': ['|', ('reward_type', 'in', ('product', 'free_shipping')), ('discount_type', '!=', 'percentage')]}">
                                 <field name="discount_max_amount" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id'}"/>
