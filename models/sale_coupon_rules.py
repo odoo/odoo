@@ -12,7 +12,7 @@ class SaleCouponRule(models.Model):
 
     rule_date_from = fields.Datetime(string="Start Date", help="Coupon program start date")
     rule_date_to = fields.Datetime(string="End Date", help="Coupon program end date")
-    rule_partners_domain = fields.Char(string="Based on Customers", help="Coupon program will work for selected customers only")
+    rule_partners_domain = fields.Char(string="Based on Customers", default=[['customer', '=', True]], help="Coupon program will work for selected customers only")
     rule_partner_ids = fields.Many2many('res.partner', 'rule_partner_rel', 'rule_id', 'partner_id',
         string="Related Partners", compute='_compute_rule_partner_ids', store=True)
     rule_products_domain = fields.Char(string="Based on Products", help="On Purchase of selected product, reward will be given")

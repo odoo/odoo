@@ -12,6 +12,7 @@ class TestSaleCouponCommon(common.TransactionCase):
         # create partner for sale order.
         self.steve = self.env['res.partner'].create({
             'name': 'Steve Bucknor',
+            'customer': True,
             'email': 'steve.bucknor@example.com',
         })
 
@@ -25,11 +26,13 @@ class TestSaleCouponCommon(common.TransactionCase):
         self.product_A = self.env['product.product'].create({
             'name': 'Product A',
             'list_price': 100,
+            'sale_ok': True
         })
 
         self.product_B = self.env['product.product'].create({
             'name': 'Product B',
             'list_price': 5,
+            'sale_ok': True
         })
 
         # Immediate Program By A + B: get B free
