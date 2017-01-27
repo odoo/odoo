@@ -78,12 +78,11 @@ class SaleOrder(models.Model):
 
         order_lines = (self.order_line - self._get_reward_lines()).filtered(lambda x: x.product_id in program.rule_product_ids)
         max_product_qty = sum(order_lines.mapped('product_uom_qty')) or 1
-        line = self.order_line.filtered(lambda line: line.product_id == program.reward_product_id)[0]
         # Remove needed quantity from reward quantity if same reward and rule product
         if program.reward_product_id in program.rule_product_ids:
-            reward_product_qty = line.product_uom_qty // (program.rule_min_quantity + program.reward_product_quantity)
+            reward_product_qty = max_product_qty // (program.rule_min_quantity + program.reward_product_quantity)
         else:
-            reward_product_qty = line.product_uom_qty
+            reward_product_qty = max_product_qty
 
         reward_qty = min(int(int(max_product_qty / program.rule_min_quantity) * program.reward_product_quantity), reward_product_qty)
 
