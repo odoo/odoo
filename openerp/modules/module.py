@@ -94,7 +94,7 @@ def initialize_sys_path():
     global hooked
 
     dd = tools.config.addons_data_dir
-    if dd not in ad_paths:
+    if os.access(dd, os.R_OK) and dd not in ad_paths:
         ad_paths.append(dd)
 
     for ad in tools.config['addons_path'].split(','):
