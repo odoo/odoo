@@ -213,7 +213,7 @@ class Inventory(models.Model):
         if self.company_id:
             domain += ' AND company_id = %s'
             args += (self.company_id.id,)
-        
+
         #case 1: Filter on One owner only or One product for a specific owner
         if self.partner_id:
             domain += ' AND owner_id = %s'
@@ -384,8 +384,16 @@ class InventoryLine(models.Model):
         moves = self.env['stock.move']
         Quant = self.env['stock.quant']
         for line in self:
-            if float_utils.float_compare(line.theoretical_qty, line.product_qty, precision_rounding=line.product_id.uom_id.rounding) == 0:
-                continue
+            neg_quants = self.env['stock.quant']
+            neg_quants = Quant.search([('qty', '<', 0.0), ('product_id', '=', line.product_id.id),
+                                       ('location_id', '=', line.location_id.id), ('package_id', '=', line.package_id.id),
+                                       ('lot_id', '=', line.prod_lot_id.id), ('owner_id', '=', line.partner_id.id)])
+            if float_utils.float_compare(line.theoretical_qty, line.product_qty, precision_rounding=line.product_id.uom_id.rounding) == 0 and not neg_quants:
+                    continue
+
+            neg_quant_qty = - sum([x.qty for x in neg_quants])
+            if float_utils.float_compare(line.theoretical_qty, 0, precision_rounding=line.product_id.uom_id.rounding) < 0:
+                neg_quant_qty += line.theoretical_qty # As the theoretical_qty is negative, we add it to neg_quant_qty
             diff = line.theoretical_qty - line.product_qty
             vals = {
                 'name': _('INV:') + (line.inventory_id.name or ''),
@@ -397,28 +405,31 @@ class InventoryLine(models.Model):
                 'state': 'confirmed',
                 'restrict_lot_id': line.prod_lot_id.id,
                 'restrict_partner_id': line.partner_id.id}
-            if diff < 0:  # found more than expected
+            move_neg = False
+            move_pos = False
+            if diff < 0 or neg_quant_qty:  # found more than expected
                 vals['location_id'] = line.product_id.property_stock_inventory.id
                 vals['location_dest_id'] = line.location_id.id
-                vals['product_uom_qty'] = abs(diff)
-            else:
+                vals['product_uom_qty'] = abs(diff) + neg_quant_qty
+                move_neg = moves.create(vals)
+            if diff > 0 or neg_quant_qty:
                 vals['location_id'] = line.location_id.id
                 vals['location_dest_id'] = line.product_id.property_stock_inventory.id
-                vals['product_uom_qty'] = diff
-            move = moves.create(vals)
+                vals['product_uom_qty'] = diff + neg_quant_qty
+                move_pos = moves.create(vals)
 
-            if diff > 0:
+            if move_pos:
                 domain = [('qty', '>', 0.0), ('package_id', '=', line.package_id.id), ('lot_id', '=', line.prod_lot_id.id), ('location_id', '=', line.location_id.id)]
                 preferred_domain_list = [[('reservation_id', '=', False)], [('reservation_id.inventory_id', '!=', line.inventory_id.id)]]
-                quants = Quant.quants_get_preferred_domain(move.product_qty, move, domain=domain, preferred_domain_list=preferred_domain_list)
-                Quant.quants_reserve(quants, move)
-            elif line.package_id:
-                move.action_done()
-                move.quant_ids.write({'package_id': line.package_id.id})
-                quants = Quant.search([('qty', '<', 0.0), ('product_id', '=', move.product_id.id),
-                                       ('location_id', '=', move.location_dest_id.id), ('package_id', '!=', False)], limit=1)
+                quants = Quant.quants_get_preferred_domain(move_pos.product_qty, move_pos, domain=domain, preferred_domain_list=preferred_domain_list)
+                Quant.quants_reserve(quants, move_pos)
+            if move_neg and line.package_id:
+                move_neg.action_done()
+                move_neg.quant_ids.write({'package_id': line.package_id.id})
+                quants = Quant.search([('qty', '<', 0.0), ('product_id', '=', move_neg.product_id.id),
+                                       ('location_id', '=', move_neg.location_dest_id.id), ('package_id', '!=', False)], limit=1)
                 if quants:
-                    for quant in move.quant_ids:
-                        if quant.location_id.id == move.location_dest_id.id:  #To avoid we take a quant that was reconcile already
-                            quant._quant_reconcile_negative(move)
+                    for quant in move_neg.quant_ids:
+                        if quant.location_id.id == move_neg.location_dest_id.id:  #To avoid we take a quant that was reconcile already
+                            quant._quant_reconcile_negative(move_neg)
         return moves
