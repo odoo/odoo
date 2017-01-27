@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="hr_attendance_view_config" model="ir.ui.view">
-        <field name="name">base.config.setting.hr.form.attendance</field>
-        <field name="model">base.config.settings</field>
-        <field name="priority">99</field>
+        <field name="name">attendance.config.settings.hr.form.attendance</field>
+        <field name="model">attendance.config.settings</field>
         <field name="arch" type="xml">
             <form string="Configuration" class= "oe_form_configuration">
                 <header>
@@ -57,7 +56,7 @@
 
     <record id="action_hr_attendance_settings" model="ir.actions.act_window">
         <field name="name">Attendance Settings</field>
-        <field name="res_model">base.config.settings</field>
+        <field name="res_model">attendance.config.settings</field>
         <field name="view_mode">form</field>
         <field name="target">inline</field>
         <field name="view_id" ref="hr_attendance_view_config"/>
