@@ -29,10 +29,14 @@
                                 <field name="rule_min_quantity" class="oe_inline"/>
                             </div>
                             <label string="Minimum Purchase Of" for="rule_minimum_amount" />
-                            <div name="rule_minimum_amount">
+                            <div name="rule_minimum_amount" class="row col-md-12">
                                 <field name="currency_id" invisible="1"/>
-                                <field name="rule_minimum_amount" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                                <field name="rule_minimum_amount_tax_inclusion" class="oe_inline"/>
+                                <div class="col-xs-6">
+                                    <field name="rule_minimum_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                </div>
+                                <div class="col-xs-6">
+                                    <field name="rule_minimum_amount_tax_inclusion"/>
+                                </div>
                             </div>
                             <field name="company_id" placeholder="Select company" groups="base.group_multi_company"></field>
                         </group>
