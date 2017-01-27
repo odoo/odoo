@@ -659,6 +659,15 @@ class module(osv.osv):
         if not self.pool['res.users'].has_group(cr, uid, 'base.group_system'):
             raise openerp.exceptions.AccessDenied()
 
+        # One-click install is opt-in - cfr Issue #15225
+        ad_dir = openerp.tools.config.addons_data_dir
+        if not os.access(ad_dir, os.W_OK):
+            msg = (_("Automatic install of downloaded Apps is currently disabled.") + "\n\n" +
+                   _("To enable it, make sure this directory exists and is writable on the server:") +
+                   "\n%s" % ad_dir)
+            _logger.warning(msg)
+            raise openerp.exceptions.AccessError(msg)
+
         apps_server = urlparse.urlparse(self.get_apps_server(cr, uid, context=context))
 
         OPENERP = openerp.release.product_name.lower()
