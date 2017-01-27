@@ -14,7 +14,7 @@ class CrmTeam(models.Model):
     @api.returns('self', lambda value: value.id if value else False)
     def _get_default_team_id(self, user_id=None):
         if not user_id:
-            user_id = self.env.uid
+            user_id = self.env.user.id
         team_id = None
         if 'default_team_id' in self.env.context:
             team_id = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
