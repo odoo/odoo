@@ -40,15 +40,15 @@
         <table class="o_group o_inner_group o_label_nowrap">
             <tr>
                 <td class="o_td_label"><label for="old_pwd" class="o_form_label">Old Password</label></td>
-                <td width="100%"><input type="password" class="o_form_field o_form_input" name="old_pwd" minlength="1" autofocus="autofocus"/></td>
+                <td width="100%"><input type="password" class="o_form_field o_form_input" name="old_pwd" minlength="1" autofocus="autofocus" autocomplete="current-password"/></td>
             </tr>
             <tr>
                 <td class="o_td_label"><label for="new_password" class="o_form_label">New Password</label></td>
-                <td width="100%"><input type="password" class="o_form_field o_form_input" name="new_password" minlength="1"/></td>
+                <td width="100%"><input type="password" class="o_form_field o_form_input" name="new_password" minlength="1" autocomplete="new-password"/></td>
             </tr>
             <tr>
                 <td class="o_td_label"><label for="confirm_pwd" class="o_form_label">Confirm New Password</label></td>
-                <td width="100%"><input type="password" class="o_form_field o_form_input" name="confirm_pwd" minlength="1"/></td>
+                <td width="100%"><input type="password" class="o_form_field o_form_input" name="confirm_pwd" minlength="1" autocomplete="new-password"/></td>
             </tr>
         </table>
 
@@ -647,6 +647,7 @@
         t-att-tabindex="widget.node.attrs.tabindex"
         t-att-autofocus="widget.node.attrs.autofocus"
         t-att-placeholder="widget.node.attrs.placeholder"
+        t-att-autocomplete="widget.password ? 'new-password' : widget.node.attrs.autocomplete"
         t-att-maxlength="widget.field.size"/>
 </t>
 <t t-name="FormSelection">
