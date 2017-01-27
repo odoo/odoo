@@ -982,7 +982,14 @@ class expression(object):
 
                 if call_null:
                     o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                    push(create_substitution_leaf(leaf, ('id', o2m_op, select_distinct_from_where_not_null(cr, column._fields_id, comodel._table)), model))
+                    # determine ids from column._fields_id
+                    if comodel._fields[column._fields_id].store:
+                        ids1 = select_distinct_from_where_not_null(cr, column._fields_id, comodel._table)
+                    else:
+                        ids2 = comodel.search(cr, uid, [(column._fields_id, '!=', False)], context=context)
+                        recs = comodel.browse(cr, SUPERUSER_ID, ids2, {'prefetch_fields': False})
+                        ids1 = recs.mapped(column._fields_id).ids
+                    push(create_substitution_leaf(leaf, ('id', o2m_op, ids1), model))
 
             elif column._type == 'many2many':
                 rel_table, rel_id1, rel_id2 = column._sql_names(model)
