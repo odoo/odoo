@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-David Halgand david.halgand@gmail.com https://github.com/halgandd
+David Halgand dhalgand@teclib.com https://github.com/halgandd
