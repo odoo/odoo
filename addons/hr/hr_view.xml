@@ -62,7 +62,7 @@
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
                                         <field name="identification_id" groups="base.group_hr_user"/>
                                         <field name="passport_id" groups="base.group_hr_user"/>
-                                        <field name="bank_account_id"/>
+                                        <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
                                     </group>
                                     <group string="Contact Information">
                                         <field name="address_home_id"

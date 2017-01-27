@@ -1299,6 +1299,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
             var new_height   = contents.height();
 
             if(!this.details_visible){
+                // resize client list to take into account client details
+                parent.height('-=' + new_height);
+
                 if(clickpos < scroll + new_height + 20 ){
                     parent.scrollTop( clickpos - 20 );
                 }else{
@@ -1328,6 +1331,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
             });
         } else if (visibility === 'hide') {
             contents.empty();
+            parent.height('100%');
             if( height > scroll ){
                 contents.css({height:height+'px'});
                 contents.animate({height:0},400,function(){

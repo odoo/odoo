@@ -1,5 +1,4 @@
-
-Algeria, 18/01/2017
+Vietnam, 2016-10-14
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -9,4 +8,4 @@ declaration.
 
 Signed,
 
-Zakria Makrelouf z.makrelouf@gmail.com https://github.com/zakiuu
+Hoang Diep Huu mr.diephuuhoang@gmail.com https://github.com/anothingguy

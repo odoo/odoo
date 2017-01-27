@@ -417,8 +417,7 @@
 
 <template id="product_price">
   <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt16">
-      <h4 class="oe_price_h4 css_editable_mode_hidden decimal_precision"
-        t-att-data-precision="user_id.partner_id.property_product_pricelist.currency_id.rounding">
+      <h4 class="oe_price_h4 css_editable_mode_hidden">
           <span class="text-danger oe_default_price" style="text-decoration: line-through; white-space: nowrap;"
             t-field="product.lst_price"
             t-field-options='{

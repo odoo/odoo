@@ -1915,9 +1915,8 @@ class One2many(_RelationalMulti):
     _column_limit = property(attrgetter('limit'))
 
     def convert_to_onchange(self, value, fnames=None):
-        if fnames:
-            # do not serialize self's inverse field
-            fnames = [name for name in fnames if name != self.inverse_name]
+        fnames = set(fnames or value.fields_view_get()['fields'])
+        fnames.discard(self.inverse_name)
         return super(One2many, self).convert_to_onchange(value, fnames)
 
 

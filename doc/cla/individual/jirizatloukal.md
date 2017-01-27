@@ -1,5 +1,4 @@
-
-Algeria, 18/01/2017
+The Czech Republic, 18.01.2017
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -9,4 +8,4 @@ declaration.
 
 Signed,
 
-Zakria Makrelouf z.makrelouf@gmail.com https://github.com/zakiuu
+Jiri Zatloukal zatloukal@apitea.com  https://github.com/jirizatloukal

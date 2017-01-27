@@ -36,7 +36,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2017-01-11 11:02+0000\n"
+"PO-Revision-Date: 2017-01-19 23:19+0000\n"
 "Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -2943,7 +2943,7 @@ msgstr "Haber"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Credit Note"
-msgstr "Abono"
+msgstr "Factura rectificativa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_credit
@@ -4662,7 +4662,7 @@ msgstr "Referencia factura"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_refund
 msgid "Invoice Refund"
-msgstr "Abono factura"
+msgstr "Factura rectificativa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_state
@@ -7005,12 +7005,12 @@ msgstr "Referencia/Descripción"
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #, python-format
 msgid "Refund"
-msgstr "Abono"
+msgstr "Factura rectificativa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date_invoice
 msgid "Refund Date"
-msgstr "Fecha de abono"
+msgstr "Fecha de rectificación"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_id
@@ -7026,14 +7026,14 @@ msgstr "Factura rectificativa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_filter_refund
 msgid "Refund Method"
-msgstr "Método de abono"
+msgstr "Método de rectificación"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_refund_filter_refund
 msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
-msgstr "Abono basado en este tipo. No lo puede Modificar o Cancelar si la factura ya está conciliada"
+msgstr "Factura rectificativa basada en este tipo. No se puede modificar o cancelar si la factura ya está conciliada"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8869,7 +8869,7 @@ msgid ""
 "                                one. The credit note will be created, validated and reconciled\n"
 "                                with the current invoice. A new, draft, invoice will be created \n"
 "                                so that you can edit it."
-msgstr "Utilice esta opción si quiere cancelar una factura y crear una nueva.\nSe creará un abono, validado y conciliado con la factura actual.\nSe creará una factura borrador nueva para que pueda editarla."
+msgstr "Utilice esta opción si quiere cancelar una factura y crear una nueva.\nSe creará una factura rectificativa, validada y conciliada con la factura actual.\nSe creará una factura borrador nueva para que pueda editarla."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
@@ -8877,7 +8877,7 @@ msgid ""
 "Use this option if you want to cancel an invoice you should not\n"
 "                                have issued. The credit note will be created, validated and reconciled\n"
 "                                with the invoice. You will not be able to modify the credit note."
-msgstr "Utilice esta opción si quiere cancelar una factura que no debería haber\nemitido. Se creará un abono, validado y conciliado con la factura.\nNo será posible modificar el abono."
+msgstr "Utilice esta opción si quiere cancelar una factura que no debería haber\nemitido. Se creará una factura rectificativa, validada y conciliada con la factura.\nNo será posible modificar la misma."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_type_include_initial_balance
@@ -9447,7 +9447,7 @@ msgid ""
 "                                credit note directly or keep it draft,\n"
 "                                waiting for the document to be issued by\n"
 "                                your supplier/customer."
-msgstr "Podrá editar y validar este\nabono directamente o dejarlo como borrador, \nen espera de que su proveedor/cliente expida el \ndocumento correspondiente."
+msgstr "Podrá editar y validar esta\nfactura rectificativa directamente o dejarla como borrador, \nen espera de que su proveedor/cliente expida el \ndocumento correspondiente."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
