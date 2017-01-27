@@ -582,10 +582,11 @@ class configmanager(object):
     def addons_data_dir(self):
         d = os.path.join(self['data_dir'], 'addons', release.series)
         if not os.path.exists(d):
-            os.makedirs(d, 0700)
-        else:
-            assert os.access(d, os.W_OK), \
-                "%s: directory is not writable" % d
+            try:
+                # try to make +rx placeholder dir, will need manual +w to activate it
+                os.makedirs(d, 0500)
+            except OSError:
+                logging.getLogger(__name__).debug('Failed to create addons data dir %s', d)
         return d
 
     @property
