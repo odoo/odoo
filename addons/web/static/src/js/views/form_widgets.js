@@ -697,6 +697,12 @@ var FieldBooleanButton = common.AbstractField.extend({
                 this.string_false = _t("Archived");
                 this.hover_false = _t("Restore");
                 break;
+            case "close":
+                this.string_true = _t("Active");
+                this.string_false = _t("Closed");
+                this.hover_true = _t("Close");
+                this.hover_false = _t("Open");
+                break;
             default:
                 var terms = typeof this.options["terminology"] === 'string' ? {} : this.options["terminology"];
                 this.string_true = _t(terms.string_true || "On");
