@@ -15,7 +15,7 @@ class SaleCouponRule(models.Model):
     rule_partners_domain = fields.Char(string="Based on Customers", default=[['customer', '=', True]], help="Coupon program will work for selected customers only")
     rule_partner_ids = fields.Many2many('res.partner', 'rule_partner_rel', 'rule_id', 'partner_id',
         string="Related Partners", compute='_compute_rule_partner_ids', store=True)
-    rule_products_domain = fields.Char(string="Based on Products", help="On Purchase of selected product, reward will be given")
+    rule_products_domain = fields.Char(string="Based on Products", default=[['sale_ok', '=', True]], help="On Purchase of selected product, reward will be given")
     rule_product_ids = fields.Many2many('product.product', 'rule_product_rel', 'rule_id', 'product_id',
         string="Related Products", compute='_compute_rule_product_ids', store=True)
     rule_min_quantity = fields.Integer(string="Minimum Quantity", default=1,
