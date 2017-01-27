@@ -623,7 +623,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 return filter.user_id && filter.is_default;
             });
             if (personal_filter) {
-                this.drawer.custom_filters.toggle_filter(personal_filter, true);
+                this.drawer.custom_filters.toggle_filter(personal_filter, false);
                 return;
             }
 
