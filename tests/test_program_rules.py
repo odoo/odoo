@@ -74,7 +74,7 @@ class TestProgramRules(TestSaleCouponCommon):
         ]})
         self.assertEqual(len(order.order_line.ids), 2, "The promo offert shouldn't have been applied as the purchased amount is not enough")
 
-        order = self.env['sale.order'].create({'partner_id': self.env.ref('base.res_partner_1').id})
+        order = self.env['sale.order'].create({'partner_id': self.steve.id})
         order.write({'order_line': [
             (0, False, {
                 'product_id': self.product_A.id,
@@ -121,7 +121,7 @@ class TestProgramRules(TestSaleCouponCommon):
             'rule_date_from': Date.to_string((datetime.now() - timedelta(days=7))),
             'rule_date_to': Date.to_string((datetime.now() + timedelta(days=2))),
         })
-        order = self.env['sale.order'].create({'partner_id': self.env.ref('base.res_partner_1').id})
+        order = self.env['sale.order'].create({'partner_id': self.steve.id})
         order.write({'order_line': [
             (0, False, {
                 'product_id': self.product_A.id,
