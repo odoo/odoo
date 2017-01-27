@@ -239,6 +239,11 @@ class AliasMixin(models.AbstractModel):
         if name != 'alias_id':
             return
 
+        # both self and the alias model must be present in 'ir.model'
+        IM = self.env['ir.model']
+        IM._reflect_model(self)
+        IM._reflect_model(self.env[self.get_alias_model_name({})])
+
         alias_ctx = {
             'alias_model_name': self.get_alias_model_name({}),
             'alias_parent_model_name': self._name,
